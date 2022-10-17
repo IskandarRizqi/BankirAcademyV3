@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('class_content', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('google_id')->unique();
-            $table->integer('role')->default('0')->comment('0=root;1=admin;2=member;');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->bigInteger('class_id');
+            $table->integer('type')->comment('0:Document;1:Image;2:Video;');
+			$table->longText('url');
+			$table->string('title');
+			$table->longText('description');
+            $table->json('custom_attribute')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('class_content');
     }
 };

@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('class_pricing', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('google_id')->unique();
-            $table->integer('role')->default('0')->comment('0=root;1=admin;2=member;');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->bigInteger('class_id');
+            $table->double('price');
+            $table->integer('promo')->default(0);
+            $table->double('promo_price')->nullable();
+            $table->date('promo_start')->nullable();
+            $table->date('promo_end')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('class_pricing');
     }
 };
