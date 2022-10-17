@@ -20,6 +20,8 @@ return new class extends Migration
             $table->bigInteger('class_id');
             $table->integer('unique_code');
             $table->double('price');
+            $table->json('additional_price')->nullable();
+            $table->json('additional_discount')->nullable();
             $table->double('price_final');
             $table->dateTime('expired')->nullable();
             $table->timestamps();
