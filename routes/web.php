@@ -14,7 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('front.home.home');
+});
+Route::get('/profile', function () {
+    return view('front.profile.profile');
+});
+Route::get('/detail-kelas', function () {
+    return view('front.kelas.detail');
 });
 
 Auth::routes();
