@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('class_participant', function (Blueprint $table) {
+        Schema::create('class_payment', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('class_id');
+			$table->integer('status')->default(0)->comment('0:unpaid;1:paid;');
             $table->bigInteger('user_id');
-            $table->bigInteger('payment_id');
-            $table->integer('certificate')->comment('0:Not Available;1:Available')->default(0);
-			$table->longText('review')->nullable();
-			$table->integer('review_point')->nullable();
-			$table->dateTime('review_time')->nullable();
+            $table->bigInteger('class_id');
+            $table->integer('unique_code');
+            $table->double('price');
+            $table->double('price_final');
+            $table->dateTime('expired')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_participant');
+        Schema::dropIfExists('class_payment');
     }
 };
