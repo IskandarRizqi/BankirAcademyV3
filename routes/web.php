@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware([IsAdminRoot::class])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
 Route::get('/', function () {
     return view('front.home.home');
+});
+Route::get('/registerc', function () {
+    return view('front.register');
 });
 Route::get('/profile', function () {
     return view('front.profile.profile');
@@ -24,5 +31,3 @@ Route::get('/detail-kelas', function () {
 });
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

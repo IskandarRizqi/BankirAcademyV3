@@ -12,7 +12,7 @@
 
                 </div><!-- #logo end -->
 
-
+                @if(Auth::check() && Auth::user()->role == 2)
                 <div class="header-misc">
                     <div class="dropdown mx-3 mr-lg-0">
                         <a href="#" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="icon-user"></i></a>
@@ -20,15 +20,16 @@
                             <a class="dropdown-item text-left" href="{{url('/profile')}}">Profile</a>
 
                             <div class="dropdown-divider"></div>
-                            <!-- <a class="dropdown-item text-left" href="{{ route('logout') }}" onclick="event.preventDefault();
+                            <a class="dropdown-item text-left" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Logout <i class="icon-signout"></i>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
-                            </a> -->
+                            </a>
                         </ul>
                     </div>
                 </div>
+                @endif
 
 
                 <div id="primary-menu-trigger">
@@ -68,6 +69,12 @@
                         @endif
 
 
+                        @if(Auth::check() && (Auth::user()->role == 0 || Auth::user()->role == 1))
+                        <li class="menu-item"><a class="menu-link" href="{{url('/home')}}">
+                                <div>Go to admin</div>
+                            </a>
+                        </li>
+                        @endif
                     </ul>
 
                 </nav><!-- #primary-menu end -->
@@ -106,6 +113,10 @@
                     <div class="col-12 form-group">
                         <button class="button button-rounded m-0" id="login" type="submit" onclick="funclogin()">Login</button>
                         <a href="#" class="float-right">Forgot Password?</a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        Don't have an account? &nbsp;
+                        <a href="{{url('/registerc')}}"> Register Now</a>
                     </div>
                     <div class="line line-sm"></div>
                     <a href="#" class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login with Google</a>
