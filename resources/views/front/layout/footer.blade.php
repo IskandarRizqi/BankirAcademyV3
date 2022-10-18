@@ -193,7 +193,13 @@
                 password: passwordlogin
             },
             success: function(result) {
+                // console.log(result)
                 console.log(result)
+                if (result.role == 0 || result.role == 1) {
+                    location.replace("/home")
+                } else {
+                    location.reload();
+                }
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
                 var errors = jqXhr.responseJSON;

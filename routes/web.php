@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware([IsAdminRoot::class])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
 Route::get('/', function () {
     return view('front.home.home');
+});
+Route::get('/registerc', function () {
+    return view('front.register');
 });
 Route::get('/profile', function () {
     return view('front.profile.profile');
@@ -23,6 +31,9 @@ Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
 
-Auth::routes();
+Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
+Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
+// Route::get('/auth/{provider}', 'Auth\SocialiteController@redirectToProvider');
+// Route::get('/auth/{provider}/callback', 'Auth\SocialiteController@handleProvideCallback');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes();

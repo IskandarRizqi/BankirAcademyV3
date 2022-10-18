@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('google_id')->unique();
+            $table->string('google_id')->unique()->nullable();
             $table->integer('role')->default('2')->comment('0=root;1=admin;2=member;');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
