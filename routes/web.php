@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('instructor', InstructorController::class);
 });
 Route::get('/', function () {
     return view('front.home.home');
