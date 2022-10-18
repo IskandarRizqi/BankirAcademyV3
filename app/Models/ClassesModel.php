@@ -19,5 +19,7 @@ class ClassesModel extends Model
 		'content',
 		'unique_id',
 		'participant_limit',
+		'date_start',
+		'date_end',
 	];
 }

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->longText('content');
             $table->longText('unique_id');
             $table->integer('participant_limit');
+            $table->date('date_start');
+            $table->date('date_end');
             $table->timestamps();
         });
     }
