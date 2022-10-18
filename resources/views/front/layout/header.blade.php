@@ -119,7 +119,7 @@
                         <a href="{{url('/registerc')}}"> Register Now</a>
                     </div>
                     <div class="line line-sm"></div>
-                    <a href="#" class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login with Google</a>
+                    <a href="{{url('/auth/google')}}" class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login with Google</a>
                 </div>
             </div>
 

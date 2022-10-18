@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,10 @@ Route::get('/profile', function () {
 Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
+
+Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
+Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
+// Route::get('/auth/{provider}', 'Auth\SocialiteController@redirectToProvider');
+// Route::get('/auth/{provider}/callback', 'Auth\SocialiteController@handleProvideCallback');
 
 Auth::routes();
