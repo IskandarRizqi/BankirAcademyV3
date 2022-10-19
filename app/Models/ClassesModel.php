@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ClassesModel extends Model
 {
@@ -22,4 +23,13 @@ class ClassesModel extends Model
 		'date_start',
 		'date_end',
 	];
+
+	protected $appends = ['instructor_list'];
+
+	public function getInstructorListAttribute()
+	{
+		if(array_key_exists('instructor',$this->attributes)) {
+			return DB::table('instructor')->whereIn('id',json_decode($this->attributes['instructor']))->get();
+		}
+	}
 }

@@ -13,8 +13,22 @@
     <!-- END GLOBAL MANDATORY STYLES -->
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+	
+    <link href="{{asset('Backend/plugins/boxicon/css/boxicons.min.css')}}" rel="stylesheet" type="text/css" />
+
+    <link href="{{asset('Backend/plugins/animate/animate.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/plugins/apex/apexcharts.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('Backend/assets/css/dashboard/dash_1.css')}}" rel="stylesheet" type="text/css" />
+	
+    <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/table/datatable/datatables.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/table/datatable/dt-global_style.css')}}">
+
+	
+    <link href="{{asset('Backend/assets/css/scrollspyNav.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('Backend/assets/css/components/custom-modal.css')}}" rel="stylesheet" type="text/css" />
+
+	
+    <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/select2/select2.min.css')}}">
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>

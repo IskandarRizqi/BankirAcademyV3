@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+	Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
 });
 Route::get('/', function () {
     return view('front.home.home');
