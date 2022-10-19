@@ -63,7 +63,7 @@
 								<td>
 									<button class="btn btn-info"><i class="bx bx-dollar"></i></button>
 									<button class="btn btn-success"><i class="bx bx-file"></i></button>
-									<button class="btn btn-primary"><i class="bx bx-clock"></i></button>
+									<button class="btn btn-primary"><i class="bx bx-calendar"></i></button>
 								</td>
 								<td>
 									<button class="btn btn-warning"><i class="bx bx-edit"></i></button>
