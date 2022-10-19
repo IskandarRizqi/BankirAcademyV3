@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-	Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
+    Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
     Route::resource('instructor', InstructorController::class);
 });
 Route::get('/', function () {
@@ -27,16 +28,12 @@ Route::get('/', function () {
 Route::get('/registerc', function () {
     return view('front.register');
 });
-Route::get('/profile', function () {
-    return view('front.profile.profile');
-});
 Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
 
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
-// Route::get('/auth/{provider}', 'Auth\SocialiteController@redirectToProvider');
-// Route::get('/auth/{provider}/callback', 'Auth\SocialiteController@handleProvideCallback');
+Route::resource('profile', ProfileController::class)->middleware('auth');
 
 Auth::routes();

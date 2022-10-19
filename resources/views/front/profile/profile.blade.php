@@ -13,7 +13,7 @@
                     <!-- <img src="images/icons/avatar.jpg" class="alignleft img-circle img-thumbnail my-0" alt="Avatar" style="max-width: 84px;"> -->
 
                     <div class="heading-block border-0">
-                        <h3>YOUR NAME LOGIN</h3>
+                        <h3>{{Auth::user()->name}}</h3>
                         <span>Your Profile Bio</span>
                     </div>
 
@@ -66,49 +66,169 @@
 
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
-                                        <form action="" method="post">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label for="form-control">Nama</label>
-                                                    <input type="text" class="form-control" name="name">
+                                        <!-- <div class="title-block">
+                                            <h4>Update User Akses</h4>
+                                            <form action="" method="post">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Name</label>
+                                                        <input type="text" class="form-control" value="{{Auth::user()->name}}">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Email</label>
+                                                        <input type="email" class="form-control" value="{{Auth::user()->email}}" readonly>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Password</label>
+                                                        <input type="text" class="form-control" name="password">
+                                                    </div>
                                                 </div>
-                                                <div class="col-lg-4">
-                                                    <label for="form-control">Email</label>
-                                                    <input type="text" class="form-control" name="email">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="form-control">Password</label>
-                                                    <input type="text" class="form-control" name="password">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label for="form-control">Nama lengkap</label>
-                                                    <input type="text" class="form-control" name="nama_lengkap">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="form-control">Nomor handphone</label>
-                                                    <input type="text" class="form-control" name="nomor_handphone">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="form-control">Company</label>
-                                                    <input type="text" class="form-control" name="company">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <label for="form-control">Alamat</label>
-                                                    <textarea class="form-control" name="alamat"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <button class="button button-small" type="submit">Update profile</button>
-                                                </div>
-                                            </div>
-                                        </form>
 
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <button class="button button-small" type="submit">Update akses login</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div> -->
 
+                                        <div class="title-block">
+                                            <h4>Update Profile</h4>
+                                            <form action="{{ route('profile.store') }}" method="post">
+                                                @csrf
+                                                @if(isset($pfl))
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Nama lengkap</label>
+                                                        <input type="text" class="form-control" name="nama_lengkap" value="{{$pfl['name']}}">
+                                                        <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                                                        @if($errors->has('nama_lengkap'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('nama_lengkap') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Nomor handphone</label>
+                                                        <input type="text" class="form-control" name="nomor_handphone" value="{{$pfl['phone']}}">
+                                                        @if($errors->has('nomor_handphone'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('nomor_handphone') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Company</label>
+                                                        <input type="text" class="form-control" name="company" value="{{$pfl['instansi']}}">
+                                                        <small class="text-danger">Jika mempunyai wajib di isi</small>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <label for="form-control">Tanggal lahir</label>
+                                                        <input type="date" name="tanggal_lahir" class="form-control" value="{{$pfl['tanggal_lahir']}}">
+                                                        @if($errors->has('tanggal_lahir'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('tanggal_lahir') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="form-control">Jenis kelamin</label>
+                                                        <select name="jenis_kelamin" class="form-control" id="jkl">
+                                                            <option value="">Pilih salah satu</option>
+                                                            <option value="0">Perempuan</option>
+                                                            <option value="1">Laki-laki</option>
+                                                        </select>
+                                                        @if($errors->has('jenis_kelamin'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('jenis_kelamin') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <label for="form-control">Alamat</label>
+                                                        <textarea class="form-control" name="alamat">{{$pfl['description']}}</textarea>
+                                                        @if($errors->has('alamat'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('alamat') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                @else
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Nama lengkap</label>
+                                                        <input type="text" class="form-control" name="nama_lengkap">
+                                                        <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                                                        @if($errors->has('nama_lengkap'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('nama_lengkap') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Nomor handphone</label>
+                                                        <input type="text" class="form-control" name="nomor_handphone">
+                                                        @if($errors->has('nomor_handphone'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('nomor_handphone') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="form-control">Company</label>
+                                                        <input type="text" class="form-control" name="company">
+                                                        <small class="text-danger">Jika mempunyai wajib di isi</small>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <label for="form-control">Tanggal lahir</label>
+                                                        <input type="date" name="tanggal_lahir" class="form-control">
+                                                        @if($errors->has('tanggal_lahir'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('tanggal_lahir') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="form-control">Jenis kelamin</label>
+                                                        <select name="jenis_kelamin" class="form-control">
+                                                            <option value="">Pilih salah satu</option>
+                                                            <option value="0">Perempuan</option>
+                                                            <option value="1">Laki-laki</option>
+                                                        </select>
+                                                        @if($errors->has('jenis_kelamin'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('jenis_kelamin') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <label for="form-control">Alamat</label>
+                                                        <textarea class="form-control" name="alamat"></textarea>
+                                                        @if($errors->has('alamat'))
+                                                        <div class="error" style="color: red; display:block;">
+                                                            {{ $errors->first('alamat') }}
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <button class="button button-small" type="submit">Update profile</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="divider divider-border divider-center"><i class="icon-email2"></i></div>
                                     </div>
                                 </div>
 
@@ -131,6 +251,8 @@
 
 <script>
     $(document).ready(function() {
+
+
         $('#destroy').click(function(event) {
             var form = $(this).closest("form");
             event.preventDefault();

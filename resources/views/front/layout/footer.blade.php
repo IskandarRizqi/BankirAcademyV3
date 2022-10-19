@@ -101,6 +101,11 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="{{asset('front/toast/dist/js/iziToast.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('front/js/components/moment.js')}}"></script>
+<script src="{{asset('front/js/components/timepicker.js')}}"></script>
+<script src="{{asset('front/js/components/datepicker.js')}}"></script>
+<script src="{{asset('front/js/components/daterangepicker.js')}}"></script>
+
 
 <script>
     var tpj = jQuery;
@@ -171,7 +176,9 @@
             SEMICOLON.slider.sliderDimensions();
         });
         $('#datatable1').dataTable();
-
+        $('.component-datepicker.past-enabled').datepicker({
+            autoclose: true,
+        });
 
     }); //ready
 </script>

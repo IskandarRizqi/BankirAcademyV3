@@ -34,6 +34,9 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{asset('front/toast/dist/css/iziToast.min.css')}}">
 
+    <link rel="stylesheet" href="{{asset('front/css/components/datepicker.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{asset('front/css/components/timepicker.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{asset('front/css/components/daterangepicker.css')}}" type="text/css" />
     <!-- Document Title
 	============================================= -->
     <title>E-class</title>

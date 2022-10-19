@@ -22,8 +22,8 @@ return new class extends Migration
             $table->longText('picture')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->integer('gender')->comment('0=Perempuan;1=Laki-Laki');
-            $table->integer('description')->nullable();
-            $table->json('instansi')->nullable();
+            $table->text('description')->nullable();
+            $table->text('instansi')->nullable();
             $table->timestamps();
         });
     }
