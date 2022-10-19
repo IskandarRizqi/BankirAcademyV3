@@ -55,13 +55,48 @@ class ClassesController extends Controller
 			'instructor' => json_encode($r->txtClassesInstructor),
 			'category' => $r->slcClassesCategory,
 			'tags' => json_encode($r->slcClassesTags),
-			'image' => asset('image/classes/' . $filename),
+			'image' => ('/image/classes/' . $filename),
 			'content' => $r->txaClassesContent,
 			'unique_id' => uniqid(),
 			'participant_limit' => $r->numClassesLimit,
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
 		]);
+
+		return redirect('/admin/classes')->with('success','Class Saved');
+	}
+
+	public function update(Request $r,$id)
+	{
+		$tobeins = [
+			'title'=>$r->txtClassesTitle,
+			'instructor' => json_encode($r->txtClassesInstructor),
+			'category' => $r->slcClassesCategory,
+			'tags' => json_encode($r->slcClassesTags),
+			'content' => $r->txaClassesContent,
+			'unique_id' => uniqid(),
+			'participant_limit' => $r->numClassesLimit,
+			'date_start' => $r->datClassesDateStart,
+			'date_end' => $r->datClassesDateEnd,
+		];
+
+		if ($r->file('filClassesImage')) {
+			$name = $r->file('filClassesImage')->getClientOriginalName();
+			$size = $r->file('filClassesImage')->getSize();
+	
+			if ($size >= 1048576) {
+				return Redirect::back()->withErrors(['error' => 'Ukuran File Melebihi 1 MB']);
+			}
+	
+			$filename = time() . '-' . $name;
+			$file = $r->file('filClassesImage');
+			$file->move(public_path('image/classes'), $filename);
+
+			$tobeins['image'] = ('/image/classes/' . $filename);
+		}
+
+
+		ClassesModel::where('id', $id)->update($tobeins);
 
 		return redirect('/admin/classes')->with('success','Class Saved');
 	}

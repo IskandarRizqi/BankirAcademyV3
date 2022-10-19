@@ -24,7 +24,7 @@
 							</div>
 						</div>
 						<div class="col-lg-6 text-right">
-							<button class="btn btn-primary btn-large" type="button" onclick="openmodal('#newClassesModal')">New</button>
+							<button class="btn btn-primary btn-large" type="button" onclick="resetClassesForm();openmodal('#newClassesModal')">New</button>
 						</div>
 					</div>
 				</form>
@@ -61,13 +61,13 @@
 									@endforeach
 								</td>
 								<td>
-									<button class="btn btn-info"><i class="bx bx-dollar"></i></button>
-									<button class="btn btn-success"><i class="bx bx-file"></i></button>
-									<button class="btn btn-primary"><i class="bx bx-calendar"></i></button>
+									<button class="btn bs-tooltip btn-info" title="Pricing"><i class="bx bx-dollar"></i></button>
+									<button class="btn bs-tooltip btn-success" title="File"><i class="bx bx-file"></i></button>
+									<button class="btn bs-tooltip btn-primary" title="Event"><i class="bx bx-calendar"></i></button>
 								</td>
 								<td>
-									<button class="btn btn-warning"><i class="bx bx-edit"></i></button>
-									<button class="btn btn-danger"><i class="bx bx-trash"></i></button>
+									<button class="btn bs-tooltip btn-warning" title="Edit" onclick="editClasses({{$v}});"><i class="bx bx-edit"></i></button>
+									<button class="btn bs-tooltip btn-danger" title="Delete"><i class="bx bx-trash"></i></button>
 								</td>
 							</tr>
 							@endforeach
@@ -81,6 +81,54 @@
 @endsection
 @section('custom-js')
 <script>
+	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
 	createDataTable('#tblClasses');
+	$('#filClassesImage').change(function (e) { 
+		getImgData(this,'#prvClassesImage');
+	});
+	function resetClassesForm() {
+		$('#newClassesForm').attr('action','/admin/classes');
+		$('#hdnClassesMethod').val('POST').trigger('change');
+		$('#hdnClassesId').val('0').trigger('change');
+		$('#txtClassesTitle').val('').trigger('change');
+		$('#slcClassesCategory').val('').trigger('change');
+		$('#datClassesDateStart').val('').trigger('change');
+		$('#datClassesDateEnd').val('').trigger('change');
+		$('#txtClassesInstructor').val('').trigger('change');
+		$('#slcClassesTags').val('').trigger('change');
+		$('#filClassesImage').val('').trigger('change');
+		$('#numClassesLimit').val('').trigger('change');
+		$('#txaClassesContent').val('').trigger('change');
+		// newClassCKEditor.setData('');
+	};
+	function editClasses(c) {
+		resetClassesForm();
+		$('#newClassesForm').attr('action','/admin/classes/'+c.id);
+		$('#hdnClassesMethod').val('PUT').trigger('change');
+		$('#hdnClassesId').val(c.id).trigger('change');
+		$('#txtClassesTitle').val(c.title).trigger('change');
+		$('#slcClassesCategory').val(c.category).trigger('change');
+		$('#datClassesDateStart').val(c.date_start).trigger('change');
+		$('#datClassesDateEnd').val(c.date_end).trigger('change');
+		$('#txtClassesInstructor').val(JSON.parse(c.instructor)).trigger('change');
+		var tags = JSON.parse(c.tags);
+		if (tags!=null && tags!='null') {
+			var h = '';
+			for (let i = 0; i < tags.length; i++) {
+				const e = tags[i];
+				h+='<option value="'+e+'">'+e+'</option>';
+			}
+			$('#slcClassesTags').html(h);
+			$('#slcClassesTags').val(JSON.parse(c.tags)).trigger('change');
+		}
+		// $('#filClassesImage').val(c.image).trigger('change');
+		$('#numClassesLimit').val(c.participant_limit).trigger('change');
+		$('#txaClassesContent').val(c.content).trigger('change');
+		newClassCKEditor.setData(c.content);
+		openmodal('#newClassesModal');
+	}
+	function submitClassesForm() {
+		$('#newClassesForm').submit()
+	}
 </script>
 @endsection
