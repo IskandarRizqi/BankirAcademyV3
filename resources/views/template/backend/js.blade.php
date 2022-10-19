@@ -28,6 +28,17 @@
 			dropdownParent: $('.modal'),
 			tags: true,
 		});
+
+		//Modal with CKEditor
+		$.fn.modal.Constructor.prototype._enforceFocus = function () {
+			var modal_this = this
+			$(document).on('focusin.modal', function (e) {
+				if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+					modal_this.$element.focus()
+				}
+			})
+		}
+
 	});
 	function createDataTable(elm,obj={}) {
 		$(elm).DataTable({
@@ -49,6 +60,16 @@
 	}
 	function closemodal(elm) {
 		$(elm).modal('hide');
+	}
+	function getImgData(fil,prv) {
+		const files = fil.files[0];
+		if (files) {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(files);
+			fileReader.addEventListener("load", function () {
+				$(prv).attr('src',this.result);
+			});    
+		}
 	}
 </script>
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->

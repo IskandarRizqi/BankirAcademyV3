@@ -1,4 +1,4 @@
-<div class="modal fade" id="newClassesModal" tabindex="-1" role="dialog" aria-labelledby="newClassesModalLabel" aria-hidden="true">
+<div class="modal fade" id="newClassesModal" role="dialog" aria-labelledby="newClassesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,7 +23,7 @@
 						<div class="col-lg-6">
 							<div class="form-group">
 								<label for="slcClassesCategory">Category</label>
-								<select class="form-control tagging mdlslc2tag" name="slcClassesCategory" name="slcClassesCategory" required>
+								<select class="form-control tagging mdlslc2tag" name="slcClassesCategory" id="slcClassesCategory" required>
 									<option value=""></option>
 									@foreach ($category as $ctg)
 										<option value="{{$ctg}}">{{$ctg}}</option>
@@ -46,7 +46,7 @@
 						<div class="col-lg-6">
 							<div class="form-group">
 								<label for="txtClassesInstructor">Instruktor</label>
-								<select class="form-control mdlslc2" multiple name="txtClassesInstructor[]" required>
+								<select class="form-control mdlslc2" multiple name="txtClassesInstructor[]" id="txtClassesInstructor" required>
 									@foreach ($instructor as $ins)
 										<option value="{{($ins->id)}}">{{$ins->name}}</option>
 									@endforeach
@@ -56,7 +56,7 @@
 						<div class="col-lg-6">
 							<div class="form-group">
 								<label for="slcClassesTags">Tag</label>
-								<select class="form-control tagging mdlslc2tag" multiple name="slcClassesTags[]" name="slcClassesTags" required>
+								<select class="form-control tagging mdlslc2tag" multiple name="slcClassesTags[]" id="slcClassesTags" required>
 									{{-- @foreach ($category as $ctg)
 										<option value="{{$ctg}}">{{$ctg}}</option>
 									@endforeach --}}
@@ -67,6 +67,7 @@
 							<div class="form-group">
 								<label for="filClassesImage">Image</label>
 								<input type="file" name="filClassesImage" id="filClassesImage" class="form-control" required>
+								<img src="#" alt="Image Preview" id="prvClassesImage" style="max-width: 100%;max-height:75px;">
 							</div>
 						</div>
 						<div class="col-lg-6">
@@ -86,7 +87,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" onclick="closemodal('#newClassesModal')"><i class="flaticon-cancel-12"></i> Discard</button>
-                <button type="button" class="btn btn-primary" onclick="$('#newClassesForm').submit()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="submitClassesForm()">Save</button>
             </div>
         </div>
     </div>
