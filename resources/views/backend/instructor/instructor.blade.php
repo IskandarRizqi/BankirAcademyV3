@@ -109,7 +109,7 @@
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
-                <form id="form_delete" action="{{ route('instructor.destroy',0) }}" method="delete">
+                <form id="form_delete" action="{{ route('instructor.destroy',0) }}" method="post">
                     @csrf
                     @method('DELETE')
                     <input type="text" name="id_instructor" id="id_instructor" hidden>

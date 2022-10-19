@@ -124,6 +124,7 @@ class InstructorController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        return $request->all();
+        InstructorModel::where('id', $request->id_instructor)->delete();
+        return Redirect::back()->with('success');
     }
 }
