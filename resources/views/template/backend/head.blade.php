@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/table/datatable/dt-global_style.css')}}">
     <link href="{{asset('Backend/assets/css/scrollspyNav.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/assets/css/components/custom-modal.css')}}" rel="stylesheet" type="text/css" />
-	<link href="assets/css/elements/tooltip.css" rel="stylesheet" type="text/css" />
+	<link href="{{asset('Backend/assets/css/elements/tooltip.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/select2/select2.min.css')}}">
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
