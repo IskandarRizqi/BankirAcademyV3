@@ -18,6 +18,7 @@
 <script src="{{asset('Backend/plugins/select2/custom-select2.js')}}"></script>
 <script src="{{asset('Backend/assets/js/elements/tooltip.js')}}"></script>
 <script src="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.js')}}"></script>
+<script src="{{asset('Backend/plugins/ckeditor/ckeditor.js')}}"></script>
 <script>
 	$(document).ready(function () {
 		$('.mdlslc2').select2({
