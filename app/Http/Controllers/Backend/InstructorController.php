@@ -20,7 +20,7 @@ class InstructorController extends Controller
     public function index()
     {
         $data['data'] = InstructorModel::get();
-        return view('backend.instructor.instructor',$data);
+        return view('backend.instructor.instructor', $data);
     }
 
     /**
@@ -45,9 +45,9 @@ class InstructorController extends Controller
             'nama' => [
                 'required', 'max:255',
             ],
-		    'title' => 'required',
-		    'picture' => 'required',
-		    'desc' => 'required',
+            'title' => 'required',
+            'picture' => 'requiredIf:id,null',
+            'desc' => 'required',
         ]);
         //response error validation
         if ($valid->fails()) {
@@ -55,11 +55,11 @@ class InstructorController extends Controller
         }
 
         $d = [
-                'name' => $request->nama,
-                'title' => $request->title,
-                'desc' => $request->desc,
-                'user_id' => Auth::user()->id,
-            ];
+            'name' => $request->nama,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'user_id' => Auth::user()->id,
+        ];
 
         if ($request->picture) {
             $name = $request->file('picture')->getClientOriginalName(); // Name File
@@ -76,8 +76,8 @@ class InstructorController extends Controller
         }
 
         InstructorModel::updateOrCreate([
-            'id'=>$request->id
-        ],$d);
+            'id' => $request->id
+        ], $d);
 
         return redirect()->back()->with('success');
     }
@@ -90,7 +90,7 @@ class InstructorController extends Controller
      */
     public function show($id)
     {
-        //
+        return $id;
     }
 
     /**
@@ -122,8 +122,8 @@ class InstructorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        return $request->all();
     }
 }

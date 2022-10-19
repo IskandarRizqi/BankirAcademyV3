@@ -2,7 +2,7 @@
 <script src="{{ asset('Backend/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ asset('Backend/assets/js/app.js') }}"></script>
 <script>
-    $(document).ready(function() {
+	$(document).ready(function() {
         App.init();
     });
 </script>
@@ -19,6 +19,8 @@
 <script src="{{asset('Backend/assets/js/elements/tooltip.js')}}"></script>
 <script src="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.js')}}"></script>
 <script src="{{asset('Backend/plugins/ckeditor/ckeditor.js')}}"></script>
+<script src="{{asset('BAckend/plugins/sweetalerts/sweetalert2.min.js')}}"></script>
+<script src="{{asset('BAckend/plugins/sweetalerts/custom-sweetalert.js')}}"></script>
 <script>
 	$(document).ready(function () {
 		$('.mdlslc2').select2({

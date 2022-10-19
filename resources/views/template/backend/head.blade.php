@@ -31,6 +31,9 @@
     <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/select2/select2.min.css')}}">
     <link href="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.css')}}" rel="stylesheet"
         type="text/css" />
+    <link href="{{asset('Backend/plugins/sweetalerts/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('Backend/plugins/sweetalerts/sweetalert.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('Backend/assets/css/components/custom-sweetalert.css')}}" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>
