@@ -98,6 +98,12 @@ class ClassesController extends Controller
 
 		ClassesModel::where('id', $id)->update($tobeins);
 
-		return redirect('/admin/classes')->with('success','Class Saved');
+		return redirect('/admin/classes')->with('success','Class Updated');
+	}
+	
+	public function destroy($id)
+	{
+		ClassesModel::where('id', $id)->delete();
+		return redirect('/admin/classes')->with('success','Class Deleted');
 	}
 }

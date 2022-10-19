@@ -67,7 +67,8 @@
 								</td>
 								<td>
 									<button class="btn bs-tooltip btn-warning" title="Edit" onclick="editClasses({{$v}});"><i class="bx bx-edit"></i></button>
-									<button class="btn bs-tooltip btn-danger" title="Delete"><i class="bx bx-trash"></i></button>
+									<button class="btn bs-tooltip btn-danger" title="Delete" onclick="deleteClasses({{$v->id}})"><i class="bx bx-trash"></i></button>
+									<form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')</form>
 								</td>
 							</tr>
 							@endforeach
@@ -129,6 +130,23 @@
 	}
 	function submitClassesForm() {
 		$('#newClassesForm').submit()
+	}
+	function deleteClasses(id) {
+		swal({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Delete',
+			padding: '2em'
+		}).then(function(result) {
+			if (result.value) {
+				$('#formdelclasses').attr('action','/admin/classes/'+id);
+				$('#formdelclasses').submit();
+			}else{
+				$('#formdelclasses').attr('action','#');
+			}
+		})
 	}
 </script>
 @endsection
