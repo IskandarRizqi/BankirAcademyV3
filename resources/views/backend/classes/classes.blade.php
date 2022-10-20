@@ -141,9 +141,12 @@
 	}
 
 	function classPricing(c) {
-		console.log(c.pricing);
-		$('#numClassPrice').val(c.pricing.price).trigger('change').trigger('input');
-		$('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
+		$('#numClassPrice').val(0);
+		$('#numClassPromo').val(0);
+		if (c.pricing) {
+			$('#numClassPrice').val(c.pricing.price).trigger('change').trigger('input');
+			$('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
+		}
 		$('.hdnClassesId').val(c.id);
 		$('.activeClassTitle').text(c.title);
 		openmodal('#classPricingModal');
