@@ -1,13 +1,11 @@
-<div class="modal fade modalwithselect2" id="newClassesModal" role="dialog" aria-labelledby="newClassesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newClassesModalLabel">Class</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closemodal('#newClassesModal')">
-					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-            </div>
-            <div class="modal-body">
+@extends('backend.template')
+@section('content')
+	<div class="col-lg-12">
+		<div class="widget">
+			<div class="widget-heading">
+				<a class="btn" data-dismiss="modal" href="/admin/classes"><i class="flaticon-cancel-12"></i> Back</a>
+			</div>
+			<div class="widget-content">
 				<form action="/admin/classes" id="newClassesForm" method="POST" enctype="multipart/form-data">
 					@csrf
 					<input type="hidden" name="_method" value="POST" id="hdnClassesMethod">
@@ -25,7 +23,7 @@
 							<div class="form-group">
 								<label for="slcClassesCategory">Category</label>
 								<small class="inputerrormessage text-danger" input-target="slcClassesCategory" style="display: none;"></small>
-								<select class="form-control tagging mdlslc2tag" name="slcClassesCategory" id="slcClassesCategory" required>
+								<select class="form-control tagging slc2tag" name="slcClassesCategory" id="slcClassesCategory" required>
 									<option value=""></option>
 									@foreach ($category as $ctg)
 										<option value="{{$ctg}}">{{$ctg}}</option>
@@ -35,7 +33,7 @@
 						</div>
 						<div class="col-lg-12">
 							<div class="form-group">
-								<label for="datClassesDateStart">Date Start</label>
+								<label for="datClassesDateStart">Class Date</label>
 								<small class="inputerrormessage text-danger" input-target="datClassesDateStart" style="display: none;"></small>
 								<small class="inputerrormessage text-danger" input-target="datClassesDateEnd" style="display: none;"></small>
 								<div class="input-group mb-4">
@@ -51,7 +49,7 @@
 							<div class="form-group">
 								<label for="txtClassesInstructor">Instruktor</label>
 								<small class="inputerrormessage text-danger" input-target="txtClassesInstructor" style="display: none;"></small>
-								<select class="form-control mdlslc2" multiple name="txtClassesInstructor[]" id="txtClassesInstructor" required>
+								<select class="form-control slc2" multiple name="txtClassesInstructor[]" id="txtClassesInstructor" required>
 									@foreach ($instructor as $ins)
 										<option value="{{($ins->id)}}">{{$ins->name}}</option>
 									@endforeach
@@ -62,7 +60,7 @@
 							<div class="form-group">
 								<label for="slcClassesTags">Tag</label>
 								<small class="inputerrormessage text-danger" input-target="slcClassesTags" style="display: none;"></small>
-								<select class="form-control tagging mdlslc2tag" multiple name="slcClassesTags[]" id="slcClassesTags" required>
+								<select class="form-control tagging slc2tag" multiple name="slcClassesTags[]" id="slcClassesTags" required>
 									{{-- @foreach ($category as $ctg)
 										<option value="{{$ctg}}">{{$ctg}}</option>
 									@endforeach --}}
@@ -73,7 +71,7 @@
 							<div class="form-group">
 								<label for="filClassesImage">Image</label>
 								<small class="inputerrormessage text-danger" input-target="filClassesImage" style="display: none;"></small>
-								<input type="file" name="filClassesImage" id="filClassesImage" class="form-control" accept="image/*" required>
+								<input type="file" name="filClassesImage" id="filClassesImage" class="form-control" accept="image/*" maxfilesize="1048576" required>
 								<img src="#" alt="Image Preview" id="prvClassesImage" class="previewImage" style="max-width: 100%;max-height:97px;">
 							</div>
 						</div>
@@ -92,12 +90,56 @@
 							</div>
 						</div>
 					</div>
+					<button type="submit" class="btn btn-block btn-primary" onclick="submitClassesForm()">Save</button>
 				</form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" onclick="closemodal('#newClassesModal')"><i class="flaticon-cancel-12"></i> Discard</button>
-                <button type="button" class="btn btn-primary" onclick="submitClassesForm()">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
+			</div>
+		</div>
+	</div>
+	@include('backend.classes.newclassesmodal')
+@endsection
+@section('custom-js')
+<script>
+	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
+	createDataTable('#tblClasses');
+	$('#filClassesImage').change(function (e) { 
+		getImgData(this,'#prvClassesImage');
+	});
+
+	$('#newClassesForm').submit(function (e) { 
+		e.preventDefault();
+		submitClassesForm($(this));
+	});
+	function submitClassesForm(formelm) {
+		$('.inputerrormessage').hide();
+		$('#txaClassesContent').val(newClassCKEditor.getData());
+		var saveable=true;
+		var req = ['txtClassesTitle','slcClassesCategory','datClassesDateStart','datClassesDateEnd','txtClassesInstructor','slcClassesTags','filClassesImage','numClassesLimit','txaClassesContent',];
+		$('#newClassesForm').find('input,select,textarea').each(function () {
+			var nm = $(this).attr('id');
+			if(req.includes(nm)){
+				console.log(nm,$(this).val().length);
+				if ($(this).attr('type')=='file') {
+					if (this.files.length == 0 && $(this).siblings('.previewImage').attr('src')=='#') {
+						$('.inputerrormessage[input-target="'+nm+'"]').text('*This Field Is Required');
+						$('.inputerrormessage[input-target="'+nm+'"]').show();
+						saveable=false;
+					}else if (this.files[0].size > $(this).attr('maxfilesize')) {
+						$('.inputerrormessage[input-target="'+nm+'"]').text('*Maximum File Size Is '+($(this).attr('maxfilesize')/1048576)+'MB');
+						$('.inputerrormessage[input-target="'+nm+'"]').show();
+						saveable=false;
+					}
+				}else{
+					if (!$(this).val() || $(this).val() == '' || $(this).val().length == 0) {
+						$('.inputerrormessage[input-target="'+nm+'"]').text('*This Field Is Required');
+						$('.inputerrormessage[input-target="'+nm+'"]').show();
+						saveable=false;
+					}
+				}
+			}
+		});
+		if (saveable) {
+			formelm[0].submit();
+		}
+	}
+</script>
+@endsection

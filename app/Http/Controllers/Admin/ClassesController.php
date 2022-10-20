@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
+use App\Models\ClassPricingModel;
 use App\Models\InstructorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -17,8 +18,8 @@ class ClassesController extends Controller
 
 		//Param
 		$data['param'] = [];
-		$data['param']['date_start'] = ($r->param_date_start)?$r->param_date_start:Carbon::now()->submonth()->format('Y-m-d');
-		$data['param']['date_end'] = ($r->param_date_end)?$r->param_date_end:Carbon::now()->format('Y-m-d');
+		$data['param']['date_start'] = ($r->param_date_start)?$r->param_date_start:Carbon::now()->format('Y-m-d');
+		$data['param']['date_end'] = ($r->param_date_end)?$r->param_date_end:Carbon::now()->addmonth()->format('Y-m-d');
 		$data['param']['category'] = ($r->param_category)?$r->param_category:null;
 
 		//Classes
@@ -34,6 +35,14 @@ class ClassesController extends Controller
 		$data['instructor'] = InstructorModel::get();
 		
 		return view('backend/classes/classes', $data);
+	}
+
+	public function create(Request $r)
+	{
+		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+		$data['instructor'] = InstructorModel::get();
+		
+		return view('backend/classes/inputclasses',$data);
 	}
 
 	public function store(Request $r)
@@ -64,6 +73,16 @@ class ClassesController extends Controller
 		]);
 
 		return redirect('/admin/classes')->with('success','Class Saved');
+	}
+
+	public function edit(Request $r,$id)
+	{
+		$data['id'] = $id;
+		$data['classes'] = ClassesModel::where('id',$id)->first();
+		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+		$data['instructor'] = InstructorModel::get();
+		
+		return view('backend/classes/editclasses',$data);
 	}
 
 	public function update(Request $r,$id)
@@ -105,5 +124,21 @@ class ClassesController extends Controller
 	{
 		ClassesModel::where('id', $id)->delete();
 		return redirect('/admin/classes')->with('success','Class Deleted');
+	}
+
+	public function setpricing(Request $r)
+	{
+		$p=0;
+		if ($r->bolClassPromo) {
+			$p=1;
+		}
+		ClassPricingModel::UpdateOrCreate(['class_id'=>$r->hdnClassesId],[
+			'price' => $r->numClassPrice,
+			'promo' => $p,
+			'promo_price' => $r->numClassPromo,
+			'promo_start' => $r->datPromoDateStart,
+			'promo_end' => $r->datPromoDateEnd,
+		]);
+		return redirect('/admin/classes')->with('success','Price Updated');
 	}
 }
