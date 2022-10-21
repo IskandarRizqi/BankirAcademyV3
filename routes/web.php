@@ -22,6 +22,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin', function (){return redirect('/home');});
     Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
     Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class,'setpricing']);
+    Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class,'setcontent']);
     Route::resource('/admin/instructor', InstructorController::class);
 });
 Route::get('/', function () {

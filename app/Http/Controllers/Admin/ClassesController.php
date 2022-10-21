@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassPricingModel;
+use App\Models\ClassContentModel;
 use App\Models\InstructorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -133,12 +134,37 @@ class ClassesController extends Controller
 			$p=1;
 		}
 		ClassPricingModel::UpdateOrCreate(['class_id'=>$r->hdnClassesId],[
+			'class_id' => $r->hdnClassesId,
 			'price' => $r->numClassPrice,
 			'promo' => $p,
 			'promo_price' => $r->numClassPromo,
 			'promo_start' => $r->datPromoDateStart,
 			'promo_end' => $r->datPromoDateEnd,
 		]);
+		return redirect('/admin/classes')->with('success','Price Updated');
+	}
+
+	public function setcontent(Request $r)
+	{
+		$tobeins = [];
+		for ($i=0; $i < count($r->slcClassContentType); $i++) { 
+			$file = '-';
+			if ($r->slcClassContentType[$i]==1) {
+				$file = $r->file('txtClassContentDoc.'.$i)->store('classes/content/'.time());
+			} else if ($r->slcClassContentType[$i]==2) {
+				$file = $r->file('txtClassContentImg.'.$i)->store('classes/content/'.time());
+			} else if ($r->slcClassContentType[$i]==3) {
+				$file = $r->txtClassContentVid[$i];
+			}
+			$tobeins[$i] = [
+				'class_id' => $r->hdnClassesId,
+				'type'=>$r->slcClassContentType[$i],
+				'title' => $r->txtClassContentTitle[$i],
+				'description' => '-',
+				'url' => $file,
+			];
+			ClassContentModel::UpdateOrCreate(['class_id'=>$r->hdnClassesId],$tobeins[$i]);
+		}
 		return redirect('/admin/classes')->with('success','Price Updated');
 	}
 }
