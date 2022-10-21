@@ -62,7 +62,7 @@
 								</td>
 								<td>
 									<button class="btn bs-tooltip btn-info" title="Pricing" onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
-									<button class="btn bs-tooltip btn-success" title="File"><i class="bx bx-file"></i></button>
+									<button class="btn bs-tooltip btn-success" title="File" onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
 									<button class="btn bs-tooltip btn-primary" title="Event"><i class="bx bx-calendar"></i></button>
 								</td>
 								<td>
@@ -80,6 +80,7 @@
 	</div>
 	@include('backend.classes.newclassesmodal')
 	@include('backend.classes.classpricingmodal')
+	@include('backend.classes.classcontentmodal')
 @endsection
 @section('custom-js')
 <script>
@@ -150,6 +151,53 @@
 		$('.hdnClassesId').val(c.id);
 		$('.activeClassTitle').text(c.title);
 		openmodal('#classPricingModal');
+	}
+
+	function classContent(c) {
+		openmodal('#classContentModal');
+	}
+
+	function addNewClassContentRow() {
+		console.log('jkadijsjodfsjdfsijoudfsjoudfsjo');
+		$('#tbdClassContent').append(''+
+			'<tr>'+
+			'	<td>'+
+			'		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">'+
+			'			<option value="1">Dokumen</option>'+
+			'			<option value="2">Gambar</option>'+
+			'			<option value="3">Video</option>'+
+			'		</select>'+
+			'	</td>'+
+			'	<td>'+
+			'		<input type="text" name="txtClassContentTitle[]" class="form-control txtClassContentTitle">'+
+			'	</td>'+
+			'	<td>'+
+			'		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc">'+
+			'		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" style="display: none;">'+
+			'		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" style="display: none;">'+
+			'	</td>'+
+			'	<td>'+
+			'		<button class="btn btn-danger" onclick="delClassContentRow($(this))"><i class="bx bx-trash"></i></button>'+
+			'	</td>'+
+			'</tr>'+
+		'');
+	}
+	function slcClassContentTypeChanged(ths){
+		ths.parent('td').parent('tr').find('.txtClassContentDoc,.txtClassContentImg,.txtClassContentVid').hide();
+		var v = ths.val();
+		if (v==1) {
+			ths.parent('td').parent('tr').find('.txtClassContentDoc').show();
+		} else if (v==2) {
+			ths.parent('td').parent('tr').find('.txtClassContentImg').show();
+		} else if (v==3) {
+			ths.parent('td').parent('tr').find('.txtClassContentVid').show();
+		}
+	}
+	function delClassContentRow(ths){
+		var tr = ths.parent('td').parent('tr');
+		if (!tr.attr('clsCtnId') || tr.attr('clsCtnId')==0) {
+			tr.remove();
+		}
 	}
 </script>
 @endsection
