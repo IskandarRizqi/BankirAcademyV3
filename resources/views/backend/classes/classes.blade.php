@@ -144,9 +144,17 @@
 	function classPricing(c) {
 		$('#numClassPrice').val(0);
 		$('#numClassPromo').val(0);
+		$('#bolClassPromo').prop('checked',false);
+		$('#datPromoDateStart').val('')
+		$('#datPromoDateEnd').val('')
 		if (c.pricing) {
 			$('#numClassPrice').val(c.pricing.price).trigger('change').trigger('input');
 			$('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
+			if (c.pricing.promo==1) {
+				$('#bolClassPromo').prop('checked',true);
+			}
+			$('#datPromoDateStart').val(c.pricing.promo_start)
+			$('#datPromoDateEnd').val(c.pricing.promo_end)
 		}
 		$('.hdnClassesId').val(c.id);
 		$('.activeClassTitle').text(c.title);
@@ -156,9 +164,8 @@
 	function classContent(c) {
 		$('#tbdClassContent').html('');
 		$('.hdnClassesId').val(c.id);
-		if (c.content) {
-			console.log(c.content)
-			c.content.forEach(e => {
+		if (c.content_list) {
+			c.content_list.forEach(e => {
 				var sd = '';
 				var sg = '';
 				var sv = '';
