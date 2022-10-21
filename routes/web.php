@@ -23,11 +23,12 @@ Route::middleware([IsAdminRoot::class])->group(function () {
         return redirect('/home');
     });
     Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
-    Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class,'setpricing']);
-    Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class,'setcontent']);
+    Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class, 'setpricing']);
+    Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class, 'setcontent']);
     Route::resource('/admin/instructor', InstructorController::class);
 });
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
+Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::get('/registerc', function () {
     return view('front.register');
 });

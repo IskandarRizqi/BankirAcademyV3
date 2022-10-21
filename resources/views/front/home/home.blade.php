@@ -61,7 +61,14 @@
                                             src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}" alt="">
                                     </div>
                                 </div>
-                                <button class="btn btn-secondary btn-block mt-4 btn-sm" width='100%'>Detail</button>
+                                @auth
+                                <a href="class/{{$p->unique_id}}/{{$p->title}}">
+                                    <button class="btn btn-secondary btn-block mt-4 btn-sm" width='100%'>Detail</button>
+                                </a>
+                                @else
+                                <a class="btn btn-secondary btn-block mt-4 btn-sm" data-toggle="modal"
+                                    data-target="#modelId" data-backdrop="static" data-keyboard="false">Detail</a>
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -71,7 +78,7 @@
 
             </div>
         </div>
-        <div class="section border-top-0 m-0">
+        <div class=" section border-top-0 m-0">
             <div class="container text-center">
 
                 <div class="heading-block center">
@@ -90,12 +97,15 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
@@ -116,12 +126,15 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
@@ -142,12 +155,15 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
@@ -168,12 +184,15 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
@@ -206,17 +225,20 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a>
+                                        </li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne,
+                                                Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy
+                                        Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
                                 </div>
                             </div>
                         </div>
@@ -232,17 +254,20 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a>
+                                        </li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne,
+                                                Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy
+                                        Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
                                 </div>
                             </div>
                         </div>
@@ -258,17 +283,20 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a>
+                                        </li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne,
+                                                Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy
+                                        Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
                                 </div>
                             </div>
                         </div>
@@ -284,17 +312,20 @@
                             </div>
                             <div class="col-md-8 pl-md-4">
                                 <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa tenetur</a></h2>
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
                                 </div>
                                 <div class="entry-meta">
                                     <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne, Australia</a></li>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 - 19:00</a>
+                                        </li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i> Melbourne,
+                                                Australia</a></li>
                                     </ul>
                                 </div>
                                 <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy
+                                        Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +351,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -342,7 +374,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -364,7 +397,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -386,7 +420,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -408,7 +443,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -430,7 +466,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -452,7 +489,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>
@@ -474,7 +512,8 @@
                                         alt="Standard Post with Image"></a>
                             </div>
                             <div class="entry-title">
-                                <h2><a href="blog-single.html">This is a Standard post with a Preview Image</a></h2>
+                                <h2><a href="blog-single.html">This is a Standard post with a
+                                        Preview Image</a></h2>
                             </div>
                             <div class="entry-meta">
                                 <ul>

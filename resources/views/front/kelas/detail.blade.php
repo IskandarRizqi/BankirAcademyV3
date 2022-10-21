@@ -11,17 +11,17 @@
                     <div class="single-event">
 
                         <div class="row col-mb-50">
-                            <div class="col-md-7 col-lg-8">
+                            <div class="col-md-12 col-lg-12">
                                 <div class="entry-image mb-0">
-                                    <a href="#"><img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Event Single"></a>
-                                    <div class="entry-overlay d-flex align-items-center justify-content-center">
+                                    <a href="#"><img src="{{$class->image}}" alt="Event Single"></a>
+                                    {{-- <div class="entry-overlay d-flex align-items-center justify-content-center">
                                         <span class="d-none d-md-flex">Starts in: </span>
                                         <div class="countdown d-block d-md-flex" data-year="2020" data-month="12"></div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
-                            <div class="col-md-5 col-lg-4">
+                            {{-- <div class="col-md-5 col-lg-4">
                                 <div class="card event-meta mb-3">
                                     <div class="card-header">
                                         <h5 class="mb-0">Kelas Info:</h5>
@@ -36,40 +36,14 @@
                                     </div>
                                 </div>
                                 <a href="#" class="btn btn-success btn-block btn-lg">Buy Tickets</a>
-                            </div>
+                            </div> --}}
 
                             <div class="w-100"></div>
 
                             <div class="col-md-10 col-lg-12">
-                                <h3>Details</h3>
+                                <h3>{{$class->title}}</h3>
 
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae, voluptatum, amet, eius esse sit praesentium similique tenetur accusamus deserunt modi dignissimos debitis consequatur facere unde sint quasi quae architecto eum!</p>
-
-                                <p>Obcaecati dolores perspiciatis eveniet adipisci repellendus consequatur ab officiis ipsa laudantium! Provident expedita odio iste corporis nam natus illum. Cupiditate, quis libero distinctio reiciendis quos adipisci eius animi.</p>
-
-                                <h4>Inclusions</h4>
-
-                                <div class="row col-mb-30">
-                                    <div class="col-sm-6">
-                                        <ul class="iconlist mb-0">
-                                            <li><i class="icon-ok"></i> Return Flight Tickets</li>
-                                            <li><i class="icon-ok"></i> All Local/Airport Transfers</li>
-                                            <li><i class="icon-ok"></i> Resort Accomodation</li>
-                                            <li><i class="icon-ok"></i> All Meals Included</li>
-                                            <li><i class="icon-ok"></i> Adventure Activities</li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <ul class="iconlist mb-0">
-                                            <li><i class="icon-ok"></i> Erotic Games</li>
-                                            <li><i class="icon-ok"></i> Local Guides</li>
-                                            <li><i class="icon-ok"></i> Support Staff</li>
-                                            <li><i class="icon-ok"></i> Personal Security</li>
-                                            <li><i class="icon-ok"></i> VISA Fees &amp; Medical Insurance</li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                <p>{!!$class->content!!}</p>
 
                             </div>
 
@@ -111,6 +85,11 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <a href="">
+                                    <button class="btn btn-primary btn-block">Order</button>
+                                </a>
+                            </div>
                         </div>
 
                     </div>
@@ -123,65 +102,28 @@
 
                             <h4>Upcoming Kelas</h4>
                             <div class="posts-sm row col-mb-30" id="post-list-sidebar">
+                                @foreach ($pop as $p)
                                 <div class="entry col-12">
                                     <div class="grid-inner row no-gutters">
                                         <div class="col-auto">
                                             <div class="entry-image">
-                                                <a href="#"><img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image"></a>
+                                                <a href="class/{{$p->unique_id}}/{{$p->title}}"><img src="{{$p->image}}"
+                                                        alt="Image"></a>
                                             </div>
                                         </div>
                                         <div class="col pl-3">
                                             <div class="entry-title">
-                                                <h4><a href="#">Lorem ipsum dolor sit amet, consectetur</a></h4>
+                                                <h4><a href="#">{{$p->title}}</a></h4>
                                             </div>
                                             <div class="entry-meta">
                                                 <ul>
-                                                    <li>10th July 2021</li>
+                                                    <li>{{$p->date_start}}</li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="entry col-12">
-                                    <div class="grid-inner row no-gutters">
-                                        <div class="col-auto">
-                                            <div class="entry-image">
-                                                <a href="#"><img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col pl-3">
-                                            <div class="entry-title">
-                                                <h4><a href="#">Elit Assumenda vel amet dolorum quasi</a></h4>
-                                            </div>
-                                            <div class="entry-meta">
-                                                <ul>
-                                                    <li>10th July 2021</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="entry col-12">
-                                    <div class="grid-inner row no-gutters">
-                                        <div class="col-auto">
-                                            <div class="entry-image">
-                                                <a href="#"><img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col pl-3">
-                                            <div class="entry-title">
-                                                <h4><a href="#">Debitis nihil placeat, illum est nisi</a></h4>
-                                            </div>
-                                            <div class="entry-meta">
-                                                <ul>
-                                                    <li>10th July 2021</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
 
                         </div>
@@ -189,7 +131,8 @@
                         <div class="widget clearfix">
 
                             <h4>Kelas</h4>
-                            <div id="oc-portfolio-sidebar" class="owl-carousel carousel-widget" data-items="1" data-margin="10" data-loop="true" data-nav="false" data-autoplay="5000">
+                            <div id="oc-portfolio-sidebar" class="owl-carousel carousel-widget" data-items="1"
+                                data-margin="10" data-loop="true" data-nav="false" data-autoplay="5000">
 
                                 <div class="portfolio-item">
                                     <div class="portfolio-image">
@@ -197,14 +140,20 @@
                                             <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image">
                                         </a>
                                         <div class="bg-overlay">
-                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="350">
-                                                <a href="https://vimeo.com/89396394" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="zoomIn" data-hover-speed="350" data-lightbox="iframe"><i class="icon-line-play"></i></a>
+                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn"
+                                                data-hover-speed="350">
+                                                <a href="https://vimeo.com/89396394"
+                                                    class="overlay-trigger-icon bg-light text-dark"
+                                                    data-hover-animate="zoomIn" data-hover-speed="350"
+                                                    data-lightbox="iframe"><i class="icon-line-play"></i></a>
                                             </div>
-                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="350"></div>
+                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn"
+                                                data-hover-speed="350"></div>
                                         </div>
                                     </div>
                                     <div class="portfolio-desc center pb-0">
-                                        <h3><a href="portfolio-single-video.html">Inventore voluptates velit totam ipsa tenetur</a></h3>
+                                        <h3><a href="portfolio-single-video.html">Inventore voluptates velit totam ipsa
+                                                tenetur</a></h3>
                                         <span><a href="#">Melbourne, Australia</a></span>
                                     </div>
                                 </div>
@@ -215,14 +164,20 @@
                                             <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image">
                                         </a>
                                         <div class="bg-overlay">
-                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="350">
-                                                <a href="images/blog/full/1.jpg" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="zoomIn" data-hover-speed="350" data-lightbox="image"><i class="icon-line-plus"></i></a>
+                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn"
+                                                data-hover-speed="350">
+                                                <a href="images/blog/full/1.jpg"
+                                                    class="overlay-trigger-icon bg-light text-dark"
+                                                    data-hover-animate="zoomIn" data-hover-speed="350"
+                                                    data-lightbox="image"><i class="icon-line-plus"></i></a>
                                             </div>
-                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="350"></div>
+                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn"
+                                                data-hover-speed="350"></div>
                                         </div>
                                     </div>
                                     <div class="portfolio-desc center pb-0">
-                                        <h3><a href="portfolio-single.html">Nisi officia adipisci molestiae aliquam</a></h3>
+                                        <h3><a href="portfolio-single.html">Nisi officia adipisci molestiae aliquam</a>
+                                        </h3>
                                         <span><a href="#">Perth, Australia</a></span>
                                     </div>
                                 </div>
@@ -235,7 +190,8 @@
                         <div class="widget clearfix">
 
                             <h4>Recent Kelas in Video</h4>
-                            <iframe src="//player.vimeo.com/video/103927232" width="500" height="250" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <iframe src="//player.vimeo.com/video/103927232" width="500" height="250"
+                                allow="autoplay; fullscreen" allowfullscreen></iframe>
 
                         </div>
 
