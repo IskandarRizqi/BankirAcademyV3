@@ -42,7 +42,7 @@
 
                             <div class="col-md-10 col-lg-12">
                                 <h3>{{$class->title}}</h3>
-                                {{$class->content}}
+                                {!!$class->content!!}
                             </div>
 
 
