@@ -180,8 +180,31 @@ class ClassesController extends Controller
 	public function createevent(Request $r,$id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
-		$data['event'] = ClassEventModel::where('id', $id)->get();
-		
+		$data['event'] = ClassEventModel::where('class_id', $id)->get();
+
 		return view('backend/classes/classevent',$data);
+	}
+
+	public function setevent(Request $r)
+	{
+		$tobedel = $r->hdnEventTBDId;
+		if ($tobedel) {
+			ClassEventModel::whereIn('id',explode(',',$tobedel))->delete();
+		}
+		$tobeins = [];
+		for ($i=0; $i < count($r->slcClassEventType); $i++) { 
+			
+			$tobeins[$i] = [
+				'class_id' => $r->hdnClassesId,
+				'type'=>$r->slcClassEventType[$i],
+				'link' => $r->txtClassEventLink[$i],
+				'location' => $r->txtClassEventLocation[$i],
+				'description' => $r->txaClassEventDescription[$i],
+				'time_start' => $r->datClassesDateStart[$i],
+				'time_end' => $r->datClassesDateEnd[$i],
+			];
+			ClassEventModel::UpdateOrCreate(['id'=>$r->txtClassEventId[$i]],$tobeins[$i]);
+		}
+		return redirect('/admin/classes')->with('success','Price Updated');
 	}
 }
