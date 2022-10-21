@@ -13,6 +13,7 @@
 					@csrf
 					<input type="hidden" name="_method" value="POST" id="hdnClassesMethod">
 					<input type="hidden" name="hdnClassesId" value="0" class="hdnClassesId">
+					<input type="hidden" name="hdnContentTBDId" value="0" class="hdnContentTBDId">
 
 					<div class="table-responsive">
 						<table class="table">

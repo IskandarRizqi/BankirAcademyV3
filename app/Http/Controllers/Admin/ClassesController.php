@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassPricingModel;
 use App\Models\ClassContentModel;
+use App\Models\ClassEventModel;
 use App\Models\InstructorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -146,13 +147,21 @@ class ClassesController extends Controller
 
 	public function setcontent(Request $r)
 	{
+		$tobedel = $r->hdnContentTBDId;
+		if ($tobedel) {
+			ClassContentModel::whereIn('id',explode(',',$tobedel))->delete();
+		}
 		$tobeins = [];
 		for ($i=0; $i < count($r->slcClassContentType); $i++) { 
 			$file = '-';
 			if ($r->slcClassContentType[$i]==1) {
-				$file = $r->file('txtClassContentDoc.'.$i)->store('classes/content/'.time());
+				if ($r->file('txtClassContentDoc.'.$i)) {
+					$file = $r->file('txtClassContentDoc.'.$i)->store('classes/content/'.time());
+				}
 			} else if ($r->slcClassContentType[$i]==2) {
-				$file = $r->file('txtClassContentImg.'.$i)->store('classes/content/'.time());
+				if ($r->file('txtClassContentImg.'.$i)) {
+					$file = $r->file('txtClassContentImg.'.$i)->store('classes/content/'.time());
+				}
 			} else if ($r->slcClassContentType[$i]==3) {
 				$file = $r->txtClassContentVid[$i];
 			}
@@ -163,8 +172,16 @@ class ClassesController extends Controller
 				'description' => '-',
 				'url' => $file,
 			];
-			ClassContentModel::UpdateOrCreate(['class_id'=>$r->hdnClassesId],$tobeins[$i]);
+			ClassContentModel::UpdateOrCreate(['id'=>$r->txtClassContentId[$i]],$tobeins[$i]);
 		}
 		return redirect('/admin/classes')->with('success','Price Updated');
+	}
+
+	public function createevent(Request $r,$id)
+	{
+		$data['class'] = ClassesModel::where('id', $id)->first();
+		$data['event'] = ClassEventModel::where('id', $id)->get();
+		
+		return view('backend/classes/classevent',$data);
 	}
 }

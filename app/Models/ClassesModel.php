@@ -24,7 +24,7 @@ class ClassesModel extends Model
 		'date_end',
 	];
 
-	protected $appends = ['instructor_list','pricing'];
+	protected $appends = ['instructor_list','pricing','content'];
 
 	public function getInstructorListAttribute()
 	{
@@ -37,6 +37,13 @@ class ClassesModel extends Model
 	{
 		if(array_key_exists('id',$this->attributes)) {
 			return DB::table('class_pricing')->where('class_id',$this->attributes['id'])->first();
+		}
+	}
+
+	public function getContentAttribute()
+	{
+		if(array_key_exists('id',$this->attributes)) {
+			return DB::table('class_content')->where('class_id',$this->attributes['id'])->get();
 		}
 	}
 }
