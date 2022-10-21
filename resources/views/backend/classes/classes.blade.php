@@ -63,7 +63,7 @@
 								<td>
 									<button class="btn bs-tooltip btn-info" title="Pricing" onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
 									<button class="btn bs-tooltip btn-success" title="File" onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
-									<button class="btn bs-tooltip btn-primary" title="Event"><i class="bx bx-calendar"></i></button>
+									<a class="btn bs-tooltip btn-primary" title="Event" href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
 								</td>
 								<td>
 									<a class="btn bs-tooltip btn-warning" title="Edit" href="/admin/classes/{{$v->id}}/edit"><i class="bx bx-edit"></i></a>
