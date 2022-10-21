@@ -11,9 +11,22 @@
         </div>
     </div>
 </section>
+<style>
+    .scroll-no-ui {
+        height: 100%;
+        width: 100%;
+        border: 1px solid green;
+        overflow: hidden;
+    }
 
-
-
+    .scroll-ui {
+        width: 100%;
+        height: 99%;
+        border: 1px solid blue;
+        overflow: auto;
+        padding-right: 15px;
+    }
+</style>
 <section id="content">
     <div class="content-wrap" style="padding: 0px;">
         <div class="section border-top-0 m-0">
@@ -24,29 +37,31 @@
                 </div>
                 <div class="row" id="sld">
                     @foreach ($pop as $p)
-                    <div class="col m-3" style="cursor: pointer;">
-                        <div style="height:190px;border-radius: 25px; box-shadow: 5px 10px 19px #e9e9e9;background-color:white;"
+                    <div class="col m-3">
+                        <div style="height:190px;border-radius: 25px; box-shadow: 5px 10px 19px #e9e9e9;background-color:white; overflow: hidden;"
                             class="row">
                             <div class="col-4"
                                 style="background-image:url('<?= $p->image ?>');background-position:center;background-size:cover;border-radius: 25px 0 0 25px;">
                             </div>
                             <div class="col-8 p-3 "
-                                style="word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;max-height:190px;">
+                                style="word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;max-height:190px; overflow: auto">
                                 <h5 class="text-uppercase">{{$p->title}}</h5>
                                 {{-- <p href="#"><i class="icon-time"></i> 11:00 - 19:00</p> --}}
-                                <div class=" row">
-                                    <div class="col" style="line-height: 0.1; margin-bottom: 0px;">
-                                        <p>{{$p->instructor_list[0]->name}}</p>
-                                        <p>{{$p->instructor_list[0]->title}}</p>
+                                {{-- <span style="position: absolute; left: 13px; bottom: 13px; background:white;">
+                                </span> --}}
+                                <div class="row" style="height: 60px; ">
+                                    <div class="col-8">
+                                        <p style="margin-bottom: 0px;">
+                                            {{$p->instructor_list[0]->name}}</p>
+                                        <p style="margin-bottom: 0px;">
+                                            {{$p->instructor_list[0]->title}}</p>
                                     </div>
                                     <div class="col-4">
                                         <img class="rounded" width="50px" height="50px"
                                             src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}" alt="">
                                     </div>
                                 </div>
-                                <span style="position: absolute; left: 13px; bottom: 13px; background:white;">
-                                </span>
-                                <button class="btn btn-secondary" width='100%'>Detail</button>
+                                <button class="btn btn-secondary btn-block mt-4 btn-sm" width='100%'>Detail</button>
                             </div>
                         </div>
                     </div>
