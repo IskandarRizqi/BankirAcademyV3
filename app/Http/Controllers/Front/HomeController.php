@@ -11,7 +11,13 @@ class HomeController extends Controller
     public function index()
     {
         $data['pop'] = ClassesModel::limit(5)->get();
-        // return $data;
         return view('front.home.home', $data);
+    }
+
+    public function detail_class($unique_id, $title)
+    {
+        $data['pop'] = ClassesModel::where('unique_id', '!=', $unique_id)->limit(3)->inRandomOrder()->get();
+        $data['class'] = ClassesModel::where('unique_id', $unique_id)->first();
+        return view('front.kelas.detail', $data);
     }
 }
