@@ -7,7 +7,6 @@
 			</div>
 			<div class="widget-content">
 				<h1>{{$class->title}}</h1>
-				{{$class->content}}
 				<form action="/admin/classes/setevent" id="newClassEventForm" method="POST">
 					@csrf
 					<input type="hidden" name="_method" value="POST" id="hdnClassesMethod">
