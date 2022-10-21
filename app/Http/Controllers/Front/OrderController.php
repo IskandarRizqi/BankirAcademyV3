@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassPaymentModel;
 use App\Models\ClassPricingModel;
+use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -16,10 +17,11 @@ class OrderController extends Controller
     public function index()
     {
         $auth = Auth::user()->id;
+        $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
         $data['payment'] = ClassPaymentModel::where('user_id', $auth)->get();
         $data['class_id'] = ClassPaymentModel::where('user_id', $auth)->pluck('class_id')->toArray();
         $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
-        return view('front.kelas.order', $data);
+        return view('front.profile.profile', $data);
     }
     public function order_class(Request $request)
     {
