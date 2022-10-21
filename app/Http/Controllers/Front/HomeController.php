@@ -20,4 +20,9 @@ class HomeController extends Controller
         $data['class'] = ClassesModel::where('unique_id', $unique_id)->first();
         return view('front.kelas.detail', $data);
     }
+
+    public function order_class(Request $request)
+    {
+        return $request->all();
+    }
 }

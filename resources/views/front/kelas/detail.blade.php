@@ -42,9 +42,7 @@
 
                             <div class="col-md-10 col-lg-12">
                                 <h3>{{$class->title}}</h3>
-
-                                <p>{!!$class->content!!}</p>
-
+                                {{$class->content}}
                             </div>
 
 
@@ -86,9 +84,11 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <a href="">
+                                <form action="{{'/order'}}" method="POST">
+                                    @csrf
+                                    <input type="text" name="class_id" value="{{$class->id}}" hidden>
                                     <button class="btn btn-primary btn-block">Order</button>
-                                </a>
+                                </form>
                             </div>
                         </div>
 
