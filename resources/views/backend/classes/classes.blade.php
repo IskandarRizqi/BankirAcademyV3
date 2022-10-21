@@ -154,14 +154,63 @@
 	}
 
 	function classContent(c) {
+		$('#tbdClassContent').html('');
+		$('.hdnClassesId').val(c.id);
+		if (c.content) {
+			console.log(c.content)
+			c.content.forEach(e => {
+				var sd = '';
+				var sg = '';
+				var sv = '';
+				var dd = 'style="display:none;"';
+				var dg = 'style="display:none;"';
+				var dv = 'style="display:none;"';
+
+				if (e.type==1) {
+					sd = 'selected';
+					dd = '';
+				} else if (e.type==2) {
+					sg = 'selected';
+					dg = '';
+				} else if (e.type==3) {
+					sv = 'selected';
+					dv = '';
+				}
+
+				$('#tbdClassContent').append(''+
+					'<tr>'+
+					'	<td>'+
+					'		<input type="hidden" name="txtClassContentId[]" class="form-control txtClassContentId" value="'+e.id+'">'+
+					'		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">'+
+					'			<option value="1" '+sd+'>Dokumen</option>'+
+					'			<option value="2" '+sg+'>Gambar</option>'+
+					'			<option value="3" '+sv+'>Video</option>'+
+					'		</select>'+
+					'	</td>'+
+					'	<td>'+
+					'		<input type="text" name="txtClassContentTitle[]" class="form-control txtClassContentTitle" value="'+e.title+'">'+
+					'	</td>'+
+					'	<td>'+
+					'		<small>Change File Only If Needed</small>'+
+					'		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc" '+dd+' value="'+e.url+'">'+
+					'		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" '+dg+' value="'+e.url+'">'+
+					'		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" '+dv+' value="'+e.url+'">'+
+					'	</td>'+
+					'	<td>'+
+					'		<button class="btn btn-danger" onclick="delClassContentRow($(this),'+e.id+')"><i class="bx bx-trash"></i></button>'+
+					'	</td>'+
+					'</tr>'+
+				'');
+			});
+		}
 		openmodal('#classContentModal');
 	}
 
 	function addNewClassContentRow() {
-		console.log('jkadijsjodfsjdfsijoudfsjoudfsjo');
 		$('#tbdClassContent').append(''+
 			'<tr>'+
 			'	<td>'+
+			'		<input type="hidden" name="txtClassContentId[]" class="form-control txtClassContentId" value="0">'+
 			'		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">'+
 			'			<option value="1">Dokumen</option>'+
 			'			<option value="2">Gambar</option>'+
@@ -177,7 +226,7 @@
 			'		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" style="display: none;">'+
 			'	</td>'+
 			'	<td>'+
-			'		<button class="btn btn-danger" onclick="delClassContentRow($(this))"><i class="bx bx-trash"></i></button>'+
+			'		<button class="btn btn-danger" onclick="delClassContentRow($(this),0)"><i class="bx bx-trash"></i></button>'+
 			'	</td>'+
 			'</tr>'+
 		'');
@@ -193,8 +242,9 @@
 			ths.parent('td').parent('tr').find('.txtClassContentVid').show();
 		}
 	}
-	function delClassContentRow(ths){
+	function delClassContentRow(ths,id){
 		var tr = ths.parent('td').parent('tr');
+		$('.hdnContentTBDId').val($('.hdnContentTBDId').val()+','+id);
 		if (!tr.attr('clsCtnId') || tr.attr('clsCtnId')==0) {
 			tr.remove();
 		}
