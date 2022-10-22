@@ -29,7 +29,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/classes/createevent/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createevent']);
     Route::resource('/admin/instructor', InstructorController::class);
 });
-Route::get('/order', [App\Http\Controllers\Front\OrderController::class, 'index']);
+// Route::get('/order', [App\Http\Controllers\Front\OrderController::class, 'index']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);

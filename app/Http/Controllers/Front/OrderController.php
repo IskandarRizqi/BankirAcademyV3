@@ -16,12 +16,12 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $auth = Auth::user()->id;
-        $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
-        $data['payment'] = ClassPaymentModel::where('user_id', $auth)->get();
-        $data['class_id'] = ClassPaymentModel::where('user_id', $auth)->pluck('class_id')->toArray();
-        $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
-        return view('front.profile.profile', $data);
+        // $auth = Auth::user()->id;
+        // $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        // $data['payment'] = ClassPaymentModel::where('user_id', $auth)->get();
+        // $data['class_id'] = ClassPaymentModel::where('user_id', $auth)->pluck('class_id')->toArray();
+        // $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
+        // return view('front.profile.profile', $data);
     }
     public function order_class(Request $request)
     {
@@ -35,12 +35,19 @@ class OrderController extends Controller
         $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->get();
         if (count($cpm) > 0) {
             $data['data'] = ClassPaymentModel::where('user_id', $request->class_id)->get();
-            return $this->index();
+            return Redirect::to('profile');
         }
-        $number = ClassPaymentModel::select('unique_code')->where('expired', '>', now())->pluck('unique_code')->toArray();
+
+        // Unique Code
+        $number = ClassPaymentModel::select('unique_code')->where('expired', '<', now())->pluck('unique_code')->toArray();
         do {
             $randomNumber = rand(0, 999);
         } while (in_array($randomNumber, $number));
+        // No Invoice
+        $numbers = ClassPaymentModel::select('no_invoice')->pluck('no_invoice')->toArray();
+        do {
+            $no_invoice = uniqid();
+        } while (in_array($no_invoice, $numbers));
 
         $price = 0;
         $price_final = 0;
@@ -58,7 +65,8 @@ class OrderController extends Controller
             'price' => $price,
             'price_final' => $price_final,
             'expired' => date('Y-m-d') . ' 23:59:59',
+            'no_invoice' => $no_invoice,
         ]);
-        return $this->index();
+        return Redirect::to('profile');
     }
 }
