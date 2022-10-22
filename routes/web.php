@@ -26,8 +26,14 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class, 'setpricing']);
     Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class, 'setcontent']);
     Route::post('/admin/classes/setevent', [App\Http\Controllers\Admin\ClassesController::class, 'setevent']);
+    Route::post('/admin/classes/inputcertificatetemplate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'setcertificate']);
     Route::get('/admin/classes/createevent/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createevent']);
+	Route::get('/admin/classes/previewcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
+    Route::get('/admin/classes/createcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createcertificate']);
     Route::resource('/admin/instructor', InstructorController::class);
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
 });
 Route::get('/order', [App\Http\Controllers\Front\OrderController::class, 'index']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
