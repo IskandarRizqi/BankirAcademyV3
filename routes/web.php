@@ -30,6 +30,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/classes/setevent', [App\Http\Controllers\Admin\ClassesController::class, 'setevent']);
     Route::get('/admin/classes/createevent/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createevent']);
     Route::resource('/admin/instructor', InstructorController::class);
+    Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
