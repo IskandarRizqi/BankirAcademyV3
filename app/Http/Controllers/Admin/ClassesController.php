@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassCertificateTemplate;
 use App\Models\ClassPricingModel;
+use App\Models\ClassParticipantModel;
 use App\Models\ClassContentModel;
 use App\Models\ClassEventModel;
 use App\Models\InstructorModel;
@@ -249,6 +250,9 @@ class ClassesController extends Controller
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
 		$profile = UserProfileModel::where('user_id',Auth::user()->id)->first();
+		if (!ClassParticipantModel::where('user_id',Auth::user()->id)->where('class_id',$id)->where('certificate',1)) {
+			return Redirect::back()->withErrors(['error' => 'Certificate belum diberikan']);
+		}
 		if (!$certs) {
 			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
 		}

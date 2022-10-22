@@ -77,6 +77,7 @@
                                                                 data-class="{{$d->class_id}}" data-payment="{{$d->id}}">
                                                                 Bayar
                                                             </button>
+															<a class="btn bs-tooltip btn-warning" title="Certificate" href="/admin/classes/certificate/{{$d->class_id}}" target="_blank"><i class="bx bxs-file-pdf"></i></a>
                                                         </td>
                                                     </tr>
                                                     @endforeach
