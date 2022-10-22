@@ -8,7 +8,7 @@
                 <!-- Logo
 						============================================= -->
                 <div id="logo">
-                    <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('front/images/logo.png')}}"><img src="{{asset('front/images/logo.png')}}" alt="E-class"></a>
+                    <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}"><img src="{{asset('Backend/logo_12.png')}}" alt="E-class"></a>
 
                 </div><!-- #logo end -->
 

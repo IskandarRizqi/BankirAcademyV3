@@ -32,182 +32,364 @@
         overflow: auto;
         padding-right: 15px;
     }
+
+    .slick-track {
+        opacity: 1;
+        width: 1356px !important;
+        transform: translate3d(0px, 0px, 0px);
+    }
+
+    .card {
+        border: none;
+        transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+        overflow: hidden;
+        border-radius: 20px;
+        min-height: 450px;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            min-height: 350px;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .card {
+            min-height: 300px;
+        }
+    }
+
+    .card.card-has-bg {
+        transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+        background-size: 120%;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    .card.card-has-bg:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: inherit;
+        -webkit-filter: grayscale(1);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+    }
+
+    .card.card-has-bg:hover {
+        transform: scale(0.98);
+        box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.3);
+        background-size: 130%;
+        transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .card.card-has-bg:hover .card-img-overlay {
+        transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+        background: #234f6d;
+        background: linear-gradient(0deg, rgba(4, 69, 114, 0.5) 0%, #044572 100%);
+    }
+
+    .card .card-footer {
+        background: none;
+        border-top: none;
+    }
+
+    .card .card-footer .media img {
+        border: solid 3px rgba(255, 255, 255, 0.3);
+    }
+
+    .card .card-meta {
+        color: #26bd75;
+    }
+
+    .card .card-body {
+        transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .card:hover {
+        cursor: pointer;
+        transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .card:hover .card-body {
+        margin-top: 30px;
+        transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .card .card-img-overlay {
+        transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+        background: #234f6d;
+        background: linear-gradient(0deg, rgba(35, 79, 109, 0.3785889356) 0%, #455f71 100%);
+    }
 </style>
 <section id="content">
     <div class="content-wrap" style="padding: 0px;">
-        <div class="section border-top-0 m-0">
-            <div class="container">
+
+        <div class=" section border-top-0 m-0">
+            <div class="container text-center">
+
                 <div class="heading-block center">
                     <h2>SEMUA KELAS</h2>
-                    <!-- <span>Sub-Title for the Heading Block</span> -->
                 </div>
+                <!-- <div class="row" id="sld1">
+                    <div class="entry event col-4">
+                        <div class="grid-inner row align-items-center no-gutters p-4">
+                            <div class="entry-image col-md-4 mb-md-0">
+                                <a href="#">
+                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
+                                    <div class="entry-date">10<span>Apr</span></div>
+                                </a>
+                            </div>
+                            <div class="col-md-8 pl-md-4">
+                                <div class="entry-title title-xs">
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
+                                </div>
+                                <div class="entry-meta">
+                                    <ul>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
+                                    </ul>
+                                </div>
+                                <div class="entry-content">
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry event col-4">
+                        <div class="grid-inner row align-items-center no-gutters p-4">
+                            <div class="entry-image col-md-4 mb-md-0">
+                                <a href="#">
+                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
+                                    <div class="entry-date">10<span>Apr</span></div>
+                                </a>
+                            </div>
+                            <div class="col-md-8 pl-md-4">
+                                <div class="entry-title title-xs">
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
+                                </div>
+                                <div class="entry-meta">
+                                    <ul>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
+                                    </ul>
+                                </div>
+                                <div class="entry-content">
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry event col-4">
+                        <div class="grid-inner row align-items-center no-gutters p-4">
+                            <div class="entry-image col-md-4 mb-md-0">
+                                <a href="#">
+                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
+                                    <div class="entry-date">10<span>Apr</span></div>
+                                </a>
+                            </div>
+                            <div class="col-md-8 pl-md-4">
+                                <div class="entry-title title-xs">
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
+                                </div>
+                                <div class="entry-meta">
+                                    <ul>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
+                                    </ul>
+                                </div>
+                                <div class="entry-content">
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry event col-4">
+                        <div class="grid-inner row align-items-center no-gutters p-4">
+                            <div class="entry-image col-md-4 mb-md-0">
+                                <a href="#">
+                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
+                                    <div class="entry-date">10<span>Apr</span></div>
+                                </a>
+                            </div>
+                            <div class="col-md-8 pl-md-4">
+                                <div class="entry-title title-xs">
+                                    <h2><a href="#">Inventore voluptates velit totam ipsa
+                                            tenetur</a></h2>
+                                </div>
+                                <div class="entry-meta">
+                                    <ul>
+                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
+                                                19:00</a></li>
+                                        <li><a href="#"><i class="icon-map-marker2"></i>
+                                                Melbourne, Australia</a></li>
+                                    </ul>
+                                </div>
+                                <div class="entry-content">
+                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
                 <div class="row" id="sld">
                     @foreach ($pop as $p)
-                    <div class="col m-3">
-                        <div style="height:190px;border-radius: 25px; box-shadow: 5px 10px 19px #e9e9e9;background-color:white; overflow: hidden;" class="row">
-                            <div class="col-4" style="background-image:url('<?= $p->image ?>');background-position:center;background-size:cover;border-radius: 25px 0 0 25px;">
-                            </div>
-                            <div class="col-8 p-3 " style="word-wrap: break-word;overflow: hidden;text-overflow: ellipsis;max-height:190px; overflow: auto">
-                                <h5 class="text-uppercase">{{$p->title}}</h5>
-                                {{-- <p href="#"><i class="icon-time"></i> 11:00 - 19:00</p> --}}
-                                {{-- <span style="position: absolute; left: 13px; bottom: 13px; background:white;">
-                                </span> --}}
-                                <div class="row" style="height: 60px; ">
-                                    <div class="col-8">
-                                        <p style="margin-bottom: 0px;">
-                                            {{$p->instructor_list[0]->name}}
-                                        </p>
-                                        <p style="margin-bottom: 0px;">
-                                            {{$p->instructor_list[0]->title}}
-                                        </p>
-                                    </div>
-                                    <div class="col-4">
-                                        <img class="rounded" width="50px" height="50px" src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}" alt="">
-                                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <div class="card text-white card-has-bg click-col" style="background-image:url('<?= $p->image ?>');">
+                            <img class="card-img d-none" src="<?= $p->image ?>">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body">
+                                    <!-- <small class="card-meta mb-2">Thought Leadership</small> -->
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">{{$p->title}}</a></h4>
+                                    <small><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }} - {{ \Carbon\Carbon::parse($p->date_end)->format('F d, Y') }}</small>
                                 </div>
-                                @auth
-                                <a href="class/{{$p->unique_id}}/{{$p->title}}">
-                                    <button class="btn btn-secondary btn-block mt-4 btn-sm" width='100%'>Detail</button>
-                                </a>
-                                @else
-                                <a class="btn btn-secondary btn-block mt-4 btn-sm" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Detail</a>
-                                @endauth
+                                <div class="card-footer">
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}" alt="Generic placeholder image" style="max-width:50px">
+                                        <div class="media-body">
+                                            <h6 class="my-0 text-white d-block"> {{$p->instructor_list[0]->name}}</h6>
+                                            <small>{{$p->instructor_list[0]->title}}</small>
+                                        </div>
+                                    </div>
+
+
+                                    @auth
+                                    <a href="class/{{$p->unique_id}}/{{$p->title}}">
+                                        <button class="button button-circle" width='100%'>Detail</button>
+                                    </a>
+                                    @else
+                                    <a class="button button-circle" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Detail</a>
+                                    @endauth
+                                </div>
                             </div>
                         </div>
                     </div>
                     @endforeach
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tree,nature');">
+                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tree,nature" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body">
+                                    <small class="card-meta mb-2">Thought Leadership</small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
+                                        <div class="media-body">
+                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
+                                            <small>Director of UI/UX</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?computer,design');">
+                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?computer,design" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body">
+                                    <small class="card-meta mb-2">Thought Leadership</small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
+                                        <div class="media-body">
+                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
+                                            <small>Director of UI/UX</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tech,street');">
+                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body">
+                                    <small class="card-meta mb-2">Thought Leadership</small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
+                                        <div class="media-body">
+                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
+                                            <small>Director of UI/UX</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tree,nature');">
+                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tree,nature" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body">
+                                    <small class="card-meta mb-2">Thought Leadership</small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
+                                        <div class="media-body">
+                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
+                                            <small>Director of UI/UX</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?computer,design');">
+                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?computer,design" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body">
+                                    <small class="card-meta mb-2">Thought Leadership</small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
+                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media">
+                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
+                                        <div class="media-body">
+                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
+                                            <small>Director of UI/UX</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
                 </div>
-
-
             </div>
         </div>
-        <!-- <div class=" section border-top-0 m-0">
-            <div class="container text-center">
-
-                <div class="heading-block center">
-                    <h2>KELAS BEST SELLER</h2>
-                </div>
-                <div class="row" id="sld1">
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}"
-                                        alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}"
-                                        alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}"
-                                        alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}"
-                                        alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a
-                                        href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div> -->
     </div>
 </section>
 <!-- #content end -->

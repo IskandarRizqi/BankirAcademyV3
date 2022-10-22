@@ -13,6 +13,7 @@ class HomeController extends Controller
     {
         $data['bannerslide'] = BannerModel::get();
         $data['pop'] = ClassesModel::limit(5)->get();
+        // return $data['pop'];
         return view('front.home.home', $data);
     }
 
