@@ -244,7 +244,7 @@
                 <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg></a>
 
-        <ul class="navbar-nav flex-row">
+        <!-- <ul class="navbar-nav flex-row">
             <li>
                 <div class="page-header">
 
@@ -274,7 +274,7 @@
                     </div>
                 </div>
             </li>
-        </ul>
+        </ul> -->
     </header>
 </div>
 <!--  END NAVBAR  -->

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Backend\BannerslideController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/classes/setevent', [App\Http\Controllers\Admin\ClassesController::class, 'setevent']);
     Route::get('/admin/classes/createevent/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createevent']);
     Route::resource('/admin/instructor', InstructorController::class);
+    Route::resource('/admin/banner', BannerslideController::class);
+    Route::post('/update-banner', [BannerslideController::class, 'updatebanner'])->name('updatebanner');
 });
 // Route::get('/order', [App\Http\Controllers\Front\OrderController::class, 'index']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
