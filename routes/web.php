@@ -34,6 +34,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/banner', BannerslideController::class);
     Route::post('/update-banner', [BannerslideController::class, 'updatebanner'])->name('updatebanner');
     Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
+    Route::post('/admin/pembayaran/approved', [App\Http\Controllers\Backend\PembayaranController::class, 'approved']);
+    Route::post('/admin/pembayaran/certificate', [App\Http\Controllers\Backend\PembayaranController::class, 'publish_certificate']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

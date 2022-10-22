@@ -1,84 +1,76 @@
 @extends('backend.template')
 @section('content')
+@if (Session::get('success'))
+<div class="alert alert-dismissible alert-success">
+    <i class="icon-gift"></i><strong>Success!</strong>
+    {{Session::get('success')}}
+    {{-- <button type="button" class="btn btn-close btn-sm" data-bs-dismiss="alert" aria-hidden="true">x</button> --}}
+</div>
+@endif
+@if (Session::get('error'))
+<div class="alert alert-dismissible alert-danger">
+    <i class="icon-gift"></i><strong>Failed!</strong>
+    {{Session::get('error')}}
+    {{-- <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-hidden="true"></button> --}}
+</div>
+@endif
 <div class="col-lg-12">
     <div class="widget">
-        {{-- <div class="widget-heading">
-            <form action="/admin/classes">
-                @csrf
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="input-group mb-4">
-                            <input type="date" class="form-control" value="{{$param['date_start']}}"
-                                placeholder="Date Start" aria-label="Date Start" name="param_date_start">
-                            <div class="input-group-append">
-                                <span class="input-group-text" id="basic-addon5">s/d</span>
-                            </div>
-                            <input type="date" class="form-control" value="{{$param['date_end']}}"
-                                placeholder="Date End" aria-label="Date End" name="param_date_end">
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <button class="btn btn-primary btn-block" type="submit">Cari</button>
-                            </div>
-                            <div class="col-lg-4">
-                                <a href="/admin/classes" class="btn btn-warning btn-block" type="button">Reset</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 text-right">
-                        <A class="btn btn-primary btn-large" type="button" href="/admin/classes/create">New</A>
-                    </div>
-                </div>
-            </form>
-        </div> --}}
         <div class="widget-content">
             <div class="table-responsive">
                 <table id="tblPembayaran" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Nomor</th>
+                            <th>Status</th>
+                            <th>No Invoice</th>
+                            <th>Bukti</th>
+                            <th>Price</th>
                             <th>Date</th>
                             <th>Class</th>
-                            <th>Category</th>
-                            <th>Instructor</th>
-                            <th>Data</th>
+                            <th>User</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($pembayaran as $key=> $p)
                         <tr>
-                            {{-- <td>
-                                <span hidden>
-                                    {{Carbon\Carbon::parse($v->date_start)->format('U')}}
+                            <td>{{$key+1}}</td>
+                            <td><span class="badge badge-primary">
+                                    {{$p->status?'lunas':'belum lunas'}}
                                 </span>
-                                {{Carbon\Carbon::parse($v->date_start)->format('d-m-Y')}}
+                            </td>
+                            <td>{{$p->no_invoice}}</td>
+                            <td>
+                                <a class="grid-item" href="/getBerkas?rf={{$p->file}}" data-lightbox="gallery-item"><img
+                                        src="/getBerkas?rf={{$p->file}}" width="110px"></a>
+                            </td>
+                            <td>{{$p->price_final}}</td>
+                            <td>
+                                {{-- <span hidden>
+                                    {{Carbon\Carbon::parse($p->date_start)->format('U')}}
+                                </span> --}}
+                                {{Carbon\Carbon::parse($p->date_start)->format('d-m-Y')}}
                                 s/d
-                                {{Carbon\Carbon::parse($v->date_end)->format('d-m-Y')}}
+                                {{Carbon\Carbon::parse($p->date_end)->format('d-m-Y')}}
                             </td>
-                            <td>{{$v->title}}</td>
-                            <td>{{$v->category}}</td>
+                            <td>{{$p->title}}</td>
+                            <td>{{$p->name}}</td>
                             <td>
-                                @foreach ($v->instructor_list as $i)
-                                <span class="badge badge-primary">{{$i->name}}</span>
-                                @endforeach
+                                <button class="btn bs-tooltip btn-warning" title="Publish Certificate"
+                                    onclick="publichCertificate({{$p->id}},{{$p->certificate}})"><i
+                                        class='bx bxs-file-doc'></i></button>
+                                <button class="btn bs-tooltip btn-info" title="Approved"
+                                    onclick="approved({{$p->id}},{{$p->status}})"><i class='bx bx-wallet'></i></button>
                             </td>
-                            <td>
-                                <button class="btn bs-tooltip btn-info" title="Pricing"
-                                    onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
-                                <button class="btn bs-tooltip btn-success" title="File"
-                                    onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
-                                <a class="btn bs-tooltip btn-primary" title="Event"
-                                    href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
-                            </td>
-                            <td>
-                                <a class="btn bs-tooltip btn-warning" title="Edit"
-                                    href="/admin/classes/{{$v->id}}/edit"><i class="bx bx-edit"></i></a>
-                                <button class="btn bs-tooltip btn-danger" title="Delete"
-                                    onclick="deleteClasses({{$v->id}})"><i class="bx bx-trash"></i></button>
-                                <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')</form>
-                            </td> --}}
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
+                <form action="#" method="post" id="formpembayaran">@csrf <input type="text" name="id" id="id" hidden>
+                    <input type="text" name="certificate" id="certificate" hidden>
+                    <input type="text" name="status" id="status" hidden>
+                </form>
             </div>
         </div>
     </div>
@@ -87,6 +79,39 @@
 @section('custom-js')
 <script>
     createDataTable('#tblPembayaran');
-
+    function approved(id,status) {
+		swal({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Done',
+			padding: '2em'
+		}).then(function(result) {
+			if (result.value) {
+				$('#formpembayaran').attr('action','/admin/pembayaran/approved');
+                $('#id').val(id);
+                $('#status').val(status);
+				$('#formpembayaran').submit();
+			}
+		})
+	}
+    function publichCertificate(id,certificate) {
+		swal({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Done',
+			padding: '2em'
+		}).then(function(result) {
+            if (result.value) {
+                $('#formpembayaran').attr('action','/admin/pembayaran/certificate');
+                $('#id').val(id);
+                $('#certificate').val(certificate);
+				$('#formpembayaran').submit();
+			}
+		})
+	}
 </script>
 @endsection
