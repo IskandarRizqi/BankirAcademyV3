@@ -234,6 +234,9 @@ class ClassesController extends Controller
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
 		$data['name'] = 'John Doe';
 		$data['contents'] = str_replace("[[date_expired]]",$data['certs']->certificate_expired, str_replace("[[date_active]]",$data['certs']->certificate_created, str_replace("[[class]]",$data['class']->title, str_replace("[[name]]",$data['name'], $data['certs']->content))));
+		if (!$certs) {
+			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
+		}
 
 		// return view('backend/certificate/certificate',$data);
 		
@@ -246,6 +249,9 @@ class ClassesController extends Controller
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
 		$profile = UserProfileModel::where('user_id',Auth::user()->id)->first();
+		if (!$certs) {
+			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
+		}
 		if (!$profile) {
 			return Redirect::back()->withErrors(['error' => 'Lengkapi Prodfile User']);
 		}
