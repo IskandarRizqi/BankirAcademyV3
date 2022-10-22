@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Backend\BannerslideController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,11 +34,19 @@ Route::middleware([IsAdminRoot::class])->group(function () {
 	Route::get('/admin/classes/previewcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
     Route::get('/admin/classes/createcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createcertificate']);
     Route::resource('/admin/instructor', InstructorController::class);
+    Route::resource('/admin/banner', BannerslideController::class);
+    Route::post('/update-banner', [BannerslideController::class, 'updatebanner'])->name('updatebanner');
+    Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
+    Route::post('/admin/pembayaran/approved', [App\Http\Controllers\Backend\PembayaranController::class, 'approved']);
+    Route::post('/admin/pembayaran/certificate', [App\Http\Controllers\Backend\PembayaranController::class, 'publish_certificate']);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
 });
-Route::get('/order', [App\Http\Controllers\Front\OrderController::class, 'index']);
+Route::get('getBerkas', function (Request $r) {
+    return Storage::download($r->rf);
+})->middleware('auth');
+Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);

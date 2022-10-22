@@ -42,7 +42,7 @@
 
                             <div class="col-md-10 col-lg-12">
                                 <h3>{{$class->title}}</h3>
-                                {{$class->content}}
+                                {!!$class->content!!}
                             </div>
 
 
@@ -60,25 +60,19 @@
                                             <tr>
                                                 <th>Timings</th>
                                                 <th>Location</th>
-                                                <th>Events</th>
+                                                <th>Description</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($event as $e)
                                             <tr>
-                                                <td><span class="badge badge-danger">10:00 - 12:00</span></td>
-                                                <td>Main Auditorium</td>
-                                                <td>WWDC Developer Conference</td>
+                                                <td><span
+                                                        class="badge badge-danger">{{$e->time_start.'-'.$e->time_end}}</span>
+                                                </td>
+                                                <td>{{$e->link?$e->link:$e->location}}</td>
+                                                <td>{{$e->description}}</td>
                                             </tr>
-                                            <tr>
-                                                <td><span class="badge badge-danger">12:00 - 12:45</span></td>
-                                                <td>Cafeteria</td>
-                                                <td>Lunch</td>
-                                            </tr>
-                                            <tr>
-                                                <td><span class="badge badge-danger">15:00 - 18:00</span></td>
-                                                <td>Room - 25, 2nd Floor</td>
-                                                <td>Hardware Testing &amp; Evaluation</td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -187,13 +181,13 @@
 
                         </div>
 
-                        <div class="widget clearfix">
+                        {{-- <div class="widget clearfix">
 
                             <h4>Recent Kelas in Video</h4>
                             <iframe src="//player.vimeo.com/video/103927232" width="500" height="250"
                                 allow="autoplay; fullscreen" allowfullscreen></iframe>
 
-                        </div>
+                        </div> --}}
 
 
                     </div>

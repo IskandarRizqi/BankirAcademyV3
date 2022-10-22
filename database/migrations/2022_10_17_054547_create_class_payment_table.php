@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('class_payment', function (Blueprint $table) {
             $table->id();
-			$table->integer('status')->default(0)->comment('0:unpaid;1:paid;');
+            $table->integer('status')->default(0)->comment('0:unpaid;1:paid;');
             $table->bigInteger('user_id');
             $table->bigInteger('class_id');
             $table->integer('unique_code');
@@ -24,6 +24,8 @@ return new class extends Migration
             $table->json('additional_discount')->nullable();
             $table->double('price_final');
             $table->dateTime('expired')->nullable();
+            $table->string('no_invoice');
+            $table->string('file');
             $table->timestamps();
         });
     }

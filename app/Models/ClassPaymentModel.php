@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClassPaymentModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'class_payment';
 	protected $fillable = [
 		'status',
@@ -17,5 +17,7 @@ class ClassPaymentModel extends Model
 		'price',
 		'price_final',
 		'expired',
+		'no_invoice',
+		'file'
 	];
 }

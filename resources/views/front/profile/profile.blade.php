@@ -33,34 +33,97 @@
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
                                         <div class="table-responsive">
-                                            <table id="datatable1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                            <table id="datatable1" class="table table-striped table-bordered"
+                                                cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr class="text-center">
-                                                        <th>No</th>
+                                                        {{-- <th>No</th>
                                                         <th>Nomor order</th>
                                                         <!-- <th>Jatuh tempo</th> -->
                                                         <th>Produk</th>
                                                         <th>Rincian</th>
                                                         <th>Metode bayar</th>
                                                         <th>Status</th>
+                                                        <th>Aksi</th> --}}
+                                                        <th>No</th>
+                                                        <th>Status</th>
+                                                        <th>Nama Class</th>
+                                                        <th>Expired</th>
+                                                        <th>Price Final</th>
+                                                        <th>Bukti</th>
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
+                                                    @foreach ($payment as $key => $d)
                                                     <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td>{{$key+1}}</td>
+                                                        <td><span class="badge badge-primary">
+                                                                {{$d->status?'lunas':'belum lunas'}}
+                                                            </span>
+                                                        </td>
+                                                        <td>{{$d->title}}</td>
+                                                        <td>{{$d->expired}}</td>
+                                                        <td>{{ numfmt_format_currency(numfmt_create('id_ID',
+                                                            \NumberFormatter::CURRENCY),$d->price_final,"IDR") }}</td>
+                                                        <td>
+                                                            <img src="/getBerkas?rf={{$d->file}}" alt="" width="130px">
+                                                        </td>
+                                                        <td>
+                                                            <!-- Button trigger modal -->
+                                                            <button id="btnModal" type="button" class="btn btn-primary"
+                                                                data-toggle="modal" data-target="#bayarModal"
+                                                                data-class="{{$d->class_id}}" data-payment="{{$d->id}}">
+                                                                Bayar
+                                                            </button>
+                                                        </td>
                                                     </tr>
+                                                    @endforeach
                                                 </tbody>
                                             </table>
 
-
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="bayarModal" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="bayar" method="POST"
+                                                            enctype="multipart/form-data">
+                                                            @csrf
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="text" id="class_id" name="class_id" hidden>
+                                                                <input type="text" id="payment_id" name="payment_id"
+                                                                    hidden>
+                                                                <div class="col-lg-12 bottommargin">
+                                                                    <label>Upload Bukti Pembayaran:</label><br>
+                                                                    <input id="input-3" name="input2[]" type="file"
+                                                                        class="file" data-show-upload="false"
+                                                                        data-show-caption="true"
+                                                                        data-show-preview="true" accept="image/*">
+                                                                    @error('input2')
+                                                                    <span class="text-danger" role="alert">
+                                                                        <strong>{{$message}}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary">Save
+                                                                    changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
 
@@ -72,11 +135,11 @@
                                                 <div class="row">
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Name</label>
-                                                        <input type="text" class="form-control" value="{{Auth::user()->name}}">
+                                                        <input type="text" class="form-control" value="">
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Email</label>
-                                                        <input type="email" class="form-control" value="{{Auth::user()->email}}" readonly>
+                                                        <input type="email" class="form-control" value="" readonly>
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Password</label>
@@ -100,8 +163,10 @@
                                                 <div class="row">
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Nama lengkap</label>
-                                                        <input type="text" class="form-control" name="nama_lengkap" value="{{$pfl['name']}}">
-                                                        <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                                                        <input type="text" class="form-control" name="nama_lengkap"
+                                                            value="{{$pfl['name']}}">
+                                                        <input type="hidden" name="user_id"
+                                                            value="{{Auth::user()->id}}">
                                                         @if($errors->has('nama_lengkap'))
                                                         <div class="error" style="color: red; display:block;">
                                                             {{ $errors->first('nama_lengkap') }}
@@ -110,7 +175,8 @@
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Nomor handphone</label>
-                                                        <input type="text" class="form-control" name="nomor_handphone" value="{{$pfl['phone']}}">
+                                                        <input type="text" class="form-control" name="nomor_handphone"
+                                                            value="{{$pfl['phone']}}">
                                                         @if($errors->has('nomor_handphone'))
                                                         <div class="error" style="color: red; display:block;">
                                                             {{ $errors->first('nomor_handphone') }}
@@ -119,14 +185,16 @@
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Company</label>
-                                                        <input type="text" class="form-control" name="company" value="{{$pfl['instansi']}}">
+                                                        <input type="text" class="form-control" name="company"
+                                                            value="{{$pfl['instansi']}}">
                                                         <small class="text-danger">Jika mempunyai wajib di isi</small>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <label for="form-control">Tanggal lahir</label>
-                                                        <input type="date" name="tanggal_lahir" class="form-control" value="{{$pfl['tanggal_lahir']}}">
+                                                        <input type="date" name="tanggal_lahir" class="form-control"
+                                                            value="{{$pfl['tanggal_lahir']}}">
                                                         @if($errors->has('tanggal_lahir'))
                                                         <div class="error" style="color: red; display:block;">
                                                             {{ $errors->first('tanggal_lahir') }}
@@ -150,7 +218,8 @@
                                                 <div class="row">
                                                     <div class="col-lg-12">
                                                         <label for="form-control">Alamat</label>
-                                                        <textarea class="form-control" name="alamat">{{$pfl['description']}}</textarea>
+                                                        <textarea class="form-control"
+                                                            name="alamat">{{$pfl['description']}}</textarea>
                                                         @if($errors->has('alamat'))
                                                         <div class="error" style="color: red; display:block;">
                                                             {{ $errors->first('alamat') }}
@@ -163,7 +232,8 @@
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Nama lengkap</label>
                                                         <input type="text" class="form-control" name="nama_lengkap">
-                                                        <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                                                        <input type="hidden" name="user_id"
+                                                            value="{{Auth::user()->id}}">
                                                         @if($errors->has('nama_lengkap'))
                                                         <div class="error" style="color: red; display:block;">
                                                             {{ $errors->first('nama_lengkap') }}
@@ -223,12 +293,14 @@
                                                 @endif
                                                 <div class="row">
                                                     <div class="col-lg-12">
-                                                        <button class="button button-small" type="submit">Update profile</button>
+                                                        <button class="button button-small" type="submit">Update
+                                                            profile</button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="divider divider-border divider-center"><i class="icon-email2"></i></div>
+                                        <div class="divider divider-border divider-center"><i class="icon-email2"></i>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -252,7 +324,10 @@
 <script>
     $(document).ready(function() {
 
-
+$('#btnModal').click(function () {
+    $('#class_id').val($(this).attr('data-class'))
+    $('#payment_id').val($(this).attr('data-payment'))
+})
         $('#destroy').click(function(event) {
             var form = $(this).closest("form");
             event.preventDefault();
