@@ -29,10 +29,19 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class, 'setpricing']);
     Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class, 'setcontent']);
     Route::post('/admin/classes/setevent', [App\Http\Controllers\Admin\ClassesController::class, 'setevent']);
+    Route::post('/admin/classes/inputcertificatetemplate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'setcertificate']);
     Route::get('/admin/classes/createevent/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createevent']);
+	Route::get('/admin/classes/previewcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
+    Route::get('/admin/classes/createcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createcertificate']);
     Route::resource('/admin/instructor', InstructorController::class);
     Route::resource('/admin/banner', BannerslideController::class);
     Route::post('/update-banner', [BannerslideController::class, 'updatebanner'])->name('updatebanner');
+    Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
+    Route::post('/admin/pembayaran/approved', [App\Http\Controllers\Backend\PembayaranController::class, 'approved']);
+    Route::post('/admin/pembayaran/certificate', [App\Http\Controllers\Backend\PembayaranController::class, 'publish_certificate']);
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

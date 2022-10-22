@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\ClassesModel;
+use App\Models\ClassEventModel;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -21,6 +22,8 @@ class HomeController extends Controller
     {
         $data['pop'] = ClassesModel::where('unique_id', '!=', $unique_id)->limit(3)->inRandomOrder()->get();
         $data['class'] = ClassesModel::where('unique_id', $unique_id)->first();
+        $data['event'] = ClassEventModel::where('class_id', $data['class']->id)->get();
+
         return view('front.kelas.detail', $data);
     }
 }

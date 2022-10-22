@@ -4,13 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
+use App\Models\ClassCertificateTemplate;
 use App\Models\ClassPricingModel;
+use App\Models\ClassParticipantModel;
 use App\Models\ClassContentModel;
 use App\Models\ClassEventModel;
 use App\Models\InstructorModel;
+use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use PDF;
 
 class ClassesController extends Controller
 {
@@ -183,6 +188,84 @@ class ClassesController extends Controller
 		$data['event'] = ClassEventModel::where('class_id', $id)->get();
 
 		return view('backend/classes/classevent',$data);
+	}
+
+	public function createcertificate(Request $r,$id)
+	{
+		$data['class'] = ClassesModel::where('id', $id)->first();
+		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
+
+		return view('backend/classes/classcertificatetemplate',$data);
+	}
+
+	public function setcertificate(Request $r,$id)
+	{
+		$tobeins = [
+			'content'=>$r->txaContent,
+			'page_size' => $r->slcPageSize,
+			'layout' => 0,
+			'certificate_created' => $r->datCertificateCreated,
+			'certificate_expired' => $r->datCertificateExpired,
+		];
+
+		if ($r->file('filBackground')) {
+			$name = $r->file('filBackground')->getClientOriginalName();
+			$size = $r->file('filBackground')->getSize();
+	
+			if ($size >= 5548576) {
+				return Redirect::back()->withErrors(['error' => 'Ukuran File Melebihi 5 MB']);
+			}
+	
+			$filename = time() . '-' . $name;
+			$file = $r->file('filBackground');
+			$file->move(public_path('image/classes/cert'), $filename);
+
+			$tobeins['background'] = ('image/classes/cert/' . $filename);
+		}
+		
+
+		ClassCertificateTemplate::UpdateOrCreate(['class_id'=>$id],$tobeins);
+
+		return redirect('/admin/classes')->with('success','Certificate Updated');
+	}
+
+	public function previewcertificate(Request $r,$id)
+	{
+		$data['class'] = ClassesModel::where('id', $id)->first();
+		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
+		$data['name'] = 'John Doe';
+		$data['contents'] = str_replace("[[date_expired]]",$data['certs']->certificate_expired, str_replace("[[date_active]]",$data['certs']->certificate_created, str_replace("[[class]]",$data['class']->title, str_replace("[[name]]",$data['name'], $data['certs']->content))));
+		if (!$certs) {
+			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
+		}
+
+		// return view('backend/certificate/certificate',$data);
+		
+		$pdf = PDF::loadView('backend/certificate/certificate', $data);
+		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
+	}
+
+	public function getCertificate(Request $r,$id)
+	{
+		$data['class'] = ClassesModel::where('id', $id)->first();
+		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
+		$profile = UserProfileModel::where('user_id',Auth::user()->id)->first();
+		if (!ClassParticipantModel::where('user_id',Auth::user()->id)->where('class_id',$id)->where('certificate',1)) {
+			return Redirect::back()->withErrors(['error' => 'Certificate belum diberikan']);
+		}
+		if (!$certs) {
+			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
+		}
+		if (!$profile) {
+			return Redirect::back()->withErrors(['error' => 'Lengkapi Prodfile User']);
+		}
+		$data['name'] = $profile->name;
+		$data['contents'] = str_replace("[[date_expired]]",$data['certs']->certificate_expired, str_replace("[[date_active]]",$data['certs']->certificate_created, str_replace("[[class]]",$data['class']->title, str_replace("[[name]]",$data['name'], $data['certs']->content))));
+
+		// return view('backend/certificate/certificate',$data);
+		
+		$pdf = PDF::loadView('backend/certificate/certificate', $data);
+		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
 	}
 
 	public function setevent(Request $r)
