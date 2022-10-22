@@ -28,6 +28,7 @@
                             <th>Price</th>
                             <th>Date</th>
                             <th>Class</th>
+                            <th>Certificate</th>
                             <th>User</th>
                             <th>Action</th>
                         </tr>
@@ -36,7 +37,7 @@
                         @foreach ($pembayaran as $key=> $p)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td><span class="badge badge-primary">
+                            <td><span class="badge badge-primary text-uppercase">
                                     {{$p->status?'lunas':'belum lunas'}}
                                 </span>
                             </td>
@@ -55,6 +56,10 @@
                                 {{Carbon\Carbon::parse($p->date_end)->format('d-m-Y')}}
                             </td>
                             <td>{{$p->title}}</td>
+                            <td><span class="badge badge-primary text-uppercase">
+                                    {{$p->status?'ada':'tidak ada'}}
+                                </span>
+                            </td>
                             <td>{{$p->name}}</td>
                             <td>
                                 <button class="btn bs-tooltip btn-warning" title="Publish Certificate"
