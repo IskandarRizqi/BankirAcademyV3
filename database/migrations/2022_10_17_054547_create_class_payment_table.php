@@ -25,6 +25,7 @@ return new class extends Migration
             $table->double('price_final');
             $table->dateTime('expired')->nullable();
             $table->string('no_invoice');
+            $table->string('file');
             $table->timestamps();
         });
     }

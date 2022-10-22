@@ -17,6 +17,7 @@ class ClassPaymentModel extends Model
 		'price',
 		'price_final',
 		'expired',
-		'no_invoice'
+		'no_invoice',
+		'file'
 	];
 }
