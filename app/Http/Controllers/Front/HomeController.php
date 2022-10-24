@@ -7,14 +7,18 @@ use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
         $data['bannerslide'] = BannerModel::get();
-        $data['pop'] = ClassesModel::limit(5)->get();
-        // return $data['pop'];
+        $data['pop'] = ClassesModel::limit(6)->get();
+        $data['message'] = '';
+        if (Auth::user()) {
+            $data['message'] = 'Login Berhasil';
+        }
         return view('front.home.home', $data);
     }
 

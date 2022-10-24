@@ -6,13 +6,11 @@
 @if(isset($bannerslide))
 <section id="slider" class="slider-element h-auto" style="background-color: #222;">
     <div class="slider-inner">
-        <div class="owl-carousel carousel-widget" data-margin="0" data-items="1" data-pagi="false" data-loop="true" data-animate="fadeIn" data-speed="450" data-autoplay="5000">
-
+        <div class="owl-carousel carousel-widget" data-margin="0" data-items="1" data-pagi="false" data-loop="true"
+            data-animate="fadeIn" data-speed="450" data-autoplay="5000">
             @foreach($bannerslide as $key => $value)
             <a href="#"><img src="/image/{{$value->image}}" alt="Slider"></a>
             @endforeach
-
-
         </div>
     </div>
 </section>
@@ -130,267 +128,281 @@
 </style>
 <section id="content">
     <div class="content-wrap" style="padding: 0px;">
-
-        <div class=" section border-top-0 m-0">
+        <div class="section border-top-0 mb-6">
             <div class="container text-center">
-
                 <div class="heading-block center">
                     <h2>SEMUA KELAS</h2>
                 </div>
-                <!-- <div class="row" id="sld1">
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
+                {{-- <div class="row" id="sld"> --}}
+                    <div class="row" id="">
+                        @foreach ($pop as $p)
+                        <div class="col-lg-4 mb-4">
+                            <div class="card text-white card-has-bg click-col"
+                                style="background-image:url('<?= $p->image ?>');">
+                                <img class="card-img d-none" src="<?= $p->image ?>">
+                                <div class="card-img-overlay d-flex flex-column">
+                                    <div class="card-body">
+                                        <!-- <small class="card-meta mb-2">Thought Leadership</small> -->
+                                        <h4 class="card-title mt-0 "><a class="text-white" herf="#">{{$p->title}}</a>
+                                        </h4>
+                                        <small><i class="far fa-clock"></i> {{
+                                            \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }} - {{
+                                            \Carbon\Carbon::parse($p->date_end)->format('F d, Y') }}</small>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="media">
+                                            <img class="mr-3 rounded-circle"
+                                                src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}"
+                                                alt="Generic placeholder image" style="max-width:50px">
+                                            <div class="media-body">
+                                                <h6 class="my-0 text-white d-block"> {{$p->instructor_list[0]->name}}
+                                                </h6>
+                                                <small>{{$p->instructor_list[0]->title}}</small>
+                                            </div>
+                                        </div>
+                                        @auth
+                                        <a href="class/{{$p->unique_id}}/{{$p->title}}">
+                                            <button class="button button-circle" width='100%'>Detail</button>
+                                        </a>
+                                        @else
+                                        <a class="button button-circle" data-toggle="modal" data-target="#modelId"
+                                            data-backdrop="static" data-keyboard="false">Detail</a>
+                                        @endauth
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry event col-4">
-                        <div class="grid-inner row align-items-center no-gutters p-4">
-                            <div class="entry-image col-md-4 mb-md-0">
-                                <a href="#">
-                                    <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Inventore voluptates velit totam ipsa tenetur">
-                                    <div class="entry-date">10<span>Apr</span></div>
-                                </a>
-                            </div>
-                            <div class="col-md-8 pl-md-4">
-                                <div class="entry-title title-xs">
-                                    <h2><a href="#">Inventore voluptates velit totam ipsa
-                                            tenetur</a></h2>
-                                </div>
-                                <div class="entry-meta">
-                                    <ul>
-                                        <li><a href="#"><i class="icon-time"></i> 11:00 -
-                                                19:00</a></li>
-                                        <li><a href="#"><i class="icon-map-marker2"></i>
-                                                Melbourne, Australia</a></li>
-                                    </ul>
-                                </div>
-                                <div class="entry-content">
-                                    <a href="#" class="btn btn-secondary" disabled="disabled">Buy Tickets</a> <a href="#" class="btn btn-danger">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <div class="row" id="sld">
-                    @foreach ($pop as $p)
+                    {{--
+                </div> --}}
+            </div>
+        </div>
+
+        <div class="section border-top-0 mb-6">
+            <div class="container text-center">
+                <div class="heading-block center">
+                    <h2>Kelas</h2>
+                </div>
+                <div class="row">
                     <div class="col-lg-4 mb-4">
-                        <div class="card text-white card-has-bg click-col" style="background-image:url('<?= $p->image ?>');">
-                            <img class="card-img d-none" src="<?= $p->image ?>">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    <!-- <small class="card-meta mb-2">Thought Leadership</small> -->
-                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">{{$p->title}}</a></h4>
-                                    <small><i class="far fa-clock"></i> {{ \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }} - {{ \Carbon\Carbon::parse($p->date_end)->format('F d, Y') }}</small>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        <img class="mr-3 rounded-circle" src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}" alt="Generic placeholder image" style="max-width:50px">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block"> {{$p->instructor_list[0]->name}}</h6>
-                                            <small>{{$p->instructor_list[0]->title}}</small>
-                                        </div>
-                                    </div>
 
-
-                                    @auth
-                                    <a href="class/{{$p->unique_id}}/{{$p->title}}">
-                                        <button class="button button-circle" width='100%'>Detail</button>
-                                    </a>
-                                    @else
-                                    <a class="button button-circle" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Detail</a>
-                                    @endauth
+                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+                            data-items-sm="1" data-items-md="1" data-items-xl="1">
+                            <div class="oc-item">
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    @endforeach
-                    <!-- <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tree,nature');">
-                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tree,nature" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    <small class="card-meta mb-2">Thought Leadership</small>
-                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
-                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                            <div class="oc-item">
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
-                                            <small>Director of UI/UX</small>
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial mb-2"
+                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img
+                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>Incidunt deleniti blanditiis quas</p>
+                                        <div class="testi-meta">
+                                            John Doe
+                                            <span>XYZ Inc.</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?computer,design');">
-                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?computer,design" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                    <div class="col-lg-8 mb-4">
+                        <div id="img_card" class="card text-white card-has-bg click-col"
+                            style="background-image:url('{{asset('front/one-page/images/outdoor/3Copy.jpg')}}'); height: 525px !important; background-size:contain !important;">
                             <div class="card-img-overlay d-flex flex-column">
                                 <div class="card-body">
-                                    <small class="card-meta mb-2">Thought Leadership</small>
-                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
-                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
+                                    {{-- --}}
                                 </div>
                                 <div class="card-footer">
                                     <div class="media">
-                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
-                                            <small>Director of UI/UX</small>
-                                        </div>
+                                        {{-- --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tech,street');">
-                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    <small class="card-meta mb-2">Thought Leadership</small>
-                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
-                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
-                                            <small>Director of UI/UX</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tree,nature');">
-                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tree,nature" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    <small class="card-meta mb-2">Thought Leadership</small>
-                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
-                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
-                                            <small>Director of UI/UX</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?computer,design');">
-                            <img class="card-img d-none" src="https://source.unsplash.com/600x900/?computer,design" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    <small class="card-meta mb-2">Thought Leadership</small>
-                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
-                                    <small><i class="far fa-clock"></i> October 15, 2020</small>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
-                                        <div class="media-body">
-                                            <h6 class="my-0 text-white d-block">Oz Coruhlu</h6>
-                                            <small>Director of UI/UX</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="section border-top-0 mb-6">
+            <div class="container text-center">
+                <div class="heading-block center">
+                    <h2>Testimonial</h2>
+                </div>
+                <div id="oc-testi"
+                    class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                    data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage"
+                            style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                            <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                <div class="oc-item">
+                                    <div class="testimonial">
+                                        <div class="testi-image">
+                                            <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                    alt="Customer Testimonails"></a>
+                                        </div>
+                                        <div class="testi-content">
+                                            <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur ullam
+                                                quibusdam
+                                                cum libero illo rerum repellendus!</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
+                                class="icon-angle-left"></i></button><button type="button" role="presentation"
+                            class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
+                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
+                            role="button" class="owl-dot active"><span></span></button></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section border-top-0 mb-6">
+            <div class="container text-center">
+                <div class="heading-block center">
+                    <h2>Partner</h2>
+                </div>
+                <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+                    data-items-sm="1" data-items-md="2" data-items-xl="3">
+                    <div class="oc-item">
+                        {{-- <div class="testimonial"
+                            style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                            <div class="testi-content">
+                                <div class="testi-image">
+                                    <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                            alt="Customer Testimonails"></a>
+                                </div>
+                                <p>Incidunt deleniti blanditiis quas</p>
+                                <div class="testi-meta">
+                                    John Doe
+                                    <span>XYZ Inc.</span>
+                                </div>
+                            </div>
+                        </div> --}}
+                        <img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}" width="310px" height="200px"
+                            alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
 </section>
 <!-- #content end -->
 

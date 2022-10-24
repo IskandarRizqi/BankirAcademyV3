@@ -9,8 +9,10 @@
             <div class="row col-mb-30">
 
                 <div class="col-md-6 text-center text-md-left">
-                    Copyrights skill academy &copy; {{ \Carbon\Carbon::now()->year }} All Rights Reserved by AKARINDO<br>
-                    <div class="copyright-links">support By CV. Anugrah Karya Indonesia <a href="https://akarindo.id/">AKARINDO.ID</a></div>
+                    Copyrights skill academy &copy; {{ \Carbon\Carbon::now()->year }} All Rights Reserved by
+                    AKARINDO<br>
+                    <div class="copyright-links">support By CV. Anugrah Karya Indonesia <a
+                            href="https://akarindo.id/">AKARINDO.ID</a></div>
                 </div>
 
                 <div class="col-md-6 text-center text-md-right">
@@ -68,14 +70,14 @@
 </footer><!-- #footer end -->
 
 </div><!-- #wrapper end -->
-
 <!-- Go To Top
 	============================================= -->
 <div id="gotoTop" class="icon-angle-up"></div>
 
 <!-- JavaScripts
 ============================================= -->
-<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+    crossorigin="anonymous"></script>
 <script src="{{asset('front/js/plugins.min.js')}}"></script>
 <!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
 
@@ -113,7 +115,6 @@
     var $ = jQuery.noConflict();
 
     tpj(document).ready(function() {
-
         var apiRevoSlider = tpj('#rev_slider_ishop').show().revolution({
             sliderType: "standard",
             jsFileLocation: "include/rs-plugin/js/",
