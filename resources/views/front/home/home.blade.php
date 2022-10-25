@@ -182,180 +182,88 @@
         <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
-                    <h2>Kelas</h2>
+                    <h2>Kelas Terdekat</h2>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 mb-4">
-
                         <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
                             data-items-sm="1" data-items-md="1" data-items-xl="1">
+                            @foreach ($kelas_mingguan as $km)
                             <div class="oc-item">
-                                <div class="testimonial mb-2"
+                                @foreach ($km as $k)
+                                {{-- <div class="testimonial mb-2"
                                     style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="oc-item">
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial mb-2"
-                                    style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                                    <div class="testi-content">
-                                        <div class="testi-image">
-                                            <a href="#"><img
-                                                    src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
-                                        <p>Incidunt deleniti blanditiis quas</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 mb-4">
-                        <div id="img_card" class="card text-white card-has-bg click-col"
-                            style="background-image:url('{{asset('front/one-page/images/outdoor/3Copy.jpg')}}'); height: 525px !important; background-size:contain !important;">
-                            <div class="card-img-overlay d-flex flex-column">
-                                <div class="card-body">
-                                    {{-- --}}
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        {{-- --}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section border-top-0 mb-6">
-            <div class="container text-center">
-                <div class="heading-block center">
-                    <h2>Testimonial</h2>
-                </div>
-                <div id="oc-testi"
-                    class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                    data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
-                    <div class="owl-stage-outer">
-                        <div class="owl-stage"
-                            style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
-                            <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                                <div class="oc-item">
-                                    <div class="testimonial">
-                                        <div class="testi-image">
-                                            <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
-                                                    alt="Customer Testimonails"></a>
-                                        </div>
+                                    --}}
+                                    <div class="testimonial mb-2" style="background-color: #E9EEF0">
                                         <div class="testi-content">
-                                            <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur ullam
-                                                quibusdam
-                                                cum libero illo rerum repellendus!</p>
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{$k->image}}" alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>{{$k->title}}</p>
+                                            <div class="testi-meta">
+                                                {{$k->instructor_list[0]->name}}
+                                                <span>{{$k->instructor_list[0]->title}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @endforeach
+                                {{-- <div class="oc-item">
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
                                             <div class="testi-meta">
                                                 John Doe
                                                 <span>XYZ Inc.</span>
@@ -363,52 +271,272 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="oc-item">
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial mb-2"
+                                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                        <div class="testi-content">
+                                            <div class="testi-image">
+                                                <a href="#"><img
+                                                        src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <p>Incidunt deleniti blanditiis quas</p>
+                                            <div class="testi-meta">
+                                                John Doe
+                                                <span>XYZ Inc.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> --}}
+                            </div>
+                        </div>
+                        <div class="col-lg-8 mb-4">
+                            <div id="img_card" class="card text-white card-has-bg click-col"
+                                style="background-image:url('{{asset('front/one-page/images/outdoor/3Copy.jpg')}}'); height: 525px !important; background-size:contain !important;">
+                                <div class="card-img-overlay d-flex flex-column">
+                                    <div class="card-body">
+                                        {{-- --}}
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="media">
+                                            {{-- --}}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
-                                class="icon-angle-left"></i></button><button type="button" role="presentation"
-                            class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
-                            role="button" class="owl-dot active"><span></span></button></div>
                 </div>
             </div>
-        </div>
 
-        <div class="section border-top-0 mb-6">
-            <div class="container text-center">
-                <div class="heading-block center">
-                    <h2>Partner</h2>
-                </div>
-                <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
-                    data-items-sm="1" data-items-md="2" data-items-xl="3">
-                    <div class="oc-item">
-                        {{-- <div class="testimonial"
-                            style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                            <div class="testi-content">
-                                <div class="testi-image">
-                                    <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                            alt="Customer Testimonails"></a>
+            <div class="section border-top-0 mb-6">
+                <div class="container text-center">
+                    <div class="heading-block center">
+                        <h2>Testimonial</h2>
+                    </div>
+                    <div id="oc-testi"
+                        class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                        data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
+                        <div class="owl-stage-outer">
+                            <div class="owl-stage"
+                                style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="oc-item">
+                                        <div class="testimonial">
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <div class="testi-content">
+                                                <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
+                                                    ullam
+                                                    quibusdam
+                                                    cum libero illo rerum repellendus!</p>
+                                                <div class="testi-meta">
+                                                    John Doe
+                                                    <span>XYZ Inc.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p>Incidunt deleniti blanditiis quas</p>
-                                <div class="testi-meta">
-                                    John Doe
-                                    <span>XYZ Inc.</span>
+                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="oc-item">
+                                        <div class="testimonial">
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <div class="testi-content">
+                                                <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
+                                                    ullam
+                                                    quibusdam
+                                                    cum libero illo rerum repellendus!</p>
+                                                <div class="testi-meta">
+                                                    John Doe
+                                                    <span>XYZ Inc.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="oc-item">
+                                        <div class="testimonial">
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <div class="testi-content">
+                                                <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
+                                                    ullam
+                                                    quibusdam
+                                                    cum libero illo rerum repellendus!</p>
+                                                <div class="testi-meta">
+                                                    John Doe
+                                                    <span>XYZ Inc.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="oc-item">
+                                        <div class="testimonial">
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <div class="testi-content">
+                                                <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
+                                                    ullam
+                                                    quibusdam
+                                                    cum libero illo rerum repellendus!</p>
+                                                <div class="testi-meta">
+                                                    John Doe
+                                                    <span>XYZ Inc.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="oc-item">
+                                        <div class="testimonial">
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <div class="testi-content">
+                                                <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
+                                                    ullam
+                                                    quibusdam
+                                                    cum libero illo rerum repellendus!</p>
+                                                <div class="testi-meta">
+                                                    John Doe
+                                                    <span>XYZ Inc.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="oc-item">
+                                        <div class="testimonial">
+                                            <div class="testi-image">
+                                                <a href="#"><img src="{{asset('front/one-page/images/team/3.jpg')}}"
+                                                        alt="Customer Testimonails"></a>
+                                            </div>
+                                            <div class="testi-content">
+                                                <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
+                                                    ullam
+                                                    quibusdam
+                                                    cum libero illo rerum repellendus!</p>
+                                                <div class="testi-meta">
+                                                    John Doe
+                                                    <span>XYZ Inc.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div> --}}
-                        <img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}" width="310px" height="200px"
-                            alt="">
+                        </div>
+                        {{-- <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
+                                    class="icon-angle-left"></i></button><button type="button" role="presentation"
+                                class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
+                        <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
+                                role="button" class="owl-dot active"><span></span></button></div> --}}
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="section border-top-0 mb-6">
+                <div class="container text-center">
+                    <div class="heading-block center">
+                        <h2>Partner</h2>
+                    </div>
+                    <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+                        data-items-sm="1" data-items-md="2" data-items-xl="3">
+                        <div class="oc-item">
+                            {{-- <div class="testimonial"
+                                style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
+                                <div class="testi-content">
+                                    <div class="testi-image">
+                                        <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                                alt="Customer Testimonails"></a>
+                                    </div>
+                                    <p>Incidunt deleniti blanditiis quas</p>
+                                    <div class="testi-meta">
+                                        John Doe
+                                        <span>XYZ Inc.</span>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            <img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}" width="310px"
+                                height="200px" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
 </section>
 <!-- #content end -->
 
 @include("front.layout.footer")
 <script>
     $(document).ready(function() {
+        @auth
+        iziToast.success({
+                    title: 'Sukses',
+                    message: 'Login Sukses',
+                    position: 'topRight',
+                });
+        @endauth
         $('#sldall').slick({
             dots: true,
             infinite: false,

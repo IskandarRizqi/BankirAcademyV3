@@ -201,8 +201,6 @@
                 password: passwordlogin
             },
             success: function(result) {
-                // console.log(result)
-                console.log(result)
                 if (result.role == 0 || result.role == 1) {
                     location.replace("/home")
                 } else {

@@ -1,35 +1,26 @@
 @include("front.layout.head")
 @include("front.layout.topbar")
 @include("front.layout.header")
-
+@error('error')
+{{$message}}
+@enderror
 <section id="content">
     <div class="content-wrap" style="padding: 24px;">
         <div class="container clearfix">
-
             <div class="row clearfix">
-
                 <div class="col-md-12">
-
-                    <!-- <img src="images/icons/avatar.jpg" class="alignleft img-circle img-thumbnail my-0" alt="Avatar" style="max-width: 84px;"> -->
-
                     <div class="heading-block border-0">
                         <h3>{{Auth::user()->name}}</h3>
                         <span>Your Profile Bio</span>
                     </div>
-
                     <div class="clear"></div>
-
                     <div class="row clearfix">
-
                         <div class="col-lg-12">
-
                             <div class="tabs tabs-alt clearfix" id="tabs-profile">
-
                                 <ul class="tab-nav clearfix">
                                     <li><a href="#tab-feeds"><i class="icon-credit-cards"></i> Billing class</a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
                                 </ul>
-
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
                                         <div class="table-responsive">
@@ -37,14 +28,6 @@
                                                 cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr class="text-center">
-                                                        {{-- <th>No</th>
-                                                        <th>Nomor order</th>
-                                                        <!-- <th>Jatuh tempo</th> -->
-                                                        <th>Produk</th>
-                                                        <th>Rincian</th>
-                                                        <th>Metode bayar</th>
-                                                        <th>Status</th>
-                                                        <th>Aksi</th> --}}
                                                         <th>No</th>
                                                         <th>Status</th>
                                                         <th>Nama Class</th>
@@ -54,12 +37,11 @@
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
-
                                                 <tbody>
                                                     @foreach ($payment as $key => $d)
                                                     <tr>
                                                         <td>{{$key+1}}</td>
-                                                        <td><span class="badge badge-primary">
+                                                        <td><span class="badge badge-primary text-uppercase">
                                                                 {{$d->status?'lunas':'belum lunas'}}
                                                             </span>
                                                         </td>
@@ -68,22 +50,36 @@
                                                         <td>{{ numfmt_format_currency(numfmt_create('id_ID',
                                                             \NumberFormatter::CURRENCY),$d->price_final,"IDR") }}</td>
                                                         <td>
+                                                            @if ($d->file)
                                                             <img src="/getBerkas?rf={{$d->file}}" alt="" width="130px">
+                                                            @endif
                                                         </td>
                                                         <td>
-                                                            <!-- Button trigger modal -->
-                                                            <button id="btnModal" type="button" class="btn btn-primary"
-                                                                data-toggle="modal" data-target="#bayarModal"
-                                                                data-class="{{$d->class_id}}" data-payment="{{$d->id}}">
-                                                                Bayar
-                                                            </button>
-															<a class="btn bs-tooltip btn-warning" title="Certificate" href="/admin/classes/certificate/{{$d->class_id}}" target="_blank"><i class="bx bxs-file-pdf"></i></a>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-warning dropdown-toggle btn-sm"
+                                                                    type="button" data-toggle="dropdown"
+                                                                    aria-expanded="false" title="Opsi">
+                                                                    <i class="icon-cog"></i>
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item"
+                                                                        href="/classes/getcertificate/{{$d->class_id}}"
+                                                                        target="_blank">Get
+                                                                        Certificate</a>
+                                                                    <button id="btnModal" type="button"
+                                                                        class="btn btn-primary dropdown-item"
+                                                                        data-toggle="modal" data-target="#bayarModal"
+                                                                        data-class="{{$d->class_id}}"
+                                                                        data-payment="{{$d->id}}" title="Upload Bukti">
+                                                                        Upload Bukti
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
-
                                             <!-- Modal -->
                                             <div class="modal fade" id="bayarModal" tabindex="-1"
                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -125,9 +121,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
-
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
                                         <!-- <div class="title-block">
@@ -155,7 +149,6 @@
                                                 </div>
                                             </form>
                                         </div> -->
-
                                         <div class="title-block">
                                             <h4>Update Profile</h4>
                                             <form action="{{ route('profile.store') }}" method="post">
@@ -304,18 +297,12 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
                 <!-- <div class="w-100 line d-block d-md-none"></div> -->
             </div>
-
         </div>
     </div>
 </section><!-- #content end -->
@@ -349,7 +336,6 @@ $('#btnModal').click(function () {
                             'Your data has been deleted.',
                             'success'
                         )
-
                     }
                 });
         });
