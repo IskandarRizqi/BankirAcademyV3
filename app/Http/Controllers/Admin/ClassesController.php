@@ -19,28 +19,28 @@ use PDF;
 
 class ClassesController extends Controller
 {
-    public function index(Request $r)
+	public function index(Request $r)
 	{
 		$data = [];
 
 		//Param
 		$data['param'] = [];
-		$data['param']['date_start'] = ($r->param_date_start)?$r->param_date_start:Carbon::now()->format('Y-m-d');
-		$data['param']['date_end'] = ($r->param_date_end)?$r->param_date_end:Carbon::now()->addmonth()->format('Y-m-d');
-		$data['param']['category'] = ($r->param_category)?$r->param_category:null;
+		$data['param']['date_start'] = ($r->param_date_start) ? $r->param_date_start : Carbon::now()->format('Y-m-d');
+		$data['param']['date_end'] = ($r->param_date_end) ? $r->param_date_end : Carbon::now()->addmonth()->format('Y-m-d');
+		$data['param']['category'] = ($r->param_category) ? $r->param_category : null;
 
 		//Classes
-		$data['classes'] = ClassesModel::where(function ($q) use ($data){
-			$q->whereBetween('date_start',[$data['param']['date_start'],$data['param']['date_end']])->orWhereBetween('date_end',[$data['param']['date_start'],$data['param']['date_end']]);
+		$data['classes'] = ClassesModel::where(function ($q) use ($data) {
+			$q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
 			if ($data['param']['category']) {
-				$q->where('category',$data['param']['category']);
+				$q->where('category', $data['param']['category']);
 			}
 		})->get();
 
 		//Additional
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
 		$data['instructor'] = InstructorModel::get();
-		
+
 		return view('backend/classes/classes', $data);
 	}
 
@@ -48,26 +48,26 @@ class ClassesController extends Controller
 	{
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
 		$data['instructor'] = InstructorModel::get();
-		
-		return view('backend/classes/inputclasses',$data);
+
+		return view('backend/classes/inputclasses', $data);
 	}
 
 	public function store(Request $r)
 	{
 		$name = $r->file('filClassesImage')->getClientOriginalName();
-        $size = $r->file('filClassesImage')->getSize();
+		$size = $r->file('filClassesImage')->getSize();
 
-        if ($size >= 1048576) {
-            return Redirect::back()->withErrors(['error' => 'Ukuran File Melebihi 1 MB']);
-        }
+		if ($size >= 1048576) {
+			return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+		}
 
-        $filename = time() . '-' . $name;
-        $file = $r->file('filClassesImage');
-        $file->move(public_path('image/classes'), $filename);
+		$filename = time() . '-' . $name;
+		$file = $r->file('filClassesImage');
+		$file->move(public_path('image/classes'), $filename);
 
 
 		ClassesModel::create([
-			'title'=>$r->txtClassesTitle,
+			'title' => $r->txtClassesTitle,
 			'instructor' => json_encode($r->txtClassesInstructor),
 			'category' => $r->slcClassesCategory,
 			'tags' => json_encode($r->slcClassesTags),
@@ -79,23 +79,23 @@ class ClassesController extends Controller
 			'date_end' => $r->datClassesDateEnd,
 		]);
 
-		return redirect('/admin/classes')->with('success','Class Saved');
+		return redirect('/admin/classes')->with('success', 'Class Saved');
 	}
 
-	public function edit(Request $r,$id)
+	public function edit(Request $r, $id)
 	{
 		$data['id'] = $id;
-		$data['classes'] = ClassesModel::where('id',$id)->first();
+		$data['classes'] = ClassesModel::where('id', $id)->first();
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
 		$data['instructor'] = InstructorModel::get();
-		
-		return view('backend/classes/editclasses',$data);
+
+		return view('backend/classes/editclasses', $data);
 	}
 
-	public function update(Request $r,$id)
+	public function update(Request $r, $id)
 	{
 		$tobeins = [
-			'title'=>$r->txtClassesTitle,
+			'title' => $r->txtClassesTitle,
 			'instructor' => json_encode($r->txtClassesInstructor),
 			'category' => $r->slcClassesCategory,
 			'tags' => json_encode($r->slcClassesTags),
@@ -109,11 +109,11 @@ class ClassesController extends Controller
 		if ($r->file('filClassesImage')) {
 			$name = $r->file('filClassesImage')->getClientOriginalName();
 			$size = $r->file('filClassesImage')->getSize();
-	
+
 			if ($size >= 1048576) {
-				return Redirect::back()->withErrors(['error' => 'Ukuran File Melebihi 1 MB']);
+				return Redirect::back()->with('error', 'Ukur, File Melebihi 1 MB');
 			}
-	
+
 			$filename = time() . '-' . $name;
 			$file = $r->file('filClassesImage');
 			$file->move(public_path('image/classes'), $filename);
@@ -124,22 +124,22 @@ class ClassesController extends Controller
 
 		ClassesModel::where('id', $id)->update($tobeins);
 
-		return redirect('/admin/classes')->with('success','Class Updated');
+		return redirect('/admin/classes')->with('success', 'Class Updated');
 	}
-	
+
 	public function destroy($id)
 	{
 		ClassesModel::where('id', $id)->delete();
-		return redirect('/admin/classes')->with('success','Class Deleted');
+		return redirect('/admin/classes')->with('success', 'Class Deleted');
 	}
 
 	public function setpricing(Request $r)
 	{
-		$p=0;
+		$p = 0;
 		if ($r->bolClassPromo) {
-			$p=1;
+			$p = 1;
 		}
-		ClassPricingModel::UpdateOrCreate(['class_id'=>$r->hdnClassesId],[
+		ClassPricingModel::UpdateOrCreate(['class_id' => $r->hdnClassesId], [
 			'class_id' => $r->hdnClassesId,
 			'price' => $r->numClassPrice,
 			'promo' => $p,
@@ -147,61 +147,61 @@ class ClassesController extends Controller
 			'promo_start' => $r->datPromoDateStart,
 			'promo_end' => $r->datPromoDateEnd,
 		]);
-		return redirect('/admin/classes')->with('success','Price Updated');
+		return redirect('/admin/classes')->with('success', 'Price Updated');
 	}
 
 	public function setcontent(Request $r)
 	{
 		$tobedel = $r->hdnContentTBDId;
 		if ($tobedel) {
-			ClassContentModel::whereIn('id',explode(',',$tobedel))->delete();
+			ClassContentModel::whereIn('id', explode(',', $tobedel))->delete();
 		}
 		$tobeins = [];
-		for ($i=0; $i < count($r->slcClassContentType); $i++) { 
+		for ($i = 0; $i < count($r->slcClassContentType); $i++) {
 			$file = '-';
-			if ($r->slcClassContentType[$i]==1) {
-				if ($r->file('txtClassContentDoc.'.$i)) {
-					$file = $r->file('txtClassContentDoc.'.$i)->store('classes/content/'.time());
+			if ($r->slcClassContentType[$i] == 1) {
+				if ($r->file('txtClassContentDoc.' . $i)) {
+					$file = $r->file('txtClassContentDoc.' . $i)->store('classes/content/' . time());
 				}
-			} else if ($r->slcClassContentType[$i]==2) {
-				if ($r->file('txtClassContentImg.'.$i)) {
-					$file = $r->file('txtClassContentImg.'.$i)->store('classes/content/'.time());
+			} else if ($r->slcClassContentType[$i] == 2) {
+				if ($r->file('txtClassContentImg.' . $i)) {
+					$file = $r->file('txtClassContentImg.' . $i)->store('classes/content/' . time());
 				}
-			} else if ($r->slcClassContentType[$i]==3) {
+			} else if ($r->slcClassContentType[$i] == 3) {
 				$file = $r->txtClassContentVid[$i];
 			}
 			$tobeins[$i] = [
 				'class_id' => $r->hdnClassesId,
-				'type'=>$r->slcClassContentType[$i],
+				'type' => $r->slcClassContentType[$i],
 				'title' => $r->txtClassContentTitle[$i],
 				'description' => '-',
 				'url' => $file,
 			];
-			ClassContentModel::UpdateOrCreate(['id'=>$r->txtClassContentId[$i]],$tobeins[$i]);
+			ClassContentModel::UpdateOrCreate(['id' => $r->txtClassContentId[$i]], $tobeins[$i]);
 		}
-		return redirect('/admin/classes')->with('success','Price Updated');
+		return redirect('/admin/classes')->with('success', 'Price Updated');
 	}
 
-	public function createevent(Request $r,$id)
+	public function createevent(Request $r, $id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['event'] = ClassEventModel::where('class_id', $id)->get();
 
-		return view('backend/classes/classevent',$data);
+		return view('backend/classes/classevent', $data);
 	}
 
-	public function createcertificate(Request $r,$id)
+	public function createcertificate(Request $r, $id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
 
-		return view('backend/classes/classcertificatetemplate',$data);
+		return view('backend/classes/classcertificatetemplate', $data);
 	}
 
-	public function setcertificate(Request $r,$id)
+	public function setcertificate(Request $r, $id)
 	{
 		$tobeins = [
-			'content'=>$r->txaContent,
+			'content' => $r->txaContent,
 			'page_size' => $r->slcPageSize,
 			'layout' => 0,
 			'certificate_created' => $r->datCertificateCreated,
@@ -211,59 +211,59 @@ class ClassesController extends Controller
 		if ($r->file('filBackground')) {
 			$name = $r->file('filBackground')->getClientOriginalName();
 			$size = $r->file('filBackground')->getSize();
-	
+
 			if ($size >= 5548576) {
-				return Redirect::back()->withErrors(['error' => 'Ukuran File Melebihi 5 MB']);
+				return Redirect::back()->with('error', 'Ukuran File Melebihi 5 MB');
 			}
-	
+
 			$filename = time() . '-' . $name;
 			$file = $r->file('filBackground');
 			$file->move(public_path('image/classes/cert'), $filename);
 
 			$tobeins['background'] = ('image/classes/cert/' . $filename);
 		}
-		
 
-		ClassCertificateTemplate::UpdateOrCreate(['class_id'=>$id],$tobeins);
 
-		return redirect('/admin/classes')->with('success','Certificate Updated');
+		ClassCertificateTemplate::UpdateOrCreate(['class_id' => $id], $tobeins);
+
+		return redirect('/admin/classes')->with('success', 'Certificate Updated');
 	}
 
-	public function previewcertificate(Request $r,$id)
+	public function previewcertificate(Request $r, $id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
 		$data['name'] = 'John Doe';
-		$data['contents'] = str_replace("[[date_expired]]",$data['certs']->certificate_expired, str_replace("[[date_active]]",$data['certs']->certificate_created, str_replace("[[class]]",$data['class']->title, str_replace("[[name]]",$data['name'], $data['certs']->content))));
-		if (!$certs) {
-			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
+		$data['contents'] = str_replace("[[date_expired]]", $data['certs']->certificate_expired, str_replace("[[date_active]]", $data['certs']->certificate_created, str_replace("[[class]]", $data['class']->title, str_replace("[[name]]", $data['name'], $data['certs']->content))));
+		if (!$data['certs']) {
+			return Redirect::back()->with('error', 'Certificate belum dibuat');
 		}
 
 		// return view('backend/certificate/certificate',$data);
-		
+
 		$pdf = PDF::loadView('backend/certificate/certificate', $data);
 		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
 	}
 
-	public function getCertificate(Request $r,$id)
+	public function getCertificate(Request $r, $id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
-		$profile = UserProfileModel::where('user_id',Auth::user()->id)->first();
-		if (!ClassParticipantModel::where('user_id',Auth::user()->id)->where('class_id',$id)->where('certificate',1)) {
-			return Redirect::back()->withErrors(['error' => 'Certificate belum diberikan']);
+		$profile = UserProfileModel::where('user_id', Auth::user()->id)->first();
+		if (!ClassParticipantModel::where('user_id', Auth::user()->id)->where('class_id', $id)->where('certificate', 1)) {
+			return Redirect::back()->with('error', 'Certificate belum diberikan');
 		}
-		if (!$certs) {
-			return Redirect::back()->withErrors(['error' => 'Certificate belum dibuat']);
+		if (!$data['certs']) {
+			return Redirect::back()->with('error', 'Certificate belum dibuat');
 		}
 		if (!$profile) {
-			return Redirect::back()->withErrors(['error' => 'Lengkapi Prodfile User']);
+			return Redirect::back()->with('error', 'Lengkapi Profile User');
 		}
 		$data['name'] = $profile->name;
-		$data['contents'] = str_replace("[[date_expired]]",$data['certs']->certificate_expired, str_replace("[[date_active]]",$data['certs']->certificate_created, str_replace("[[class]]",$data['class']->title, str_replace("[[name]]",$data['name'], $data['certs']->content))));
+		$data['contents'] = str_replace("[[date_expired]]", $data['certs']->certificate_expired, str_replace("[[date_active]]", $data['certs']->certificate_created, str_replace("[[class]]", $data['class']->title, str_replace("[[name]]", $data['name'], $data['certs']->content))));
 
 		// return view('backend/certificate/certificate',$data);
-		
+
 		$pdf = PDF::loadView('backend/certificate/certificate', $data);
 		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
 	}
@@ -272,22 +272,22 @@ class ClassesController extends Controller
 	{
 		$tobedel = $r->hdnEventTBDId;
 		if ($tobedel) {
-			ClassEventModel::whereIn('id',explode(',',$tobedel))->delete();
+			ClassEventModel::whereIn('id', explode(',', $tobedel))->delete();
 		}
 		$tobeins = [];
-		for ($i=0; $i < count($r->slcClassEventType); $i++) { 
-			
+		for ($i = 0; $i < count($r->slcClassEventType); $i++) {
+
 			$tobeins[$i] = [
 				'class_id' => $r->hdnClassesId,
-				'type'=>$r->slcClassEventType[$i],
+				'type' => $r->slcClassEventType[$i],
 				'link' => $r->txtClassEventLink[$i],
 				'location' => $r->txtClassEventLocation[$i],
 				'description' => $r->txaClassEventDescription[$i],
 				'time_start' => $r->datClassesDateStart[$i],
 				'time_end' => $r->datClassesDateEnd[$i],
 			];
-			ClassEventModel::UpdateOrCreate(['id'=>$r->txtClassEventId[$i]],$tobeins[$i]);
+			ClassEventModel::UpdateOrCreate(['id' => $r->txtClassEventId[$i]], $tobeins[$i]);
 		}
-		return redirect('/admin/classes')->with('success','Price Updated');
+		return redirect('/admin/classes')->with('success', 'Price Updated');
 	}
 }

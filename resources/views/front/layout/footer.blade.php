@@ -1,81 +1,176 @@
 <!-- Footer
 		============================================= -->
 <footer id="footer" class="dark">
-    <!-- Copyrights
-			============================================= -->
-    <div id="copyrights">
-        <div class="container">
+    <div class="container">
 
-            <div class="row col-mb-30">
-
-                <div class="col-md-6 text-center text-md-left">
-                    Copyrights skill academy &copy; {{ \Carbon\Carbon::now()->year }} All Rights Reserved by AKARINDO<br>
-                    <div class="copyright-links">support By CV. Anugrah Karya Indonesia <a href="https://akarindo.id/">AKARINDO.ID</a></div>
-                </div>
-
-                <div class="col-md-6 text-center text-md-right">
-                    <div class="d-flex justify-content-center justify-content-md-end">
-                        <a href="#" class="social-icon si-small si-borderless si-facebook">
+        <div class="footer-widgets-wrap">
+            <div class="row col-mb-50">
+                <div class="col-lg-6">
+                    <div class="widget clearfix">
+                        <img src="images/footer-widget-logo.png" alt="Image" class="footer-logo">
+                        <p>We believe in <strong>Simple</strong>, <strong>Creative</strong> &amp;
+                            <strong>Flexible</strong> Design Standards with a Retina &amp; Responsive Approach. Browse
+                            the amazing Features this template offers.</p>
+                        <div class="py-2" style="background: url('images/world-map.png') no-repeat center center;">
+                            <div class="row col-mb-30">
+                                <div class="col-6">
+                                    <address class="mb-0">
+                                        <abbr title="Headquarters"
+                                            style="display: inline-block;margin-bottom: 7px;"><strong>Headquarters:</strong></abbr><br>
+                                        795 Folsom Ave, Suite 600<br>
+                                        San Francisco, CA 94107<br>
+                                    </address>
+                                </div>
+                                <div class="col-6">
+                                    <abbr title="Phone Number"><strong>Phone:</strong></abbr> (1) 8547 632521<br>
+                                    <abbr title="Fax"><strong>Fax:</strong></abbr> (1) 11 4752 1433<br>
+                                    <abbr title="Email Address"><strong>Email:</strong></abbr> <a
+                                        href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                        data-cfemail="6d04030b022d0e0c031b0c1e430e0200">[email&#160;protected]</a>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-facebook">
                             <i class="icon-facebook"></i>
                             <i class="icon-facebook"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-twitter">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-twitter">
                             <i class="icon-twitter"></i>
                             <i class="icon-twitter"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-gplus">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-gplus">
                             <i class="icon-gplus"></i>
                             <i class="icon-gplus"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-pinterest">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-pinterest">
                             <i class="icon-pinterest"></i>
                             <i class="icon-pinterest"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-vimeo">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-vimeo">
                             <i class="icon-vimeo"></i>
                             <i class="icon-vimeo"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-github">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-github">
                             <i class="icon-github"></i>
                             <i class="icon-github"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-yahoo">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-yahoo">
                             <i class="icon-yahoo"></i>
                             <i class="icon-yahoo"></i>
                         </a>
-
-                        <a href="#" class="social-icon si-small si-borderless si-linkedin">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-linkedin">
                             <i class="icon-linkedin"></i>
                             <i class="icon-linkedin"></i>
                         </a>
                     </div>
-
-                    <div class="clear"></div>
-
-                    <!-- <i class="icon-envelope2"></i> info@canvas.com <span class="middot">&middot;</span> <i class="icon-headphones"></i> +1-11-6541-6369 <span class="middot">&middot;</span> <i class="icon-skype2"></i> CanvasOnSkype -->
                 </div>
-
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget clearfix">
+                        <h4>Recent Posts</h4>
+                        <div class="posts-sm row col-mb-30" id="post-list-footer">
+                            <div class="entry col-12">
+                                <div class="grid-inner row">
+                                    <div class="col">
+                                        <div class="entry-title">
+                                            <h4><a href="#">Lorem ipsum dolor sit amet, consectetur</a></h4>
+                                        </div>
+                                        <div class="entry-meta">
+                                            <ul>
+                                                <li>10th July 2021</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="entry col-12">
+                                <div class="grid-inner row">
+                                    <div class="col">
+                                        <div class="entry-title">
+                                            <h4><a href="#">Elit Assumenda vel amet dolorum quasi</a></h4>
+                                        </div>
+                                        <div class="entry-meta">
+                                            <ul>
+                                                <li>10th July 2021</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="entry col-12">
+                                <div class="grid-inner row">
+                                    <div class="col">
+                                        <div class="entry-title">
+                                            <h4><a href="#">Debitis nihil placeat, illum est nisi</a></h4>
+                                        </div>
+                                        <div class="entry-meta">
+                                            <ul>
+                                                <li>10th July 2021</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget quick-contact-widget form-widget clearfix">
+                        <h4>Send Message</h4>
+                        <div class="form-result"></div>
+                        <form id="quick-contact-form" name="quick-contact-form" action="include/form.php" method="post"
+                            class="quick-contact-form mb-0">
+                            <div class="form-process">
+                                <div class="css3-spinner">
+                                    <div class="css3-spinner-scaler"></div>
+                                </div>
+                            </div>
+                            <div class="input-group mx-auto">
+                                <div class="input-group-text"><i class="icon-user"></i></div>
+                                <input type="text" class="required form-control" id="quick-contact-form-name"
+                                    name="quick-contact-form-name" value="" placeholder="Full Name" />
+                            </div>
+                            <div class="input-group mx-auto">
+                                <div class="input-group-text"><i class="icon-email2"></i></div>
+                                <input type="text" class="required form-control email" id="quick-contact-form-email"
+                                    name="quick-contact-form-email" value="" placeholder="Email Address" />
+                            </div>
+                            <textarea class="required form-control input-block-level short-textarea"
+                                id="quick-contact-form-message" name="quick-contact-form-message" rows="4" cols="30"
+                                placeholder="Message"></textarea>
+                            <input type="text" class="d-none" id="quick-contact-form-botcheck"
+                                name="quick-contact-form-botcheck" value="" />
+                            <input type="hidden" name="prefix" value="quick-contact-form-">
+                            <button type="submit" id="quick-contact-form-submit" name="quick-contact-form-submit"
+                                class="btn btn-danger m-0" value="submit">Send Email</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-
         </div>
-    </div><!-- #copyrights end -->
+    </div>
+
+    <div id="copyrights">
+        <div class="container">
+            <div class="w-100 text-center">
+                <div class="copyrights-menu copyright-links clearfix">
+                    <a href="#">Home</a>/<a href="#">About</a>/<a href="#">Features</a>/<a href="#">Portfolio</a>/<a
+                        href="#">FAQs</a>/<a href="#">Contact</a>
+                </div>
+                Copyrights &copy; 2020 All Rights Reserved by Canvas Inc.
+            </div>
+        </div>
+    </div>
 </footer><!-- #footer end -->
 
 </div><!-- #wrapper end -->
-
 <!-- Go To Top
 	============================================= -->
 <div id="gotoTop" class="icon-angle-up"></div>
 
 <!-- JavaScripts
 ============================================= -->
-<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+    crossorigin="anonymous"></script>
 <script src="{{asset('front/js/plugins.min.js')}}"></script>
 <!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
 
@@ -113,7 +208,6 @@
     var $ = jQuery.noConflict();
 
     tpj(document).ready(function() {
-
         var apiRevoSlider = tpj('#rev_slider_ishop').show().revolution({
             sliderType: "standard",
             jsFileLocation: "include/rs-plugin/js/",
@@ -200,8 +294,6 @@
                 password: passwordlogin
             },
             success: function(result) {
-                // console.log(result)
-                console.log(result)
                 if (result.role == 0 || result.role == 1) {
                     location.replace("/home")
                 } else {

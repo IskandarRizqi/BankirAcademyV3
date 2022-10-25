@@ -28,7 +28,7 @@
                             <th>Price</th>
                             <th>Date</th>
                             <th>Class</th>
-                            <th>Certificate</th>
+                            <th>Category</th>
                             <th>User</th>
                             <th>Action</th>
                         </tr>
@@ -56,10 +56,7 @@
                                 {{Carbon\Carbon::parse($p->date_end)->format('d-m-Y')}}
                             </td>
                             <td>{{$p->title}}</td>
-                            <td><span class="badge badge-primary text-uppercase">
-                                    {{$p->status?'ada':'tidak ada'}}
-                                </span>
-                            </td>
+                            <td>{{$p->category}}</td>
                             <td>{{$p->name}}</td>
                             <td>
                                 <button class="btn bs-tooltip btn-warning" title="Publish Certificate"
