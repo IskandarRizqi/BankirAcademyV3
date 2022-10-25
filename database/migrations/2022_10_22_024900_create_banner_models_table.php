@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('banner_slide', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->integer('jenis')->comment('0 = bannerslide;');
+            $table->integer('jenis')->comment('0 = bannerslide, 1 = banner bawah');
             $table->date('mulai')->nullable();
             $table->date('selesai')->nullable();
             $table->text('image');

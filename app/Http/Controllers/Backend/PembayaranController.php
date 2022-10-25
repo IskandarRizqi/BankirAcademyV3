@@ -18,6 +18,7 @@ class PembayaranController extends Controller
             'classes.title',
             'classes.date_start',
             'classes.date_start',
+            'classes.category',
             'class_participant.certificate'
 
         )

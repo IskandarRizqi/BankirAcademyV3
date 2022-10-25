@@ -16,13 +16,14 @@ class HomeController extends Controller
     {
         $now = Carbon::now();
         $kelas_mingguan = [];
+        $data['banner_bawah'] = BannerModel::where('jenis', 1)->first();
         $data['bannerslide'] = BannerModel::get();
         $data['pop'] = ClassesModel::limit(6)->get();
         $data['minggu_ini'] = ClassesModel::whereBetween("date_start", [
             $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
             $now->endOfWeek()->format('Y-m-d')
         ])
-            ->whereDate('date_start', '>=', Carbon::now())
+            ->whereDate('date_start', '>', Carbon::now())
             ->orderBy('date_start', 'ASC')
             ->get();
         $class = [];
