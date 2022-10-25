@@ -10,13 +10,13 @@
                         <img src="images/footer-widget-logo.png" alt="Image" class="footer-logo">
                         <p>We believe in <strong>Simple</strong>, <strong>Creative</strong> &amp;
                             <strong>Flexible</strong> Design Standards with a Retina &amp; Responsive Approach. Browse
-                            the amazing Features this template offers.</p>
+                            the amazing Features this template offers.
+                        </p>
                         <div class="py-2" style="background: url('images/world-map.png') no-repeat center center;">
                             <div class="row col-mb-30">
                                 <div class="col-6">
                                     <address class="mb-0">
-                                        <abbr title="Headquarters"
-                                            style="display: inline-block;margin-bottom: 7px;"><strong>Headquarters:</strong></abbr><br>
+                                        <abbr title="Headquarters" style="display: inline-block;margin-bottom: 7px;"><strong>Headquarters:</strong></abbr><br>
                                         795 Folsom Ave, Suite 600<br>
                                         San Francisco, CA 94107<br>
                                     </address>
@@ -24,9 +24,7 @@
                                 <div class="col-6">
                                     <abbr title="Phone Number"><strong>Phone:</strong></abbr> (1) 8547 632521<br>
                                     <abbr title="Fax"><strong>Fax:</strong></abbr> (1) 11 4752 1433<br>
-                                    <abbr title="Email Address"><strong>Email:</strong></abbr> <a
-                                        href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                        data-cfemail="6d04030b022d0e0c031b0c1e430e0200">[email&#160;protected]</a>
+                                    <abbr title="Email Address"><strong>Email:</strong></abbr> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d04030b022d0e0c031b0c1e430e0200">[email&#160;protected]</a>
                                 </div>
                             </div>
                         </div>
@@ -117,8 +115,7 @@
                     <div class="widget quick-contact-widget form-widget clearfix">
                         <h4>Send Message</h4>
                         <div class="form-result"></div>
-                        <form id="quick-contact-form" name="quick-contact-form" action="include/form.php" method="post"
-                            class="quick-contact-form mb-0">
+                        <form id="quick-contact-form" name="quick-contact-form" action="include/form.php" method="post" class="quick-contact-form mb-0">
                             <div class="form-process">
                                 <div class="css3-spinner">
                                     <div class="css3-spinner-scaler"></div>
@@ -126,22 +123,16 @@
                             </div>
                             <div class="input-group mx-auto">
                                 <div class="input-group-text"><i class="icon-user"></i></div>
-                                <input type="text" class="required form-control" id="quick-contact-form-name"
-                                    name="quick-contact-form-name" value="" placeholder="Full Name" />
+                                <input type="text" class="required form-control" id="quick-contact-form-name" name="quick-contact-form-name" value="" placeholder="Full Name" />
                             </div>
                             <div class="input-group mx-auto">
                                 <div class="input-group-text"><i class="icon-email2"></i></div>
-                                <input type="text" class="required form-control email" id="quick-contact-form-email"
-                                    name="quick-contact-form-email" value="" placeholder="Email Address" />
+                                <input type="text" class="required form-control email" id="quick-contact-form-email" name="quick-contact-form-email" value="" placeholder="Email Address" />
                             </div>
-                            <textarea class="required form-control input-block-level short-textarea"
-                                id="quick-contact-form-message" name="quick-contact-form-message" rows="4" cols="30"
-                                placeholder="Message"></textarea>
-                            <input type="text" class="d-none" id="quick-contact-form-botcheck"
-                                name="quick-contact-form-botcheck" value="" />
+                            <textarea class="required form-control input-block-level short-textarea" id="quick-contact-form-message" name="quick-contact-form-message" rows="4" cols="30" placeholder="Message"></textarea>
+                            <input type="text" class="d-none" id="quick-contact-form-botcheck" name="quick-contact-form-botcheck" value="" />
                             <input type="hidden" name="prefix" value="quick-contact-form-">
-                            <button type="submit" id="quick-contact-form-submit" name="quick-contact-form-submit"
-                                class="btn btn-danger m-0" value="submit">Send Email</button>
+                            <button type="submit" id="quick-contact-form-submit" name="quick-contact-form-submit" class="btn btn-danger m-0" value="submit">Send Email</button>
                         </form>
                     </div>
                 </div>
@@ -153,8 +144,7 @@
         <div class="container">
             <div class="w-100 text-center">
                 <div class="copyrights-menu copyright-links clearfix">
-                    <a href="#">Home</a>/<a href="#">About</a>/<a href="#">Features</a>/<a href="#">Portfolio</a>/<a
-                        href="#">FAQs</a>/<a href="#">Contact</a>
+                    <a href="#">Home</a>/<a href="#">About</a>/<a href="#">Features</a>/<a href="#">Portfolio</a>/<a href="#">FAQs</a>/<a href="#">Contact</a>
                 </div>
                 Copyrights &copy; 2020 All Rights Reserved by Canvas Inc.
             </div>
@@ -169,8 +159,7 @@
 
 <!-- JavaScripts
 ============================================= -->
-<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 <script src="{{asset('front/js/plugins.min.js')}}"></script>
 <!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
 
