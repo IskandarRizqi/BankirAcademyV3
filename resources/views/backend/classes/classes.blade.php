@@ -70,15 +70,8 @@
 								@endforeach
 							</td>
 							<td class="text-center">
-								<button class="dropdown-item badge" title="List Peserta" data-toggle="modal"
-									data-target="#listPesertaModal" onclick="openPeserta($v->peserta_list['belum'])">
-									<span
-										class="badge">{{count($v->peserta_list['belum'])+count($v->peserta_list['lunas'])}}</span>
-								</button>|
-								<button class="dropdown-item badge" title="List Peserta" data-toggle="modal"
-									data-target="#listPesertaModal" onclick="openPeserta($v->peserta_list['lunas'])">
-									<span class="badge">{{count($v->peserta_list['lunas'])}}</span>
-								</button>
+								{{count($v->peserta_list['belum'])+count($v->peserta_list['lunas'])}} |
+								{{count($v->peserta_list['lunas'])}}
 							</td>
 							<td>
 								<button class="btn bs-tooltip btn-info" title="Pricing"
