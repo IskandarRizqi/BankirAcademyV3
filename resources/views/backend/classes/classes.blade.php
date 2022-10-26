@@ -40,6 +40,13 @@
 							<th>Class</th>
 							<th>Category</th>
 							<th>Instructor</th>
+							<th class="text-center">
+								<p>
+									Jml Peserta
+								</p>
+								<span class="bs-tooltip text-danger" title="All">A</span>|<span
+									class="bs-tooltip text-success" title="Lunas">L</span>
+							</th>
 							<th>Data</th>
 							<th>Action</th>
 						</tr>
@@ -62,6 +69,17 @@
 								<span class="badge badge-primary">{{$i->name}}</span>
 								@endforeach
 							</td>
+							<td class="text-center">
+								<button class="dropdown-item badge" title="List Peserta" data-toggle="modal"
+									data-target="#listPesertaModal" onclick="openPeserta($v->peserta_list['belum'])">
+									<span
+										class="badge">{{count($v->peserta_list['belum'])+count($v->peserta_list['lunas'])}}</span>
+								</button>|
+								<button class="dropdown-item badge" title="List Peserta" data-toggle="modal"
+									data-target="#listPesertaModal" onclick="openPeserta($v->peserta_list['lunas'])">
+									<span class="badge">{{count($v->peserta_list['lunas'])}}</span>
+								</button>
+							</td>
 							<td>
 								<button class="btn bs-tooltip btn-info" title="Pricing"
 									onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
@@ -69,12 +87,18 @@
 									onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
 								<a class="btn bs-tooltip btn-primary" title="Event"
 									href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
-								<a class="btn bs-tooltip btn-danger" title="Certificate"
-									href="/admin/classes/createcertificate/{{$v->id}}"><i
-										class="bx bxs-file-pdf"></i></a>
-								<a class="btn bs-tooltip btn-warning" title="Preview"
-									href="/admin/classes/previewcertificate/{{$v->id}}" target="_blank"><i
-										class="bx bxs-file-pdf"></i></a>
+								<button class="btn bs-tooltip btn-warning dropdown-toggle" type="button"
+									data-toggle="dropdown" aria-expanded="false" title="Certificate">
+									<i class="bx bx-cog"></i></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" title="Certificate"
+										href="/admin/classes/createcertificate/{{$v->id}}">Create Certificate</a>
+									<a class="dropdown-item" title="Preview"
+										href="/admin/classes/previewcertificate/{{$v->id}}" target="_blank">Show
+										Certificate</a>
+								</div>
+								<div class="dropdown">
+								</div>
 							</td>
 							<td>
 								<div class="dropdown">
@@ -83,11 +107,6 @@
 										<i class="bx bx-cog"></i>
 									</button>
 									<div class="dropdown-menu">
-										<a class="dropdown-item" title="List Peserta" data-toggle="modal"
-											data-target="#listPesertaModal"
-											onclick="openPeserta({{$v->peserta_list}})">Jml
-											Peserta
-											<span class="badge">{{count($v->peserta_list)}}</span></a>
 										<a class="dropdown-item" title="Edit"
 											href="/admin/classes/{{$v->id}}/edit">Edit</a>
 										<a class="dropdown-item" title="Delete"
@@ -135,7 +154,6 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save changes</button>
 						</div>
 					</div>
 				</div>

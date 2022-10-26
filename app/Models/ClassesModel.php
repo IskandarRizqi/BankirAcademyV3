@@ -49,11 +49,20 @@ class ClassesModel extends Model
 	public function getPesertaListAttribute()
 	{
 		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_payment')
+			$data = [];
+			$data['lunas'] = DB::table('class_payment')
 				->select('class_payment.*', 'user_profile.name')
 				->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
+				->where('class_payment.status', 1)
 				->where('class_payment.class_id', $this->attributes['id'])
 				->get();
+			$data['belum'] = DB::table('class_payment')
+				->select('class_payment.*', 'user_profile.name')
+				->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
+				->where('class_payment.status', 0)
+				->where('class_payment.class_id', $this->attributes['id'])
+				->get();
+			return $data;
 		}
 	}
 }
