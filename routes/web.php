@@ -39,6 +39,10 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
     Route::post('/admin/pembayaran/approved', [App\Http\Controllers\Backend\PembayaranController::class, 'approved']);
     Route::post('/admin/pembayaran/certificate', [App\Http\Controllers\Backend\PembayaranController::class, 'publish_certificate']);
+    Route::get('/admin/partner', [App\Http\Controllers\Backend\PartnerController::class, 'index']);
+    Route::post('/admin/partner', [App\Http\Controllers\Backend\PartnerController::class, 'input_partner']);
+    Route::post('/admin/partner/delete', [App\Http\Controllers\Backend\PartnerController::class, 'delete_partner']);
+    Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);

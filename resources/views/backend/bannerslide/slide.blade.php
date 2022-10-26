@@ -42,6 +42,7 @@
                                                 <select name="jenis" class="form-control" id="type">
                                                     <option value="0" selected>Banner Slide</option>
                                                     <option value="1">Banner Bawah</option>
+                                                    <option value="2">Banner Promo</option>
                                                 </select>
                                                 @if($errors->has('jenis'))
                                                 <div class="error" style="color: red; display:block;">{{
@@ -120,7 +121,9 @@
                                 <td>{{$value->nama}}</td>
                                 <td>
                                     @if($value->jenis == 0)
-                                    <span class="badge badge-primary">Banner slide</span>
+                                    <span class="badge badge-info">Banner slide</span>
+                                    @elseif ($value->jenis == 1)
+                                    <span class="badge badge-info">Banner bawah</span>
                                     @else
                                     <span class="badge badge-info">Banner promo</span>
                                     @endif

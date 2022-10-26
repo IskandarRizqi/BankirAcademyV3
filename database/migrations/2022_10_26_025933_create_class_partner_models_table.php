@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('banner_slide', function (Blueprint $table) {
+        Schema::create('class_partner_models', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->integer('jenis')->comment('0 = bannerslide, 1 = banner bawah, 2 = banner promo');
-            $table->date('mulai')->nullable();
-            $table->date('selesai')->nullable();
             $table->text('image');
-            $table->timestamps();
+            $table->text('link');
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('banner');
+        Schema::dropIfExists('class_partner_models');
     }
 };

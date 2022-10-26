@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class ClassesModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'classes';
 	protected $fillable = [
 		'title',
@@ -24,26 +24,36 @@ class ClassesModel extends Model
 		'date_end',
 	];
 
-	protected $appends = ['instructor_list','pricing','content_list'];
+	protected $appends = ['instructor_list', 'pricing', 'content_list', 'peserta_list'];
 
 	public function getInstructorListAttribute()
 	{
-		if(array_key_exists('instructor',$this->attributes)) {
-			return DB::table('instructor')->whereIn('id',json_decode($this->attributes['instructor']))->get();
+		if (array_key_exists('instructor', $this->attributes)) {
+			return DB::table('instructor')->whereIn('id', json_decode($this->attributes['instructor']))->get();
 		}
 	}
 
 	public function getPricingAttribute()
 	{
-		if(array_key_exists('id',$this->attributes)) {
-			return DB::table('class_pricing')->where('class_id',$this->attributes['id'])->first();
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_pricing')->where('class_id', $this->attributes['id'])->first();
 		}
 	}
 
 	public function getContentListAttribute()
 	{
-		if(array_key_exists('id',$this->attributes)) {
-			return DB::table('class_content')->where('class_id',$this->attributes['id'])->get();
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_content')->where('class_id', $this->attributes['id'])->get();
+		}
+	}
+	public function getPesertaListAttribute()
+	{
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_payment')
+				->select('class_payment.*', 'user_profile.name')
+				->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
+				->where('class_payment.class_id', $this->attributes['id'])
+				->get();
 		}
 	}
 }

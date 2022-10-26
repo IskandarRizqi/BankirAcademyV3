@@ -18,6 +18,9 @@ class IsAdminRoot
      */
     public function handle(Request $request, Closure $next)
     {
+        if (!Auth::user()) {
+            return Redirect::to('/');
+        }
         // return $next($request);
         if (Auth::user()->role == 0 || Auth::user()->role == 1) {
             // return "hello";

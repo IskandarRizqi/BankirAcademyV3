@@ -1,92 +1,159 @@
 @extends('backend.template')
 @section('content')
-	<div class="col-lg-12">
-		<div class="widget">
-			<div class="widget-heading">
-				<form action="/admin/classes">
-					@csrf
-					<div class="row">
-						<div class="col-lg-6">
-							<div class="input-group mb-4">
-								<input type="date" class="form-control" value="{{$param['date_start']}}" placeholder="Date Start" aria-label="Date Start" name="param_date_start">
-								<div class="input-group-append">
-									<span class="input-group-text" id="basic-addon5">s/d</span>
-								</div>
-								<input type="date" class="form-control" value="{{$param['date_end']}}" placeholder="Date End" aria-label="Date End" name="param_date_end">
+<div class="col-lg-12">
+	<div class="widget">
+		<div class="widget-heading">
+			<form action="/admin/classes">
+				@csrf
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="input-group mb-4">
+							<input type="date" class="form-control" value="{{$param['date_start']}}"
+								placeholder="Date Start" aria-label="Date Start" name="param_date_start">
+							<div class="input-group-append">
+								<span class="input-group-text" id="basic-addon5">s/d</span>
 							</div>
-							<div class="row">
-								<div class="col-lg-8">
-									<button class="btn btn-primary btn-block" type="submit">Cari</button>
-								</div>
-								<div class="col-lg-4">
-									<a href="/admin/classes" class="btn btn-warning btn-block" type="button">Reset</a>
-								</div>
-							</div>
+							<input type="date" class="form-control" value="{{$param['date_end']}}"
+								placeholder="Date End" aria-label="Date End" name="param_date_end">
 						</div>
-						<div class="col-lg-6 text-right">
-							<A class="btn btn-primary btn-large" type="button" href="/admin/classes/create">New</A>
+						<div class="row">
+							<div class="col-lg-8">
+								<button class="btn btn-primary btn-block" type="submit">Cari</button>
+							</div>
+							<div class="col-lg-4">
+								<a href="/admin/classes" class="btn btn-warning btn-block" type="button">Reset</a>
+							</div>
 						</div>
 					</div>
-				</form>
-			</div>
-			<div class="widget-content">
-				<div class="table-responsive">
-					<table id="tblClasses" class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th>Date</th>
-								<th>Class</th>
-								<th>Category</th>
-								<th>Instructor</th>
-								<th>Data</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach ($classes as $k=>$v)
-							<tr>
-								<td>
-									<span hidden>
-										{{Carbon\Carbon::parse($v->date_start)->format('U')}}
-									</span>
-									{{Carbon\Carbon::parse($v->date_start)->format('d-m-Y')}}
-									s/d
-									{{Carbon\Carbon::parse($v->date_end)->format('d-m-Y')}}
-								</td>
-								<td>{{$v->title}}</td>
-								<td>{{$v->category}}</td>
-								<td>
-									@foreach ($v->instructor_list as $i)
-									<span class="badge badge-primary">{{$i->name}}</span>
-									@endforeach
-								</td>
-								<td>
-									<button class="btn bs-tooltip btn-info" title="Pricing" onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
-									<button class="btn bs-tooltip btn-success" title="File" onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
-									<a class="btn bs-tooltip btn-primary" title="Event" href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
-									<a class="btn bs-tooltip btn-danger" title="Certificate" href="/admin/classes/createcertificate/{{$v->id}}"><i class="bx bxs-file-pdf"></i></a>
-									<a class="btn bs-tooltip btn-warning" title="Preview" href="/admin/classes/previewcertificate/{{$v->id}}" target="_blank"><i class="bx bxs-file-pdf"></i></a>
-								</td>
-								<td>
-									<a class="btn bs-tooltip btn-warning" title="Edit" href="/admin/classes/{{$v->id}}/edit"><i class="bx bx-edit"></i></a>
-									<button class="btn bs-tooltip btn-danger" title="Delete" onclick="deleteClasses({{$v->id}})"><i class="bx bx-trash"></i></button>
-									<form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')</form>
-								</td>
-							</tr>
-							@endforeach
-						</tbody>
-					</table>
+					<div class="col-lg-6 text-right">
+						<A class="btn btn-primary btn-large" type="button" href="/admin/classes/create">New</A>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="widget-content">
+			<div class="table-responsive">
+				<table id="tblClasses" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Class</th>
+							<th>Category</th>
+							<th>Instructor</th>
+							<th>Data</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach ($classes as $k=>$v)
+						<tr>
+							<td>
+								<span hidden>
+									{{Carbon\Carbon::parse($v->date_start)->format('U')}}
+								</span>
+								{{Carbon\Carbon::parse($v->date_start)->format('d-m-Y')}}
+								s/d
+								{{Carbon\Carbon::parse($v->date_end)->format('d-m-Y')}}
+							</td>
+							<td>{{$v->title}}</td>
+							<td>{{$v->category}}</td>
+							<td>
+								@foreach ($v->instructor_list as $i)
+								<span class="badge badge-primary">{{$i->name}}</span>
+								@endforeach
+							</td>
+							<td>
+								<button class="btn bs-tooltip btn-info" title="Pricing"
+									onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
+								<button class="btn bs-tooltip btn-success" title="File"
+									onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
+								<a class="btn bs-tooltip btn-primary" title="Event"
+									href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
+								<a class="btn bs-tooltip btn-danger" title="Certificate"
+									href="/admin/classes/createcertificate/{{$v->id}}"><i
+										class="bx bxs-file-pdf"></i></a>
+								<a class="btn bs-tooltip btn-warning" title="Preview"
+									href="/admin/classes/previewcertificate/{{$v->id}}" target="_blank"><i
+										class="bx bxs-file-pdf"></i></a>
+							</td>
+							<td>
+								<div class="dropdown">
+									<button class="btn btn-warning dropdown-toggle btn-sm" type="button"
+										data-toggle="dropdown" aria-expanded="false" title="Opsi">
+										<i class="bx bx-cog"></i>
+									</button>
+									<div class="dropdown-menu">
+										<a class="dropdown-item" title="List Peserta" data-toggle="modal"
+											data-target="#listPesertaModal"
+											onclick="openPeserta({{$v->peserta_list}})">Jml
+											Peserta
+											<span class="badge">{{count($v->peserta_list)}}</span></a>
+										<a class="dropdown-item" title="Edit"
+											href="/admin/classes/{{$v->id}}/edit">Edit</a>
+										<a class="dropdown-item" title="Delete"
+											onclick="deleteClasses({{$v->id}})">Hapus</a>
+										<form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
+										</form>
+									</div>
+								</div>
+							</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+				<!-- Modal -->
+				<div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="listPesertaModalLabel">List Peserta</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div class="table-responsive">
+									<table id="tblListPeserta" class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Status</th>
+												<th>Nama</th>
+												<th>Price</th>
+											</tr>
+										</thead>
+										<tbody id="listPeserta">
+											<tr>
+												<td></td>
+												<td></td>
+												<td></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save changes</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	@include('backend.classes.newclassesmodal')
-	@include('backend.classes.classpricingmodal')
-	@include('backend.classes.classcontentmodal')
+</div>
+</div>
+@include('backend.classes.newclassesmodal')
+@include('backend.classes.classpricingmodal')
+@include('backend.classes.classcontentmodal')
 @endsection
 @section('custom-js')
 <script>
 	createDataTable('#tblClasses');
+	createDataTable('#tblListPeserta');
+
+
 
 	$('#numClassPrice').on('input',function () {
 		var v = $(this).val();
@@ -124,6 +191,28 @@
 		$('#numClassPromo').val(rp);
 		$('#numClassPromoPrctg').val(rs);
 	});
+
+	function openPeserta(data){
+		let = html = '';
+		if (data.length > 0) {
+			data.forEach(el=>{
+				let status = 'Belum Lunas';
+				if (el.status) {
+					status = 'Lunas';
+				}
+				let price = Number(el.price_final).toLocaleString('id-ID',{
+			style:'currency',
+			currency:'IDR'
+		});
+				html +='<tr>';
+				html +='<td>'+status+'</td>';
+				html += '<td>'+el.name+'</td>';
+				html += '<td>'+price+'</td>';
+				html +='</tr>';
+			})
+			$('#listPeserta').html(html);
+		}
+	}
 
 	function deleteClasses(id) {
 		swal({

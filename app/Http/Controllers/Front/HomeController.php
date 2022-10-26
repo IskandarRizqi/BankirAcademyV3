@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
+use App\Models\ClassPartnerModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,9 @@ class HomeController extends Controller
     {
         $now = Carbon::now();
         $kelas_mingguan = [];
-        $data['banner_bawah'] = BannerModel::where('jenis', 1)->first();
-        $data['bannerslide'] = BannerModel::get();
+        $data['banner_promo'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
+        $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->first();
+        $data['banner_slide'] = BannerModel::where('jenis', 0)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['pop'] = ClassesModel::limit(6)->get();
         $data['minggu_ini'] = ClassesModel::whereBetween("date_start", [
             $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
@@ -48,6 +50,7 @@ class HomeController extends Controller
             $data['message'] = 'Login Berhasil';
         }
         $data['kelas_mingguan'] = $kelas_mingguan;
+        $data['partner'] = ClassPartnerModel::get();
         return view('front.home.home', $data);
     }
 

@@ -16,7 +16,8 @@
                             <div class="row col-mb-30">
                                 <div class="col-6">
                                     <address class="mb-0">
-                                        <abbr title="Headquarters" style="display: inline-block;margin-bottom: 7px;"><strong>Headquarters:</strong></abbr><br>
+                                        <abbr title="Headquarters"
+                                            style="display: inline-block;margin-bottom: 7px;"><strong>Headquarters:</strong></abbr><br>
                                         795 Folsom Ave, Suite 600<br>
                                         San Francisco, CA 94107<br>
                                     </address>
@@ -24,7 +25,9 @@
                                 <div class="col-6">
                                     <abbr title="Phone Number"><strong>Phone:</strong></abbr> (1) 8547 632521<br>
                                     <abbr title="Fax"><strong>Fax:</strong></abbr> (1) 11 4752 1433<br>
-                                    <abbr title="Email Address"><strong>Email:</strong></abbr> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d04030b022d0e0c031b0c1e430e0200">[email&#160;protected]</a>
+                                    <abbr title="Email Address"><strong>Email:</strong></abbr> <a
+                                        href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                        data-cfemail="6d04030b022d0e0c031b0c1e430e0200">[email&#160;protected]</a>
                                 </div>
                             </div>
                         </div>
@@ -66,85 +69,68 @@
                     <div class="widget clearfix">
                         <h4>Recent Posts</h4>
                         <div class="posts-sm row col-mb-30" id="post-list-footer">
-                            <div class="entry col-12">
+                            @foreach ($pop as $key => $p)
+                            @if ($key <= 2) <div class="entry col-12">
                                 <div class="grid-inner row">
                                     <div class="col">
                                         <div class="entry-title">
-                                            <h4><a href="#">Lorem ipsum dolor sit amet, consectetur</a></h4>
+                                            <h4><a href="class/{{$p->unique_id}}/{{$p->title}}">{{$p->title}}</a></h4>
                                         </div>
                                         <div class="entry-meta">
                                             <ul>
-                                                <li>10th July 2021</li>
+                                                <li>{{\Carbon\Carbon::parse($p->date_start)->format('F d, Y')}}</li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="entry col-12">
-                                <div class="grid-inner row">
-                                    <div class="col">
-                                        <div class="entry-title">
-                                            <h4><a href="#">Elit Assumenda vel amet dolorum quasi</a></h4>
-                                        </div>
-                                        <div class="entry-meta">
-                                            <ul>
-                                                <li>10th July 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="entry col-12">
-                                <div class="grid-inner row">
-                                    <div class="col">
-                                        <div class="entry-title">
-                                            <h4><a href="#">Debitis nihil placeat, illum est nisi</a></h4>
-                                        </div>
-                                        <div class="entry-meta">
-                                            <ul>
-                                                <li>10th July 2021</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="widget quick-contact-widget form-widget clearfix">
-                        <h4>Send Message</h4>
-                        <div class="form-result"></div>
-                        <form id="quick-contact-form" name="quick-contact-form" action="include/form.php" method="post" class="quick-contact-form mb-0">
-                            <div class="form-process">
-                                <div class="css3-spinner">
-                                    <div class="css3-spinner-scaler"></div>
-                                </div>
-                            </div>
-                            <div class="input-group mx-auto">
-                                <div class="input-group-text"><i class="icon-user"></i></div>
-                                <input type="text" class="required form-control" id="quick-contact-form-name" name="quick-contact-form-name" value="" placeholder="Full Name" />
-                            </div>
-                            <div class="input-group mx-auto">
-                                <div class="input-group-text"><i class="icon-email2"></i></div>
-                                <input type="text" class="required form-control email" id="quick-contact-form-email" name="quick-contact-form-email" value="" placeholder="Email Address" />
-                            </div>
-                            <textarea class="required form-control input-block-level short-textarea" id="quick-contact-form-message" name="quick-contact-form-message" rows="4" cols="30" placeholder="Message"></textarea>
-                            <input type="text" class="d-none" id="quick-contact-form-botcheck" name="quick-contact-form-botcheck" value="" />
-                            <input type="hidden" name="prefix" value="quick-contact-form-">
-                            <button type="submit" id="quick-contact-form-submit" name="quick-contact-form-submit" class="btn btn-danger m-0" value="submit">Send Email</button>
-                        </form>
+                        @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6 col-lg-3">
+                {{-- <div class="widget quick-contact-widget form-widget clearfix">
+                    <h4>Send Message</h4>
+                    <div class="form-result"></div>
+                    <form id="quick-contact-form" name="quick-contact-form" action="include/form.php" method="post"
+                        class="quick-contact-form mb-0">
+                        <div class="form-process">
+                            <div class="css3-spinner">
+                                <div class="css3-spinner-scaler"></div>
+                            </div>
+                        </div>
+                        <div class="input-group mx-auto">
+                            <div class="input-group-text"><i class="icon-user"></i></div>
+                            <input type="text" class="required form-control" id="quick-contact-form-name"
+                                name="quick-contact-form-name" value="" placeholder="Full Name" />
+                        </div>
+                        <div class="input-group mx-auto">
+                            <div class="input-group-text"><i class="icon-email2"></i></div>
+                            <input type="text" class="required form-control email" id="quick-contact-form-email"
+                                name="quick-contact-form-email" value="" placeholder="Email Address" />
+                        </div>
+                        <textarea class="required form-control input-block-level short-textarea"
+                            id="quick-contact-form-message" name="quick-contact-form-message" rows="4" cols="30"
+                            placeholder="Message"></textarea>
+                        <input type="text" class="d-none" id="quick-contact-form-botcheck"
+                            name="quick-contact-form-botcheck" value="" />
+                        <input type="hidden" name="prefix" value="quick-contact-form-">
+                        <button type="submit" id="quick-contact-form-submit" name="quick-contact-form-submit"
+                            class="btn btn-danger m-0" value="submit">Send Email</button>
+                    </form>
+                </div> --}}
+            </div>
         </div>
+    </div>
     </div>
 
     <div id="copyrights">
         <div class="container">
             <div class="w-100 text-center">
                 <div class="copyrights-menu copyright-links clearfix">
-                    <a href="#">Home</a>/<a href="#">About</a>/<a href="#">Features</a>/<a href="#">Portfolio</a>/<a href="#">FAQs</a>/<a href="#">Contact</a>
+                    <a href="#">Home</a>/<a href="#">About</a>/<a href="#">Features</a>/<a href="#">Portfolio</a>/<a
+                        href="#">FAQs</a>/<a href="#">Contact</a>
                 </div>
                 Copyrights &copy; 2020 All Rights Reserved by Canvas Inc.
             </div>
@@ -159,7 +145,8 @@
 
 <!-- JavaScripts
 ============================================= -->
-<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+    crossorigin="anonymous"></script>
 <script src="{{asset('front/js/plugins.min.js')}}"></script>
 <!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
 
