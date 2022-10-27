@@ -207,7 +207,7 @@
                                                 </a>
                                             </div>
                                         @else
-                                            <div class="text-right w-100">
+                                            <div class="text-right mt-2 w-100">
                                                 <a class="btn btn-success btn-block btn-rounded"
                                                     style=" border-radius:10px !important"
                                                     href="class/{{ $p->unique_id }}/{{ $p->title }}" data-toggle="modal"
