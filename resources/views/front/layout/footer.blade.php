@@ -1,5 +1,5 @@
 <!-- Footer
-		============================================= -->
+  ============================================= -->
 <footer id="footer" class="dark">
     <div class="container">
 
@@ -64,42 +64,48 @@
                     <div class="widget clearfix">
                         <h4>Recent Posts</h4>
                         <div class="posts-sm row col-mb-30" id="post-list-footer">
-                            @foreach ($pop as $key => $p)
-                            @if ($key <= 2) <div class="entry col-12">
-                                <div class="grid-inner row">
-                                    <div class="col">
-                                        <div class="entry-title">
-                                            <h4><a href="class/{{$p->unique_id}}/{{$p->title}}">{{$p->title}}</a></h4>
+                            @if (isset($pop))
+                                @foreach ($pop as $key => $p)
+                                    @if ($key <= 2)
+                                        <div class="entry col-12">
+                                            <div class="grid-inner row">
+                                                <div class="col">
+                                                    <div class="entry-title">
+                                                        <h4><a
+                                                                href="class/{{ $p->unique_id }}/{{ $p->title }}">{{ $p->title }}</a>
+                                                        </h4>
+                                                    </div>
+                                                    <div class="entry-meta">
+                                                        <ul>
+                                                            <li>{{ \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="entry-meta">
-                                            <ul>
-                                                <li>{{\Carbon\Carbon::parse($p->date_start)->format('F d, Y')}}</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                    @endif
+                                @endforeach
+                            @endif
                         </div>
-                        @endif
-                        @endforeach
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget quick-contact-widget form-widget clearfix">
+                        <h4>Bantuan & Panduan</h4>
+                        <div class="form-result"></div>
+                        <a href="#">Layanan Pengaduan</a><br>
+                        <a href="#">Syarat & Ketentuan</a><br>
+                        <a href="#">Kebijakan Privasi</a><br>
+                        <a href="#">Tentang Kami</a><br>
+                        <a href="#">Kontak Kami</a><br>
+                        <a href="#">Press Kit</a><br>
+                        <a href="#">Bantuan</a><br>
+                        <a href="#">Karier</a><br>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-3">
-                <div class="widget quick-contact-widget form-widget clearfix">
-                    <h4>Bantuan & Panduan</h4>
-                    <div class="form-result"></div>
-                    <a href="#">Layanan Pengaduan</a><br>
-                    <a href="#">Syarat & Ketentuan</a><br>
-                    <a href="#">Kebijakan Privasi</a><br>
-                    <a href="#">Tentang Kami</a><br>
-                    <a href="#">Kontak Kami</a><br>
-                    <a href="#">Press Kit</a><br>
-                    <a href="#">Bantuan</a><br>
-                    <a href="#">Karier</a><br>
-                </div>
-            </div>
         </div>
-    </div>
     </div>
 
     <div id="copyrights">
@@ -113,39 +119,40 @@
 
 </div><!-- #wrapper end -->
 <!-- Go To Top
-	============================================= -->
+ ============================================= -->
 <div id="gotoTop" class="icon-angle-up"></div>
 
 
 <!-- Footer Scripts
 ============================================= -->
-<script src="{{asset('front/js/functions.js')}}"></script>
+<script src="{{ asset('front/js/functions.js') }}"></script>
 
 <!-- SLIDER REVOLUTION 5.x SCRIPTS  -->
-<script src="{{asset('front/include/rs-plugin/js/jquery.themepunch.tools.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/jquery.themepunch.revolution.min.js')}}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.tools.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.revolution.min.js') }}"></script>
 
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.video.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.slideanims.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.actions.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.layeranimation.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.kenburn.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.navigation.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.migration.min.js')}}"></script>
-<script src="{{asset('front/include/rs-plugin/js/extensions/revolution.extension.parallax.min.js')}}"></script>
-<script src="{{asset('front/js/components/rangeslider.min.js')}}"></script>
-<script src="{{asset('front/js/components/bs-datatable.js')}}"></script>
-<script src="{{asset('front/js/components/bs-filestyle.js')}}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.video.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.actions.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.navigation.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.migration.min.js') }}"></script>
+<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.parallax.min.js') }}"></script>
+<script src="{{ asset('front/js/components/rangeslider.min.js') }}"></script>
+<script src="{{ asset('front/js/components/bs-datatable.js') }}"></script>
+<script src="{{ asset('front/js/components/bs-filestyle.js') }}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-<script src="{{asset('front/toast/dist/js/iziToast.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('front/js/components/moment.js')}}"></script>
-<script src="{{asset('front/js/components/timepicker.js')}}"></script>
-<script src="{{asset('front/js/components/datepicker.js')}}"></script>
-<script src="{{asset('front/js/components/daterangepicker.js')}}"></script>
+<script src="{{ asset('front/toast/dist/js/iziToast.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('front/js/components/moment.js') }}"></script>
+<script src="{{ asset('front/js/components/timepicker.js') }}"></script>
+<script src="{{ asset('front/js/components/datepicker.js') }}"></script>
+<script src="{{ asset('front/js/components/daterangepicker.js') }}"></script>
 
 
 <script>
+    console.log('27-10-2022 20:25');
     var tpj = jQuery;
     tpj.noConflict();
     var $ = jQuery.noConflict();
@@ -243,7 +250,7 @@
                     location.reload();
                 }
             },
-            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;
                 var errorsHtml = '';
                 $.each(errors['errors'], function(index, value) {
@@ -299,7 +306,7 @@
                 // location.replace("/get-order?produk_id=" + produk);
                 console.log(result)
             },
-            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;
                 var errorsHtml = '';
                 $.each(errors['errors'], function(index, value) {
