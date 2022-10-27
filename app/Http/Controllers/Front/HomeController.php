@@ -51,6 +51,7 @@ class HomeController extends Controller
         }
         $data['kelas_mingguan'] = $kelas_mingguan;
         $data['partner'] = ClassPartnerModel::get();
+        // return $data;
         return view('front.home.home', $data);
     }
 

@@ -9,7 +9,9 @@
 
     <!-- Stylesheets
 	============================================= -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Poppins:300,400,500,600,700|PT+Serif:400,400i&display=swap" rel="stylesheet" type="text/css" />
+    <link
+        href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Poppins:300,400,500,600,700|PT+Serif:400,400i&display=swap"
+        rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/x-icon" href="{{asset('Backend/logo_12.png')}}" />
     <link rel="stylesheet" href="{{asset('front/css/bootstrap.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/style.css')}}" type="text/css" />
@@ -24,7 +26,8 @@
     @yield('seo-head')
 
     <!-- SLIDER REVOLUTION 5.x CSS SETTINGS -->
-    <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/settings.css')}}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/settings.css')}}"
+        media="screen" />
     <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/layers.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/navigation.css')}}">
     <link rel="stylesheet" href="{{asset('front/css/components/ion.rangeslider.css')}}" type="text/css" />
@@ -43,6 +46,11 @@
 	============================================= -->
     <title>E-class Akarindo</title>
 
+    <!-- JavaScripts
+============================================= -->
+    <script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script src="{{asset('front/js/plugins.min.js')}}"></script>
     <style>
         .revo-slider-emphasis-text {
             font-size: 58px;

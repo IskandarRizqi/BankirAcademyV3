@@ -14,7 +14,7 @@ class PembayaranController extends Controller
     {
         $data['pembayaran'] = ClassPaymentModel::select(
             'class_payment.*',
-            'users.name',
+            'user_profile.name',
             'classes.title',
             'classes.date_start',
             'classes.date_start',
@@ -22,7 +22,7 @@ class PembayaranController extends Controller
             'class_participant.certificate'
 
         )
-            ->join('users', 'users.id', 'class_payment.user_id')
+            ->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')
             ->get();

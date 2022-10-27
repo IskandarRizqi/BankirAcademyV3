@@ -70,8 +70,15 @@
 								@endforeach
 							</td>
 							<td class="text-center">
-								{{count($v->peserta_list['belum'])+count($v->peserta_list['lunas'])}} |
-								{{count($v->peserta_list['lunas'])}}
+								<span class="badge badge-danger" data-toggle="modal" data-target="#listPesertaModal"
+									onclick="openPeserta({{$v->peserta_list['all']}})">
+									{{count($v->peserta_list['all'])}}
+								</span>
+								|
+								<span class="badge badge-success" data-toggle="modal" data-target="#listPesertaModal"
+									onclick="openPeserta({{$v->peserta_list['all']}})">
+									{{count($v->peserta_list['all'])}}
+								</span>
 							</td>
 							<td>
 								<button class="btn bs-tooltip btn-info" title="Pricing"
@@ -144,9 +151,9 @@
 									</table>
 								</div>
 							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn" data-dismiss="modal">Close</button>
+							<div class="modal-footer">
+								<button type="button" class="btn btn" data-dismiss="modal">Close</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -205,6 +212,7 @@
 
 	function openPeserta(data){
 		let = html = '';
+		$('#listPeserta').html(html);
 		if (data.length > 0) {
 			data.forEach(el=>{
 				let status = 'Belum Lunas';

@@ -38,7 +38,7 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td><span class="badge badge-primary text-uppercase">
-                                    {{$p->status?'lunas':'belum lunas'}}
+                                    {{$p->status==1?'lunas':'belum lunas'}}
                                 </span>
                             </td>
                             <td>{{$p->no_invoice}}</td>
@@ -81,6 +81,16 @@
 @section('custom-js')
 <script>
     createDataTable('#tblPembayaran');
+    function viewimage(image) {
+        swal.fire({
+            imageUrl: '/image/' + image,
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+            animation: false,
+            padding: '2em'
+        })
+    }
     function approved(id,status) {
 		swal({
 			title: 'Are you sure?',

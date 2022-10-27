@@ -37,7 +37,7 @@ class OrderController extends Controller
         foreach ($request->input2 as $key => $value) {
             $size = $request->file('input2')[$key]->getSize();
             if (($size / 1024) > 100) {
-                return Redirect::back()->withErrors(['input2' => 'Size Maximum 100kb']);
+                return Redirect::back()->with('error', 'Size Maximum 100kb');
             }
             $gambar = $value->store('order/' . Auth::user()->email . '/' . time());
         }

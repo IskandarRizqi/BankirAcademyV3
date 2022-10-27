@@ -137,7 +137,7 @@
                     <div class="row" id="">
                         @foreach ($pop as $p)
                         <div class="col-lg-4 mb-4">
-                            <div class="card text-white card-has-bg click-col"
+                            {{-- <div class="card text-white click-col"
                                 style="background-image:url('<?= $p->image ?>');">
                                 <img class="card-img d-none" src="<?= $p->image ?>">
                                 <div class="card-img-overlay d-flex flex-column">
@@ -169,6 +169,50 @@
                                             data-backdrop="static" data-keyboard="false">Detail</a>
                                         @endauth
                                     </div>
+                                </div>
+                            </div> --}}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card" style="min-height: 0px !important">
+                                        <img src="<?= $p->image ?>" alt="" height="360px" width="100%">
+                                    </div>
+                                    <h5 class="text-uppercase mt-2">{{$p->title}}</h5>
+                                    <div class="d-flex mt-2">
+                                        <img class="mr-3 rounded-circle"
+                                            src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}"
+                                            alt="Generic placeholder image" style="max-width:50px; max-height:50px;">
+                                        <div class="">
+                                            <label class="d-block mb-0"> {{$p->instructor_list[0]->name}}
+                                            </label>
+                                            <small>{{$p->instructor_list[0]->title}}</small>
+                                        </div>
+                                        <div class="ml-2 flex-fill">
+                                            <label class="d-block mb-0"> Harga
+                                            </label>
+                                            @if ($p->pricing)
+                                            <small>
+                                                {{numfmt_format_currency(numfmt_create('id_ID',
+                                                \NumberFormatter::CURRENCY),$p->pricing->price,"IDR")}}
+                                            </small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @auth
+                                    <div class="text-right w-100">
+                                        <a class="btn btn-success btn-block btn-rounded"
+                                            href="class/{{$p->unique_id}}/{{$p->title}}">
+                                            Detail
+                                        </a>
+                                    </div>
+                                    @else
+                                    <div class="text-right w-100">
+                                        <a class="btn btn-success btn-block btn-rounded"
+                                            href="class/{{$p->unique_id}}/{{$p->title}}" data-toggle="modal"
+                                            data-target="#modelId" data-backdrop="static" data-keyboard="false">
+                                            Detail
+                                        </a>
+                                    </div>
+                                    @endauth
                                 </div>
                             </div>
                         </div>

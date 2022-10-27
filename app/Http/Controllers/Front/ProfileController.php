@@ -28,6 +28,8 @@ class ProfileController extends Controller
             ->get();
         $data['class_id'] = ClassPaymentModel::where('user_id', $auth)->pluck('class_id')->toArray();
         $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
+        $data['pop'] = ClassesModel::limit(6)->get();
+        // return $data;
         return view('front.profile.profile', $data);
     }
 

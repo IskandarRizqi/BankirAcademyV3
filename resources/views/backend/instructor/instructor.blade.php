@@ -50,7 +50,7 @@
                                     <input type="text" class="form-control" id="id" name="id" value="{{ old('id') }}"
                                         hidden>
                                     <input type="text" class="form-control" id="nama" name="nama"
-                                        value="{{ old('nama') }}">
+                                        value="{{ old('nama') }}" required>
                                     @error('nama')
                                     <span class="text-danger" role="alert">
                                         <strong>Harap Diisi</strong>
@@ -60,8 +60,8 @@
 
                                 <div class="form-group">
                                     <label for="">Deskripsi</label>
-                                    <textarea type="text" class="form-control" id="desc"
-                                        name="desc">{{ old('desc') }}</textarea>
+                                    <textarea type="text" class="form-control" id="desc" name="desc"
+                                        required>{{ old('desc') }}</textarea>
                                     @error('desc')
                                     <span class="text-danger" role="alert">
                                         <strong>Harap Diisi</strong>
@@ -73,7 +73,7 @@
                                 <div class="form-group">
                                     <label for="">Title</label>
                                     <input type="text" class="form-control" id="title" name="title"
-                                        value="{{ old('title') }}">
+                                        value="{{ old('title') }}" required>
                                     @error('title')
                                     <span class="text-danger" role="alert">
                                         <strong>Harap Diisi</strong>
@@ -88,7 +88,7 @@
                                         <label class="custom-file-container__custom-file">
                                             <input type="file"
                                                 class="custom-file-container__custom-file__custom-file-input"
-                                                accept="image/*" name="picture">
+                                                accept="image/*" name="picture" required>
                                             <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
                                             <span
                                                 class="custom-file-container__custom-file__custom-file-control"></span>

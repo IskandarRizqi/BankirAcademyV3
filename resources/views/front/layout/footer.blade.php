@@ -116,12 +116,6 @@
 	============================================= -->
 <div id="gotoTop" class="icon-angle-up"></div>
 
-<!-- JavaScripts
-============================================= -->
-<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
-    crossorigin="anonymous"></script>
-<script src="{{asset('front/js/plugins.min.js')}}"></script>
-<!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
 
 <!-- Footer Scripts
 ============================================= -->
