@@ -65,15 +65,21 @@
                                                                 <div class="dropdown-menu">
                                                                     <a class="dropdown-item"
                                                                         href="/classes/getcertificate/{{$d->class_id}}"
-                                                                        target="_blank">Get
-                                                                        Certificate</a>
+                                                                        target="_blank">
+                                                                        Get Certificate
+                                                                    </a>
                                                                     <button id="btnModal" type="button"
                                                                         class="btn btn-primary dropdown-item"
                                                                         data-toggle="modal" data-target="#bayarModal"
                                                                         onclick="bukti({{$d->class_id}},{{$d->id}})"
-                                                                        title="Upload Bukti">
-                                                                        Upload Bukti
+                                                                        title="Upload Bukti" @if ($d->expired <=
+                                                                            Carbon\Carbon::now()) disabled @endif>
+                                                                            Upload Bukti
                                                                     </button>
+                                                                    @if (!$d->review)
+                                                                    <button
+                                                                        onclick="review({{$d->participant_id}})">review</button>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -81,7 +87,7 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
-                                            <!-- Modal -->
+                                            <!-- Modal Bukti-->
                                             <div class="modal fade" id="bayarModal" tabindex="-1"
                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
@@ -105,6 +111,55 @@
                                                                         class="file" data-show-upload="false"
                                                                         data-show-caption="true"
                                                                         data-show-preview="true" accept="image/*">
+                                                                    @error('input2')
+                                                                    <span class="text-danger" role="alert">
+                                                                        <strong>{{$message}}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary">Save
+                                                                    changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Participant-->
+                                            <div class="modal fade" id="reviewModal" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="bayar" method="POST"
+                                                            enctype="multipart/form-data">
+                                                            @csrf
+                                                            <div class="modal-header">
+                                                                <h3>Review</h3>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="text" id="participant_id"
+                                                                    name="participant_id" hidden>
+                                                                <div class="col-lg-12">
+                                                                    <label>Nilai</label><br>
+                                                                    <input type="number" max="10" min="0" value="0"
+                                                                        id="nilai" name="nilai" class="form-control">
+                                                                    @error('nilai')
+                                                                    <span class="text-danger" role="alert">
+                                                                        <strong>{{$message}}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="col-lg-12 bottommargin">
+                                                                    <label>Pesan</label><br>
+                                                                    <textarea name="review" id="review" cols="30"
+                                                                        rows="10" class="form-control"></textarea>
                                                                     @error('input2')
                                                                     <span class="text-danger" role="alert">
                                                                         <strong>{{$message}}</strong>
@@ -357,6 +412,10 @@
     function bukti(class_id, payment) {
         $('#class_id').val(class_id);
         $('#payment_id').val(payment);
+    }
+    function review(participant_id) {
+        $('#reviewModal').modal('show');
+        $('#participant_id').val(participant_id);
     }
     
 </script>

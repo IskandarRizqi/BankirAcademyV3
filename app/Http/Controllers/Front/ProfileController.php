@@ -22,9 +22,11 @@ class ProfileController extends Controller
     {
         $auth = Auth::user()->id;
         $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
-        $data['payment'] = ClassPaymentModel::select('class_payment.*', 'classes.title')
+        $data['payment'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'class_participant.review', 'class_participant.id as participant_id')
             ->join('classes', 'classes.id', 'class_payment.class_id')
-            ->where('user_id', $auth)
+            ->join('class_participant', 'class_participant.class_id', 'classes.id')
+            ->where('class_payment.user_id', $auth)
+            ->where('class_participant.user_id', $auth)
             ->get();
         $data['class_id'] = ClassPaymentModel::where('user_id', $auth)->pluck('class_id')->toArray();
         $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
