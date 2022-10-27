@@ -52,7 +52,7 @@ class BannerslideController extends Controller
         $name = $request->file('banner')->getClientOriginalName();
         $filename = time() . '-' . $name;
         $file = $request->file('banner');
-        $file->move(public_path('image'), $filename);
+        $file->move(public_path('Image'), $filename);
 
 
         BannerModel::create([
@@ -138,7 +138,7 @@ class BannerslideController extends Controller
             $name = $request->file('banner')->getClientOriginalName();
             $filename = time() . '-' . $name;
             $file = $request->file('banner');
-            $file->move(public_path('image'), $filename);
+            $file->move(public_path('Image'), $filename);
 
             // $cdl = GlobalHelper::cloudinarys();
             // $cdl->uploadApi()->destroy($request->urlbanner);

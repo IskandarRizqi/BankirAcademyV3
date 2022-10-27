@@ -24,7 +24,7 @@
                         <td>{{ $d->title }}</td>
                         <td>{{ $d->desc }}</td>
                         <td><img src="{{ asset('Image/'.json_decode($d->picture)->url) }}" alt="" width="130px"> </td>
-                        <td><button class="btn btn-warning" id="edit" data-data="{{$d}}"><i
+                        <td><button class="btn btn-warning" id="edit" onclick="edit({{$d}})"><i
                                     class='bx bx-edit'></i></button>
                             <button class="btn btn-danger" onclick="hapus('{{$d->id}}')"> <i
                                     class='bx bx-trash'></i></button>
@@ -123,17 +123,20 @@
 <script>
     var firstUpload = new FileUploadWithPreview('myFirstImage')
     createDataTable('#zero-config')
-    $('#edit').click(function () {
-        openmodal('#instructorModal')
-        let data = JSON.parse($(this).attr('data-data'))
-        $('#id').val(data['id'])
-        $('#nama').val(data['name'])
-        $('#title').val(data['title'])
-        $('#desc').val(data['desc'])
+    // $('#edit').click(function () {
+    //     openmodal('#instructorModal')
+    // })
+    function edit(data) {
+        openmodal('#instructorModal');
+        $('#id').val(data.id)
+        $('#nama').val(data.name)
+        $('#title').val(data.title)
+        $('#desc').val(data.desc)
         // $('#picture').val(data['picture'])
         // document.getElementById('img_preview').style.backgroundImage="{{asset('Image/1666142736-1.png')}}"
         document.getElementById('img_preview').style.backgroundImage="asset('Image/1666142736-1.png')"
-    })
+        
+    }
     function hapus(id) {
         $('#id_instructor').val(id)
         swal({

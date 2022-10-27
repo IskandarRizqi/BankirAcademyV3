@@ -22,15 +22,26 @@ class ProfileController extends Controller
     {
         $auth = Auth::user()->id;
         $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        $data['pop'] = ClassesModel::limit(6)->get();
         $data['payment'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'class_participant.review', 'class_participant.id as participant_id')
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->join('class_participant', 'class_participant.class_id', 'classes.id')
             ->where('class_payment.user_id', $auth)
             ->where('class_participant.user_id', $auth)
             ->get();
-        $data['class_id'] = ClassPaymentModel::where('user_id', $auth)->pluck('class_id')->toArray();
-        $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
-        $data['pop'] = ClassesModel::limit(6)->get();
+        $data['class'] = ClassPaymentModel::select(
+            'class_payment.*',
+            'class_participant.review',
+            'class_participant.id as participant_id'
+        )
+            ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')
+            ->where('class_payment.status', 1)
+            ->where('class_payment.user_id', $auth)
+            ->where('class_participant.user_id', $auth)
+            ->get();
+        foreach ($data['class'] as $key => $value) {
+            $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end')->where('id', $value->class_id)->get();
+        }
         // return $data;
         return view('front.profile.profile', $data);
     }

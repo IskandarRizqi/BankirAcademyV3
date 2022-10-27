@@ -200,6 +200,7 @@
                                     @auth
                                     <div class="text-right mt-2 w-100">
                                         <a class="btn btn-success btn-block btn-rounded"
+                                            style=" border-radius:10px !important"
                                             href="class/{{$p->unique_id}}/{{$p->title}}">
                                             Detail
                                         </a>
@@ -207,6 +208,7 @@
                                     @else
                                     <div class="text-right w-100">
                                         <a class="btn btn-success btn-block btn-rounded"
+                                            style=" border-radius:10px !important"
                                             href="class/{{$p->unique_id}}/{{$p->title}}" data-toggle="modal"
                                             data-target="#modelId" data-backdrop="static" data-keyboard="false">
                                             Detail
@@ -288,7 +290,7 @@
                                                         width='100%'>Detail</button>
                                                 </a>
                                                 @else
-                                                <a class="btn btn-success btn-sm" style="margin-left: 83px"
+                                                <a class="btn btn-success btn-sm" style="margin-left: 83px;"
                                                     data-toggle="modal" data-target="#modelId" data-backdrop="static"
                                                     data-keyboard="false">Detail</a>
                                                 @endauth

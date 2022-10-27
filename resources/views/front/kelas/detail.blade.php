@@ -59,7 +59,6 @@
                                         <thead>
                                             <tr>
                                                 <th>Timings</th>
-                                                <th>Location</th>
                                                 <th>Description</th>
                                             </tr>
                                         </thead>
@@ -69,7 +68,6 @@
                                                 <td><span
                                                         class="badge badge-danger">{{$e->time_start.'-'.$e->time_end}}</span>
                                                 </td>
-                                                <td>{{$e->link?$e->link:$e->location}}</td>
                                                 <td>{{$e->description}}</td>
                                             </tr>
                                             @endforeach

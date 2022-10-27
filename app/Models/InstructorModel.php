@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InstructorModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'instructor';
 	protected $fillable = [
 		'name',
@@ -16,4 +16,11 @@ class InstructorModel extends Model
 		'desc',
 		'user_id',
 	];
+	// protected $appends = ['picture'];
+	// public function getPictureAttribute()
+	// {
+	// 	if (array_key_exists('picture', $this->attributes)) {
+	// 		return $this->attributes['picture'];
+	// 	}
+	// }
 }

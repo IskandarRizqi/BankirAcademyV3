@@ -128,59 +128,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Modal Participant-->
-                                            <div class="modal fade" id="reviewModal" tabindex="-1"
-                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <form action="bayar" method="POST"
-                                                            enctype="multipart/form-data">
-                                                            @csrf
-                                                            <div class="modal-header">
-                                                                <h3>Review</h3>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <input type="text" id="participant_id"
-                                                                    name="participant_id" hidden>
-                                                                <div class="col-lg-12">
-                                                                    <label>Nilai</label><br>
-                                                                    <input type="number" max="10" min="0" value="0"
-                                                                        id="nilai" name="nilai" class="form-control">
-                                                                    @error('nilai')
-                                                                    <span class="text-danger" role="alert">
-                                                                        <strong>{{$message}}</strong>
-                                                                    </span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="col-lg-12 bottommargin">
-                                                                    <label>Pesan</label><br>
-                                                                    <textarea name="review" id="review" cols="30"
-                                                                        rows="10" class="form-control"></textarea>
-                                                                    @error('input2')
-                                                                    <span class="text-danger" role="alert">
-                                                                        <strong>{{$message}}</strong>
-                                                                    </span>
-                                                                    @enderror
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary">Save
-                                                                    changes</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-postss">
-                                        <table class="table table-bordered">
+                                        <table id="tblKelasAnda" class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -192,11 +143,93 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @foreach ($class as $c )
+                                                @foreach ($c->class as $key=> $cl)
                                                 <tr>
-
+                                                    <td>{{$key+1}}</td>
+                                                    <td>{{$cl->title}}</td>
+                                                    <td>
+                                                        @foreach ($cl->instructor_list as $instructor_list)
+                                                        <span
+                                                            class="badge badge-primary">{{$instructor_list->name}}</span>
+                                                        @endforeach
+                                                    </td>
+                                                    <td>{{$cl->date_start}} - {{$cl->date_end}}</td>
+                                                    <td>a</td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-warning dropdown-toggle btn-sm"
+                                                                type="button" data-toggle="dropdown"
+                                                                aria-expanded="false" title="Opsi">
+                                                                <i class="icon-cog"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item"
+                                                                    href="/classes/getcertificate/{{$c->class_id}}"
+                                                                    target="_blank">
+                                                                    Get Certificate
+                                                                </a>
+                                                                @if (!$c->review)
+                                                                <button
+                                                                    onclick="review({{$c->participant_id}})">review</button>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                 </tr>
+                                                @endforeach
+                                                @endforeach
                                             </tbody>
                                         </table>
+
+                                        <!-- Modal Participant-->
+                                        <div class="modal fade" id="reviewModal" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="bayar" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h3>Review</h3>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="text" id="participant_id" name="participant_id"
+                                                                hidden>
+                                                            <div class="col-lg-12">
+                                                                <label>Nilai</label><br>
+                                                                <input type="number" max="10" min="0" value="0"
+                                                                    id="nilai" name="nilai" class="form-control">
+                                                                @error('nilai')
+                                                                <span class="text-danger" role="alert">
+                                                                    <strong>{{$message}}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="col-lg-12 bottommargin">
+                                                                <label>Pesan</label><br>
+                                                                <textarea name="review" id="review" cols="30" rows="10"
+                                                                    class="form-control"></textarea>
+                                                                @error('input2')
+                                                                <span class="text-danger" role="alert">
+                                                                    <strong>{{$message}}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save
+                                                                changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
                                         <!-- <div class="title-block">
