@@ -23,11 +23,16 @@ class ProfileController extends Controller
         $auth = Auth::user()->id;
         $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
         $data['pop'] = ClassesModel::limit(6)->get();
-        $data['payment'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'class_participant.review', 'class_participant.id as participant_id')
+        $data['payment'] = ClassPaymentModel::select(
+            'class_payment.*',
+            'classes.title',
+            'class_participant.review',
+            'class_participant.id as participant_id'
+        )
             ->join('classes', 'classes.id', 'class_payment.class_id')
-            ->join('class_participant', 'class_participant.class_id', 'classes.id')
+            ->leftJoin('class_participant', 'class_participant.class_id', 'class_payment.id')
+            // ->where('class_participant.user_id', $auth)
             ->where('class_payment.user_id', $auth)
-            ->where('class_participant.user_id', $auth)
             ->get();
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',

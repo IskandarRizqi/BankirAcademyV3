@@ -292,6 +292,31 @@ class ClassesController extends Controller
 		return redirect('/admin/classes')->with('success', 'Price Updated');
 	}
 
+	public function setreview($id, $active)
+	{
+		$act = 1;
+		if ($active == 1) {
+			$act = 0;
+		}
+		$d = ClassParticipantModel::where('id', $id)->update(
+			[
+				'review_active' => $act,
+			]
+		);
+		if ($d) {
+			return Redirect::back()->with('success', 'Review Tersimpan');
+		}
+		return Redirect::back()->with('error', 'Review Tidak Tersimpan');
+	}
+
+	public function getreview($class_id)
+	{
+		$data['class'] = ClassesModel::where('id', $class_id)->first();
+		$data['review'] = ClassParticipantModel::where('class_id', $class_id)->get();
+		// return $data;
+		return view('backend.classes.reviewclass', $data);
+	}
+
 	public function sendreview(Request $request)
 	{
 		$valid = Validator::make($request->all(), [
@@ -304,6 +329,8 @@ class ClassesController extends Controller
 		}
 
 		$c = ClassParticipantModel::where('id', $request->participant_id)->update([
+			'review_active' => 0,
+			'review_time' => Carbon::now(),
 			'review_point' => $request->nilai,
 			'review' => $request->review,
 		]);

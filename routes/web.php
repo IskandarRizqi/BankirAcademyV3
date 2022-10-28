@@ -43,6 +43,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/partner', [App\Http\Controllers\Backend\PartnerController::class, 'input_partner']);
     Route::post('/admin/partner/delete', [App\Http\Controllers\Backend\PartnerController::class, 'delete_partner']);
     Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
+    Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
+    Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);

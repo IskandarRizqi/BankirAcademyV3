@@ -407,126 +407,28 @@
                 <div class="owl-stage-outer">
                     <div class="owl-stage"
                         style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                        @if (isset($testimoni))
+                        @foreach ($testimoni as $t)
                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                             <div class="oc-item">
                                 <div class="testimonial">
                                     <div class="testi-image">
-                                        <a href="#"><img src="{{ asset('front/one-page/images/team/3.jpg') }}"
+                                        <a href="#"><img
+                                                src="{{ $t->picture?$t->picture:asset('front/one-page/images/team/3.jpg') }}"
                                                 alt="Customer Testimonails"></a>
                                     </div>
                                     <div class="testi-content">
-                                        <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
-                                            ullam
-                                            quibusdam
-                                            cum libero illo rerum repellendus!</p>
+                                        <p>{{$t->review}}</p>
                                         <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
+                                            {{$t->name}}
+                                            {{-- <span>XYZ Inc.</span> --}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                            <div class="oc-item">
-                                <div class="testimonial">
-                                    <div class="testi-image">
-                                        <a href="#"><img src="{{ asset('front/one-page/images/team/3.jpg') }}"
-                                                alt="Customer Testimonails"></a>
-                                    </div>
-                                    <div class="testi-content">
-                                        <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
-                                            ullam
-                                            quibusdam
-                                            cum libero illo rerum repellendus!</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                            <div class="oc-item">
-                                <div class="testimonial">
-                                    <div class="testi-image">
-                                        <a href="#"><img src="{{ asset('front/one-page/images/team/3.jpg') }}"
-                                                alt="Customer Testimonails"></a>
-                                    </div>
-                                    <div class="testi-content">
-                                        <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
-                                            ullam
-                                            quibusdam
-                                            cum libero illo rerum repellendus!</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                            <div class="oc-item">
-                                <div class="testimonial">
-                                    <div class="testi-image">
-                                        <a href="#"><img src="{{ asset('front/one-page/images/team/3.jpg') }}"
-                                                alt="Customer Testimonails"></a>
-                                    </div>
-                                    <div class="testi-content">
-                                        <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
-                                            ullam
-                                            quibusdam
-                                            cum libero illo rerum repellendus!</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                            <div class="oc-item">
-                                <div class="testimonial">
-                                    <div class="testi-image">
-                                        <a href="#"><img src="{{ asset('front/one-page/images/team/3.jpg') }}"
-                                                alt="Customer Testimonails"></a>
-                                    </div>
-                                    <div class="testi-content">
-                                        <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
-                                            ullam
-                                            quibusdam
-                                            cum libero illo rerum repellendus!</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                            <div class="oc-item">
-                                <div class="testimonial">
-                                    <div class="testi-image">
-                                        <a href="#"><img src="{{ asset('front/one-page/images/team/3.jpg') }}"
-                                                alt="Customer Testimonails"></a>
-                                    </div>
-                                    <div class="testi-content">
-                                        <p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur
-                                            ullam
-                                            quibusdam
-                                            cum libero illo rerum repellendus!</p>
-                                        <div class="testi-meta">
-                                            John Doe
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                        @endif
                     </div>
                 </div>
                 {{-- <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i

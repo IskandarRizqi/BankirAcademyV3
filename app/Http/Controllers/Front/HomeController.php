@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
+use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,6 +52,10 @@ class HomeController extends Controller
         }
         $data['kelas_mingguan'] = $kelas_mingguan;
         $data['partner'] = ClassPartnerModel::get();
+        $data['testimoni'] = ClassParticipantModel::select('class_participant.*', 'user_profile.name', 'user_profile.picture')
+            ->join('user_profile', 'user_profile.user_id', 'class_participant.user_id')
+            ->where('class_participant.review_active', 1)
+            ->get();
         // return $data;
         return view('front.home.home', $data);
     }

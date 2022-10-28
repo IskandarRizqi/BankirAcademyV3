@@ -19,9 +19,10 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('payment_id');
             $table->integer('certificate')->comment('0:Not Available;1:Available')->default(0);
-			$table->longText('review')->nullable();
-			$table->integer('review_point')->nullable();
-			$table->dateTime('review_time')->nullable();
+            $table->longText('review')->nullable();
+            $table->integer('review_point')->nullable();
+            $table->dateTime('review_time')->nullable();
+            $table->integer('review_active')->default(0);
             $table->timestamps();
         });
     }

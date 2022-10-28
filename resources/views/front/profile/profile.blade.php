@@ -76,10 +76,6 @@
                                                                             Carbon\Carbon::now()) disabled @endif>
                                                                             Upload Bukti
                                                                     </button>
-                                                                    @if (!$d->review)
-                                                                    <button
-                                                                        onclick="review({{$d->participant_id}})">review</button>
-                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </td>

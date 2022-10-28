@@ -96,6 +96,9 @@
 									<a class="dropdown-item" title="Preview"
 										href="/admin/classes/previewcertificate/{{$v->id}}" target="_blank">Show
 										Certificate</a>
+									<a class="dropdown-item" title="Preview" href="/admin/classes/getreview/{{$v->id}}"
+										target="_blank">Show
+										Review</a>
 								</div>
 								<div class="dropdown">
 								</div>
