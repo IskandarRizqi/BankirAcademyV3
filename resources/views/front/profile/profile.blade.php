@@ -131,7 +131,7 @@
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-postss">
-                                        <table id="tblKelasAnda" class="table table-bordered">
+                                        <table id="datatable2" class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -169,10 +169,12 @@
                                                                     target="_blank">
                                                                     Get Certificate
                                                                 </a>
-                                                                @if (!$c->review)
-                                                                <button
-                                                                    onclick="review({{$c->participant_id}})">review</button>
-                                                                @endif
+                                                                <span class="dropdown-item" @if ($c->review)
+                                                                    onclick="onReview('{{$c->review}}','{{$c->review_point}}')"
+                                                                    @else
+                                                                    onclick="review({{$c->participant_id}})"
+                                                                    @endif
+                                                                    >Review</span>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -187,7 +189,8 @@
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="bayar" method="POST" enctype="multipart/form-data">
+                                                    <form action="/classes/review" method="POST"
+                                                        enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="modal-header">
                                                             <h3>Review</h3>
@@ -200,9 +203,10 @@
                                                             <input type="text" id="participant_id" name="participant_id"
                                                                 hidden>
                                                             <div class="col-lg-12">
-                                                                <label>Nilai</label><br>
-                                                                <input type="number" max="10" min="0" value="0"
-                                                                    id="nilai" name="nilai" class="form-control">
+                                                                <label>Nilai = </label><span id="nilai_val"></span><br>
+                                                                <input type="range" class="form-range form-control"
+                                                                    id="nilai" name="nilai" value="{{old('nilai')}}"
+                                                                    min="1" max="5">
                                                                 @error('nilai')
                                                                 <span class="text-danger" role="alert">
                                                                     <strong>{{$message}}</strong>
@@ -223,7 +227,8 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Save
+                                                            <button type="submit" class="btn btn-primary"
+                                                                id="btnReview">Save
                                                                 changes</button>
                                                         </div>
                                                     </form>
@@ -418,6 +423,11 @@
 
 <script>
     $(document).ready(function() {
+        $('#datatable2').dataTable();
+        $('#nilai').change(function () {
+            let nilai = $('#nilai').val();
+            $('#nilai_val').html(nilai);
+        })
         $('#destroy').click(function(event) {
             var form = $(this).closest("form");
             event.preventDefault();
@@ -449,6 +459,14 @@
     function review(participant_id) {
         $('#reviewModal').modal('show');
         $('#participant_id').val(participant_id);
+        $('#btnReview').removeAttr('disabled');
+    }
+    function onReview(review,point) {
+        $('#reviewModal').modal('show');
+        $('#nilai').val(point);
+        $('#nilai_val').html(point);
+        $('#review').val(review);
+        $('#btnReview').attr('disabled','disabled');
     }
     
 </script>

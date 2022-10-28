@@ -32,6 +32,7 @@ class ProfileController extends Controller
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',
             'class_participant.review',
+            'class_participant.review_point',
             'class_participant.id as participant_id'
         )
             ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')

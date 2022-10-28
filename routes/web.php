@@ -47,6 +47,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
+    Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

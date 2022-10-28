@@ -19,8 +19,8 @@
 <script src="{{asset('Backend/assets/js/elements/tooltip.js')}}"></script>
 <script src="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.js')}}"></script>
 <script src="{{asset('Backend/plugins/ckeditor/ckeditor.js')}}"></script>
-<script src="{{asset('BAckend/plugins/sweetalerts/sweetalert2.min.js')}}"></script>
-<script src="{{asset('BAckend/plugins/sweetalerts/custom-sweetalert.js')}}"></script>
+<script src="{{asset('Backend/plugins/sweetalerts/sweetalert2.min.js')}}"></script>
+<script src="{{asset('Backend/plugins/sweetalerts/custom-sweetalert.js')}}"></script>
 <script>
 	$(document).ready(function() {
 		$('.slc2').select2({

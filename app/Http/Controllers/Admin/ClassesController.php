@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use PDF;
 
 class ClassesController extends Controller
@@ -289,5 +290,26 @@ class ClassesController extends Controller
 			ClassEventModel::UpdateOrCreate(['id' => $r->txtClassEventId[$i]], $tobeins[$i]);
 		}
 		return redirect('/admin/classes')->with('success', 'Price Updated');
+	}
+
+	public function sendreview(Request $request)
+	{
+		$valid = Validator::make($request->all(), [
+			'nilai' => 'required',
+			'review' => 'required',
+		]);
+		//response error validation
+		if ($valid->fails()) {
+			return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Lengkap');
+		}
+
+		$c = ClassParticipantModel::where('id', $request->participant_id)->update([
+			'review_point' => $request->nilai,
+			'review' => $request->review,
+		]);
+		if ($c) {
+			return Redirect::back()->with('success', 'Review Tersimpan');
+		}
+		return Redirect::back()->withInput($request->all())->with('error', 'Review Tidak Tersimpan');
 	}
 }
