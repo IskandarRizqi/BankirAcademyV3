@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
+use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
@@ -46,7 +47,8 @@ class ProfileController extends Controller
             ->where('class_participant.user_id', $auth)
             ->get();
         foreach ($data['class'] as $key => $value) {
-            $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end')->where('id', $value->class_id)->get();
+            $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id')->where('id', $value->class_id)->get();
+            $value->event = ClassEventModel::where('class_id', $value->class_id)->get();
         }
         // return $data;
         return view('front.profile.profile', $data);

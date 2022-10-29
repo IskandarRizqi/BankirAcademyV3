@@ -65,47 +65,45 @@
                         <h4>Recent Posts</h4>
                         <div class="posts-sm row col-mb-30" id="post-list-footer">
                             @if (isset($pop))
-                                @foreach ($pop as $key => $p)
-                                    @if ($key <= 2)
-                                        <div class="entry col-12">
-                                            <div class="grid-inner row">
-                                                <div class="col">
-                                                    <div class="entry-title">
-                                                        <h4><a
-                                                                href="class/{{ $p->unique_id }}/{{ $p->title }}">{{ $p->title }}</a>
-                                                        </h4>
-                                                    </div>
-                                                    <div class="entry-meta">
-                                                        <ul>
-                                                            <li>{{ \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }}
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            @foreach ($pop as $key => $p)
+                            @if ($key <= 2) <div class="entry col-12">
+                                <div class="grid-inner row">
+                                    <div class="col">
+                                        <div class="entry-title">
+                                            <h4><a href="class/{{ $p->unique_id }}/{{ $p->title }}">{{ $p->title }}</a>
+                                            </h4>
                                         </div>
-                                    @endif
-                                @endforeach
-                            @endif
+                                        <div class="entry-meta">
+                                            <ul>
+                                                <li>{{ \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="widget quick-contact-widget form-widget clearfix">
-                        <h4>Bantuan & Panduan</h4>
-                        <div class="form-result"></div>
-                        <a href="#">Layanan Pengaduan</a><br>
-                        <a href="#">Syarat & Ketentuan</a><br>
-                        <a href="#">Kebijakan Privasi</a><br>
-                        <a href="#">Tentang Kami</a><br>
-                        <a href="#">Kontak Kami</a><br>
-                        <a href="#">Press Kit</a><br>
-                        <a href="#">Bantuan</a><br>
-                        <a href="#">Karier</a><br>
+                        @endif
+                        @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="widget quick-contact-widget form-widget clearfix">
+                    <h4>Bantuan & Panduan</h4>
+                    <div class="form-result"></div>
+                    <a href="#">Layanan Pengaduan</a><br>
+                    <a href="#">Syarat & Ketentuan</a><br>
+                    <a href="#">Kebijakan Privasi</a><br>
+                    <a href="#">Tentang Kami</a><br>
+                    <a href="#">Kontak Kami</a><br>
+                    <a href="#">Press Kit</a><br>
+                    <a href="#">Bantuan</a><br>
+                    <a href="#">Karier</a><br>
+                </div>
+            </div>
         </div>
+    </div>
     </div>
 
     <div id="copyrights">

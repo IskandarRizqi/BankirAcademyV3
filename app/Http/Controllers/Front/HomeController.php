@@ -26,7 +26,7 @@ class HomeController extends Controller
             $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
             $now->endOfWeek()->format('Y-m-d')
         ])
-            ->whereDate('date_start', '>', Carbon::now())
+            ->whereDate('date_start', '>=', Carbon::now())
             ->orderBy('date_start', 'ASC')
             ->get();
         $class = [];
@@ -38,10 +38,10 @@ class HomeController extends Controller
                     $class = [];
                     $empat += 4;
                 }
-                if ($key == (count($data['minggu_ini']) - 1)) {
+                array_push($class, $value);
+                if (($key + 1) == count($data['minggu_ini'])) {
                     array_push($kelas_mingguan, $class);
                 }
-                array_push($class, $value);
             }
         } else {
             array_push($kelas_mingguan, $data['minggu_ini']);

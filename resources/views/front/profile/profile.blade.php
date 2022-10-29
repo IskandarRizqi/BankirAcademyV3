@@ -63,11 +63,6 @@
                                                                     <i class="icon-cog"></i>
                                                                 </button>
                                                                 <div class="dropdown-menu">
-                                                                    <a class="dropdown-item"
-                                                                        href="/classes/getcertificate/{{$d->class_id}}"
-                                                                        target="_blank">
-                                                                        Get Certificate
-                                                                    </a>
                                                                     <button id="btnModal" type="button"
                                                                         class="btn btn-primary dropdown-item"
                                                                         data-toggle="modal" data-target="#bayarModal"
@@ -151,7 +146,13 @@
                                                         @endforeach
                                                     </td>
                                                     <td>{{$cl->date_start}} - {{$cl->date_end}}</td>
-                                                    <td>a</td>
+                                                    <td>
+                                                        <button id="evModal" class="btn btn-info dropdown-item"
+                                                            data-toggle="modal" data-target="#eventModal"
+                                                            onclick="onEvent({{$c->event}})" title="Event">
+                                                            Event
+                                                        </button>
+                                                    </td>
                                                     <td>
                                                         <div class="dropdown">
                                                             <button class="btn btn-warning dropdown-toggle btn-sm"
@@ -171,6 +172,8 @@
                                                                     onclick="review({{$c->participant_id}})"
                                                                     @endif
                                                                     >Review</span>
+                                                                <span class="dropdown-item"
+                                                                    onclick="onContent({{$cl->content_list}})">Content</span>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -226,6 +229,67 @@
                                                             <button type="submit" class="btn btn-primary"
                                                                 id="btnReview">Save
                                                                 changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal Content-->
+                                        <div class="modal fade" id="contentModal" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <form action="#" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h3>Content</h3>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Title</th>
+                                                                        <th>Url</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tableContent">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal Event-->
+                                        <div class="modal fade" id="eventModal" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <form action="#" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h3>Event</h3>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Link/Lokasi</th>
+                                                                        <th>Waktu</th>
+                                                                        <th>Keterangan</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tableEvent">
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -452,6 +516,24 @@
         $('#class_id').val(class_id);
         $('#payment_id').val(payment);
     }
+    function onEvent(event) {
+        let html = 'Tidak Ditemukan';
+        if (event.length > 0) {
+            html = '';
+            event.forEach(el => {
+                html += '<tr>';
+                    if (el.link) {
+                        html += '    <td>'+el.link+'</td>';
+                    }else{
+                        html += '    <td>'+el.location+'</td>';
+                    }
+                html += '    <td>'+el.time_start+' - '+el.time_end+'</td>';
+                html += '    <td>'+el.description+'</td>';
+                html += '</tr>';
+            });
+        }
+        $('#tableEvent').html(html);
+    }
     function review(participant_id) {
         $('#reviewModal').modal('show');
         $('#participant_id').val(participant_id);
@@ -463,6 +545,24 @@
         $('#nilai_val').html(point);
         $('#review').val(review);
         $('#btnReview').attr('disabled','disabled');
+    }
+    function onContent(content) {
+        $('#contentModal').modal('show');
+        let html = 'Tidak Ditemukan';
+        if (content.length > 0) {
+            html = '';
+            content.forEach(el => {
+                html += '<tr>';
+                html += '    <td>'+el.title+'</td>';
+                if (el.type != 3) {
+                    html += '    <td><a href=/getBerkas?rf='+el.url+' target=_blank>Link</a></td>';
+                }else{
+                    html += '    <td><a href='+el.url+' target=_blank>Link</a></td>';
+                }
+                html += '</tr>';
+            });
+        }
+        $('#tableContent').html(html);
     }
     
 </script>
