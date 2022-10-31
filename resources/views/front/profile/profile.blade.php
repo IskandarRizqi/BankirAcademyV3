@@ -24,6 +24,45 @@
                                 </ul>
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
+										<div class="row">
+											<div class="col-lg-6">
+												<form action="/profile#tab-feeds" method="get">
+													<label>Tanggal Pembayaran</label>
+													<div class="input-group mb-4">
+														<input type="date" class="form-control" value="{{$param['date'][0]}}"
+															placeholder="Date Start" aria-label="Date Start" name="param_date_start">
+														<div class="input-group-append">
+															<span class="input-group-text" id="basic-addon5">s/d</span>
+														</div>
+														<input type="date" class="form-control" value="{{$param['date'][1]}}"
+															placeholder="Date End" aria-label="Date End" name="param_date_end">
+													</div>
+													<div class="form-group">
+														<label>Status : </label>
+														<div class="form-check form-check-inline">
+															<label class="form-check-label">
+																<input class="form-check-input" type="checkbox" name="param_checked_lunas[]" value="0" {{(in_array(0,$param['status'])?'checked':'')}}>
+																Belum Lunas
+															</label>
+														</div>
+														<div class="form-check form-check-inline">
+															<label class="form-check-label">
+																<input class="form-check-input" type="checkbox" name="param_checked_lunas[]" value="1" {{(in_array(1,$param['status'])?'checked':'')}}>
+																Lunas
+															</label>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-8">
+															<button class="btn btn-primary btn-block" type="submit">Cari</button>
+														</div>
+														<div class="col-lg-4">
+															<a href="/profile#tab-feeds" class="btn btn-warning btn-block" type="button">Reset</a>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
                                         <div class="table-responsive">
                                             <table id="datatable1" class="table table-striped table-bordered"
                                                 cellspacing="0" width="100%">
@@ -42,17 +81,29 @@
                                                     @foreach ($payment as $key => $d)
                                                     <tr>
                                                         <td>{{$key+1}}</td>
-                                                        <td><span class="badge badge-primary text-uppercase">
-                                                                {{$d->status?'lunas':'belum lunas'}}
-                                                            </span>
+                                                        <td>
+															@if (!$d->file && $d->status==0)
+																<span class="badge badge-danger text-uppercase">
+																	Belum Lunas
+																</span>
+															@elseif ($d->file && $d->status==0)
+																<span class="badge badge-secondary text-uppercase">
+																	Sedang Diproses
+																</span>
+															@else
+																<span class="badge badge-primary text-uppercase">
+																	Lunas
+																</span>
+															@endif
                                                         </td>
-                                                        <td>{{$d->title}}</td>
-                                                        <td>{{$d->expired}}</td>
+                                                        <td class="longtextoverflow">{{$d->title}}</td>
+                                                        <td class="text-danger"><b>{{ \Carbon\Carbon::parse($d->expired)->format('d-m-Y H:i:s') }}</b></td>
                                                         <td>{{ numfmt_format_currency(numfmt_create('id_ID',
                                                             \NumberFormatter::CURRENCY),$d->price_final,"IDR") }}</td>
                                                         <td>
                                                             @if ($d->file)
-                                                            <img src="/getBerkas?rf={{$d->file}}" alt="" width="130px">
+															<a href="/getBerkas?rf={{$d->file}}" target="_blank" data-lightbox="gallery-item"><img
+																src="/getBerkas?rf={{$d->file}}" width="110px"></a>
                                                             @endif
                                                         </td>
                                                         <td>
@@ -63,6 +114,8 @@
                                                                     <i class="icon-cog"></i>
                                                                 </button>
                                                                 <div class="dropdown-menu">
+																	<a class="btn btn-primary dropdown-item" href="/classes/getinvoice/{{$d->id}}" target="_blank" title="Invoice">Invoice</a>
+																	@if ($d->status == 0)
                                                                     <button id="btnModal" type="button"
                                                                         class="btn btn-primary dropdown-item"
                                                                         data-toggle="modal" data-target="#bayarModal"
@@ -71,6 +124,7 @@
                                                                             Carbon\Carbon::now()) disabled @endif>
                                                                             Upload Bukti
                                                                     </button>
+																	@endif
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -122,66 +176,92 @@
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-postss">
-                                        <table id="datatable2" class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>kelas</th>
-                                                    <th>Instruktor</th>
-                                                    <th>Tanggal</th>
-                                                    <th>Link kelas</th>
-                                                    <th>Unduhan</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($class as $c )
-                                                @foreach ($c->class as $key=> $cl)
-                                                <tr>
-                                                    <td>{{$key+1}}</td>
-                                                    <td>{{$cl->title}}</td>
-                                                    <td>
-                                                        @foreach ($cl->instructor_list as $instructor_list)
-                                                        <span
-                                                            class="badge badge-primary">{{$instructor_list->name}}</span>
-                                                        @endforeach
-                                                    </td>
-                                                    <td>{{$cl->date_start}} - {{$cl->date_end}}</td>
-                                                    <td>
-                                                        <button id="evModal" class="btn btn-info dropdown-item"
-                                                            data-toggle="modal" data-target="#eventModal"
-                                                            onclick="onEvent({{$c->event}})" title="Event">
-                                                            Event
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-warning dropdown-toggle btn-sm"
-                                                                type="button" data-toggle="dropdown"
-                                                                aria-expanded="false" title="Opsi">
-                                                                <i class="icon-cog"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item"
-                                                                    href="/classes/getcertificate/{{$c->class_id}}"
-                                                                    target="_blank">
-                                                                    Get Certificate
-                                                                </a>
-                                                                <span class="dropdown-item" @if ($c->review)
-                                                                    onclick="onReview('{{$c->review}}','{{$c->review_point}}')"
-                                                                    @else
-                                                                    onclick="review({{$c->participant_id}})"
-                                                                    @endif
-                                                                    >Review</span>
-                                                                <span class="dropdown-item"
-                                                                    onclick="onContent({{$cl->content_list}})">Content</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+										<div class="row">
+											<div class="col-lg-6">
+												<form action="/profile#tab-feeds" method="get">
+													<label>Tanggal Pembayaran</label>
+													<div class="input-group mb-4">
+														<input type="date" class="form-control" value="{{$param['date'][0]}}"
+															placeholder="Date Start" aria-label="Date Start" name="param_date_start">
+														<div class="input-group-append">
+															<span class="input-group-text" id="basic-addon5">s/d</span>
+														</div>
+														<input type="date" class="form-control" value="{{$param['date'][1]}}"
+															placeholder="Date End" aria-label="Date End" name="param_date_end">
+													</div>
+													<div class="row">
+														<div class="col-lg-8">
+															<button class="btn btn-primary btn-block" type="submit">Cari</button>
+														</div>
+														<div class="col-lg-4">
+															<a href="/profile#tab-feeds" class="btn btn-warning btn-block" type="button">Reset</a>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+										<div class="table-responsive">
+											<table id="datatable2" class="table table-bordered">
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>kelas</th>
+														<th>Instruktor</th>
+														<th>Tanggal</th>
+														<th>Event</th>
+														<th>Unduhan</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach ($class as $c )
+													@foreach ($c->class as $key=> $cl)
+													<tr>
+														<td>{{$key+1}}</td>
+														<td class="longtextoverflow">{{$cl->title}}</td>
+														<td>
+															@foreach ($cl->instructor_list as $instructor_list)
+															<span
+																class="badge badge-primary">{{$instructor_list->name}}</span>
+															@endforeach
+														</td>
+														<td>{{$cl->date_start}} - {{$cl->date_end}}</td>
+														<td>
+															<button id="evModal" class="btn btn-info"
+																data-toggle="modal" data-target="#eventModal"
+																onclick="onEvent({{$c->event}})" title="Event">
+																Event
+															</button>
+														</td>
+														<td>
+															<div class="dropdown">
+																<button class="btn btn-warning dropdown-toggle btn-sm"
+																	type="button" data-toggle="dropdown"
+																	aria-expanded="false" title="Opsi">
+																	<i class="icon-cog"></i>
+																</button>
+																<div class="dropdown-menu">
+																	<a class="dropdown-item"
+																		href="/classes/getcertificate/{{$c->class_id}}"
+																		target="_blank">
+																		Get Certificate
+																	</a>
+																	<span class="dropdown-item" @if ($c->review)
+																		onclick="onReview('{{$c->review}}','{{$c->review_point}}')"
+																		@else
+																		onclick="review({{$c->participant_id}})"
+																		@endif
+																		>Review</span>
+																	<span class="dropdown-item"
+																		onclick="onContent({{$cl->content_list}})">Content/Material</span>
+																</div>
+															</div>
+														</td>
+													</tr>
+													@endforeach
+													@endforeach
+												</tbody>
+											</table>
+										</div>
 
                                         <!-- Modal Participant-->
                                         <div class="modal fade" id="reviewModal" tabindex="-1"
@@ -522,13 +602,13 @@
             html = '';
             event.forEach(el => {
                 html += '<tr>';
-                    if (el.link) {
-                        html += '    <td>'+el.link+'</td>';
+                    if (el.type==0) {
+                        html += '    <td><a class="btn btn-success" href="'+el.link+'" target="_blank"><i class="icon-link"></i></a></td>';
                     }else{
                         html += '    <td>'+el.location+'</td>';
                     }
                 html += '    <td>'+el.time_start+' - '+el.time_end+'</td>';
-                html += '    <td>'+el.description+'</td>';
+                html += '    <td class="longtextoverflow">'+el.description+'</td>';
                 html += '</tr>';
             });
         }
@@ -555,9 +635,9 @@
                 html += '<tr>';
                 html += '    <td>'+el.title+'</td>';
                 if (el.type != 3) {
-                    html += '    <td><a href=/getBerkas?rf='+el.url+' target=_blank>Link</a></td>';
+                    html += '    <td><a href=/getBerkas?rf='+el.url+' target=_blank><i class="icon-link"></i></a></td>';
                 }else{
-                    html += '    <td><a href='+el.url+' target=_blank>Link</a></td>';
+                    html += '    <td><a href='+el.url+' target=_blank><i class="icon-link"></i></a></td>';
                 }
                 html += '</tr>';
             });

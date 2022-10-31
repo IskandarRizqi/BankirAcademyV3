@@ -251,7 +251,7 @@ class ClassesController extends Controller
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
 		$profile = UserProfileModel::where('user_id', Auth::user()->id)->first();
-		if (!ClassParticipantModel::where('user_id', Auth::user()->id)->where('class_id', $id)->where('certificate', 1)) {
+		if (!ClassParticipantModel::where('user_id', Auth::user()->id)->where('class_id', $id)->where('certificate', 1)->exists()) {
 			return Redirect::back()->with('error', 'Certificate belum diberikan');
 		}
 		if (!$data['certs']) {

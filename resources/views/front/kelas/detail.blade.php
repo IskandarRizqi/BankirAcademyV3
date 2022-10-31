@@ -68,7 +68,7 @@
                                                 <td><span
                                                         class="badge badge-danger">{{$e->time_start.'-'.$e->time_end}}</span>
                                                 </td>
-                                                <td>{{$e->description}}</td>
+                                                <td class="longtextoverflow">{{$e->description}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -117,65 +117,6 @@
                                 </div>
                                 @endforeach
                             </div>
-
-                        </div>
-
-                        <div class="widget clearfix">
-
-                            <h4>Kelas</h4>
-                            <div id="oc-portfolio-sidebar" class="owl-carousel carousel-widget" data-items="1"
-                                data-margin="10" data-loop="true" data-nav="false" data-autoplay="5000">
-
-                                <div class="portfolio-item">
-                                    <div class="portfolio-image">
-                                        <a href="#">
-                                            <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image">
-                                        </a>
-                                        <div class="bg-overlay">
-                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn"
-                                                data-hover-speed="350">
-                                                <a href="https://vimeo.com/89396394"
-                                                    class="overlay-trigger-icon bg-light text-dark"
-                                                    data-hover-animate="zoomIn" data-hover-speed="350"
-                                                    data-lightbox="iframe"><i class="icon-line-play"></i></a>
-                                            </div>
-                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn"
-                                                data-hover-speed="350"></div>
-                                        </div>
-                                    </div>
-                                    <div class="portfolio-desc center pb-0">
-                                        <h3><a href="portfolio-single-video.html">Inventore voluptates velit totam ipsa
-                                                tenetur</a></h3>
-                                        <span><a href="#">Melbourne, Australia</a></span>
-                                    </div>
-                                </div>
-
-                                <div class="portfolio-item">
-                                    <div class="portfolio-image">
-                                        <a href="portfolio-single.html">
-                                            <img src="{{asset('front/images/thumbs/1.jpg')}}" alt="Image">
-                                        </a>
-                                        <div class="bg-overlay">
-                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn"
-                                                data-hover-speed="350">
-                                                <a href="images/blog/full/1.jpg"
-                                                    class="overlay-trigger-icon bg-light text-dark"
-                                                    data-hover-animate="zoomIn" data-hover-speed="350"
-                                                    data-lightbox="image"><i class="icon-line-plus"></i></a>
-                                            </div>
-                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn"
-                                                data-hover-speed="350"></div>
-                                        </div>
-                                    </div>
-                                    <div class="portfolio-desc center pb-0">
-                                        <h3><a href="portfolio-single.html">Nisi officia adipisci molestiae aliquam</a>
-                                        </h3>
-                                        <span><a href="#">Perth, Australia</a></span>
-                                    </div>
-                                </div>
-
-                            </div>
-
 
                         </div>
 

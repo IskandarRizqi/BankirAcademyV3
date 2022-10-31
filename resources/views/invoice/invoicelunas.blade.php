@@ -456,7 +456,7 @@
             <header>
                 <div class="row">
                     <div class="col">
-                        <img src="admin/logo-12.png" width="125" alt="" />
+                        <img src="Backend/logo_12.png" width="125" alt="" />
                         <h2 class="name">
                             <a target="_blank">
                                 AKARINDO.ID
@@ -479,15 +479,15 @@
                     <div class="float-left invoice-to">
                         <div class="col-lg-6">
                             <div class="text-gray-light">INVOICE TO:</div>
-                            <h2 class="to">NAMA LENGKAP</h2>
-                            <div class="email"><a href="mailto:">EMAIL</a>
+                            <h2 class="to">{{$profile->name}}</h2>
+                            <div class="email"><a href="mailto:">{{Auth::user()->email}}</a>
                             </div>
                         </div>
                     </div>
                     <div class="float-right invoice-details">
                         <div class="col-lg-6">
-                            <div class="date">Tanggal Invoice :TANGGAL INVOICE</div>
-                            <h2 class="invoice-id">NOMOR ORDER</h2>
+                            <div class="date">Tanggal Invoice :{{Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}}</div>
+                            <h2 class="invoice-id" style="text-transform: uppercase;">{{$payment->no_invoice}}</h2>
                         </div>
                     </div>
                 </div>
@@ -498,41 +498,50 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="text-left">PRODUK</th>
+                            <th class="text-left">KELAS</th>
                             <th class="text-center">HARGA</th>
-                            <td class="text-center">DURASI SEWA</td>
+                            <th class="text-center">PROMO</th>
+                            <td class="text-center">KODE UNIK</td>
                             <td class="text-center">TOTAL</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-left">{{$invoice['produk']}}</td>
-                            <td class="text-left">Order domain {{$invoice['domain']}}</td>
-                            <td class="unit">Rp. {{number_format($invoice['harga_paket'])}}</td>
-                            <td class="qty">QTY</td>
-                            <td class="total">TOTAL</td>
-                        </tr>
-                    </tbody>
+						<tr>
+							<th class="text-left">{{$class->title}}</th>
+							<td class="unit">{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$class->pricing->price,"IDR") }}</td>
+							<td class="unit">
+								@if ($class->pricing->promo==1)
+								- {{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$class->pricing->promo_price,"IDR") }}
+								@endif
+							</td>
+							<td class="unit">
+								{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->unique_code,"IDR") }}
+							</td>
+							<td class="unit">
+								{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->price_final,"IDR") }}
+							</td>
+						</tr>
+					</tbody>
                     <tfoot>
-                        <tr>
+                        {{-- <tr>
                             <td colspan="1"></td>
                             <td colspan="2">SUBTOTAL</td>
                             <td>SUBTOTAL</td>
-                        </tr>
+                        </tr> --}}
 
-                        <tr>
+                        {{-- <tr>
                             <td colspan="1"></td>
                             <td colspan="2">PAJAK PAJAK</td>
                             <td>NOMINAL PAJAK</td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td colspan="1"></td>
-                            <td colspan="2">GRAND TOTAL</td>
-                            <td>NOMINAL TOTAL</td>
+                            <td colspan="3">GRAND TOTAL</td>
+                            <td>{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->price_final,"IDR") }}</td>
                         </tr>
                     </tfoot>
                 </table>
-                <div class="thanks">Thank you!</div>
+                {{-- <div class="thanks">Thank you!</div> --}}
                 <div class="notices">
                     <div>Informasi:</div>
                     <div class="notice">

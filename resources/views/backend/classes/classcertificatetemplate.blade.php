@@ -47,18 +47,18 @@
 							<div class="form-group">
 								<label>Date (Active s/d Expired)</label>
 								<div class="input-group mb-4">
-									<input type="date" class="form-control" placeholder="Date Start" aria-label="Date Start" name="datCertificateCreated" value="{{(isset($certs->certificate_created)) ? '/'.$certs->certificate_created : ''}}">
+									<input type="date" class="form-control" placeholder="Date Start" aria-label="Date Start" name="datCertificateCreated" value="{{(isset($certs->certificate_created)) ? $certs->certificate_created : ''}}">
 									<div class="input-group-append">
 										<span class="input-group-text">s/d</span>
 									</div>
-									<input type="date" class="form-control" placeholder="Date End" aria-label="Date End" name="datCertificateExpired" value="{{(isset($certs->certificate_expired)) ? '/'.$certs->certificate_expired : ''}}">
+									<input type="date" class="form-control" placeholder="Date End" aria-label="Date End" name="datCertificateExpired" value="{{(isset($certs->certificate_expired)) ? $certs->certificate_expired : ''}}">
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-12">
 							<div class="form-group">
 								<label>Content</label> &nbsp;<button type="button" class="btn btn-sm btn-info" onclick="openmodal('#classCertificateTemplateVariable')"><i class="bx bx-info-circle"></i></button>
-								<textarea name="txaContent" id="txaContent">{{(isset($certs->content)) ? '/'.$certs->content : ''}}</textarea>
+								<textarea name="txaContent" id="txaContent">{{(isset($certs->content)) ? $certs->content : ''}}</textarea>
 							</div>
 						</div>
 					</div>

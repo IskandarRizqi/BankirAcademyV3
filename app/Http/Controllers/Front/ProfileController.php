@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -19,11 +20,25 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $r)
     {
         $auth = Auth::user()->id;
         $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
         $data['pop'] = ClassesModel::limit(6)->get();
+		$data['param']=[];
+		$data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
+		$data['param']['status'] = [0,1];
+
+		if ($r->param_date_start) {
+			$data['param']['date'][0]=$r->param_date_start;
+		}
+		if ($r->param_date_end) {
+			$data['param']['date'][1]=$r->param_date_end;
+		}
+
+		if ($r->param_checked_lunas) {
+			$data['param']['status'] = $r->param_checked_lunas ;
+		}
         $data['payment'] = ClassPaymentModel::select(
             'class_payment.*',
             'classes.title',
@@ -34,6 +49,11 @@ class ProfileController extends Controller
             ->leftJoin('class_participant', 'class_participant.class_id', 'class_payment.id')
             // ->where('class_participant.user_id', $auth)
             ->where('class_payment.user_id', $auth)
+			->whereDate('class_payment.created_at','>=',$data['param']['date'][0])
+			->whereDate('class_payment.created_at','<=',$data['param']['date'][1])
+			->whereIn('class_payment.status',$data['param']['status'])
+			->orderBy('class_payment.status')
+			->orderBy('class_payment.created_at','desc')
             ->get();
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',
@@ -43,8 +63,11 @@ class ProfileController extends Controller
         )
             ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')
             ->where('class_payment.status', 1)
+			->whereDate('class_payment.created_at','>=',$data['param']['date'][0])
+			->whereDate('class_payment.created_at','<=',$data['param']['date'][1])
             ->where('class_payment.user_id', $auth)
             ->where('class_participant.user_id', $auth)
+			->orderBy('class_payment.created_at','desc')
             ->get();
         foreach ($data['class'] as $key => $value) {
             $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id')->where('id', $value->class_id)->get();

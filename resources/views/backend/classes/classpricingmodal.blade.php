@@ -30,7 +30,7 @@
 							</div>
 						</div>
 						<div class="col-lg-10">
-							<div class="form-group">
+							<div class="form-group" hidden>
 								<label for="datPromoDateStart">Promo Date</label>
 								<small class="inputerrormessage text-danger" input-target="datPromoDateStart" style="display: none;"></small>
 								<small class="inputerrormessage text-danger" input-target="datPromoDateEnd" style="display: none;"></small>

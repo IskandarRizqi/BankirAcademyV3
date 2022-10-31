@@ -7,11 +7,27 @@ use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Carbon\Carbon;
 
 class PembayaranController extends Controller
 {
-    public function index()
+    public function index(Request $r)
     {
+		$data['param']=[];
+		$data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
+		$data['param']['status'] = [0,1];
+
+		if ($r->param_date_start) {
+			$data['param']['date'][0]=$r->param_date_start;
+		}
+		if ($r->param_date_end) {
+			$data['param']['date'][1]=$r->param_date_end;
+		}
+
+		if ($r->param_checked_lunas) {
+			$data['param']['status'] = $r->param_checked_lunas ;
+		}
+
         $data['pembayaran'] = ClassPaymentModel::select(
             'class_payment.*',
             'user_profile.name',
@@ -22,9 +38,14 @@ class PembayaranController extends Controller
             'class_participant.certificate'
 
         )
-            ->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
-            ->join('classes', 'classes.id', 'class_payment.class_id')
-            ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')
+			->leftJoin('user_profile', 'user_profile.user_id', 'class_payment.user_id')
+			->leftJoin('classes', 'classes.id', 'class_payment.class_id')
+			->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
+			->whereDate('class_payment.created_at','>=',$data['param']['date'][0])
+			->whereDate('class_payment.created_at','<=',$data['param']['date'][1])
+			->whereIn('class_payment.status',$data['param']['status'])
+			->orderBy('class_payment.status')
+			->orderBy('class_payment.created_at','desc')
             ->get();
         return view('backend.pembayaran.pembayaran', $data);
     }

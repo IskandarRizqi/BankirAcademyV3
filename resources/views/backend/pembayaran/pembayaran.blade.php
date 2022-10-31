@@ -17,6 +17,44 @@
 <div class="col-lg-12">
     <div class="widget">
         <div class="widget-content">
+			<div class="row">
+				<div class="col-lg-6">
+					<form action="/admin/pembayaran" method="get">
+						<div class="input-group mb-4">
+							<input type="date" class="form-control" value="{{$param['date'][0]}}"
+								placeholder="Date Start" aria-label="Date Start" name="param_date_start">
+							<div class="input-group-append">
+								<span class="input-group-text" id="basic-addon5">s/d</span>
+							</div>
+							<input type="date" class="form-control" value="{{$param['date'][1]}}"
+								placeholder="Date End" aria-label="Date End" name="param_date_end">
+						</div>
+						<div class="form-group">
+							<label>Status : </label>
+							<div class="form-check form-check-inline">
+								<label class="form-check-label">
+									<input class="form-check-input" type="checkbox" name="param_checked_lunas[]" value="0" {{(in_array(0,$param['status'])?'checked':'')}}>
+									Belum Lunas
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<label class="form-check-label">
+									<input class="form-check-input" type="checkbox" name="param_checked_lunas[]" value="1" {{(in_array(1,$param['status'])?'checked':'')}}>
+									Lunas
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-8">
+								<button class="btn btn-primary btn-block" type="submit">Cari</button>
+							</div>
+							<div class="col-lg-4">
+								<a href="/admin/pembayaran" class="btn btn-warning btn-block" type="button">Reset</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
             <div class="table-responsive">
                 <table id="tblPembayaran" class="table table-bordered table-striped">
                     <thead>
@@ -37,16 +75,27 @@
                         @foreach ($pembayaran as $key=> $p)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td><span class="badge badge-primary text-uppercase">
-                                    {{$p->status==1?'lunas':'belum lunas'}}
-                                </span>
+                            <td>
+								@if (!$p->file && $p->status==0)
+									<span class="badge badge-danger text-uppercase">
+										Belum Lunas
+									</span>
+								@elseif ($p->file && $p->status==0)
+									<span class="badge badge-secondary text-uppercase">
+										Sedang Diproses
+									</span>
+								@else
+									<span class="badge badge-primary text-uppercase">
+										Lunas
+									</span>
+								@endif
                             </td>
                             <td>{{$p->no_invoice}}</td>
                             <td>
-                                <a class="grid-item" href="/getBerkas?rf={{$p->file}}" data-lightbox="gallery-item"><img
+                                <a class="grid-item" href="/getBerkas?rf={{$p->file}}" target="_blank" data-lightbox="gallery-item"><img
                                         src="/getBerkas?rf={{$p->file}}" width="110px"></a>
                             </td>
-                            <td>{{$p->price_final}}</td>
+                            <td>{{ numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$p->price_final,"IDR") }}</td>
                             <td>
                                 {{-- <span hidden>
                                     {{Carbon\Carbon::parse($p->date_start)->format('U')}}
@@ -59,11 +108,22 @@
                             <td>{{$p->category}}</td>
                             <td>{{$p->name}}</td>
                             <td>
-                                <button class="btn bs-tooltip btn-warning" title="Publish Certificate"
-                                    onclick="publichCertificate({{$p->id}},{{$p->certificate}})"><i
-                                        class='bx bxs-file-doc'></i></button>
-                                <button class="btn bs-tooltip btn-info" title="Approved"
+								@if ($p->status==1)
+								@if ($p->certificate==1)
+                                <button class="btn bs-tooltip btn-warning" title="Unpublish Certificate"
+									onclick="publichCertificate({{$p->id}},{{$p->certificate}})"><i
+									class='bx bxs-file-doc'></i></button>
+								@else
+                                <button class="btn bs-tooltip btn-success" title="Publish Certificate"
+									onclick="publichCertificate({{$p->id}},{{$p->certificate}})"><i
+									class='bx bxs-file-doc'></i></button>
+								@endif
+								<button class="btn bs-tooltip btn-warning" title="Batal Lunas"
+									onclick="approved({{$p->id}},{{$p->status}})"><i class='bx bx-wallet'></i></button>
+								@else
+                                <button class="btn bs-tooltip btn-info" title="Lunas"
                                     onclick="approved({{$p->id}},{{$p->status}})"><i class='bx bx-wallet'></i></button>
+								@endif
                             </td>
                         </tr>
                         @endforeach
@@ -92,14 +152,25 @@
         })
     }
     function approved(id,status) {
-		swal({
+		var s = {
 			title: 'Are you sure?',
-			text: "You won't be able to revert this!",
-			type: 'warning',
+			text: "Mark this payment as completed!",
+			type: 'info',
 			showCancelButton: true,
 			confirmButtonText: 'Done',
 			padding: '2em'
-		}).then(function(result) {
+		}
+		if (status==1) {
+			s = {
+				title: 'Are you sure?',
+				text: "Mark this payment as unpaid!",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Done',
+				padding: '2em'
+			}
+		}
+		swal(s).then(function(result) {
 			if (result.value) {
 				$('#formpembayaran').attr('action','/admin/pembayaran/approved');
                 $('#id').val(id);
@@ -109,14 +180,25 @@
 		})
 	}
     function publichCertificate(id,certificate) {
-		swal({
+		var s = {
 			title: 'Are you sure?',
-			text: "You won't be able to revert this!",
-			type: 'warning',
+			text: "Publish certificate for this user!",
+			type: 'info',
 			showCancelButton: true,
 			confirmButtonText: 'Done',
 			padding: '2em'
-		}).then(function(result) {
+		}
+		if (certificate==1) {
+			s = {
+				title: 'Are you sure?',
+				text: "Unublish certificate for this user!",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Done',
+				padding: '2em'
+			}
+		}
+		swal(s).then(function(result) {
             if (result.value) {
                 $('#formpembayaran').attr('action','/admin/pembayaran/certificate');
                 $('#id').val(id);
