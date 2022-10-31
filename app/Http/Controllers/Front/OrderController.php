@@ -105,6 +105,6 @@ class OrderController extends Controller
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
         ]);
-        return Redirect::to('profile');
+        return Redirect::to('profile')->with('success', 'Order Berhasil');
     }
 }
