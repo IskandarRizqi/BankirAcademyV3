@@ -45,6 +45,15 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
+
+	//pages
+	Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);
+	Route::post("/admin/pages/setabout", [App\Http\Controllers\Front\PagesController::class, "setAbout"]);
+	Route::get("/admin/pages/getcontact", [App\Http\Controllers\Front\PagesController::class, "getContact"]);
+	Route::post("/admin/pages/setcontact", [App\Http\Controllers\Front\PagesController::class, "setContact"]);
+	Route::get("/admin/pages/getbloglist", [App\Http\Controllers\Front\PagesController::class, "getListBlog"]);
+	Route::get("/admin/pages/getblog/{id}", [App\Http\Controllers\Front\PagesController::class, "getBlog"]);
+	Route::post("/admin/pages/setblog/{id}", [App\Http\Controllers\Front\PagesController::class, "setBlog"]);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
@@ -69,5 +78,11 @@ Route::get('/detail-kelas', function () {
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
 Route::resource('profile', ProfileController::class)->middleware('auth');
+
+//Pages
+Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "showAbout"]);
+Route::get("/pages/contact", [App\Http\Controllers\Front\PagesController::class, "showContact"]);
+Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
+Route::get("/pages/blog/{id}/{sliug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
 
 Auth::routes();
