@@ -456,10 +456,10 @@
             <header>
                 <div class="row">
                     <div class="col">
-                        <img src="Backend/logo_12.png" width="125" alt="" />
+                        <img src="Backend/logo_l.png" width="125" alt="" />
                         <h2 class="name">
                             <a target="_blank">
-                                AKARINDO.ID
+                               LUCAS
                             </a>
                         </h2>
                         <div>
@@ -471,6 +471,9 @@
                             info.ehrindo@gmail.com
                         </div>
                     </div>
+					<span class="float-right">
+						Supported By: <a href="https://akarindo.id">AKARINDO</a>
+					</span>
                 </div>
             </header>
             <br>

@@ -257,7 +257,7 @@
 
         .invoice table::after {
             content: "";
-            background: url('lunas-watermark-03.png');
+            background: url(admin/lunas-watermark-03.png);
             top: 280px;
             left: 150px;
             bottom: 0px;
@@ -456,7 +456,7 @@
             <header>
                 <div class="row">
                     <div class="col">
-                        <img src="Backend/logo_12.png" width="125" alt="" />
+                        <img src="Backend/logo_l.png" width="125" alt="" />
                         <h2 class="name">
                             <a target="_blank">
                                 AKARINDO.ID
@@ -470,6 +470,9 @@
                             <br>
                             info.ehrindo@gmail.com
                         </div>
+						<span class="float-right">
+							Supported By: <a href="https://akarindo.id">AKARINDO</a>
+						</span>
                     </div>
                 </div>
             </header>
