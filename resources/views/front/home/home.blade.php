@@ -29,13 +29,17 @@
         transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
         overflow: hidden;
         border-radius: 20px;
-        min-height: 450px;
+        min-height: 425px;
         box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
     }
 
     @media (max-width: 768px) {
         .card {
             min-height: 350px;
+        }
+
+        .testimonial {
+            height: 166px !important;
         }
     }
 
@@ -45,8 +49,11 @@
         }
 
         .card img {
-            height: 460px;
             max-width: 100%;
+        }
+
+        .testimonial {
+            height: 180px !important;
         }
     }
 
@@ -121,18 +128,16 @@
 
 <!-- Content -->
 @if (isset($banner_slide))
-<div class="card">
-    <section id="slider" class="slider-element h-auto h-sm-100" style="background-color: #222;">
-        <div class="slider-inner">
-            <div class="owl-carousel carousel-widget" data-margin="0" data-items="1" data-pagi="false" data-loop="true"
-                data-animate="fadeIn" data-speed="450" data-autoplay="5000">
-                @foreach ($banner_slide as $key => $value)
-                <a href="#"><img src="/image/{{ $value->image }}" alt="Slider"></a>
-                @endforeach
-            </div>
+<section id="slider" class="slider-element " style="background-color: #222;">
+    <div class="slider-inner">
+        <div class="owl-carousel carousel-widget" data-margin="0" data-items="1" data-pagi="false" data-loop="true"
+            data-animate="fadeIn" data-speed="450" data-autoplay="5000">
+            @foreach ($banner_slide as $key => $value)
+            <a href="#"><img src="/image/{{ $value->image }}" alt="Slider"></a>
+            @endforeach
         </div>
-    </section>
-</div>
+    </div>
+</section>
 @endif
 <section id="content">
     <div class="content-wrap" style="padding: 0px;">
@@ -183,7 +188,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card" style="min-height: 0px !important">
-                                        <img src="<?= $p->image ?>" alt="" height="360px" width="100%">
+                                        <img src="<?= $p->image ?>" alt="" width="100%">
                                     </div>
                                     <h5 class="text-uppercase mt-2">{{ $p->title }}</h5>
                                     <div class="d-flex mt-2">
@@ -206,7 +211,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                    @auth
                                     <div class="text-right mt-2 w-100">
                                         <a class="btn btn-success btn-block btn-rounded"
                                             style=" border-radius:10px !important"
@@ -214,16 +218,6 @@
                                             Detail
                                         </a>
                                     </div>
-                                    @else
-                                    <div class="text-right mt-2 w-100">
-                                        <a class="btn btn-success btn-block btn-rounded"
-                                            style=" border-radius:10px !important"
-                                            href="class/{{ $p->unique_id }}/{{ $p->title }}" data-toggle="modal"
-                                            data-target="#modelId" data-backdrop="static" data-keyboard="false">
-                                            Detail
-                                        </a>
-                                    </div>
-                                    @endauth
                                 </div>
                             </div>
                         </div>
@@ -248,11 +242,12 @@
                             style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                             @if (isset($banner_promo))
                             @foreach ($banner_promo as $bp)
-                            <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                            <div class="owl-item active" style="margin-right: 20px;">
                                 <div class="oc-item">
-                                    <div class="testimonial" style="border-radius: 20px !important; height: 250px;">
-                                        <a href="#"><img src="Image/{{ $bp->image }}" alt="Customer Testimonails"
-                                                height="100%"></a>
+                                    <div class="testimonial"
+                                        style="background-image:url('Image/{{ $bp->image }}');
+                                                    border-radius: 20px !important; height: 316px; background-size:100%;">
+                                        <a href="#"></a>
                                     </div>
                                 </div>
                             </div>
@@ -318,16 +313,6 @@
                         @if (count($banner_bawah) > 0)
                         <div id="img_card" class="card text-white click-col"
                             style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
-                            <div class="card-img d-flex flex-column">
-                                <div class="card-body">
-                                    {{-- --}}
-                                </div>
-                                <div class="card-footer">
-                                    <div class="media">
-                                        {{-- --}}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="d-flex mt-4">
                             <div id="oc-testi"
