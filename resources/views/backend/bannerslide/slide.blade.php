@@ -41,6 +41,7 @@
                                                 <label for="form-control">Type banner</label>
                                                 <select name="jenis" class="form-control" id="type">
                                                     <option value="0" selected>Banner Slide</option>
+                                                    <option value="3">Banner Slide Mobile</option>
                                                     <option value="1">Banner Bawah</option>
                                                     <option value="2">Banner Promo</option>
                                                 </select>
@@ -124,8 +125,10 @@
                                     <span class="badge badge-info">Banner slide</span>
                                     @elseif ($value->jenis == 1)
                                     <span class="badge badge-info">Banner bawah</span>
-                                    @else
+                                    @elseif ($value->jenis == 2)
                                     <span class="badge badge-info">Banner promo</span>
+                                    @else
+                                    <span class="badge badge-info">Banner silde mobile</span>
                                     @endif
                                 </td>
                                 <td>{{ \Carbon\Carbon::parse($value->mulai)->format('Y-m-d') }} - {{

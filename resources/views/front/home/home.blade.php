@@ -41,6 +41,7 @@
         .testimonial {
             height: 166px !important;
         }
+
     }
 
     @media (max-width: 420px) {
@@ -128,13 +129,43 @@
 
 <!-- Content -->
 @if (isset($banner_slide))
-<section id="slider" class="slider-element " style="background-color: #222;">
-    <div class="slider-inner">
-        <div class="owl-carousel carousel-widget" data-margin="0" data-items="1" data-pagi="false" data-loop="true"
-            data-animate="fadeIn" data-speed="450" data-autoplay="5000">
-            @foreach ($banner_slide as $key => $value)
-            <a href="#"><img src="/image/{{ $value->image }}" alt="Slider"></a>
-            @endforeach
+<section id="content">
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
+        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+        <div class="owl-stage-outer">
+            <div class="owl-stage"
+                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+                @foreach ($banner_slide as $key => $value)
+                <div class="owl-item" style=" margin-right: 20px;">
+                    <div class="oc-item">
+                        <a href="#"><img src="/Image/{{$value->image}}" alt="Image 1"></a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
+        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+        <div class="owl-stage-outer">
+            <div class="owl-stage"
+                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+                @if (isset($banner_slide_mobile))
+                @foreach ($banner_slide_mobile as $key => $value)
+                <div class="owl-item" style=" margin-right: 20px;">
+                    <div class="oc-item">
+                        <a href="#"><img src="/Image/{{$value->image}}" alt="Image 1"></a>
+                    </div>
+                </div>
+                @endforeach
+                @else
+                <div class="owl-item" style=" margin-right: 20px;">
+                    <div class="oc-item">
+                        <a href="#"><img src="{{asset('Backend/assets/img/600x300.jpg')}}" alt="Image 1"></a>
+                    </div>
+                </div>
+                @endif
+            </div>
         </div>
     </div>
 </section>
