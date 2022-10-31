@@ -84,6 +84,12 @@
         .tp-caption {
             white-space: nowrap;
         }
+		.longtextoverflow {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+			max-width: 150px;
+		}
     </style>
 
 </head>
