@@ -258,10 +258,10 @@
                         var class_id = $("#class_id").val();
                         var _token = document.getElementsByName("_token");
                         if (class_id && _token) {
-                            window.location = '/ordernopost?_token='+_token+'&class_id='+class_id;
+                            return window.location = '/ordernopost?_token='+_token+'&class_id='+class_id;
                         }
-                        // location.reload();
                     }
+                    location.reload();
                 }, 2000);
                 iziToast.success({
                     title: 'Success',
