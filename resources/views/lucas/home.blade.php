@@ -126,7 +126,6 @@
         background: linear-gradient(0deg, rgba(35, 79, 109, 0.3785889356) 0%, #455f71 100%);
     }
 </style>
-
 <!-- Content -->
 @if (isset($banner_slide))
 <section id="content">
@@ -400,7 +399,7 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6">
+    {{-- <div class="section border-top-0 mb-6">
         <div class="container text-center">
             <div class="heading-block center">
                 <h2>Testimonial</h2>
@@ -425,7 +424,6 @@
                                         <p>{{$t->review}}</p>
                                         <div class="testi-meta">
                                             {{$t->name}}
-                                            {{-- <span>XYZ Inc.</span> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -435,14 +433,9 @@
                         @endif
                     </div>
                 </div>
-                {{-- <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
-                            class="icon-angle-left"></i></button><button type="button" role="presentation"
-                        class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button"
-                        class="owl-dot active"><span></span></button></div> --}}
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="section border-top-0 mb-6">
         <div class="container text-center">
@@ -481,7 +474,7 @@
 </section>
 <!-- #content end -->
 
-@include('front.layout.footer')
+@include('front.layout.footerlucas')
 <script>
     $(document).ready(function() {
     $('#sldall').slick({
