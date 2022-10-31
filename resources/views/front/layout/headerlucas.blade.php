@@ -57,33 +57,21 @@
                             </a>
                         </li>
                         <li class="menu-item"><a class="menu-link" href="#">
+                                <div>Kelas</div>
+                            </a>
+                        </li>
+                        <li class="menu-item"><a class="menu-link" href="#">
                                 <div>Promo</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
-                                <div>Event</div>
+                        <li class="menu-item"><a class="menu-link" href="{{url('/pages/blog')}}">
+                                <div>Blog</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a class="menu-link" href="#">
-                                <div>Layanan</div>
-                            </a>
-                            <ul class="sub-menu-container">
-                                <li class="menu-item">
-                                    <a class="menu-link" href="#">
-                                        <div>FAQ</div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
-                                <div>Loker Bankir</div>
+                        <li class="menu-item"><a class="menu-link" href="{{url('/pages/contact')}}">
+                                <div>Contact</div>
                             </a>
                         </li>
-                        <!-- <li class="menu-item"><a class="menu-link" href="#">
-                                <div>Contact</div><span>Get In Touch</span>
-                            </a>
-                        </li> -->
                         @if(!Auth::check())
                         <li class="menu-item"><a class="menu-link" data-toggle="modal" data-target="#modelId"
                                 data-backdrop="static" data-keyboard="false">
