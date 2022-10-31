@@ -1,6 +1,6 @@
 @include("front.layout.head")
 @include("front.layout.topbar")
-@include("front.layout.header")
+@include(env("CUSTOM_HEADER","front.layout.header"))
 @error('error')
 {{$message}}
 @enderror
@@ -646,4 +646,4 @@
     }
     
 </script>
-@include("front.layout.footer")
+@include(env("CUSTOM_FOOTER","front.layout.footer"))

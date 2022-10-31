@@ -1,6 +1,6 @@
 @include("front.layout.head")
 @include("front.layout.topbar")
-@include("front.layout.header")
+@include(env("CUSTOM_HEADER","front.layout.header"))
 
 <section id="content">
     <div class="content-wrap">
@@ -14,15 +14,14 @@
 
                         @foreach ($blog['data'] as $v)
 							<a href="/pages/blog/{{$v['id']}}/{{urlencode($v['title'])}}">
-							<div class="card">
-								<div class="card-body">
-									<img src="{{$v['thumbnail']}}" alt="Thumbnail" style="width: 130px;max-height:75px;">
-									&nbsp;&nbsp;&nbsp;<span style="font-size: 19px; font-weight: bold;">{{$v['title']}}</span>
-									<span class="text-secondary float-right">{{Carbon\Carbon::parse($v['created_at'])->format('d-m-Y H:i:s')}}</span>
-								</div>
-							</div>	
+								<div class="card">
+									<div class="card-body">
+										<img src="{{$v['thumbnail']}}" alt="Thumbnail" style="width: 130px;max-height:75px;">
+										&nbsp;&nbsp;&nbsp;<span style="font-size: 19px; font-weight: bold;">{{$v['title']}}</span>
+										<span class="text-secondary float-right">{{Carbon\Carbon::parse($v['created_at'])->format('d-m-Y H:i:s')}}</span>
+									</div>
+								</div>	
 							</a>
-							<hr>
 						@endforeach
 						<div class="row">
 							<div class="col-lg-12 text-center">
@@ -47,4 +46,4 @@
         </div>
     </div>
 </section><!-- #content end -->
-@include("front.layout.footer")
+@include(env("CUSTOM_FOOTER","front.layout.footer"))

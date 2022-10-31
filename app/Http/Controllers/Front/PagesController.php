@@ -138,7 +138,7 @@ class PagesController extends Controller
 
 	public function showListBlog(Request $r)
 	{
-		$data['blog'] = Pages::select('id','title','thumbnail','created_at')->where('type',0)->orderBy('created_at','desc')->paginate(15)->toArray();
+		$data['blog'] = Pages::select('id','title','thumbnail','created_at')->where('type',0)->orderBy('created_at','desc')->paginate(7)->toArray();
 
 		return view('pages/bloglist',$data);
 	}

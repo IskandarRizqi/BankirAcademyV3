@@ -54,7 +54,7 @@ class HomeController extends Controller
             ->where('class_participant.review_active', 1)
             ->get();
         // return $data;
-        return view('front.home.home', $data);
+        return view(env('CUSTOM_HOME_PAGE','front.home.home'), $data);
     }
 
     public function detail_class($unique_id, $title)
