@@ -33,9 +33,9 @@ class InvoiceController extends Controller
 
 		// return $data;
 		if ($data['payment']->status == 1) {
-			$pdf = PDF::loadView('invoice/invoicelunas', $data);
+			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS','invoice/invoicelunas'), $data);
 		}else{
-			$pdf = PDF::loadView('invoice/invoicepending', $data);
+			$pdf = PDF::loadView(env('CUSTOM_INVOICE_PENDING','invoice/invoicepending'), $data);
 		}
 		return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
 	}
