@@ -47,10 +47,6 @@ class HomeController extends Controller
         } else {
             array_push($kelas_mingguan, $data['minggu_ini']);
         }
-        $data['message'] = '';
-        if (Auth::user()) {
-            $data['message'] = 'Login Berhasil';
-        }
         $data['kelas_mingguan'] = $kelas_mingguan;
         $data['partner'] = ClassPartnerModel::get();
         $data['testimoni'] = ClassParticipantModel::select('class_participant.*', 'user_profile.name', 'user_profile.picture')

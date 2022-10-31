@@ -46,15 +46,15 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
 
-	//pages
-	Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);
-	Route::post("/admin/pages/setabout", [App\Http\Controllers\Front\PagesController::class, "setAbout"]);
-	Route::get("/admin/pages/getcontact", [App\Http\Controllers\Front\PagesController::class, "getContact"]);
-	Route::post("/admin/pages/setcontact", [App\Http\Controllers\Front\PagesController::class, "setContact"]);
-	Route::get("/admin/pages/getbloglist", [App\Http\Controllers\Front\PagesController::class, "getListBlog"]);
-	Route::get("/admin/pages/getblog/{id}", [App\Http\Controllers\Front\PagesController::class, "getBlog"]);
+    //pages
+    Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);
+    Route::post("/admin/pages/setabout", [App\Http\Controllers\Front\PagesController::class, "setAbout"]);
+    Route::get("/admin/pages/getcontact", [App\Http\Controllers\Front\PagesController::class, "getContact"]);
+    Route::post("/admin/pages/setcontact", [App\Http\Controllers\Front\PagesController::class, "setContact"]);
+    Route::get("/admin/pages/getbloglist", [App\Http\Controllers\Front\PagesController::class, "getListBlog"]);
+    Route::get("/admin/pages/getblog/{id}", [App\Http\Controllers\Front\PagesController::class, "getBlog"]);
 	Route::get("/admin/pages/delblog/{id}", [App\Http\Controllers\Front\PagesController::class, "delBlog"]);
-	Route::post("/admin/pages/setblog/{id}", [App\Http\Controllers\Front\PagesController::class, "setBlog"]);
+    Route::post("/admin/pages/setblog/{id}", [App\Http\Controllers\Front\PagesController::class, "setBlog"]);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
@@ -67,6 +67,7 @@ Route::get('getBerkas', function (Request $r) {
 })->middleware('auth');
 Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
+Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::get('/registerc', function () {

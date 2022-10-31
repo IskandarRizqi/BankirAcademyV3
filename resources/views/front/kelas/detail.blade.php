@@ -76,12 +76,21 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <form action="{{'/order'}}" method="POST">
+                                <form id="orderForm" action="{{'/order'}}" method="POST">
                                     @csrf
-                                    <input type="text" name="class_id" value="{{$class->id}}" hidden>
+                                    <input type="text" id="class_id" name="class_id" value="{{$class->id}}" hidden>
+                                    @auth
                                     <button class="btn btn-primary btn-block">Order</button>
+                                    @else
+                                    <span class="btn btn-primary btn-block" data-toggle="modal" data-target="#modelId"
+                                        data-backdrop="static" data-keyboard="false">Order</span>
+                                    @endauth
+                                    <button class="btn btn-primary btn-block" hidden>Order</button>
                                 </form>
                             </div>
+                            <script>
+                                // $('#orderForm').submit()
+                            </script>
                         </div>
 
                     </div>
