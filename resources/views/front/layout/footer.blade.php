@@ -226,27 +226,48 @@
 </script>
 
 <script>
+    $('#login').removeAttr('disabled')
+    let form = $('#orderForm').val()
     function funclogin(e) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        var emaillogin = $("#emaillogin").val();
-        var passwordlogin = $("#passwordlogin").val();
+        // var emaillogin = ;
+        // var passwordlogin = ;
+        let data = {
+            email : $("#emaillogin").val(),
+            password : $("#passwordlogin").val(),
+        }
+        var class_id = $("#class_id").val();
+        if (class_id) {
+            data.class_id = class_id
+        }
+        
         jQuery.ajax({
             url: "{{ route('login') }}",
             method: 'post',
-            data: {
-                email: emaillogin,
-                password: passwordlogin
-            },
+            data: data,
             success: function(result) {
-                if (result.role == 0 || result.role == 1) {
-                    location.replace("/home")
-                } else {
-                    location.reload();
-                }
+                $('#login').attr('disabled',true)
+                setTimeout(() => {
+                    if (result.role == 0 || result.role == 1) {
+                        location.replace("/home")
+                    } else {
+                        var class_id = $("#class_id").val();
+                        var _token = document.getElementsByName("_token");
+                        if (class_id && _token) {
+                            window.location = '/ordernopost?_token='+_token+'&class_id='+class_id;
+                        }
+                        // location.reload();
+                    }
+                }, 2000);
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Login Berhasil',
+                    position: 'topRight',
+                });
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;
@@ -258,7 +279,6 @@
                         position: 'topRight',
                     });
                 });
-
             }
         })
     }
@@ -284,7 +304,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         var usernameregis = $("#usernameregis").val();
         var produk = $("#produk").val();
         var emailregis = $("#emailregis").val();
@@ -301,6 +320,11 @@
                 password_confirmation: confpassword
             },
             success: function(result) {
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Login Berhasil',
+                    position: 'topRight',
+                });
                 // location.replace("/get-order?produk_id=" + produk);
                 console.log(result)
             },
@@ -314,7 +338,6 @@
                         position: 'topRight',
                     });
                 });
-
             }
         })
     }

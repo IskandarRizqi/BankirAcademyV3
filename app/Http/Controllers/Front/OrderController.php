@@ -65,10 +65,10 @@ class OrderController extends Controller
     {
         $auth = Auth::user()->id;
         if (!$request->class_id) {
-            Redirect::back();
+            Redirect::back()->with('error', 'Kelas Ditemukan');
         }
         if (!$auth) {
-            Redirect::back();
+            Redirect::back()->with('error', 'Belum Login');
         }
         $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->get();
         if (count($cpm) > 0) {

@@ -484,13 +484,6 @@
 @include('front.layout.footer')
 <script>
     $(document).ready(function() {
-        @auth
-        iziToast.success({
-            title: 'Sukses',
-            message: 'Login Sukses',
-            position: 'topRight',
-        });
-    @endauth
     $('#sldall').slick({
         dots: true,
         infinite: false,
