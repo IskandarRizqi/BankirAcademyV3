@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="{{asset('front/css/components/daterangepicker.css')}}" type="text/css" />
     <!-- Document Title
 	============================================= -->
-    <title>E-class Akarindo</title>
+    <title>{{env('APP_NAME','E-class Akarindo')}}</title>
 
     <!-- JavaScripts
 ============================================= -->
