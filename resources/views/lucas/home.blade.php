@@ -174,7 +174,7 @@
         <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
-                    <h2>SEMUA KELAS</h2>
+                    <h2 id="kelassectiontitle">SEMUA KELAS</h2>
                 </div>
                 {{-- <div class="row" id="sld"> --}}
                     <div class="row" id="">
