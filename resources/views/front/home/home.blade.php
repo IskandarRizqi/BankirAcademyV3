@@ -254,7 +254,7 @@
                                             <div class="text-right mt-2 w-100">
                                                 <a class="btn btn-success btn-block btn-rounded"
                                                     style=" border-radius:10px !important"
-                                                    href="class/{{ $ke->unique_id }}/{{ $ke->title }}">
+                                                    href="class/{{ $ke->unique_id }}/{{ urlencode($ke->title) }}">
                                                     Detail
                                                 </a>
                                             </div>
