@@ -56,11 +56,11 @@
                                 <div>About</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
+                        <li class="menu-item"><a class="menu-link" href="/#kelassectiontitle">
                                 <div>Kelas</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
+                        <li class="menu-item"><a class="menu-link" href="/#promosectiontitle">
                                 <div>Promo</div>
                             </a>
                         </li>
