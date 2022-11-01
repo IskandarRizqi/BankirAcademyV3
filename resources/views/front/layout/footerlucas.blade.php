@@ -4,7 +4,7 @@
     <div id="copyrights">
         <div class="container">
             <div class="w-100 text-center">
-                Copyrights &copy; 2022 By <a href="https://akarindo.id/">Akarindo.id</a>
+                Copyrights &copy; 2022 By <a href="https://lucas.akarindo.id/">Lucas</a>
             </div>
         </div>
     </div>
