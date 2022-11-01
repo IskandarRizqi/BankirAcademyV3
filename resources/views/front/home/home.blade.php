@@ -364,7 +364,7 @@
                                             <span style="padding-left: 83px">{{ $k->instructor_list[0]->title }}
                                             </span>
                                             @auth
-                                            <a href="class/{{ $k->unique_id }}/{{ $k->title }}">
+                                            <a href="class/{{ $k->unique_id }}/{{ urlencode($k->title) }}">
                                                 <button class="btn btn-success btn-sm" style="margin-left: 83px"
                                                     width='100%'>Detail</button>
                                             </a>
