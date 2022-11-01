@@ -422,8 +422,13 @@
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label for="form-control">Nomor handphone</label>
-                                                        <input type="text" class="form-control" name="nomor_handphone"
-                                                            value="{{$pfl['phone']}}">
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+																<span class="input-group-text">+62</span>
+															</div>
+															<input type="text" class="form-control" name="nomor_handphone"
+																value="{{$pfl['phone']}}">
+														</div>
                                                         @if($errors->has('nomor_handphone'))
                                                         <div class="error" style="color: red; display:block;">
                                                             {{ $errors->first('nomor_handphone') }}
@@ -452,8 +457,8 @@
                                                         <label for="form-control">Jenis kelamin</label>
                                                         <select name="jenis_kelamin" class="form-control" id="jkl">
                                                             <option value="">Pilih salah satu</option>
-                                                            <option value="0">Perempuan</option>
-                                                            <option value="1">Laki-laki</option>
+                                                            <option value="0" {{($pfl['gender']==0)?'selected':null}}>Perempuan</option>
+                                                            <option value="1" {{($pfl['gender']==1)?'selected':null}}>Laki-laki</option>
                                                         </select>
                                                         @if($errors->has('jenis_kelamin'))
                                                         <div class="error" style="color: red; display:block;">

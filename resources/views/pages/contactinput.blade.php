@@ -12,14 +12,14 @@
 					<div class="col-lg-6">
 						<div class="form-group">
 							<label>Title:</label>
-							<input type="text" class="form-control" name="txtTitle" id="txtTitle" value="{{isset($contact->title)?$contact->title:null}}">
+							<input type="text" class="form-control" name="txtTitle" id="txtTitle" value="{{isset($contact->title)?$contact->title:null}}" required>
 						</div>
 					</div>
 					<div class="col-lg-6">
 						<div class="form-group">
 							<label>Thumbnail:</label>
 							<input type="file" class="form-control" name="txtThumbnail" id="txtThumbnail" accept="image/*">
-							<img src="{{isset($contact->thumbnail)?$contact->thumbnail:'#'}}" alt="Image Preview" id="prvImage" class="previewImage" style="max-width: 100%;max-height:97px;">
+							<img src="{{isset($contact->thumbnail)?$contact->thumbnail:'/Backend/assets/img/90x90.jpg'}}" alt="Image Preview" id="prvImage" class="previewImage" style="max-width: 100%;max-height:97px;">
 						</div>
 					</div>
 					<div class="col-lg-12">

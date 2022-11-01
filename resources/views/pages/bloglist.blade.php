@@ -23,17 +23,14 @@
 								</div>	
 							</a>
 						@endforeach
+						<hr>
 						<div class="row">
 							<div class="col-lg-12 text-center">
-								<nav aria-label="Page navigation example">
-									<ul class="pagination">
-										@foreach ($blog['links'] as $p)
+								<nav aria-label="Page navigation blog">
+									<ul class="pagination justify-content-center">
+										@foreach ($blog['links'] as $k=>$p)
 										<li class="page-item {{($p['active'])?'active':''}}"><a class="page-link" href="{{$p['url']}}"><?=$p['label']?></a></li>
 										@endforeach
-									  {{-- <li class="page-item"><a class="page-link" href="#">1</a></li>
-									  <li class="page-item"><a class="page-link" href="#">2</a></li>
-									  <li class="page-item"><a class="page-link" href="#">3</a></li>
-									  <li class="page-item"><a class="page-link" href="#">Next</a></li> --}}
 									</ul>
 								  </nav>
 							</div>

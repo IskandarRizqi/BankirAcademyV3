@@ -24,7 +24,7 @@ class ClassesModel extends Model
 		'date_end',
 	];
 
-	protected $appends = ['instructor_list', 'pricing', 'content_list', 'peserta_list'];
+	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list'];
 
 	public function getInstructorListAttribute()
 	{
@@ -37,6 +37,20 @@ class ClassesModel extends Model
 	{
 		if (array_key_exists('id', $this->attributes)) {
 			return DB::table('class_pricing')->where('class_id', $this->attributes['id'])->first();
+		}
+	}
+
+	public function getEventsExistAttribute()
+	{
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_event')->where('class_id', $this->attributes['id'])->exists();
+		}
+	}
+
+	public function getCertifExistAttribute()
+	{
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_certificate_template')->where('class_id', $this->attributes['id'])->exists();
 		}
 	}
 
