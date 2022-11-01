@@ -28,7 +28,7 @@
 							<div class="col-lg-12 text-center">
 								<nav aria-label="Page navigation blog">
 									<ul class="pagination justify-content-center">
-										@foreach ($blog['links'] as $p)
+										@foreach ($blog['links'] as $k=>$p)
 										<li class="page-item {{($p['active'])?'active':''}}"><a class="page-link" href="{{$p['url']}}"><?=$p['label']?></a></li>
 										@endforeach
 									</ul>

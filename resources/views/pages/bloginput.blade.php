@@ -12,7 +12,7 @@
 					<div class="col-lg-6">
 						<div class="form-group">
 							<label>Title:</label>
-							<input type="text" class="form-control" name="txtTitle" id="txtTitle" value="{{isset($blog->title)?$blog->title:null}}">
+							<input type="text" class="form-control" name="txtTitle" id="txtTitle" value="{{isset($blog->title)?$blog->title:null}}" required>
 						</div>
 					</div>
 					<div class="col-lg-6">
