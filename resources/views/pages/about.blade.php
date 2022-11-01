@@ -13,6 +13,7 @@
                     <div class="single-event">
 
                         <div class="row col-mb-50">
+							@if ($about->thumbnail)
                             <div class="col-md-12 col-lg-12">
                                 <div class="entry-image mb-0">
                                     <a href="#"><img src="{{$about->thumbnail}}" alt="Event Single"></a>
@@ -22,6 +23,7 @@
                                     </div> --}}
                                 </div>
                             </div>
+							@endif
 
                             {{-- <div class="col-md-5 col-lg-4">
                                 <div class="card event-meta mb-3">
