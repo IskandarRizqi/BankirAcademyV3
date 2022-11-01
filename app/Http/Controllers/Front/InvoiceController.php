@@ -31,6 +31,14 @@ class InvoiceController extends Controller
 		$data['class'] = ClassesModel::where('id',$data['payment']->class_id)->first();
 		$data['profile'] = UserProfileModel::where('user_id',$data['payment']->user_id)->first();
 
+		if (!$data['class']->pricing) {
+			return Redirect::back()->with('error', "Pricing Doesn't Exist");
+		}
+
+		if (!$data['profile']) {
+			return Redirect::back()->with('error', "Please Fill Your Profile Info");
+		}
+
 		// return $data;
 		if ($data['payment']->status == 1) {
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS','invoice/invoicelunas'), $data);
