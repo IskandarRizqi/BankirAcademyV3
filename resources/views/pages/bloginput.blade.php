@@ -19,7 +19,7 @@
 						<div class="form-group">
 							<label>Thumbnail:</label>
 							<input type="file" class="form-control" name="txtThumbnail" id="txtThumbnail" accept="image/*">
-							<img src="{{isset($blog->thumbnail)?$blog->thumbnail:'#'}}" alt="Image Preview" id="prvImage" class="previewImage" style="max-width: 100%;max-height:97px;">
+							<img src="{{isset($blog->thumbnail)?$blog->thumbnail:'/Backend/assets/img/90x90.jpg'}}" alt="Image Preview" id="prvImage" class="previewImage" style="max-width: 100%;max-height:97px;">
 						</div>
 					</div>
 					<div class="col-lg-12">

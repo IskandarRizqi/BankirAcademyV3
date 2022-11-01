@@ -81,13 +81,13 @@
 								</span>
 							</td>
 							<td>
-								<button class="btn bs-tooltip btn-info" title="Pricing"
+								<button class="btn bs-tooltip {{($v->pricing)?'btn-info':'btn-dark'}}" title="Pricing"
 									onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
-								<button class="btn bs-tooltip btn-success" title="File"
+								<button class="btn bs-tooltip {{(count($v->content_list)>0)?'btn-success':'btn-dark'}}" title="File"
 									onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
-								<a class="btn bs-tooltip btn-primary" title="Event"
+								<a class="btn bs-tooltip {{($v->events_exist)?'btn-primary':'btn-dark'}}" title="Event"
 									href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
-								<button class="btn bs-tooltip btn-warning dropdown-toggle" type="button"
+								<button class="btn bs-tooltip  {{($v->certif_exist)?'btn-warning':'btn-dark'}} dropdown-toggle" type="button"
 									data-toggle="dropdown" aria-expanded="false" title="Certificate">
 									<i class="bx bx-cog"></i></button>
 								<div class="dropdown-menu">
