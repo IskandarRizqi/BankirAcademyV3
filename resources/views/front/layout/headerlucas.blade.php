@@ -7,7 +7,7 @@
                 <!-- Logo
 						============================================= -->
                 <div id="logo">
-                    <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}"><img
+                    <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_l.png')}}"><img
                             src="{{asset('Backend/logo_l.png')}}" alt="E-class"></a>
                 </div><!-- #logo end -->
                 @if(Auth::check() && Auth::user()->role == 2)

@@ -257,7 +257,7 @@
 
         .invoice table::after {
             content: "";
-            background: url(admin/lunas-watermark-03.png);
+            /* background: url('lunas-watermark-03.png'); */
             top: 280px;
             left: 150px;
             bottom: 0px;
@@ -480,29 +480,26 @@
                         <div class="col-lg-6">
                             <div class="text-gray-light">INVOICE TO:</div>
                             <h2 class="to">{{$profile->name}}</h2>
-                            <div class="email"><a href="mailto:">{{Auth::user()->email}}</a>
-                            </div>
+                            <div class="email"><a href="mailto:">{{Auth::user()->email}}</a></div>
+							<small>({{$profile->phone_region}}){{$profile->phone}}</small>
                         </div>
                     </div>
                     <div class="float-right invoice-details">
                         <div class="col-lg-6">
                             <div class="date">Tanggal Invoice :{{Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}}</div>
-                            <h2 class="invoice-id" style="text-transform: uppercase;">{{$payment->no_invoice}}</h2>
+                            <h2 class="invoice-id" style="text-transform: uppercase;">No. Invoice : {{$payment->no_invoice}}</h2>
                         </div>
                     </div>
                 </div>
-                <br>
-                <br>
-                <br>
-                <br>
+                <br><br><br><br><br><br><br>
                 <table>
                     <thead>
                         <tr>
                             <th class="text-left">KELAS</th>
-                            <th class="text-center">HARGA</th>
-                            <th class="text-center">PROMO</th>
-                            <td class="text-center">KODE UNIK</td>
-                            <td class="text-center">TOTAL</td>
+                            <th style="text-align: right;">HARGA</th>
+                            <th style="text-align: right;">PROMO</th>
+                            <th style="text-align: right;">KODE UNIK</th>
+                            <th style="text-align: right;">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
