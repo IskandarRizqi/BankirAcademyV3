@@ -66,7 +66,7 @@ class InstructorController extends Controller
             $size = $request->file('picture')->getSize(); // Size File
 
             if ($size >= 1048576) {
-                return Redirect::back()->withErrors(['error' => 'Ukuran File Melebihi 1 MB'])->with([$this->type => 'true']);
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
 
             $filename = time() . '-' . $name;
