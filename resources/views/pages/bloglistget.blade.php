@@ -52,7 +52,7 @@
 							</td>
 							<td>
 								<a class="btn btn-primary btn-large" type="button" href="/admin/pages/getblog/{{$v->id}}" title="Edit"><i class="bx bx-edit"></i></a>
-								<a class="btn btn-danger btn-large" type="button" href="/admin/pages/delblog/{{$v->id}}" title="Delete"><i class="bx bx-trash"></i></a>
+								<button class="btn btn-danger btn-large" type="button" onclick="delBlog('/admin/pages/delblog/{{$v->id}}')" title="Delete"><i class="bx bx-trash"></i></button>
 							</td>
 						</tr>
 						@endforeach
@@ -67,5 +67,20 @@
 @section('custom-js')
 <script>
 	createDataTable('#tblBlogList');
+
+	function delBlog(url) {
+		swal({
+			title: 'This data will be deleted?',
+			text: "You won't be able to revert this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Delete',
+			padding: '2em'
+		}).then(function(result) {
+			if (result.value) {
+				window.location.href = url;
+			}
+		})
+	}
 </script>
 @endsection
