@@ -132,7 +132,7 @@ class BannerslideController extends Controller
             // unlink($image_path);
 
             $img = BannerModel::where('id', $request->id)->first();
-            $image_path = public_path() . '/image/' . $img['image'];
+            $image_path = public_path() . '/Image/' . $img['image'];
             unlink($image_path);
             // return $image_path;
             $name = $request->file('banner')->getClientOriginalName();

@@ -151,11 +151,9 @@
     }
 </style>
 <section id="content">
-    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
-        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block" data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
         <div class="owl-stage-outer">
-            <div class="owl-stage"
-                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+            <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
                 @foreach ($banner_slide as $key => $value)
                 <div class="owl-item">
                     <div class="oc-item">
@@ -178,11 +176,9 @@
         {{-- <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button"
                 class="owl-dot active"><span></span></button></div> --}}
     </div>
-    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
-        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none" data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
         <div class="owl-stage-outer">
-            <div class="owl-stage"
-                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+            <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
                 @if (isset($banner_slide_mobile))
                 @foreach ($banner_slide_mobile as $key => $value)
                 <div class="owl-item" style=" margin-right: 20px;">
@@ -208,24 +204,19 @@
         <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
-                    <h2>Jelajahi Course</h2>
-                    <p>Berbagai macam pilihan course dengan metode belajar yang cocok buat kamu</p>
+                    <h2>Jelajahi Akademi</h2>
+                    <p>Berbagai macam pilihan akademi dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div id="related-portfolio"
-                    class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                    data-margin="0" data-autoplay="5000" data-items-xs="2" data-items-sm="2" data-items-md="0"
-                    data-items-xl="0">
+                <div id="related-portfolio" class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="0" data-autoplay="5000" data-items-xs="2" data-items-sm="2" data-items-md="0" data-items-xl="0">
                     <div class="owl-stage-outer">
-                        <div class="owl-stage"
-                            style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
+                        <div class="owl-stage" style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
                             @if (isset($kelas))
                             @foreach ($kelas as $key => $k )
                             <div class="owl-item" style="">
                                 <div class="oc-item">
                                     <div class="portfolio-item">
                                         <div class="portfolio-image">
-                                            <button class="button button-circle"
-                                                onclick="tabsCategory('{{str_replace(' ','_',$key)}}')">{{$key}}</button>
+                                            <button class="button button-circle" onclick="tabsCategory('{{str_replace(' ','_',$key)}}')">{{$key}}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -234,10 +225,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"
-                            style="zoom: 1 !important"><i class="icon-angle-left"></i></button><button type="button"
-                            role="presentation" class="owl-next" style="zoom: 1 !important"><i
-                                class="icon-angle-right"></i></button></div>
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev" style="zoom: 1 !important"><i class="icon-angle-left"></i></button><button type="button" role="presentation" class="owl-next" style="zoom: 1 !important"><i class="icon-angle-right"></i></button></div>
                 </div>
                 <hr style="width: 1100px">
                 @foreach ($kelas as $key => $k )
@@ -252,9 +240,7 @@
                                     </div>
                                     <h5 class="text-uppercase mt-2">{{ $ke->title }}</h5>
                                     <div class="d-flex mt-2">
-                                        <img class="mr-3 rounded-circle"
-                                            src="Image/{{ json_decode($ke->instructor_list[0]->picture)->url }}"
-                                            alt="Generic placeholder image" style="max-width:50px; max-height:50px;">
+                                        <img class="mr-3 rounded-circle" src="Image/{{ json_decode($ke->instructor_list[0]->picture)->url }}" alt="Generic placeholder image" style="max-width:50px; max-height:50px;">
                                         <div class="">
                                             <label class="d-block mb-0"> {{ $ke->instructor_list[0]->name }}
                                             </label>
@@ -272,9 +258,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right mt-2 w-100">
-                                        <a class="btn btn-success btn-block btn-rounded"
-                                            style=" border-radius:10px !important"
-                                            href="class/{{ $ke->unique_id }}/{{ urlencode($ke->title) }}">
+                                        <a class="btn btn-success btn-block btn-rounded" style=" border-radius:10px !important" href="class/{{ $ke->unique_id }}/{{ urlencode($ke->title) }}">
                                             Detail
                                         </a>
                                     </div>
@@ -286,15 +270,16 @@
                 </div>
                 @endforeach
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         tabsCategory('Semua');
                     })
+
                     function tabsCategory(params) {
-                        $('.tabsCustom').each(function () {
-                            $(this).attr('hidden',true);
+                        $('.tabsCustom').each(function() {
+                            $(this).attr('hidden', true);
                         })
-                        $('#'+params).removeAttr('hidden');
-                        $('#allClass').attr('href','/list-class/'+params);
+                        $('#' + params).removeAttr('hidden');
+                        $('#allClass').attr('href', '/list-class/' + params);
                     }
                 </script>
                 <div class="center">
@@ -306,20 +291,16 @@
         <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
-                    <h2>Promo</h2>
+                    <h2 id="hrefpromo">Promo</h2>
                 </div>
-                <div id="oc-testi"
-                    class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                    data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
+                <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
                     <div class="owl-stage-outer">
-                        <div class="owl-stage"
-                            style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                        <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                             @if (isset($banner_promo))
                             @foreach ($banner_promo as $bp)
                             <div class="owl-item active" style="margin-right: 20px;">
                                 <div class="oc-item">
-                                    <div class="testimonial"
-                                        style="background-image:url('Image/{{ $bp->image }}');
+                                    <div class="testimonial" style="background-image:url('Image/{{ $bp->image }}');
                                                     border-radius: 20px !important; height: 316px; background-size:100%;">
                                         <a href="#"></a>
                                     </div>
@@ -329,11 +310,8 @@
                             @endif
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
-                                class="icon-angle-left"></i></button><button type="button" role="presentation"
-                            class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
-                            role="button" class="owl-dot active"><span></span></button></div>
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i class="icon-angle-left"></i></button><button type="button" role="presentation" class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
+                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
                 </div>
             </div>
         </div>
@@ -345,8 +323,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4 mb-4">
-                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
-                            data-items-sm="1" data-items-md="1" data-items-xl="1">
+                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20" data-items-sm="1" data-items-md="1" data-items-xl="1">
                             @if (isset($kelas_mingguan))
                             @foreach ($kelas_mingguan as $km)
                             <div class="oc-item">
@@ -365,13 +342,10 @@
                                             </span>
                                             @auth
                                             <a href="class/{{ $k->unique_id }}/{{ urlencode($k->title) }}">
-                                                <button class="btn btn-success btn-sm" style="margin-left: 83px"
-                                                    width='100%'>Detail</button>
+                                                <button class="btn btn-success btn-sm" style="margin-left: 83px" width='100%'>Detail</button>
                                             </a>
                                             @else
-                                            <a class="btn btn-success btn-sm" style="margin-left: 83px;"
-                                                data-toggle="modal" data-target="#modelId" data-backdrop="static"
-                                                data-keyboard="false">Detail</a>
+                                            <a class="btn btn-success btn-sm" style="margin-left: 83px;" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Detail</a>
                                             @endauth
                                         </div>
                                     </div>
@@ -385,22 +359,15 @@
                     <div class="col-lg-8 mb-4">
                         @if (isset($banner_bawah))
                         @if (count($banner_bawah) > 0)
-                        <div id="img_card" class="card text-white click-col"
-                            style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
+                        <div id="img_card" class="card text-white click-col" style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
                         </div>
                         <div class="d-flex mt-4">
-                            <div id="oc-testi"
-                                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2"
-                                style="height: 155px">
+                            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2" style="height: 155px">
                                 <div class="owl-stage-outer">
-                                    <div class="owl-stage"
-                                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
-                                        @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active"
-                                            style="width: 418.667px; margin-right: 20px;">
+                                    <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                        @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial"
-                                                    style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
+                                                <div class="testimonial" style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
                                                     border-radius: 20px !important; height: 260px !important; background-size:100%;">
                                                     <a href="#"></a>
                                                 </div>
@@ -411,23 +378,16 @@
                             </div>
                         </div>
                         @else
-                        <div id="img_card" class="card text-white click-col"
-                            style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); min-height:0px; background-size:contain !important;">
+                        <div id="img_card" class="card text-white click-col" style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); min-height:0px; background-size:contain !important;">
                         </div>
                         <div class="d-flex mt-4">
-                            <div id="oc-testi"
-                                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
+                            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
                                 <div class="owl-stage-outer">
-                                    <div class="owl-stage"
-                                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                    <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial"
-                                                    style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
-                                                    <a href="#"><img
-                                                            src="{{ asset('Backend/assets/img/1280x857.jpg') }}"
-                                                            alt="Customer Testimonails" height="100%"></a>
+                                                <div class="testimonial" style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
+                                                    <a href="#"><img src="{{ asset('Backend/assets/img/1280x857.jpg') }}" alt="Customer Testimonails" height="100%"></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -448,21 +408,16 @@
             <div class="heading-block center">
                 <h2>Testimonial</h2>
             </div>
-            <div id="oc-testi"
-                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
+            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
                 <div class="owl-stage-outer">
-                    <div class="owl-stage"
-                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                    <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                         @if (isset($testimoni))
                         @foreach ($testimoni as $t)
                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                             <div class="oc-item">
                                 <div class="testimonial">
                                     <div class="testi-image">
-                                        <a href="#"><img
-                                                src="{{ $t->picture?$t->picture:asset('front/one-page/images/team/3.jpg') }}"
-                                                alt="Customer Testimonails"></a>
+                                        <a href="#"><img src="{{ $t->picture?$t->picture:asset('front/one-page/images/team/3.jpg') }}" alt="Customer Testimonails"></a>
                                     </div>
                                     <div class="testi-content">
                                         <p>{{$t->review}}</p>
@@ -499,27 +454,26 @@
                 <div class="oc-item">
                     <div class="testimonial"
                         style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                        <div class="testi-content">
-                            <div class="testi-image">
-                                <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                        alt="Customer Testimonails"></a>
-                            </div>
-                            <p>Incidunt deleniti blanditiis quas</p>
-                            <div class="testi-meta">
-                                John Doe
-                                <span>XYZ Inc.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="{{ $p->link }}">
-                        <img src="Image/Partner/{{ json_decode($p->image)->url }}" alt="">
-                    </a>
+            <div class="testi-content">
+                <div class="testi-image">
+                    <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}" alt="Customer Testimonails"></a>
                 </div>
-                @endforeach
-                @endif
-            </div> --}}
-            <img src="{{asset('partner-eclass.png')}}" alt="" style="width: 700px">
+                <p>Incidunt deleniti blanditiis quas</p>
+                <div class="testi-meta">
+                    John Doe
+                    <span>XYZ Inc.</span>
+                </div>
+            </div>
         </div>
+        <a href="{{ $p->link }}">
+            <img src="Image/Partner/{{ json_decode($p->image)->url }}" alt="">
+        </a>
+    </div>
+    @endforeach
+    @endif
+    </div> --}}
+    <img src="{{asset('partner-eclass.png')}}" alt="" style="width: 700px">
+    </div>
     </div>
     </div>
 </section>
@@ -528,139 +482,142 @@
 @include('front.layout.footer')
 <script>
     $(document).ready(function() {
-    $('#sldall').slick({
-        dots: true,
-        infinite: false,
-        speed: 300,
-        slidesToShow: 4,
-        slidesToScroll: 4,
-        responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true
+        $('#sldall').slick({
+            dots: true,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
                 }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
+        $('#sld').slick({
+            dots: true,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
                 }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
+        $('#sld1').slick({
+            dots: true,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
                 }
-            }
-            // You can unslick at a given breakpoint now by adding:
-            // settings: "unslick"
-            // instead of a settings object
-        ]
-    }); $('#sld').slick({
-        dots: true,
-        infinite: false,
-        speed: 300,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
+        $('#sld2').slick({
+            dots: true,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
                 }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-            // You can unslick at a given breakpoint now by adding:
-            // settings: "unslick"
-            // instead of a settings object
-        ]
-    }); $('#sld1').slick({
-        dots: true,
-        infinite: false,
-        speed: 300,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-            // You can unslick at a given breakpoint now by adding:
-            // settings: "unslick"
-            // instead of a settings object
-        ]
-    }); $('#sld2').slick({
-        dots: true,
-        infinite: false,
-        speed: 300,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        responsive: [{
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-            // You can unslick at a given breakpoint now by adding:
-            // settings: "unslick"
-            // instead of a settings object
-        ]
-    });
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
 
     })
 </script>
