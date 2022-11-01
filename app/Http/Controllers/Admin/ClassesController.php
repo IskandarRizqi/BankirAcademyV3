@@ -339,4 +339,15 @@ class ClassesController extends Controller
 		}
 		return Redirect::back()->withInput($request->all())->with('error', 'Review Tidak Tersimpan');
 	}
+	public function listClass($category)
+	{
+		$data['class'] = ClassesModel::where(function ($sql) use ($category) {
+			if ($category !== 'Semua') {
+				$str = str_replace('_', ' ', $category);
+				return $sql->where('category', $str);
+			}
+		})->paginate(7)->toArray();
+
+		return view('front.kelas.listclass', $data);
+	}
 }

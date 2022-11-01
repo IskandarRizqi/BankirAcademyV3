@@ -54,9 +54,9 @@ class HomeController extends Controller
             ->get();
         $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
         $data['kelas'] = [];
-        $data['kelas']['Semua'] = ClassesModel::limit(6)->get();
+        $data['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(6)->get();
         foreach ($categori as $key => $value) {
-            $data['kelas'][$value] = ClassesModel::where('category', $value)->limit(6)->get();
+            $data['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->limit(6)->get();
         }
 
         // return $data;

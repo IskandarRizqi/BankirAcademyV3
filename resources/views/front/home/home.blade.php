@@ -157,7 +157,7 @@
             <div class="owl-stage"
                 style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
                 @foreach ($banner_slide as $key => $value)
-                <div class="owl-item" style=" margin-right: 20px;">
+                <div class="owl-item">
                     <div class="oc-item">
                         <a href="#"><img src="/Image/{{$value->image}}" alt="Image 1"></a>
                     </div>
@@ -192,7 +192,7 @@
                 </div>
                 @endforeach
                 @else
-                <div class="owl-item" style=" margin-right: 20px;">
+                <div class="owl-item" style="margin-right: 20px;">
                     <div class="oc-item">
                         <a href="#"><img src="{{asset('Backend/assets/img/600x300.jpg')}}" alt="Image 1"></a>
                     </div>
@@ -208,93 +208,65 @@
         <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
-                    <h2>SEMUA KELAS</h2>
+                    <h2>Jelajahi Course</h2>
+                    <p>Berbagai macam pilihan course dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div class="tabs tabs-alt clearfix" id="tabs-profile">
-                    @if (isset($kelas))
-                    <ul class="tab-nav clearfix" style="overflow-x: scroll !important; overflow-y: hidden !important;">
-                        @foreach ($kelas as $key => $k )
-                        <li><a href="#{{str_replace(' ','_',$key)}}"><i class="icon-credit-cards"></i>{{str_replace('
-                                ','_',$key)}}</a></li>
-                        @endforeach
-                    </ul>
-                    <div class="tab-container">
-                        @foreach ($kelas as $key => $k )
-                        <div class="tab-content clearfix" id="{{str_replace(' ','_',$key)}}">
-                            <div class="row">
-                                @foreach ($k as $ke)
-                                <div class="col-lg-4 col-sm-6 mb-4">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="card" style="min-height: 0px !important">
-                                                <img src="<?= $ke->image ?>" alt="" width="100%">
-                                            </div>
-                                            <h5 class="text-uppercase mt-2">{{ $ke->title }}</h5>
-                                            <div class="d-flex mt-2">
-                                                <img class="mr-3 rounded-circle"
-                                                    src="Image/{{ json_decode($ke->instructor_list[0]->picture)->url }}"
-                                                    alt="Generic placeholder image"
-                                                    style="max-width:50px; max-height:50px;">
-                                                <div class="">
-                                                    <label class="d-block mb-0"> {{ $ke->instructor_list[0]->name }}
-                                                    </label>
-                                                    <small>{{ $ke->instructor_list[0]->title }}</small>
-                                                </div>
-                                                <div class="ml-2 flex-fill">
-                                                    <label class="d-block mb-0"> Harga
-                                                    </label>
-                                                    @if ($ke->pricing)
-                                                    <small>
-                                                        {{ numfmt_format_currency(numfmt_create('id_ID',
-                                                        \NumberFormatter::CURRENCY), $ke->pricing->price, 'IDR') }}
-                                                    </small>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="text-right mt-2 w-100">
-                                                <a class="btn btn-success btn-block btn-rounded"
-                                                    style=" border-radius:10px !important"
-                                                    href="class/{{ $ke->unique_id }}/{{ urlencode($ke->title) }}">
-                                                    Detail
-                                                </a>
-                                            </div>
+                <div id="related-portfolio"
+                    class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                    data-margin="0" data-autoplay="5000" data-items-xs="2" data-items-sm="2" data-items-md="0"
+                    data-items-xl="0">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage"
+                            style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
+                            @if (isset($kelas))
+                            @foreach ($kelas as $key => $k )
+                            <div class="owl-item" style="">
+                                <div class="oc-item">
+                                    <div class="portfolio-item">
+                                        <div class="portfolio-image">
+                                            <button class="button button-circle"
+                                                onclick="tabsCategory('{{str_replace(' ','_',$key)}}')">{{$key}}</button>
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
                             </div>
+                            @endforeach
+                            @endif
                         </div>
-                        @endforeach
                     </div>
-                    @endif
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"
+                            style="zoom: 1 !important"><i class="icon-angle-left"></i></button><button type="button"
+                            role="presentation" class="owl-next" style="zoom: 1 !important"><i
+                                class="icon-angle-right"></i></button></div>
                 </div>
-                {{-- <div class="row" id="sld"> --}}
-                    {{-- <div class="row" id="">
-                        @if (isset($pop))
-                        @foreach ($pop as $p)
+                <hr style="width: 1100px">
+                @foreach ($kelas as $key => $k )
+                <div id="{{str_replace(' ','_',$key)}}" class="tabsCustom mt-2" hidden>
+                    <div class="row">
+                        @foreach ($k as $ke)
                         <div class="col-lg-4 col-sm-6 mb-4">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card" style="min-height: 0px !important">
-                                        <img src="<?= $p->image ?>" alt="" width="100%">
+                                        <img src="<?= $ke->image ?>" alt="" width="100%">
                                     </div>
-                                    <h5 class="text-uppercase mt-2">{{ $p->title }}</h5>
+                                    <h5 class="text-uppercase mt-2">{{ $ke->title }}</h5>
                                     <div class="d-flex mt-2">
                                         <img class="mr-3 rounded-circle"
-                                            src="Image/{{ json_decode($p->instructor_list[0]->picture)->url }}"
+                                            src="Image/{{ json_decode($ke->instructor_list[0]->picture)->url }}"
                                             alt="Generic placeholder image" style="max-width:50px; max-height:50px;">
                                         <div class="">
-                                            <label class="d-block mb-0"> {{ $p->instructor_list[0]->name }}
+                                            <label class="d-block mb-0"> {{ $ke->instructor_list[0]->name }}
                                             </label>
-                                            <small>{{ $p->instructor_list[0]->title }}</small>
+                                            <small>{{ $ke->instructor_list[0]->title }}</small>
                                         </div>
                                         <div class="ml-2 flex-fill">
                                             <label class="d-block mb-0"> Harga
                                             </label>
-                                            @if ($p->pricing)
+                                            @if ($ke->pricing)
                                             <small>
                                                 {{ numfmt_format_currency(numfmt_create('id_ID',
-                                                \NumberFormatter::CURRENCY), $p->pricing->price, 'IDR') }}
+                                                \NumberFormatter::CURRENCY), $ke->pricing->price, 'IDR') }}
                                             </small>
                                             @endif
                                         </div>
@@ -302,7 +274,7 @@
                                     <div class="text-right mt-2 w-100">
                                         <a class="btn btn-success btn-block btn-rounded"
                                             style=" border-radius:10px !important"
-                                            href="class/{{ $p->unique_id }}/{{ $p->title }}">
+                                            href="class/{{ $ke->unique_id }}/{{ urlencode($ke->title) }}">
                                             Detail
                                         </a>
                                     </div>
@@ -310,12 +282,23 @@
                             </div>
                         </div>
                         @endforeach
-                        @endif
-                    </div> --}}
-                    {{--
-                </div> --}}
+                    </div>
+                </div>
+                @endforeach
+                <script>
+                    $(document).ready(function () {
+                        tabsCategory('Semua');
+                    })
+                    function tabsCategory(params) {
+                        $('.tabsCustom').each(function () {
+                            $(this).attr('hidden',true);
+                        })
+                        $('#'+params).removeAttr('hidden');
+                        $('#allClass').attr('href','/list-class/'+params);
+                    }
+                </script>
                 <div class="center">
-                    <a href="#" class="btn btn-primary btn-block">Load more...</a>
+                    <a id="allClass" class="btn btn-primary btn-block">Semua Kelas</a>
                 </div>
             </div>
         </div>
