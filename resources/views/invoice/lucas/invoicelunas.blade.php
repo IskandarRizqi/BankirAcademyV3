@@ -459,7 +459,7 @@
                         <img src="Backend/logo_l.png" width="125" alt="" />
                         <h2 class="name">
                             <a target="_blank">
-                               LUCAS
+                                LUCAS
                             </a>
                         </h2>
                         <div>
@@ -471,9 +471,9 @@
                             info.ehrindo@gmail.com
                         </div>
                     </div>
-					<span class="float-right">
-						Supported By: <a href="https://akarindo.id">AKARINDO</a>
-					</span>
+                    <span class="float-right">
+                        Supported By: <a href="https://akarindo.id">AKARINDO</a>
+                    </span>
                 </div>
             </header>
             <br>
@@ -489,7 +489,8 @@
                     </div>
                     <div class="float-right invoice-details">
                         <div class="col-lg-6">
-                            <div class="date">Tanggal Invoice :{{Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}}</div>
+                            <div class="date">Tanggal Invoice
+                                :{{Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}}</div>
                             <h2 class="invoice-id" style="text-transform: uppercase;">{{$payment->no_invoice}}</h2>
                         </div>
                     </div>
@@ -509,22 +510,26 @@
                         </tr>
                     </thead>
                     <tbody>
-						<tr>
-							<th class="text-left">{{$class->title}}</th>
-							<td class="unit">{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$class->pricing->price,"IDR") }}</td>
-							<td class="unit">
-								@if ($class->pricing->promo==1)
-								- {{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$class->pricing->promo_price,"IDR") }}
-								@endif
-							</td>
-							<td class="unit">
-								{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->unique_code,"IDR") }}
-							</td>
-							<td class="unit">
-								{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->price_final,"IDR") }}
-							</td>
-						</tr>
-					</tbody>
+                        <tr>
+                            <th class="text-left">{{$class->title}}</th>
+                            <td class="unit">{{numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$class->pricing->price,"IDR") }}</td>
+                            <td class="unit">
+                                @if ($class->pricing->promo==1)
+                                - {{numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$class->pricing->promo_price,"IDR") }}
+                                @endif
+                            </td>
+                            <td class="unit">
+                                {{numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->unique_code,"IDR") }}
+                            </td>
+                            <td class="unit">
+                                {{numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->price_final,"IDR") }}
+                            </td>
+                        </tr>
+                    </tbody>
                     <tfoot>
                         {{-- <tr>
                             <td colspan="1"></td>
@@ -540,14 +545,15 @@
                         <tr>
                             <td colspan="1"></td>
                             <td colspan="3">GRAND TOTAL</td>
-                            <td>{{numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->price_final,"IDR") }}</td>
+                            <td>{{numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->price_final,"IDR") }}</td>
                         </tr>
                     </tfoot>
                 </table>
                 {{-- <div class="thanks">Thank you!</div> --}}
                 <div class="notices">
                     <div>Informasi:</div>
-                    <div class="notice">
+                    {{-- <div class="notice">
                         Bank : BCA || No.Rekening : 2466030896 || Atas Nama
                         : CV. ANUGRAH KARYA INDONESIA
                     </div>
@@ -555,7 +561,7 @@
                         Apabila telah melakukan pembayaran harap melakukan
                         Konfirmasi pada Whatsapp +6289531229494 atau pada
                         nomor (024) 76435498
-                    </div>
+                    </div> --}}
                 </div>
             </main>
         </div>

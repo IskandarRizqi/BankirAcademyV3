@@ -259,7 +259,7 @@
             </div>
         </div>
 
-        <div class="section border-top-0 mb-6">
+        {{-- <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2>Promo</h2>
@@ -285,16 +285,11 @@
                             @endif
                         </div>
                     </div>
-                    {{-- <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
-                                class="icon-angle-left"></i></button><button type="button" role="presentation"
-                            class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
-                            role="button" class="owl-dot active"><span></span></button></div> --}}
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="section border-top-0 mb-6">
+        {{-- <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2>Kelas Terdekat</h2>
@@ -396,7 +391,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     {{-- <div class="section border-top-0 mb-6">

@@ -257,6 +257,9 @@
                     </div>
                     {{--
                 </div> --}}
+                <div class="center">
+                    <a href="portfolio-infinity-scroll-2.html" class="">Load more...</a>
+                </div>
             </div>
         </div>
 
@@ -449,12 +452,12 @@
             <div class="heading-block center">
                 <h2>Partner</h2>
             </div>
-            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+            {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
                 data-items-sm="1" data-items-md="2" data-items-xl="3">
                 @if (isset($partner))
                 @foreach ($partner as $p)
                 <div class="oc-item">
-                    {{-- <div class="testimonial"
+                    <div class="testimonial"
                         style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
                         <div class="testi-content">
                             <div class="testi-image">
@@ -467,14 +470,15 @@
                                 <span>XYZ Inc.</span>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <a href="{{ $p->link }}">
                         <img src="Image/Partner/{{ json_decode($p->image)->url }}" alt="">
                     </a>
                 </div>
                 @endforeach
                 @endif
-            </div>
+            </div> --}}
+            <img src="{{asset('partner-eclass.png')}}" alt="" style="width: 700px">
         </div>
     </div>
     </div>
