@@ -53,7 +53,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post("/admin/pages/setcontact", [App\Http\Controllers\Front\PagesController::class, "setContact"]);
     Route::get("/admin/pages/getbloglist", [App\Http\Controllers\Front\PagesController::class, "getListBlog"]);
     Route::get("/admin/pages/getblog/{id}", [App\Http\Controllers\Front\PagesController::class, "getBlog"]);
-	Route::get("/admin/pages/delblog/{id}", [App\Http\Controllers\Front\PagesController::class, "delBlog"]);
+    Route::get("/admin/pages/delblog/{id}", [App\Http\Controllers\Front\PagesController::class, "delBlog"]);
     Route::post("/admin/pages/setblog/{id}", [App\Http\Controllers\Front\PagesController::class, "setBlog"]);
 });
 Route::middleware('auth')->group(function () {
@@ -86,5 +86,8 @@ Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "
 Route::get("/pages/contact", [App\Http\Controllers\Front\PagesController::class, "showContact"]);
 Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "showListBlog"]);
 Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
+
+//Class
+Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
 
 Auth::routes();

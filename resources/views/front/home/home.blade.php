@@ -129,6 +129,27 @@
 
 <!-- Content -->
 @if (isset($banner_slide))
+<style>
+    .owl-carousel .owl-nav [class*=owl-] {
+        position: absolute;
+        top: 50%;
+        margin-top: -18px;
+        left: -36px;
+        zoom: 2;
+        width: 40px;
+        height: 40px;
+        line-height: 32px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #0b5fc7;
+        background-color: #FFF;
+        font-size: 18px;
+        border-radius: 50%;
+        opacity: 0;
+        -webkit-transition: all .3s ease;
+        -o-transition: all .3s ease;
+        transition: all .3s ease;
+    }
+</style>
 <section id="content">
     <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
         data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
@@ -144,6 +165,18 @@
                 @endforeach
             </div>
         </div>
+
+
+        {{-- style="zoom: 2 !important; width: 40px !important; height: 40px !important; color: #0b5fc7 ! important;
+        background-color: #fff" --}}
+
+        {{-- <div class="owl-nav">
+            <button type="button" role="presentation" class="owl-prev"><i class="icon-angle-left"></i></button>
+            <button type="button" role="presentation" class="owl-next disabled"><i
+                    class="icon-angle-right"></i></button>
+        </div> --}}
+        {{-- <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button"
+                class="owl-dot active"><span></span></button></div> --}}
     </div>
     <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
         data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
@@ -177,45 +210,69 @@
                 <div class="heading-block center">
                     <h2>SEMUA KELAS</h2>
                 </div>
+                <div class="tabs tabs-alt clearfix" id="tabs-profile">
+                    @if (isset($kelas))
+                    <ul class="tab-nav clearfix" style="overflow-x: scroll !important; overflow-y: hidden !important;">
+                        @foreach ($kelas as $key => $k )
+                        <li><a href="#{{str_replace(' ','_',$key)}}"><i class="icon-credit-cards"></i>{{str_replace('
+                                ','_',$key)}}</a></li>
+                        @endforeach
+                    </ul>
+                    <div class="tab-container">
+                        @foreach ($kelas as $key => $k )
+                        <div class="tab-content clearfix" id="{{str_replace(' ','_',$key)}}">
+                            <div class="row">
+                                @foreach ($k as $ke)
+                                <div class="col-lg-4 col-sm-6 mb-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="card" style="min-height: 0px !important">
+                                                <img src="<?= $ke->image ?>" alt="" width="100%">
+                                            </div>
+                                            <h5 class="text-uppercase mt-2">{{ $ke->title }}</h5>
+                                            <div class="d-flex mt-2">
+                                                <img class="mr-3 rounded-circle"
+                                                    src="Image/{{ json_decode($ke->instructor_list[0]->picture)->url }}"
+                                                    alt="Generic placeholder image"
+                                                    style="max-width:50px; max-height:50px;">
+                                                <div class="">
+                                                    <label class="d-block mb-0"> {{ $ke->instructor_list[0]->name }}
+                                                    </label>
+                                                    <small>{{ $ke->instructor_list[0]->title }}</small>
+                                                </div>
+                                                <div class="ml-2 flex-fill">
+                                                    <label class="d-block mb-0"> Harga
+                                                    </label>
+                                                    @if ($ke->pricing)
+                                                    <small>
+                                                        {{ numfmt_format_currency(numfmt_create('id_ID',
+                                                        \NumberFormatter::CURRENCY), $ke->pricing->price, 'IDR') }}
+                                                    </small>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="text-right mt-2 w-100">
+                                                <a class="btn btn-success btn-block btn-rounded"
+                                                    style=" border-radius:10px !important"
+                                                    href="class/{{ $ke->unique_id }}/{{ $ke->title }}">
+                                                    Detail
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                </div>
                 {{-- <div class="row" id="sld"> --}}
-                    <div class="row" id="">
+                    {{-- <div class="row" id="">
                         @if (isset($pop))
                         @foreach ($pop as $p)
                         <div class="col-lg-4 col-sm-6 mb-4">
-                            {{-- <div class="card text-white click-col"
-                                style="background-image:url('<?= $p->image ?>');">
-                                <img class="card-img d-none" src="<?= $p->image ?>">
-                                <div class="card-img-overlay d-flex flex-column">
-                                    <div class="card-body">
-                                        <!-- <small class="card-meta mb-2">Thought Leadership</small> -->
-                                        <h4 class="card-title mt-0 "><a class="text-white" herf="#">{{$p->title}}</a>
-                                        </h4>
-                                        <small><i class="far fa-clock"></i> {{
-                                            \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }} - {{
-                                            \Carbon\Carbon::parse($p->date_end)->format('F d, Y') }}</small>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="media">
-                                            <img class="mr-3 rounded-circle"
-                                                src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}"
-                                                alt="Generic placeholder image" style="max-width:50px">
-                                            <div class="media-body">
-                                                <h6 class="my-0 text-white d-block"> {{$p->instructor_list[0]->name}}
-                                                </h6>
-                                                <small>{{$p->instructor_list[0]->title}}</small>
-                                            </div>
-                                        </div>
-                                        @auth
-                                        <a href="class/{{$p->unique_id}}/{{$p->title}}">
-                                            <button class="button button-circle" width='100%'>Detail</button>
-                                        </a>
-                                        @else
-                                        <a class="button button-circle" data-toggle="modal" data-target="#modelId"
-                                            data-backdrop="static" data-keyboard="false">Detail</a>
-                                        @endauth
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card" style="min-height: 0px !important">
@@ -254,11 +311,11 @@
                         </div>
                         @endforeach
                         @endif
-                    </div>
+                    </div> --}}
                     {{--
                 </div> --}}
                 <div class="center">
-                    <a href="portfolio-infinity-scroll-2.html" class="">Load more...</a>
+                    <a href="#" class="btn btn-primary btn-block">Load more...</a>
                 </div>
             </div>
         </div>
@@ -289,11 +346,11 @@
                             @endif
                         </div>
                     </div>
-                    {{-- <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
                                 class="icon-angle-left"></i></button><button type="button" role="presentation"
                             class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
                     <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
-                            role="button" class="owl-dot active"><span></span></button></div> --}}
+                            role="button" class="owl-dot active"><span></span></button></div>
                 </div>
             </div>
         </div>

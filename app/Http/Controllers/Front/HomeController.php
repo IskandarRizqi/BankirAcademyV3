@@ -22,7 +22,6 @@ class HomeController extends Controller
         $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_slide'] = BannerModel::where('jenis', 0)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_slide_mobile'] = BannerModel::where('jenis', 3)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
-        $data['pop'] = ClassesModel::limit(6)->get();
         $data['minggu_ini'] = ClassesModel::whereBetween("date_start", [
             $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
             $now->endOfWeek()->format('Y-m-d')
@@ -53,8 +52,15 @@ class HomeController extends Controller
             ->join('user_profile', 'user_profile.user_id', 'class_participant.user_id')
             ->where('class_participant.review_active', 1)
             ->get();
+        $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
+        $data['kelas'] = [];
+        $data['kelas']['Semua'] = ClassesModel::limit(6)->get();
+        foreach ($categori as $key => $value) {
+            $data['kelas'][$value] = ClassesModel::where('category', $value)->limit(6)->get();
+        }
+
         // return $data;
-        return view(env('CUSTOM_HOME_PAGE','front.home.home'), $data);
+        return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
     }
 
     public function detail_class($unique_id, $title)
