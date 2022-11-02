@@ -671,10 +671,10 @@
                         html += '                    </label>';
                         if (el.pricing) {
                             if (el.pricing.promo) {
-                                html += '<del>'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(el.pricing.price)+'</del>';
+                                html += '<del>'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumSignificantDigits:1 }).format(el.pricing.price)+'</del>';
                             }
                             else {
-                                html += '<small>'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(el.pricing.price,2)+'</small>';
+                                html += '<small>'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumSignificantDigits:1 }).format(el.pricing.price)+'</small>';
                             }
                         } 
                         html += '                </div>';
@@ -682,7 +682,7 @@
                         html += '            <div class="text-center mt-2 w-100">';
                             if (el.pricing) {
                                 if (el.pricing.promo) {
-                                html += '<h3 style="margin: 0px !important; color:#007038 !important;">'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(el.pricing.price-el.pricing.promo_price)+'</h3>';
+                                html += '<h3 style="margin: 0px !important; color:#007038 !important;">'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumSignificantDigits:1 }).format(el.pricing.price-el.pricing.promo_price)+'</h3>';
                             }
                         }
                         html += '                <a class="btn btn-success btn-block btn-rounded"';
