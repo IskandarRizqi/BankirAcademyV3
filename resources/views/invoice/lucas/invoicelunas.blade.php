@@ -553,15 +553,15 @@
                 {{-- <div class="thanks">Thank you!</div> --}}
                 <div class="notices">
                     <div>Informasi:</div>
-                    {{-- <div class="notice">
-                        Bank : BCA || No.Rekening : 2466030896 || Atas Nama
+                    <div class="notice">
+                        Bank : BCA || No.Rekening : ********* || Atas Nama
                         : CV. ANUGRAH KARYA INDONESIA
                     </div>
                     <div class="notice">
                         Apabila telah melakukan pembayaran harap melakukan
-                        Konfirmasi pada Whatsapp +6289531229494 atau pada
-                        nomor (024) 76435498
-                    </div> --}}
+                        Konfirmasi pada Whatsapp ********* atau pada
+                        nomor (***) ********
+                    </div>
                 </div>
             </main>
         </div>
