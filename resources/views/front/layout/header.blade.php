@@ -62,13 +62,13 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
-                                        <div title="UP COMING">Kelas Umum <i class="icon-code float-right"></i></div>
+                                    <a class="menu-link" href="#" onclick="popc()">
+                                        <div title="UP COMING">Kelas Umum</div>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#hrefpromo">
+                        <li class="menu-item"><a class="menu-link" href="#hrefpromo" onclick="popc()">
                                 <div>Promo</div>
                             </a>
                         </li>
@@ -88,8 +88,8 @@
                                 </li>
                             </ul>
                         </li> -->
-                        <li class="menu-item"><a class="menu-link" href="#">
-                                <div title="UP COMING">Loker Bankir <i class="icon-code"></i></div>
+                        <li class="menu-item"><a class="menu-link" onclick="popc()" href="#">
+                                <div>Loker Bankir</div>
                             </a>
                         </li>
                         <li class="menu-item"><a class="menu-link" href="#">

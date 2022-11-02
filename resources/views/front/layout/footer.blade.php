@@ -14,8 +14,7 @@
                             <div class="row col-mb-30">
                                 <div class="col-6">
                                     <address class="mb-0">
-                                        <abbr title="Headquarters"
-                                            style="display: inline-block;margin-bottom: 7px;"><strong>Alamat:</strong></abbr><br>
+                                        <abbr title="Headquarters" style="display: inline-block;margin-bottom: 7px;"><strong>Alamat:</strong></abbr><br>
                                         Jl. Jendral Sudirman 354, Semarang Barat<br> Kota Semarang<br>
                                     </address>
                                 </div>
@@ -222,12 +221,24 @@
             autoclose: true,
         });
 
+
+
+
     }); //ready
 </script>
 
 <script>
+    function popc() {
+        Swal.fire({
+            icon: 'info',
+            title: 'Oops...',
+            text: 'UP COMING',
+            footer: '<a href="https://akarindo.id/">By akarindo.id</a>'
+        })
+    }
     $('#login').removeAttr('disabled')
     let form = $('#orderForm').val()
+
     function funclogin(e) {
         $.ajaxSetup({
             headers: {
@@ -237,20 +248,20 @@
         // var emaillogin = ;
         // var passwordlogin = ;
         let data = {
-            email : $("#emaillogin").val(),
-            password : $("#passwordlogin").val(),
+            email: $("#emaillogin").val(),
+            password: $("#passwordlogin").val(),
         }
         var class_id = $("#class_id").val();
         if (class_id) {
             data.class_id = class_id
         }
-        
+
         jQuery.ajax({
             url: "{{ route('login') }}",
             method: 'post',
             data: data,
             success: function(result) {
-                $('#login').attr('disabled',true)
+                $('#login').attr('disabled', true)
                 setTimeout(() => {
                     if (result.role == 0 || result.role == 1) {
                         location.replace("/home")
@@ -258,7 +269,7 @@
                         var class_id = $("#class_id").val();
                         var _token = document.getElementsByName("_token");
                         if (class_id && _token) {
-                            return window.location = '/ordernopost?_token='+_token+'&class_id='+class_id;
+                            return window.location = '/ordernopost?_token=' + _token + '&class_id=' + class_id;
                         }
                     }
                     location.reload();

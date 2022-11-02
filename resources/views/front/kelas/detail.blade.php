@@ -51,41 +51,45 @@
 
 
 
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="padding-bottom: 10px;">
                                 <h4>Kelas Timeline</h4>
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped">
+                                    <table class="table table-striped table-bordered" id="datatable1" cellspacing="0" width="100%">
                                         <thead>
-                                            <tr>
-                                                <th>Timings</th>
-                                                <th>Description</th>
+                                            <tr class="text-center">
+                                                <th>No</th>
+                                                <th>Waktu</th>
+                                                <th>Deskripsi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($event as $e)
-                                            <tr>
-                                                <td><span
-                                                        class="badge badge-danger">{{$e->time_start.'-'.$e->time_end}}</span>
+                                            @foreach ($event as $e => $val)
+                                            <tr class="text-center">
+                                                <td width="1%">{{$e + 1}}</td>
+                                                <td width="20%">
+                                                    <span class="badge badge-danger">{{$val->time_start.'-'.$val->time_end}}</span>
                                                 </td>
-                                                <td class="longtextoverflow">{{$e->description}}</td>
+                                                <!-- <td class="longtextoverflow">{{$val->description}}</td> -->
+                                                <td>
+                                                    <button class="button button-circle button-small" onclick="infodesk({{$val}})">Lihat Deskripsi</button>
+                                                </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="padding-bottom: 0px;">
                                 <form id="orderForm" action="{{'/order'}}" method="POST">
                                     @csrf
                                     <input type="text" id="class_id" name="class_id" value="{{$class->id}}" hidden>
                                     @auth
-                                    <button class="btn btn-primary btn-block">Order</button>
+                                    <button class="button button-circle btn-block text-center">Order sekarang</button>
                                     @else
-                                    <span class="btn btn-primary btn-block" data-toggle="modal" data-target="#modelId"
-                                        data-backdrop="static" data-keyboard="false">Order</span>
+                                    <span class="button button-circle btn-block text-center" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Order sekarang</span>
                                     @endauth
-                                    <button class="btn btn-primary btn-block" hidden>Order</button>
+                                    <button class="button button-circle btn-block text-center" hidden>Order sekarang</button>
                                 </form>
                             </div>
                             <script>
@@ -108,8 +112,7 @@
                                     <div class="grid-inner row no-gutters">
                                         <div class="col-auto">
                                             <div class="entry-image">
-                                                <a href="class/{{$p->unique_id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title))}}"><img src="{{$p->image}}"
-                                                        alt="Image"></a>
+                                                <a href="class/{{$p->unique_id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title))}}"><img src="{{$p->image}}" alt="Image"></a>
                                             </div>
                                         </div>
                                         <div class="col pl-3">
@@ -146,3 +149,17 @@
     </div>
 </section><!-- #content end -->
 @include(env("CUSTOM_FOOTER","front.layout.footer"))
+
+<script>
+    $(document).ready(function() {})
+
+    function infodesk(desk) {
+        console.log(desk)
+        Swal.fire({
+            title: 'Deskripsi kelas',
+            width: 900,
+            padding: '2em',
+            text: desk.description,
+        })
+    }
+</script>
