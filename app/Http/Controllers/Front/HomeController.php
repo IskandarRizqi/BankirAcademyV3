@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $now = Carbon::now();
         $kelas_mingguan = [];
@@ -54,11 +54,21 @@ class HomeController extends Controller
             ->get();
         $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
         $data['kelas'] = [];
-        $data['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(6)->get();
-        foreach ($categori as $key => $value) {
-            $data['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->limit(6)->get();
-        }
+        $data['lucas'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(6)->get();
+        // $data['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
+        // foreach ($categori as $key => $value) {
+        //     $data['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->paginate(6)->toArray();
+        // }
 
+        if ($request->ajax()) {
+            $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
+            $dx['kelas'] = [];
+            $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
+            foreach ($categori as $key => $value) {
+                $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->paginate(6)->toArray();
+            }
+            return response()->json($dx);
+        }
         // return $data;
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
     }

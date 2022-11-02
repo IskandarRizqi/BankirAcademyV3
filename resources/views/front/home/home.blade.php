@@ -151,9 +151,11 @@
     }
 </style>
 <section id="content">
-    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block" data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
+        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
         <div class="owl-stage-outer">
-            <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+            <div class="owl-stage"
+                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
                 @foreach ($banner_slide as $key => $value)
                 <div class="owl-item">
                     <div class="oc-item">
@@ -163,22 +165,12 @@
                 @endforeach
             </div>
         </div>
-
-
-        {{-- style="zoom: 2 !important; width: 40px !important; height: 40px !important; color: #0b5fc7 ! important;
-        background-color: #fff" --}}
-
-        {{-- <div class="owl-nav">
-            <button type="button" role="presentation" class="owl-prev"><i class="icon-angle-left"></i></button>
-            <button type="button" role="presentation" class="owl-next disabled"><i
-                    class="icon-angle-right"></i></button>
-        </div> --}}
-        {{-- <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button"
-                class="owl-dot active"><span></span></button></div> --}}
     </div>
-    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none" data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
+        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
         <div class="owl-stage-outer">
-            <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+            <div class="owl-stage"
+                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
                 @if (isset($banner_slide_mobile))
                 @foreach ($banner_slide_mobile as $key => $value)
                 <div class="owl-item" style=" margin-right: 20px;">
@@ -207,129 +199,60 @@
                     <h2>Jelajahi Akademi</h2>
                     <p>Berbagai macam pilihan akademi dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div class="tabs tabs-alt clearfix" id="tabs-profile">
-                    @if (isset($kelas))
-                    <ul class="tab-nav clearfix" style="overflow-x: scroll !important; overflow-y: hidden !important;">
-                        @foreach ($kelas as $key => $k )
-                        <li><a href="#{{str_replace(' ','_',$key)}}"><i class="icon-credit-cards"></i>{{str_replace('
-                                ','_',$key)}}</a></li>
-                        @endforeach
-                    </ul>
-                    <div class="tab-container">
-                        @foreach ($kelas as $key => $k )
-                        <div class="tab-content clearfix" id="{{str_replace(' ','_',$key)}}">
-                            <div class="row">
-                                @foreach ($k as $ke)
-                                <div class="col-lg-4 col-sm-6 mb-4">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="card" style="min-height: 0px !important">
-                                                <img src="<?= $ke->image ?>" alt="" width="100%">
-                                            </div>
-                                            <h5 class="text-uppercase mt-2">{{ $ke->title }}</h5>
-                                            <div class="d-flex mt-2">
-                                                <img class="mr-3 rounded-circle"
-                                                    src="Image/{{ json_decode($ke->instructor_list[0]->picture)->url }}"
-                                                    alt="Generic placeholder image"
-                                                    style="max-width:50px; max-height:50px;">
-                                                <div class="">
-                                                    <label class="d-block mb-0"> {{ $ke->instructor_list[0]->name }}
-                                                    </label>
-                                                    <small>{{ $ke->instructor_list[0]->title }}</small>
-                                                </div>
-                                                <div class="ml-2 flex-fill">
-                                                    <label class="d-block mb-0"> Harga
-                                                    </label>
-                                                    @if ($ke->pricing)
-                                                    <small>
-                                                        {{ numfmt_format_currency(numfmt_create('id_ID',
-                                                        \NumberFormatter::CURRENCY), $ke->pricing->price, 'IDR') }}
-                                                    </small>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="text-right mt-2 w-100">
-                                                <a class="btn btn-success btn-block btn-rounded"
-                                                    style=" border-radius:10px !important"
-                                                    href="class/{{ $ke->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $ke->title)) }}">
-                                                    Detail
-                                                </a>
-                                            </div>
+                <div id="related-portfolio"
+                    class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                    data-margin="0" data-autoplay="5000" data-items-xs="2" data-items-sm="2" data-items-md="0"
+                    data-items-xl="0">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage owlCustom"
+                            style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
+                            {{-- @if (isset($kelas))
+                            @foreach ($kelas as $key => $k )
+                            <div class="owl-item" style="">
+                                <div class="oc-item">
+                                    <div class="portfolio-item">
+                                        <div class="portfolio-image">
+                                            <button class="button button-circle"
+                                                onclick="tabsCategory('{{str_replace(' ','_',$key)}}')">{{$key}}</button>
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
                             </div>
+                            @endforeach
+                            @endif --}}
                         </div>
-                        @endforeach
                     </div>
-                    @endif
+                    <div class="owl-nav" hidden><button type="button" role="presentation" class="owl-prev"
+                            style="zoom: 1 !important"><i class="icon-angle-left"></i></button><button type="button"
+                            role="presentation" class="owl-next" style="zoom: 1 !important"><i
+                                class="icon-angle-right"></i></button></div>
                 </div>
-                {{-- <div class="row" id="sld"> --}}
-                    {{-- <div class="row" id="">
-                        @if (isset($pop))
-                        @foreach ($pop as $p)
-                        <div class="col-lg-4 col-sm-6 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="card" style="min-height: 0px !important">
-                                        <img src="<?= $p->image ?>" alt="" width="100%">
-                                    </div>
-                                    <h5 class="text-uppercase mt-2">{{ $p->title }}</h5>
-                                    <div class="d-flex mt-2">
-                                        <img class="mr-3 rounded-circle"
-                                            src="Image/{{ json_decode($p->instructor_list[0]->picture)->url }}"
-                                            alt="Generic placeholder image" style="max-width:50px; max-height:50px;">
-                                        <div class="">
-                                            <label class="d-block mb-0"> {{ $p->instructor_list[0]->name }}
-                                            </label>
-                                            <small>{{ $p->instructor_list[0]->title }}</small>
-                                        </div>
-                                        <div class="ml-2 flex-fill">
-                                            <label class="d-block mb-0"> Harga
-                                            </label>
-                                            @if ($p->pricing)
-                                            <small>
-                                                {{ numfmt_format_currency(numfmt_create('id_ID',
-                                                \NumberFormatter::CURRENCY), $p->pricing->price, 'IDR') }}
-                                            </small>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="text-right mt-2 w-100">
-                                        <a class="btn btn-success btn-block btn-rounded"
-                                            style=" border-radius:10px !important"
-                                            href="class/{{ $p->unique_id }}/{{ $p->title }}">
-                                            Detail
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                    </div> --}}
-                    {{--
-                </div> --}}
+                <hr style="width: 1100px">
+                <div id="cateKelas"></div>
                 <div class="center">
+                    <input type="text" id="halaman" hidden>
                     <a id="allClass" class="btn btn-primary btn-block">Semua Kelas</a>
                 </div>
             </div>
         </div>
 
-        <div class="section border-top-0 mb-6">
+        <div class="section border-top-0 mb-6" hidden>
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2 id="hrefpromo">Promo</h2>
                 </div>
-                <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
+                <div id="oc-testi"
+                    class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                    data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
                     <div class="owl-stage-outer">
-                        <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                        <div class="owl-stage"
+                            style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                             @if (isset($banner_promo))
                             @foreach ($banner_promo as $bp)
                             <div class="owl-item active" style="margin-right: 20px;">
                                 <div class="oc-item">
-                                    <div class="testimonial" style="background-image:url('Image/{{ $bp->image }}');
+                                    <div class="testimonial"
+                                        style="background-image:url('Image/{{ $bp->image }}');
                                                     border-radius: 20px !important; height: 316px; background-size:100%;">
                                         <a href="#"></a>
                                     </div>
@@ -339,20 +262,24 @@
                             @endif
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i class="icon-angle-left"></i></button><button type="button" role="presentation" class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
+                                class="icon-angle-left"></i></button><button type="button" role="presentation"
+                            class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
+                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
+                            role="button" class="owl-dot active"><span></span></button></div>
                 </div>
             </div>
         </div>
 
-        <div class="section border-top-0 mb-6">
+        <div class="section border-top-0 mb-6" hidden>
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2>Kelas Terdekat</h2>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 mb-4">
-                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20" data-items-sm="1" data-items-md="1" data-items-xl="1">
+                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+                            data-items-sm="1" data-items-md="1" data-items-xl="1">
                             @if (isset($kelas_mingguan))
                             @foreach ($kelas_mingguan as $km)
                             <div class="oc-item">
@@ -370,12 +297,15 @@
                                             <span style="padding-left: 83px">{{ $k->instructor_list[0]->title }}
                                             </span>
                                             @auth
-                                            <a href="class/{{ $k->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $k->title)) }}">
+                                            <a href="class/{{ $k->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+                                                ,' , ';' , '<' , '>' ), '' , $k->title)) }}">
                                                 <button class="btn btn-success btn-sm" style="margin-left: 83px"
                                                     width='100%'>Detail</button>
                                             </a>
                                             @else
-                                            <a class="btn btn-success btn-sm" style="margin-left: 83px;" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Detail</a>
+                                            <a class="btn btn-success btn-sm" style="margin-left: 83px;"
+                                                data-toggle="modal" data-target="#modelId" data-backdrop="static"
+                                                data-keyboard="false">Detail</a>
                                             @endauth
                                         </div>
                                     </div>
@@ -389,15 +319,22 @@
                     <div class="col-lg-8 mb-4">
                         @if (isset($banner_bawah))
                         @if (count($banner_bawah) > 0)
-                        <div id="img_card" class="card text-white click-col" style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
+                        <div id="img_card" class="card text-white click-col"
+                            style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
                         </div>
                         <div class="d-flex mt-4">
-                            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2" style="height: 155px">
+                            <div id="oc-testi"
+                                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2"
+                                style="height: 155px">
                                 <div class="owl-stage-outer">
-                                    <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
-                                        @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                    <div class="owl-stage"
+                                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                        @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active"
+                                            style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial" style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
+                                                <div class="testimonial"
+                                                    style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
                                                     border-radius: 20px !important; height: 260px !important; background-size:100%;">
                                                     <a href="#"></a>
                                                 </div>
@@ -408,16 +345,23 @@
                             </div>
                         </div>
                         @else
-                        <div id="img_card" class="card text-white click-col" style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); min-height:0px; background-size:contain !important;">
+                        <div id="img_card" class="card text-white click-col"
+                            style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); min-height:0px; background-size:contain !important;">
                         </div>
                         <div class="d-flex mt-4">
-                            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
+                            <div id="oc-testi"
+                                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
                                 <div class="owl-stage-outer">
-                                    <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                    <div class="owl-stage"
+                                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial" style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
-                                                    <a href="#"><img src="{{ asset('Backend/assets/img/1280x857.jpg') }}" alt="Customer Testimonails" height="100%"></a>
+                                                <div class="testimonial"
+                                                    style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
+                                                    <a href="#"><img
+                                                            src="{{ asset('Backend/assets/img/1280x857.jpg') }}"
+                                                            alt="Customer Testimonails" height="100%"></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -433,21 +377,26 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6">
+    <div class="section border-top-0 mb-6" hidden>
         <div class="container text-center">
             <div class="heading-block center">
                 <h2>Testimonial</h2>
             </div>
-            <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots" data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
+            <div id="oc-testi"
+                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="3">
                 <div class="owl-stage-outer">
-                    <div class="owl-stage" style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                    <div class="owl-stage"
+                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                         @if (isset($testimoni))
                         @foreach ($testimoni as $t)
                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                             <div class="oc-item">
                                 <div class="testimonial">
                                     <div class="testi-image">
-                                        <a href="#"><img src="{{ $t->picture?$t->picture:asset('front/one-page/images/team/3.jpg') }}" alt="Customer Testimonails"></a>
+                                        <a href="#"><img
+                                                src="{{ $t->picture?$t->picture:asset('front/one-page/images/team/3.jpg') }}"
+                                                alt="Customer Testimonails"></a>
                                     </div>
                                     <div class="testi-content">
                                         <p>{{$t->review}}</p>
@@ -472,7 +421,7 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6">
+    <div class="section border-top-0 mb-6" hidden>
         <div class="container text-center">
             <div class="heading-block center">
                 <h2>Partner</h2>
@@ -484,26 +433,27 @@
                 <div class="oc-item">
                     <div class="testimonial"
                         style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-            <div class="testi-content">
-                <div class="testi-image">
-                    <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}" alt="Customer Testimonails"></a>
+                        <div class="testi-content">
+                            <div class="testi-image">
+                                <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
+                                        alt="Customer Testimonails"></a>
+                            </div>
+                            <p>Incidunt deleniti blanditiis quas</p>
+                            <div class="testi-meta">
+                                John Doe
+                                <span>XYZ Inc.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ $p->link }}">
+                        <img src="Image/Partner/{{ json_decode($p->image)->url }}" alt="">
+                    </a>
                 </div>
-                <p>Incidunt deleniti blanditiis quas</p>
-                <div class="testi-meta">
-                    John Doe
-                    <span>XYZ Inc.</span>
-                </div>
-            </div>
+                @endforeach
+                @endif
+            </div> --}}
+            <img src="{{asset('partner-eclass.png')}}" alt="" style="width: 700px">
         </div>
-        <a href="{{ $p->link }}">
-            <img src="Image/Partner/{{ json_decode($p->image)->url }}" alt="">
-        </a>
-    </div>
-    @endforeach
-    @endif
-    </div> --}}
-    <img src="{{asset('partner-eclass.png')}}" alt="" style="width: 700px">
-    </div>
     </div>
     </div>
 </section>
@@ -512,6 +462,14 @@
 @include('front.layout.footer')
 <script>
     $(document).ready(function() {
+        $('#allClass').click(function () {
+            let hal = $('#halaman').val();
+            lazyLoad(hal);
+        })
+        lazyLoad(1);
+        setTimeout(() => {
+            tabsCategory('Semua');
+        }, 3000);
         $('#sldall').slick({
             dots: true,
             infinite: false,
@@ -648,6 +606,108 @@
                 // instead of a settings object
             ]
         });
-
     })
+    
+    function tabsCategory(params) {
+        $('.tabsCustom').each(function () {
+            $(this).attr('hidden',true);
+        })
+        $('#'+params).removeAttr('hidden');
+        // $('#allClass').attr('href','/list-class/'+params);
+    }
+
+    function lazyLoad(page){
+        return new Promise((resolve,reject) => {
+            $.ajax({
+                url: '?page='+page,
+                type:'GET',
+                beforeSend:function() {
+                // $('.ajax-load').show();
+                console.log('getData');
+            }, 
+                success :function (response){
+                    let next_page = 0;
+                    for (const key in response.kelas) {
+                        if (Object.hasOwnProperty.call(response.kelas, key)) {
+                            const element = response.kelas[key];
+                            let owl = '';
+                            owl +='<div class="owl-item" style="">';
+                            owl +='    <div class="oc-item">';
+                            owl +='        <div class="portfolio-item">';
+                            owl +='            <div class="portfolio-image">';
+                            owl +='                <button class="button button-circle"';
+                            owl +='                    onclick=tabsCategory("'+key.replace(' ','_')+'")>'+key+'</button>';
+                            owl +='            </div>';
+                            owl +='        </div>';
+                            owl +='    </div>';
+                            owl +='</div>';
+                            let hal = $('#halaman').val();
+                            if (hal<=1) {
+                                $('.owlCustom').append(owl);
+                                $('#cateKelas').append('<div id="'+key.replace(' ','_')+'" class="row tabsCustom mt-2" hidden></div>');
+                            }
+
+
+                            let html = '';
+                            element.data.forEach(el => {
+                        html += '<div class="col-lg-4 col-sm-6 mb-4">';
+                        html += '    <div class=card>';
+                        html += '        <div class=card-body>';
+                        html += '            <div class="card" style="min-height: 0px !important">';
+                        html += '                <img src="'+el.image+'" width=100%>';
+                        html += '            </div>';
+                        html += '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">'+el.title+'</h5>';
+                        html += '<h6 style="margin: 0px !important;">'+el.date_start+' - '+el.date_end+'</h6>'
+                        html += '            <div class="d-flex mt-2">';
+                        html += '                <img class="mr-3 rounded-circle"';
+                        html += '                    src="Image/'+JSON.parse(el.instructor_list[0].picture).url+'" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                        html += '                <div class=>';
+                        html += '                    <label class="d-block mb-0">'+el.instructor_list[0].name;
+                        html += '                    </label>';
+                        html += '                    <small>'+el.instructor_list[0].title+'</small>';
+                        html += '                </div>';
+                        html += '                <div class="ml-2 flex-fill">';
+                        html += '                    <label class="d-block mb-0"> Harga';
+                        html += '                    </label>';
+                        if (el.pricing) {
+                            if (el.pricing.promo) {
+                                html += '<del>'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(el.pricing.price)+'</del>';
+                            }
+                            else {
+                                html += '<small>'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(el.pricing.price,2)+'</small>';
+                            }
+                        } 
+                        html += '                </div>';
+                        html += '            </div>';
+                        html += '            <div class="text-center mt-2 w-100">';
+                            if (el.pricing) {
+                                if (el.pricing.promo) {
+                                html += '<h3 style="margin: 0px !important; color:#007038 !important;">'+new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(el.pricing.price-el.pricing.promo_price)+'</h3>';
+                            }
+                        }
+                        html += '                <a class="btn btn-success btn-block btn-rounded"';
+                        html += '                    style="border-radius:10px !important"';
+                        html += '                    href="class/'+el.unique_id+'/'+el.title.replace(/<|>|\|\\|"|,|;|/gi,'')+'">';
+                        html += '                    Detail';
+                        html += '                </a>';
+                        html += '            </div>';
+                        html += '        </div>';
+                        html += '    </div>';
+                        html += '</div>';
+                    });
+                    if (element.next_page_url) {
+                        next_page++;
+                    }
+                            $('#'+key.replace(' ','_')).append(html);
+                        }
+                    }
+                    if (next_page <= 0) {
+                        $('#allClass').attr('disabled',true);
+                    }
+                    $('#halaman').val(parseInt(page)+1);
+                    resolve();
+            }
+            })
+        })
+    };
 </script>

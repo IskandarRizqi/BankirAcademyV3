@@ -178,8 +178,8 @@
                 </div>
                 {{-- <div class="row" id="sld"> --}}
                     <div class="row" id="">
-                        @if (isset($kelas['Semua']))
-                        @foreach ($kelas['Semua'] as $p)
+                        @if (isset($lucas))
+                        @foreach ($lucas as $p)
                         <div class="col-lg-4 col-sm-6 mb-4">
                             <div class="card">
                                 <div class="card-body">
@@ -210,7 +210,8 @@
                                     <div class="text-right mt-2 w-100">
                                         <a class="btn btn-success btn-block btn-rounded"
                                             style=" border-radius:10px !important"
-                                            href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title)) }}">
+                                            href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '\\', '"', '
+                                            ,' , ';' , '<' , '>' ), '' , $p->title)) }}">
                                             Detail
                                         </a>
                                     </div>
