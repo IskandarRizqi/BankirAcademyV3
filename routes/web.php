@@ -88,6 +88,6 @@ Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "s
 Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
 
 //Class
-Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
+Route::get('/list-class/{semua}', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
 
 Auth::routes();

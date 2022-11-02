@@ -178,43 +178,9 @@
                 </div>
                 {{-- <div class="row" id="sld"> --}}
                     <div class="row" id="">
-                        @if (isset($pop))
-                        @foreach ($pop as $p)
+                        @if (isset($kelas['Semua']))
+                        @foreach ($kelas['Semua'] as $p)
                         <div class="col-lg-4 col-sm-6 mb-4">
-                            {{-- <div class="card text-white click-col"
-                                style="background-image:url('<?= $p->image ?>');">
-                                <img class="card-img d-none" src="<?= $p->image ?>">
-                                <div class="card-img-overlay d-flex flex-column">
-                                    <div class="card-body">
-                                        <!-- <small class="card-meta mb-2">Thought Leadership</small> -->
-                                        <h4 class="card-title mt-0 "><a class="text-white" herf="#">{{$p->title}}</a>
-                                        </h4>
-                                        <small><i class="far fa-clock"></i> {{
-                                            \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }} - {{
-                                            \Carbon\Carbon::parse($p->date_end)->format('F d, Y') }}</small>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="media">
-                                            <img class="mr-3 rounded-circle"
-                                                src="Image/{{json_decode($p->instructor_list[0]->picture)->url}}"
-                                                alt="Generic placeholder image" style="max-width:50px">
-                                            <div class="media-body">
-                                                <h6 class="my-0 text-white d-block"> {{$p->instructor_list[0]->name}}
-                                                </h6>
-                                                <small>{{$p->instructor_list[0]->title}}</small>
-                                            </div>
-                                        </div>
-                                        @auth
-                                        <a href="class/{{$p->unique_id}}/{{$p->title}}">
-                                            <button class="button button-circle" width='100%'>Detail</button>
-                                        </a>
-                                        @else
-                                        <a class="button button-circle" data-toggle="modal" data-target="#modelId"
-                                            data-backdrop="static" data-keyboard="false">Detail</a>
-                                        @endauth
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card" style="min-height: 0px !important">

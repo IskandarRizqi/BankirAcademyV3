@@ -1,0 +1,53 @@
+@include('front.layout.head')
+@include('front.layout.topbar')
+@include(env('CUSTOM_HEADER', 'front.layout.header'))
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+            <h3>Kelas</h3>
+            @if ($class['data'])
+
+                <div class="row gutter-40 col-mb-80">
+                    <div class="postcontent col-lg-9">
+                        <div class="single-event">
+
+                            @foreach ($class['data'] as $v)
+                                <a href="/class/{{ $v['unique_id'] }}/{{ urlencode($v['title']) }}">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <img src="{{ $v['image'] }}" alt="Thumbnail"
+                                                style="width: 130px;max-height:75px;">
+                                            &nbsp;&nbsp;&nbsp;<span
+                                                style="font-size: 19px; font-weight: bold;">{{ $v['title'] }}</span>
+                                            <span
+                                                class="text-secondary float-right">{{ Carbon\Carbon::parse($v['created_at'])->format('d-m-Y
+                                                                                                                                                                                        H:i:s') }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                            <hr>
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <nav aria-label="Page navigation blog">
+                                        <ul class="pagination justify-content-center">
+                                            @foreach ($class['links'] as $k => $p)
+                                                <li class="page-item {{ $p['active'] ? 'active' : '' }}"><a
+                                                        class="page-link" href="{{ $p['url'] }}">
+                                                        <?= $p['label'] ?>
+                                                    </a></li>
+                                            @endforeach
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+        </div>
+    </div>
+</section><!-- #content end -->
+@include(env('CUSTOM_FOOTER', 'front.layout.footer'))
