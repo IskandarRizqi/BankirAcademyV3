@@ -309,7 +309,7 @@
                                                                             '//',
                                                                             '"',
                                                                             '
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,',
                                                                             ';',
                                                                             '<',
                                                                             '>',
@@ -686,8 +686,14 @@
                                 html +=
                                     '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' +
                                     el.title + '</h5>';
-                                html += '<h6 style="margin: 0px !important;">' + el
-                                    .date_start + ' - ' + el.date_end + '</h6>'
+                                html += '<h6 style="margin: 0px !important;">' + new Intl
+                                    .DateTimeFormat('id-ID', {
+                                        dateStyle: 'medium'
+                                    }).format(new Date(el
+                                        .date_start)) + ' - ' + new Intl
+                                    .DateTimeFormat('id-ID', {
+                                        dateStyle: 'medium'
+                                    }).format(new Date(el.date_end)) + '</h6>'
                                 html += '            <div class="d-flex mt-2">';
                                 html += '                <img class="mr-3 rounded-circle"';
                                 html += '                    src="Image/' + JSON.parse(el
@@ -709,13 +715,13 @@
                                         html += '<del>' + new Intl.NumberFormat('id-ID', {
                                             style: 'currency',
                                             currency: 'IDR',
-                                            maximumSignificantDigits: 1
+                                            maximumFractionDigits: 0
                                         }).format(el.pricing.price) + '</del>';
                                     } else {
                                         html += '<small>' + new Intl.NumberFormat('id-ID', {
                                             style: 'currency',
                                             currency: 'IDR',
-                                            maximumSignificantDigits: 1
+                                            maximumFractionDigits: 0
                                         }).format(el.pricing.price) + '</small>';
                                     }
                                 }
@@ -725,15 +731,16 @@
                                 if (el.pricing) {
                                     if (el.pricing.promo) {
                                         html +=
-                                            '<h3 style="margin: 0px !important; color:#007038 !important;"><sup><span class="badge badge-info badge-sm">' +
-                                            (el.pricing.promo_price / el.pricing
-                                                .price) * 100 + ' %</span></sup>' +
+                                            '<h3 style="margin: 0px !important; color:#007038 !important;">' +
                                             new Intl.NumberFormat('id-ID', {
                                                 style: 'currency',
                                                 currency: 'IDR',
-                                                maximumSignificantDigits: 1
+                                                maximumFractionDigits: 0
                                             }).format(el.pricing.price - el.pricing
-                                                .promo_price) + '</h3>';
+                                                .promo_price) +
+                                            '<span class="badge badge-info badge-sm">' +
+                                            ((el.pricing.promo_price / el.pricing.price) *
+                                                100) + ' %</span></h3>';
                                     }
                                 }
                                 html +=
