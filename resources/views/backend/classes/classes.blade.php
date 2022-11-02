@@ -176,7 +176,7 @@
 
 
 
-	$('#numClassPrice').on('input',function () {
+	$('#numClassPrice').on('input change',function () {
 		var v = $(this).val();
 		var n = Number(v).toLocaleString('id-ID',{
 			style:'currency',
@@ -185,7 +185,7 @@
 		$('#nomClassPrice').text(n);
 	});
 
-	$('#numClassPromo').on('input',function () {
+	$('#numClassPromo').on('input change',function () {
 		var v = $(this).val();
 		var n = Number(v).toLocaleString('id-ID',{
 			style:'currency',
@@ -194,7 +194,7 @@
 		$('#nomClassPromo').text(n);
 	});
 
-	$('.clsNumberOnPrice').on('input',function () {
+	$('.clsNumberOnPrice').on('input change',function () {
 		var n = $('#numClassPrice').val();
 		var p = $('#numClassPromo').val();
 		var s = $('#numClassPromoPrctg').val();

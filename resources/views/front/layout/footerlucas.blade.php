@@ -4,7 +4,12 @@
     <div id="copyrights">
         <div class="container">
             <div class="w-100 text-center">
-                Copyrights &copy; 2022 By <a href="https://lucas.akarindo.id/">Lucas</a>
+				<span class="float-left">
+					Copyrights &copy; 2022 By <a href="https://lucas.akarindo.id/">Lucas Sulaiman Mulyawan</a>
+				</span>
+				<span class="float-right">
+					Supported By <a href="https://ehr.co.id/">EHR System</a>
+				</span>
             </div>
         </div>
     </div>
