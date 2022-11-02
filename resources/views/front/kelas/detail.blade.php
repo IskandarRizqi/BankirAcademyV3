@@ -108,7 +108,7 @@
                                     <div class="grid-inner row no-gutters">
                                         <div class="col-auto">
                                             <div class="entry-image">
-                                                <a href="class/{{$p->unique_id}}/{{urlencode($p->title)}}"><img src="{{$p->image}}"
+                                                <a href="class/{{$p->unique_id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title))}}"><img src="{{$p->image}}"
                                                         alt="Image"></a>
                                             </div>
                                         </div>

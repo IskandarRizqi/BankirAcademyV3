@@ -13,7 +13,7 @@
                     <div class="single-event">
 
                         @foreach ($blog['data'] as $v)
-							<a href="/pages/blog/{{$v['id']}}/{{urlencode($v['title'])}}">
+							<a href="/pages/blog/{{$v['id']}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $v['title']))}}">
 								<div class="card">
 									<div class="card-body">
 										<img src="{{$v['thumbnail']}}" alt="Thumbnail" style="width: 130px;max-height:75px;">

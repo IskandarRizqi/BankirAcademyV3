@@ -48,7 +48,7 @@
 								{{$v->title}}
 							</td>
 							<td>
-								<a href="/pages/blog/{{$v->id}}/{{urlencode($v->title)}}" target="_blank" class="btn btn-success"><i class="bx bx-link-external"></i></a>
+								<a href="/pages/blog/{{$v->id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $v->title))}}" target="_blank" class="btn btn-success"><i class="bx bx-link-external"></i></a>
 							</td>
 							<td>
 								<a class="btn btn-primary btn-large" type="button" href="/admin/pages/getblog/{{$v->id}}" title="Edit"><i class="bx bx-edit"></i></a>

@@ -70,7 +70,7 @@
                                 <div class="grid-inner row">
                                     <div class="col">
                                         <div class="entry-title">
-                                            <h4><a href="class/{{ $p->unique_id }}/{{ urlencode($p->title) }}">{{ $p->title }}</a>
+                                            <h4><a href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title)) }}">{{ $p->title }}</a>
                                             </h4>
                                         </div>
                                         <div class="entry-meta">

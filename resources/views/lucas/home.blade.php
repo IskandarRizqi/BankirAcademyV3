@@ -244,7 +244,7 @@
                                     <div class="text-right mt-2 w-100">
                                         <a class="btn btn-success btn-block btn-rounded"
                                             style=" border-radius:10px !important"
-                                            href="class/{{ $p->unique_id }}/{{ urlencode($p->title) }}">
+                                            href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title)) }}">
                                             Detail
                                         </a>
                                     </div>

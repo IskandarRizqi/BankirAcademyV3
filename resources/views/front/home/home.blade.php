@@ -254,7 +254,7 @@
                                             <div class="text-right mt-2 w-100">
                                                 <a class="btn btn-success btn-block btn-rounded"
                                                     style=" border-radius:10px !important"
-                                                    href="class/{{ $ke->unique_id }}/{{ urlencode($ke->title) }}">
+                                                    href="class/{{ $ke->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $ke->title)) }}">
                                                     Detail
                                                 </a>
                                             </div>
@@ -381,7 +381,7 @@
                                             <span style="padding-left: 83px">{{ $k->instructor_list[0]->title }}
                                             </span>
                                             @auth
-                                            <a href="class/{{ $k->unique_id }}/{{ urlencode($k->title) }}">
+                                            <a href="class/{{ $k->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $k->title)) }}">
                                                 <button class="btn btn-success btn-sm" style="margin-left: 83px"
                                                     width='100%'>Detail</button>
                                             </a>
