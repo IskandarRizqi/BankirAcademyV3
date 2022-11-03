@@ -74,12 +74,14 @@
                                                 <td width="1%">{{$e + 1}}</td>
                                                 <td width="20%">
                                                     <span
-                                                        class="badge badge-danger">{{$val->time_start.'-'.$val->time_end}}</span>
+                                                        class="badge badge-danger">{{\Carbon\Carbon::parse($val->time_start)->format('d-M-Y
+                                                        H:i:s').' -
+                                                        '.\Carbon\Carbon::parse($val->time_end)->format('d-M-Y
+                                                        H:i:s')}}</span>
                                                 </td>
-                                                <!-- <td class="longtextoverflow">{{$val->description}}</td> -->
-                                                <td>
-                                                    <button class="button button-circle button-small"
-                                                        onclick="infodesk({{$val}})">Lihat Deskripsi</button>
+                                                {{-- <td class="longtextoverflow">{{$val->description}}</td> --}}
+                                                <td class="longtextoverflow" onclick="infodesk({{$val}})">
+                                                    {{$val->description}}
                                                 </td>
                                             </tr>
                                             @endforeach

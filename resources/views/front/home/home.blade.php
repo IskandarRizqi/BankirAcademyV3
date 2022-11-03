@@ -671,14 +671,22 @@
                                 html +=
                                     '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' +
                                     el.title + '</h5>';
-                                html += '<h6 style="margin: 0px !important;">' + new Intl
-                                    .DateTimeFormat('id-ID', {
-                                        dateStyle: 'medium'
-                                    }).format(new Date(el
-                                        .date_start)) + ' - ' + new Intl
-                                    .DateTimeFormat('id-ID', {
-                                        dateStyle: 'medium'
-                                    }).format(new Date(el.date_end)) + '</h6>'
+                                    if (el.date_start == el.date_end) {
+                                        html += '<h6 style="margin: 0px !important;">' + new Intl
+                                            .DateTimeFormat('id-ID', {
+                                                dateStyle: 'medium'
+                                            }).format(new Date(el
+                                                .date_start)) + '</h6>';
+                                    } else {
+                                        html += '<h6 style="margin: 0px !important;">' + new Intl
+                                            .DateTimeFormat('id-ID', {
+                                                dateStyle: 'medium'
+                                            }).format(new Date(el
+                                                .date_start)) + ' - ' + new Intl
+                                            .DateTimeFormat('id-ID', {
+                                                dateStyle: 'medium'
+                                            }).format(new Date(el.date_end)) + '</h6>';
+                                    }
                                 html += '            <div class="d-flex mt-2">';
                                 html += '                <img class="mr-3 rounded-circle"';
                                 html += '                    src="Image/' + JSON.parse(el
