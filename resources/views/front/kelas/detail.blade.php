@@ -13,7 +13,11 @@
                         <div class="row col-mb-50">
                             <div class="col-md-12 col-lg-12">
                                 <div class="entry-image mb-0">
-                                    <a href="#"><img src="{{$class->image}}" alt="Event Single"></a>
+                                    @if ($class->image_mobile)
+                                    <img src="{{$class->image_mobile}}" alt="Event Single">
+                                    @else
+                                    <img src="{{$class->image}}" alt="Event Single">
+                                    @endif
                                     {{-- <div class="entry-overlay d-flex align-items-center justify-content-center">
                                         <span class="d-none d-md-flex">Starts in: </span>
                                         <div class="countdown d-block d-md-flex" data-year="2020" data-month="12"></div>
@@ -55,7 +59,8 @@
                                 <h4>Kelas Timeline</h4>
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered" id="datatable1" cellspacing="0" width="100%">
+                                    <table class="table table-striped table-bordered" id="datatable1" cellspacing="0"
+                                        width="100%">
                                         <thead>
                                             <tr class="text-center">
                                                 <th>No</th>
@@ -68,11 +73,13 @@
                                             <tr class="text-center">
                                                 <td width="1%">{{$e + 1}}</td>
                                                 <td width="20%">
-                                                    <span class="badge badge-danger">{{$val->time_start.'-'.$val->time_end}}</span>
+                                                    <span
+                                                        class="badge badge-danger">{{$val->time_start.'-'.$val->time_end}}</span>
                                                 </td>
                                                 <!-- <td class="longtextoverflow">{{$val->description}}</td> -->
                                                 <td>
-                                                    <button class="button button-circle button-small" onclick="infodesk({{$val}})">Lihat Deskripsi</button>
+                                                    <button class="button button-circle button-small"
+                                                        onclick="infodesk({{$val}})">Lihat Deskripsi</button>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -87,9 +94,12 @@
                                     @auth
                                     <button class="button button-circle btn-block text-center">Order sekarang</button>
                                     @else
-                                    <span class="button button-circle btn-block text-center" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">Order sekarang</span>
+                                    <span class="button button-circle btn-block text-center" data-toggle="modal"
+                                        data-target="#modelId" data-backdrop="static" data-keyboard="false">Order
+                                        sekarang</span>
                                     @endauth
-                                    <button class="button button-circle btn-block text-center" hidden>Order sekarang</button>
+                                    <button class="button button-circle btn-block text-center" hidden>Order
+                                        sekarang</button>
                                 </form>
                             </div>
                             <script>
@@ -112,7 +122,9 @@
                                     <div class="grid-inner row no-gutters">
                                         <div class="col-auto">
                                             <div class="entry-image">
-                                                <a href="class/{{$p->unique_id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title))}}"><img src="{{$p->image}}" alt="Image"></a>
+                                                <a href="class/{{$p->unique_id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+                                                    ,' , ';' , '<' , '>' ), '' , $p->title))}}"><img src="{{$p->image}}"
+                                                        alt="Image"></a>
                                             </div>
                                         </div>
                                         <div class="col pl-3">

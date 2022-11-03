@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('participant_limit');
             $table->date('date_start');
             $table->date('date_end');
+            $table->longText('image_mobile')->nullable();
             $table->timestamps();
         });
     }

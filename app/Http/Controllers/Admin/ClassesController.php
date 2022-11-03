@@ -55,16 +55,24 @@ class ClassesController extends Controller
 
 	public function store(Request $r)
 	{
+		$nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
+		$sizeMobile = $r->file('filClassesImageMobile')->getSize();
 		$name = $r->file('filClassesImage')->getClientOriginalName();
 		$size = $r->file('filClassesImage')->getSize();
 
 		if ($size >= 1048576) {
 			return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
 		}
+		if ($sizeMobile >= 1048576) {
+			return Redirect::back()->with('error', 'Ukuran File Mobile Melebihi 1 MB');
+		}
 
 		$filename = time() . '-' . $name;
 		$file = $r->file('filClassesImage');
 		$file->move(public_path('image/classes'), $filename);
+		$filenameMobile = time() . '-' . $nameMobile;
+		$fileMobile = $r->file('filClassesImageMobile');
+		$fileMobile->move(public_path('image/classes'), $filenameMobile);
 
 
 		ClassesModel::create([
@@ -73,6 +81,7 @@ class ClassesController extends Controller
 			'category' => $r->slcClassesCategory,
 			'tags' => json_encode($r->slcClassesTags),
 			'image' => ('/image/classes/' . $filename),
+			'image_mobile' => ('/image/classes/' . $filenameMobile),
 			'content' => $r->txaClassesContent,
 			'unique_id' => uniqid(),
 			'participant_limit' => $r->numClassesLimit,
@@ -120,6 +129,20 @@ class ClassesController extends Controller
 			$file->move(public_path('image/classes'), $filename);
 
 			$tobeins['image'] = ('/image/classes/' . $filename);
+		}
+		if ($r->file('filClassesImageMobile')) {
+			$nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
+			$sizeMobile = $r->file('filClassesImageMobile')->getSize();
+
+			if ($sizeMobile >= 1048576) {
+				return Redirect::back()->with('error', 'Ukur, File Melebihi 1 MB');
+			}
+
+			$filenameMobile = time() . '-' . $nameMobile;
+			$fileMobile = $r->file('filClassesImageMobile');
+			$fileMobile->move(public_path('image/classes'), $filenameMobile);
+
+			$tobeins['image_mobile'] = ('/image/classes/' . $filenameMobile);
 		}
 
 

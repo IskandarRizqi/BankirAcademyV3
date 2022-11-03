@@ -17,6 +17,7 @@ class ClassesModel extends Model
 		'sub_category',
 		'tags',
 		'image',
+		'image_mobile',
 		'content',
 		'unique_id',
 		'participant_limit',
