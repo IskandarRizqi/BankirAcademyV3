@@ -22,7 +22,7 @@ class IsAdminRoot
             return Redirect::to('/');
         }
         // return $next($request);
-        if (Auth::user()->role == 0 || Auth::user()->role == 1) {
+        if (Auth::user()->role !== 2) {
             // return "hello";
             return $next($request);
         }
