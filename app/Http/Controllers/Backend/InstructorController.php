@@ -91,9 +91,19 @@ class InstructorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        return $id;
+        // return $request->all();
+        // Aktif atau non aktif Intructor
+        $id_instructor_status = 1;
+        if ($request->id_instructor_status == 1) {
+            $id_instructor_status = 0;
+        }
+        $i = InstructorModel::where('id', $request->id_instructor_show)->update(['status' => $id_instructor_status]);
+        if ($i) {
+            return Redirect::back()->with('success', 'Data Berhasil Aktif');
+        }
+        return Redirect::back()->with('error', 'Data Gagal Aktif');
     }
 
     /**

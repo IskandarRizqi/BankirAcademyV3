@@ -21,7 +21,8 @@
                 <tbody>
                     @foreach ($data as $d)
                     <tr>
-                        <td><span class="badge badge-{{$d->status?'primary':'danger'}}"> {{$d->status?'Aktif':'Tidak
+                        <td><span class="badge badge-{{$d->status?'primary':'danger'}}" onclick="aktifasi({{$d}})">
+                                {{$d->status?'Aktif':'Tidak
                                 Aktif'}} </span></td>
                         <td>{{ $d->name }}</td>
                         <td>{{ $d->title }}</td>
@@ -119,6 +120,11 @@
                     @method('DELETE')
                     <input type="text" name="id_instructor" id="id_instructor" hidden>
                 </form>
+                <form id="form_aktif" action="{{ route('instructor.show', 0) }}">
+                    @csrf
+                    <input type="text" name="id_instructor_show" id="id_instructor_show" hidden>
+                    <input type="text" name="id_instructor_status" id="id_instructor_status" hidden>
+                </form>
             </div>
         </div>
     </div>
@@ -169,9 +175,6 @@
 <script>
     var firstUpload = new FileUploadWithPreview('myFirstImage')
         createDataTable('#zero-config')
-        // $('#edit').click(function () {
-        //     openmodal('#instructorModal')
-        // })
         function login(data,user) {
             console.log(data);
             openmodal('#loginInstructorModal');
@@ -194,8 +197,6 @@
             $('#nama').val(data.name)
             $('#title').val(data.title)
             $('#desc').val(data.desc)
-            // $('#picture').val(data['picture'])
-            // document.getElementById('img_preview').style.backgroundImage="{{ asset('Image/1666142736-1.png') }}"
             document.getElementById('img_preview').style.backgroundImage = "asset('Image/1666142736-1.png')"
         }
 
@@ -210,9 +211,24 @@
                 padding: '2em'
             }).then(function(result) {
                 if (result.value) {
-                    // $('#form_delete').attr('action',"{{ route('instructor.destroy', 0) }}")
-                    // $('#form_delete').attr('method','DELETE')
                     $('#form_delete').submit()
+                }
+            });
+        }
+
+        function aktifasi(data) {
+            $('#id_instructor_show').val(data.id)
+            $('#id_instructor_status').val(data.status)
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aktif',
+                padding: '2em'
+            }).then(function(result) {
+                if (result.value) {
+                    $('#form_aktif').submit()
                 }
             });
         }

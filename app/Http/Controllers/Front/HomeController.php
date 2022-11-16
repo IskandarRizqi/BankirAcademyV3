@@ -8,9 +8,13 @@ use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
+use App\Models\InstructorModel;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -80,5 +84,39 @@ class HomeController extends Controller
         $data['event'] = ClassEventModel::where('class_id', $data['class']->id)->get();
 
         return view('front.kelas.detail', $data);
+    }
+
+    public function inputinstructor(Request $request)
+    {
+        $valid = Validator::make($request->all(), [
+            'nama' => 'required',
+            'email' => 'required',
+            'nohp' => 'required',
+            'alamat' => 'required',
+            'deskripsi' => 'required',
+        ]);
+        //response error validation
+        if ($valid->fails()) {
+            return Redirect::back()->withErrors($valid)->withInput($request->all());
+        }
+        $i = User::create([
+            'name' => $request->nama,
+            'email' => $request->email,
+            'role' => 3,
+        ]);
+        if ($i) {
+            InstructorModel::create([
+                'name' => $request->nama,
+                'title' => 'e-class ehr system',
+                'picture' => json_encode(['url' => 'aki.png', 'size' => 0]),
+                'desc' => $request->deskripsi,
+                'alamat' => $request->alamat,
+                'nohp' => $request->nohp,
+                'user_id' => $i->id,
+                'status' => 0,
+            ]);
+            return Redirect::to('/')->with('success', 'Pendaftaran Berhasil, Menunggu Konfirmasi Admin via Email');
+        }
+        return Redirect::back()->with('error', 'Pendaftaran Gagal')->withInput($request->all());
     }
 }

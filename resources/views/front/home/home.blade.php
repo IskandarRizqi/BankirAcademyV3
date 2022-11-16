@@ -151,7 +151,7 @@
     }
 </style>
 <section id="content">
-    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
+    {{-- <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
         data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
         <div class="owl-stage-outer">
             <div class="owl-stage"
@@ -165,6 +165,25 @@
                 @endforeach
             </div>
         </div>
+    </div> --}}
+    <div id="carouselExampleControls" class="carousel slide d-none d-sm-block" data-ride="carousel">
+        <div class="carousel-inner">
+            @foreach ($banner_slide as $key => $value)
+            <div class="carousel-item @if ($key == 0)
+                active
+            @endif">
+                <img class="d-block w-100" src="/Image/{{ $value->image }}" alt="First slide">
+            </div>
+            @endforeach
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
     <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
         data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
