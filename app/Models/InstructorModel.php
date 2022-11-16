@@ -15,12 +15,13 @@ class InstructorModel extends Model
 		'picture',
 		'desc',
 		'user_id',
+		'status',
 	];
-	// protected $appends = ['picture'];
-	// public function getPictureAttribute()
-	// {
-	// 	if (array_key_exists('picture', $this->attributes)) {
-	// 		return $this->attributes['picture'];
-	// 	}
-	// }
+	protected $appends = ['user'];
+	public function getUserAttribute()
+	{
+		if (array_key_exists('user_id', $this->attributes)) {
+			return User::where('id', $this->attributes['user_id'])->first();
+		}
+	}
 }

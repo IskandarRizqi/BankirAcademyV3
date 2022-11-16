@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\InstructorModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class InstructorController extends Controller
 {
@@ -20,6 +22,7 @@ class InstructorController extends Controller
     public function index()
     {
         $data['data'] = InstructorModel::get();
+        // return $data;
         return view('backend.instructor.instructor', $data);
     }
 
@@ -58,7 +61,7 @@ class InstructorController extends Controller
             'name' => $request->nama,
             'title' => $request->title,
             'desc' => $request->desc,
-            'user_id' => Auth::user()->id,
+            'status' => 1,
         ];
 
         if ($request->picture) {
@@ -79,7 +82,7 @@ class InstructorController extends Controller
             'id' => $request->id
         ], $d);
 
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success', 'Data Tersimpan');
     }
 
     /**
@@ -126,5 +129,25 @@ class InstructorController extends Controller
     {
         InstructorModel::where('id', $request->id_instructor)->delete();
         return Redirect::back()->with('success');
+    }
+
+    public function logininstructor(Request $request)
+    {
+        $data =  [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => 3,
+        ];
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+        $s = User::updateOrCreate([
+            'id' => $request->idUser
+        ], $data);
+        if ($s) {
+            InstructorModel::where('id', $request->idIntructor)->update(['user_id' => $s->id]);
+            return Redirect::back()->with('success', 'Data Berhasil Tersimpan');
+        }
+        return Redirect::back()->with('error', 'Data Gagal Tersimpan');
     }
 }
