@@ -54,9 +54,40 @@
                             <div class="w-100"></div>
 
 
-
                             <div class="col-md-12" style="padding-bottom: 10px;">
                                 <h4>Kelas Timeline</h4>
+                                <a href="#" class="d-flex mt-2">
+                                    <img class="mr-3 rounded-circle"
+                                        src="{{asset('Image/'.json_decode($class->instructor_list[0]->picture)->url)}}"
+                                        alt=Generic placeholder image style="max-width:50px; max-height:50px;">
+                                    <div class=>
+                                        <label class="d-block mb-0">
+                                            {{$class->instructor_list[0]->name}}
+                                        </label>
+                                        <small>{{$class->instructor_list[0]->title}}</small>
+                                    </div>
+                                    {{-- <div class="ml-2 flex-fill">
+                                        <label class="d-block mb-0"> Harga
+                                        </label>
+                                        @if ($class->pricing) {
+                                        @if ($class->pricing->promo) {
+                                        <del>' + new Intl.NumberFormat('id-ID', {
+                                            style: 'currency',
+                                            currency: 'IDR',
+                                            maximumFractionDigits: 0
+                                            }).format(el.pricing.price) + '</del>
+                                        } @else {
+                                        <small>' + new Intl.NumberFormat('id-ID', {
+                                            style: 'currency',
+                                            currency: 'IDR',
+                                            maximumFractionDigits: 0
+                                            }).format(el.pricing.price) + '</small>
+                                        }
+                                        @endif
+                                        }
+                                        @endif
+                                    </div> --}}
+                                </a>
 
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered" id="datatable1" cellspacing="0"
@@ -73,11 +104,20 @@
                                             <tr class="text-center">
                                                 <td width="1%">{{$e + 1}}</td>
                                                 <td width="20%">
-                                                    <span
-                                                        class="badge badge-danger">{{\Carbon\Carbon::parse($val->time_start)->format('d-M-Y
-                                                        H:i:s').' -
-                                                        '.\Carbon\Carbon::parse($val->time_end)->format('d-M-Y
-                                                        H:i:s')}}</span>
+                                                    <span class="badge badge-info">
+                                                        @if (\Carbon\Carbon::parse($val->time_start)->format('d-m-Y') ==
+                                                        \Carbon\Carbon::parse($val->time_end)->format('d-m-Y'))
+                                                        {{\Carbon\Carbon::parse($val->time_start)->format('d-m-Y')}}
+                                                        @else
+                                                        {{\Carbon\Carbon::parse($val->time_start)->format('d-m-Y') .' -
+                                                        '. \Carbon\Carbon::parse($val->time_end)->format('d-m-Y')}}
+                                                        @endif
+                                                    </span>
+                                                    <span class="badge badge-danger">
+                                                        {{\Carbon\Carbon::parse($val->time_start)->format('H:i:s').'
+                                                        -
+                                                        '.\Carbon\Carbon::parse($val->time_end)->format('H:i:s')}}
+                                                    </span>
                                                 </td>
                                                 {{-- <td class="longtextoverflow">{{$val->description}}</td> --}}
                                                 <td class="longtextoverflow" onclick="infodesk({{$val}})">

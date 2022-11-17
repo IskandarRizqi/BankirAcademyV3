@@ -81,6 +81,9 @@ Route::get('/registerc', function () {
 Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
+Route::get('/profile-instructor', function () {
+    return view('front.profile.instructor');
+});
 
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
