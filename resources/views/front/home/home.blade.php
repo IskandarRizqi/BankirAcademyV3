@@ -129,7 +129,7 @@
 
 <!-- Content -->
 @if (isset($banner_slide))
-<style>
+{{-- <style>
     .owl-carousel .owl-nav [class*=owl-] {
         position: absolute;
         top: 50%;
@@ -149,7 +149,7 @@
         -o-transition: all .3s ease;
         transition: all .3s ease;
     }
-</style>
+</style> --}}
 <section id="content">
     {{-- <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
         data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
@@ -220,7 +220,7 @@
                 </div>
                 <div id="related-portfolio"
                     class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                    data-margin="0" data-autoplay="5000" data-items-xs="2" data-items-sm="2" data-items-md="0"
+                    data-margin="0" data-autoplay="5000" data-items-xs="0" data-items-sm="0" data-items-md="0"
                     data-items-xl="0">
                     <div class="owl-stage-outer">
                         <div class="owl-stage owlCustom"
@@ -644,6 +644,7 @@
     }
 
     function lazyLoad(page) {
+        $('#halaman').val(page)
         return new Promise((resolve, reject) => {
             $.ajax({
                 url: '?page=' + page,
@@ -654,28 +655,26 @@
                 },
                 success: function(response) {
                     let next_page = 0;
+                    // $('.owlCustom').html(null);
                     for (const key in response.kelas) {
                         if (Object.hasOwnProperty.call(response.kelas, key)) {
                             const element = response.kelas[key];
                             let owl = '';
-                            owl += '<div class="owl-item" style="">';
+                            owl += '<div class="owl-item" style="margin:0px !important;">';
                             owl += '    <div class="oc-item">';
                             owl += '        <div class="portfolio-item">';
                             owl += '            <div class="portfolio-image">';
                             owl += '                <button class="button button-circle"';
-                            owl += '                    onclick=tabsCategory("' + key.replace(' ',
-                                '_') + '")>' + key + '</button>';
+                            owl += '                    onclick=tabsCategory("' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_') + '")><small>' + key + '</small></button>';
                             owl += '            </div>';
                             owl += '        </div>';
                             owl += '    </div>';
                             owl += '</div>';
-                            let hal = $('#halaman').val();
-                            if (hal <= 1) {
+                            // let hal = $('#halaman').val();
+                            if (page == 1) {
                                 $('.owlCustom').append(owl);
-                                $('#cateKelas').append('<div id="' + key.replace(' ', '_') +
-                                    '" class="row tabsCustom mt-2" hidden></div>');
+                                $('#cateKelas').append('<div id="' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_') + '" class="row tabsCustom mt-2" hidden></div>');
                             }
-
 
                             let html = '';
                             element.data.forEach(el => {
@@ -706,7 +705,7 @@
                                                 dateStyle: 'medium'
                                             }).format(new Date(el.date_end)) + '</h6>';
                                     }
-                                html += '            <div class="d-flex mt-2">';
+                                html += '            <a href="#" class="d-flex mt-2">';
                                 html += '                <img class="mr-3 rounded-circle"';
                                 html += '                    src="Image/' + JSON.parse(el
                                         .instructor_list[0].picture).url +
@@ -738,7 +737,7 @@
                                     }
                                 }
                                 html += '                </div>';
-                                html += '            </div>';
+                                html += '            </a>';
                                 html += '            <div class="text-center mt-2 w-100">';
                                 if (el.pricing) {
                                     if (el.pricing.promo) {
@@ -771,7 +770,7 @@
                             if (element.next_page_url) {
                                 next_page++;
                             }
-                            $('#' + key.replace(' ', '_')).append(html);
+                            $('#' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_')).append(html);
                         }
                     }
                     if (next_page <= 0) {

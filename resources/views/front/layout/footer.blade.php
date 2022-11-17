@@ -7,14 +7,16 @@
             <div class="row col-mb-50">
                 <div class="col-lg-6">
                     <div class="widget clearfix">
-                        <p>Bankir Akademi merupakan platform digital learning yang dapat digunakan sebagai media
+                        <p>{{env('APP_NAME','Bankir Akademi')}} merupakan platform digital learning yang dapat digunakan
+                            sebagai media
                             pembelajaran untuk seluruh calon dan karyawan bank.
                         </p>
                         <div class="py-2" style="background: url('images/world-map.png') no-repeat center center;">
                             <div class="row col-mb-30">
                                 <div class="col-6">
                                     <address class="mb-0">
-                                        <abbr title="Headquarters" style="display: inline-block;margin-bottom: 7px;"><strong>Alamat:</strong></abbr><br>
+                                        <abbr title="Headquarters"
+                                            style="display: inline-block;margin-bottom: 7px;"><strong>Alamat:</strong></abbr><br>
                                         Jl. Jendral Sudirman 354, Semarang Barat<br> Kota Semarang<br>
                                     </address>
                                 </div>
@@ -69,7 +71,8 @@
                                 <div class="grid-inner row">
                                     <div class="col">
                                         <div class="entry-title">
-                                            <h4><a href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $p->title)) }}">{{ $p->title }}</a>
+                                            <h4><a href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+                                                    ,' , ';' , '<' , '>' ), '' , $p->title)) }}">{{ $p->title }}</a>
                                             </h4>
                                         </div>
                                         <div class="entry-meta">
