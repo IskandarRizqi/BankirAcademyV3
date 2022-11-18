@@ -21,8 +21,8 @@ return new class extends Migration
             $table->longText('desc');
             $table->bigInteger('user_id')->nullable();
             $table->integer('status')->default(0);
-            $table->integer('alamat')->nullable();
-            $table->integer('nohp')->nullable();
+            $table->text('alamat')->nullable();
+            $table->string('nohp')->nullable();
             $table->timestamps();
         });
     }

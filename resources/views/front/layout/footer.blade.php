@@ -21,8 +21,8 @@
                                     </address>
                                 </div>
                                 <div class="col-6">
-                                    <abbr title="Phone Number"><strong>Phone:</strong></abbr> (1) 8547 632521<br>
-                                    <abbr title="Fax"><strong>Fax:</strong></abbr> (1) 11 4752 1433<br>
+                                    <abbr title="Phone Number"><strong>Phone:</strong></abbr> (024) 76435498<br>
+                                    <abbr title="Fax"><strong>Whatsapp:</strong></abbr> (+62) 895 3122 9494<br>
                                     <abbr title="Email Address"><strong>Email:</strong></abbr> info@akarindo.id
                                 </div>
                             </div>
