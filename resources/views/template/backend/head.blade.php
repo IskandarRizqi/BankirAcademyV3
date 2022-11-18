@@ -3,7 +3,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <title>Admin class akarindo</title>
-    <link rel="icon" type="image/x-icon" href="{{asset('Backend/logo_12.png')}}" />
+    <link rel="icon" type="image/x-icon" href="{{asset('Backend/fav.png')}}" />
     <link href="{{ asset('Backend/assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
     <script src="{{ asset('Backend/assets/js/loader.js') }}"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -29,7 +29,8 @@
     <link href="{{asset('Backend/assets/css/components/custom-modal.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/assets/css/elements/tooltip.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/select2/select2.min.css')}}">
-    <link href="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.css')}}" rel="stylesheet"
+        type="text/css" />
     <link href="{{asset('Backend/plugins/sweetalerts/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/plugins/sweetalerts/sweetalert.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/assets/css/components/custom-sweetalert.css')}}" rel="stylesheet" type="text/css" />
