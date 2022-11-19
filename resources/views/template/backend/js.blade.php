@@ -23,9 +23,6 @@
 <script src="{{asset('Backend/plugins/sweetalerts/custom-sweetalert.js')}}"></script>
 <script>
 	$(document).ready(function() {
-		$('.slc2').select2({
-
-		});
 		$('.slc2tag').select2({
 			tags: true,
 		});

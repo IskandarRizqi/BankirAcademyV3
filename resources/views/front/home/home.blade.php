@@ -705,7 +705,7 @@
                                                 dateStyle: 'medium'
                                             }).format(new Date(el.date_end)) + '</h6>';
                                     }
-                                html += '            <a href="#" class="d-flex mt-2">';
+                                html += '            <a href="/profile-instructor/'+el.instructor_list[0].id+'/'+el.instructor_list[0].name+'" class="d-flex mt-2">';
                                 html += '                <img class="mr-3 rounded-circle"';
                                 html += '                    src="Image/' + JSON.parse(el
                                         .instructor_list[0].picture).url +

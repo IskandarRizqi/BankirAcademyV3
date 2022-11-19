@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
+use App\Models\InstructorModel;
+use App\Models\InstructorReviewModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,20 +27,20 @@ class ProfileController extends Controller
         $auth = Auth::user()->id;
         $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
         $data['pop'] = ClassesModel::limit(6)->get();
-		$data['param']=[];
-		$data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
-		$data['param']['status'] = [0,1];
+        $data['param'] = [];
+        $data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
+        $data['param']['status'] = [0, 1];
 
-		if ($r->param_date_start) {
-			$data['param']['date'][0]=$r->param_date_start;
-		}
-		if ($r->param_date_end) {
-			$data['param']['date'][1]=$r->param_date_end;
-		}
+        if ($r->param_date_start) {
+            $data['param']['date'][0] = $r->param_date_start;
+        }
+        if ($r->param_date_end) {
+            $data['param']['date'][1] = $r->param_date_end;
+        }
 
-		if ($r->param_checked_lunas) {
-			$data['param']['status'] = $r->param_checked_lunas ;
-		}
+        if ($r->param_checked_lunas) {
+            $data['param']['status'] = $r->param_checked_lunas;
+        }
         $data['payment'] = ClassPaymentModel::select(
             'class_payment.*',
             'classes.title',
@@ -49,14 +51,14 @@ class ProfileController extends Controller
             ->leftJoin('class_participant', 'class_participant.class_id', 'class_payment.id')
             // ->where('class_participant.user_id', $auth)
             ->where('class_payment.user_id', $auth)
-			->whereDate('class_payment.created_at','>=',$data['param']['date'][0])
-			->whereDate('class_payment.created_at','<=',$data['param']['date'][1])
-			->whereIn('class_payment.status',$data['param']['status'])
-			->where(function ($q) {
-				return $q->where('class_payment.expired','>=',date('Y-m-d H:i:s'))->orWhere('status','1')->orWhereNotNull('file');
-			})
-			->orderBy('class_payment.status')
-			->orderBy('class_payment.created_at','desc')
+            ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
+            ->whereDate('class_payment.created_at', '<=', $data['param']['date'][1])
+            ->whereIn('class_payment.status', $data['param']['status'])
+            ->where(function ($q) {
+                return $q->where('class_payment.expired', '>=', date('Y-m-d H:i:s'))->orWhere('status', '1')->orWhereNotNull('file');
+            })
+            ->orderBy('class_payment.status')
+            ->orderBy('class_payment.created_at', 'desc')
             ->get();
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',
@@ -66,11 +68,11 @@ class ProfileController extends Controller
         )
             ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')
             ->where('class_payment.status', 1)
-			->whereDate('class_payment.created_at','>=',$data['param']['date'][0])
-			->whereDate('class_payment.created_at','<=',$data['param']['date'][1])
+            ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
+            ->whereDate('class_payment.created_at', '<=', $data['param']['date'][1])
             ->where('class_payment.user_id', $auth)
             ->where('class_participant.user_id', $auth)
-			->orderBy('class_payment.created_at','desc')
+            ->orderBy('class_payment.created_at', 'desc')
             ->get();
         foreach ($data['class'] as $key => $value) {
             $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id')->where('id', $value->class_id)->get();
@@ -169,5 +171,54 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function profileinstructor($id, $name)
+    {
+        $p = InstructorModel::where('id', $id)->first();
+        $review = InstructorReviewModel::select('instructor_review.*', 'users.name')
+            ->join('users', 'users.id', 'instructor_review.users_id')
+            ->where('instructor_review.instructor_id', $id)
+            ->where('instructor_review.status', 1)
+            ->get();
+        return view('front.profile.instructor', [
+            'data' => $p,
+            'review' => $review
+        ]);
+    }
+
+    public function addreviewinstructor(Request $request)
+    {
+        $auth = Auth::user();
+        $validasi = InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->instructor_id)->get();
+        if (count($validasi) > 0) {
+            return Redirect::back()->with('success', 'Anda Sudah Review');
+        }
+        $r = InstructorReviewModel::create([
+            'instructor_id' => $request->instructor_id,
+            'users_id' => $auth->id,
+            'review_msg' => $request->comment,
+            'review_val' => $request->nilai,
+            'status' => 0,
+        ]);
+        if (!$r) {
+            return view('front.profile.instructor')->with('error', 'Review Gagal Tersimpan');
+        }
+        return Redirect::back()->with('success', 'Review Berhasil Disimpan');
+    }
+
+    public function changestatusreview(Request $request)
+    {
+        $status = 0;
+        if ($request->val_review == 'Tampil') {
+            $status = 1;
+        }
+        $i = InstructorReviewModel::where('id', $request->id_review)->update([
+            'status' => $status
+        ]);
+        if (!$i) {
+            return Redirect::back()->with('success', 'Review Gagal Disimpan');
+        }
+        return Redirect::back()->with('success', 'Review Berhasil Disimpan');
     }
 }

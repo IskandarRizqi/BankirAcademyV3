@@ -62,6 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/classes/getinvoice/{id}', [App\Http\Controllers\Front\InvoiceController::class, 'getInvoice']);
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
     Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
+    // 
+    Route::post("/addreviewinstructor", [App\Http\Controllers\Front\ProfileController::class, "addreviewinstructor"]);
+    Route::post("/changestatusreview", [App\Http\Controllers\Front\ProfileController::class, "changestatusreview"]);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
@@ -81,9 +84,7 @@ Route::get('/registerc', function () {
 Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
-Route::get('/profile-instructor', function () {
-    return view('front.profile.instructor');
-});
+Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
 
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);

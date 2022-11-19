@@ -32,18 +32,44 @@
       </div>
     </div>
   </div>
-
   <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-    <div class="widget widget-chart-two">
-      <div class="widget-heading">
-        <h5 class="">Sales by Category</h5>
-      </div>
+    <div class="widget widget-card-one">
       <div class="widget-content">
-        <div id="chart-2" class=""></div>
+        <div class="table-responsive">
+          <table id="zero-config" class="table dt-table-hover" style="width:100%">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Nilai</th>
+                <th>Pesan</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($review as $key => $r)
+              <tr>
+                <td>{{$key+1}}</td>
+                <td>{{$r->name}}</td>
+                <td>{{$r->review_val}}</td>
+                <td>{{$r->review_msg}}</td>
+                <td><span onclick="aktif('{{$r->id}}','{{$r->status?'Tidak Tampil':'Tampil'}}')"
+                    class="badge badge-{{$r->status?'success':'danger'}}">{{$r->status?'Tampil':'Tidak
+                    Tampil'}}</span></td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<form id="form_tampil" action="/changestatusreview" method="post">
+  @csrf
+  <input type="text" name="id_review" id="id_review" hidden>
+  <input type="text" name="val_review" id="val_review" hidden>
+</form>
 @endsection
 @section('custom-js')
 <script>
@@ -130,5 +156,22 @@
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
+
+        function aktif(id,msg) {
+            $('#id_review').val(id)
+            $('#val_review').val(msg)
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: msg,
+                padding: '2em'
+            }).then(function(result) {
+                if (result.value) {
+                    $('#form_tampil').submit()
+                }
+            });
+        }
 </script>
 @endsection

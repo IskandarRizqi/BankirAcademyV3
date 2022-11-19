@@ -56,7 +56,8 @@
 
                             <div class="col-md-12" style="padding-bottom: 10px;">
                                 <h4>Kelas Timeline</h4>
-                                <a href="#" class="d-flex mt-2">
+                                <a href="/profile-instructor/{{$class->instructor_list[0]->id}}/{{$class->instructor_list[0]->name}}"
+                                    class="d-flex mt-2">
                                     <img class="mr-3 rounded-circle"
                                         src="{{asset('Image/'.json_decode($class->instructor_list[0]->picture)->url)}}"
                                         alt=Generic placeholder image style="max-width:50px; max-height:50px;">
