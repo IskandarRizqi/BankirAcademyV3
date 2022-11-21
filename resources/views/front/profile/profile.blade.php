@@ -207,9 +207,10 @@
                                                         <!-- <td>{{$cl->date_start}} - {{$cl->date_end}}</td> -->
                                                         <td>{{ \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y') }} - {{ \Carbon\Carbon::parse($cl->date_end)->format('d-m-Y') }}</td>
                                                         <td>
-                                                            <button id="evModal" class="button button-circle button-small" data-toggle="modal" data-target="#eventModal" onclick="onEvent({{$c->event}})" title="Event">
-                                                                Open detail
+                                                            <button id="evModal" class="button button-circle button-mini" data-toggle="modal" data-target="#eventModal" onclick="onEvent({{$c->event}})" title="Event">
+                                                                Open
                                                             </button>
+                                                            <button class="button button-mini button-circle">Link</button>
                                                         </td>
                                                         <td>
                                                             <div class="dropdown">
@@ -315,7 +316,7 @@
                                                     <form action="#" method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="modal-header">
-                                                            <h3>Event</h3>
+                                                            <h3>Rincian kelas</h3>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
