@@ -191,6 +191,7 @@
                                                         <th>Tanggal</th>
                                                         <th>Rincian kelas</th>
                                                         <th>Unduhan</th>
+                                                        <th>Review</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -212,7 +213,7 @@
                                                             </button>
                                                             <button class="button button-mini button-circle">Link</button>
                                                         </td>
-                                                        <td>
+                                                        <td width="5%">
                                                             <div class="dropdown">
                                                                 <button class="btn btn-warning dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-expanded="false" title="Opsi">
                                                                     <i class="icon-cog"></i>
@@ -231,6 +232,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
+                                                        <td></td>
                                                     </tr>
                                                     @endforeach
                                                     @endforeach
