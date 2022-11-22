@@ -25,7 +25,11 @@
         <div class="search-overlay"></div>
 
         <!--  BEGIN SIDEBAR  -->
+        @if (Auth::user()->role == 3)
+        @include('backend.instructor.sidebar')
+        @else
         @include('template.backend.sidebar')
+        @endif
         <!--  END SIDEBAR  -->
 
         <!--  BEGIN CONTENT AREA  -->

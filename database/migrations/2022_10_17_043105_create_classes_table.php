@@ -27,6 +27,7 @@ return new class extends Migration
             $table->date('date_start');
             $table->date('date_end');
             $table->longText('image_mobile')->nullable();
+            $table->integer('tipe')->default(0);
             $table->timestamps();
         });
     }

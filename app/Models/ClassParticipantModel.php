@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClassParticipantModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'class_participant';
 	protected $fillable = [
 		'class_id',
@@ -17,5 +17,6 @@ class ClassParticipantModel extends Model
 		'review',
 		'review_point',
 		'review_time',
+		'jumlah',
 	];
 }

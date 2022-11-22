@@ -481,15 +481,17 @@
                             <div class="text-gray-light">INVOICE TO:</div>
                             <h2 class="to">{{$profile->name}}</h2>
                             <div class="email"><a href="mailto:">{{Auth::user()->email}}</a></div>
-							<small>({{$profile->phone_region}}){{$profile->phone}}</small>
-							<br>
-							<small>{{substr($profile->description,0,97).'...'}}</small>
+                            <small>({{$profile->phone_region}}){{$profile->phone}}</small>
+                            <br>
+                            <small>{{substr($profile->description,0,97).'...'}}</small>
                         </div>
                     </div>
                     <div class="float-right invoice-details">
                         <div class="col-lg-6">
-                            <div class="date">Tanggal Invoice :{{Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}}</div>
-                            <h2 class="invoice-id">No. Invoice : <span style="text-transform: uppercase;">{{$payment->no_invoice}}</span></h2>
+                            <div class="date">Tanggal Invoice
+                                :{{Carbon\Carbon::parse($payment->created_at)->format('d-m-Y')}}</div>
+                            <h2 class="invoice-id">No. Invoice : <span
+                                    style="text-transform: uppercase;">{{$payment->no_invoice}}</span></h2>
                         </div>
                     </div>
                 </div>
@@ -501,26 +503,36 @@
                             <th style="text-align: right;">HARGA</th>
                             <th style="text-align: right;">PROMO</th>
                             <th style="text-align: right;">KODE UNIK</th>
+                            <th style="text-align: right;">QTY</th>
                             <th style="text-align: right;">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
-						<tr>
-							<th class="text-left">{{$class->title}}</th>
-							<td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
-							<td class="unit">
-								@if ($class->pricing->promo==1)
-								- {{substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$class->pricing->promo_price,"IDR"),0,-3) }}
-								@endif
-							</td>
-							<td class="unit">
-								{{substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}
-							</td>
-							<td class="unit">
-								{{substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->price_final,"IDR"),0,-3) }}
-							</td>
-						</tr>
-					</tbody>
+                        <tr>
+                            <th class="text-left"
+                                style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
+                                {{$class->title}}</th>
+                            <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
+                            <td class="unit">
+                                @if ($class->pricing->promo==1)
+                                - {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$class->pricing->promo_price,"IDR"),0,-3) }}
+                                @endif
+                            </td>
+                            <td class="unit">
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}
+                            </td>
+                            <td class="unit">
+                                {{$payment->qty}}
+                            </td>
+                            <td class="unit">
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),($payment->price_final*$payment->qty),"IDR"),0,-3) }}
+                            </td>
+                        </tr>
+                    </tbody>
                     <tfoot>
                         {{-- <tr>
                             <td colspan="1"></td>
@@ -536,7 +548,8 @@
                         <tr>
                             <td colspan="1"></td>
                             <td colspan="3">GRAND TOTAL</td>
-                            <td>{{substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY),$payment->price_final,"IDR"),0,-3) }}</td>
+                            <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->price_final*$payment->qty,"IDR"),0,-3) }}</td>
                         </tr>
                     </tfoot>
                 </table>

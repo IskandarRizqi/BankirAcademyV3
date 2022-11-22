@@ -23,6 +23,7 @@ class ClassesModel extends Model
 		'participant_limit',
 		'date_start',
 		'date_end',
+		'tipe',
 	];
 
 	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list'];
@@ -63,8 +64,8 @@ class ClassesModel extends Model
 	}
 	public function getPesertaListAttribute()
 	{
+		$data = [];
 		if (array_key_exists('id', $this->attributes)) {
-			$data = [];
 			$data['all'] = DB::table('class_payment')
 				->select('class_payment.*', 'user_profile.name')
 				->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
@@ -77,7 +78,7 @@ class ClassesModel extends Model
 				->where('class_payment.status', 0)
 				->where('class_payment.class_id', $this->attributes['id'])
 				->get();
-			return $data;
 		}
+		return $data;
 	}
 }

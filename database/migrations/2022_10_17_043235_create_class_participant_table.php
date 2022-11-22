@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('review_point')->nullable();
             $table->dateTime('review_time')->nullable();
             $table->integer('review_active')->default(0);
+            $table->integer('jumlah')->default(1);
             $table->timestamps();
         });
     }

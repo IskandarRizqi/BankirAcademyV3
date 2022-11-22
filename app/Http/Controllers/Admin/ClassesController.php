@@ -42,6 +42,7 @@ class ClassesController extends Controller
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
 		$data['instructor'] = InstructorModel::get();
 
+		// return $data;
 		return view('backend/classes/classes', $data);
 	}
 
@@ -87,6 +88,7 @@ class ClassesController extends Controller
 			'participant_limit' => $r->numClassesLimit,
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
+			'tipe' => $r->slcClassesType,
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -114,6 +116,7 @@ class ClassesController extends Controller
 			'participant_limit' => $r->numClassesLimit,
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
+			'tipe' => $r->slcClassesType,
 		];
 
 		if ($r->file('filClassesImage')) {

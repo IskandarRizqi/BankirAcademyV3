@@ -30,9 +30,15 @@ class OrderController extends Controller
             'input2' => 'required',
             'class_id' => 'required',
             'payment_id' => 'required',
+            'jml_peserta' => 'required',
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput($request->all());
+        }
+        $class = ClassesModel::where('id', $request->class_id)->first();
+        $part = ClassParticipantModel::where('class_id', $request->class_id)->sum('jumlah');
+        if ($class->participant_limit < ($part + $request->jml_peserta)) {
+            return Redirect::back()->with('error', 'Participant Sudah Penuh');
         }
         foreach ($request->input2 as $key => $value) {
             $size = $request->file('input2')[$key]->getSize();
@@ -53,8 +59,9 @@ class OrderController extends Controller
                     'user_id' => Auth::user()->id
                 ],
                 [
+                    'jumlah' => $request->jml_peserta,
                     'class_id' => $request->class_id,
-                    'user_id' => Auth::user()->id
+                    'user_id' => Auth::user()->id,
                 ]
             );
             return Redirect::back();

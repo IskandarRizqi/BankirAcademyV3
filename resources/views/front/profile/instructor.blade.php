@@ -129,8 +129,8 @@
                                                 @endforeach
                                             </ol>
 
-                                            <button data-toggle="modal" data-target="#reviewFormModal"
-                                                class="button button-3d m-0 float-end">Add a Review</button>
+                                            {{-- <button data-toggle="modal" data-target="#reviewFormModal"
+                                                class="button button-3d m-0 float-end">Add a Review</button> --}}
                                             <div class="modal fade" id="reviewFormModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="reviewFormModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">

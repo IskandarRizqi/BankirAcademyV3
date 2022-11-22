@@ -22,21 +22,39 @@
 						</div>
 					</div>
 					<div class="col-lg-6">
-						<div class="form-group">
-							<label for="slcClassesCategory">Category</label>
-							<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
-								style="display: none;"></small>
-							<select class="form-control tagging slc2tag" name="slcClassesCategory"
-								id="slcClassesCategory" required>
-								<option value=""></option>
-								@foreach ($category as $ctg)
-								@if ($ctg==$classes->category)
-								<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
-								@else
-								<option value="{{$ctg}}">{{$ctg}}</option>
-								@endif
-								@endforeach
-							</select>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="slcClassesCategory">Category</label>
+									<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
+										style="display: none;"></small>
+									<select class="form-control tagging slc2tag" name="slcClassesCategory"
+										id="slcClassesCategory" required>
+										<option value=""></option>
+										@foreach ($category as $ctg)
+										@if ($ctg==$classes->category)
+										<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
+										@else
+										<option value="{{$ctg}}">{{$ctg}}</option>
+										@endif
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="slcClassesCategory">Type</label>
+									<select class="form-control" name="slcClassesType" id="slcClassesType" required>
+										@if ($classes->title == 0)
+										<option value="0" selected>Bank</option>
+										<option value="1">Non Bank</option>
+										@else
+										<option value="0">Bank</option>
+										<option value="1" selected>Non Bank</option>
+										@endif
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="col-lg-12">

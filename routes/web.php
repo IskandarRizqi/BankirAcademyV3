@@ -89,6 +89,7 @@ Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\Profil
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
 Route::resource('profile', ProfileController::class)->middleware('auth');
+Route::get("/review-instructor", [App\Http\Controllers\Front\ProfileController::class, "review_instructor"]);
 
 //Pages
 Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "showAbout"]);

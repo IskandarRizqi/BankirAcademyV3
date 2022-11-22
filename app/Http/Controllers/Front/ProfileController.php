@@ -44,11 +44,13 @@ class ProfileController extends Controller
         $data['payment'] = ClassPaymentModel::select(
             'class_payment.*',
             'classes.title',
+            'classes.participant_limit',
             'class_participant.review',
+            'class_participant.jumlah',
             'class_participant.id as participant_id'
         )
             ->join('classes', 'classes.id', 'class_payment.class_id')
-            ->leftJoin('class_participant', 'class_participant.class_id', 'class_payment.id')
+            ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
             // ->where('class_participant.user_id', $auth)
             ->where('class_payment.user_id', $auth)
             ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
@@ -64,7 +66,8 @@ class ProfileController extends Controller
             'class_payment.*',
             'class_participant.review',
             'class_participant.review_point',
-            'class_participant.id as participant_id'
+            'class_participant.id as participant_id',
+            'class_participant.jumlah',
         )
             ->join('class_participant', 'class_participant.payment_id', 'class_payment.id')
             ->where('class_payment.status', 1)
@@ -192,7 +195,11 @@ class ProfileController extends Controller
         $auth = Auth::user();
         $validasi = InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->instructor_id)->get();
         if (count($validasi) > 0) {
-            return Redirect::back()->with('success', 'Anda Sudah Review');
+            InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->instructor_id)->update([
+                'review_msg' => $request->comment,
+                'review_val' => $request->nilai,
+            ]);
+            return Redirect::back()->with('success', 'Update Review Berhasil');
         }
         $r = InstructorReviewModel::create([
             'instructor_id' => $request->instructor_id,
@@ -220,5 +227,11 @@ class ProfileController extends Controller
             return Redirect::back()->with('success', 'Review Gagal Disimpan');
         }
         return Redirect::back()->with('success', 'Review Berhasil Disimpan');
+    }
+    public function review_instructor(Request $request)
+    {
+        $auth = Auth::user();
+        $validasi = InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->id_instructor)->get();
+        return $validasi;
     }
 }
