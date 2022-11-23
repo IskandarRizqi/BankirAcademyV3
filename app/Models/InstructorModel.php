@@ -16,6 +16,7 @@ class InstructorModel extends Model
 		'desc',
 		'user_id',
 		'status',
+		'dokumen',
 	];
 	protected $appends = ['user'];
 	public function getUserAttribute()

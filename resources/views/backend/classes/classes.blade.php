@@ -76,19 +76,20 @@
 								</span>
 								|
 								<span class="badge badge-success" data-toggle="modal" data-target="#listPesertaModal"
-									onclick="openPeserta({{$v->peserta_list['all']}})">
-									{{count($v->peserta_list['all'])}}
+									onclick="openPeserta({{$v->peserta_list['lunas']}})">
+									{{count($v->peserta_list['lunas'])}}
 								</span>
 							</td>
 							<td>
 								<button class="btn bs-tooltip {{($v->pricing)?'btn-info':'btn-dark'}}" title="Pricing"
 									onclick="classPricing({{$v}})"><i class="bx bx-dollar"></i></button>
-								<button class="btn bs-tooltip {{(count($v->content_list)>0)?'btn-success':'btn-dark'}}" title="File"
-									onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
+								<button class="btn bs-tooltip {{(count($v->content_list)>0)?'btn-success':'btn-dark'}}"
+									title="File" onclick="classContent({{$v}})"><i class="bx bx-file"></i></button>
 								<a class="btn bs-tooltip {{($v->events_exist)?'btn-primary':'btn-dark'}}" title="Event"
 									href="/admin/classes/createevent/{{$v->id}}"><i class="bx bx-calendar"></i></a>
-								<button class="btn bs-tooltip  {{($v->certif_exist)?'btn-warning':'btn-dark'}} dropdown-toggle" type="button"
-									data-toggle="dropdown" aria-expanded="false" title="Certificate">
+								<button
+									class="btn bs-tooltip  {{($v->certif_exist)?'btn-warning':'btn-dark'}} dropdown-toggle"
+									type="button" data-toggle="dropdown" aria-expanded="false" title="Certificate">
 									<i class="bx bx-cog"></i></button>
 								<div class="dropdown-menu">
 									<a class="dropdown-item" title="Certificate"
@@ -126,7 +127,7 @@
 				<!-- Modal -->
 				<div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
 					aria-hidden="true">
-					<div class="modal-dialog">
+					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="listPesertaModalLabel">List Peserta</h5>
@@ -141,15 +142,12 @@
 											<tr>
 												<th>Status</th>
 												<th>Nama</th>
+												<th>No HP</th>
+												<th>Instansi</th>
 												<th>Price</th>
 											</tr>
 										</thead>
 										<tbody id="listPeserta">
-											<tr>
-												<td></td>
-												<td></td>
-												<td></td>
-											</tr>
 										</tbody>
 									</table>
 								</div>
@@ -229,6 +227,8 @@
 				html +='<tr>';
 				html +='<td>'+status+'</td>';
 				html += '<td>'+el.name+'</td>';
+				html += '<td>'+el.phone_region+el.phone+'</td>';
+				html += '<td>'+el.instansi+'</td>';
 				html += '<td>'+price+'</td>';
 				html +='</tr>';
 			})

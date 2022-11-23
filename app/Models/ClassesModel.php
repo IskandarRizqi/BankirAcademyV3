@@ -67,15 +67,16 @@ class ClassesModel extends Model
 		$data = [];
 		if (array_key_exists('id', $this->attributes)) {
 			$data['all'] = DB::table('class_payment')
-				->select('class_payment.*', 'user_profile.name')
+				->select('class_payment.*', 'user_profile.name', 'user_profile.phone_region', 'user_profile.phone', 'user_profile.gender', 'user_profile.instansi')
 				->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
 				// ->where('class_payment.status', 1)
 				->where('class_payment.class_id', $this->attributes['id'])
 				->get();
-			$data['belum'] = DB::table('class_payment')
-				->select('class_payment.*', 'user_profile.name')
+			$data['lunas'] = DB::table('class_payment')
+				->select('class_payment.*', 'user_profile.name', 'user_profile.phone_region', 'user_profile.phone', 'user_profile.gender', 'user_profile.instansi')
 				->join('user_profile', 'user_profile.user_id', 'class_payment.user_id')
-				->where('class_payment.status', 0)
+				->where('class_payment.status', 1)
+				// ->where('class_payment.status', 0)
 				->where('class_payment.class_id', $this->attributes['id'])
 				->get();
 		}

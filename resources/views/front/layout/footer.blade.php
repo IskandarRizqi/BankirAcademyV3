@@ -102,6 +102,7 @@
                     <a href="#">Press Kit</a><br>
                     <a href="#">Bantuan</a><br>
                     <a href="#">Karier</a><br>
+                    <a href="/sdank">Register Instructor</a><br>
                 </div>
             </div>
         </div>
@@ -266,16 +267,17 @@
             success: function(result) {
                 $('#login').attr('disabled', true)
                 setTimeout(() => {
-                    if (result.role == 0 || result.role == 1) {
-                        location.replace("/home")
+                    if (result.length > 500 ) {
+                        window.location = '/home';
                     } else {
-                        var class_id = $("#class_id").val();
+                        var class_id = $("#class_id");
                         var _token = document.getElementsByName("_token");
-                        if (class_id && _token) {
+                        if ((class_id.length > 0) && (_token.length > 0)) {
                             return window.location = '/ordernopost?_token=' + _token + '&class_id=' + class_id;
+                        } else{
+                            return location.reload();
                         }
                     }
-                    location.reload();
                 }, 2000);
                 iziToast.success({
                     title: 'Success',

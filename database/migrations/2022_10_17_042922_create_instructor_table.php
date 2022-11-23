@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('title');
+            $table->longText('dokumen');
             $table->longText('picture');
             $table->longText('desc');
             $table->bigInteger('user_id')->nullable();

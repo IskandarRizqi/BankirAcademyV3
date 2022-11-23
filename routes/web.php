@@ -75,6 +75,10 @@ Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, '
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::class, 'inputinstructor']);
+
+Route::get('/sdank', function () {
+    return view('front.syaratnketentuan');
+});
 Route::get('/registerinstructor', function () {
     return view('front.registerinstructor');
 });
@@ -84,6 +88,7 @@ Route::get('/registerc', function () {
 Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
+
 Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
 
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);

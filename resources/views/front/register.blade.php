@@ -9,7 +9,9 @@
 
     <!-- Stylesheets
 	============================================= -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Poppins:300,400,500,600,700|PT+Serif:400,400i&display=swap" rel="stylesheet" type="text/css" />
+    <link
+        href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Poppins:300,400,500,600,700|PT+Serif:400,400i&display=swap"
+        rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/x-icon" href="{{asset('admin/fav06.png')}}" />
     <link rel="stylesheet" href="{{asset('front/css/bootstrap.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/style.css')}}" type="text/css" />
@@ -39,7 +41,8 @@
         <section id="content">
             <div class="content-wrap py-0">
 
-                <div class="section dark p-0 m-0 h-100 position-absolute"></div>
+                <div class="section dark p-0 m-0 h-100 position-absolute"
+                    style="background-image: url('{{asset('bg-example.jpg')}}')"></div>
 
                 <div class="section bg-transparent min-vh-100 p-0 m-0 d-flex">
                     <div class="vertical-middle">
@@ -49,35 +52,44 @@
                             <div class="card mx-auto rounded-0 border-0" style="max-width: 400px;">
                                 <div class="card-body" style="padding: 40px;">
                                     <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize" for="login-form-modal-username">USERNAME</label>
+                                        <label class="font-body text-capitalize"
+                                            for="login-form-modal-username">USERNAME</label>
                                         <input type="text" id="usernameregis" name="name" class="form-control" />
                                     </div>
                                     <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize" for="login-form-modal-username">EMAIL</label>
+                                        <label class="font-body text-capitalize"
+                                            for="login-form-modal-username">EMAIL</label>
                                         <input type="email" id="emailregis" name="email" class="form-control" />
 
                                     </div>
 
                                     <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize" for="login-form-modal-password">PASSWORD</label>
-                                        <input type="password" id="passwordregis" name="password" class="form-control" required />
+                                        <label class="font-body text-capitalize"
+                                            for="login-form-modal-password">PASSWORD</label>
+                                        <input type="password" id="passwordregis" name="password" class="form-control"
+                                            required />
 
                                     </div>
                                     <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize" for="login-form-modal-password">CONFIRM PASSWORD</label>
-                                        <input type="password" id="confpassword" name="password_confirmation" class="form-control" required />
+                                        <label class="font-body text-capitalize" for="login-form-modal-password">CONFIRM
+                                            PASSWORD</label>
+                                        <input type="password" id="confpassword" name="password_confirmation"
+                                            class="form-control" required />
 
                                     </div>
 
                                     <div class="col-12 form-group">
-                                        <button class="button button-rounded m-0" onclick="funcregis()" type="submit">REGISTER</button>
+                                        <button class="button button-rounded m-0" onclick="funcregis()"
+                                            type="submit">REGISTER</button>
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         have an account? &nbsp;
                                         <a href="{{url('/')}}"> Login</a>
                                     </div>
                                     <div class="line line-sm"></div>
-                                    <a href="{{url('/auth/google')}}" class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login with Google</a>
+                                    <a href="{{url('/auth/google')}}"
+                                        class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
+                                        with Google</a>
                                 </div>
                             </div>
 
@@ -98,7 +110,8 @@
 
     <!-- JavaScripts
 ============================================= -->
-    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <script src="{{asset('front/js/plugins.min.js')}}"></script>
     <!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
 

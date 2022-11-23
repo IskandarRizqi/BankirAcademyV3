@@ -94,11 +94,31 @@ class HomeController extends Controller
             'nohp' => 'required',
             'alamat' => 'required',
             'deskripsi' => 'required',
+            'dokumen' => 'required',
+            'foto' => 'required',
         ]);
         //response error validation
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
+        $dokumen = $request->file('dokumen')->getSize();
+        if (($dokumen / 1024) > 1000) {
+            return Redirect::back()->with('error', 'Size Maximum 1 Mb');
+        }
+
+        if ($request->foto) {
+            $name = $request->file('foto')->getClientOriginalName(); // Name File
+            $size = $request->file('foto')->getSize(); // Size File
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $request->file('foto');
+            $file->move(public_path('Image'), $filename);
+        }
+        $do = $request->file('dokumen')->store('instructor/' . Auth::user()->email . '/' . time());
         $i = User::create([
             'name' => $request->nama,
             'email' => $request->email,
@@ -108,7 +128,8 @@ class HomeController extends Controller
             InstructorModel::create([
                 'name' => $request->nama,
                 'title' => 'e-class ehr system',
-                'picture' => json_encode(['url' => 'aki.png', 'size' => 0]),
+                'picture' => json_encode(['url' => $filename, 'size' => $size]),
+                'dokumen' => json_encode(['url' => $do, 'size' => $dokumen]),
                 'desc' => $request->deskripsi,
                 'alamat' => $request->alamat,
                 'nohp' => $request->nohp,
