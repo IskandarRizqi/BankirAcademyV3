@@ -116,9 +116,9 @@ class HomeController extends Controller
 
             $filename = time() . '-' . $name;
             $file = $request->file('foto');
-            $file->move(public_path('Image'), $filename);
+            $file->move(public_path('Image/instructor/' . $request->nama), $filename);
         }
-        $do = $request->file('dokumen')->store('instructor/' . Auth::user()->email . '/' . time());
+        $do = $request->file('dokumen')->store('instructor/' . $request->nama . '/' . time());
         $i = User::create([
             'name' => $request->nama,
             'email' => $request->email,
