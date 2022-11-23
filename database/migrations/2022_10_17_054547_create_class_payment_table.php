@@ -26,6 +26,7 @@ return new class extends Migration
             $table->dateTime('expired')->nullable();
             $table->string('no_invoice');
             $table->string('file')->nullable();
+            $table->integer('jumlah')->default(1);
             $table->timestamps();
         });
     }

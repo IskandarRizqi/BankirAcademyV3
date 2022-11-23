@@ -46,7 +46,7 @@ class ProfileController extends Controller
             'classes.title',
             'classes.participant_limit',
             'class_participant.review',
-            'class_participant.jumlah',
+            // 'class_participant.jumlah',
             'class_participant.id as participant_id'
         )
             ->join('classes', 'classes.id', 'class_payment.class_id')

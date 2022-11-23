@@ -112,7 +112,16 @@
                                                                 H:i:s') }}</b></td>
                                                         <!-- <td>{{ numfmt_format_currency(numfmt_create('id_ID',
                                                             \NumberFormatter::CURRENCY),$d->price_final,"IDR") }}</td> -->
-                                                        <td class="longtextoverflow">{{$d->jumlah}} Order Peserta</td>
+                                                        <td class="longtextoverflow">
+                                                            @if ($d->file)
+                                                            {{$d->jumlah}} Order Peserta
+                                                            @else
+                                                            <input type="number" name="jmlPeserta[]"
+                                                                class="form-control"
+                                                                onchange="tambahPeserta('{{$d->id}}','{{$d->participant_limit}}','{{$d->class_id}}',$(this).val())"
+                                                                value="{{$d->jumlah}}">
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             @if ($d->file)
                                                             <a href="/getBerkas?rf={{$d->file}}" target="_blank"
@@ -166,10 +175,10 @@
                                                                 <input type="text" id="class_id" name="class_id" hidden>
                                                                 <input type="text" id="payment_id" name="payment_id"
                                                                     hidden>
-                                                                <div class="form-group">
+                                                                <div class="form-group" hidden>
                                                                     <label for="">Jumlah Peserta</label>
                                                                     <input class="form-control" type="number"
-                                                                        id="jml_peserta" name="jml_peserta" required>
+                                                                        id="jml_peserta" name="jml_peserta">
                                                                 </div>
                                                                 <div class="col-lg-12 bottommargin">
                                                                     <label>Upload Bukti Pembayaran:</label><br>
@@ -700,8 +709,45 @@
         $('#nilai_value').html(nilai);
     })
 
-    function changeJumlah(id) {
-        console.log(id);
+    function tambahPeserta(params,limit,classid,val) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "bayar",
+            method: 'post',
+            data: {
+                payment_id:params,
+                limit:limit,
+                classid:classid,
+                jumlah:val,
+            },
+            success: function(result) {
+                if (result.status) {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: result.message,
+                    })
+            }else{
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: result.message,
+                    })
+                }
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 1000);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                // var errors = jqXhr.responseJSON;
+                // var errorsHtml = '';
+                // console.log(errors['errors']);
+            }
+        })
     }
 
     function reviewIns(e) {

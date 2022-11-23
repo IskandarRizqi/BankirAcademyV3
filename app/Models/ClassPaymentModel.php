@@ -18,6 +18,7 @@ class ClassPaymentModel extends Model
 		'price_final',
 		'expired',
 		'no_invoice',
-		'file'
+		'file',
+		'jumlah',
 	];
 }

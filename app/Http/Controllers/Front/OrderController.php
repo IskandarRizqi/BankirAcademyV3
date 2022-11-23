@@ -26,20 +26,30 @@ class OrderController extends Controller
     }
     public function bayar(Request $request)
     {
+        if ($request->ajax()) {
+            $part = ClassPaymentModel::where('class_id', $request->classid)->where('id', '!=', $request->payment_id)->sum('jumlah');
+            if ($request->limit < ($part + $request->jumlah)) {
+                return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh']);
+            }
+            ClassPaymentModel::where('id', $request->payment_id)->update([
+                'jumlah' => $request->jumlah
+            ]);
+            return response()->json(['status' => true, 'message' => 'Input Participant Berhasil']);
+        }
         $validator = Validator::make($request->all(), [
             'input2' => 'required',
             'class_id' => 'required',
             'payment_id' => 'required',
-            'jml_peserta' => 'required',
+            // 'jml_peserta' => 'required',
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput($request->all());
         }
-        $class = ClassesModel::where('id', $request->class_id)->first();
-        $part = ClassParticipantModel::where('class_id', $request->class_id)->sum('jumlah');
-        if ($class->participant_limit < ($part + $request->jml_peserta)) {
-            return Redirect::back()->with('error', 'Participant Sudah Penuh');
-        }
+        // $class = ClassesModel::where('id', $request->class_id)->first();
+        // $part = ClassParticipantModel::where('class_id', $request->class_id)->sum('jumlah');
+        // if ($class->participant_limit < ($part + $request->jml_peserta)) {
+        //     return Redirect::back()->with('error', 'Participant Sudah Penuh');
+        // }
         foreach ($request->input2 as $key => $value) {
             $size = $request->file('input2')[$key]->getSize();
             if (($size / 1024) > 100) {
