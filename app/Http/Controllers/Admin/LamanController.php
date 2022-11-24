@@ -58,17 +58,21 @@ class LamanController extends Controller
 
         // Data Meta
         $meta = [];
-        if (count($request->meta_name) > 0) {
-            for ($i = 0; $i < count($request->meta_name); $i++) {
-                if ($request->meta_name[$i]) {
-                    $meta['name'][$i] = $request->meta_name[$i];
+        if ($request->meta_name) {
+            if (count($request->meta_name) > 0) {
+                for ($i = 0; $i < count($request->meta_name); $i++) {
+                    if ($request->meta_name[$i]) {
+                        $meta['name'][$i] = $request->meta_name[$i];
+                    }
                 }
             }
         }
-        if (count($request->meta_content) > 0) {
-            for ($i = 0; $i < count($request->meta_content); $i++) {
-                if ($request->meta_content[$i]) {
-                    $meta['content'][$i] = $request->meta_content[$i];
+        if ($request->meta_content) {
+            if (count($request->meta_content) > 0) {
+                for ($i = 0; $i < count($request->meta_content); $i++) {
+                    if ($request->meta_content[$i]) {
+                        $meta['content'][$i] = $request->meta_content[$i];
+                    }
                 }
             }
         }
@@ -80,9 +84,9 @@ class LamanController extends Controller
         if ($sizebanner >= 1048576) {
             return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
         }
-        $filename = time() . '-' . $namebanner;
+        $filename1 = time() . '-' . $namebanner;
         $file = $request->file('banner');
-        $file->move(public_path('image/laman/' . $slug . '/banner'), $filename);
+        $file->move(public_path('image/laman/' . $slug . '/banner'), $filename1);
 
         // Data Meta Image
         $namemeta_image = $request->file('meta_image')->getClientOriginalName();
@@ -90,15 +94,15 @@ class LamanController extends Controller
         if ($sizemeta_image >= 1048576) {
             return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
         }
-        $filename = time() . '-' . $namemeta_image;
+        $filename2 = time() . '-' . $namemeta_image;
         $file = $request->file('meta_image');
-        $file->move(public_path('image/laman/' . $slug . '/meta_image'), $filename);
+        $file->move(public_path('image/laman/' . $slug . '/meta_image'), $filename2);
 
-        $data['banner'] = json_encode(['url' => $filename, 'size' => $sizebanner]);
+        $data['banner'] = json_encode(['url' => $filename1, 'size' => $sizebanner]);
         $data['og'] = json_encode([
             'description' => $request->meta_description,
             'title' => $request->meta_title,
-            'image' => $namemeta_image,
+            'image' => $filename2,
             'size' => $sizemeta_image
         ]);
 
