@@ -16,9 +16,16 @@ return new class extends Migration
         Schema::create('class_laman', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->json('meta');
+            $table->json('meta')->nullable();
             $table->json('og');
-            $table->text('desc');
+            $table->json('banner');
+            $table->text('content');
+            $table->text('slug');
+            $table->text('tag')->nullable();
+            $table->date('tgl_tayang')->nullable();
+            $table->date('tgl_expired')->nullable();
+            $table->integer('type')->comment('1: head, 2: footer');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

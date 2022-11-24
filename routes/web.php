@@ -56,6 +56,13 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get("/admin/pages/getblog/{id}", [App\Http\Controllers\Front\PagesController::class, "getBlog"]);
     Route::get("/admin/pages/delblog/{id}", [App\Http\Controllers\Front\PagesController::class, "delBlog"]);
     Route::post("/admin/pages/setblog/{id}", [App\Http\Controllers\Front\PagesController::class, "setBlog"]);
+
+    // Laman
+    Route::get("/admin/laman", [App\Http\Controllers\Admin\LamanController::class, "index"]);
+    Route::get("/admin/laman/create", [App\Http\Controllers\Admin\LamanController::class, "create"]);
+    Route::post("/admin/laman/store", [App\Http\Controllers\Admin\LamanController::class, "store"]);
+    Route::get("/admin/laman/edit/{id}", [App\Http\Controllers\Admin\LamanController::class, "edit"]);
+    Route::delete("/admin/laman/destroy/{id}", [App\Http\Controllers\Admin\LamanController::class, "destroy"]);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);

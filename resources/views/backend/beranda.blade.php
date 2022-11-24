@@ -35,6 +35,9 @@
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
+                @if (Session::has('message'))
+                {{Session::get('message')}}
+                @endif
                 @yield('content')
             </div>
             @include('template.backend.footer')

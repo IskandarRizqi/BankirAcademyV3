@@ -9,4 +9,17 @@ class ClassLamanModel extends Model
 {
     use HasFactory;
     protected $table = 'class_laman';
+    protected $fillable = [
+        'title',
+        'meta',
+        'og',
+        'content',
+        'slug',
+        'tag',
+        'tgl_tayang',
+        'tgl_expired',
+        'type',
+        'status',
+        'banner',
+    ];
 }
