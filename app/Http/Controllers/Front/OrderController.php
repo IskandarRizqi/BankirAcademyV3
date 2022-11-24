@@ -62,20 +62,20 @@ class OrderController extends Controller
                 'file' => $gambar
             ]
         );
-        if ($update) {
-            ClassParticipantModel::updateOrCreate(
-                [
-                    'payment_id' => $request->payment_id,
-                    'user_id' => Auth::user()->id
-                ],
-                [
-                    'jumlah' => $request->jml_peserta,
-                    'class_id' => $request->class_id,
-                    'user_id' => Auth::user()->id,
-                ]
-            );
-            return Redirect::back();
-        }
+        // if ($update) {
+        //     ClassParticipantModel::updateOrCreate(
+        //         [
+        //             'payment_id' => $request->payment_id,
+        //             'user_id' => Auth::user()->id
+        //         ],
+        //         [
+        //             'jumlah' => $request->jml_peserta,
+        //             'class_id' => $request->class_id,
+        //             'user_id' => Auth::user()->id,
+        //         ]
+        //     );
+        //     return Redirect::back();
+        // }
         return Redirect::back();
     }
     public function order_class(Request $request)

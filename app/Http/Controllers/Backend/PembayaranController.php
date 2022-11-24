@@ -13,20 +13,20 @@ class PembayaranController extends Controller
 {
     public function index(Request $r)
     {
-		$data['param']=[];
-		$data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
-		$data['param']['status'] = [0,1];
+        $data['param'] = [];
+        $data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
+        $data['param']['status'] = [0, 1];
 
-		if ($r->param_date_start) {
-			$data['param']['date'][0]=$r->param_date_start;
-		}
-		if ($r->param_date_end) {
-			$data['param']['date'][1]=$r->param_date_end;
-		}
+        if ($r->param_date_start) {
+            $data['param']['date'][0] = $r->param_date_start;
+        }
+        if ($r->param_date_end) {
+            $data['param']['date'][1] = $r->param_date_end;
+        }
 
-		if ($r->param_checked_lunas) {
-			$data['param']['status'] = $r->param_checked_lunas ;
-		}
+        if ($r->param_checked_lunas) {
+            $data['param']['status'] = $r->param_checked_lunas;
+        }
 
         $data['pembayaran'] = ClassPaymentModel::select(
             'class_payment.*',
@@ -38,14 +38,14 @@ class PembayaranController extends Controller
             'class_participant.certificate'
 
         )
-			->leftJoin('user_profile', 'user_profile.user_id', 'class_payment.user_id')
-			->leftJoin('classes', 'classes.id', 'class_payment.class_id')
-			->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
-			->whereDate('class_payment.created_at','>=',$data['param']['date'][0])
-			->whereDate('class_payment.created_at','<=',$data['param']['date'][1])
-			->whereIn('class_payment.status',$data['param']['status'])
-			->orderBy('class_payment.status')
-			->orderBy('class_payment.created_at','desc')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'class_payment.user_id')
+            ->leftJoin('classes', 'classes.id', 'class_payment.class_id')
+            ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
+            ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
+            ->whereDate('class_payment.created_at', '<=', $data['param']['date'][1])
+            ->whereIn('class_payment.status', $data['param']['status'])
+            ->orderBy('class_payment.status')
+            ->orderBy('class_payment.created_at', 'desc')
             ->get();
         return view('backend.pembayaran.pembayaran', $data);
     }
@@ -64,6 +64,18 @@ class PembayaranController extends Controller
         $status = $request->status ? 0 : 1;
         $cs = ClassPaymentModel::where('id', $request->id)->update(['status' => $status]);
         if ($cs) {
+            $cp = ClassPaymentModel::where('id', $request->id)->first();
+            ClassParticipantModel::updateOrCreate(
+                [
+                    'payment_id' => $cp->id,
+                    'user_id' => $cp->user_id
+                ],
+                [
+                    'jumlah' => $cp->jumlah,
+                    'class_id' => $cp->class_id,
+                    'user_id' => $cp->user_id,
+                ]
+            );
             return Redirect::back()->with(['success' => 'Pembayaran Berhasil']);
         }
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $cs]);
