@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
 
 class HomeController extends Controller
 {
@@ -141,6 +142,47 @@ class HomeController extends Controller
         }
         return Redirect::back()->with('error', 'Pendaftaran Gagal')->withInput($request->all());
     }
+
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function handleProviderCallback($provider)
+    {
+        $user = Socialite::driver($provider)->user();
+        $authUser = $this->findOrCreateUser($user, $provider);
+        Auth::login($authUser, true);
+        return redirect('/');
+    }
+
+    public function findOrCreateUser($socialUser, $provider)
+    {
+        $user = User::where('email', $socialUser->getEmail())->first();
+
+        if (!$user) {
+            $user = User::create([
+                'google_id'  => $socialUser->getId(),
+                'name'  => $socialUser->getName(),
+                'email' => $socialUser->getEmail(),
+                'role' => 3,
+            ]);
+            $i = InstructorModel::create([
+                'name' => $socialUser->getName(),
+                'title' => 0,
+                'picture' => $socialUser->getAvatar(),
+                'desc' => 0,
+                'user_id' => $user->id,
+                'status' => 1,
+                'dokumen' => 0,
+                'alamat' => 0,
+                'nohp' => 0,
+            ]);
+        }
+
+        return $user;
+    }
+
     public function getAllLaman()
     {
         $now = Carbon::now();
@@ -148,6 +190,7 @@ class HomeController extends Controller
         $data['laman_footer'] = ClassLamanModel::where('type', 2)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->get();
         return $data;
     }
+
     public function laman($slug)
     {
         $l = [];

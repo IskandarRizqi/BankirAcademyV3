@@ -105,6 +105,8 @@ Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
 Route::resource('profile', ProfileController::class)->middleware('auth');
 Route::get("/review-instructor", [App\Http\Controllers\Front\ProfileController::class, "review_instructor"]);
+Route::get("/instructor/{provider}", [App\Http\Controllers\Front\HomeController::class, "redirectToProvider"]);
+Route::get("/instructor/{provider}/callback", [App\Http\Controllers\Front\HomeController::class, "handleProviderCallback"]);
 
 //Pages
 Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "showAbout"]);
