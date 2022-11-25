@@ -1,7 +1,6 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
 @include(env('CUSTOM_HEADER', 'front.layout.header'))
-
 <style>
     .scroll-no-ui {
         height: 100%;

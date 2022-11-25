@@ -144,6 +144,9 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="pagesDropdownMenu" data-parent="#accordionExample">
                     <li>
+                        <a href="/admin/laman"> Laman </a>
+                    </li>
+                    <li>
                         <a href="/admin/pages/getabout"> About </a>
                     </li>
                     <li>

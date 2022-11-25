@@ -80,10 +80,12 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
+                                <input type="text" name="oldbanner" value="{{old('banner')}}" hidden>
+                                <input type="text" name="oldsizebanner" value="{{old('size_banner')}}" hidden>
                                 <label>Banner: <b class="text-danger">*</b></label>
                                 <input type="file" class="form-control" name="banner" id="txtThumbnail"
                                     accept="image/*">
-                                <img src="{{isset($laman->thumbnail)?$laman->thumbnail:'/Backend/assets/img/90x90.jpg'}}"
+                                <img src="{{old('banner')?'/Image/laman/banner/'.old('banner'):'/Backend/assets/img/90x90.jpg'}}"
                                     alt="Image Preview" id="prvImage" class="previewImage"
                                     style="max-width: 100%;max-height:97px;">
                                 @error('banner')
@@ -127,9 +129,11 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <input type="text" name="oldmetaimage" value="{{old('meta_image')}}" hidden>
+                            <input type="text" name="oldsizemetaimage" value="{{old('meta_size_image')}}" hidden>
                             <label>Image: <b class="text-danger">*</b></label>
                             <input type="file" class="form-control" name="meta_image" id="image" accept="image/*">
-                            <img src="{{isset($laman->thumbnail)?$laman->thumbnail:'/Backend/assets/img/90x90.jpg'}}"
+                            <img src="{{old('meta_image')?'/Image/laman/meta_image/'.old('meta_image'):'/Backend/assets/img/90x90.jpg'}}"
                                 alt="Image Preview" id="prvImageMeta" class="previewImage"
                                 style="max-width: 100%;max-height:97px;">
                             @error('meta_image')

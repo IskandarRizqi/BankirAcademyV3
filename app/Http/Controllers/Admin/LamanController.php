@@ -77,34 +77,45 @@ class LamanController extends Controller
             }
         }
         $data['meta'] = json_encode($meta);
+        if ($request->oldsizebanner) {
+            $data['banner'] = json_encode(['url' => $request->oldbanner, 'size' => $request->oldsizebanner]);
+        }
 
         // Data Banner
-        $namebanner = $request->file('banner')->getClientOriginalName();
-        $sizebanner = $request->file('banner')->getSize();
-        if ($sizebanner >= 1048576) {
-            return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+        if ($request->banner) {
+            $namebanner = $request->file('banner')->getClientOriginalName();
+            $sizebanner = $request->file('banner')->getSize();
+            if ($sizebanner >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+            $filename1 = time() . '-' . $namebanner;
+            $file = $request->file('banner');
+            $file->move(public_path('image/laman/banner'), $filename1);
+            $data['banner'] = json_encode(['url' => $filename1, 'size' => $sizebanner]);
         }
-        $filename1 = time() . '-' . $namebanner;
-        $file = $request->file('banner');
-        $file->move(public_path('image/laman/' . $slug . '/banner'), $filename1);
 
-        // Data Meta Image
-        $namemeta_image = $request->file('meta_image')->getClientOriginalName();
-        $sizemeta_image = $request->file('meta_image')->getSize();
-        if ($sizemeta_image >= 1048576) {
-            return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
-        }
-        $filename2 = time() . '-' . $namemeta_image;
-        $file = $request->file('meta_image');
-        $file->move(public_path('image/laman/' . $slug . '/meta_image'), $filename2);
-
-        $data['banner'] = json_encode(['url' => $filename1, 'size' => $sizebanner]);
-        $data['og'] = json_encode([
+        $og = [
             'description' => $request->meta_description,
             'title' => $request->meta_title,
-            'image' => $filename2,
-            'size' => $sizemeta_image
-        ]);
+        ];
+        if ($request->oldsizemetaimage) {
+            $og['image'] = $request->oldmetaimage;
+            $og['size'] = $request->oldsizemetaimage;
+        }
+        // Data Meta Image
+        if ($request->meta_image) {
+            $namemeta_image = $request->file('meta_image')->getClientOriginalName();
+            $sizemeta_image = $request->file('meta_image')->getSize();
+            if ($sizemeta_image >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+            $filename2 = time() . '-' . $namemeta_image;
+            $file = $request->file('meta_image');
+            $file->move(public_path('image/laman/meta_image'), $filename2);
+            $og['image'] = $filename2;
+            $og['size'] = $sizemeta_image;
+        }
+        $data['og'] = json_encode($og);
 
         $l = ClassLamanModel::UpdateOrCreate([
             'id' => $request->id
@@ -122,11 +133,21 @@ class LamanController extends Controller
         $data['id'] = $l->id;
         $data['title'] = $l->title;
         $m = json_decode($l->og);
+        $me = json_decode($l->meta);
         // $data['meta'] = $l->meta;
         $data['meta_description'] = $m->description;
         $data['meta_title'] = $m->title;
         $data['meta_image'] = $m->image;
-        $data['og'] = $l->og;
+        $data['meta_size_image'] = $m->size;
+        $data['meta_name'] = $me;
+        if (is_object($me)) {
+            if (property_exists($me, 'name')) {
+                $data['meta_name'] = $me->name;
+            }
+            if (property_exists($me, 'content')) {
+                $data['meta_content'] = $me->content;
+            }
+        }
         $data['content'] = $l->content;
         $data['slug'] = $l->slug;
         $data['tag'] = $l->tag;
@@ -136,11 +157,30 @@ class LamanController extends Controller
         $data['status'] = $l->status;
         $b = json_decode($l->banner);
         $data['banner'] = $b->url;
+        $data['oldsizebanner'] = $b->size;
+        // return $data;
         return Redirect::to('/admin/laman/create')->withInput($data);
     }
 
     public function destroy($id)
     {
-        return $id;
+        $d = ClassLamanModel::where('id', $id)->delete();
+        if ($d) {
+            return Redirect::to('/admin/laman')->with('message', 'Hapus Data Berhasil');
+        }
+        return Redirect::back()->with('message', 'Hapus Data Gagal');
+    }
+
+    public function activated($id, $status)
+    {
+        $s = 0;
+        if ($status == 0) {
+            $s = 1;
+        }
+        $d = ClassLamanModel::where('id', $id)->update(['status' => $s]);
+        if ($d) {
+            return Redirect::to('/admin/laman')->with('message', 'Ubah Data Berhasil');
+        }
+        return Redirect::back()->with('message', 'Ubah Data Gagal');
     }
 }

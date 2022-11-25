@@ -93,16 +93,17 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="widget quick-contact-widget form-widget clearfix">
                     <h4>Bantuan & Panduan</h4>
-                    <div class="form-result"></div>
-                    <a href="#">Layanan Pengaduan</a><br>
-                    <a href="#">Syarat & Ketentuan</a><br>
-                    <a href="#">Kebijakan Privasi</a><br>
-                    <a href="#">Tentang Kami</a><br>
-                    <a href="#">Kontak Kami</a><br>
-                    <a href="#">Press Kit</a><br>
-                    <a href="#">Bantuan</a><br>
-                    <a href="#">Karier</a><br>
                     <a href="/sdank">Register Instructor</a><br>
+                    <div class="form-result laman_footer">
+                        {{-- <a href="#">Layanan Pengaduan</a><br>
+                        <a href="#">Syarat & Ketentuan</a><br>
+                        <a href="#">Kebijakan Privasi</a><br>
+                        <a href="#">Tentang Kami</a><br>
+                        <a href="#">Kontak Kami</a><br>
+                        <a href="#">Press Kit</a><br>
+                        <a href="#">Bantuan</a><br>
+                        <a href="#">Karier</a><br> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,6 +233,9 @@
 </script>
 
 <script>
+    $(document).ready(function () {
+        getLaman();
+    })
     function popc() {
         Swal.fire({
             icon: 'info',
@@ -343,6 +347,43 @@
                 });
                 // location.replace("/get-order?produk_id=" + produk);
                 console.log(result)
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                var errors = jqXhr.responseJSON;
+                var errorsHtml = '';
+                $.each(errors['errors'], function(index, value) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: value,
+                        position: 'topRight',
+                    });
+                });
+            }
+        })
+    }
+
+    function getLaman() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "/all-laman",
+            method: 'get',
+            success: function(result) {
+                if (result.laman_footer.length > 0) {
+                    result.laman_footer.forEach(el => {
+                        let foo = '<a href="/u-laman/'+el.slug+'" class="text-capitalize">'+el.title+'</a><br>';
+                        $('.laman_footer').append(foo);
+                    });
+                }
+                if (result.laman_head.length > 0) {
+                    result.laman_head.forEach(el => {
+                        // let foo = '<a href="/u-laman/'+el.slug+'" class="text-capitalize">'+el.title+'</a><br>';
+                        // $('.laman_footer').append(foo);
+                    });
+                }
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;

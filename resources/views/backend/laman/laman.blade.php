@@ -29,18 +29,31 @@
                             @foreach ($data as $key => $l)
                             <tr>
                                 <td>{{$key+1}}</td>
-                                <td>{{$l->status?'Aktif':'Tidak Aktif'}}</td>
-                                <td title="{{$l->title}}">{{$l->title}}</td>
-                                <td>{{$l->tgl_tayang}} - {{$l->tgl_expired}}</td>
+                                <td onclick="accLaman('{{$l->id}}','{{$l->status}}')">{{$l->status?'Aktif':'Tidak
+                                    Aktif'}}</td>
+                                <td class="text-truncate" style="max-width: 350px;" title="{{$l->title}}">{{$l->title}}
+                                </td>
+                                <td>
+                                    @if (Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y') ==
+                                    Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y'))
+                                    {{Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y')}}
+                                    @else
+                                    {{Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y')}}
+                                    s/d
+                                    {{Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y')}}
+                                    @endif</td>
                                 <td title="{!!$l->content!!}">{!!$l->content!!}</td>
                                 <td>
-                                    <img src="{{asset('Image/laman/'.$l->slug.'/banner/'.json_decode($l->banner)->url)}}"
-                                        alt="" width="130px">
+                                    <img src="{{asset('Image/laman/banner/'.json_decode($l->banner)->url)}}" alt=""
+                                        width="130px">
                                 </td>
                                 <td>
                                     <a href="/admin/laman/edit/{{$l->id}}">
-                                        <span class="btn btn-warning">Edit</span></a>
-                                    <a class="btn btn-danger" title="Delete" onclick="deleteLaman({{$l->id}})">Hapus</a>
+                                        <button class="btn btn-warning" id="edit" title="Edit"><i
+                                                class='bx bx-edit'></i></button>
+                                    </a>
+                                    <button class="btn btn-danger" onclick="deleteLaman({{$l->id}})" title="Delete"> <i
+                                            class='bx bx-trash'></i></button>
                                     <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
                                     </form>
                                 </td>
@@ -53,11 +66,35 @@
         </div>
     </div>
 </div>
+
+<form action="#" method="get" id="activeform">@csrf
+</form>
 @endsection
 @section('custom-js')
 <script>
     // var firstUpload = new FileUploadWithPreview('myFirstImage')
     createDataTable('#banner')
+    function accLaman(id,status) {
+        let s = 'Tidak Aktif';
+        if (status==0) {
+            s='Aktif';
+        }
+		swal({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: s,
+			padding: '2em'
+		}).then(function(result) {
+			if (result.value) {
+				$('#activeform').attr('action','/admin/laman/activated/'+id+'/'+status);
+				$('#activeform').submit();
+			}else{
+				$('#activeform').attr('action','#');
+			}
+		})
+	}
     function deleteLaman(id) {
 		swal({
 			title: 'Are you sure?',

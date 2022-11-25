@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
+use App\Models\ClassLamanModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
 use App\Models\InstructorModel;
@@ -139,5 +140,18 @@ class HomeController extends Controller
             return Redirect::to('/')->with('success', 'Pendaftaran Berhasil, Menunggu Konfirmasi Admin via Email');
         }
         return Redirect::back()->with('error', 'Pendaftaran Gagal')->withInput($request->all());
+    }
+    public function getAllLaman()
+    {
+        $now = Carbon::now();
+        $data['laman_head'] = ClassLamanModel::where('type', 1)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->get();
+        $data['laman_footer'] = ClassLamanModel::where('type', 2)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->get();
+        return $data;
+    }
+    public function laman($slug)
+    {
+        $l = [];
+        $l['data'] = ClassLamanModel::where('slug', $slug)->first();
+        return view('front.home.laman', $l);
     }
 }

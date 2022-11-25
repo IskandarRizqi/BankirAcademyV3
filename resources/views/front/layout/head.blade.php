@@ -23,8 +23,6 @@
     <link rel="stylesheet" href="{{asset('front/css/custom.css')}}" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    @yield('seo-head')
-
     <!-- SLIDER REVOLUTION 5.x CSS SETTINGS -->
     <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/settings.css')}}"
         media="screen" />
@@ -84,18 +82,11 @@
         .tp-caption {
             white-space: nowrap;
         }
-		.longtextoverflow {
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
-			max-width: 150px;
-		}
+
+        .longtextoverflow {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 150px;
+        }
     </style>
-
-</head>
-
-<body class="stretched">
-    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
-    <!-- Document Wrapper
-	============================================= -->
-    <div id="wrapper" class="clearfix">

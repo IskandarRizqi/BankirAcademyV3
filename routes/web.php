@@ -63,6 +63,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post("/admin/laman/store", [App\Http\Controllers\Admin\LamanController::class, "store"]);
     Route::get("/admin/laman/edit/{id}", [App\Http\Controllers\Admin\LamanController::class, "edit"]);
     Route::delete("/admin/laman/destroy/{id}", [App\Http\Controllers\Admin\LamanController::class, "destroy"]);
+    Route::get("/admin/laman/activated/{id}/{status}", [App\Http\Controllers\Admin\LamanController::class, "activated"]);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
@@ -82,6 +83,8 @@ Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, '
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::class, 'inputinstructor']);
+Route::get('/u-laman/{slug}', [App\Http\Controllers\Front\HomeController::class, 'laman']);
+Route::get('/all-laman', [App\Http\Controllers\Front\HomeController::class, 'getAllLaman']);
 
 Route::get('/sdank', function () {
     return view('front.syaratnketentuan');
