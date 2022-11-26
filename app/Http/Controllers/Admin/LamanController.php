@@ -54,6 +54,7 @@ class LamanController extends Controller
             'type' => $request->type,
             'status' => $request->status,
             // 'banner' => $request->,
+            'no_urut' => $request->no_urut
         ];
 
         // Data Meta
@@ -148,6 +149,7 @@ class LamanController extends Controller
                 $data['meta_content'] = $me->content;
             }
         }
+        $data['no_urut'] = $l->no_urut;
         $data['content'] = $l->content;
         $data['slug'] = $l->slug;
         $data['tag'] = $l->tag;

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->date('tgl_expired')->nullable();
             $table->integer('type')->comment('1: head, 2: footer');
             $table->integer('status')->default(0);
+            $table->integer('no_urut');
             $table->timestamps();
         });
     }

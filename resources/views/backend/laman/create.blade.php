@@ -53,7 +53,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
                                     <div class="form-group">
                                         <label>Status: <b class="text-danger">*</b></label>
                                         <select name="status" id="status" class="form-control">
@@ -62,6 +62,16 @@
                                             <option value="2" {{old('status')=='2' ?'selected':''}}>Tidak Aktif</option>
                                         </select>
                                         @error('status')
+                                        <small class="text-danger">Harus Diisi</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label>No Urut: <b class="text-danger">*</b></label>
+                                        <input type="number" name="no_urut" id="no_urut" class="form-control"
+                                            value="{{old('no_urut')}}">
+                                        @error('no_urut')
                                         <small class="text-danger">Harus Diisi</small>
                                         @enderror
                                     </div>

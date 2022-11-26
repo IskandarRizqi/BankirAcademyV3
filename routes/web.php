@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Backend\BannerslideController;
+use App\Http\Controllers\Backend\PromoController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
@@ -46,6 +47,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
+    Route::resource('/admin/promo', PromoController::class);
 
     //pages
     Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);

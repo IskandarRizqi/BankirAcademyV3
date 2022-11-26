@@ -20,7 +20,7 @@
                                 <th>Status</th>
                                 <th>Title</th>
                                 <th>Tanggal Tayang</th>
-                                <th>Content</th>
+                                {{-- <th>Content</th> --}}
                                 <th>Banner</th>
                                 <th class="dt-no-sorting text-center">Aksi</th>
                             </tr>
@@ -42,7 +42,8 @@
                                     s/d
                                     {{Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y')}}
                                     @endif</td>
-                                <td title="{!!$l->content!!}">{!!$l->content!!}</td>
+                                {{-- <td class="d-inline-block text-truncate" style="max-width: 350px;">
+                                    {!!$l->content!!}</td> --}}
                                 <td>
                                     <img src="{{asset('Image/laman/banner/'.json_decode($l->banner)->url)}}" alt=""
                                         width="130px">

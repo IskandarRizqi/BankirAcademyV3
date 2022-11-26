@@ -186,8 +186,8 @@ class HomeController extends Controller
     public function getAllLaman()
     {
         $now = Carbon::now();
-        $data['laman_head'] = ClassLamanModel::where('type', 1)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->get();
-        $data['laman_footer'] = ClassLamanModel::where('type', 2)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->get();
+        $data['laman_head'] = ClassLamanModel::where('type', 1)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->orderBy('no_urut', 'asc')->get();
+        $data['laman_footer'] = ClassLamanModel::where('type', 2)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->orderBy('no_urut', 'asc')->get();
         return $data;
     }
 

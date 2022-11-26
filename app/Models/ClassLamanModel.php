@@ -21,5 +21,6 @@ class ClassLamanModel extends Model
         'type',
         'status',
         'banner',
+        'no_urut'
     ];
 }

@@ -488,11 +488,11 @@
 @include('front.layout.footer')
 <script>
     $(document).ready(function() {
+        lazyLoad(1);
         $('#allClass').click(function() {
             let hal = $('#halaman').val();
             lazyLoad(hal);
         })
-        lazyLoad(1);
         setTimeout(() => {
             tabsCategory('Semua');
         }, 3000);

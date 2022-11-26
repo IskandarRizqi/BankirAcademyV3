@@ -30,9 +30,21 @@
         <!--  BEGIN CONTENT AREA  -->
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
-				<div class="row layout-top-spacing">
-                	@yield('content')
-				</div>
+                <div class="row layout-top-spacing">
+                    @if (Session::get('success'))
+                    <div class="alert alert-dismissible alert-success">
+                        <i class="icon-gift"></i><strong>Success!</strong>
+                        {{Session::get('success')}}
+                    </div>
+                    @endif
+                    @if (Session::get('error'))
+                    <div class="alert alert-dismissible alert-danger">
+                        <i class="icon-gift"></i><strong>Failed!</strong>
+                        {{Session::get('error')}}
+                    </div>
+                    @endif
+                    @yield('content')
+                </div>
             </div>
             @include('template.backend.footer')
         </div>

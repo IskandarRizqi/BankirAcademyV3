@@ -1,19 +1,5 @@
 @extends('backend.template')
 @section('content')
-@if (Session::get('success'))
-<div class="alert alert-dismissible alert-success">
-	<i class="icon-gift"></i><strong>Success!</strong>
-	{{Session::get('success')}}
-	{{-- <button type="button" class="btn btn-close btn-sm" data-bs-dismiss="alert" aria-hidden="true">x</button> --}}
-</div>
-@endif
-@if (Session::get('error'))
-<div class="alert alert-dismissible alert-danger">
-	<i class="icon-gift"></i><strong>Failed!</strong>
-	{{Session::get('error')}}
-	{{-- <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-hidden="true"></button> --}}
-</div>
-@endif
 <div class="col-lg-12">
 	<div class="widget">
 		<div class="widget-content">
