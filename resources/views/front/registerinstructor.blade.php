@@ -94,10 +94,10 @@
                         have an account? &nbsp;
                         <a href="{{url('/')}}"> Login</a>
                     </div>
-                    <div class="line line-sm"></div>
-                    <a href="{{url('/auth/google')}}"
+                    <div class="line line-sm"></div> --}}
+                    <a href="{{url('/auth/google?ins=true')}}"
                         class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
-                        with Google</a> --}}
+                        with Google</a>
                 </div>
             </div>
 
