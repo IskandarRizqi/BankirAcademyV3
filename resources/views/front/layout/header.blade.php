@@ -8,7 +8,8 @@
 						============================================= -->
                 <div id="logo">
                     <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}"><img
-                            src="{{env('CUSTOM_LOGO','/Backend/logo_12.png')}}" alt="E-class"></a>
+                            src="{{env('CUSTOM_LOGO','/Backend/logo_12.png')}}" alt="E-class"
+                            style="max-width: 400px; height:auto !important;"></a>
                 </div><!-- #logo end -->
                 @if(Auth::check() && Auth::user()->role == 2)
                 <div class="header-misc">
