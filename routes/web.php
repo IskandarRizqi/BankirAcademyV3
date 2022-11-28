@@ -50,6 +50,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/promo', PromoController::class);
 
     //pages
+    Route::get("/admin/pages/getsdank", [App\Http\Controllers\Front\PagesController::class, "getsdank"]);
+    Route::post("/admin/pages/setsdank", [App\Http\Controllers\Front\PagesController::class, "setsdank"]);
     Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);
     Route::post("/admin/pages/setabout", [App\Http\Controllers\Front\PagesController::class, "setAbout"]);
     Route::get("/admin/pages/getcontact", [App\Http\Controllers\Front\PagesController::class, "getContact"]);
@@ -88,9 +90,7 @@ Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::clas
 Route::get('/u-laman/{slug}', [App\Http\Controllers\Front\HomeController::class, 'laman']);
 Route::get('/all-laman', [App\Http\Controllers\Front\HomeController::class, 'getAllLaman']);
 
-Route::get('/sdank', function () {
-    return view('front.syaratnketentuan');
-});
+Route::get('/sdank', [App\Http\Controllers\Front\PagesController::class, 'showsdank']);
 Route::get('/registerinstructor', function () {
     return view('front.registerinstructor');
 });

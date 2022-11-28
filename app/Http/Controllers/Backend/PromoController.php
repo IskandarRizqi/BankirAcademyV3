@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassesModel;
 use App\Models\KodePromoModel;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class PromoController extends Controller
     {
         $data = [];
         $data['promo'] = KodePromoModel::get();
+        $data['kelas'] = ClassesModel::select('')->get();
         return view('backend.promo.promo', $data);
     }
 

@@ -3,7 +3,7 @@
 <div class="col-lg-12">
     <div class="widget">
         <div class="widget-content">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-6">
                     <form action="/admin/promo" method="post">
                         @csrf
@@ -43,7 +43,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
             <div class="table-responsive">
                 <table id="tblpromo" class="table table-bordered table-striped">
                     <thead>

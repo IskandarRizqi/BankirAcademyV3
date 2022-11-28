@@ -13,7 +13,9 @@
                         <div class="card mx-auto rounded-0 border-0" style="max-width: 800px;">
                             <div class="card-body" style="padding: 40px;">
                                 <h3>Register Instructor</h3>
-                                <div class="row">
+                                {{-- <a href="/" class="btn btn-secondary btn-rounded"
+                                    style="border-radius:10px !important">Batal</a> --}}
+                                {{-- <div class="row">
                                     <div class="col-6 form-group">
                                         <label class="font-body text-capitalize"
                                             for="login-form-modal-username">Nama</label>
@@ -81,13 +83,11 @@
                                         <small class="text-danger">Harus Diisi</small>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-6 form-group">
-                                    <button class="btn btn-success btn-rounded" style="border-radius:10px !important"
-                                        type="submit">REGISTER</button>
-                                    <a href="/" class="btn btn-secondary btn-rounded"
-                                        style="border-radius:10px !important">Batal</a>
+                                    {{-- <button class="btn btn-success btn-rounded"
+                                        style="border-radius:10px !important" type="submit">REGISTER</button> --}}
                                 </div>
                     </form>
                     {{-- <div class="d-flex justify-content-center">
@@ -95,8 +95,9 @@
                         <a href="{{url('/')}}"> Login</a>
                     </div>
                     <div class="line line-sm"></div> --}}
+                    <a href="/" class="btn btn-secondary btn-rounded" style="border-radius:10px !important">Kembali</a>
                     <a href="{{url('/auth/google?ins=true')}}"
-                        class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
+                        class="button button-rounded font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
                         with Google</a>
                 </div>
             </div>
