@@ -8,6 +8,7 @@ use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
+use App\Models\KodePromoModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -233,5 +234,16 @@ class ProfileController extends Controller
         $auth = Auth::user();
         $validasi = InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->id_instructor)->get();
         return $validasi;
+    }
+    public function setKodePromo($title_kelas, $kode_promo, $id_payment)
+    {
+        $kp = KodePromoModel::where('kode', $kode_promo)->where('class_title', 'like', '%"' . $title_kelas . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        if (count($kp) > 0) {
+            ClassPaymentModel::where('id', $id_payment)->update([
+                'kode_promo' => $kode_promo,
+            ]);
+            return response()->json(['message' => 'Kode Benar', 'status' => true]);
+        }
+        return response()->json(['message' => 'Kode Salah', 'status' => false]);
     }
 }

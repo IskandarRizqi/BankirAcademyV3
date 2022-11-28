@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\KodePromoModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class PromoController extends Controller
 {
@@ -18,7 +20,7 @@ class PromoController extends Controller
     {
         $data = [];
         $data['promo'] = KodePromoModel::get();
-        $data['kelas'] = ClassesModel::select('')->get();
+        $data['kelas'] = ClassesModel::select('title')->get();
         return view('backend.promo.promo', $data);
     }
 
@@ -40,7 +42,32 @@ class PromoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request->all();
+        $valid = Validator::make($request->all(), [
+            'tgl_mulai' => 'required',
+            'tgl_selesai' => 'required',
+            'kode' => 'required',
+            'nominal' => 'required',
+            'kelas' => 'required',
+        ]);
+        //response error validation
+        if ($valid->fails()) {
+            return Redirect::back()->withErrors($valid)->withInput($request->all());
+        }
+
+        $p = KodePromoModel::UpdateOrCreate([
+            'id' => $request->id
+        ], [
+            'kode' => $request->kode,
+            'tgl_mulai' => $request->tgl_mulai,
+            'tgl_selesai' => $request->tgl_selesai,
+            'nominal' => $request->nominal,
+            'class_title' => json_encode($request->kelas),
+        ]);
+        if ($p) {
+            return Redirect::back()->with('success', 'Data Berhasil Tersimpan');
+        }
+        return Redirect::back()->with('error', 'Data Gagal Tersimpan');
     }
 
     /**
@@ -85,6 +112,10 @@ class PromoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $p = KodePromoModel::where('id', $id)->delete();
+        if ($p) {
+            return Redirect::back()->with('success', 'Data Berhasil Tersimpan');
+        }
+        return Redirect::back()->with('error', 'Data Gagal Tersimpan');
     }
 }

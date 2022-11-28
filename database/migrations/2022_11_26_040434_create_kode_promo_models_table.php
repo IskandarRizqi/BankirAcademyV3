@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('kode_promo', function (Blueprint $table) {
             $table->id();
-            $table->string('kode');
+            $table->string('kode')->unique();
             $table->date('tgl_mulai');
             $table->date('tgl_selesai');
             $table->double('nominal');
-            $table->json('class_id');
+            $table->json('class_title')->nullable();
             $table->timestamps();
         });
     }

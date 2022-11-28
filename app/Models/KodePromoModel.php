@@ -14,6 +14,6 @@ class KodePromoModel extends Model
         'tgl_mulai',
         'tgl_selesai',
         'nominal',
-        'class_id',
+        'class_title',
     ];
 }

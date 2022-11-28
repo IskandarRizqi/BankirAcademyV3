@@ -83,6 +83,7 @@
                                                         <th>Jatuh Tempo</th>
                                                         <th>Jml Order</th>
                                                         <th>Bukti</th>
+                                                        <th>Kode Promo</th>
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -127,6 +128,14 @@
                                                             <a href="/getBerkas?rf={{$d->file}}" target="_blank"
                                                                 data-lightbox="gallery-item"><img
                                                                     src="/getBerkas?rf={{$d->file}}" width="110px"></a>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($d->kode_promo)
+                                                            {{$d->kode_promo}}
+                                                            @else
+                                                            <input type="text" name="kode_promo[]" class="form-control"
+                                                                onchange="kodePromo('{{$d->title}}',$(this).val(),'{{$d->id}}')">
                                                             @endif
                                                         </td>
                                                         <td>
@@ -731,6 +740,41 @@
                     title: 'Berhasil',
                     text: result.message,
                     })
+            }else{
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: result.message,
+                    })
+                }
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 1000);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                // var errors = jqXhr.responseJSON;
+                // var errorsHtml = '';
+                // console.log(errors['errors']);
+            }
+        })
+    }
+    function kodePromo(id,kode_promo,idpaymnet) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "/kode-promo/"+id+'/'+kode_promo+'/'+idpaymnet,
+            method: 'post',
+            success: function(result) {
+                if (result.status) {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: result.message,
+                    })
+                    location.reload()
             }else{
                     Swal.fire({
                     icon: 'error',

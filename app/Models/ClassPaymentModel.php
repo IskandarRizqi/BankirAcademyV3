@@ -20,5 +20,6 @@ class ClassPaymentModel extends Model
 		'no_invoice',
 		'file',
 		'jumlah',
+		'kode_promo',
 	];
 }

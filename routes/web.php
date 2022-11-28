@@ -101,6 +101,7 @@ Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
 
+Route::post("/kode-promo/{id}/{kode}/{payment}", [App\Http\Controllers\Front\ProfileController::class, "setKodePromo"]);
 Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
 
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);

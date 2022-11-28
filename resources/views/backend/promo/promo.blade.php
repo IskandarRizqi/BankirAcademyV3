@@ -44,6 +44,58 @@
                     </form>
                 </div>
             </div> --}}
+            <form action="/admin/promo" method="POST">
+                @csrf
+                <input name="id" id="id" value="{{old('id')}}" hidden>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="">Tanggal Mulai</label>
+                        <input type="date" name="tgl_mulai" id="tgl_mulai" value="{{old('tgl_mulai')}}"
+                            class="form-control">
+                        @error('tgl_mulai')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col">
+                        <label for="">Tanggal Selesai</label>
+                        <input type="date" name="tgl_selesai" id="tgl_selesai" value="{{old('tgl_selesai')}}"
+                            class="form-control">
+                        @error('tgl_selesai')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col">
+                        <label for="">Kode Promo</label>
+                        <input type="text" name="kode" id="kode" value="{{old('kode')}}" class="form-control">
+                        @error('kode')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col">
+                        <label for="">Nominal (%)</label>
+                        <input type="number" step="any" name="nominal" id="nominal" value="{{old('nominal')}}"
+                            class="form-control">
+                        @error('nominal')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col">
+                        <label for="">Kelas</label>
+                        {{-- <input type="text" name="kelas" id="kelas" value="{{old('kelas')}}" class="form-control">
+                        --}}
+                        <select name="kelas[]" id="kelas" class="form-control" multiple>
+                            @foreach ($kelas as $k)
+                            <option value="{{$k->title}}">{{$k->title}}</option>
+                            @endforeach
+                        </select>
+                        @error('kelas')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                </div>
+                <button class="btn btn-primary">Simpan</button>
+                <span class="btn btn-danger" id="reset">Reset</span>
+            </form>
             <div class="table-responsive">
                 <table id="tblpromo" class="table table-bordered table-striped">
                     <thead>
@@ -57,10 +109,34 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($promo as $key=> $p)
+                        @foreach ($promo as $key=> $p)
                         <tr>
+                            <td>{{$key+1}}</td>
+                            <td>{{$p->kode}}</td>
+                            <td>
+                                @if ($p->tgl_mulai == $p->tgl_selesai)
+                                {{\Carbon\Carbon::parse($p->tgl_mulai)->format('d-m-Y')}}
+                                @else
+                                {{\Carbon\Carbon::parse($p->tgl_mulai)->format('d-m-Y')}} -
+                                {{\Carbon\Carbon::parse($p->tgl_selesai)->format('d-m-Y')}}</td>
+                            @endif
+                            <td>{{$p->nominal}} %</td>
+                            <td>
+                                @foreach (json_decode($p->class_title) as $cl)
+                                <div class="badge badge-info">{{$cl}}</div>
+                                @endforeach
+                            </td>
+                            <td>
+                                <button class="btn btn-warning" id="edit" title="Edit"
+                                    onclick="editPromo('{{$p->id}}','{{$p->tgl_mulai}}','{{$p->tgl_selesai}}','{{$p->kode}}','{{$p->nominal}}','{{$p->class_title}}')"><i
+                                        class='bx bx-edit'></i></button>
+                                <button class="btn btn-danger" onclick="deletePromo({{$p->id}})" title="Delete"> <i
+                                        class='bx bx-trash'></i></button>
+                                <form action="#" method="post" id="formdelpromo">@csrf @method('DELETE')
+                                </form>
+                            </td>
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
                 <form action="#" method="post" id="formpromo">@csrf <input type="text" name="id" id="id" hidden>
@@ -75,5 +151,34 @@
 @section('custom-js')
 <script>
     createDataTable('#tblpromo');
+    $('#kelas').select2({
+			tags: true,
+		});
+        function deletePromo(id) {
+		swal({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Delete',
+			padding: '2em'
+		}).then(function(result) {
+			if (result.value) {
+				$('#formdelpromo').attr('action','/admin/promo/'+id);
+				$('#formdelpromo').submit();
+			}else{
+				$('#formdelpromo').attr('action','#');
+			}
+		})
+	}
+    function editPromo(id,tglm,tgls,kode,nominal,ct) {
+        $('#id').val(id);
+        $('#tgl_mulai').val(tglm);
+        $('#tgl_selesai').val(tgls);
+        $('#kode').val(kode);
+        $('#nominal').val(nominal);
+        // $('#kelas').val(JSON.parse(ct));
+        $("#kelas").val(JSON.parse(ct)).trigger('change');
+    }
 </script>
 @endsection

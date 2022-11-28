@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('no_invoice');
             $table->string('file')->nullable();
             $table->integer('jumlah')->default(1);
+            $table->string('kode_promo')->nullable();
             $table->timestamps();
         });
     }
