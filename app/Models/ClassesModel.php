@@ -24,6 +24,7 @@ class ClassesModel extends Model
 		'date_start',
 		'date_end',
 		'tipe',
+		'level',
 	];
 
 	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list'];

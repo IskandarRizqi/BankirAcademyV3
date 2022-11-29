@@ -53,97 +53,140 @@
 
                             <div class="w-100"></div>
 
-
-                            <div class="col-md-12" style="padding-bottom: 10px;">
-                                <h4>Kelas Timeline</h4>
-                                <a href="/profile-instructor/{{$class->instructor_list[0]->id}}/{{$class->instructor_list[0]->name}}"
-                                    class="d-flex mt-2">
-                                    <img class="mr-3 rounded-circle"
-                                        src="{{asset('Image/'.json_decode($class->instructor_list[0]->picture)->url)}}"
-                                        alt=Generic placeholder image style="max-width:50px; max-height:50px;">
-                                    <div class=>
-                                        <label class="d-block mb-0">
-                                            {{$class->instructor_list[0]->name}}
-                                        </label>
-                                        <small>{{$class->instructor_list[0]->title}}</small>
-                                    </div>
-                                    {{-- <div class="ml-2 flex-fill">
-                                        <label class="d-block mb-0"> Harga
-                                        </label>
-                                        @if ($class->pricing) {
-                                        @if ($class->pricing->promo) {
-                                        <del>' + new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            maximumFractionDigits: 0
-                                            }).format(el.pricing.price) + '</del>
-                                        } @else {
-                                        <small>' + new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            maximumFractionDigits: 0
-                                            }).format(el.pricing.price) + '</small>
-                                        }
-                                        @endif
-                                        }
-                                        @endif
-                                    </div> --}}
-                                </a>
-
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered" id="datatable1" cellspacing="0"
-                                        width="100%">
-                                        <thead>
-                                            <tr class="text-center">
-                                                <th>No</th>
-                                                <th>Waktu</th>
-                                                <th>Deskripsi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($event as $e => $val)
-                                            <tr class="text-center">
-                                                <td width="1%">{{$e + 1}}</td>
-                                                <td width="20%">
-                                                    <span class="badge badge-info">
-                                                        @if (\Carbon\Carbon::parse($val->time_start)->format('d-m-Y') ==
-                                                        \Carbon\Carbon::parse($val->time_end)->format('d-m-Y'))
-                                                        {{\Carbon\Carbon::parse($val->time_start)->format('d-m-Y')}}
-                                                        @else
-                                                        {{\Carbon\Carbon::parse($val->time_start)->format('d-m-Y') .' -
-                                                        '. \Carbon\Carbon::parse($val->time_end)->format('d-m-Y')}}
+                            <div class="card col">
+                                @if ($class->type==0)
+                                <span class="badge badge-success" style="width: fit-content">Bank</span>
+                                @else
+                                <span class="badge badge-warning" style="width: fit-content">Non-Bank</span>
+                                @endif
+                                <div class="card-body">
+                                    <div class="col-md-12" style="padding-bottom: 10px;">
+                                        <h4>Kelas Timeline</h4>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <a href="/profile-instructor/{{$class->instructor_list[0]->id}}/{{$class->instructor_list[0]->name}}"
+                                                    class="d-flex mt-2">
+                                                    <img class="mr-3 rounded-circle"
+                                                        src="{{asset('Image/'.json_decode($class->instructor_list[0]->picture)->url)}}"
+                                                        alt=Generic placeholder image
+                                                        style="max-width:50px; max-height:50px;">
+                                                    <div class=>
+                                                        <label class="d-block mb-0">
+                                                            {{$class->instructor_list[0]->name}}
+                                                        </label>
+                                                        <small>{{$class->instructor_list[0]->title}}</small>
+                                                    </div>
+                                                    {{-- <div class="ml-2 flex-fill">
+                                                        <label class="d-block mb-0"> Harga
+                                                        </label>
+                                                        @if ($class->pricing) {
+                                                        @if ($class->pricing->promo) {
+                                                        <del>' + new Intl.NumberFormat('id-ID', {
+                                                            style: 'currency',
+                                                            currency: 'IDR',
+                                                            maximumFractionDigits: 0
+                                                            }).format(el.pricing.price) + '</del>
+                                                        } @else {
+                                                        <small>' + new Intl.NumberFormat('id-ID', {
+                                                            style: 'currency',
+                                                            currency: 'IDR',
+                                                            maximumFractionDigits: 0
+                                                            }).format(el.pricing.price) + '</small>
+                                                        }
                                                         @endif
-                                                    </span>
-                                                    <span class="badge badge-danger">
-                                                        {{\Carbon\Carbon::parse($val->time_start)->format('H:i:s').'
-                                                        -
-                                                        '.\Carbon\Carbon::parse($val->time_end)->format('H:i:s')}}
-                                                    </span>
-                                                </td>
-                                                {{-- <td class="longtextoverflow">{{$val->description}}</td> --}}
-                                                <td class="longtextoverflow" onclick="infodesk({{$val}})">
-                                                    {{$val->description}}
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                        }
+                                                        @endif
+                                                    </div> --}}
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <label for="">Category</label>
+                                                <p>{{$class->category}}</p>
+                                            </div>
+                                            <div class="col">
+                                                <label for="">Level</label>
+                                                <p>
+                                                    @if ($class->level == 1)
+                                                    Pemula
+                                                    @elseif ($class->level == 2)
+                                                    Menengah
+                                                    @else
+                                                    Lanjutan
+                                                    @endif
+                                                </p>
+                                            </div>
+                                            <div class="col">
+                                                <label for="">Category</label>
+                                                <p>
+                                                    @foreach (json_decode($class->tags) as $t)
+                                                    <span class="badge badge-info">{{$t}}</span>
+                                                    @endforeach
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered" id="datatable1"
+                                                cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr class="text-center">
+                                                        <th>No</th>
+                                                        <th>Waktu</th>
+                                                        <th>Deskripsi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($event as $e => $val)
+                                                    <tr class="text-center">
+                                                        <td width="1%">{{$e + 1}}</td>
+                                                        <td width="20%">
+                                                            <span class="badge badge-info">
+                                                                @if(\Carbon\Carbon::parse($val->time_start)->format('d-m-Y')==
+                                                                \Carbon\Carbon::parse($val->time_end)->format('d-m-Y'))
+                                                                {{\Carbon\Carbon::parse($val->time_start)->format('d-m-Y')}}
+                                                                @else
+                                                                {{\Carbon\Carbon::parse($val->time_start)->format('d-m-Y')
+                                                                .' -
+                                                                '.
+                                                                \Carbon\Carbon::parse($val->time_end)->format('d-m-Y')}}
+                                                                @endif
+                                                            </span>
+                                                            <span class="badge badge-danger">
+                                                                {{\Carbon\Carbon::parse($val->time_start)->format('H:i:s').'
+                                                                -
+                                                                '.\Carbon\Carbon::parse($val->time_end)->format('H:i:s')}}
+                                                            </span>
+                                                        </td>
+                                                        {{-- <td class="longtextoverflow">{{$val->description}}</td>
+                                                        --}}
+                                                        <td class="longtextoverflow" onclick="infodesk({{$val}})">
+                                                            {{$val->description}}
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" style="padding-bottom: 0px;">
+                                        <form id="orderForm" action="{{'/order'}}" method="POST">
+                                            @csrf
+                                            <input type="text" id="class_id" name="class_id" value="{{$class->id}}"
+                                                hidden>
+                                            @auth
+                                            <button class="button button-circle btn-block text-center">Order
+                                                sekarang</button>
+                                            @else
+                                            <span class="button button-circle btn-block text-center" data-toggle="modal"
+                                                data-target="#modelId" data-backdrop="static"
+                                                data-keyboard="false">Order
+                                                sekarang</span>
+                                            @endauth
+                                            <button class="button button-circle btn-block text-center" hidden>Order
+                                                sekarang</button>
+                                        </form>
+                                    </div>
+
                                 </div>
-                            </div>
-                            <div class="col-md-12" style="padding-bottom: 0px;">
-                                <form id="orderForm" action="{{'/order'}}" method="POST">
-                                    @csrf
-                                    <input type="text" id="class_id" name="class_id" value="{{$class->id}}" hidden>
-                                    @auth
-                                    <button class="button button-circle btn-block text-center">Order sekarang</button>
-                                    @else
-                                    <span class="button button-circle btn-block text-center" data-toggle="modal"
-                                        data-target="#modelId" data-backdrop="static" data-keyboard="false">Order
-                                        sekarang</span>
-                                    @endauth
-                                    <button class="button button-circle btn-block text-center" hidden>Order
-                                        sekarang</button>
-                                </form>
                             </div>
                             <script>
                                 // $('#orderForm').submit()

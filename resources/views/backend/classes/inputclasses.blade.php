@@ -29,9 +29,9 @@
 									<small class="inputerrormessage text-danger" input-target="slcClassesLevel"
 										style="display: none;"></small>
 									<select class="form-control" name="slcClassesLevel" id="slcClassesLevel" required>
-										<option value="0">Pemula</option>
-										<option value="1">Menengah</option>
-										<option value="2">Lanjutan</option>
+										<option value="1">Pemula</option>
+										<option value="2">Menengah</option>
+										<option value="3">Lanjutan</option>
 									</select>
 								</div>
 							</div>

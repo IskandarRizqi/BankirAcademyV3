@@ -28,6 +28,7 @@ return new class extends Migration
             $table->date('date_end');
             $table->longText('image_mobile')->nullable();
             $table->integer('tipe')->default(0);
+            $table->integer('level')->comment('1:Pemula, 2:Menengah, 3:Lanjutan')->default(1);
             $table->timestamps();
         });
     }

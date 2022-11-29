@@ -21,8 +21,8 @@
                                     <li><a href="#tab-feeds"><i class="icon-credit-cards"></i> Billing kelas</a></li>
                                     <li><a href="#tab-postss"><i class="icon-line-book-open"></i> Kelas anda</a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
-                                    <li><a href="#"><i class="icon-cog"></i> Affiliate</a></li>
-                                    <li><a href="#"><i class="icon-cog"></i> Absen</a></li>
+                                    <li><a href="#tab-affiliate"><i class="icon-users1"></i> Affiliate</a></li>
+                                    <li><a href="#tab-absen"><i class="icon-fingerprint"></i> Absen</a></li>
                                 </ul>
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
@@ -634,6 +634,12 @@
                                         </div>
                                         <div class="divider divider-border divider-center"><i class="icon-email2"></i>
                                         </div>
+                                    </div>
+                                    <div class="tab-content clearfix" id="tab-affiliate">
+                                        Coming Soon
+                                    </div>
+                                    <div class="tab-content clearfix" id="tab-absen">
+                                        Coming Soon
                                     </div>
 
                                 </div>

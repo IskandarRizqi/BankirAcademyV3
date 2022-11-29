@@ -758,7 +758,7 @@
                                 html +=
                                     '                    style="border-radius:10px !important"';
                                 html += '                    href="class/' + el.unique_id +
-                                    '/' + el.title.replace('/',' ') + '">';
+                                    '/' + el.title.replace('/','-') + '">';
                                 html += '                    Detail';
                                 html += '                </a>';
                                 html += '            </div>';
@@ -769,7 +769,7 @@
                             if (element.next_page_url) {
                                 next_page++;
                             }
-                            $('#' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_')).append(html);
+                            $('#' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'-')).append(html);
                         }
                     }
                     if (next_page <= 0) {

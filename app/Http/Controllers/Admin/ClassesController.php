@@ -89,6 +89,7 @@ class ClassesController extends Controller
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
 			'tipe' => $r->slcClassesType,
+			'level' => $r->slcClassesLevel,
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -112,11 +113,12 @@ class ClassesController extends Controller
 			'category' => $r->slcClassesCategory,
 			'tags' => json_encode($r->slcClassesTags),
 			'content' => $r->txaClassesContent,
-			'unique_id' => uniqid(),
+			// 'unique_id' => uniqid(),
 			'participant_limit' => $r->numClassesLimit,
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
 			'tipe' => $r->slcClassesType,
+			'level' => $r->slcClassesLevel,
 		];
 
 		if ($r->file('filClassesImage')) {
