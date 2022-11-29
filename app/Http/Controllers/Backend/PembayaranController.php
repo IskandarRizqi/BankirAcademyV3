@@ -47,6 +47,7 @@ class PembayaranController extends Controller
             ->orderBy('class_payment.status')
             ->orderBy('class_payment.created_at', 'desc')
             ->get();
+        // return $data;
         return view('backend.pembayaran.pembayaran', $data);
     }
 

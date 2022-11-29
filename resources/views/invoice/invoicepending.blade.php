@@ -529,7 +529,8 @@
                             </td>
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),($payment->price_final),"IDR"),0,-3) }}
+                                \NumberFormatter::CURRENCY),(($payment->price_final-$payment->promo)*$payment->jumlah),"IDR"),0,-3)
+                                }}
                             </td>
                         </tr>
                     </tbody>
@@ -549,7 +550,8 @@
                             <td colspan="1"></td>
                             <td colspan="3">GRAND TOTAL</td>
                             <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),$payment->price_final,"IDR"),0,-3) }}</td>
+                                \NumberFormatter::CURRENCY),($payment->price_final-$payment->promo)*$payment->jumlah,"IDR"),0,-3)
+                                }}</td>
                         </tr>
                     </tfoot>
                 </table>

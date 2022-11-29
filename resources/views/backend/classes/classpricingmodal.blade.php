@@ -63,7 +63,7 @@
 								<div class="row">
 									<div class="col-lg-9">
 										<input type="number" name="numClassPromo" step="any" id="numClassPromo"
-											class="form-control clsNumberOnPrice" value="0">
+											class="form-control" value="0" readonly>
 									</div>
 									<div class="col-lg-3">
 										<div class="input-group mb-4">

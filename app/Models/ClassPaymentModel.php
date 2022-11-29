@@ -22,4 +22,16 @@ class ClassPaymentModel extends Model
 		'jumlah',
 		'kode_promo',
 	];
+	protected $appends = ['promo'];
+	public function getPromoAttribute()
+	{
+		if (array_key_exists('kode_promo', $this->attributes)) {
+			$kp = KodePromoModel::where('kode', $this->attributes['kode_promo'])->first();
+			if ($kp) {
+				return ($kp->nominal * $this->attributes['price_final']) / 100;
+				// return $kp;
+			}
+		}
+		return 0;
+	}
 }

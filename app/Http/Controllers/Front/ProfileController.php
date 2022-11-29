@@ -244,6 +244,6 @@ class ProfileController extends Controller
             ]);
             return response()->json(['message' => 'Kode Benar', 'status' => true]);
         }
-        return response()->json(['message' => 'Kode Salah', 'status' => false]);
+        return response()->json(['message' => 'Kupon Tidak Tersedia', 'status' => false]);
     }
 }

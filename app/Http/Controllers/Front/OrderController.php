@@ -32,7 +32,7 @@ class OrderController extends Controller
                 return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh']);
             }
             ClassPaymentModel::where('id', $request->payment_id)->update([
-                'jumlah' => $request->jumlah
+                'jumlah' => $request->jumlah,
             ]);
             return response()->json(['status' => true, 'message' => 'Input Participant Berhasil']);
         }

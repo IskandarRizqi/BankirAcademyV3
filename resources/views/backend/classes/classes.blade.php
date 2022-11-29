@@ -208,7 +208,7 @@
 		}
 
 		$('#numClassPromo').val(rp);
-		$('#numClassPromoPrctg').val(rs);
+		// $('#numClassPromoPrctg').val(rs);
 	});
 
 	function openPeserta(data){

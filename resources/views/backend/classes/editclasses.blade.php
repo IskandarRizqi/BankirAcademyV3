@@ -23,7 +23,19 @@
 					</div>
 					<div class="col-lg-6">
 						<div class="row">
-							<div class="col-lg-6">
+							<div class="col">
+								<div class="form-group">
+									<label for="slcClassesCategory">Level</label>
+									<small class="inputerrormessage text-danger" input-target="slcClassesLevel"
+										style="display: none;"></small>
+									<select class="form-control" name="slcClassesLevel" id="slcClassesLevel" required>
+										<option value="0">Pemula</option>
+										<option value="1">Menengah</option>
+										<option value="2">Lanjutan</option>
+									</select>
+								</div>
+							</div>
+							<div class="col">
 								<div class="form-group">
 									<label for="slcClassesCategory">Category</label>
 									<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
@@ -41,7 +53,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-lg-6">
+							<div class="col">
 								<div class="form-group">
 									<label for="slcClassesCategory">Type</label>
 									<select class="form-control" name="slcClassesType" id="slcClassesType" required>

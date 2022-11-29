@@ -21,6 +21,8 @@
                                     <li><a href="#tab-feeds"><i class="icon-credit-cards"></i> Billing kelas</a></li>
                                     <li><a href="#tab-postss"><i class="icon-line-book-open"></i> Kelas anda</a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
+                                    <li><a href="#"><i class="icon-cog"></i> Affiliate</a></li>
+                                    <li><a href="#"><i class="icon-cog"></i> Absen</a></li>
                                 </ul>
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
@@ -790,7 +792,7 @@
             }else{
                     Swal.fire({
                     icon: 'error',
-                    title: 'Gagal',
+                    title: 'Maaf',
                     text: result.message,
                     })
                 }
