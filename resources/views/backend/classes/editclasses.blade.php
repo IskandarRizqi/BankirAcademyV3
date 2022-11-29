@@ -1,9 +1,18 @@
 @extends('backend.template')
 @section('content')
+@if (Auth::user()->role==3)
+<script>
+	$(document).ready(function(){
+		$('#content').css('margin-left','0px')
+	});
+</script>
+@endif
 <div class="col-lg-12">
 	<div class="widget">
 		<div class="widget-heading">
-			<a class="btn" data-dismiss="modal" href="/admin/classes"><i class="flaticon-cancel-12"></i> Back</a>
+			<a class="btn" data-dismiss="modal"
+				href="{{Auth::user()->role==3?'/instructor/classes':'/admin/classes'}}"><i
+					class="flaticon-cancel-12"></i> Back</a>
 		</div>
 		<div class="widget-content">
 			<form action="/admin/classes/{{$id}}" id="newClassesForm" method="POST" enctype="multipart/form-data">

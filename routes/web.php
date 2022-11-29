@@ -75,6 +75,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
     Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
     // 
+    Route::post("/instructor/classes/store", [App\Http\Controllers\Backend\InstructorController::class, "classesStore"]);
+    Route::get("/instructor/classes/create", [App\Http\Controllers\Backend\InstructorController::class, "classesCreate"]);
+    Route::get("/instructor/classes", [App\Http\Controllers\Backend\InstructorController::class, "classes"]);
+    Route::get("/instructor/profile", [App\Http\Controllers\Backend\InstructorController::class, "profile"]);
+    Route::post("/instructor/profile", [App\Http\Controllers\Backend\InstructorController::class, "profileUpdate"]);
     Route::post("/addreviewinstructor", [App\Http\Controllers\Front\ProfileController::class, "addreviewinstructor"]);
     Route::post("/changestatusreview", [App\Http\Controllers\Front\ProfileController::class, "changestatusreview"]);
 });

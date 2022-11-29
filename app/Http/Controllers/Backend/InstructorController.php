@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassesModel;
 use App\Models\InstructorModel;
 use App\Models\User;
+use App\Models\UserProfileModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -14,11 +17,6 @@ use Illuminate\Support\Facades\Hash;
 
 class InstructorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $data['data'] = InstructorModel::get();
@@ -26,22 +24,11 @@ class InstructorController extends Controller
         return view('backend.instructor.instructor', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $valid = Validator::make($request->all(), [
@@ -85,12 +72,6 @@ class InstructorController extends Controller
         return redirect()->back()->with('success', 'Data Tersimpan');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, Request $request)
     {
         // return $request->all();
@@ -106,35 +87,16 @@ class InstructorController extends Controller
         return Redirect::back()->with('error', 'Data Gagal Aktif');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, Request $request)
     {
         InstructorModel::where('id', $request->id_instructor)->delete();
@@ -159,5 +121,144 @@ class InstructorController extends Controller
             return Redirect::back()->with('success', 'Data Berhasil Tersimpan');
         }
         return Redirect::back()->with('error', 'Data Gagal Tersimpan');
+    }
+
+    public function profile()
+    {
+        $data = [];
+        $data['data'] = InstructorModel::where('user_id', Auth::user()->id)->first();
+        // return $data;
+        return view('backend.instructor.profile', $data);
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        // return $request->all();
+        $valid = Validator::make($request->all(), [
+            'nama' => [
+                'required', 'max:255',
+            ],
+            'title' => 'required',
+            'nohp' => 'required',
+            'alamat' => 'required',
+            'deskripsi' => 'required',
+        ]);
+        //response error validation
+        if ($valid->fails()) {
+            return Redirect::back()->withErrors($valid)->withInput($request->all());
+        }
+
+        $d = [
+            'name' => $request->nama,
+            'title' => $request->title,
+            'desc' => $request->deskripsi,
+            'alamat' => $request->alamat,
+            'nohp' => $request->nohp,
+            'status' => 1,
+        ];
+
+        if ($request->picture) {
+            $name = $request->file('picture')->getClientOriginalName(); // Name File
+            $size = $request->file('picture')->getSize(); // Size File
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $request->file('picture');
+            $file->move(public_path('Image'), $filename);
+            $d['picture'] = json_encode(['url' => $filename, 'size' => $size]);
+        }
+        if ($request->dokumen) {
+            $dokumen = $request->file('dokumen')->getSize();
+            if (($dokumen / 1024) > 1000) {
+                return Redirect::back()->with('error', 'Size Maximum 1 Mb');
+            }
+            $d['dokumen'] = json_encode(['url' => $request->file('dokumen')->store('instructor/' . $request->nama . '/' . time()), 'size' => $dokumen]);
+        }
+
+        InstructorModel::updateOrCreate([
+            'id' => $request->id
+        ], $d);
+
+        return redirect()->back()->with('success', 'Data Tersimpan');
+    }
+
+    public function classes(Request $r)
+    {
+        $data = [];
+        $ins = InstructorModel::where('user_id', Auth::user()->id)->first();
+
+        //Param
+        $data['param'] = [];
+        $data['param']['date_start'] = ($r->param_date_start) ? $r->param_date_start : Carbon::now()->format('Y-m-d');
+        $data['param']['date_end'] = ($r->param_date_end) ? $r->param_date_end : Carbon::now()->addmonth()->format('Y-m-d');
+        $data['param']['category'] = ($r->param_category) ? $r->param_category : null;
+
+        //Classes
+        $data['classes'] = ClassesModel::where(function ($q) use ($data) {
+            $q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
+            if ($data['param']['category']) {
+                $q->where('category', $data['param']['category']);
+            }
+        })
+            ->where('instructor', 'like', '%"' . $ins->id . '"%')
+            ->get();
+
+        //Additional
+        $data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+        $data['instructor'] = InstructorModel::get();
+
+        // return $data;
+        return view('backend.instructor.class.classess', $data);
+    }
+
+    public function classesCreate()
+    {
+        $data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+        $data['instructor'] = InstructorModel::where('user_id', Auth::user()->id)->get();
+        return view('backend.instructor.class.classcreate', $data);
+    }
+
+    public function classesStore(Request $r)
+    {
+        $nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
+        $sizeMobile = $r->file('filClassesImageMobile')->getSize();
+        $name = $r->file('filClassesImage')->getClientOriginalName();
+        $size = $r->file('filClassesImage')->getSize();
+
+        if ($size >= 1048576) {
+            return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+        }
+        if ($sizeMobile >= 1048576) {
+            return Redirect::back()->with('error', 'Ukuran File Mobile Melebihi 1 MB');
+        }
+
+        $filename = time() . '-' . $name;
+        $file = $r->file('filClassesImage');
+        $file->move(public_path('image/classes'), $filename);
+        $filenameMobile = time() . '-' . $nameMobile;
+        $fileMobile = $r->file('filClassesImageMobile');
+        $fileMobile->move(public_path('image/classes'), $filenameMobile);
+
+
+        ClassesModel::create([
+            'title' => $r->txtClassesTitle,
+            'instructor' => json_encode($r->txtClassesInstructor),
+            'category' => $r->slcClassesCategory,
+            'tags' => json_encode($r->slcClassesTags),
+            'image' => ('/image/classes/' . $filename),
+            'image_mobile' => ('/image/classes/' . $filenameMobile),
+            'content' => $r->txaClassesContent,
+            'unique_id' => uniqid(),
+            'participant_limit' => $r->numClassesLimit,
+            'date_start' => $r->datClassesDateStart,
+            'date_end' => $r->datClassesDateEnd,
+            'tipe' => $r->slcClassesType,
+            'level' => $r->slcClassesLevel,
+        ]);
+
+        return Redirect::back()->with('success', 'Class Saved');
     }
 }

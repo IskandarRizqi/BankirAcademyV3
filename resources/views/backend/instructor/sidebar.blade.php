@@ -15,6 +15,33 @@
                     </div>
                 </a>
             </li>
+            <li class="menu">
+                <a href="/instructor/profile" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                            <circle cx="12" cy="6" r="2"></circle>
+                            <path
+                                d="M14 9h-4a1 1 0 0 0-.8.4l-3 4 1.6 1.2L9 13v7h2v-4h2v4h2v-7l1.2 1.6 1.6-1.2-3-4A1 1 0 0 0 14 9z">
+                            </path>
+                        </svg>
+                        <span>Profile</span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu">
+                <a href="/instructor/classes" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path
+                                d="M6.012 18H21V4a2 2 0 0 0-2-2H6c-1.206 0-3 .799-3 3v14c0 2.201 1.794 3 3 3h15v-2H6.012C5.55 19.988 5 19.805 5 19s.55-.988 1.012-1zM8 6h9v2H8V6z">
+                            </path>
+                        </svg>
+                        <span>Daftar kelas</span>
+                    </div>
+                </a>
+            </li>
 
             <li class="menu">
                 <h5 class="text-center text-uppercase mt-3 mb-1">Coming soon</h5>

@@ -176,7 +176,7 @@ class ClassesController extends Controller
 			'promo_start' => $r->datPromoDateStart,
 			'promo_end' => $r->datPromoDateEnd,
 		]);
-		return redirect('/admin/classes')->with('success', 'Price Updated');
+		return Redirect::back()->with('success', 'Price Updated');
 	}
 
 	public function setcontent(Request $r)
@@ -208,7 +208,7 @@ class ClassesController extends Controller
 			];
 			ClassContentModel::UpdateOrCreate(['id' => $r->txtClassContentId[$i]], $tobeins[$i]);
 		}
-		return redirect('/admin/classes')->with('success', 'Price Updated');
+		return Redirect::back()->with('success', 'File Updated');
 	}
 
 	public function createevent(Request $r, $id)
@@ -255,7 +255,7 @@ class ClassesController extends Controller
 
 		ClassCertificateTemplate::UpdateOrCreate(['class_id' => $id], $tobeins);
 
-		return redirect('/admin/classes')->with('success', 'Certificate Updated');
+		return Redirect::back()->with('success', 'Certificate Updated');
 	}
 
 	public function previewcertificate(Request $r, $id)
@@ -317,7 +317,7 @@ class ClassesController extends Controller
 			];
 			ClassEventModel::UpdateOrCreate(['id' => $r->txtClassEventId[$i]], $tobeins[$i]);
 		}
-		return redirect('/admin/classes')->with('success', 'Price Updated');
+		return Redirect::back()->with('success', 'Event Updated');
 	}
 
 	public function setreview($id, $active)

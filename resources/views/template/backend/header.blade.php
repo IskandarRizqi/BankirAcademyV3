@@ -27,13 +27,6 @@
         </ul> -->
 
         <ul class="navbar-item flex-row ml-md-auto">
-
-
-
-
-
-
-
             <li class="nav-item dropdown user-profile-dropdown">
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -76,7 +69,6 @@
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg></a>
-
         <!-- <ul class="navbar-nav flex-row">
             <li>
                 <div class="page-header">

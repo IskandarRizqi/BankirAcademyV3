@@ -22,9 +22,10 @@
 
         <div class="overlay"></div>
         <div class="search-overlay"></div>
-
-        <!--  BEGIN SIDEBAR  -->
+        @if (Auth::user()->role!=3)
         @include('template.backend.sidebar')
+        @endif
+        <!--  BEGIN SIDEBAR  -->
         <!--  END SIDEBAR  -->
 
         <!--  BEGIN CONTENT AREA  -->
