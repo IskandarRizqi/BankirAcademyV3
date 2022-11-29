@@ -25,6 +25,7 @@
                                 <th>Nama</th>
                                 <th>No HP</th>
                                 <th>Kelas</th>
+                                <th>Tanggal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,6 +35,7 @@
                                     <td>{{ $p->name }}</td>
                                     <td>{{ $p->phone ? $p->phone : '' }}</td>
                                     <td>{{ $p->title }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($p->created_at)->format('d-m-Y') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
