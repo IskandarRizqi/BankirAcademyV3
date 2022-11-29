@@ -36,7 +36,7 @@ class HomeController extends Controller
             $ins = InstructorModel::where('user_id', Auth::user()->id)->first();
             for ($i = 1; $i < 13; $i++) {
                 $class[] = ClassesModel::where('instructor', 'like', '%"' . $ins->id . '"%')
-                    ->whereDate('date_end', '<', Carbon::now())
+                    // ->whereDate('date_end', '<', Carbon::now())
                     ->whereMonth('created_at', $i)
                     ->whereYear('created_at', Carbon::now()->year)
                     ->count();

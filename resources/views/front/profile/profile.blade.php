@@ -145,7 +145,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($d->kode_promo)
+                                                            @if ($d->kode_promo || $d->file)
                                                             {{$d->kode_promo}}
                                                             @else
                                                             <input type="text" name="kode_promo[]" class="form-control"
