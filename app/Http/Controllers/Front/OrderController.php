@@ -87,10 +87,10 @@ class OrderController extends Controller
         if (!$auth) {
             Redirect::back()->with('error', 'Belum Login');
         }
-        $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->get();
+        $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->where('expired', '>=', now())->get();
         if (count($cpm) > 0) {
             $data['data'] = ClassPaymentModel::where('user_id', $request->class_id)->get();
-            return Redirect::to('profile');
+            return Redirect::to('profile')->with('success', 'Kelas Sudah Terdaftar');
         }
 
         // Unique Code

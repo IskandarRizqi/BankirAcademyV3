@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
+use App\Models\KodePromoModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,13 @@ class InvoiceController extends Controller
 		}
 
 		$data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
-
+		$data['payment']->price_final = $data['payment']->price_final * $data['payment']->jumlah;
+		if ($data['payment']->kode_promo) {
+			$kp = KodePromoModel::where('kode', $data['payment']->kode_promo)->where('class_title', 'like', '%"' . $data['class']->title . '"%')->where('tgl_selesai', '>=', now())->first();
+			$promo = ($kp->nominal * $data['payment']->price_final) / 100;
+			$data['payment']->promo = $promo;
+			$data['payment']->price_final = $data['payment']->price_final - $promo;
+		}
 		// return $data;
 		if ($data['payment']->status == 1) {
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/invoicelunas'), $data);

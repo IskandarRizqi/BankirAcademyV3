@@ -89,9 +89,15 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($payment as $key => $d)
-                                                    <tr class="text-center">
+                                                    @if ($d->expired < \Carbon\Carbon::now()) {{$expired=true}} @else
+                                                        {{$expired=false}} @endif <tr class="text-center">
                                                         <td width="1%">{{$key+1}}</td>
                                                         <td>
+                                                            @if ($expired) <span
+                                                                class="badge badge-danger text-uppercase">
+                                                                Expired
+                                                            </span>
+                                                            @else
                                                             @if (!$d->file && $d->status==0)
                                                             <span class="badge badge-danger text-uppercase">
                                                                 Belum Lunas
@@ -105,6 +111,7 @@
                                                                 Lunas
                                                             </span>
                                                             @endif
+                                                            @endif
                                                         </td>
                                                         <td class="longtextoverflow" title="{{$d->title}}">{{$d->title}}
                                                         </td>
@@ -114,6 +121,10 @@
                                                         <!-- <td>{{ numfmt_format_currency(numfmt_create('id_ID',
                                                             \NumberFormatter::CURRENCY),$d->price_final,"IDR") }}</td> -->
                                                         <td class="longtextoverflow">
+                                                            @if ($expired)
+                                                            <input type="number" name="jmlPeserta[]"
+                                                                class="form-control" value="{{$d->jumlah}}" readonly>
+                                                            @else
                                                             @if ($d->file)
                                                             {{$d->jumlah}} Order Peserta
                                                             @else
@@ -121,6 +132,7 @@
                                                                 class="form-control"
                                                                 onchange="tambahPeserta('{{$d->id}}','{{$d->participant_limit}}','{{$d->class_id}}',$(this).val())"
                                                                 value="{{$d->jumlah}}">
+                                                            @endif
                                                             @endif
                                                         </td>
                                                         <td>
@@ -162,8 +174,8 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                    </tr>
-                                                    @endforeach
+                                                        </tr>
+                                                        @endforeach
                                                 </tbody>
                                             </table>
                                             <!-- Modal Bukti-->
