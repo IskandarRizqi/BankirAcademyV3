@@ -64,7 +64,7 @@ class HomeController extends Controller
                 $value->data_fee = FeeModel::where('class_id', 'null')->get();
             }
         }
-        return $data;
+        // return $data;
         return view('backend.beranda', $data);
     }
 }
