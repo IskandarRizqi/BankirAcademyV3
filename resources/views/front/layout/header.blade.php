@@ -1,5 +1,7 @@
 <!-- Header
 		============================================= -->
+{{-- <div class="container">
+</div> --}}
 <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
     Upgrade Skill Tanpa Batas, Lampaui Batas <strong>#TanpaMengurangiJamKerja</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
