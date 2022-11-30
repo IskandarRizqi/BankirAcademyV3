@@ -210,11 +210,11 @@
 </section>
 @endif
 <section id="content">
-    <div class="content-wrap" style="padding: 0px;">
+    <div class="content-wrap mt-6" style="padding: 0px;">
         <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
-                    <h2>Jelajahi Akademi</h2>
+                    <h2>Jelajahi Academy</h2>
                     <p>Berbagai macam pilihan akademi dengan metode belajar yang cocok buat kamu</p>
                 </div>
                 <div id="related-portfolio"
@@ -294,7 +294,7 @@
                 </div>
             </div>
         </div>
-        <div class="section border-top-0" style="background-color:#0076f5; ">
+        <div class="section border-top-0" style="background-color:#0076f5; padding-bottom: 118px !important">
             <div class=" container text-center">
                 <div class="heading-block center mt-4">
                     <h2 class="text-white">Kelas Terdekat</h2>
@@ -366,7 +366,7 @@
                                             <div class="oc-item">
                                                 <div class="testimonial"
                                                     style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
-                                                    border-radius: 20px !important; height: 260px !important; background-size:100%;">
+                                                    border-radius: 20px !important; height: 208px !important; background-size:100%;">
                                                     <a href="#"></a>
                                                 </div>
                                             </div>
@@ -501,7 +501,7 @@
                 @endforeach
                 @endif
             </div> --}}
-            <img src="{{ asset('partner-eclass.png') }}" alt="" style="width: 700px">
+            <img src="{{ asset('gambar-footer-03.png') }}" alt="">
         </div>
     </div>
     </div>

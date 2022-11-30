@@ -1,14 +1,20 @@
 <!-- Header
 		============================================= -->
+<div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+    Upgrade Skill Tanpa Batas, Lampaui Batas <strong>#TanpaMengurangiJamKerja</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <header id="header">
     <div id="header-wrap">
         <div class="container">
             <div class="header-row">
                 <!-- Logo
 						============================================= -->
-                <div id="logo">
+                <div id="logo" style="height: auto !important">
                     <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}"><img
-                            src="{{env('CUSTOM_LOGO','/Backend/logo_12.png')}}" alt="E-class"
+                            src="{{env('CUSTOM_LOGO','/Bank-academy-logo-03.png')}}" alt="E-class"
                             style="max-width: 400px; height:auto !important;"></a>
                 </div><!-- #logo end -->
                 @if(Auth::check() && Auth::user()->role == 2)

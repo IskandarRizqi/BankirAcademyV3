@@ -23,7 +23,7 @@
                                 <div class="col-6">
                                     <abbr title="Phone Number"><strong>Phone:</strong></abbr> (024) 76435498<br>
                                     <abbr title="Fax"><strong>Whatsapp:</strong></abbr> (+62) 895 3122 9494<br>
-                                    <abbr title="Email Address"><strong>Email:</strong></abbr> info@akarindo.id
+                                    <abbr title="Email Address"><strong>Email:</strong></abbr> info@bankiracademy.com
                                 </div>
                             </div>
                         </div>
