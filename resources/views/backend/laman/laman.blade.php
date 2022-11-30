@@ -1,69 +1,65 @@
 @extends('backend.beranda')
 @section('content')
-<div class="layout-px-spacing mt-2">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <!-- Button trigger modal -->
-                    <a href="/admin/laman/create">
-                        <button type="button" class="btn btn-primary btn-sm">
-                            Tambah
-                        </button>
-                    </a>
-                </div>
-                <div class="card-body">
-                    <table id="banner" class="table table-hover" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Status</th>
-                                <th>Title</th>
-                                <th>Tanggal Tayang</th>
-                                {{-- <th>Content</th> --}}
-                                <th>Banner</th>
-                                <th class="dt-no-sorting text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data as $key => $l)
-                            <tr>
-                                <td>{{$key+1}}</td>
-                                <td onclick="accLaman('{{$l->id}}','{{$l->status}}')">{{$l->status?'Aktif':'Tidak
-                                    Aktif'}}</td>
-                                <td class="text-truncate" style="max-width: 350px;" title="{{$l->title}}">{{$l->title}}
-                                </td>
-                                <td>
-                                    @if (Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y') ==
-                                    Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y'))
-                                    {{Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y')}}
-                                    @else
-                                    {{Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y')}}
-                                    s/d
-                                    {{Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y')}}
-                                    @endif</td>
-                                {{-- <td class="d-inline-block text-truncate" style="max-width: 350px;">
-                                    {!!$l->content!!}</td> --}}
-                                <td>
-                                    <img src="{{asset('Image/laman/banner/'.json_decode($l->banner)->url)}}" alt=""
-                                        width="130px">
-                                </td>
-                                <td>
-                                    <a href="/admin/laman/edit/{{$l->id}}">
-                                        <button class="btn btn-warning" id="edit" title="Edit"><i
-                                                class='bx bx-edit'></i></button>
-                                    </a>
-                                    <button class="btn btn-danger" onclick="deleteLaman({{$l->id}})" title="Delete"> <i
-                                            class='bx bx-trash'></i></button>
-                                    <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <!-- Button trigger modal -->
+            <a href="/admin/laman/create">
+                <button type="button" class="btn btn-primary btn-sm">
+                    Tambah
+                </button>
+            </a>
+        </div>
+        <div class="card-body">
+            <table id="banner" class="table table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Status</th>
+                        <th>Title</th>
+                        <th>Tanggal Tayang</th>
+                        {{-- <th>Content</th> --}}
+                        <th>Banner</th>
+                        <th class="dt-no-sorting text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data as $key => $l)
+                    <tr>
+                        <td>{{$key+1}}</td>
+                        <td onclick="accLaman('{{$l->id}}','{{$l->status}}')">{{$l->status?'Aktif':'Tidak
+                            Aktif'}}</td>
+                        <td class="text-truncate" style="max-width: 350px;" title="{{$l->title}}">{{$l->title}}
+                        </td>
+                        <td>
+                            @if (Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y') ==
+                            Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y'))
+                            {{Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y')}}
+                            @else
+                            {{Carbon\Carbon::parse($l->tgl_tayang)->format('d-m-Y')}}
+                            s/d
+                            {{Carbon\Carbon::parse($l->tgl_expired)->format('d-m-Y')}}
+                            @endif</td>
+                        {{-- <td class="d-inline-block text-truncate" style="max-width: 350px;">
+                            {!!$l->content!!}</td> --}}
+                        <td>
+                            <img src="{{asset('Image/laman/banner/'.json_decode($l->banner)->url)}}" alt=""
+                                width="130px">
+                        </td>
+                        <td>
+                            <a href="/admin/laman/edit/{{$l->id}}">
+                                <button class="btn btn-warning" id="edit" title="Edit"><i
+                                        class='bx bx-edit'></i></button>
+                            </a>
+                            <button class="btn btn-danger" onclick="deleteLaman({{$l->id}})" title="Delete"> <i
+                                    class='bx bx-trash'></i></button>
+                            <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
