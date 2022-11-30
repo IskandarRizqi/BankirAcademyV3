@@ -151,9 +151,9 @@
                         <span>Pages</span>
                     </div>
                     <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-chevron-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-chevron-right">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </div>
@@ -229,6 +229,36 @@
                             <circle cx="9" cy="10" r="2"></circle>
                         </svg>
                         <span>Chat box</span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu">
+                <a href="#" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path
+                                d="M20 2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3v3.766L13.277 18H20c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-7.277L9 18.234V16H4V4h16v12z">
+                            </path>
+                            <circle cx="15" cy="10" r="2"></circle>
+                            <circle cx="9" cy="10" r="2"></circle>
+                        </svg>
+                        <span>Penarikan Dana</span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu">
+                <a href="#" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path
+                                d="M20 2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3v3.766L13.277 18H20c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-7.277L9 18.234V16H4V4h16v12z">
+                            </path>
+                            <circle cx="15" cy="10" r="2"></circle>
+                            <circle cx="9" cy="10" r="2"></circle>
+                        </svg>
+                        <span>Absen</span>
                     </div>
                 </a>
             </li>

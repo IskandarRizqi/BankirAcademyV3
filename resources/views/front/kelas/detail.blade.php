@@ -14,9 +14,9 @@
                             <div class="col-md-12 col-lg-12">
                                 <div class="entry-image mb-0">
                                     @if ($class->image_mobile)
-                                        <img src="{{ $class->image_mobile }}" alt="Event Single">
+                                    <img src="{{ $class->image_mobile }}" alt="Event Single">
                                     @else
-                                        <img src="{{ $class->image }}" alt="Event Single">
+                                    <img src="{{ $class->image }}" alt="Event Single">
                                     @endif
                                     {{-- <div class="entry-overlay d-flex align-items-center justify-content-center">
                                         <span class="d-none d-md-flex">Starts in: </span>
@@ -55,9 +55,9 @@
 
                             <div class="card col">
                                 @if ($class->type == 0)
-                                    <span class="badge badge-success" style="width: fit-content">Bank</span>
+                                <span class="badge badge-success" style="width: fit-content">Bank</span>
                                 @else
-                                    <span class="badge badge-warning" style="width: fit-content">Non-Bank</span>
+                                <span class="badge badge-warning" style="width: fit-content">Non-Bank</span>
                                 @endif
                                 <div class="card-body">
                                     <div class="col-md-12" style="padding-bottom: 10px;">
@@ -107,24 +107,31 @@
                                                 <label for="">Level</label>
                                                 <p>
                                                     @if ($class->level == 1)
-                                                        Pemula
+                                                    Pemula
                                                     @elseif ($class->level == 2)
-                                                        Menengah
+                                                    Menengah
                                                     @else
-                                                        Lanjutan
+                                                    Lanjutan
                                                     @endif
                                                 </p>
                                             </div>
                                             <div class="col">
                                                 <label for="">Tanggal</label>
                                                 <span class="badge badge-info">
-                                                    @if (\Carbon\Carbon::parse($class->time_start)->format('d-m-Y') ==
-                                                        \Carbon\Carbon::parse($class->time_end)->format('d-m-Y'))
-                                                        {{ \Carbon\Carbon::parse($class->time_start)->format('d-m-Y') }}
+                                                    @if (\Carbon\Carbon::parse($time_start)->format('d-m-Y') ==
+                                                    \Carbon\Carbon::parse($time_end)->format('d-m-Y'))
+                                                    {{ \Carbon\Carbon::parse($time_start)->format('d-m-Y')}}
+                                                    <p style="margin: 0px">
+                                                        {{ \Carbon\Carbon::parse($time_start)->format('H:i:s')}} -
+                                                        {{ \Carbon\Carbon::parse($time_end)->format('H:i:s')}}
+                                                    </p>
                                                     @else
-                                                        {{ \Carbon\Carbon::parse($class->time_start)->format('d-m-Y') .
-                                                            ' -' .
-                                                            \Carbon\Carbon::parse($class->time_end)->format('d-m-Y') }}
+                                                    {{ \Carbon\Carbon::parse($time_start)->format('d-m-Y') .' -'
+                                                    .\Carbon\Carbon::parse($time_end)->format('d-m-Y') }}
+                                                    <p style="margin: 0px">
+                                                        {{ \Carbon\Carbon::parse($time_start)->format('H:i:s') .' -'
+                                                        .\Carbon\Carbon::parse($time_end)->format('H:i:s') }}
+                                                    </p>
                                                     @endif
                                                 </span>
                                             </div>
@@ -141,35 +148,43 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($event as $e => $val)
-                                                        <tr class="text-center">
-                                                            <td width="1%">{{ $e + 1 }}</td>
-                                                            <td width="20%">
-                                                                <span class="badge badge-info">
-                                                                    @if (\Carbon\Carbon::parse($val->time_start)->format('d-m-Y') ==
-                                                                        \Carbon\Carbon::parse($val->time_end)->format('d-m-Y'))
-                                                                        {{ \Carbon\Carbon::parse($val->time_start)->format('d-m-Y') }}
-                                                                    @else
-                                                                        {{ \Carbon\Carbon::parse($val->time_start)->format('d-m-Y') .
-                                                                            ' -
-                                                                                                                                                                                                                                                                                        ' .
-                                                                            \Carbon\Carbon::parse($val->time_end)->format('d-m-Y') }}
-                                                                    @endif
-                                                                </span>
-                                                                <span class="badge badge-danger">
-                                                                    {{ \Carbon\Carbon::parse($val->time_start)->format('H:i:s') .
-                                                                        '
-                                                                                                                                                                                                                                                                            -
-                                                                                                                                                                                                                                                                            ' .
-                                                                        \Carbon\Carbon::parse($val->time_end)->format('H:i:s') }}
-                                                                </span>
-                                                            </td>
-                                                            {{-- <td class="longtextoverflow">{{$val->description}}</td>
+                                                    <tr class="text-center">
+                                                        <td width="1%">{{ $e + 1 }}</td>
+                                                        <td width="20%">
+                                                            <span class="badge badge-info">
+                                                                @if(\Carbon\Carbon::parse($val->time_start)->format('d-m-Y')
+                                                                ==
+                                                                \Carbon\Carbon::parse($val->time_end)->format('d-m-Y'))
+                                                                {{
+                                                                \Carbon\Carbon::parse($val->time_start)->format('d-m-Y')
+                                                                }}
+                                                                @else
+                                                                {{
+                                                                \Carbon\Carbon::parse($val->time_start)->format('d-m-Y')
+                                                                .
+                                                                ' -
+                                                                ' .
+                                                                \Carbon\Carbon::parse($val->time_end)->format('d-m-Y')
+                                                                }}
+                                                                @endif
+                                                            </span>
+                                                            <span class="badge badge-danger">
+                                                                {{
+                                                                \Carbon\Carbon::parse($val->time_start)->format('H:i:s')
+                                                                .
+                                                                '
+                                                                -
+                                                                ' .
+                                                                \Carbon\Carbon::parse($val->time_end)->format('H:i:s')
+                                                                }}
+                                                            </span>
+                                                        </td>
+                                                        {{-- <td class="longtextoverflow">{{$val->description}}</td>
                                                         --}}
-                                                            <td class="longtextoverflow"
-                                                                onclick="infodesk({{ $val }})">
-                                                                {{ $val->description }}
-                                                            </td>
-                                                        </tr>
+                                                        <td class="longtextoverflow" onclick="infodesk({{ $val }})">
+                                                            {{ $val->description }}
+                                                        </td>
+                                                    </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -178,16 +193,16 @@
                                     <div class="col-md-12" style="padding-bottom: 0px;">
                                         <form id="orderForm" action="{{ '/order' }}" method="POST">
                                             @csrf
-                                            <input type="text" id="class_id" name="class_id"
-                                                value="{{ $class->id }}" hidden>
+                                            <input type="text" id="class_id" name="class_id" value="{{ $class->id }}"
+                                                hidden>
                                             @auth
-                                                <button class="button button-circle btn-block text-center">Order
-                                                    sekarang</button>
+                                            <button class="button button-circle btn-block text-center">Order
+                                                sekarang</button>
                                             @else
-                                                <span class="button button-circle btn-block text-center" data-toggle="modal"
-                                                    data-target="#modelId" data-backdrop="static"
-                                                    data-keyboard="false">Order
-                                                    sekarang</span>
+                                            <span class="button button-circle btn-block text-center" data-toggle="modal"
+                                                data-target="#modelId" data-backdrop="static"
+                                                data-keyboard="false">Order
+                                                sekarang</span>
                                             @endauth
                                             <button class="button button-circle btn-block text-center" hidden>Order
                                                 sekarang</button>
@@ -212,43 +227,34 @@
                             <h4>Upcoming Kelas</h4>
                             <div class="posts-sm row col-mb-30" id="post-list-sidebar">
                                 @foreach ($pop as $p)
-                                    <div class="entry col-12">
-                                        <div class="grid-inner row no-gutters">
-                                            <div class="col-auto">
-                                                <div class="entry-image">
-                                                    <a
-                                                        href="class/{{ $p->unique_id }}/{{ urlencode(
+                                <div class="entry col-12">
+                                    <div class="grid-inner row no-gutters">
+                                        <div class="col-auto">
+                                            <div class="entry-image">
+                                                <a href="class/{{ $p->unique_id }}/{{ urlencode(
                                                             str_ireplace(
                                                                 [
                                                                     '\'',
                                                                     '/',
                                                                     '//',
                                                                     '"',
-                                                                    '
-                                                                                                                                                                                                                            ,',
-                                                                    ';',
-                                                                    '<',
-                                                                    '>',
-                                                                ],
-                                                                '',
-                                                                $p->title,
-                                                            ),
-                                                        ) }}"><img
-                                                            src="{{ $p->image }}" alt="Image"></a>
-                                                </div>
+                                                                    ' ,', ';' , '<' , '>' , ], '' , $p->title,
+                                                    ),
+                                                    ) }}"><img src="{{ $p->image }}" alt="Image"></a>
                                             </div>
-                                            <div class="col pl-3">
-                                                <div class="entry-title">
-                                                    <h4><a href="#">{{ $p->title }}</a></h4>
-                                                </div>
-                                                <div class="entry-meta">
-                                                    <ul>
-                                                        <li>{{ $p->date_start }}</li>
-                                                    </ul>
-                                                </div>
+                                        </div>
+                                        <div class="col pl-3">
+                                            <div class="entry-title">
+                                                <h4><a href="#">{{ $p->title }}</a></h4>
+                                            </div>
+                                            <div class="entry-meta">
+                                                <ul>
+                                                    <li>{{ $p->date_start }}</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                                 @endforeach
                             </div>
 
