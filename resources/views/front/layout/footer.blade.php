@@ -1,9 +1,9 @@
 <!-- Footer
   ============================================= -->
-<footer id="footer" class="dark">
+<footer id="footer" class="dark" style="background-color:#ededed">
     <div class="container">
 
-        <div class="footer-widgets-wrap">
+        <div class="footer-widgets-wrap" style="color: black">
             <div class="row col-mb-50">
                 <div class="col-lg-6">
                     <div class="widget clearfix">
@@ -27,35 +27,39 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-facebook">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-facebook"
+                            style="color: black">
                             <i class="icon-facebook"></i>
                             <i class="icon-facebook"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-twitter">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-twitter"
+                            style="color: black">
                             <i class="icon-twitter"></i>
                             <i class="icon-twitter"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-gplus">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-gplus" style="color: black">
                             <i class="icon-gplus"></i>
                             <i class="icon-gplus"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-pinterest">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-pinterest"
+                            style="color: black">
                             <i class="icon-pinterest"></i>
                             <i class="icon-pinterest"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-vimeo">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-vimeo" style="color: black">
                             <i class="icon-vimeo"></i>
                             <i class="icon-vimeo"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-github">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-github" style="color: black">
                             <i class="icon-github"></i>
                             <i class="icon-github"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-yahoo">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-yahoo" style="color: black">
                             <i class="icon-yahoo"></i>
                             <i class="icon-yahoo"></i>
                         </a>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-linkedin">
+                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-linkedin"
+                            style="color: black">
                             <i class="icon-linkedin"></i>
                             <i class="icon-linkedin"></i>
                         </a>
@@ -63,46 +67,23 @@
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget clearfix">
-                        <h4>Recent Posts</h4>
-                        <div class="posts-sm row col-mb-30" id="post-list-footer">
-                            @if (isset($pop))
-                            @foreach ($pop as $key => $p)
-                            @if ($key <= 2) <div class="entry col-12">
-                                <div class="grid-inner row">
-                                    <div class="col">
-                                        <div class="entry-title">
-                                            <h4><a href="class/{{ $p->unique_id }}/{{ urlencode(str_ireplace( array( '\'', '/', '//', '"', '
-                                                    ,' , ';' , '<' , '>' ), '' , $p->title)) }}">{{ $p->title }}</a>
-                                            </h4>
-                                        </div>
-                                        <div class="entry-meta">
-                                            <ul>
-                                                <li>{{ \Carbon\Carbon::parse($p->date_start)->format('F d, Y') }}
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                        <h4 style="color: black">Bantuan & Panduan</h4>
+                        <a href="/sdank" style="color: black">Register Instructor</a><br>
+                        <div class="form-result laman_footer" style="color: black">
+                            {{-- <a href="#">Layanan Pengaduan</a><br>
+                            <a href="#">Syarat & Ketentuan</a><br>
+                            <a href="#">Kebijakan Privasi</a><br>
+                            <a href="#">Tentang Kami</a><br>
+                            <a href="#">Kontak Kami</a><br>
+                            <a href="#">Press Kit</a><br>
+                            <a href="#">Bantuan</a><br>
+                            <a href="#">Karier</a><br> --}}
                         </div>
-                        @endif
-                        @endforeach
-                        @endif
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <div class="widget quick-contact-widget form-widget clearfix">
-                    <h4>Bantuan & Panduan</h4>
-                    <a href="/sdank">Register Instructor</a><br>
-                    <div class="form-result laman_footer">
-                        {{-- <a href="#">Layanan Pengaduan</a><br>
-                        <a href="#">Syarat & Ketentuan</a><br>
-                        <a href="#">Kebijakan Privasi</a><br>
-                        <a href="#">Tentang Kami</a><br>
-                        <a href="#">Kontak Kami</a><br>
-                        <a href="#">Press Kit</a><br>
-                        <a href="#">Bantuan</a><br>
-                        <a href="#">Karier</a><br> --}}
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget quick-contact-widget form-widget clearfix" style="color: black">
+                        <h4 style="color: black">Download Aplikasi</h4>
                     </div>
                 </div>
             </div>
@@ -110,9 +91,9 @@
     </div>
     </div>
 
-    <div id="copyrights">
+    <div id="copyrights" style="background-color:#0076f5">
         <div class="container">
-            <div class="w-100 text-center">
+            <div class="w-100 text-center text-white">
                 Copyrights &copy; 2022 By <a href="https://akarindo.id/">Akarindo.id</a>
             </div>
         </div>
@@ -374,7 +355,7 @@
             success: function(result) {
                 if (result.laman_footer.length > 0) {
                     result.laman_footer.forEach(el => {
-                        let foo = '<a href="/u-laman/'+el.slug+'" class="text-capitalize">'+el.title+'</a><br>';
+                        let foo = '<a href="/u-laman/'+el.slug+'" class="text-capitalize" style="color: black">'+el.title+'</a><br>';
                         $('.laman_footer').append(foo);
                     });
                 }

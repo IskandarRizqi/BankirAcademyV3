@@ -254,10 +254,10 @@
             </div>
         </div>
 
-        <div class="section border-top-0 mb-6">
+        <div class="section border-top-0" style="background-color:#0076f5">
             <div class="container text-center">
-                <div class="heading-block center">
-                    <h2 id="hrefpromo">Promo</h2>
+                <div class="heading-block center mt-4">
+                    <h2 id="hrefpromo" class="text-white">Promo</h2>
                 </div>
                 <div id="oc-testi"
                     class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
@@ -283,16 +283,15 @@
                     <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
                                 class="icon-angle-left"></i></button><button type="button" role="presentation"
                             class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
-                            role="button" class="owl-dot active"><span></span></button></div>
+                    {{-- <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
+                            role="button" class="owl-dot active"><span></span></button></div> --}}
                 </div>
             </div>
         </div>
-
-        <div class="section border-top-0 mb-6">
-            <div class="container text-center">
-                <div class="heading-block center">
-                    <h2>Kelas Terdekat</h2>
+        <div class="section border-top-0" style="background-color:#0076f5; ">
+            <div class=" container text-center">
+                <div class="heading-block center mt-4">
+                    <h2 class="text-white">Kelas Terdekat</h2>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 mb-4">
@@ -325,11 +324,11 @@
                                                                             ' ,', ';' , '<' , '>' , ], '' , $k->title,
                                                 ),
                                                 ) }}">
-                                                <button class="btn btn-success btn-sm" style="margin-left: 83px"
+                                                <button class="btn btn-primary btn-sm" style="margin-left: 83px"
                                                     width='100%'>Detail</button>
                                             </a>
                                             @else
-                                            <a class="btn btn-success btn-sm" style="margin-left: 83px;"
+                                            <a class="btn btn-primary btn-sm" style="margin-left: 83px;"
                                                 data-toggle="modal" data-target="#modelId" data-backdrop="static"
                                                 data-keyboard="false">Detail</a>
                                             @endauth
@@ -403,10 +402,10 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6">
+    <div class="section border-top-0" style="background-color:#FFA600">
         <div class="container text-center">
-            <div class="heading-block center">
-                <h2>Testimonial</h2>
+            <div class="heading-block center text-white mt-4">
+                <h2 class="text-white">Testimonial</h2>
             </div>
             <div id="oc-testi"
                 class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
@@ -449,9 +448,9 @@
 
     <div class="section border-top-0 mb-6">
         <div class="container text-center">
-            <div class="heading-block center">
+            {{-- <div class="heading-block center">
                 <h2>Partner</h2>
-            </div>
+            </div> --}}
             {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
                 data-items-sm="1" data-items-md="2" data-items-xl="3">
                 @if (isset($partner))
@@ -741,20 +740,20 @@
                                 if (el.pricing) {
                                     if (el.pricing.promo) {
                                         html +=
-                                            '<h3 style="margin: 0px !important; color:#007038 !important;">' +
+                                            '<h3 style=" color:#139700 !important;">' +
                                             new Intl.NumberFormat('id-ID', {
                                                 style: 'currency',
                                                 currency: 'IDR',
                                                 maximumFractionDigits: 0
                                             }).format(el.pricing.price - el.pricing
                                                 .promo_price) +
-                                            '<span class="badge badge-info badge-sm">' +
+                                            '<span class="badge badge-danger badge-sm ml-2">' +
                                             ((el.pricing.promo_price / el.pricing.price) *
                                                 100) + ' %</span></h3>';
                                     }
                                 }
                                 html +=
-                                    '                <a class="btn btn-success btn-block btn-rounded"';
+                                    '                <a class="btn btn-primary btn-block btn-rounded"';
                                 html +=
                                     '                    style="border-radius:10px !important"';
                                 html += '                    href="class/' + el.unique_id +
