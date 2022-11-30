@@ -254,7 +254,7 @@
             </div>
         </div>
 
-        <div class="section border-top-0 mb-6" hidden>
+        <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2 id="hrefpromo">Promo</h2>
@@ -289,7 +289,7 @@
             </div>
         </div>
 
-        <div class="section border-top-0 mb-6" hidden>
+        <div class="section border-top-0 mb-6">
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2>Kelas Terdekat</h2>
@@ -403,7 +403,7 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6" hidden>
+    <div class="section border-top-0 mb-6">
         <div class="container text-center">
             <div class="heading-block center">
                 <h2>Testimonial</h2>
@@ -447,7 +447,7 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6" hidden>
+    <div class="section border-top-0 mb-6">
         <div class="container text-center">
             <div class="heading-block center">
                 <h2>Partner</h2>

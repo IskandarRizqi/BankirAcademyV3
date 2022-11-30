@@ -36,8 +36,22 @@
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
                 @if (Session::has('message'))
-                {{Session::get('message')}}
+                <div class="alert alert-dismissible alert-info">
+                    {{Session::get('message')}}
+                </div>
                 @endif
+                {{-- @if (Session::get('success'))
+                <div class="alert alert-dismissible alert-success">
+                    <i class="icon-gift"></i><strong>Success!</strong>
+                    {{ Session::get('success') }}
+                </div>
+                @endif
+                @if (Session::get('error'))
+                <div class="alert alert-dismissible alert-danger">
+                    <i class="icon-gift"></i><strong>Failed!</strong>
+                    {{ Session::get('error') }}
+                </div>
+                @endif --}}
                 @yield('content')
             </div>
             @include('template.backend.footer')

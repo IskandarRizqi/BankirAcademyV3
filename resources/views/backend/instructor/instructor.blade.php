@@ -39,8 +39,11 @@
                             <a href="">Download</a>
                             @endif
                         </td>
-                        <td><img src="{{ asset('Image/instructor/' . $d->name . '/' . json_decode($d->picture)->url) }}"
-                                alt="" width="130px"> </td>
+                        <td>@if (json_decode($d->picture))
+                            <img src="{{ asset('Image/instructor/' . $d->name . '/' . json_decode($d->picture)->url) }}"
+                                alt="" width="130px">
+                            @endif
+                        </td>
                         <td><button class="btn btn-warning" id="edit" onclick="edit({{ $d }})" title="Edit"><i
                                     class='bx bx-edit'></i></button>
                             <button class="btn btn-danger" onclick="hapus('{{ $d->id }}')" title="Delete"> <i

@@ -136,6 +136,11 @@
                                                 </span>
                                             </div>
                                         </div>
+                                        <hr>
+                                        <div class="mb-4">
+                                            <label for="">Location :</label>
+                                            <label for="" class="ml-auto">{{$lokasi?$location:'Online'}}</label>
+                                        </div>
                                         <div class="table-responsive">
                                             <table class="table table-striped table-bordered" id="datatable1"
                                                 cellspacing="0" width="100%">

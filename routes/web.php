@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Backend\BannerslideController;
+use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
@@ -47,7 +48,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
-    Route::resource('/admin/promo', PromoController::class);
+    Route::resource('/admin/kupon', PromoController::class);
+    Route::resource('/admin/fee', FeeController::class);
 
     //pages
     Route::get("/admin/pages/getsdank", [App\Http\Controllers\Front\PagesController::class, "getsdank"]);

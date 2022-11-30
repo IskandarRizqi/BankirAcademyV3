@@ -83,17 +83,20 @@ class HomeController extends Controller
     {
         $start = '';
         $end = '';
+        $lokasi = '';
         $data['pop'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('unique_id', '!=', $unique_id)->limit(3)->inRandomOrder()->get();
         $data['class'] = ClassesModel::where('unique_id', $unique_id)->first();
         $data['event'] = ClassEventModel::where('class_id', $data['class']->id)->get();
         foreach ($data['event'] as $key => $value) {
             if ($key == 0) {
                 $start = $value->time_start;
+                $lokasi = $value->location;
             }
             $end = $value->time_end;
         }
         $data['time_start'] = $start;
         $data['time_end'] = $end;
+        $data['lokasi'] = $lokasi;
         return view('front.kelas.detail', $data);
     }
 
