@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClassesModel;
+use App\Models\ClassPaymentModel;
+use App\Models\FeeModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
 use Carbon\Carbon;
@@ -29,7 +31,7 @@ class HomeController extends Controller
     public function index()
     {
         $auth = Auth::user();
-
+        $data = [];
         // Dashboard Instructor
         if ($auth->role == 3) {
             $data['data'] = json_encode([2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]);
@@ -49,6 +51,20 @@ class HomeController extends Controller
                 ->get();
             return view('backend.instructor.dashboard', $data);
         }
-        return view('backend.beranda');
+        $data['fee'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'users.name')
+            ->join('classes', 'classes.id', 'class_payment.class_id')
+            ->join('users', 'users.id', 'class_payment.user_id')
+            ->where('status', 1)
+            ->get();
+        foreach ($data['fee'] as $key => $value) {
+            $f = FeeModel::where('class_id', 'like', '%"' . $value->title . '"%')->get();
+            if ($f) {
+                $value->data_fee = $f;
+            } else {
+                $value->data_fee = FeeModel::where('class_id', 'null')->get();
+            }
+        }
+        return $data;
+        return view('backend.beranda', $data);
     }
 }

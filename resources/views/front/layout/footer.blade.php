@@ -83,7 +83,8 @@
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget quick-contact-widget form-widget clearfix" style="color: black">
-                        <h4 style="color: black">Download Aplikasi</h4>
+                        <h4 style="color: black">Up coming</h4>
+                        <img src="{{asset('google-play-and-apple-app-store-logos-22.png')}}" alt="" width="200px">
                     </div>
                 </div>
             </div>

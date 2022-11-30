@@ -283,8 +283,14 @@
                     <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
                                 class="icon-angle-left"></i></button><button type="button" role="presentation"
                             class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    {{-- <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button
-                            role="button" class="owl-dot active"><span></span></button></div> --}}
+                    <div class="owl-dots text-left">
+                        <button role="button" class="owl-dot" style="background-color: white"><span></span></button>
+                        <button role="button" class="owl-dot active"
+                            style="background-color: white"><span></span></button>
+                    </div>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <button class="btn btn-warning" style="border-radius: 9px">Promo Lainnya</button>
                 </div>
             </div>
         </div>
@@ -402,7 +408,7 @@
         </div>
     </div>
 
-    <div class="section border-top-0" style="background-color:#FFA600">
+    <div class="section border-top-0" style="background-color:#FFA600; padding-bottom: 30px">
         <div class="container text-center">
             <div class="heading-block center text-white mt-4">
                 <h2 class="text-white">Testimonial</h2>
@@ -413,11 +419,29 @@
                 <div class="owl-stage-outer">
                     <div class="owl-stage"
                         style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                        {{-- <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                            <div class="oc-item">
+                                <div class="testimonial"
+                                    style="background-color: #ffffffa1 !important; border-radius: 9px !important">
+                                    <div class="testi-image">
+                                        <a href="#"><img src="" alt="Customer Testimonails"></a>
+                                    </div>
+                                    <div class="testi-content">
+                                        <p>$t->review</p>
+                                        <div class="testi-meta">
+                                            $t->name
+                                            <span>XYZ Inc.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
                         @if (isset($testimoni))
                         @foreach ($testimoni as $t)
                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                             <div class="oc-item">
-                                <div class="testimonial">
+                                <div class="testimonial"
+                                    style="background-color: #ffffffa1 !important; border-radius: 9px !important">
                                     <div class="testi-image">
                                         <a href="#"><img
                                                 src="{{ $t->picture ? $t->picture : asset('front/one-page/images/team/3.jpg') }}"
@@ -446,7 +470,7 @@
         </div>
     </div>
 
-    <div class="section border-top-0 mb-6">
+    <div class="section border-top-0 mb-6 mt-4">
         <div class="container text-center">
             {{-- <div class="heading-block center">
                 <h2>Partner</h2>
