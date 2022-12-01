@@ -126,7 +126,7 @@ class PagesController extends Controller
 		}
 
 		Pages::UpdateOrCreate(['id' => $id], $tobeins);
-		return Redirect::to('/admin/pages/getbloglist')->with('success', 'Data Deleted');
+		return Redirect::to('/admin/pages/getbloglist')->with('success', 'Data Tersimpan');
 	}
 
 	public function showBlog(Request $r, $id)

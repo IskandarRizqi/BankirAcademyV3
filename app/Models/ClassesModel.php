@@ -27,7 +27,7 @@ class ClassesModel extends Model
 		'level',
 	];
 
-	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list'];
+	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list', 'total_peserta'];
 
 	public function getInstructorListAttribute()
 	{
@@ -61,6 +61,14 @@ class ClassesModel extends Model
 	{
 		if (array_key_exists('id', $this->attributes)) {
 			return DB::table('class_content')->where('class_id', $this->attributes['id'])->get();
+		}
+	}
+	public function getTotalPesertaAttribute()
+	{
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_payment')
+				->where('class_payment.class_id', $this->attributes['id'])
+				->sum('jumlah');
 		}
 	}
 	public function getPesertaListAttribute()

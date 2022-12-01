@@ -225,9 +225,7 @@
 
                 <div class="sidebar col-lg-3">
                     <div class="sidebar-widgets-wrap">
-
                         <div class="widget clearfix">
-
                             <h4>Upcoming Kelas</h4>
                             <div class="posts-sm row col-mb-30" id="post-list-sidebar">
                                 @foreach ($pop as $p)
@@ -235,7 +233,7 @@
                                     <div class="grid-inner row no-gutters">
                                         <div class="col-auto">
                                             <div class="entry-image">
-                                                <a href="class/{{ $p->unique_id }}/{{ urlencode(
+                                                <a href="/class/{{ $p->unique_id }}/{{ urlencode(
                                                             str_ireplace(
                                                                 [
                                                                     '\'',
@@ -249,7 +247,16 @@
                                         </div>
                                         <div class="col pl-3">
                                             <div class="entry-title">
-                                                <h4><a href="#">{{ $p->title }}</a></h4>
+                                                <h4><a href="/class/{{ $p->unique_id }}/{{ urlencode(
+                                                    str_ireplace(
+                                                        [
+                                                            '\'',
+                                                            '/',
+                                                            '//',
+                                                            '"',
+                                                            ' ,', ';' , '<' , '>' , ], '' , $p->title,
+                                                        ),
+                                                        ) }}">{{ $p->title }}</a></h4>
                                             </div>
                                             <div class="entry-meta">
                                                 <ul>
@@ -271,6 +278,84 @@
                                 allow="autoplay; fullscreen" allowfullscreen></iframe>
 
                         </div> --}}
+                        <div class="widget clearfix">
+
+                            <h4>Trending Class</h4>
+                            <div class="posts-sm row col-mb-30" id="post-list-sidebar">
+                                @foreach ($pop as $p)
+                                <div class="entry col-12">
+                                    <div class="grid-inner row no-gutters">
+                                        <div class="col-auto">
+                                            <div class="entry-image">
+                                                <a href="/class/{{ $p->unique_id }}/{{ urlencode(
+                                                            str_ireplace(
+                                                                [
+                                                                    '\'',
+                                                                    '/',
+                                                                    '//',
+                                                                    '"',
+                                                                    ' ,', ';' , '<' , '>' , ], '' , $p->title,
+                                                    ),
+                                                    ) }}"><img src="{{ $p->image }}" alt="Image"></a>
+                                            </div>
+                                        </div>
+                                        <div class="col pl-3">
+                                            <div class="entry-title">
+                                                <h4><a href="/class/{{ $p->unique_id }}/{{ urlencode(
+                                                    str_ireplace(
+                                                        [
+                                                            '\'',
+                                                            '/',
+                                                            '//',
+                                                            '"',
+                                                            ' ,', ';' , '<' , '>' , ], '' , $p->title,
+                                                        ),
+                                                        ) }}"">{{ $p->title }}</a></h4>
+                                            </div>
+                                            <div class="entry-meta">
+                                                <ul>
+                                                    <li>{{ $p->date_start }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        <div class="widget clearfix">
+
+                            <h4>Literasi</h4>
+                            <div class="posts-sm row col-mb-30" id="post-list-sidebar">
+                                @foreach ($literasi as $l)
+                                <div class="entry col-12">
+                                    <div class="grid-inner row no-gutters">
+                                        <div class="col-auto">
+                                            <div class="entry-image">
+                                                <a href="/pages/blog/{{$l->id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+                                                    ,' , ';' , '<' , '>' ), '' , $l->title))}}"><img
+                                                        src="{{ $l->thumbnail }}" alt="Image"></a>
+                                            </div>
+                                        </div>
+                                        <div class="col pl-3">
+                                            <div class="entry-title">
+                                                <h4><a href="/pages/blog/{{$l->id}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+                                                        ,' , ';' , '<' , '>' ), '' , $l->title))}}">{{ $l->title }}</a>
+                                                </h4>
+                                            </div>
+                                            <div class="entry-meta">
+                                                <ul>
+                                                    <li>{{ $l->date_start }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                        </div>
 
 
                     </div>

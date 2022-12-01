@@ -10,6 +10,7 @@ use App\Models\ClassLamanModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
 use App\Models\InstructorModel;
+use App\Models\Pages;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -87,6 +88,7 @@ class HomeController extends Controller
         $data['pop'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('unique_id', '!=', $unique_id)->limit(3)->inRandomOrder()->get();
         $data['class'] = ClassesModel::where('unique_id', $unique_id)->first();
         $data['event'] = ClassEventModel::where('class_id', $data['class']->id)->get();
+
         foreach ($data['event'] as $key => $value) {
             if ($key == 0) {
                 $start = $value->time_start;
@@ -97,6 +99,14 @@ class HomeController extends Controller
         $data['time_start'] = $start;
         $data['time_end'] = $end;
         $data['lokasi'] = $lokasi;
+
+        $data['trend'] = ClassesModel::select()
+            ->where('date_end', '>=', Carbon::now()
+                ->format('Y-m-d'))
+            ->limit(3)
+            ->get();
+        $data['literasi'] = Pages::where('type', 0)->limit(3)->inRandomOrder()->get();
+        // return $data;
         return view('front.kelas.detail', $data);
     }
 
