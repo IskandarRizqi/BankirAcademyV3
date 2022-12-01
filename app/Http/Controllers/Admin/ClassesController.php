@@ -88,7 +88,7 @@ class ClassesController extends Controller
 			'participant_limit' => $r->numClassesLimit,
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
-			'tipe' => $r->slcClassesType,
+			'tipe' => json_encode($r->slcClassesType),
 			'level' => $r->slcClassesLevel,
 		]);
 
@@ -117,7 +117,7 @@ class ClassesController extends Controller
 			'participant_limit' => $r->numClassesLimit,
 			'date_start' => $r->datClassesDateStart,
 			'date_end' => $r->datClassesDateEnd,
-			'tipe' => $r->slcClassesType,
+			'tipe' => json_encode($r->slcClassesType),
 			'level' => $r->slcClassesLevel,
 		];
 

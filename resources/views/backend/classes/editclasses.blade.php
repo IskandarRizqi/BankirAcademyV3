@@ -64,15 +64,15 @@
 							</div>
 							<div class="col">
 								<div class="form-group">
+									<input type="text" name="" id="oldSlcClassesType" value="{{$classes->tipe}}" hidden>
 									<label for="slcClassesCategory">Type</label>
-									<select class="form-control" name="slcClassesType" id="slcClassesType" required>
-										@if ($classes->title == 0)
-										<option value="0" selected>Bank</option>
-										<option value="1">Non Bank</option>
-										@else
-										<option value="0">Bank</option>
-										<option value="1" selected>Non Bank</option>
-										@endif
+									<select class="form-control tagging" name="slcClassesType[]" id="slcClassesType"
+										multiple required>
+										<option value="BANK">BANK</option>
+										<option value="BPR">BPR</option>
+										<option value="KOPERASI">KOPERASI</option>
+										<option value="LEMABAGA KEUANGAN MICRO (LKM)">LEMABAGA KEUANGAN MICRO (LKM)
+										</option>
 									</select>
 								</div>
 							</div>
@@ -183,7 +183,14 @@
 @endsection
 @section('custom-js')
 <script>
+	$(document).ready(function () {
+		let old = $('#oldSlcClassesType').val();
+		$("#slcClassesType").val(JSON.parse(old)).trigger('change');
+	})
 	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
+	$('#slcClassesType').select2({
+		tagging:true,
+	})
 	createDataTable('#tblClasses');
 	$('#filClassesImage').change(function (e) { 
 		getImgData(this,'#prvClassesImage');

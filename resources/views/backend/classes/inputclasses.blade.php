@@ -52,10 +52,13 @@
 							<div class="col">
 								<div class="form-group">
 									<label for="slcClassesCategory">Type</label>
-									<select class="form-control" name="slcClassesType" id="slcClassesType" required>
-										<option value=""></option>
-										<option value="0">Bank</option>
-										<option value="1">Non Bank</option>
+									<select class="form-control tagging" name="slcClassesType[]" id="slcClassesType"
+										multiple required>
+										<option value="BANK">BANK</option>
+										<option value="BPR">BPR</option>
+										<option value="KOPERASI">KOPERASI</option>
+										<option value="LEMABAGA KEUANGAN MICRO (LKM)">LEMABAGA KEUANGAN MICRO (LKM)
+										</option>
 									</select>
 								</div>
 							</div>
@@ -160,6 +163,9 @@
 @section('custom-js')
 <script>
 	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
+	$('#slcClassesType').select2({
+		tagging:true,
+	})
 	createDataTable('#tblClasses');
 	$('#filClassesImage').change(function (e) { 
 		getImgData(this,'#prvClassesImage');

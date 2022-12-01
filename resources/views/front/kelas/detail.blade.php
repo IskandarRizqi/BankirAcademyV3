@@ -133,12 +133,10 @@
                                         </div>
                                         <hr>
                                         <div class="mb-4">
-                                            {{-- @if ($class->type == 0)
-                                            @else
-                                            <p>Non-Bank</p>
-                                            @endif --}}
-                                            <span class="btn btn-warning btn-block btn-sm">Bank | BPR |
-                                                KOPERASI | LEMBAGA KEUANGAN MICRO ( LKM )</span>
+                                            @if (count(json_decode($class->tipe)) > 0)
+                                            <span class="btn btn-warning btn-block btn-sm">{{implode(' |
+                                                ',json_decode($class->tipe))}}</span>
+                                            @endif
                                             <label for="">Location :</label>
                                             <label for="" class="ml-auto">{{$lokasi?$location:'Online'}}</label>
                                         </div>
