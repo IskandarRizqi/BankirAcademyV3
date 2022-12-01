@@ -61,22 +61,22 @@
                                 <div>Beranda</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="/list-class/Semua">
+                        <li class="menu-item"><a class="menu-link" href="/list-class">
                                 <div>Kelas</div>
                             </a>
                             <ul class="sub-menu-container">
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/pages/page/4">
                                         <div>Calon Bankir</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/pages/page/5">
                                         <div>Bankir</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/pages/page/6">
                                         <div>Bootcamp Bankir</div>
                                     </a>
                                 </li>
@@ -106,7 +106,7 @@
                                 <div>Loker Bankir</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
+                        <li class="menu-item"><a class="menu-link" href="/pages/page/7">
                                 <div>Bantuan</div>
                             </a>
                         </li>

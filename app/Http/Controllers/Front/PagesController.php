@@ -177,4 +177,39 @@ class PagesController extends Controller
 		$data['sdank'] = Pages::where('type', 3)->first();
 		return view('front.syaratnketentuan', $data);
 	}
+	public function getPageKelas($id)
+	{
+		$data['data'] = Pages::where('type', $id)->first();
+		$data['tipe'] = $id;
+
+		return view('pages.customkelas', $data);
+	}
+
+	public function setPageKelas($tipe, Request $r)
+	{
+		$tobeins = [
+			'title' => $r->txtTitle,
+			'content' => $r->txaPageSdanK,
+		];
+		if ($r->file('txtThumbnail')) {
+			$name = $r->file('txtThumbnail')->getClientOriginalName();
+			$size = $r->file('txtThumbnail')->getSize();
+
+			$filename = time() . '-' . $name;
+			$file = $r->file('txtThumbnail');
+			$file->move(public_path('image/pages'), $filename);
+
+			$tobeins['thumbnail'] = ('/image/pages/' . $filename);
+		}
+
+		Pages::UpdateOrCreate(['type' => $tipe], $tobeins);
+		return Redirect::back();
+	}
+
+	public function showKelas($id)
+	{
+		$data = [];
+		$data['data'] = Pages::where('type', $id)->first();
+		return view('front.customKelas', $data);
+	}
 }

@@ -52,6 +52,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/fee', FeeController::class);
 
     //pages
+    Route::post("/admin/pages/kelas/{tipe}", [App\Http\Controllers\Front\PagesController::class, "setPageKelas"]);
+    Route::get("/admin/pages/kelas/{tipe}", [App\Http\Controllers\Front\PagesController::class, "getPageKelas"]);
     Route::get("/admin/pages/getsdank", [App\Http\Controllers\Front\PagesController::class, "getsdank"]);
     Route::post("/admin/pages/setsdank", [App\Http\Controllers\Front\PagesController::class, "setsdank"]);
     Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);
@@ -119,12 +121,14 @@ Route::get("/instructor/{provider}", [App\Http\Controllers\Front\HomeController:
 Route::get("/instructor/{provider}/callback", [App\Http\Controllers\Front\HomeController::class, "handleProviderCallback"]);
 
 //Pages
+Route::get("/pages/page/{id}", [App\Http\Controllers\Front\PagesController::class, "showKelas"]);
 Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "showAbout"]);
 Route::get("/pages/contact", [App\Http\Controllers\Front\PagesController::class, "showContact"]);
 Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "showListBlog"]);
 Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
 
 //Class
-Route::get('/list-class/{semua}', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
+Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
+Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "findClass"]);
 
 Auth::routes();

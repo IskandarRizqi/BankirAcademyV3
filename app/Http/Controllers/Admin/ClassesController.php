@@ -367,15 +367,30 @@ class ClassesController extends Controller
 		}
 		return Redirect::back()->withInput($request->all())->with('error', 'Review Tidak Tersimpan');
 	}
-	public function listClass($category)
+	public function listClass()
 	{
-		$data['class'] = ClassesModel::where(function ($sql) use ($category) {
-			if ($category !== 'Semua') {
-				$str = str_replace('_', ' ', $category);
-				return $sql->where('category', $str);
-			}
-		})->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->paginate(7)->toArray();
+		$data['class'] = ClassesModel::select()
+			// ->where(function ($sql) use ($category) {
+			// 	if ($category !== 'Semua') {
+			// 		$str = str_replace('_', ' ', $category);
+			// 		return $sql->where('category', $str);
+			// 	}})
+			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			->paginate(12)->toArray();
+
+		return view('front.kelas.listclass', $data);
+	}
+	public function findClass(Request $request)
+	{
+		$data['class'] = ClassesModel::select()
+			// ->where(function ($sql) use ($category) {
+			// 	if ($category !== 'Semua') {
+			// 		$str = str_replace('_', ' ', $category);
+			// 		return $sql->where('category', $str);
+			// 	}})
+			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			->where('title', 'like', '%' . $request->title . '%')
+			->paginate(12)->toArray();
 
 		return view('front.kelas.listclass', $data);
 	}

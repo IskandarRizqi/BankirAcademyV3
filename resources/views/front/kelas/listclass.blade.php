@@ -7,9 +7,8 @@
         <div class="container clearfix">
             <h3>Kelas</h3>
             @if ($class['data'])
-
             <div class="row gutter-40 col-mb-80">
-                <div class="postcontent col-lg-12">
+                <div class="postcontent col-lg-9">
                     <div class="single-event">
                         <div class="row">
                             @foreach ($class['data'] as $v)
@@ -38,18 +37,18 @@
                                                 <label class="d-block mb-0">{{$v['instructor_list'][0]->name}}
                                                     {{-- <small>{{$v['instructor_list'][0]->title}}</small> --}}
                                                 </label>
-                                            </div>
-                                            <div class="ml-2 flex-fill text-right">
                                                 @if ($v['pricing'])
                                                 @if ($v['pricing']->promo)
-                                                <label class="d-block mb-0"> Harga</label>
+                                                <span class="d-block mb-0"> Harga</span>
                                                 <del>Rp. {{number_format($v['pricing']->price)}}</del>
                                                 @else
-                                                <label class="d-block mb-0"> Harga</label>
+                                                <span class="d-block mb-0"> Harga</span>
                                                 <small>{{$v['pricing']->price}}</small>
                                                 @endif
                                                 @endif
                                             </div>
+                                            {{-- <div class="ml-2 flex-fill text-right">
+                                            </div> --}}
                                         </a>
                                         <div class="text-center mt-2 w-100">
                                             @if ($v['pricing'])
@@ -96,6 +95,18 @@
                                 </nav>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card" style="position: fixed; z-index: 999;">
+                        <form action="/list-class" method="POST">
+                            @csrf
+                            <div class="card-body">
+                                <label for="">Pencarian:</label>
+                                <input type="text" name="title" id="title" class="form-control">
+                                <button type="submit" class="btn btn-secondary btn-sm mt-2">Cari</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

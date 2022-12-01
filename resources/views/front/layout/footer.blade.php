@@ -1,6 +1,6 @@
 <!-- Footer
   ============================================= -->
-<footer id="footer" class="dark" style="background-color:#ededed">
+<footer id="footer" class="dark" style="background-color:#ededed; z-index: 1000">
     <div class="container">
 
         <div class="footer-widgets-wrap" style="color: black">
