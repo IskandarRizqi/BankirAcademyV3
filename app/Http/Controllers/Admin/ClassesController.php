@@ -374,7 +374,8 @@ class ClassesController extends Controller
 				$str = str_replace('_', ' ', $category);
 				return $sql->where('category', $str);
 			}
-		})->paginate(7)->toArray();
+		})->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			->paginate(7)->toArray();
 
 		return view('front.kelas.listclass', $data);
 	}

@@ -3,44 +3,54 @@
 @include(env("CUSTOM_HEADER","front.layout.header"))
 
 <section id="content">
-    <div class="content-wrap">
-        <div class="container clearfix">
+	<div class="content-wrap">
+		<div class="container clearfix">
 			<h3>BLOG</h3>
 			@if ($blog['data'])
-				
-            <div class="row gutter-40 col-mb-80">
-                <div class="postcontent col-lg-9">
-                    <div class="single-event">
-
-                        @foreach ($blog['data'] as $v)
-							<a href="/pages/blog/{{$v['id']}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', ',' , ';', '<', '>' ), '', $v['title']))}}">
+			<div class="row gutter-40 col-mb-80">
+				<div class="postcontent col-lg-12">
+					<div class="single-event">
+						<div class="row">
+							@foreach ($blog['data'] as $v)
+							<div class="col-lg-3 col-sm-6 mb-4">
 								<div class="card">
 									<div class="card-body">
-										<img src="{{$v['thumbnail']}}" alt="Thumbnail" style="width: 130px;max-height:75px;">
-										&nbsp;&nbsp;&nbsp;<span style="font-size: 19px; font-weight: bold;">{{$v['title']}}</span>
-										<span class="text-secondary float-right">{{Carbon\Carbon::parse($v['created_at'])->format('d-m-Y H:i:s')}}</span>
+										<div class="card" style="min-height: 0px !important"> <img
+												src="{{$v['thumbnail']}}" width="100%"> </div>
+										<h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">
+											{{$v['title']}}</h5>
+										<div class="text-center mt-2 w-100"><a
+												class="btn btn-primary btn-block btn-rounded"
+												style="border-radius:10px !important"
+												href="/pages/blog/{{$v['id']}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+												,' , ';' , '<' , '>' ), '' , $v['title']))}}"> Detail </a>
+										</div>
 									</div>
-								</div>	
-							</a>
-						@endforeach
+								</div>
+							</div>
+							@endforeach
+						</div>
 						<hr>
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<nav aria-label="Page navigation blog">
 									<ul class="pagination justify-content-center">
 										@foreach ($blog['links'] as $k=>$p)
-										<li class="page-item {{($p['active'])?'active':''}}"><a class="page-link" href="{{$p['url']}}"><?=$p['label']?></a></li>
+										<li class="page-item {{($p['active'])?'active':''}}"><a class="page-link"
+												href="{{$p['url']}}">
+												<?=$p['label']?>
+											</a></li>
 										@endforeach
 									</ul>
-								  </nav>
+								</nav>
 							</div>
 						</div>
-                    </div>
-                </div>
-            </div>
+					</div>
+				</div>
+			</div>
 			@endif
 
-        </div>
-    </div>
+		</div>
+	</div>
 </section><!-- #content end -->
 @include(env("CUSTOM_FOOTER","front.layout.footer"))

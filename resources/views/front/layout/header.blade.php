@@ -61,7 +61,7 @@
                                 <div>Beranda</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
+                        <li class="menu-item"><a class="menu-link" href="/list-class/Semua">
                                 <div>Kelas</div>
                             </a>
                             <ul class="sub-menu-container">
@@ -86,7 +86,7 @@
                                 <div>Promo</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#">
+                        <li class="menu-item"><a class="menu-link" href="/pages/blog">
                                 <div>Literasi</div>
                             </a>
                         </li>

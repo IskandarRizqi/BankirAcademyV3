@@ -62,10 +62,6 @@ class HomeController extends Controller
         $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
         $data['kelas'] = [];
         $data['lucas'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(6)->get();
-        // $data['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
-        // foreach ($categori as $key => $value) {
-        //     $data['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->paginate(6)->toArray();
-        // }
 
         if ($request->ajax()) {
             $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
