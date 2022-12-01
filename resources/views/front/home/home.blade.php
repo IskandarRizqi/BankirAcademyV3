@@ -128,43 +128,7 @@
 
 <!-- Content -->
 @if (isset($banner_slide))
-{{-- <style>
-    .owl-carousel .owl-nav [class*=owl-] {
-        position: absolute;
-        top: 50%;
-        margin-top: -18px;
-        left: -36px;
-        zoom: 2;
-        width: 40px;
-        height: 40px;
-        line-height: 32px;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        color: #0b5fc7;
-        background-color: #FFF;
-        font-size: 18px;
-        border-radius: 50%;
-        opacity: 0;
-        -webkit-transition: all .3s ease;
-        -o-transition: all .3s ease;
-        transition: all .3s ease;
-    }
-</style> --}}
 <section id="content">
-    {{-- <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-none d-sm-block"
-        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
-        <div class="owl-stage-outer">
-            <div class="owl-stage"
-                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
-                @foreach ($banner_slide as $key => $value)
-                <div class="owl-item">
-                    <div class="oc-item">
-                        <a href="#"><img src="/Image/{{ $value->image }}" alt="Image 1"></a>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div> --}}
     <div id="carouselExampleControls" class="carousel slide d-none d-sm-block" data-ride="carousel">
         <div class="carousel-inner">
             @foreach ($banner_slide as $key => $value)
@@ -224,20 +188,6 @@
                     <div class="owl-stage-outer">
                         <div class="owl-stage owlCustom"
                             style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
-                            {{-- @if (isset($kelas))
-                            @foreach ($kelas as $key => $k)
-                            <div class="owl-item" style="">
-                                <div class="oc-item">
-                                    <div class="portfolio-item">
-                                        <div class="portfolio-image">
-                                            <button class="button button-circle"
-                                                onclick="tabsCategory('{{str_replace(' ','_',$key)}}')">{{$key}}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                            @endif --}}
                         </div>
                     </div>
                     <div class="owl-nav" hidden><button type="button" role="presentation" class="owl-prev"
@@ -510,6 +460,7 @@
 
 @include('front.layout.footer')
 <script>
+    let arrkategori = [];
     $(document).ready(function() {
         lazyLoad(1);
         $('#allClass').click(function() {
@@ -662,6 +613,17 @@
             $(this).attr('hidden', true);
         })
         $('#' + params).removeAttr('hidden');
+        // $('.' + params).removeClass('btn-outline-primary');
+        // $('.' + params).addClass('btn-primary');
+        arrkategori.forEach(element => {
+            if (params == element) {
+                $('.' + params).removeClass('btn-outline-primary');
+                $('.' + params).addClass('btn-primary');
+            }else{
+                $('.' + element).addClass('btn-outline-primary');
+                $('.' + element).removeClass('btn-primary');
+            }
+        });
         // $('#allClass').attr('href','/list-class/'+params);
     }
 
@@ -680,13 +642,14 @@
                     // $('.owlCustom').html(null);
                     for (const key in response.kelas) {
                         if (Object.hasOwnProperty.call(response.kelas, key)) {
+                            arrkategori.push(key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_'));
                             const element = response.kelas[key];
                             let owl = '';
                             owl += '<div class="owl-item" style="margin:0px !important;">';
                             owl += '    <div class="oc-item">';
                             owl += '        <div class="portfolio-item">';
                             owl += '            <div class="portfolio-image">';
-                            owl += '                <button class="button button-circle"';
+                            owl += '                <button class="mr-2 '+key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_')+' btn btn-outline-primary" style="border-radius: 10px"';
                             owl += '                    onclick=tabsCategory("' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_') + '")><small>' + key + '</small></button>';
                             owl += '            </div>';
                             owl += '        </div>';

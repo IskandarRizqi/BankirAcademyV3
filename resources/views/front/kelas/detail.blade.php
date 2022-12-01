@@ -54,11 +54,6 @@
                             <div class="w-100"></div>
 
                             <div class="card col">
-                                @if ($class->type == 0)
-                                <span class="badge badge-success" style="width: fit-content">Bank</span>
-                                @else
-                                <span class="badge badge-warning" style="width: fit-content">Non-Bank</span>
-                                @endif
                                 <div class="card-body">
                                     <div class="col-md-12" style="padding-bottom: 10px;">
                                         <h4>Kelas Timeline</h4>
@@ -138,6 +133,12 @@
                                         </div>
                                         <hr>
                                         <div class="mb-4">
+                                            {{-- @if ($class->type == 0)
+                                            @else
+                                            <p>Non-Bank</p>
+                                            @endif --}}
+                                            <span class="btn btn-warning btn-block btn-sm">Bank | BPR |
+                                                KOPERASI | LEMBAGA KEUANGAN MICRO ( LKM )</span>
                                             <label for="">Location :</label>
                                             <label for="" class="ml-auto">{{$lokasi?$location:'Online'}}</label>
                                         </div>
