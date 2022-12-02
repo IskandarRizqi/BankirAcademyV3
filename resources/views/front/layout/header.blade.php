@@ -15,9 +15,11 @@
                 <!-- Logo
 						============================================= -->
                 <div id="logo" style="height: auto !important">
-                    <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}"><img
-                            src="{{env('CUSTOM_LOGO','/Bank-academy-logo-03.png')}}" alt="E-class"
+                    <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}">
+                        <img src="{{env('CUSTOM_LOGO','/Bank-academy-logo-03.png')}}" alt="E-class"
                             style="max-width: 400px; height:auto !important;"></a>
+                    <a href="{{url('/')}}" class="retina-logo" data-dark-logo="{{asset('/526x417-05.png')}}"><img
+                            src="{{asset('/526x417-05.png')}}" alt="Canvas Logo"></a>
                 </div><!-- #logo end -->
                 @if(Auth::check() && Auth::user()->role == 2)
                 <div class="header-misc">
@@ -66,17 +68,17 @@
                             </a>
                             <ul class="sub-menu-container">
                                 <li class="menu-item">
-                                    <a class="menu-link" href="/pages/page/4">
+                                    <a class="menu-link" href="#">
                                         <div>Calon Bankir</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="/pages/page/5">
+                                    <a class="menu-link" href="#">
                                         <div>Bankir</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="/pages/page/6">
+                                    <a class="menu-link" href="#">
                                         <div>Bootcamp Bankir</div>
                                     </a>
                                 </li>

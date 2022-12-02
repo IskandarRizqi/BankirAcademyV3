@@ -188,6 +188,9 @@
                     <div class="owl-stage-outer">
                         <div class="owl-stage owlCustom"
                             style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
+                            @foreach ($o['owlCustom'] as $k => $v )
+                            {!!$v!!}
+                            @endforeach
                         </div>
                     </div>
                     <div class="owl-nav" hidden><button type="button" role="presentation" class="owl-prev"
@@ -196,9 +199,13 @@
                                 class="icon-angle-right"></i></button></div>
                 </div>
                 <hr style="width: 1100px">
-                <div id="cateKelas"></div>
+                <div id="cateKelas">
+                    @foreach ($o['cateKelas'] as $k => $v )
+                    {!!$v!!}
+                    @endforeach
+                </div>
                 <div class="center">
-                    <input type="text" id="halaman" hidden>
+                    <input type="text" id="halaman" value="2" hidden>
                     <a id="allClass" class="btn btn-primary btn-block">Semua Kelas</a>
                 </div>
             </div>
@@ -457,14 +464,15 @@
         </div>
     </div>
     </div>
+    <textarea name="" id="kelas" cols="30" rows="10" hidden>{{json_encode($o['kelas'])}}</textarea>
 </section>
 <!-- #content end -->
 
 @include('front.layout.footer')
 <script>
-    let arrkategori = [];
+    let arrkategori = JSON.parse($('#kelas').val());
     $(document).ready(function() {
-        lazyLoad(1);
+        // lazyLoad(1);
         $('#allClass').click(function() {
             let hal = $('#halaman').val();
             lazyLoad(hal);
@@ -611,6 +619,7 @@
     })
 
     function tabsCategory(params) {
+        console.log(params);
         $('.tabsCustom').each(function() {
             $(this).attr('hidden', true);
         })
@@ -644,22 +653,22 @@
                     // $('.owlCustom').html(null);
                     for (const key in response.kelas) {
                         if (Object.hasOwnProperty.call(response.kelas, key)) {
-                            arrkategori.push(key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_'));
+                            arrkategori.push(key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,''));
                             const element = response.kelas[key];
                             let owl = '';
                             owl += '<div class="owl-item" style="margin:0px !important;">';
                             owl += '    <div class="oc-item">';
                             owl += '        <div class="portfolio-item">';
                             owl += '            <div class="portfolio-image">';
-                            owl += '                <button class="mr-2 '+key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_')+' btn btn-outline-primary" style="border-radius: 10px"';
-                            owl += '                    onclick=tabsCategory("' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_') + '")><small>' + key + '</small></button>';
+                            owl += '                <button class="mr-2 '+key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'')+' btn btn-outline-primary" style="border-radius: 10px"';
+                            owl += '                    onclick=tabsCategory("' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'') + '")><small>' + key + '</small></button>';
                             owl += '            </div>';
                             owl += '        </div>';
                             owl += '    </div>';
                             owl += '</div>';
                             if (page == 1) {
                                 $('.owlCustom').append(owl);
-                                $('#cateKelas').append('<div id="' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_') + '" class="row tabsCustom mt-2" hidden></div>');
+                                $('#cateKelas').append('<div id="' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'') + '" class="row tabsCustom mt-2" hidden></div>');
                             }
 
                             let html = '';
@@ -756,7 +765,7 @@
                             if (element.next_page_url) {
                                 next_page++;
                             }
-                            $('#' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'-')).append(html);
+                            $('#' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'')).append(html);
                         }
                     }
                     if (next_page <= 0) {

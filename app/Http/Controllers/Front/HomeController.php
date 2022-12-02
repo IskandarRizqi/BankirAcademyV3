@@ -72,6 +72,156 @@ class HomeController extends Controller
             }
             return response()->json($dx);
         }
+
+        $dx['kelas'] = [];
+        $data['o']['owlCustom'] = [
+            '<div class="owl-item" style="margin:0px !important;">
+                <div class="oc-item">
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <button class="mr-2 Semua btn btn-outline-primary" style="border-radius: 10px"
+                            onclick=tabsCategory("Semua")><small>Semua</small></button>
+                    </div>
+                </div>
+                </div>
+            </div>',
+        ];
+        $data['o']['cateKelas'] = [];
+        $data['o']['kelas'] = ['Semua'];
+        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
+        $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
+        foreach ($categori as $key => $value) {
+            $data['o']['kelas'][] = preg_replace('/\s+/', '', $value);
+            $owl = '';
+            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->paginate(6)->toArray();
+            $owl .= '<div class="owl-item" style="margin:0px !important;">';
+            $owl .= '    <div class="oc-item">';
+            $owl .= '        <div class="portfolio-item">';
+            $owl .= '            <div class="portfolio-image">';
+            $owl .= '                <button class="mr-2 ' . preg_replace('/\s+/', '', $value) . ' btn btn-outline-primary" style="border-radius: 10px"';
+            $owl .= '                    onclick=tabsCategory("' . preg_replace('/\s+/', '', $value) . '")><small>' . $value . '</small></button>';
+            $owl .= '            </div>';
+            $owl .= '        </div>';
+            $owl .= '    </div>';
+            $owl .= '</div>';
+            array_push($data['o']['owlCustom'], $owl);
+            // array_push($data['o']['cateKelas'], '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden></div>');
+            $html = '';
+
+            $html .= '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden>';
+            foreach ($dx['kelas'][$value]['data'] as $k => $v) {
+                $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
+                $html .= '    <div class=card>';
+                $html .= '        <div class=card-body>';
+                $html .= '            <div class="card" style="min-height: 0px !important">';
+                $html .= '                <img src="' . $v['image'] . '" width=100%>';
+                $html .= '            </div>';
+                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' . $v['title'] . '</h5>';
+                if ($v['date_start'] == $v['date_end']) {
+                    $html .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</h6>';
+                } else {
+                    $html .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</h6>';
+                }
+                $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
+                $html .= '                <img class="mr-3 rounded-circle"';
+                $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                $html .= '                <div class=>';
+                $html .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
+                $html .= '                    </label>';
+                $html .= '                    <small>' . $v['instructor_list'][0]->title . '</small>';
+                $html .= '                </div>';
+                $html .= '                <div class="ml-2 flex-fill">';
+                $html .= '                    <label class="d-block mb-0"> Harga';
+                $html .= '                    </label>';
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>';
+                    } else {
+                        $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                    }
+                }
+                $html .= '                </div>';
+                $html .= '            </a>';
+                $html .= '            <div class="text-center mt-2 w-100">';
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $html .=
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '<span class="badge badge-danger badge-sm ml-2">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</span></h3>';
+                    }
+                }
+                $html .=
+                    '                <a class="btn btn-primary btn-block btn-rounded"';
+                $html .=
+                    '                    style="border-radius:10px !important"';
+                $html .= '                    href="class/' . $v['unique_id'] .
+                    '/' . str_replace('/', '-', $v['title']) . '">';
+                $html .= '                    Detail';
+                $html .= '                </a>';
+                $html .= '            </div>';
+                $html .= '        </div>';
+                $html .= '    </div>';
+                $html .= '</div>';
+
+                $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
+                $semua .= '    <div class=card>';
+                $semua .= '        <div class=card-body>';
+                $semua .= '            <div class="card" style="min-height: 0px !important">';
+                $semua .= '                <img src="' . $v['image'] . '" width=100%>';
+                $semua .= '            </div>';
+                $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' . $v['title'] . '</h5>';
+                if ($v['date_start'] == $v['date_end']) {
+                    $semua .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</h6>';
+                } else {
+                    $semua .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</h6>';
+                }
+                $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
+                $semua .= '                <img class="mr-3 rounded-circle"';
+                $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                $semua .= '                <div class=>';
+                $semua .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
+                $semua .= '                    </label>';
+                $semua .= '                    <small>' . $v['instructor_list'][0]->title . '</small>';
+                $semua .= '                </div>';
+                $semua .= '                <div class="ml-2 flex-fill">';
+                $semua .= '                    <label class="d-block mb-0"> Harga';
+                $semua .= '                    </label>';
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>';
+                    } else {
+                        $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                    }
+                }
+                $semua .= '                </div>';
+                $semua .= '            </a>';
+                $semua .= '            <div class="text-center mt-2 w-100">';
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $semua .=
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '<span class="badge badge-danger badge-sm ml-2">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</span></h3>';
+                    }
+                }
+                $semua .=
+                    '                <a class="btn btn-primary btn-block btn-rounded"';
+                $semua .=
+                    '                    style="border-radius:10px !important"';
+                $semua .= '                    href="class/' . $v['unique_id'] .
+                    '/' . str_replace('/', '-', $v['title']) . '">';
+                $semua .= '                    Detail';
+                $semua .= '                </a>';
+                $semua .= '            </div>';
+                $semua .= '        </div>';
+                $semua .= '    </div>';
+                $semua .= '</div>';
+            }
+            $html .= '</div>';
+            // $semua .= $html;
+            array_push($data['o']['cateKelas'], $html);
+        }
+        $semua .= '</div>';
+        array_push($data['o']['cateKelas'], $semua);
+        // return $dx;
+
         // return $data;
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
     }

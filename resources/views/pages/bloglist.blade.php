@@ -5,7 +5,7 @@
 <section id="content">
 	<div class="content-wrap">
 		<div class="container clearfix">
-			<h3>BLOG</h3>
+			<h3>Literasi</h3>
 			@if ($blog['data'])
 			<div class="row gutter-40 col-mb-80">
 				<div class="postcontent col-lg-12">
