@@ -82,7 +82,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="menu-item"><a class="menu-link" href="#hrefpromo" onclick="popc()">
+                        <li class="menu-item"><a class="menu-link" href="/promo">
                                 <div>Promo</div>
                             </a>
                         </li>

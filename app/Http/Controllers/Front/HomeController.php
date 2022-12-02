@@ -215,4 +215,12 @@ class HomeController extends Controller
         $l['data'] = ClassLamanModel::where('slug', $slug)->first();
         return view('front.home.laman', $l);
     }
+
+    public function showAllPromo()
+    {
+        $now = Carbon::now();
+        $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
+        // return $data;
+        return view('front.allpromo', $data);
+    }
 }

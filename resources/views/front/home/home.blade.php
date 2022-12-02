@@ -240,7 +240,9 @@
                     </div>
                 </div>
                 <div class="d-flex flex-row-reverse">
-                    <button class="btn btn-warning" style="border-radius: 9px">Promo Lainnya</button>
+                    <a href="/promo">
+                        <button class="btn btn-warning" style="border-radius: 9px">Promo Lainnya</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -655,7 +657,6 @@
                             owl += '        </div>';
                             owl += '    </div>';
                             owl += '</div>';
-                            // let hal = $('#halaman').val();
                             if (page == 1) {
                                 $('.owlCustom').append(owl);
                                 $('#cateKelas').append('<div id="' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,'_') + '" class="row tabsCustom mt-2" hidden></div>');

@@ -113,6 +113,7 @@ Route::get('/detail-kelas', function () {
 Route::post("/kode-promo/{id}/{kode}/{payment}", [App\Http\Controllers\Front\ProfileController::class, "setKodePromo"]);
 Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
 
+Route::get("/promo", [App\Http\Controllers\Front\HomeController::class, "showAllPromo"]);
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
 Route::resource('profile', ProfileController::class)->middleware('auth');
