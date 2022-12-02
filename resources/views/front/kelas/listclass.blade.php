@@ -5,22 +5,22 @@
 <section id="content">
     <div class="content-wrap">
         <div class="container clearfix">
-            <h3>Kelas</h3>
+            <h3 class="text-capitalize">{{$judul}}</h3>
             @if ($class['data'])
             <div class="row gutter-40 col-mb-80">
                 <div class="postcontent col-lg-9">
                     <div class="single-event">
                         <div class="row">
                             @foreach ($class['data'] as $v)
-                            <div class="col-lg-3 col-sm-6 mb-4">
+                            <div class="col-lg-4 col-sm-6 mb-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card" style="min-height: 0px !important">
                                             <img src="{{ $v['image'] }}" width="100%">
                                         </div>
-                                        <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">
-                                            {{$v['title'] }}</h5>
-                                        <h6 style="margin: 0px !important;">
+                                        <p class="mt-2 text-overflow" style="line-height: 1 !important;">
+                                            {{ substr($v['title'],0,115) }}... </p>
+                                        <h6 style="margin: 0px !important; font-weight: normal;">
                                             @if ($v['date_start'] == $v['date_end'])
                                             {{\Carbon\Carbon::parse($v['date_start'])->format('d-m-Y')}}
                                             @else
@@ -98,12 +98,24 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="card" style="position: fixed; z-index: 999;">
+                    <div class="card">
                         <form action="/list-class" method="POST">
                             @csrf
                             <div class="card-body">
-                                <label for="">Pencarian:</label>
-                                <input type="text" name="title" id="title" class="form-control">
+                                <div class="form-group">
+                                    <label for="">Pencarian:</label>
+                                    <input type="text" name="title" id="title" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Kategori:</label>
+                                    <select class="form-control tagging slc2tag" name="slcClassesCategory"
+                                        id="slcClassesCategory" required>
+                                        <option value=""></option>
+                                        @foreach ($pencarian['category'] as $ctg)
+                                        <option value="{{$ctg}}">{{$ctg}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <button type="submit" class="btn btn-secondary btn-sm mt-2">Cari</button>
                             </div>
                         </form>
@@ -115,4 +127,11 @@
         </div>
     </div>
 </section><!-- #content end -->
+@section('custom-js')
+<script>
+    $('#slcClassesCategory').select2({
+		tagging:true,
+	})
+</script>
+@endsection
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))

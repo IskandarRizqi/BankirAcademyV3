@@ -13,20 +13,23 @@
 						<div class="row">
 							@foreach ($blog['data'] as $v)
 							<div class="col-lg-3 col-sm-6 mb-4">
-								<div class="card">
-									<div class="card-body">
-										<div class="card" style="min-height: 0px !important"> <img
-												src="{{$v['thumbnail']}}" width="100%"> </div>
-										<h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">
-											{{$v['title']}}</h5>
-										<div class="text-center mt-2 w-100"><a
-												class="btn btn-primary btn-block btn-rounded"
-												style="border-radius:10px !important"
-												href="/pages/blog/{{$v['id']}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', '
-												,' , ';' , '<' , '>' ), '' , $v['title']))}}"> Detail </a>
+								<a href="/pages/blog/{{$v['id']}}/{{urlencode(str_ireplace( array( '\'', '/', '//', '"', '
+									,' , ';' , '<' , '>' ), '' , $v['title']))}}">
+									<div class="card">
+										<div class="card-body">
+											<div class="card" style="min-height: 0px !important"> <img
+													src="{{$v['thumbnail']}}" width="100%"> </div>
+											<p class="mt-2 text-overflow" style="line-height: 1 !important;">
+												{{ substr($v['title'],0,115) }}... </p>
+											<hr>
+											<small>{!! $v['description'] !!}...</small>
+											{{-- <div class="text-center mt-2 w-100"><a
+													class="btn btn-primary btn-block btn-rounded"
+													style="border-radius:10px !important" href=""> Baca </a>
+											</div> --}}
 										</div>
 									</div>
-								</div>
+								</a>
 							</div>
 							@endforeach
 						</div>

@@ -113,6 +113,9 @@ class PagesController extends Controller
 		$tobeins = [
 			'title' => $r->txtTitle,
 			'content' => $r->txaPageBlog,
+			'description' => $r->txtdescription,
+			'date_start' => $r->DateStart,
+			'date_end' => $r->DateEnd,
 		];
 		if ($r->file('txtThumbnail')) {
 			$name = $r->file('txtThumbnail')->getClientOriginalName();
@@ -138,8 +141,8 @@ class PagesController extends Controller
 
 	public function showListBlog(Request $r)
 	{
-		$data['blog'] = Pages::select('id', 'title', 'thumbnail', 'created_at')->where('type', 0)->orderBy('created_at', 'desc')->paginate(7)->toArray();
-
+		$now = Carbon::now();
+		$data['blog'] = Pages::select()->where('type', 0)->whereDate('date_start', '<=', $now->format('Y-m-d'))->whereDate('date_end', '>=', $now->format('Y-m-d'))->orderBy('created_at', 'desc')->paginate(7)->toArray();
 		return view('pages/bloglist', $data);
 	}
 

@@ -90,6 +90,7 @@ class ClassesController extends Controller
 			'date_end' => $r->datClassesDateEnd,
 			'tipe' => json_encode($r->slcClassesType),
 			'level' => $r->slcClassesLevel,
+			'jenis' => json_encode($r->slcClassesJenis),
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -119,6 +120,7 @@ class ClassesController extends Controller
 			'date_end' => $r->datClassesDateEnd,
 			'tipe' => json_encode($r->slcClassesType),
 			'level' => $r->slcClassesLevel,
+			'jenis' => json_encode($r->slcClassesJenis),
 		];
 
 		if ($r->file('filClassesImage')) {
@@ -367,21 +369,47 @@ class ClassesController extends Controller
 		}
 		return Redirect::back()->withInput($request->all())->with('error', 'Review Tidak Tersimpan');
 	}
-	public function listClass()
+	public function pencarian()
 	{
+		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+		$tags = ClassesModel::select('tags')->distinct('tags')->pluck('tags')->toArray();
+		$data['tags'] = [];
+		foreach ($tags as $key => $value) {
+			foreach (json_decode($value) as $key => $v) {
+				// $data['tag'] = $v;
+				if (array_search($v, $data['tags'])) {
+					// 
+				} else {
+					array_push($data['tags'], $v);
+				}
+			}
+		}
+		return $data;
+	}
+	public function listClass(Request $request)
+	{
+		$data['judul'] = 'Kelas';
+		if ($request->jenis) {
+			$data['judul'] = str_replace('_', ' ', $request->jenis);
+		}
 		$data['class'] = ClassesModel::select()
-			// ->where(function ($sql) use ($category) {
-			// 	if ($category !== 'Semua') {
-			// 		$str = str_replace('_', ' ', $category);
-			// 		return $sql->where('category', $str);
-			// 	}})
+			->where(function ($sql) use ($request) {
+				if ($request->jenis) {
+					return $sql->where('jenis', 'like', '%"' . strtoupper($request->jenis) . '"%');
+				}
+			})
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->paginate(12)->toArray();
+			->paginate(8)->toArray();
 
+		$data['pencarian'] = $this->pencarian();
 		return view('front.kelas.listclass', $data);
 	}
 	public function findClass(Request $request)
 	{
+		$data['judul'] = 'Kelas';
+		if ($request->jenis) {
+			$data['judul'] = str_replace('_', ' ', $request->jenis);
+		}
 		$data['class'] = ClassesModel::select()
 			// ->where(function ($sql) use ($category) {
 			// 	if ($category !== 'Semua') {
@@ -390,7 +418,7 @@ class ClassesController extends Controller
 			// 	}})
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
 			->where('title', 'like', '%' . $request->title . '%')
-			->paginate(12)->toArray();
+			->paginate(8)->toArray();
 
 		return view('front.kelas.listclass', $data);
 	}

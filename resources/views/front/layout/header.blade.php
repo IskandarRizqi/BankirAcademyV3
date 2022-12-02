@@ -68,18 +68,23 @@
                             </a>
                             <ul class="sub-menu-container">
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/list-class?jenis=calon_bankir">
                                         <div>Calon Bankir</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/list-class?jenis=bankir">
                                         <div>Bankir</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/list-class?jenis=bootcamp_bankir">
                                         <div>Bootcamp Bankir</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a class="menu-link" href="#">
+                                        <div>Management Trainee</div>
                                     </a>
                                 </li>
                             </ul>

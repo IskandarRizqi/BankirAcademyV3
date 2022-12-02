@@ -62,23 +62,9 @@
 									</select>
 								</div>
 							</div>
-							<div class="col">
-								<div class="form-group">
-									<input type="text" name="" id="oldSlcClassesType" value="{{$classes->tipe}}" hidden>
-									<label for="slcClassesCategory">Type</label>
-									<select class="form-control tagging" name="slcClassesType[]" id="slcClassesType"
-										multiple required>
-										<option value="BANK">BANK</option>
-										<option value="BPR">BPR</option>
-										<option value="KOPERASI">KOPERASI</option>
-										<option value="LEMABAGA KEUANGAN MICRO (LKM)">LEMABAGA KEUANGAN MICRO (LKM)
-										</option>
-									</select>
-								</div>
-							</div>
 						</div>
 					</div>
-					<div class="col-lg-12">
+					<div class="col-lg-6">
 						<div class="form-group">
 							<label for="datClassesDateStart">Class Date</label>
 							<small class="inputerrormessage text-danger" input-target="datClassesDateStart"
@@ -95,6 +81,38 @@
 								<input type="date" class="form-control" name="datClassesDateEnd" id="datClassesDateEnd"
 									placeholder="Date End" aria-label="Date End" value="{{$classes->date_end}}"
 									required>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<input type="text" name="" id="oldSlcClassesType" value="{{$classes->tipe}}" hidden>
+									<label for="slcClassesCategory">Type</label>
+									<select class="form-control tagging" name="slcClassesType[]" id="slcClassesType"
+										multiple required>
+										<option value="BANK">BANK</option>
+										<option value="BPR">BPR</option>
+										<option value="KOPERASI">KOPERASI</option>
+										<option value="LEMABAGA KEUANGAN MICRO (LKM)">LEMABAGA KEUANGAN MICRO (LKM)
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-group">
+									<input type="text" name="" id="oldSlcClassesJenis" value="{{$classes->jenis}}"
+										hidden>
+									<label for="slcClassesCategory">Jenis</label>
+									<select class="form-control tagging" name="slcClassesJenis[]" id="slcClassesJenis"
+										multiple>
+										<option value="CALON_BANKIR">CALON BANKIR</option>
+										<option value="BANKIR">BANKIR</option>
+										<option value="BOOTCAMP_BANKIR">BOOTCAMP BANKIR</option>
+										</option>
+									</select>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -184,11 +202,16 @@
 @section('custom-js')
 <script>
 	$(document).ready(function () {
-		let old = $('#oldSlcClassesType').val();
-		$("#slcClassesType").val(JSON.parse(old)).trigger('change');
+		let old_type = $('#oldSlcClassesType').val();
+		$("#slcClassesType").val(JSON.parse(old_type)).trigger('change');
+		let old_jenis = $('#oldSlcClassesJenis').val();
+		$("#slcClassesJenis").val(JSON.parse(old_jenis)).trigger('change');
 	})
 	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
 	$('#slcClassesType').select2({
+		tagging:true,
+	})
+	$('#slcClassesJenis').select2({
 		tagging:true,
 	})
 	createDataTable('#tblClasses');

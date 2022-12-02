@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('title');
             $table->longText('thumbnail')->nullable();
             $table->longText('content');
+            $table->text('description');
+            $table->date('date_start');
+            $table->date('date_end');
             $table->timestamps();
         });
     }

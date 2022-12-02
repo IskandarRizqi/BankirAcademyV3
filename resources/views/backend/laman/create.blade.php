@@ -1,4 +1,4 @@
-@extends('backend.beranda')
+@extends('backend.template')
 @section('content')
 <div class="widget">
     <form action="/admin/laman/store" method="POST" enctype="multipart/form-data">

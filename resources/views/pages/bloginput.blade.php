@@ -28,6 +28,33 @@
 					</div>
 					<div class="col-lg-12">
 						<div class="form-group">
+							<label for="datClassesDateStart">Date</label>
+							<small class="inputerrormessage text-danger" input-target="DateStart"
+								style="display: none;"></small>
+							<small class="inputerrormessage text-danger" input-target="DateEnd"
+								style="display: none;"></small>
+							<div class="input-group mb-4">
+								<input type="date" class="form-control" name="DateStart" id="DateStart"
+									placeholder="Date Start" aria-label="Date Start" value="{{$blog->date_start}}"
+									required>
+								<div class="input-group-append">
+									<span class="input-group-text" id="basic-addon5">s/d</span>
+								</div>
+								<input type="date" class="form-control" name="DateEnd" id="DateEnd"
+									placeholder="Date End" aria-label="Date End" value="{{$blog->date_end}}" required>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Description:</label>
+							<textarea type="text" class="form-control" name="txtdescription" id="txtdescription"
+								maxlength="500"
+								required>{{isset($blog->description)?$blog->description:null}}</textarea>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
 							<label>Content:</label>
 							<textarea name="txaPageBlog" id="txaPageBlog" class="form-control"
 								required>{{isset($blog->content)?$blog->content:null}}</textarea>

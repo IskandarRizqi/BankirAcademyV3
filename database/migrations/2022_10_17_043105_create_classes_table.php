@@ -29,6 +29,7 @@ return new class extends Migration
             $table->longText('image_mobile')->nullable();
             $table->json('tipe');
             $table->integer('level')->comment('1:Pemula, 2:Menengah, 3:Lanjutan')->default(1);
+            $table->json('jenis')->nullable();
             $table->timestamps();
         });
     }
