@@ -29,7 +29,7 @@
                         </span></td>
                     <td>{{ $d->name }}</td>
                     <td>{{ $d->title }}</td>
-                    <td>{{ $d->desc }}</td>
+                    <td class="text-truncate" style="max-width: 200px" title="{{$d->desc}}">{{ $d->desc }}</td>
                     <td>
                         @if (json_decode($d->dokumen))
                         <a href="/getBerkas?rf={{ json_decode($d->dokumen)->url }}">Download</a>

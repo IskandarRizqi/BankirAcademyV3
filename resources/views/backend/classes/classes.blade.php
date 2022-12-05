@@ -62,7 +62,7 @@
 								s/d
 								{{Carbon\Carbon::parse($v->date_end)->format('d-m-Y')}}
 							</td>
-							<td>{{$v->title}}</td>
+							<td class="text-truncate" style="max-width: 200px" title="{{$v->title}}">{{$v->title}}</td>
 							<td>{{$v->category}}</td>
 							<td>
 								@foreach ($v->instructor_list as $i)
