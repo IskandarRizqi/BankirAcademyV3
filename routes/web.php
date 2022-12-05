@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/instructor/profile", [App\Http\Controllers\Backend\InstructorController::class, "profileUpdate"]);
     Route::post("/addreviewinstructor", [App\Http\Controllers\Front\ProfileController::class, "addreviewinstructor"]);
     Route::post("/changestatusreview", [App\Http\Controllers\Front\ProfileController::class, "changestatusreview"]);
+    Route::get('/instructor/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'instructor']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

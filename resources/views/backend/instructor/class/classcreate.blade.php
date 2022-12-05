@@ -1,4 +1,4 @@
-@extends('backend.beranda')
+@extends('backend.template')
 @section('content')
 <div class="col-lg-12">
     <div class="widget">

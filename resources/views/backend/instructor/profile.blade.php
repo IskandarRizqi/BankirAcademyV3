@@ -1,4 +1,4 @@
-@extends('backend.beranda')
+@extends('backend.template')
 @section('content')
 <div class="row layout-top-spacing">
     <form action="/instructor/profile" method="POST" enctype="multipart/form-data">

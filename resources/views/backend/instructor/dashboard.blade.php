@@ -1,66 +1,63 @@
-@extends('backend.beranda')
+@extends('backend.template')
 @section('content')
-<div class="row layout-top-spacing">
-  <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-    <div class="widget widget-chart-one">
-      <div class="widget-heading">
-        <h5 class="">Jumlah Kelas Per Bulan Dalam Setahun</h5>
-        <div class="task-action">
-          {{-- <div class="dropdown">
-            <a class="dropdown-toggle" href="#" role="button" id="pendingTask" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="feather feather-more-horizontal">
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="19" cy="12" r="1"></circle>
-                <circle cx="5" cy="12" r="1"></circle>
-              </svg>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="pendingTask"
-              style="will-change: transform;">
-              <a class="dropdown-item" href="javascript:void(0);">Weekly</a>
-              <a class="dropdown-item" href="javascript:void(0);">Monthly</a>
-              <a class="dropdown-item" href="javascript:void(0);">Yearly</a>
-            </div>
-          </div> --}}
-        </div>
-      </div>
-
-      <div class="widget-content">
-        <div id="chart"></div>
+<div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+  <div class="widget widget-chart-one">
+    <div class="widget-heading">
+      <h5 class="">Jumlah Kelas Per Bulan Dalam Setahun</h5>
+      <div class="task-action">
+        {{-- <div class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="pendingTask" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-more-horizontal">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="pendingTask" style="will-change: transform;">
+            <a class="dropdown-item" href="javascript:void(0);">Weekly</a>
+            <a class="dropdown-item" href="javascript:void(0);">Monthly</a>
+            <a class="dropdown-item" href="javascript:void(0);">Yearly</a>
+          </div>
+        </div> --}}
       </div>
     </div>
+
+    <div class="widget-content">
+      <div id="chart"></div>
+    </div>
   </div>
-  <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-    <div class="widget widget-card-one">
-      <div class="widget-content">
-        <div class="table-responsive">
-          <table id="zero-config" class="table dt-table-hover" style="width:100%">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Nilai</th>
-                <th>Pesan</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($review as $key => $r)
-              <tr>
-                <td>{{$key+1}}</td>
-                <td>{{$r->name}}</td>
-                <td>{{$r->review_val}}</td>
-                <td>{{$r->review_msg}}</td>
-                <td><span onclick="aktif('{{$r->id}}','{{$r->status?'Tidak Tampil':'Tampil'}}')"
-                    class="badge badge-{{$r->status?'success':'danger'}}">{{$r->status?'Tampil':'Tidak
-                    Tampil'}}</span></td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
+</div>
+<div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+  <div class="widget widget-card-one">
+    <div class="widget-content">
+      <div class="table-responsive">
+        <table id="zero-config" class="table dt-table-hover" style="width:100%">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Nilai</th>
+              <th>Pesan</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($review as $key => $r)
+            <tr>
+              <td>{{$key+1}}</td>
+              <td>{{$r->name}}</td>
+              <td>{{$r->review_val}}</td>
+              <td>{{$r->review_msg}}</td>
+              <td><span onclick="aktif('{{$r->id}}','{{$r->status?'Tidak Tampil':'Tampil'}}')"
+                  class="badge badge-{{$r->status?'success':'danger'}}">{{$r->status?'Tampil':'Tidak
+                  Tampil'}}</span></td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

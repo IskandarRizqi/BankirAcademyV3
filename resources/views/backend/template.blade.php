@@ -24,6 +24,8 @@
         <div class="search-overlay"></div>
         @if (Auth::user()->role!=3)
         @include('template.backend.sidebar')
+        @else
+        @include('backend.instructor.sidebar')
         @endif
         <!--  BEGIN SIDEBAR  -->
         <!--  END SIDEBAR  -->

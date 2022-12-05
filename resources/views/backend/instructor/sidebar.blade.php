@@ -42,13 +42,8 @@
                     </div>
                 </a>
             </li>
-
             <li class="menu">
-                <h5 class="text-center text-uppercase mt-3 mb-1">Coming soon</h5>
-            </li>
-
-            <li class="menu">
-                <a href="#" aria-expanded="false" class="dropdown-toggle">
+                <a href="/instructor/peserta" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             style="fill: rgba(0, 0, 0, 1);">
@@ -63,6 +58,11 @@
                     </div>
                 </a>
             </li>
+
+            <li class="menu">
+                <h5 class="text-center text-uppercase mt-3 mb-1">Coming soon</h5>
+            </li>
+
             <li class="menu">
                 <a href="#" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
