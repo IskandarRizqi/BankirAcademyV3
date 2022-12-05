@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="social-icon si-small si-rounded topmargin-sm si-facebook"
+                        {{-- <a href="#" class="social-icon si-small si-rounded topmargin-sm si-facebook"
                             style="color: black">
                             <i class="icon-facebook"></i>
                             <i class="icon-facebook"></i>
@@ -62,7 +62,7 @@
                             style="color: black">
                             <i class="icon-linkedin"></i>
                             <i class="icon-linkedin"></i>
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">

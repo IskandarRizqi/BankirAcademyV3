@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassLamanModel;
 use App\Models\Pages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,59 @@ use Illuminate\Support\Facades\Validator;
 
 class PagesController extends Controller
 {
+	public function index()
+	{
+		$page = [];
+		$page['data'] = Pages::get();
+		return view('backend.page.page', $page);
+	}
+	public function edit($id)
+	{
+		$page = [];
+		if ($id) {
+			$page['page'] = Pages::where('id', $id)->first();
+		}
+		// return $page;
+		return view('backend.page.edit', $page);
+	}
+	public function update(Request $r)
+	{
+		// return $r->all();
+		if ($r->type > 0) {
+			$validator = Validator::make($r->all(), [
+				'type' => 'required|unique:pages,type',
+			]);
+			if ($validator->fails()) {
+				return Redirect::back()->withErrors($validator)->with('error', 'Data Sudah Ada')->withInput($r->all());
+			}
+		}
+		$tobeins = [
+			'title' => $r->txtTitle,
+			'content' => $r->txaPageAbout,
+			'type' => $r->type,
+		];
+		if ($r->file('txtThumbnail')) {
+			$name = $r->file('txtThumbnail')->getClientOriginalName();
+			$size = $r->file('txtThumbnail')->getSize();
+
+			$filename = time() . '-' . $name;
+			$file = $r->file('txtThumbnail');
+			$file->move(public_path('image/pages'), $filename);
+
+			$tobeins['thumbnail'] = ('/image/pages/' . $filename);
+		}
+
+		Pages::UpdateOrCreate(['id' => $r->id], $tobeins);
+		return Redirect::to('admin/pages');
+	}
+	public function delete(Request $r, $id)
+	{
+		$p = Pages::where('id', $id)->delete();
+		if ($p) {
+			return Redirect::back()->with('success', 'Berhasil Hapus');
+		}
+		return Redirect::back()->with('error', 'Gagal Hapus');
+	}
 	public function getAbout(Request $r)
 	{
 		$data['about'] = Pages::where('type', 1)->first();

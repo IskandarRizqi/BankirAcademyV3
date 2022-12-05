@@ -17,7 +17,7 @@
                 <div id="logo" style="height: auto !important">
                     <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}">
                         <img src="{{env('CUSTOM_LOGO','/Bank-academy-logo-03.png')}}" alt="E-class"
-                            style="max-width: 400px; height:auto !important;"></a>
+                            style="max-width: 340px; height:auto !important;"></a>
                     <a href="{{url('/')}}" class="retina-logo" data-dark-logo="{{asset('/526x417-05.png')}}"><img
                             src="{{asset('/526x417-05.png')}}" alt="Canvas Logo"></a>
                 </div><!-- #logo end -->

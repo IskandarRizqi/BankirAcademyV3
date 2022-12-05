@@ -222,7 +222,6 @@ class HomeController extends Controller
         array_push($data['o']['cateKelas'], $semua);
         // return $dx;
 
-        // return $data;
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
     }
 

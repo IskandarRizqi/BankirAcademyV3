@@ -275,7 +275,8 @@
                                         <small><i class="far fa-clock"></i>
                                             {{ \Carbon\Carbon::parse($k->date_start)->format('F d, Y') }}</small>
                                         <div class="testi-meta">
-                                            {{ $k->instructor_list[0]->name }}
+                                            <p class="text-center" style="padding-left: 50px">{{
+                                                $k->instructor_list[0]->name }}</p>
                                             <span style="padding-left: 83px">{{ $k->instructor_list[0]->title }}
                                             </span>
                                             @auth

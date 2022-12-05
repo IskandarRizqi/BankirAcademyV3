@@ -176,6 +176,9 @@
                         <a href="/admin/laman"> Laman </a>
                     </li>
                     <li>
+                        <a href="/admin/pages"> Page </a>
+                    </li>
+                    {{-- <li>
                         <a href="/admin/pages/kelas/4"> Calon Bankir </a>
                     </li>
                     <li>
@@ -198,7 +201,7 @@
                     </li>
                     <li>
                         <a href="/admin/pages/getsdank"> Syarat & Ketentuan </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             <li class="menu">

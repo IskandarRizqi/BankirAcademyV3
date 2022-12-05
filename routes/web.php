@@ -52,6 +52,10 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/fee', FeeController::class);
 
     //pages
+    Route::delete("/admin/pages/delete/{id}", [App\Http\Controllers\Front\PagesController::class, "delete"]);
+    Route::post("/admin/pages/update", [App\Http\Controllers\Front\PagesController::class, "update"]);
+    Route::get("/admin/pages/edit/{id}", [App\Http\Controllers\Front\PagesController::class, "edit"]);
+    Route::get("/admin/pages", [App\Http\Controllers\Front\PagesController::class, "index"]);
     Route::post("/admin/pages/kelas/{tipe}", [App\Http\Controllers\Front\PagesController::class, "setPageKelas"]);
     Route::get("/admin/pages/kelas/{tipe}", [App\Http\Controllers\Front\PagesController::class, "getPageKelas"]);
     Route::get("/admin/pages/getsdank", [App\Http\Controllers\Front\PagesController::class, "getsdank"]);
