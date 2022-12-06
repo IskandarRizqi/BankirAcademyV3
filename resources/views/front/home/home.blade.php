@@ -266,7 +266,8 @@
                             @foreach ($kelas_mingguan as $km)
                             <div class="oc-item">
                                 @foreach ($km as $k)
-                                <div class="testimonial mb-2" style="background-color: #E9EEF0">
+                                <div class="testimonial mb-2"
+                                    style="background-color: #E9EEF0; padding: 10px !important">
                                     <div class="testi-content">
                                         <div class="testi-image">
                                             <a href="#"><img src="{{ $k->image }}" alt="Customer Testimonails"></a>
@@ -274,29 +275,26 @@
                                         <p>{{ $k->title }}</p>
                                         <small><i class="far fa-clock"></i>
                                             {{ \Carbon\Carbon::parse($k->date_start)->format('F d, Y') }}</small>
-                                        <div class="testi-meta">
-                                            <p class="text-center" style="padding-left: 50px">{{
-                                                $k->instructor_list[0]->name }}</p>
-                                            <span style="padding-left: 83px">{{ $k->instructor_list[0]->title }}
-                                            </span>
+                                        <div class="testi-meta" style="padding-left: 90px">
+                                            <p>{{$k->instructor_list[0]->name }}</p>
+                                            <span>{{ $k->instructor_list[0]->title }}</span>
                                             @auth
                                             <a href="class/{{ $k->unique_id }}/{{ urlencode(
-                                                                    str_ireplace(
-                                                                        [
-                                                                            '\'',
-                                                                            '/',
-                                                                            '//',
-                                                                            '"',
-                                                                            ' ,', ';' , '<' , '>' , ], '' , $k->title,
+                                                                        str_ireplace(
+                                                                            [
+                                                                                '\'',
+                                                                                '/',
+                                                                                '//',
+                                                                                '"',
+                                                                                ' ,', ';' , '<' , '>' , ], '' ,
+                                                $k->title,
                                                 ),
                                                 ) }}">
-                                                <button class="btn btn-primary btn-sm" style="margin-left: 83px"
-                                                    width='100%'>Detail</button>
+                                                <button class="btn btn-primary btn-sm" width='100%'>Detail</button>
                                             </a>
                                             @else
-                                            <a class="btn btn-primary btn-sm" style="margin-left: 83px;"
-                                                data-toggle="modal" data-target="#modelId" data-backdrop="static"
-                                                data-keyboard="false">Detail</a>
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId"
+                                                data-backdrop="static" data-keyboard="false">Detail</a>
                                             @endauth
                                         </div>
                                     </div>

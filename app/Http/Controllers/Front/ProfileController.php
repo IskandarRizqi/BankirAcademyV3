@@ -9,6 +9,7 @@ use App\Models\ClassPaymentModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
 use App\Models\KodePromoModel;
+use App\Models\MasterRefferralModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,7 @@ class ProfileController extends Controller
             $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id')->where('id', $value->class_id)->get();
             $value->event = ClassEventModel::where('class_id', $value->class_id)->get();
         }
+        $data['reff'] = MasterRefferralModel::where('user_id', Auth::user()->id)->first();
         // return $data;
         return view('front.profile.profile', $data);
     }
@@ -111,6 +113,7 @@ class ProfileController extends Controller
             'nomor_handphone' => 'required|numeric',
             'alamat' => 'required',
             'tanggal_lahir' => 'required',
+            'rekening' => 'required',
             // 'image_produk' => 'image|mimes:jpeg,png,jpg|max:2048|required',
         ]);
         if ($validator->fails()) {
@@ -122,6 +125,7 @@ class ProfileController extends Controller
         ], [
             'name' => $request->nama_lengkap,
             'phone' => $request->nomor_handphone,
+            'rekening' => $request->rekening,
             'tanggal_lahir' => $request->tanggal_lahir,
             'gender' => $request->jenis_kelamin,
             'description' => $request->alamat,

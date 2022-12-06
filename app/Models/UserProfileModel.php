@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserProfileModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'user_profile';
 	protected $fillable = [
 		'user_id',
@@ -19,5 +19,6 @@ class UserProfileModel extends Model
 		'gender',
 		'description',
 		'instansi',
+		'rekening',
 	];
 }

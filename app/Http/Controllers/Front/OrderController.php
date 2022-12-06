@@ -80,6 +80,7 @@ class OrderController extends Controller
     }
     public function order_class(Request $request)
     {
+        // return $request->all();
         $auth = Auth::user()->id;
         if (!$request->class_id) {
             Redirect::back()->with('error', 'Kelas Ditemukan');

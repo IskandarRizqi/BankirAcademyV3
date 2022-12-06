@@ -526,14 +526,24 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-6">
-                                                        <label for="form-control">Tanggal lahir</label>
-                                                        <input type="date" name="tanggal_lahir" class="form-control"
-                                                            value="{{ $pfl['tanggal_lahir'] }}">
-                                                        @if ($errors->has('tanggal_lahir'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('tanggal_lahir') }}
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="form-control">Tanggal lahir</label>
+                                                                <input type="date" name="tanggal_lahir"
+                                                                    class="form-control"
+                                                                    value="{{ $pfl['tanggal_lahir'] }}">
+                                                                @if ($errors->has('tanggal_lahir'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{ $errors->first('tanggal_lahir') }}
+                                                                </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label for="">No. Rekening</label>
+                                                                <input type="text" name="rekening" id="rekening"
+                                                                    class="form-control" value="{{$pfl['rekening']}}">
+                                                            </div>
                                                         </div>
-                                                        @endif
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <label for="form-control">Jenis kelamin</label>
@@ -596,13 +606,28 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-6">
-                                                        <label for="form-control">Tanggal lahir</label>
-                                                        <input type="date" name="tanggal_lahir" class="form-control">
-                                                        @if ($errors->has('tanggal_lahir'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('tanggal_lahir') }}
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="form-control">Tanggal lahir</label>
+                                                                <input type="date" name="tanggal_lahir"
+                                                                    class="form-control">
+                                                                @if ($errors->has('tanggal_lahir'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{ $errors->first('tanggal_lahir') }}
+                                                                </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label for="">No. Rekening</label>
+                                                                <input type="text" name="rekening" id="rekening"
+                                                                    class="form-control">
+                                                                @if ($errors->has('rekening'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{ $errors->first('rekening') }}
+                                                                </div>
+                                                                @endif
+                                                            </div>
                                                         </div>
-                                                        @endif
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <label for="form-control">Jenis kelamin</label>
@@ -645,7 +670,7 @@
                                         Coming Soon
                                     </div>
                                     <div class="tab-content clearfix" id="tab-affiliate">
-                                        Coming Soon
+                                        @include('front.profile.tabAffiliate')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-absen">
                                         Coming Soon

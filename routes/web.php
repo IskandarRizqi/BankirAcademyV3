@@ -117,6 +117,7 @@ Route::get('/detail-kelas', function () {
 
 Route::post("/kode-promo/{id}/{kode}/{payment}", [App\Http\Controllers\Front\ProfileController::class, "setKodePromo"]);
 Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
+Route::post("/set-master-refferal", [App\Http\Controllers\Backend\RefferalController::class, "setMasterRefferal"]);
 
 Route::get("/promo", [App\Http\Controllers\Front\HomeController::class, "showAllPromo"]);
 Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
@@ -136,5 +137,7 @@ Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesControlle
 //Class
 Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
 Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "findClass"]);
+
+Route::get('/join/referral/{url}', [App\Http\Controllers\Backend\RefferalController::class, "joinRef"]);
 
 Auth::routes();

@@ -199,6 +199,8 @@
                                             @csrf
                                             <input type="text" id="class_id" name="class_id" value="{{ $class->id }}"
                                                 hidden>
+                                            <label for="">Kode Referral ( optional )</label>
+                                            <input type="text" id="kode_reff" name="kode_reff" class="form-control">
                                             @auth
                                             <button class="button button-circle btn-block text-center">Order
                                                 sekarang</button>

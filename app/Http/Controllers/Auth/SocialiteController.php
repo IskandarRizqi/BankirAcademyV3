@@ -35,18 +35,6 @@ class SocialiteController extends Controller
 
     public function findOrCreateUser($socialUser, $provider, $ins)
     {
-        // $socialAccount = SocialAccount::where('provider_id', $socialUser->getId())
-        //     ->where('provider_name', $provider)
-        //     ->first();
-
-        // if ($socialAccount) {
-
-        //     return $socialAccount->user;
-
-        // } else {
-
-
-        // }
         $user = User::where('email', $socialUser->getEmail())->first();
 
         if (!$user) {
@@ -71,11 +59,7 @@ class SocialiteController extends Controller
                 ]);
             }
         }
-
-        // $user->socialAccounts()->create([
-        //     'provider_id'   => $socialUser->getId(),
-        //     'provider_name' => $provider
-        // ]);
+        Session::forget('ins');
 
         return $user;
     }
