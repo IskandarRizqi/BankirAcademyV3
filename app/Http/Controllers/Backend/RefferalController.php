@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\MasterRefferralModel;
+use App\Models\RefferralPesertaModelModel;
 use App\Models\RefferralModel;
+use App\Models\RefferralPesertaModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +15,32 @@ use Illuminate\Support\Facades\Validator;
 
 class RefferalController extends Controller
 {
+    public function masterReff()
+    {
+        $data = [];
+        $data['data'] = MasterRefferralModel::get();
+        return view('backend.referral.masteradmin', $data);
+    }
+    public function storeMasterReff(Request $request)
+    {
+        $mr = MasterRefferralModel::updateOrCreate([
+            'id' => $request->id
+        ], [
+            'nominal' => $request->nominal
+        ]);
+        if ($mr) {
+            return Redirect::back()->with('success', 'Simpan Data Berhasil');
+        }
+        return Redirect::back()->with('error', 'Simpan Data Gagal');
+    }
+    public function delMasterReff($id)
+    {
+        $mr = MasterRefferralModel::where('id', $id)->delete();
+        if ($mr) {
+            return Redirect::back()->with('success', 'Hapus Data Berhasil');
+        }
+        return Redirect::back()->with('error', 'Hapus Data Gagal');
+    }
     public function setMasterRefferal(Request $request)
     {
         $up = UserProfileModel::where('user_id', Auth::user()->id)->first();
@@ -28,8 +56,8 @@ class RefferalController extends Controller
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
 
-        $k = MasterRefferralModel::where('code', $request->kode)->where('id', '!==', $request->id)->get();
-        $u = MasterRefferralModel::where('url', $request->url)->where('id', '!==', $request->id)->get();
+        $k = RefferralPesertaModel::where('code', $request->kode)->where('id', '!==', $request->id)->get();
+        $u = RefferralPesertaModel::where('url', $request->url)->where('id', '!==', $request->id)->get();
         if (count($k) > 0) {
             return Redirect::back()->with('error', 'Kode Sudah Terpakai')->withInput($request->all());
         }
@@ -37,7 +65,7 @@ class RefferalController extends Controller
             return Redirect::back()->with('error', 'URL Sudah Terpakai')->withInput($request->all());
         }
 
-        $m = MasterRefferralModel::updateOrCreate([
+        $m = RefferralPesertaModel::updateOrCreate([
             'id' => $request->id
         ], [
             'user_id' => Auth::user()->id,
@@ -52,7 +80,7 @@ class RefferalController extends Controller
 
     public function joinRef($uri)
     {
-        $k = MasterRefferralModel::where('code', $uri)->first();
+        $k = RefferralPesertaModel::where('code', $uri)->first();
         if (!$k) {
             return Redirect::to('/')->with('error', 'Kode Referral Tidak Ditemukan');
         }
@@ -67,7 +95,7 @@ class RefferalController extends Controller
         if ($o) {
             return Redirect::to('/')->with('error', 'Kode Referral Sudah Terpakai');
         }
-        $s = MasterRefferralModel::where('code', $uri)->where('user_id', $auth->id)->first();
+        $s = RefferralPesertaModel::where('code', $uri)->where('user_id', $auth->id)->first();
         if ($s) {
             return Redirect::to('/')->with('error', 'Kode Referral Punya Sendiri');
         }

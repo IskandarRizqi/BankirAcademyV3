@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('master_referral', function (Blueprint $table) {
             $table->id();
-            $table->integer('class_id');
-            $table->integer('user_id');
-            $table->string('code')->nullable();
-            $table->string('url')->nullable();
+            $table->double('nominal');
+            $table->integer('min')->nullable();
+            $table->integer('max')->nullable();
+            $table->date('date_start')->nullable();
+            $table->date('date_end')->nullable();
             $table->timestamps();
         });
     }

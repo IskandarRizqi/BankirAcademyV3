@@ -10,6 +10,8 @@ use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
 use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
+use App\Models\RefferralModel;
+use App\Models\RefferralPesertaModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,7 +85,8 @@ class ProfileController extends Controller
             $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id')->where('id', $value->class_id)->get();
             $value->event = ClassEventModel::where('class_id', $value->class_id)->get();
         }
-        $data['reff'] = MasterRefferralModel::where('user_id', Auth::user()->id)->first();
+        $data['reff'] = RefferralPesertaModel::where('user_id', Auth::user()->id)->first();
+        $data['referralku'] = RefferralModel::select('code')->where('user_aplicator', Auth::user()->id)->first();
         // return $data;
         return view('front.profile.profile', $data);
     }
@@ -118,6 +121,18 @@ class ProfileController extends Controller
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
+        }
+
+        if ($request->referral) {
+            $r = RefferralPesertaModel::where('code', $request->referral)->first();
+            if (!$r) {
+                return Redirect::back()->withInput($request->all())->with('referral', 'Kode Referral Tidak Ditemukan');
+            }
+            RefferralModel::create([
+                'user_id' => $r->user_id,
+                'user_aplicator' => $request->user_id,
+                'code' => $request->referral,
+            ]);
         }
 
         UserProfileModel::updateOrCreate([

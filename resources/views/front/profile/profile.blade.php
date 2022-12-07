@@ -458,31 +458,6 @@
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
-                                        <!-- <div class="title-block">
-                                            <h4>Update User Akses</h4>
-                                            <form action="" method="post">
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Name</label>
-                                                        <input type="text" class="form-control" value="">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Email</label>
-                                                        <input type="email" class="form-control" value="" readonly>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Password</label>
-                                                        <input type="text" class="form-control" name="password">
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <button class="button button-small" type="submit">Update akses login</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div> -->
                                         <div class="title-block">
                                             <h4>Update Profile</h4>
                                             <form action="{{ route('profile.store') }}" method="post">
@@ -546,21 +521,37 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
-                                                        <label for="form-control">Jenis kelamin</label>
-                                                        <select name="jenis_kelamin" class="form-control" id="jkl">
-                                                            <option value="">Pilih salah satu</option>
-                                                            <option value="0" {{ $pfl['gender']==0 ? 'selected' : null
-                                                                }}>
-                                                                Perempuan</option>
-                                                            <option value="1" {{ $pfl['gender']==1 ? 'selected' : null
-                                                                }}>
-                                                                Laki-laki</option>
-                                                        </select>
-                                                        @if ($errors->has('jenis_kelamin'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('jenis_kelamin') }}
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="form-control">Jenis kelamin</label>
+                                                                <select name="jenis_kelamin" class="form-control"
+                                                                    id="jkl">
+                                                                    <option value="">Pilih salah satu</option>
+                                                                    <option value="0" {{ $pfl['gender']==0 ? 'selected'
+                                                                        : null }}>
+                                                                        Perempuan</option>
+                                                                    <option value="1" {{ $pfl['gender']==1 ? 'selected'
+                                                                        : null }}>
+                                                                        Laki-laki</option>
+                                                                </select>
+                                                                @if ($errors->has('jenis_kelamin'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{ $errors->first('jenis_kelamin') }}
+                                                                </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label for="form-control">Referral (optional)</label>
+                                                                <input type="text" name="referral" class="form-control"
+                                                                    value="{{$referralku?$referralku->code:''}}"
+                                                                    {{$referralku?'readonly':''}}>
+                                                                @if (Session::has('referral'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{Session::get('referral')}}
+                                                                </div>
+                                                                @endif
+                                                            </div>
                                                         </div>
-                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -630,17 +621,35 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
-                                                        <label for="form-control">Jenis kelamin</label>
-                                                        <select name="jenis_kelamin" class="form-control">
-                                                            <option value="">Pilih salah satu</option>
-                                                            <option value="0">Perempuan</option>
-                                                            <option value="1">Laki-laki</option>
-                                                        </select>
-                                                        @if ($errors->has('jenis_kelamin'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('jenis_kelamin') }}
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="form-control">Jenis kelamin</label>
+                                                                <select name="jenis_kelamin" class="form-control"
+                                                                    id="jkl">
+                                                                    <option value="">Pilih salah satu</option>
+                                                                    <option value="0">
+                                                                        Perempuan</option>
+                                                                    <option value="1">
+                                                                        Laki-laki</option>
+                                                                </select>
+                                                                @if ($errors->has('jenis_kelamin'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{ $errors->first('jenis_kelamin') }}
+                                                                </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label for="form-control">Referral (optional)</label>
+                                                                <input type="text" name="referral" class="form-control"
+                                                                    value="{{$referralku?$referralku->code:''}}"
+                                                                    {{$referralku?'readonly':''}}>
+                                                                @if (Session::has('referral'))
+                                                                <div class="error" style="color: red; display:block;">
+                                                                    {{Session::get('referral')}}
+                                                                </div>
+                                                                @endif
+                                                            </div>
                                                         </div>
-                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -669,7 +678,7 @@
                                     <div class="tab-content clearfix" id="tab-pnpt">
                                         Coming Soon
                                     </div>
-                                    <div class="tab-content clearfix" id="tab-affiliate">
+                                    <div class="tab-content clearfix" id="'tab-affiliate'">
                                         @include('front.profile.tabAffiliate')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-absen">

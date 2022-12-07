@@ -11,10 +11,13 @@ use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
 use App\Models\InstructorModel;
 use App\Models\Pages;
+use App\Models\RefferralModel;
+use App\Models\RefferralPesertaModel;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
@@ -371,5 +374,73 @@ class HomeController extends Controller
         $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
         // return $data;
         return view('front.allpromo', $data);
+    }
+
+    public function registerUser(Request $request)
+    {
+        $va = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        //response error validation
+        if ($va->fails()) {
+            return response()->json([
+                'status' => 400,
+                'error' => $va->errors()
+            ], 400);
+        }
+
+        if ($request->referral) {
+            $r = RefferralPesertaModel::where('code', $request->referral)->first();
+            if (!$r) {
+                return response()->json([
+                    'status' => 400,
+                    'error' => ['referral' => 'Kode Referral Tidak Ditemukan']
+                ], 400);
+            }
+
+            $u = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'role' => 2,
+                'password' => Hash::make($request->password),
+            ]);
+            if (!$u) {
+                return response()->json([
+                    'status' => 400,
+                    'error' => ['register' => 'Register Gagal']
+                ], 400);
+            }
+            Auth::login($u);
+            RefferralModel::create([
+                'user_id' => $r->user_id,
+                'user_aplicator' => $u->id,
+                'code' => $request->referral,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'error' => ''
+            ], 200);
+        }
+
+        $u = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => 2,
+            'password' => Hash::make($request->password),
+        ]);
+        if (!$u) {
+            return response()->json([
+                'status' => 400,
+                'error' => ['register' => 'Register Gagal']
+            ], 400);
+        }
+        Auth::login($u);
+        return response()->json([
+            'status' => 200,
+            'error' => ''
+        ], 200);
     }
 }

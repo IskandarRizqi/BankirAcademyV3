@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('referral', function (Blueprint $table) {
+        Schema::create('refferral_peserta', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
             $table->integer('user_aplicator');
             $table->string('code')->nullable();
-            $table->double('nominal_class')->nullable();
-            $table->double('nominal_admin')->nullable();
-            $table->double('total')->nullable();
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('referral');
+        Schema::dropIfExists('refferral_peserta');
     }
 };

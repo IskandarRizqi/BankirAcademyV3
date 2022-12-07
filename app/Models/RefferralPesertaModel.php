@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MasterRefferralModel extends Model
+class RefferralPesertaModel extends Model
 {
     use HasFactory;
-    protected $table = 'master_referral';
+    protected $table = 'refferral_peserta';
     protected $fillable = [
-        'nominal',
-        'min',
-        'max',
-        'date_start',
-        'date_end',
+        'user_id',
+        'user_aplicator',
+        'code',
+        'url',
     ];
 }

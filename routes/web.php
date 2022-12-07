@@ -76,6 +76,11 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get("/admin/laman/edit/{id}", [App\Http\Controllers\Admin\LamanController::class, "edit"]);
     Route::delete("/admin/laman/destroy/{id}", [App\Http\Controllers\Admin\LamanController::class, "destroy"]);
     Route::get("/admin/laman/activated/{id}/{status}", [App\Http\Controllers\Admin\LamanController::class, "activated"]);
+
+    // Referral
+    Route::get("/admin/master/index", [App\Http\Controllers\Backend\RefferalController::class, "masterReff"]);
+    Route::post("/admin/master/store", [App\Http\Controllers\Backend\RefferalController::class, "storeMasterReff"]);
+    Route::delete("/admin/master/del/{id}", [App\Http\Controllers\Backend\RefferalController::class, "delMasterReff"]);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
@@ -103,6 +108,7 @@ Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeControl
 Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::class, 'inputinstructor']);
 Route::get('/u-laman/{slug}', [App\Http\Controllers\Front\HomeController::class, 'laman']);
 Route::get('/all-laman', [App\Http\Controllers\Front\HomeController::class, 'getAllLaman']);
+Route::post('/registerUser', [App\Http\Controllers\Front\HomeController::class, 'registerUser']);
 
 Route::get('/sdank', [App\Http\Controllers\Front\PagesController::class, 'showsdank']);
 Route::get('/registerinstructor', function () {
@@ -127,17 +133,18 @@ Route::get("/review-instructor", [App\Http\Controllers\Front\ProfileController::
 Route::get("/instructor/{provider}", [App\Http\Controllers\Front\HomeController::class, "redirectToProvider"]);
 Route::get("/instructor/{provider}/callback", [App\Http\Controllers\Front\HomeController::class, "handleProviderCallback"]);
 
-//Pages
+// Pages
 Route::get("/pages/page/{id}", [App\Http\Controllers\Front\PagesController::class, "showKelas"]);
 Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "showAbout"]);
 Route::get("/pages/contact", [App\Http\Controllers\Front\PagesController::class, "showContact"]);
 Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "showListBlog"]);
 Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
 
-//Class
+// Class
 Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
 Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "findClass"]);
 
+// Referral
 Route::get('/join/referral/{url}', [App\Http\Controllers\Backend\RefferalController::class, "joinRef"]);
 
 Auth::routes();

@@ -75,7 +75,11 @@
                                             PASSWORD</label>
                                         <input type="password" id="confpassword" name="password_confirmation"
                                             class="form-control" required />
-
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label class="font-body text-capitalize"
+                                            for="login-form-modal-password">REFERRAL (optional)</label>
+                                        <input type="text" id="referral" name="referral" class="form-control" />
                                     </div>
 
                                     <div class="col-12 form-group">
@@ -133,23 +137,27 @@
             var passwordregis = $("#passwordregis").val();
             var confpassword = $("#confpassword").val();
             jQuery.ajax({
-                url: "{{ route('register') }}",
+                // url: "{{ route('register') }}",
+                url: "/registerUser",
                 method: 'post',
                 data: {
                     name: usernameregis,
                     email: emailregis,
                     password: passwordregis,
-                    password_confirmation: confpassword
+                    password_confirmation: confpassword,
+                    referral : $('#referral').val()
                 },
                 success: function(result) {
                     // location.replace("/get-order?produk_id=" + produk);
-                    location.replace("/");
                     // console.log(result)
+                    if (result.status == 200) {
+                        location.replace("/");
+                    }
                 },
                 error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
                     var errors = jqXhr.responseJSON;
                     var errorsHtml = '';
-                    $.each(errors['errors'], function(index, value) {
+                    $.each(errors['error'], function(index, value) {
                         iziToast.error({
                             title: 'Error',
                             message: value,

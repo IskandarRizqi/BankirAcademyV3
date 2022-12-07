@@ -13,6 +13,8 @@ class RefferralModel extends Model
         'user_id',
         'user_aplicator',
         'code',
-        'url',
+        'nominal_class',
+        'nominal_admin',
+        'total',
     ];
 }
