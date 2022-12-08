@@ -133,7 +133,7 @@
                                                             @else
                                                             <input type="number" name="jmlPeserta[]"
                                                                 class="form-control"
-                                                                onchange="tambahPeserta('{{ $d->id }}','{{ $d->participant_limit }}','{{ $d->class_id }}',$(this).val())"
+                                                                onchange="tambahPeserta('{{ $d->id }}','{{ $d->participant_limit }}','{{ $d->class_id }}',$(this).val(),{{$referralku?$referralku->code:''}})"
                                                                 value="{{ $d->jumlah }}">
                                                             @endif
                                                             @endif
@@ -151,7 +151,8 @@
                                                             {{ $d->kode_promo }}
                                                             @else
                                                             <input type="text" name="kode_promo[]" class="form-control"
-                                                                onchange="kodePromo('{{ $d->title }}',$(this).val(),'{{ $d->id }}')">
+                                                                onchange="kodePromo('{{ $d->title }}',$(this).val(),'{{ $d->id }}')"
+                                                                @if ($expired) readonly @endif>
                                                             @endif
                                                         </td>
                                                         <td>
@@ -169,7 +170,7 @@
                                                                     <button id="btnModal" type="button"
                                                                         class="btn btn-primary dropdown-item"
                                                                         data-toggle="modal" data-target="#bayarModal"
-                                                                        onclick="bukti({{ $d->class_id }},{{ $d->id }})"
+                                                                        onclick="bukti({{ $d->class_id }},{{ $d->id }},{{$referralku?$referralku->code:''}})"
                                                                         title="Upload Bukti" @if ($d->expired <=
                                                                             Carbon\Carbon::now()) disabled @endif>
                                                                             Upload Bukti
@@ -200,6 +201,7 @@
                                                                 <input type="text" id="class_id" name="class_id" hidden>
                                                                 <input type="text" id="payment_id" name="payment_id"
                                                                     hidden>
+                                                                <input type="text" id="ref" name="ref" hidden>
                                                                 <div class="form-group" hidden>
                                                                     <label for="">Jumlah Peserta</label>
                                                                     <input class="form-control" type="number"
@@ -543,8 +545,8 @@
                                                             <div class="col-lg-6">
                                                                 <label for="form-control">Referral (optional)</label>
                                                                 <input type="text" name="referral" class="form-control"
-                                                                    value="{{$referralku?$referralku->code:''}}"
-                                                                    {{$referralku?'readonly':''}}>
+                                                                    value="{{$referralku?$referralku->code:''}}" {{--
+                                                                    {{$referralku?'readonly':''}} --}}>
                                                                 @if (Session::has('referral'))
                                                                 <div class="error" style="color: red; display:block;">
                                                                     {{Session::get('referral')}}
@@ -641,8 +643,8 @@
                                                             <div class="col-lg-6">
                                                                 <label for="form-control">Referral (optional)</label>
                                                                 <input type="text" name="referral" class="form-control"
-                                                                    value="{{$referralku?$referralku->code:''}}"
-                                                                    {{$referralku?'readonly':''}}>
+                                                                    value="{{$referralku?$referralku->code:''}}" {{--
+                                                                    {{$referralku?'readonly':''}} --}}>
                                                                 @if (Session::has('referral'))
                                                                 <div class="error" style="color: red; display:block;">
                                                                     {{Session::get('referral')}}
@@ -781,7 +783,7 @@
         $('#nilai_value').html(nilai);
     })
 
-    function tambahPeserta(params, limit, classid, val) {
+    function tambahPeserta(params, limit, classid, val,ref) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -795,6 +797,7 @@
                 limit: limit,
                 classid: classid,
                 jumlah: val,
+                ref: ref,
             },
             success: function(result) {
                 if (result.status) {
@@ -886,9 +889,10 @@
         })
     }
 
-    function bukti(class_id, payment) {
+    function bukti(class_id, payment,ref) {
         $('#class_id').val(class_id);
         $('#payment_id').val(payment);
+        $('#ref').val(ref);
     }
 
     function onEvent(event) {

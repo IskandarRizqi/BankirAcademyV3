@@ -44,7 +44,7 @@
                     </form>
                 </div>
             </div> --}}
-            <form action="/admin/promo" method="POST">
+            <form action="/admin/kupon" method="POST">
                 @csrf
                 <input name="id" id="id" value="{{old('id')}}" hidden>
                 <div class="row">
@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary">Simpan</button>
-                <span class="btn btn-danger" id="reset">Reset</span>
+                <span class="btn btn-danger" id="reset" onclick="reset()">Reset</span>
             </form>
             <div class="table-responsive">
                 <table id="tblpromo" class="table table-bordered table-striped">
@@ -164,7 +164,7 @@
 			padding: '2em'
 		}).then(function(result) {
 			if (result.value) {
-				$('#formdelpromo').attr('action','/admin/promo/'+id);
+				$('#formdelpromo').attr('action','/admin/kupon/'+id);
 				$('#formdelpromo').submit();
 			}else{
 				$('#formdelpromo').attr('action','#');
@@ -179,6 +179,15 @@
         $('#nominal').val(nominal);
         // $('#kelas').val(JSON.parse(ct));
         $("#kelas").val(JSON.parse(ct)).trigger('change');
+    }
+    function reset() {
+        $('#id').val(null);
+        $('#tgl_mulai').val(null);
+        $('#tgl_selesai').val(null);
+        $('#kode').val(null);
+        $('#nominal').val(null);
+        $("#kelas").val(null).trigger('change');
+        
     }
 </script>
 @endsection

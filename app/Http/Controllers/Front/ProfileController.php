@@ -128,11 +128,15 @@ class ProfileController extends Controller
             if (!$r) {
                 return Redirect::back()->withInput($request->all())->with('referral', 'Kode Referral Tidak Ditemukan');
             }
-            RefferralModel::create([
-                'user_id' => $r->user_id,
-                'user_aplicator' => $request->user_id,
-                'code' => $request->referral,
-            ]);
+            RefferralModel::updateOrCreate(
+                [
+                    'user_id' => $r->user_id,
+                ],
+                [
+                    'user_aplicator' => $request->user_id,
+                    'code' => $request->referral,
+                ]
+            );
         }
 
         UserProfileModel::updateOrCreate([

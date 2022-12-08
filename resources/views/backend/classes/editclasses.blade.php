@@ -1,12 +1,5 @@
 @extends('backend.template')
 @section('content')
-@if (Auth::user()->role==3)
-<script>
-	$(document).ready(function(){
-		$('#content').css('margin-left','0px')
-	});
-</script>
-@endif
 <div class="col-lg-12">
 	<div class="widget">
 		<div class="widget-heading">

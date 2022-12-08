@@ -5,7 +5,7 @@
         <div class="card-body">
             <form action="/admin/master/store" method="POST">
                 @csrf
-                <input type="number" name="id" id="id" class="form-control" value="{{old('id')}}" hidden>
+                <input type="text" name="id" id="id" class="form-control" value="{{old('id')}}" hidden>
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label for="">Nominal</label>
@@ -33,7 +33,8 @@
                         <td>{{$key+1}}</td>
                         <td>{{$l->nominal}}</td>
                         <td>
-                            <button class="btn btn-warning" id="edit" title="Edit"><i class='bx bx-edit'></i></button>
+                            <button class="btn btn-warning" id="edit" title="Edit" onclick="edit({{$data}})"><i
+                                    class='bx bx-edit'></i></button>
                             <button class="btn btn-danger" onclick="deleteLaman({{$l->id}})" title="Delete"> <i
                                     class='bx bx-trash'></i></button>
                             <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
@@ -54,6 +55,10 @@
 <script>
     // var firstUpload = new FileUploadWithPreview('myFirstImage')
     createDataTable('#banner')
+    function edit(p) {
+        let js = JSON.parse(p)
+        console.log(js.nominal);
+    }
     function deleteLaman(id) {
 		swal({
 			title: 'Are you sure?',

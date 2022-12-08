@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('nominal_class')->nullable();
             $table->double('nominal_admin')->nullable();
             $table->double('total')->nullable();
+            $table->integer('available')->default(0)->comment('0:available; 1:unavailable');
             $table->timestamps();
         });
     }
