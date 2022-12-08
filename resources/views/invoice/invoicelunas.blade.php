@@ -503,6 +503,9 @@
                             <th style="text-align: right;">HARGA</th>
                             <th style="text-align: right;">PROMO</th>
                             <th style="text-align: right;">KODE UNIK</th>
+                            <th style="text-align: right;">(-)PROMO</th>
+                            <th style="text-align: right;">(-)KUPON</th>
+                            <th style="text-align: right;">(-)REFERRAL</th>
                             <th style="text-align: right;">QTY</th>
                             <th style="text-align: right;">TOTAL</th>
                         </tr>
@@ -515,21 +518,31 @@
                             <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
                             <td class="unit">
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}
+                            </td>
+                            <td class="unit">
                                 @if ($class->pricing->promo==1)
-                                - {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->promo_price,"IDR"),0,-3) }}
                                 @endif
                             </td>
                             <td class="unit">
+                                @if ($payment->promo)
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}
+                                \NumberFormatter::CURRENCY),$payment->promo,"IDR"),0,-3)}}
+                                @endif
+                            </td>
+                            <td class="unit">
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->reff,"IDR"),0,-3)}}
                             </td>
                             <td class="unit">
                                 {{$payment->jumlah}}
                             </td>
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),(($payment->price_final-$payment->promo)*$payment->jumlah),"IDR"),0,-3)
+                                \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
                                 }}
                             </td>
                         </tr>
@@ -550,7 +563,7 @@
                             <td colspan="1"></td>
                             <td colspan="3">GRAND TOTAL</td>
                             <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),($payment->price_final-$payment->promo)*$payment->jumlah,"IDR"),0,-3)
+                                \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
                                 }}</td>
                         </tr>
                     </tfoot>

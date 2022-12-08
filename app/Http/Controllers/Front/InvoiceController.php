@@ -67,10 +67,8 @@ class InvoiceController extends Controller
 				}
 			}
 		}
-		return $data;
 
 		$data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
-		return $data;
 		if ($data['payment']->status == 1) {
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/invoicelunas'), $data);
 		} else {

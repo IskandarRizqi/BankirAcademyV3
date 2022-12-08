@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
+use App\Models\RefferralModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
@@ -77,6 +78,12 @@ class PembayaranController extends Controller
                     'user_id' => $cp->user_id,
                 ]
             );
+            $r = RefferralModel::where('user_aplicator', $cp->user_id)->first();
+            if ($r) {
+                RefferralModel::where('user_aplicator', $cp->user_id)->update([
+                    'available' => $status
+                ]);
+            }
             return Redirect::back()->with(['success' => 'Pembayaran Berhasil']);
         }
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $cs]);

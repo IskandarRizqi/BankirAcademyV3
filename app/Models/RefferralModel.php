@@ -16,5 +16,6 @@ class RefferralModel extends Model
         'nominal_class',
         'nominal_admin',
         'total',
+        'available',
     ];
 }
