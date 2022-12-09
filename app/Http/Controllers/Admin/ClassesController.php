@@ -108,6 +108,7 @@ class ClassesController extends Controller
 
 	public function update(Request $r, $id)
 	{
+		// return $r->all();
 		$tobeins = [
 			'title' => $r->txtClassesTitle,
 			'instructor' => json_encode($r->txtClassesInstructor),
@@ -155,7 +156,8 @@ class ClassesController extends Controller
 
 		ClassesModel::where('id', $id)->update($tobeins);
 
-		return redirect('/admin/classes')->with('success', 'Class Updated');
+		return Redirect::back()->with('success', 'Class Updated');
+		// return redirect('/admin/classes')->with('success', 'Class Updated');
 	}
 
 	public function destroy($id)
