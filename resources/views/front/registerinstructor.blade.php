@@ -3,7 +3,7 @@
     <div class="content-wrap py-0">
 
         <div class="section dark p-0 m-0 h-100 position-absolute"
-            style="background-image: url('{{asset('bg-example.jpg')}}')"></div>
+            style="background-size: 100%; background-image: url('{{asset('Bg-register-01.jpg')}}')"></div>
 
         <div class="section bg-transparent min-vh-100 p-0 m-0 d-flex">
             <div class="vertical-middle">

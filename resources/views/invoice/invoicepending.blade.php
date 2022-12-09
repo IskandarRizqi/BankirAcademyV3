@@ -559,8 +559,8 @@
                             <td>NOMINAL PAJAK</td>
                         </tr> --}}
                         <tr>
-                            <td colspan="1"></td>
-                            <td colspan="3">GRAND TOTAL</td>
+                            <td colspan="5"></td>
+                            <td colspan="2">GRAND TOTAL</td>
                             <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
                                 }}</td>

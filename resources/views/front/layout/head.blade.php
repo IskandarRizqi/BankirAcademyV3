@@ -41,11 +41,11 @@
     <link rel="stylesheet" href="{{asset('front/css/components/timepicker.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/css/components/daterangepicker.css')}}" type="text/css" />
     <!-- Document Title
-	============================================= -->
+        ============================================= -->
     <title>{{env('APP_NAME','E-class Akarindo')}}</title>
 
     <!-- JavaScripts
-============================================= -->
+            ============================================= -->
     <script src="https://code.jquery.com/jquery-3.6.1.js"
         integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <script src="{{asset('front/js/plugins.min.js')}}"></script>

@@ -126,8 +126,10 @@ class HomeController extends Controller
                     $html .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</h6>';
                 }
                 $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
-                $html .= '                <img class="mr-3 rounded-circle"';
-                $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                if (json_decode($v['instructor_list'][0]->picture)) {
+                    $html .= '                <img class="mr-3 rounded-circle"';
+                    $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                }
                 $html .= '                <div class=>';
                 $html .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
                 $html .= '                    </label>';
@@ -178,8 +180,10 @@ class HomeController extends Controller
                     $semua .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</h6>';
                 }
                 $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
-                $semua .= '                <img class="mr-3 rounded-circle"';
-                $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                if (json_decode($v['instructor_list'][0]->picture)) {
+                    $semua .= '                <img class="mr-3 rounded-circle"';
+                    $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                }
                 $semua .= '                <div class=>';
                 $semua .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
                 $semua .= '                    </label>';

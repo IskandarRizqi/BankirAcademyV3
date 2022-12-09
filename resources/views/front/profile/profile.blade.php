@@ -680,7 +680,7 @@
                                     <div class="tab-content clearfix" id="tab-pnpt">
                                         Coming Soon
                                     </div>
-                                    <div class="tab-content clearfix" id="'tab-affiliate'">
+                                    <div class="tab-content clearfix" id="tab-affiliate">
                                         @include('front.profile.tabAffiliate')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-absen">

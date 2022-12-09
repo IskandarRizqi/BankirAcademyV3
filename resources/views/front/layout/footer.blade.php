@@ -98,7 +98,8 @@
     <div id="copyrights" style="background-color:#0076f5">
         <div class="container">
             <div class="w-100 text-center text-white">
-                Copyrights &copy; 2022 By <a href="https://akarindo.id/">Akarindo.id</a>
+                Management By PT. Bankir Academy Indonesia </br> Support Sistem By <a
+                    href="https://akarindo.id/">Akarindo.id</a>
             </div>
         </div>
     </div>
@@ -108,8 +109,6 @@
 <!-- Go To Top
  ============================================= -->
 <div id="gotoTop" class="icon-angle-up"></div>
-
-
 <!-- Footer Scripts
 ============================================= -->
 <script src="{{ asset('front/js/functions.js') }}"></script>

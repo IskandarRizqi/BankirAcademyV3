@@ -6,9 +6,127 @@
     <div class="content-wrap">
         <div class="container clearfix">
             <h3 class="text-capitalize">{{$judul}}</h3>
-            @if ($class['data'])
+            <form action="/list-class" method="POST">
+                <div class="row">
+                    @csrf
+                    <div class="form-group col-md-2">
+                        <label for="">Pencarian:</label>
+                        <input type="text" name="title" id="title" class="form-control"
+                            value="{{isset($title)?$title:''}}">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="">Kategori:</label>
+                        <select class="form-control tagging slc2tag" name="slcClassesCategory" id="slcClassesCategory">
+                            <option value="">Pilih</option>
+                            @foreach ($pencarian['category'] as $ctg)
+                            <option value="{{$ctg}}" @if (isset($slcClassesCategory))
+                                {{$slcClassesCategory==$ctg?'selected':''}} @endif>
+                                {{$ctg}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="">Instructor:</label>
+                        <select class="form-control tagging" name="instructor" id="instructor">
+                            <option value="">Pilih</option>
+                            @foreach ($pencarian['instructor'] as $key => $ctg)
+                            <option value="{{$ctg}}" @if (isset($instructor)) {{$instructor==$ctg?'selected':''}}
+                                @endif>
+                                {{$key}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="accordion" id="accordionExample">
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="">Tag:</label>
+                                    <button class="btn btn-light btn-block text-left" type="button"
+                                        data-toggle="collapse" data-target="#collapseTag" aria-expanded="true"
+                                        aria-controls="collapseTag">
+                                        <label for="">Pilih</label>
+                                    </button>
+                                </div>
+                                <div class="form-group col">
+                                    <label for="">Jenis:</label>
+                                    <button class="btn btn-light btn-block text-left" type="button"
+                                        data-toggle="collapse" data-target="#collapseJenis" aria-expanded="true"
+                                        aria-controls="collapseJenis">
+                                        <label for="">Pilih</label>
+                                    </button>
+                                </div>
+                                <div class="form-group col">
+                                    <label for="">Tipe:</label>
+                                    <button class="btn btn-light btn-block text-left" type="button"
+                                        data-toggle="collapse" data-target="#collapseTipe" aria-expanded="true"
+                                        aria-controls="collapseTipe">
+                                        <label for="">Tipe:</label>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="collapseTag" class="collapse" aria-labelledby="headingOne"
+                                data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($pencarian['tags'] as $key => $ctg)
+                                        <div>
+                                            <div class="col d-flex">
+                                                <input id="checkbox-{{$key}}" class="checkbox-style"
+                                                    name="checkbox[{{$ctg}}]" type="checkbox" @if (isset($tags))
+                                                    {{array_key_exists($ctg,$tags)?'checked':''}} @endif>
+                                                <label for="checkbox-{{$key}}"
+                                                    class="checkbox-style-1-label">{{$ctg}}</label>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="collapseJenis" class="collapse" aria-labelledby="headingOne"
+                                data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($pencarian['jenis'] as $key => $ctg)
+                                        <div>
+                                            <div class="col d-flex">
+                                                <input id="jenis-{{$key}}" class="checkbox-style"
+                                                    name="jeniss[{{$ctg}}]" type="checkbox" @if (isset($jeniss))
+                                                    {{array_key_exists($ctg,$jeniss)?'checked':''}} @endif>
+                                                <label for="jenis-{{$key}}"
+                                                    class="checkbox-style-1-label">{{$ctg}}</label>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="collapseTipe" class="collapse" aria-labelledby="headingOne"
+                                data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach ($pencarian['tipe'] as $key => $ctg)
+                                        <div>
+                                            <div class="col d-flex">
+                                                <input id="tipe-{{$key}}" class="checkbox-style" name="tipe[{{$ctg}}]"
+                                                    type="checkbox" @if (isset($tipe))
+                                                    {{array_key_exists($ctg,$tipe)?'checked':''}} @endif>
+                                                <label for="tipe-{{$key}}"
+                                                    class="checkbox-style-1-label">{{$ctg}}</label>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-sm mt-2">Cari</button>
+                </div>
+
+            </form>
             <div class="row gutter-40 col-mb-80">
                 <div class="postcontent col-lg-9">
+                    @if ($class['data'])
                     <div class="single-event">
                         <div class="row">
                             @foreach ($class['data'] as $v)
@@ -96,41 +214,20 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
                 <div class="col-lg-3">
-                    <div class="card">
-                        <form action="/list-class" method="POST">
-                            @csrf
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="">Pencarian:</label>
-                                    <input type="text" name="title" id="title" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Kategori:</label>
-                                    <select class="form-control tagging slc2tag" name="slcClassesCategory"
-                                        id="slcClassesCategory" required>
-                                        <option value=""></option>
-                                        @foreach ($pencarian['category'] as $ctg)
-                                        <option value="{{$ctg}}">{{$ctg}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-secondary btn-sm mt-2">Cari</button>
-                            </div>
-                        </form>
-                    </div>
+                    {{-- --}}
                 </div>
             </div>
-            @endif
 
         </div>
     </div>
 </section><!-- #content end -->
 @section('custom-js')
 <script>
-    $('#slcClassesCategory').select2({
-		tagging:true,
+    $('#tags').select2({
+        tagging:true,
 	})
 </script>
 @endsection

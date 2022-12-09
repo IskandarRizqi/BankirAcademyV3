@@ -1,4 +1,3 @@
-Coming soon
 <form action="/set-master-refferal" method="POST">
     @csrf
     <input type="text" name="id" id="id" class="form-control" value="{{$reff?$reff->id:''}}" hidden>
@@ -20,7 +19,7 @@ Coming soon
     </div>
     <button class="button button-primary">Set</button>
 </form>
-<table id="affiliate" class="table table-hover" style="width:100%">
+<table id="affiliate" class="table table-hover" style="width:100%" hidden>
     <thead>
         <tr>
             <th>No</th>

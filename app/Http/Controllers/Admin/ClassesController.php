@@ -371,16 +371,50 @@ class ClassesController extends Controller
 	}
 	public function pencarian()
 	{
+		$data['instructor'] = InstructorModel::select('id', 'name')->where('status', 1)->distinct('id')->pluck('id', 'name')->toArray();
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+		// Tags
 		$tags = ClassesModel::select('tags')->distinct('tags')->pluck('tags')->toArray();
 		$data['tags'] = [];
 		foreach ($tags as $key => $value) {
-			foreach (json_decode($value) as $key => $v) {
-				// $data['tag'] = $v;
-				if (array_search($v, $data['tags'])) {
-					// 
-				} else {
-					array_push($data['tags'], $v);
+			if ($value) {
+				foreach (json_decode($value) as $key => $v) {
+					// $data['tag'] = $v;
+					if (array_search($v, $data['tags'])) {
+						// 
+					} else {
+						array_push($data['tags'], $v);
+					}
+				}
+			}
+		}
+		// Jenis
+		$jenis = ClassesModel::select('jenis')->distinct('jenis')->pluck('jenis')->toArray();
+		$data['jenis'] = [];
+		foreach ($jenis as $key => $value) {
+			if ($value) {
+				foreach (json_decode($value) as $key => $v) {
+					// $data['tag'] = $v;
+					if (array_search($v, $data['jenis'])) {
+						// 
+					} else {
+						array_push($data['jenis'], $v);
+					}
+				}
+			}
+		}
+		// Type
+		$tipe = ClassesModel::select('tipe')->distinct('tipe')->pluck('tipe')->toArray();
+		$data['tipe'] = [];
+		foreach ($tipe as $key => $value) {
+			if ($value) {
+				foreach (json_decode($value) as $key => $v) {
+					// $data['tag'] = $v;
+					if (array_search($v, $data['tipe'])) {
+						// 
+					} else {
+						array_push($data['tipe'], $v);
+					}
 				}
 			}
 		}
@@ -402,24 +436,71 @@ class ClassesController extends Controller
 			->paginate(8)->toArray();
 
 		$data['pencarian'] = $this->pencarian();
+		// return $data;
 		return view('front.kelas.listclass', $data);
 	}
 	public function findClass(Request $request)
 	{
+		$checbox = [];
+		if ($request->checkbox) {
+			$checbox = array_keys((array)$request->checkbox);
+		}
+		$tipe = [];
+		if ($request->tipe) {
+			$tipe = array_keys((array)$request->tipe);
+		}
+		$jeniss = [];
+		if ($request->jeniss) {
+			$jeniss = array_keys((array)$request->jeniss);
+		}
+
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
 		}
 		$data['class'] = ClassesModel::select()
-			// ->where(function ($sql) use ($category) {
-			// 	if ($category !== 'Semua') {
-			// 		$str = str_replace('_', ' ', $category);
-			// 		return $sql->where('category', $str);
-			// 	}})
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->where('title', 'like', '%' . $request->title . '%')
+			->where(function ($sql) use ($checbox) {
+				if (count($checbox) > 0) {
+					for ($i = 0; $i < count($checbox); $i++) {
+						$sql->orWhere('tags', 'like', '%"' . $checbox[$i] . '"%');
+					}
+				}
+			})
+			->where(function ($sql) use ($tipe) {
+				if (count($tipe) > 0) {
+					for ($i = 0; $i < count($tipe); $i++) {
+						$sql->orWhere('tipe', 'like', '%"' . $tipe[$i] . '"%');
+					}
+				}
+			})
+			->where(function ($sql) use ($jeniss) {
+				if (count($jeniss) > 0) {
+					for ($i = 0; $i < count($jeniss); $i++) {
+						$sql->orWhere('jenis', 'like', '%"' . $jeniss[$i] . '"%');
+					}
+				}
+			})
+			->where(function ($sql) use ($request) {
+				if ($request->title) {
+					$sql->where('title', 'like', '%' . $request->title . '%');
+				}
+				if ($request->instructor) {
+					$sql->where('instructor', 'like', '%' . $request->instructor . '%');
+				}
+				if ($request->slcClassesCategory) {
+					$sql->where('category', 'like', '%' . $request->slcClassesCategory . '%');
+				}
+			})
 			->paginate(8)->toArray();
 
+		$data['pencarian'] = $this->pencarian();
+		$data['slcClassesCategory'] = $request->slcClassesCategory;
+		$data['title'] = $request->title;
+		$data['instructor'] = $request->instructor;
+		$data['tags'] = $request->checkbox;
+		$data['tipe'] = $request->tipe;
+		$data['jeniss'] = $request->jeniss;
 		return view('front.kelas.listclass', $data);
 	}
 }
