@@ -39,9 +39,43 @@
         </div>
     </div>
 </div>
+@if (Auth::user()->email == 'root@root.root')
+<button class="btn btn-primary" id="sitemap" onclick="sitemap()">Create Sitemap</button>
+@endif
 @endsection
 @section('custom-js')
 <script>
     createDataTable('#tblFee');
+    function sitemap() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        jQuery.ajax({
+            url: "/createSitemap",
+            method: 'get',
+            success: function(result) {
+                // iziToast.success({
+                //     title: 'Success',
+                //     message: 'Login Berhasil',
+                //     position: 'topRight',
+                // });
+                console.log(result);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                var errors = jqXhr.responseJSON;
+                var errorsHtml = '';
+                $.each(errors['errors'], function(index, value) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: value,
+                        position: 'topRight',
+                    });
+                });
+            }
+        })
+    }
 </script>
 @endsection

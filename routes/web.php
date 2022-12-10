@@ -147,4 +147,6 @@ Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class,
 // Referral
 Route::get('/join/referral/{url}', [App\Http\Controllers\Backend\RefferalController::class, "joinRef"]);
 
+
+Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();

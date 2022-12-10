@@ -10,6 +10,7 @@ use App\Models\InstructorReviewModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Sitemap\SitemapGenerator;
 
 class HomeController extends Controller
 {
@@ -66,5 +67,10 @@ class HomeController extends Controller
         }
         // return $data;
         return view('backend.beranda', $data);
+    }
+
+    public function createSitemap()
+    {
+        SitemapGenerator::create(env('APP_URL'))->writeToFile(public_path('sitemap.xml'));
     }
 }
