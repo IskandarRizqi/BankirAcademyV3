@@ -42,6 +42,10 @@
                                             <option value="3">Banner Slide Mobile</option>
                                             <option value="1">Banner Bawah</option>
                                             <option value="2">Banner Promo</option>
+                                            <option value="4">Calon Bankir</option>
+                                            <option value="5">Bankir</option>
+                                            <option value="6">Bootcampt Bankir</option>
+                                            <option value="7">All Kelas</option>
                                         </select>
                                         @if($errors->has('jenis'))
                                         <div class="error" style="color: red; display:block;">{{

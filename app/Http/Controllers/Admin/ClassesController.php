@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassCertificateTemplate;
 use App\Models\ClassPricingModel;
@@ -422,12 +423,32 @@ class ClassesController extends Controller
 		}
 		return $data;
 	}
+	public function bannerClass($judul)
+	{
+		$now = Carbon::now();
+		$j = 'Bg-register-01-Copy.jpg';
+		$banner = BannerModel::where('jenis', 7)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
+		if ($judul == 'calon_bankir') {
+			$banner = BannerModel::where('jenis', 4)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
+		}
+		if ($judul == 'bankir') {
+			$banner = BannerModel::where('jenis', 5)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
+		}
+		if ($judul == 'bootcamp_bankir') {
+			$banner = BannerModel::where('jenis', 6)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
+		}
+		if ($banner) {
+			$j = '/image/' . $banner->image;
+		}
+		return $j;
+	}
 	public function listClass(Request $request)
 	{
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
 		}
+		$data['banner'] = $this->bannerClass($data['judul']);
 		$data['class'] = ClassesModel::select()
 			->where(function ($sql) use ($request) {
 				if ($request->jenis) {
@@ -460,6 +481,7 @@ class ClassesController extends Controller
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
 		}
+		$data['banner'] = $this->bannerClass($data['judul']);
 		$data['class'] = ClassesModel::select()
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
 			->where(function ($sql) use ($checbox) {
