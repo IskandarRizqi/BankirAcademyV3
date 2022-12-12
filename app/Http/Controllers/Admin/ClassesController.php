@@ -540,17 +540,17 @@ class ClassesController extends Controller
 		$now = Carbon::now();
 		$j = 'Bg-register-01-Copy.jpg';
 		$banner = BannerModel::where('jenis', 7)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
-		if ($judul == 'calon_bankir') {
+		if ($judul == 'calon bankir') {
 			$banner = BannerModel::where('jenis', 4)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
 		}
 		if ($judul == 'bankir') {
 			$banner = BannerModel::where('jenis', 5)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
 		}
-		if ($judul == 'bootcamp_bankir') {
+		if ($judul == 'bootcamp bankir') {
 			$banner = BannerModel::where('jenis', 6)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
 		}
 		if ($banner) {
-			$j = '/image/' . $banner->image;
+			$j = '/Image/' . $banner->image;
 		}
 		return $j;
 	}
