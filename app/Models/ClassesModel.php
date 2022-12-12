@@ -28,6 +28,7 @@ class ClassesModel extends Model
 		'jenis',
 		'og',
 		'meta',
+		'status',
 	];
 
 	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list', 'total_peserta'];

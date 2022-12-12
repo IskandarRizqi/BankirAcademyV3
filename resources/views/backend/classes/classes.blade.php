@@ -36,6 +36,7 @@
 				<table id="tblClasses" class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th>Status</th>
 							<th>Date</th>
 							<th>Class</th>
 							<th>Category</th>
@@ -54,6 +55,9 @@
 					<tbody>
 						@foreach ($classes as $k=>$v)
 						<tr>
+							<td><span
+									class="badge badge-{{$v->status==1?'info':'danger'}}">{{$v->status==1?'Activated':'De-Activated'}}</span>
+							</td>
 							<td>
 								<span hidden>
 									{{Carbon\Carbon::parse($v->date_start)->format('U')}}
@@ -116,6 +120,10 @@
 										<a class="dropdown-item" title="Delete"
 											onclick="deleteClasses({{$v->id}})">Hapus</a>
 										<form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
+										</form>
+										<a class="dropdown-item" title="Activated"
+											onclick="activedClasses({{$v->id}},{{$v->status}})">Activated</a>
+										<form action="#" method="get" id="formacclasses">@csrf
 										</form>
 									</div>
 								</div>
@@ -234,6 +242,24 @@
 			})
 			$('#listPeserta').html(html);
 		}
+	}
+
+	function activedClasses(id,s) {
+		swal({
+			title: 'Are you sure?',
+			text: "You want change status class?",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Confirm',
+			padding: '2em'
+		}).then(function(result) {
+			if (result.value) {
+				$('#formacclasses').attr('action','/admin/classes/activated/'+id+'/'+s);
+				$('#formacclasses').submit();
+			}else{
+				$('#formacclasses').attr('action','#');
+			}
+		})
 	}
 
 	function deleteClasses(id) {

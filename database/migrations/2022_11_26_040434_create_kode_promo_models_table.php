@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('tgl_selesai');
             $table->double('nominal');
             $table->json('class_title')->nullable();
+            $table->json('image')->nullable();
             $table->timestamps();
         });
     }

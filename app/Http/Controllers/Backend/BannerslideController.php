@@ -43,11 +43,12 @@ class BannerslideController extends Controller
             'banner' => 'image|mimes:jpeg,png,jpg|max:2048|required',
             'judul' => 'required',
             'jenis' => 'required',
+            'nominal' => 'required_if:jenis,2',
             'mulai_aktif' => 'required',
             'akhir_aktif' => 'required',
         ]);
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator);
+            return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
         }
         $name = $request->file('banner')->getClientOriginalName();
         $filename = time() . '-' . $name;
@@ -58,6 +59,7 @@ class BannerslideController extends Controller
         BannerModel::create([
             'nama' => $request->judul,
             'jenis' => $request->jenis,
+            'nominal' => $request->nominal,
             'mulai' => $request->mulai_aktif,
             'selesai' => $request->akhir_aktif,
             'image' => $filename,
@@ -120,11 +122,12 @@ class BannerslideController extends Controller
                 'banner' => 'image|mimes:jpeg,png,jpg|max:2048|required',
                 'judul' => 'required',
                 'jenis' => 'required',
+                'nominal' => 'required_if:jenis,2',
                 'mulai_aktif' => 'required',
                 'akhir_aktif' => 'required',
             ]);
             if ($validator->fails()) {
-                return Redirect::back()->withErrors($validator);
+                return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
             }
 
             // $data = Avatar::find($id);
@@ -150,6 +153,7 @@ class BannerslideController extends Controller
             BannerModel::where('id', $request->id)->update([
                 'nama' => $request->judul,
                 'jenis' => $request->jenis,
+                'nominal' => $request->nominal,
                 'mulai' => $request->mulai_aktif,
                 'selesai' => $request->akhir_aktif,
                 'image' => $filename,
@@ -160,15 +164,17 @@ class BannerslideController extends Controller
             $validator = Validator::make($request->all(), [
                 'judul' => 'required',
                 'jenis' => 'required',
+                'nominal' => 'required_if:jenis,2',
                 'mulai_aktif' => 'required',
                 'akhir_aktif' => 'required',
             ]);
             if ($validator->fails()) {
-                return Redirect::back()->withErrors($validator);
+                return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
             }
             BannerModel::where('id', $request->id)->update([
                 'nama' => $request->judul,
                 'jenis' => $request->jenis,
+                'nominal' => $request->nominal,
                 'mulai' => $request->mulai_aktif,
                 'selesai' => $request->akhir_aktif,
             ]);

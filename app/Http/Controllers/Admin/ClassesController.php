@@ -57,6 +57,10 @@ class ClassesController extends Controller
 
 	public function store(Request $r)
 	{
+		$status = 0;
+		if (Auth::user()->role == 0) {
+			$status = 1;
+		}
 		// Data Meta
 		$meta = [];
 		if ($r->meta_name) {
@@ -135,6 +139,7 @@ class ClassesController extends Controller
 			'jenis' => json_encode($r->slcClassesJenis),
 			'og' => json_encode($og),
 			'meta' => json_encode($meta),
+			'status' => $status,
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -152,6 +157,10 @@ class ClassesController extends Controller
 
 	public function update(Request $r, $id)
 	{
+		$status = 0;
+		if (Auth::user()->role == 0) {
+			$status = 1;
+		}
 		$tobeins = [
 			'title' => $r->txtClassesTitle,
 			'instructor' => json_encode($r->txtClassesInstructor),
@@ -165,6 +174,7 @@ class ClassesController extends Controller
 			'tipe' => json_encode($r->slcClassesType),
 			'level' => $r->slcClassesLevel,
 			'jenis' => json_encode($r->slcClassesJenis),
+			'status' => $status,
 		];
 
 		// Data Meta
@@ -252,6 +262,21 @@ class ClassesController extends Controller
 	{
 		ClassesModel::where('id', $id)->delete();
 		return redirect('/admin/classes')->with('success', 'Class Deleted');
+	}
+
+	public function activated($id, $status)
+	{
+		$s = 0;
+		if ($status == 1) {
+			$s = 1;
+		}
+		$c = ClassesModel::where('id', $id)->update([
+			'status' => $s
+		]);
+		if ($c) {
+			return Redirect::back()->with('success', 'Class is Changed');
+		}
+		return Redirect::back()->with('success', 'Class not Changed');
 	}
 
 	public function setpricing(Request $r)

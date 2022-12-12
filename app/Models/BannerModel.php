@@ -16,5 +16,6 @@ class BannerModel extends Model
         'mulai',
         'selesai',
         'image',
+        'nominal',
     ];
 }

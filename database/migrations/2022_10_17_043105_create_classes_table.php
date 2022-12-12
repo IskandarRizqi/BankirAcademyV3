@@ -32,6 +32,7 @@ return new class extends Migration
             $table->json('jenis')->nullable();
             $table->json('og')->nullable();
             $table->json('meta')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

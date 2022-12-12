@@ -44,7 +44,7 @@
                     </form>
                 </div>
             </div> --}}
-            <form action="/admin/kupon" method="POST">
+            <form action="/admin/kupon" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input name="id" id="id" value="{{old('id')}}" hidden>
                 <div class="row">
@@ -92,6 +92,15 @@
                         <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
+                    <div class="col-md-3">
+                        <label>Image: <b class="text-danger">*</b></label>
+                        <input type="file" class="form-control" name="image" id="image" accept="image/*">
+                        <img src="/Backend/assets/img/90x90.jpg" alt="Image Preview" id="prvImage" class="previewImage"
+                            style="max-width: 100%;max-height:97px;">
+                        @error('image')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
                 </div>
                 <button class="btn btn-primary">Simpan</button>
                 <span class="btn btn-danger" id="reset" onclick="reset()">Reset</span>
@@ -105,6 +114,7 @@
                             <th>Tanggal</th>
                             <th>Nominal</th>
                             <th>Kelas</th>
+                            <th>Gambar</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -126,9 +136,11 @@
                                 <div class="badge badge-info">{{$cl}}</div>
                                 @endforeach
                             </td>
+                            <td> <img src="/image/promo/image/{{json_decode($p->image)->url}}" alt="" width="200px">
+                            </td>
                             <td>
                                 <button class="btn btn-warning" id="edit" title="Edit"
-                                    onclick="editPromo('{{$p->id}}','{{$p->tgl_mulai}}','{{$p->tgl_selesai}}','{{$p->kode}}','{{$p->nominal}}','{{$p->class_title}}')"><i
+                                    onclick="editPromo('{{$p->id}}','{{$p->tgl_mulai}}','{{$p->tgl_selesai}}','{{$p->kode}}','{{$p->nominal}}','{{$p->class_title}}','{{$p->image}}')"><i
                                         class='bx bx-edit'></i></button>
                                 <button class="btn btn-danger" onclick="deletePromo({{$p->id}})" title="Delete"> <i
                                         class='bx bx-trash'></i></button>
@@ -151,6 +163,9 @@
 @section('custom-js')
 <script>
     createDataTable('#tblpromo');
+    $('#image').change(function (e) { 
+		getImgData(this,'#prvImage');
+	});
     $('#kelas').select2({
 			tags: true,
 		});
@@ -171,7 +186,8 @@
 			}
 		})
 	}
-    function editPromo(id,tglm,tgls,kode,nominal,ct) {
+    function editPromo(id,tglm,tgls,kode,nominal,ct,img) {
+        $('#prvImage').attr('src','/Backend/assets/img/90x90.jpg');
         $('#id').val(id);
         $('#tgl_mulai').val(tglm);
         $('#tgl_selesai').val(tgls);
@@ -179,6 +195,8 @@
         $('#nominal').val(nominal);
         // $('#kelas').val(JSON.parse(ct));
         $("#kelas").val(JSON.parse(ct)).trigger('change');
+        $('#prvImage').attr('src','/image/promo/image/'+JSON.parse(img).url);
+        console.log(JSON.parse(img).url);
     }
     function reset() {
         $('#id').val(null);

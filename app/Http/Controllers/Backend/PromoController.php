@@ -42,7 +42,7 @@ class PromoController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
+        // return $request->image;
         $valid = Validator::make($request->all(), [
             'tgl_mulai' => 'required',
             'tgl_selesai' => 'required',
@@ -54,16 +54,35 @@ class PromoController extends Controller
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
+        $kode = KodePromoModel::where('kode', $request->kode)->where('id', '!=', $request->id)->first();
+        if ($kode) {
+            return Redirect::back()->withInput($request->all())->with('error', 'Kode Sudah Tersedia');
+        }
 
-        $p = KodePromoModel::UpdateOrCreate([
-            'id' => $request->id
-        ], [
+        $data = [
             'kode' => $request->kode,
             'tgl_mulai' => $request->tgl_mulai,
             'tgl_selesai' => $request->tgl_selesai,
             'nominal' => $request->nominal,
             'class_title' => json_encode($request->kelas),
-        ]);
+        ];
+
+        // Data
+        if ($request->image) {
+            $nameimage = $request->file('image')->getClientOriginalName();
+            $sizeimage = $request->file('image')->getSize();
+            if ($sizeimage >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+            $filename1 = time() . '-' . $nameimage;
+            $file = $request->file('image');
+            $file->move(public_path('image/promo/image'), $filename1);
+            $data['image'] = json_encode(['url' => $filename1, 'size' => $sizeimage]);
+        }
+
+        $p = KodePromoModel::UpdateOrCreate([
+            'id' => $request->id
+        ], $data);
         if ($p) {
             return Redirect::back()->with('success', 'Data Berhasil Tersimpan');
         }

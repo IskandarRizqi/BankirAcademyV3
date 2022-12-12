@@ -35,6 +35,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/classes/createevent/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createevent']);
     Route::get('/admin/classes/previewcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
     Route::get('/admin/classes/createcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createcertificate']);
+    Route::get('/admin/classes/activated/{id}/{status}', [App\Http\Controllers\Admin\ClassesController::class, 'activated']);
     Route::resource('/admin/instructor', InstructorController::class);
     Route::post('/admin/logininstructor', [InstructorController::class, 'logininstructor']);
     Route::resource('/admin/banner', BannerslideController::class);

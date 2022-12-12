@@ -375,7 +375,6 @@ class HomeController extends Controller
     {
         $now = Carbon::now();
         $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
-        return $data;
         return view('front.allpromo', $data);
     }
 

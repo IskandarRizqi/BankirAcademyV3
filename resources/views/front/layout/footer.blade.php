@@ -17,6 +17,7 @@
                                     <address class="mb-0">
                                         <abbr title="Headquarters"
                                             style="display: inline-block;margin-bottom: 7px;"><strong>Alamat:</strong></abbr><br>
+                                        PT. Bankir Academy Indonesia <br>
                                         Jl. Jendral Sudirman 354, Semarang Barat<br> Kota Semarang<br>
                                     </address>
                                 </div>

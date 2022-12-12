@@ -15,5 +15,6 @@ class KodePromoModel extends Model
         'tgl_selesai',
         'nominal',
         'class_title',
+        'image',
     ];
 }

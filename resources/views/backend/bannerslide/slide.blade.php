@@ -35,22 +35,38 @@
                                             $errors->first('judul') }}</div>
                                         @endif
                                     </div>
-                                    <div class="col-lg-6">
-                                        <label for="form-control">Type banner</label>
-                                        <select name="jenis" class="form-control" id="type">
-                                            <option value="0" selected>Banner Slide</option>
-                                            <option value="3">Banner Slide Mobile</option>
-                                            <option value="1">Banner Bawah</option>
-                                            <option value="2">Banner Promo</option>
-                                            <option value="4">Calon Bankir</option>
-                                            <option value="5">Bankir</option>
-                                            <option value="6">Bootcampt Bankir</option>
-                                            <option value="7">All Kelas</option>
-                                        </select>
-                                        @if($errors->has('jenis'))
-                                        <div class="error" style="color: red; display:block;">{{
-                                            $errors->first('jenis') }}</div>
-                                        @endif
+                                    <div class="col-lg-6 d-flex">
+                                        <div class="form-group">
+                                            <label for="form-control">Type banner</label>
+                                            <select name="jenis" class="form-control" id="type">
+                                                <option value="0" selected>Banner Slide</option>
+                                                <option value="3" {{old('jenis')==3?'selected':''}}>Banner Slide Mobile
+                                                </option>
+                                                <option value="1" {{old('jenis')==1?'selected':''}}>Banner Bawah
+                                                </option>
+                                                <option value="2" {{old('jenis')==2?'selected':''}}>Banner Promo
+                                                </option>
+                                                <option value="4" {{old('jenis')==4?'selected':''}}>Calon Bankir
+                                                </option>
+                                                <option value="5" {{old('jenis')==5?'selected':''}}>Bankir</option>
+                                                <option value="6" {{old('jenis')==6?'selected':''}}>Bootcampt Bankir
+                                                </option>
+                                                <option value="7" {{old('jenis')==7?'selected':''}}>All Kelas</option>
+                                            </select>
+                                            @if($errors->has('jenis'))
+                                            <div class="error" style="color: red; display:block;">{{
+                                                $errors->first('jenis') }}</div>
+                                            @endif
+                                        </div>
+                                        <div id="form_nominal" class="form-group" hidden>
+                                            <label for="">Nominal (%)</label>
+                                            <input type="number" name="nominal" id="nominal" step="any"
+                                                class="form-control" value="{{old('nominal')}}">
+                                            @if($errors->has('nominal'))
+                                            <div class="error" style="color: red; display:block;">{{
+                                                $errors->first('nominal') }}</div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -168,7 +184,18 @@
     var firstUpload = new FileUploadWithPreview('myFirstImage')
     createDataTable('#banner')
 
-
+    $(document).ready(function () {
+        $('#type').change();
+    })
+    
+    $('#type').change(function () {
+        let t = $('#type').val();
+        if (t == 2) {
+            $('#form_nominal').removeAttr('hidden')
+        }else{
+            $('#form_nominal').attr('hidden',true)
+        }
+    })
     function viewimage(image) {
         console.log(image)
         swal.fire({
@@ -200,8 +227,10 @@
                 $("#aktif").val(result.mulai)
                 $("#type").val(result.jenis)
                 $("#selesai").val(result.selesai)
+                $("#nominal").val(result.nominal)
                 $("#urlbanner").val(result.public_id)
                 $(".custom-file-container__image-preview").css("background-image", "url(/image/" + result.image + ")")
+                $('#type').change();
 
                 // $("#judul").val()
             }
