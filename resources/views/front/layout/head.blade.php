@@ -15,7 +15,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!-- Stylesheets
-	============================================= -->
+        ============================================= -->
     <link
         href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Poppins:300,400,500,600,700|PT+Serif:400,400i&display=swap"
         rel="stylesheet" type="text/css" />
@@ -51,49 +51,73 @@
         ============================================= -->
     <title>{{env('APP_NAME','E-class Akarindo')}}</title>
 
-    <!-- JavaScripts
+    @isset($class->meta)
+    @if ($class->meta)
+    @for ($i=0;$i<count(json_decode($class->meta)->name);$i++)
+        <meta name="{{json_decode($class->meta)->name[$i]}}" content="{{json_decode($class->meta)->content[$i]}}" />
+        @endfor
+        <meta name="description" content="{{json_decode($class->og)->description}}">
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="{{url()->current()}}">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{json_decode($class->og)->title}}">
+        <meta property="og:description" content="{{json_decode($class->og)->description}}">
+        <meta property="og:image" content="{{asset('/Image/laman/meta_image/'.json_decode($class->og)->image)}}">
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="twitter:domain" content="{{env('APP_URL','localhost')}}">
+        <meta property="twitter:url" content="{{url()->current()}}">
+        <meta name="twitter:title" content="{{json_decode($class->og)->title}}">
+        <meta name="twitter:description" content="{{json_decode($class->og)->description}}">
+        <meta name="twitter:image" content="{{asset('/Image/laman/meta_image/'.json_decode($class->og)->image)}}">
+        @endif
+        @endisset
+        <!-- JavaScripts
             ============================================= -->
-    <script src="https://code.jquery.com/jquery-3.6.1.js"
-        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
-    <script src="{{asset('front/js/plugins.min.js')}}"></script>
-    <style>
-        .revo-slider-emphasis-text {
-            font-size: 58px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-family: 'Poppins', sans-serif;
-            padding: 15px 20px;
-            border-top: 2px solid #FFF;
-            border-bottom: 2px solid #FFF;
-        }
+        <script src="https://code.jquery.com/jquery-3.6.1.js"
+            integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+        <script src="{{asset('front/js/plugins.min.js')}}"></script>
+        <style>
+            .revo-slider-emphasis-text {
+                font-size: 58px;
+                font-weight: 700;
+                letter-spacing: 1px;
+                font-family: 'Poppins', sans-serif;
+                padding: 15px 20px;
+                border-top: 2px solid #FFF;
+                border-bottom: 2px solid #FFF;
+            }
 
-        .revo-slider-desc-text {
-            font-size: 20px;
-            font-family: 'Lato', sans-serif;
-            width: 650px;
-            text-align: center;
-            line-height: 1.5;
-        }
+            .revo-slider-desc-text {
+                font-size: 20px;
+                font-family: 'Lato', sans-serif;
+                width: 650px;
+                text-align: center;
+                line-height: 1.5;
+            }
 
-        .revo-slider-caps-text {
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 3px;
-            font-family: 'Poppins', sans-serif;
-        }
+            .revo-slider-caps-text {
+                font-size: 16px;
+                font-weight: 400;
+                letter-spacing: 3px;
+                font-family: 'Poppins', sans-serif;
+            }
 
-        .tp-video-play-button {
-            display: none !important;
-        }
+            .tp-video-play-button {
+                display: none !important;
+            }
 
-        .tp-caption {
-            white-space: nowrap;
-        }
+            .tp-caption {
+                white-space: nowrap;
+            }
 
-        .longtextoverflow {
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            max-width: 150px;
-        }
-    </style>
+            .longtextoverflow {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                max-width: 150px;
+            }
+        </style>
+</head>

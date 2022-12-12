@@ -57,6 +57,47 @@ class ClassesController extends Controller
 
 	public function store(Request $r)
 	{
+		// Data Meta
+		$meta = [];
+		if ($r->meta_name) {
+			if (count($r->meta_name) > 0) {
+				for ($i = 0; $i < count($r->meta_name); $i++) {
+					if ($r->meta_name[$i]) {
+						$meta['name'][$i] = $r->meta_name[$i];
+					}
+				}
+			}
+		}
+		if ($r->meta_content) {
+			if (count($r->meta_content) > 0) {
+				for ($i = 0; $i < count($r->meta_content); $i++) {
+					if ($r->meta_content[$i]) {
+						$meta['content'][$i] = $r->meta_content[$i];
+					}
+				}
+			}
+		}
+		// $data['meta'] = json_encode($meta);
+
+		$og = [
+			'description' => $r->meta_description,
+			'title' => $r->meta_title,
+		];
+		// Data Meta Image
+		if ($r->meta_image) {
+			$namemeta_image = $r->file('meta_image')->getClientOriginalName();
+			$sizemeta_image = $r->file('meta_image')->getSize();
+			if ($sizemeta_image >= 1048576) {
+				return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+			}
+			$filename2 = time() . '-' . $namemeta_image;
+			$file = $r->file('meta_image');
+			$file->move(public_path('image/laman/meta_image'), $filename2);
+			$og['image'] = $filename2;
+			$og['size'] = $sizemeta_image;
+		}
+		// $data['og'] = json_encode($og);
+
 		$nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
 		$sizeMobile = $r->file('filClassesImageMobile')->getSize();
 		$name = $r->file('filClassesImage')->getClientOriginalName();
@@ -92,6 +133,8 @@ class ClassesController extends Controller
 			'tipe' => json_encode($r->slcClassesType),
 			'level' => $r->slcClassesLevel,
 			'jenis' => json_encode($r->slcClassesJenis),
+			'og' => json_encode($og),
+			'meta' => json_encode($meta),
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -109,7 +152,6 @@ class ClassesController extends Controller
 
 	public function update(Request $r, $id)
 	{
-		// return $r->all();
 		$tobeins = [
 			'title' => $r->txtClassesTitle,
 			'instructor' => json_encode($r->txtClassesInstructor),
@@ -124,6 +166,51 @@ class ClassesController extends Controller
 			'level' => $r->slcClassesLevel,
 			'jenis' => json_encode($r->slcClassesJenis),
 		];
+
+		// Data Meta
+		$meta = [];
+		if ($r->meta_name) {
+			if (count($r->meta_name) > 0) {
+				for ($i = 0; $i < count($r->meta_name); $i++) {
+					if ($r->meta_name[$i]) {
+						$meta['name'][$i] = $r->meta_name[$i];
+					}
+				}
+			}
+		}
+		if ($r->meta_content) {
+			if (count($r->meta_content) > 0) {
+				for ($i = 0; $i < count($r->meta_content); $i++) {
+					if ($r->meta_content[$i]) {
+						$meta['content'][$i] = $r->meta_content[$i];
+					}
+				}
+			}
+		}
+		$tobeins['meta'] = json_encode($meta);
+
+		$og = [
+			'description' => $r->meta_description,
+			'title' => $r->meta_title,
+		];
+		if ($r->oldsizemetaimage) {
+			$og['image'] = $r->oldmetaimage;
+			$og['size'] = $r->oldsizemetaimage;
+		}
+		// Data Meta Image
+		if ($r->meta_image) {
+			$namemeta_image = $r->file('meta_image')->getClientOriginalName();
+			$sizemeta_image = $r->file('meta_image')->getSize();
+			if ($sizemeta_image >= 1048576) {
+				return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+			}
+			$filename2 = time() . '-' . $namemeta_image;
+			$file = $r->file('meta_image');
+			$file->move(public_path('image/laman/meta_image'), $filename2);
+			$og['image'] = $filename2;
+			$og['size'] = $sizemeta_image;
+		}
+		$tobeins['og'] = json_encode($og);
 
 		if ($r->file('filClassesImage')) {
 			$name = $r->file('filClassesImage')->getClientOriginalName();

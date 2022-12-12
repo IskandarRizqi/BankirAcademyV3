@@ -21,7 +21,8 @@
                                             </a>
                                         </div>
                                         <h5 class="text-uppercase text-center mt-2"
-                                            style="margin-bottom: 0px !important">{{$v['nama']}}</h5>
+                                            style="margin-bottom: 0px !important"
+                                            onclick="handleCopyTextFromParagraph({{$v['kode']}})">{{$v['nama']}}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -50,4 +51,19 @@
         </div>
     </div>
 </section><!-- #content end -->
+<script>
+    $('#judul').click(function () {
+    })
+    function copy() {
+        let copyText = document.querySelector("#judul");
+        copyText.select();
+        document.execCommand("copy");
+    }
+    function handleCopyTextFromParagraph(promo) {
+  const cb = navigator.clipboard;
+  const paragraph = promo;
+//   const paragraph = document.querySelector('#promo');
+  cb.writeText(paragraph).then(() => alert('Text copied'));
+}
+</script>
 @include(env("CUSTOM_FOOTER","front.layout.footer"))
