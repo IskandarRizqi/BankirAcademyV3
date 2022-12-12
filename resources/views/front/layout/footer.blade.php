@@ -13,17 +13,19 @@
                         </p>
                         <div class="py-2" style="background: url('images/world-map.png') no-repeat center center;">
                             <div class="row col-mb-30">
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <address class="mb-0">
                                         <abbr title="Headquarters"
                                             style="display: inline-block;margin-bottom: 7px;"><strong>Alamat:</strong></abbr><br>
                                         Jl. Jendral Sudirman 354, Semarang Barat<br> Kota Semarang<br>
                                     </address>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <abbr title="Phone Number"><strong>Phone:</strong></abbr> (024) 76435498<br>
                                     <abbr title="Fax"><strong>Whatsapp:</strong></abbr> (+62) 895 3122 9494<br>
-                                    <abbr title="Email Address"><strong>Email:</strong></abbr> info@bankiracademy.com
+                                    <abbr title="Email Address"
+                                        style="display: inline-block;margin-bottom: 7px;"><strong>Email:</strong></abbr>
+                                    info@bankiracademy.com<br>
                                 </div>
                             </div>
                         </div>

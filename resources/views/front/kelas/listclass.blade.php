@@ -8,7 +8,7 @@
     </div>
 </section> --}}
 <section id="content">
-    <div class="content-wrap">
+    <div class="content-wrap" style="padding: 0px !important">
         <div class="container clearfix">
             <h3 class="text-capitalize">{{ $judul }}</h3>
             <div class="entry-image">

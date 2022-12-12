@@ -2,7 +2,14 @@
 <html dir="ltr" lang="en-US">
 
 <head>
-
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B65MGBTSZD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-B65MGBTSZD');
+    </script>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="SemiColonWeb" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />

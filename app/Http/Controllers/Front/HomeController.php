@@ -77,7 +77,7 @@ class HomeController extends Controller
         }
 
         $dx['kelas'] = [];
-        $data['o']['owlCustom'] = [
+        $data['o']['owlCustom'] =
             '<div class="owl-item" style="margin:0px !important;">
                 <div class="oc-item">
                 <div class="portfolio-item">
@@ -87,9 +87,8 @@ class HomeController extends Controller
                     </div>
                 </div>
                 </div>
-            </div>',
-        ];
-        $data['o']['cateKelas'] = [];
+            </div>';
+        $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
         $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
         $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
@@ -107,7 +106,7 @@ class HomeController extends Controller
             $owl .= '        </div>';
             $owl .= '    </div>';
             $owl .= '</div>';
-            array_push($data['o']['owlCustom'], $owl);
+            $data['o']['owlCustom'] .= $owl;
             // array_push($data['o']['cateKelas'], '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden></div>');
             $html = '';
 
@@ -223,11 +222,11 @@ class HomeController extends Controller
             }
             $html .= '</div>';
             // $semua .= $html;
-            array_push($data['o']['cateKelas'], $html);
+            $data['o']['cateKelas'] .= $html;
         }
         $semua .= '</div>';
-        array_push($data['o']['cateKelas'], $semua);
-        // return $dx;
+        $data['o']['cateKelas'] .= $semua;
+        // return $data;
 
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
     }

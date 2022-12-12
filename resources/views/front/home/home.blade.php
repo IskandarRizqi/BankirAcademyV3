@@ -149,7 +149,7 @@
         </a>
     </div>
     <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
-        data-items-xs="1" data-items-sm="1" data-items-lg="1" data-items-xl="1">
+        data-items-xs="1" data-items-sm="1" data-items-lg="2" data-items-xl="1">
         <div class="owl-stage-outer">
             <div class="owl-stage"
                 style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
@@ -188,9 +188,10 @@
                     <div class="owl-stage-outer">
                         <div class="owl-stage owlCustom"
                             style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
-                            @foreach ($o['owlCustom'] as $k => $v )
+                            {{-- @foreach ($o['owlCustom'] as $k => $v )
                             {!!$v!!}
-                            @endforeach
+                            @endforeach --}}
+                            {!!$o['owlCustom']!!}
                         </div>
                     </div>
                     <div class="owl-nav" hidden><button type="button" role="presentation" class="owl-prev"
@@ -200,9 +201,10 @@
                 </div>
                 <hr style="width: 1100px">
                 <div id="cateKelas">
-                    @foreach ($o['cateKelas'] as $k => $v )
+                    {{-- @foreach ($o['cateKelas'] as $k => $v )
                     {!!$v!!}
-                    @endforeach
+                    @endforeach --}}
+                    {!!$o['cateKelas']!!}
                 </div>
                 <div class="center">
                     <input type="text" id="halaman" value="2" hidden>
