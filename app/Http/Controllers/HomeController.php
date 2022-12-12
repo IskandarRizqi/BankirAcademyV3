@@ -55,7 +55,7 @@ class HomeController extends Controller
         $data['fee'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'users.name')
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->join('users', 'users.id', 'class_payment.user_id')
-            ->where('status', 1)
+            ->where('class_payment.status', 1)
             ->get();
         foreach ($data['fee'] as $key => $value) {
             $f = FeeModel::where('class_id', 'like', '%"' . $value->title . '"%')->get();

@@ -7,7 +7,8 @@
             <div class="row col-mb-50">
                 <div class="col-lg-6">
                     <div class="widget clearfix">
-                        <p>{{env('APP_NAME','Bankir Akademi')}} merupakan platform digital learning yang dapat digunakan
+                        <p>{{ env('APP_NAME', 'Bankir Akademi') }} merupakan platform digital learning yang dapat
+                            digunakan
                             sebagai media
                             pembelajaran untuk seluruh calon dan karyawan bank.
                         </p>
@@ -23,7 +24,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <abbr title="Phone Number"><strong>Phone:</strong></abbr> (024) 76435498<br>
-                                    <abbr title="Fax"><strong>Whatsapp:</strong></abbr> (+62) 895 3122 9494<br>
+                                    <abbr title="Fax"><strong>Whatsapp 1:</strong></abbr> (+62) 895 3122 9494<br>
+                                    <abbr title="Fax"><strong>Whatsapp 2:</strong></abbr> (+62) 895 3330 17060<br>
                                     <abbr title="Email Address"
                                         style="display: inline-block;margin-bottom: 7px;"><strong>Email:</strong></abbr>
                                     info@bankiracademy.com<br>
@@ -87,9 +89,10 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget quick-contact-widget form-widget clearfix" style="color: black">
                         <h4 style="color: black">Up coming</h4>
-                        <img src="{{asset('google-play-and-apple-app-store-logos-22.png')}}" alt="" width="200px">
+                        <img src="{{ asset('google-play-and-apple-app-store-logos-22.png') }}" alt=""
+                            width="200px">
                         <p></p>
-                        <img src="{{asset('pse-terdaftar.png')}}" alt="" width="50px">
+                        <img src="{{ asset('pse-terdaftar.png') }}" alt="" width="50px">
                         <p>001922.04/DJAI.PSE/12/2022</p>
                     </div>
                 </div>
@@ -220,9 +223,10 @@
 </script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         getLaman();
     })
+
     function popc() {
         Swal.fire({
             icon: 'info',
@@ -258,14 +262,15 @@
             success: function(result) {
                 $('#login').attr('disabled', true)
                 setTimeout(() => {
-                    if (result.length > 500 ) {
+                    if (result.length > 500) {
                         window.location = '/home';
                     } else {
                         var class_id = $("#class_id");
                         var _token = document.getElementsByName("_token");
                         if ((class_id.length > 0) && (_token.length > 0)) {
-                            return window.location = '/ordernopost?_token=' + _token + '&class_id=' + class_id;
-                        } else{
+                            return window.location = '/ordernopost?_token=' + _token +
+                                '&class_id=' + class_id;
+                        } else {
                             return location.reload();
                         }
                     }
@@ -361,7 +366,9 @@
             success: function(result) {
                 if (result.laman_footer.length > 0) {
                     result.laman_footer.forEach(el => {
-                        let foo = '<a href="/u-laman/'+el.slug+'" class="text-capitalize" style="color: black">'+el.title+'</a><br>';
+                        let foo = '<a href="/u-laman/' + el.slug +
+                            '" class="text-capitalize" style="color: black">' + el.title +
+                            '</a><br>';
                         $('.laman_footer').append(foo);
                     });
                 }
