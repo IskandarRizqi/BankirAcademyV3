@@ -24,6 +24,10 @@ use Laravel\Socialite\Facades\Socialite;
 
 class HomeController extends Controller
 {
+    public function index_custom()
+    {
+        return view('home');
+    }
     public function index(Request $request)
     {
         $now = Carbon::now();
