@@ -88,7 +88,7 @@
                                     maxfilesize="1048576">
                                 <img src="
                                     @if (isset($data) && $data->picture)
-                                {{'/Image/'.json_decode($data->picture)->url:''}}
+                                {{'/Image/'.json_decode($data->picture)->url}}
                                 @endif
                                 " alt="Image Preview" id="previewImage" class="previewImage"
                                     style="max-width: 100%;max-height:97px;">

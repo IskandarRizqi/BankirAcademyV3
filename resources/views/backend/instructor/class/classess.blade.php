@@ -36,6 +36,7 @@
 				<table id="tblClasses" class="table table-bordered table-striped">
 					<thead>
 						<tr>
+							<th>Status</th>
 							<th>Date</th>
 							<th>Class</th>
 							<th>Category</th>
@@ -54,6 +55,9 @@
 					<tbody>
 						@foreach ($classes as $k=>$v)
 						<tr>
+							<td><span
+									class="badge badge-{{$v->status==1?'info':'danger'}}">{{$v->status==1?'Activated':'De-Activated'}}</span>
+							</td>
 							<td>
 								<span hidden>
 									{{Carbon\Carbon::parse($v->date_start)->format('U')}}
