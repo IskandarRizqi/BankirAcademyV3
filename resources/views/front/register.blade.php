@@ -51,6 +51,7 @@
 
                             <div class="card mx-auto rounded-0 border-0" style="max-width: 400px;">
                                 <div class="card-body" style="padding: 40px;">
+                                    <h3>Register Peserta/Member</h3>
                                     <div class="col-12 form-group">
                                         <label class="font-body text-capitalize"
                                             for="login-form-modal-username">USERNAME</label>
@@ -151,6 +152,11 @@
                     // location.replace("/get-order?produk_id=" + produk);
                     // console.log(result)
                     if (result.status == 200) {
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Register Berhasil, Tunggu Hingga Redirect',
+                            position: 'topRight',
+                        });
                         location.replace("/");
                     }
                 },

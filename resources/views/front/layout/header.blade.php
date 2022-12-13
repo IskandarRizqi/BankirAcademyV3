@@ -18,13 +18,14 @@
                     <a href="{{url('/')}}" class="standard-logo" data-dark-logo="{{asset('Backend/logo_12.png')}}">
                         <img src="{{env('CUSTOM_LOGO','/Bank-academy-logo-03.png')}}" alt="E-class"
                             style="max-width: 340px; height:auto !important;"></a>
-                    <a href="{{url('/')}}" class="retina-logo" data-dark-logo="{{asset('/526x417-05.png')}}"><img
-                            src="{{asset('/526x417-05.png')}}" alt="Canvas Logo"></a>
+                    <a href="{{url('/')}}" class="retina-logo"
+                        data-dark-logo="{{asset('/Bank-academy-logo-04.png')}}"><img
+                            src="{{asset('/Bank-academy-logo-04.png')}}" alt="Canvas Logo"></a>
                 </div><!-- #logo end -->
                 @if(Auth::check() && Auth::user()->role == 2)
                 <div class="header-misc">
                     <a href="{{url('/profile')}}">
-                        <button class="btn btn-info" title="Profile">
+                        <button class="btn btn-info btn-sm" title="Profile">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
                                 <path
@@ -33,9 +34,9 @@
                             </svg>
                             Profile</button>
                     </a>
-                    <a href=" {{ route('logout') }}" onclick="event.preventDefault();
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-                        <button class="btn btn-warning text-white" title="Logout">
+                        <button class="btn btn-warning text-white btn-sm" title="Logout">
                             <svg xmlns=" http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: rgb(255, 255, 255);transform: ;msFilter:;">
                                 <path d="M16 13v-2H7V8l-5 4 5 4v-3z"></path>
@@ -44,6 +45,9 @@
                                 </path>
                             </svg>
                             Logout</button>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </a>
                     {{-- <div class="dropdown mx-3 mr-lg-0">
                         <a href="#" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
@@ -105,7 +109,7 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="#">
+                                    <a class="menu-link" href="/list-class?jenis=management_trainer">
                                         <div>Management Trainee</div>
                                     </a>
                                 </li>
@@ -146,7 +150,7 @@
                         @if(!Auth::check())
                         <li class="menu-item d-flex">
                             <a class="menu-link" data-toggle="modal" data-target="#modelId" data-backdrop="static"
-                                data-keyboard="false">
+                                data-keyboard="false" style="padding-right: 0px">
                                 <button class="btn" style="background-color: #FFA600; border-radius: 9px"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
@@ -158,7 +162,7 @@
                                         </path>
                                     </svg>Masuk</button>
                             </a>
-                            <a class="menu-link"
+                            <a class="menu-link" style="padding-left: 5px"
                                 href="https://api.whatsapp.com/send/?phone=62895333017060&text&type=phone_number&app_absent=0">
                                 <button class="btn btn-primary" style="border-radius: 9px"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

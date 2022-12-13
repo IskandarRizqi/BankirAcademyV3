@@ -50,6 +50,7 @@
                                                 </option>
                                                 <option value="5" {{old('jenis')==5?'selected':''}}>Bankir</option>
                                                 <option value="6" {{old('jenis')==6?'selected':''}}>Bootcampt Bankir
+                                                <option value="8" {{old('jenis')==8?'selected':''}}>Management Trainer
                                                 </option>
                                                 <option value="7" {{old('jenis')==7?'selected':''}}>All Kelas</option>
                                             </select>

@@ -456,10 +456,10 @@
             <header>
                 <div class="row">
                     <div class="col">
-                        <img src="Backend/logo_12.png" width="125" alt="" />
+                        <img src="Bank-academy-logo-03.png" width="500" alt="" />
                         <h2 class="name">
                             <a target="_blank">
-                                AKARINDO.ID
+                                {{-- AKARINDO.ID --}}
                             </a>
                         </h2>
                         <div>
@@ -559,21 +559,26 @@
                             <td colspan="2">PAJAK PAJAK</td>
                             <td>NOMINAL PAJAK</td>
                         </tr> --}}
-                        <tr>
+                        {{-- <tr>
                             <td colspan="5"></td>
                             <td colspan="2">GRAND TOTAL</td>
                             <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
                                 }}</td>
-                        </tr>
+                        </tr> --}}
                     </tfoot>
                 </table>
-                {{-- <div class="thanks">Thank you!</div> --}}
+                <div style="text-align: right">
+                    <h2>Grand Total : {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                        \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
+                        }}</h2>
+                    <p style="text-transform: capitalize;">{{$terbilang}}</p>
+                </div>
                 <div class="notices">
                     <div>Informasi:</div>
                     <div class="notice">
-                        Bank : BCA || No.Rekening : 2466030896 || Atas Nama
-                        : CV. ANUGRAH KARYA INDONESIA
+                        Bank : BCA || No.Rekening : 8035559091 || Atas Nama
+                        : PT. Bankir Academy Indonesia
                     </div>
                     <div class="notice">
                         Apabila telah melakukan pembayaran harap melakukan

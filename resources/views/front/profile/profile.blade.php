@@ -4,6 +4,46 @@
 @error('error')
 {{ $message }}
 @enderror
+<style>
+    /* .badge {
+        display: inline-block;
+        background-color: lighten(red, 20%);
+        border-radius: 50%;
+        color: #fff;
+        padding: 0.5em 0.75em;
+        position: relative;
+    } */
+
+    .pulsate::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        animation: pulse 1s ease infinite;
+        border-radius: 50%;
+        border: 4px double lighten(red, 20%);
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        60% {
+            transform: scale(1.3);
+            opacity: 0.4;
+        }
+
+        100% {
+            transform: scale(1.4);
+            opacity: 0;
+        }
+    }
+</style>
 <section id="content">
     <div class="content-wrap" style="padding: 24px;">
         <div class="container clearfix">
@@ -22,7 +62,13 @@
                                     <li><a href="#tab-pnpt"><i class="icon-line-book-open"></i> Pre & Pos Tes</a></li>
                                     <li><a href="#tab-absen"><i class="icon-fingerprint"></i> Absen</a></li>
                                     <li><a href="#tab-affiliate"><i class="icon-users1"></i> Affiliate</a></li>
-                                    <li><a href="#tab-feeds"><i class="icon-credit-cards"></i> Billing Kelas</a></li>
+                                    <li><a href="#tab-feeds"><i class="icon-credit-cards"></i> Billing Kelas
+                                            <span class="badge bg-danger text-white">
+                                                <div class="spinner-grow spinner-grow-sm">
+                                                </div>
+                                                {{$count_payment}}
+                                            </span>
+                                        </a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
                                 </ul>
                                 <div class="tab-container">
@@ -504,7 +550,7 @@
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="row">
-                                                            <div class="col-lg-6">
+                                                            <div class="col-lg-12">
                                                                 <label for="form-control">Tanggal lahir</label>
                                                                 <input type="date" name="tanggal_lahir"
                                                                     class="form-control"
@@ -515,10 +561,10 @@
                                                                 </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="col-lg-6">
+                                                            <div class="col-lg-6" hidden>
                                                                 <label for="">No. Rekening</label>
                                                                 <input type="text" name="rekening" id="rekening"
-                                                                    class="form-control" value="{{$pfl['rekening']}}">
+                                                                    class="form-control" value="1">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -544,7 +590,9 @@
                                                             </div>
                                                             <div class="col-lg-6">
                                                                 <label for="form-control">Referral (optional)</label>
-                                                                <input type="text" name="referral" class="form-control"
+                                                                <input type="text" id="referral" name="referral"
+                                                                    class="form-control"
+                                                                    onchange="referralKode('{{$pfl['user_id']}}',$(this).val())"
                                                                     value="{{$referralku?$referralku->code:''}}" {{--
                                                                     {{$referralku?'readonly':''}} --}}>
                                                                 @if (Session::has('referral'))
@@ -600,7 +648,7 @@
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="row">
-                                                            <div class="col-lg-6">
+                                                            <div class="col-lg-12">
                                                                 <label for="form-control">Tanggal lahir</label>
                                                                 <input type="date" name="tanggal_lahir"
                                                                     class="form-control">
@@ -610,10 +658,10 @@
                                                                 </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="col-lg-6">
+                                                            <div class="col-lg-6" hidden>
                                                                 <label for="">No. Rekening</label>
                                                                 <input type="text" name="rekening" id="rekening"
-                                                                    class="form-control">
+                                                                    class="form-control" value="1">
                                                                 @if ($errors->has('rekening'))
                                                                 <div class="error" style="color: red; display:block;">
                                                                     {{ $errors->first('rekening') }}
@@ -642,7 +690,9 @@
                                                             </div>
                                                             <div class="col-lg-6">
                                                                 <label for="form-control">Referral (optional)</label>
-                                                                <input type="text" name="referral" class="form-control"
+                                                                <input type="text" id="referral" name="referral"
+                                                                    class="form-control"
+                                                                    onchange="referralKode('{{Auth::user()->id}}',$(this).val())"
                                                                     value="{{$referralku?$referralku->code:''}}" {{--
                                                                     {{$referralku?'readonly':''}} --}}>
                                                                 @if (Session::has('referral'))
@@ -745,7 +795,6 @@
         </div>
     </div>
 </section><!-- #content end -->
-
 <script>
     $(document).ready(function() {
         $('#datatable2').dataTable();
@@ -842,6 +891,43 @@
                         text: result.message,
                     })
                     location.reload()
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Maaf',
+                        text: result.message,
+                    })
+                }
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 1000);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                // var errors = jqXhr.responseJSON;
+                // var errorsHtml = '';
+                // console.log(errors['errors']);
+            }
+        })
+    }
+
+    function referralKode(id_user, referral) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "/join/referral/" + id_user + '/' + referral ,
+            method: 'get',
+            success: function(result) {
+                console.log(result);
+                if (result.status == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: result.message,
+                    })
+                    // location.reload()
                 } else {
                     Swal.fire({
                         icon: 'error',

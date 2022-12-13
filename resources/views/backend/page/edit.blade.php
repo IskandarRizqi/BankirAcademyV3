@@ -8,7 +8,8 @@
         <div class="widget-content">
             <form action="/admin/pages/update" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="text" class="form-control" name="id" id="id" value="{{isset($page->id)?$page->id:null}}">
+                <input type="text" class="form-control" name="id" id="id" value="{{isset($page->id)?$page->id:null}}"
+                    hidden>
                 <div class="row">
                     <div class="col">
                         <div class="form-group">

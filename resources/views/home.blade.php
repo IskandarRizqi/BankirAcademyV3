@@ -1,7 +1,7 @@
 @include("front.layout.head")
 
 <section id="content">
-    <div class="content-wrap">
+    <div class="content-wrap" style="padding: 0px !important">
         <div class="container clearfix">
             <div class="entry-image mb-0">
                 <img src="{{asset('526x417-05.png')}}" alt="">

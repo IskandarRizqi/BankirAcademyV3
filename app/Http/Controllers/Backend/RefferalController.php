@@ -78,6 +78,68 @@ class RefferalController extends Controller
         return Redirect::back()->with('error', 'Simpan Data Gagal');
     }
 
+    public function joinRefAjax($id, $kode)
+    {
+        $k = RefferralPesertaModel::where('code', $kode)->first();
+        if (!$k) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Kode Referral Tidak Ditemukan',
+                'response' => 'error',
+            ]);
+        }
+        $auth = Auth::user();
+        if (!$auth) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Anda Belum Login',
+                'response' => 'error',
+            ]);
+        }
+        if ($auth->role !== 2) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Kode Referral Hanya Untuk Member',
+                'response' => 'error',
+            ]);
+        }
+        $o = RefferralModel::where('code', $kode)->where('user_aplicator', $auth->id)->first();
+        if ($o) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Kode Referral Sudah Terpakai',
+                'response' => 'error',
+            ]);
+        }
+        $s = RefferralPesertaModel::where('code', $kode)->where('user_id', $auth->id)->first();
+        if ($s) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Kode Referral Punya Sendiri',
+                'response' => 'error',
+            ]);
+        }
+
+        $r = RefferralModel::create([
+            'user_id' => $k->user_id,
+            'user_aplicator' => $auth->id,
+            'code' => $kode,
+            'url' => null,
+        ]);
+        if ($r) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Kode Referral Tersimpan',
+                'response' => 'success',
+            ]);
+        }
+        return response()->json([
+            'status' => 400,
+            'message' => 'Kode Referral Gagal Simpan',
+            'response' => 'error',
+        ]);
+    }
+
     public function joinRef($uri)
     {
         $k = RefferralPesertaModel::where('code', $uri)->first();

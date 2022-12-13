@@ -13,6 +13,7 @@ use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Terbilang;
 use PDF;
 
 class InvoiceController extends Controller
@@ -69,6 +70,8 @@ class InvoiceController extends Controller
 		}
 
 		$data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
+		$data['terbilang'] = Terbilang::make($data['payment']['totalAkhir'], '', 'Rp. ');
+		// return $data;
 		if ($data['payment']->status == 1) {
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/invoicelunas'), $data);
 		} else {

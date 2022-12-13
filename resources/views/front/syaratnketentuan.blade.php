@@ -4,16 +4,16 @@
 
 <div class="container clearfix">
 
-    @if ($sdank)
     <section id="content">
         <div class="content-wrap">
 
             <div class="row gutter-40 col-mb-80">
 
                 <div class="row col-mb-50">
-                    @if ($sdank->thumbnail)
+                    @if ($sdank)
                     <div class="col-md-12 col-lg-12">
                         <div class="postcontent col-lg-9">
+                            @if ($sdank->thumbnail)
                             <div class="single-event">
                                 <div class="entry-image mb-0">
                                     <a href="#"><img src="{{$sdank->thumbnail}}" alt="Event Single"></a>
@@ -47,23 +47,18 @@
                                 {!!$sdank->content!!}
                             </div>
                             <div class="w-100"></div>
-
-
-
-
-                            <div class="w-100"></div>
-
-                            <a href="/registerinstructor" class="btn btn-success btn-rounded"
-                                style="border-radius:10px !important">Setuju</a>
-                            <a href="/" class="btn btn-secondary btn-rounded"
-                                style="border-radius:10px !important">Batal</a>
-
                         </div>
 
                     </div>
+                    @endif
+                    <div class="col-md-12">
+                        <a href="/registerinstructor" class="btn btn-success btn-rounded"
+                            style="border-radius:10px !important">Setuju</a>
+                        <a href="/" class="btn btn-secondary btn-rounded"
+                            style="border-radius:10px !important">Batal</a>
+                    </div>
                 </div>
             </div>
-            @endif
 
         </div>
 </div>

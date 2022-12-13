@@ -89,8 +89,7 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget quick-contact-widget form-widget clearfix" style="color: black">
                         <h4 style="color: black">Up coming</h4>
-                        <img src="{{ asset('google-play-and-apple-app-store-logos-22.png') }}" alt=""
-                            width="200px">
+                        <img src="{{ asset('google-play-and-apple-app-store-logos-22.png') }}" alt="" width="200px">
                         <p></p>
                         <img src="{{ asset('pse-terdaftar.png') }}" alt="" width="50px">
                         <p>001922.04/DJAI.PSE/12/2022</p>
@@ -261,6 +260,11 @@
             data: data,
             success: function(result) {
                 $('#login').attr('disabled', true)
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Login Berhasil',
+                    position: 'topRight',
+                });
                 setTimeout(() => {
                     if (result.length > 500) {
                         window.location = '/home';
@@ -269,17 +273,13 @@
                         var _token = document.getElementsByName("_token");
                         if ((class_id.length > 0) && (_token.length > 0)) {
                             return window.location = '/ordernopost?_token=' + _token +
-                                '&class_id=' + class_id;
+                            '&class_id=' + class_id;
                         } else {
-                            return location.reload();
+                            window.location = '/profile';
+                            // return location.reload();
                         }
                     }
                 }, 2000);
-                iziToast.success({
-                    title: 'Success',
-                    message: 'Login Berhasil',
-                    position: 'topRight',
-                });
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;

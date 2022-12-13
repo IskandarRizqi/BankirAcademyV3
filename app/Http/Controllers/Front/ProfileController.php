@@ -45,6 +45,10 @@ class ProfileController extends Controller
         if ($r->param_checked_lunas) {
             $data['param']['status'] = $r->param_checked_lunas;
         }
+        $data['count_payment'] = ClassPaymentModel::select()
+            ->whereDate('class_payment.expired', '>=', Carbon::now()->format('Y-m-d'))
+            ->where('class_payment.user_id', $auth)
+            ->count();
         $data['payment'] = ClassPaymentModel::select(
             'class_payment.*',
             'classes.title',
@@ -123,21 +127,21 @@ class ProfileController extends Controller
             return Redirect::back()->withErrors($validator);
         }
 
-        if ($request->referral) {
-            $r = RefferralPesertaModel::where('code', $request->referral)->first();
-            if (!$r) {
-                return Redirect::back()->withInput($request->all())->with('referral', 'Kode Referral Tidak Ditemukan');
-            }
-            RefferralModel::updateOrCreate(
-                [
-                    'user_id' => $r->user_id,
-                ],
-                [
-                    'user_aplicator' => $request->user_id,
-                    'code' => $request->referral,
-                ]
-            );
-        }
+        // if ($request->referral) {
+        //     $r = RefferralPesertaModel::where('code', $request->referral)->first();
+        //     if (!$r) {
+        //         return Redirect::back()->withInput($request->all())->with('referral', 'Kode Referral Tidak Ditemukan');
+        //     }
+        //     RefferralModel::updateOrCreate(
+        //         [
+        //             'user_id' => $r->user_id,
+        //         ],
+        //         [
+        //             'user_aplicator' => $request->user_id,
+        //             'code' => $request->referral,
+        //         ]
+        //     );
+        // }
 
         UserProfileModel::updateOrCreate([
             'user_id' => $request->user_id,

@@ -28,14 +28,13 @@
 @include('front.layout.topbar')
 @include(env('CUSTOM_HEADER', 'front.layout.header'))
 
-<section id="page-title" class="page-title-dark"
-    style="padding: 250px 0; background-image: url( {{json_decode($data->banner)?'/Image/laman/banner/'.json_decode($data->banner)->url:'images/about/parallax.jpg'}}); background-size: contain; background-position: center; background-repeat:no-repeat;">
+<section
+    style="padding: 250px 0; background-image: url('{{asset(json_decode($data->banner)?'/Image/laman/banner/'.json_decode($data->banner)->url:'526x417-05.png')}}'); background-size: contain; background-position: center; background-repeat:no-repeat;">
     <div class="container clearfix">
         <h1>{{$data->title}}</h1>
         {{-- <span>Everything you need to know about our Company</span> --}}
     </div>
 </section>
-{{-- {{$data}} --}}
 <section id="content">
     <div class="content-wrap">
         <div class="container clearfix">
