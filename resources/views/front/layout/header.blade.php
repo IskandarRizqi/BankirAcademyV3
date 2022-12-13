@@ -23,7 +23,29 @@
                 </div><!-- #logo end -->
                 @if(Auth::check() && Auth::user()->role == 2)
                 <div class="header-misc">
-                    <div class="dropdown mx-3 mr-lg-0">
+                    <a href="{{url('/profile')}}">
+                        <button class="btn btn-info" title="Profile">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
+                                <path
+                                    d="M15 11h7v2h-7zm1 4h6v2h-6zm-2-8h8v2h-8zM4 19h10v-1c0-2.757-2.243-5-5-5H7c-2.757 0-5 2.243-5 5v1h2zm4-7c1.995 0 3.5-1.505 3.5-3.5S9.995 5 8 5 4.5 6.505 4.5 8.5 6.005 12 8 12z">
+                                </path>
+                            </svg>
+                            Profile</button>
+                    </a>
+                    <a href=" {{ route('logout') }}" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                        <button class="btn btn-warning text-white" title="Logout">
+                            <svg xmlns=" http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                style="fill: rgb(255, 255, 255);transform: ;msFilter:;">
+                                <path d="M16 13v-2H7V8l-5 4 5 4v-3z"></path>
+                                <path
+                                    d="M20 3h-9c-1.103 0-2 .897-2 2v4h2V5h9v14h-9v-4H9v4c0 1.103.897 2 2 2h9c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2z">
+                                </path>
+                            </svg>
+                            Logout</button>
+                    </a>
+                    {{-- <div class="dropdown mx-3 mr-lg-0">
                         <a href="#" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="true"><i class="icon-user"></i></a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
@@ -37,7 +59,7 @@
                                 </form>
                             </a>
                         </ul>
-                    </div>
+                    </div> --}}
                 </div>
                 @endif
                 <div id="primary-menu-trigger">
@@ -122,7 +144,7 @@
                             </a>
                         </li> -->
                         @if(!Auth::check())
-                        <li class="menu-item ml-4 text-right">
+                        <li class="menu-item d-flex">
                             <a class="menu-link" data-toggle="modal" data-target="#modelId" data-backdrop="static"
                                 data-keyboard="false">
                                 <button class="btn" style="background-color: #FFA600; border-radius: 9px"><svg
@@ -135,6 +157,9 @@
                                             d="M14.242 13.159c.446-.112.758-.512.758-.971v-.377a1 1 0 1 0-2 .001v.377a1 1 0 0 0 1.242.97z">
                                         </path>
                                     </svg>Masuk</button>
+                            </a>
+                            <a class="menu-link"
+                                href="https://api.whatsapp.com/send/?phone=62895333017060&text&type=phone_number&app_absent=0">
                                 <button class="btn btn-primary" style="border-radius: 9px"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         style="fill: rgb(255, 255, 255);transform: ;msFilter:;">
@@ -146,10 +171,6 @@
                                     Kami</button>
                             </a>
                         </li>
-                        <!-- <li class="menu-item"><a class="menu-link" href="{{url('/registerc')}}">
-                            <div>Register</div>
-                        </a>
-                    </li> -->
                         @endif
                         @if(Auth::check() && (Auth::user()->role !== 2))
                         <li class="menu-item"><a class="menu-link" href="{{url('/home')}}">
@@ -157,10 +178,6 @@
                             </a>
                         </li>
                         @endif
-                        <li class="menu-item">
-                            <a class="menu-link">
-                            </a>
-                        </li>
                     </ul>
                 </nav><!-- #primary-menu end -->
             </div>
