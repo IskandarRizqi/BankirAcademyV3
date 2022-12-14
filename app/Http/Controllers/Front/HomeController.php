@@ -380,8 +380,8 @@ class HomeController extends Controller
     public function showAllPromo()
     {
         $now = Carbon::now();
-        // $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
-        $data['data'] = KodePromoModel::where('tgl_mulai', '<=', $now->format('Y-m-d'))->where('tgl_selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
+        $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
+        // $data['data'] = KodePromoModel::where('tgl_mulai', '<=', $now->format('Y-m-d'))->where('tgl_selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
         // return $data;
         return view('front.allpromo', $data);
     }

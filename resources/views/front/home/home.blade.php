@@ -124,53 +124,73 @@
         background: #234f6d;
         background: linear-gradient(0deg, rgba(35, 79, 109, 0.3785889356) 0%, #455f71 100%);
     }
+
+    .owl-carousel .owl-dots,
+    .owl-carousel .owl-nav {
+        text-align: left !important;
+        -webkit-tap-highlight-color: transparent;
+        line-height: 1;
+    }
+
+    .owl-carousel .owl-dots .owl-dot {
+        display: inline-block;
+        zoom: 1;
+        width: 8px;
+        height: 8px;
+        margin: 30px 4px 0 4px;
+        opacity: 0.5;
+        border-radius: 50%;
+        background-color: #ffffff;
+        -webkit-transition: all .3s ease;
+        -o-transition: all .3s ease;
+        transition: all .3s ease;
+    }
 </style>
 
 <!-- Content -->
 @if (isset($banner_slide))
-    <section id="content">
-        <div id="carouselExampleControls" class="carousel slide d-none d-sm-block" data-ride="carousel">
-            <div class="carousel-inner">
-                @foreach ($banner_slide as $key => $value)
-                    <div class="carousel-item @if ($key == 0) active @endif">
-                        <img class="d-block w-100" src="/Image/{{ $value->image }}" alt="First slide">
+<section id="content">
+    <div id="carouselExampleControls" class="carousel slide d-none d-sm-block" data-ride="carousel">
+        <div class="carousel-inner">
+            @foreach ($banner_slide as $key => $value)
+            <div class="carousel-item @if ($key == 0) active @endif">
+                <img class="d-block w-100" src="/Image/{{ $value->image }}" alt="First slide">
+            </div>
+            @endforeach
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
+        data-items-xs="1" data-items-sm="1" data-items-lg="2" data-items-xl="1">
+        <div class="owl-stage-outer">
+            <div class="owl-stage"
+                style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
+                @if (isset($banner_slide_mobile))
+                @foreach ($banner_slide_mobile as $key => $value)
+                <div class="owl-item" style=" margin-right: 20px;">
+                    <div class="oc-item">
+                        <a href="#"><img src="/Image/{{ $value->image }}" alt="Image 1"></a>
                     </div>
-                @endforeach
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <div id="oc-images" class="owl-carousel image-carousel carousel-widget owl-loaded owl-drag d-block d-sm-none"
-            data-items-xs="1" data-items-sm="1" data-items-lg="2" data-items-xl="1">
-            <div class="owl-stage-outer">
-                <div class="owl-stage"
-                    style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
-                    @if (isset($banner_slide_mobile))
-                        @foreach ($banner_slide_mobile as $key => $value)
-                            <div class="owl-item" style=" margin-right: 20px;">
-                                <div class="oc-item">
-                                    <a href="#"><img src="/Image/{{ $value->image }}" alt="Image 1"></a>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="owl-item" style="margin-right: 20px;">
-                            <div class="oc-item">
-                                <a href="#"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}"
-                                        alt="Image 1"></a>
-                            </div>
-                        </div>
-                    @endif
                 </div>
+                @endforeach
+                @else
+                <div class="owl-item" style="margin-right: 20px;">
+                    <div class="oc-item">
+                        <a href="#"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}" alt="Image 1"></a>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endif
 <section id="content">
     <div class="content-wrap mt-6" style="padding: 0px;">
@@ -217,34 +237,25 @@
                 <div class="heading-block center mt-4">
                     <h2 id="hrefpromo" class="text-white">Promo</h2>
                 </div>
-                <div id="oc-testi"
-                    class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget owl-loaded"
                     data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
                     <div class="owl-stage-outer">
                         <div class="owl-stage"
                             style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                             @if (isset($banner_promo))
-                                @foreach ($banner_promo as $bp)
-                                    <div class="owl-item active" style="margin-right: 20px;">
-                                        <div class="oc-item">
-                                            <div class="testimonial"
-                                                style="background-image:url('Image/{{ $bp->image }}');
+                            @foreach ($banner_promo as $bp)
+                            <div class="owl-item active" style="margin-right: 20px;">
+                                <div class="oc-item">
+                                    <div class="testimonial"
+                                        style="background-image:url('Image/{{ $bp->image }}');
                                                     border-radius: 20px !important; height: 316px; background-size:100%;">
-                                                <a href="#"></a>
-                                            </div>
-                                        </div>
+                                        <a href="#"></a>
                                     </div>
-                                @endforeach
+                                </div>
+                            </div>
+                            @endforeach
                             @endif
                         </div>
-                    </div>
-                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
-                                class="icon-angle-left"></i></button><button type="button" role="presentation"
-                            class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                    <div class="owl-dots text-left">
-                        <button role="button" class="owl-dot" style="background-color: white"><span></span></button>
-                        <button role="button" class="owl-dot active"
-                            style="background-color: white"><span></span></button>
                     </div>
                 </div>
                 <div class="d-flex flex-row-reverse">
@@ -261,102 +272,96 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4 mb-4">
-                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget"
-                            data-margin="20" data-items-sm="1" data-items-md="1" data-items-xl="1">
+                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+                            data-items-sm="1" data-items-md="1" data-items-xl="1">
                             @if (isset($kelas_mingguan))
-                                @foreach ($kelas_mingguan as $km)
-                                    <div class="oc-item">
-                                        @foreach ($km as $k)
-                                            <div class="testimonial mb-2"
-                                                style="background-color: #E9EEF0; padding: 10px !important">
-                                                <div class="testi-content">
-                                                    <div class="testi-image">
-                                                        <a href="#"><img src="{{ $k->image }}"
-                                                                alt="Customer Testimonails"></a>
-                                                    </div>
-                                                    <p>{{ $k->title }}</p>
-                                                    <small><i class="far fa-clock"></i>
-                                                        {{ \Carbon\Carbon::parse($k->date_start)->format('F d, Y') }}</small>
-                                                    <div class="testi-meta" style="padding-left: 90px">
-                                                        <p>{{ $k->instructor_list[0]->name }}</p>
-                                                        <span>{{ $k->instructor_list[0]->title }}</span>
-                                                        @auth
-                                                            <a
-                                                                href="class/{{ $k->unique_id }}/{{ urlencode(str_ireplace(['\'', '/', '//', '"', ' ,', ';', '<', '>'], '', $k->title)) }}">
-                                                                <button class="btn btn-primary btn-sm"
-                                                                    width='100%'>Detail</button>
-                                                            </a>
-                                                        @else
-                                                            <a class="btn btn-primary btn-sm" data-toggle="modal"
-                                                                data-target="#modelId" data-backdrop="static"
-                                                                data-keyboard="false">Detail</a>
-                                                        @endauth
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
+                            @foreach ($kelas_mingguan as $km)
+                            <div class="oc-item">
+                                @foreach ($km as $k)
+                                <div class="testimonial mb-2"
+                                    style="background-color: #E9EEF0; padding: 10px !important">
+                                    <div class="testi-content">
+                                        <div class="testi-image">
+                                            <a href="#"><img src="{{ $k->image }}" alt="Customer Testimonails"></a>
+                                        </div>
+                                        <p>{{ $k->title }}</p>
+                                        <small><i class="far fa-clock"></i>
+                                            {{ \Carbon\Carbon::parse($k->date_start)->format('F d, Y') }}</small>
+                                        <div class="testi-meta" style="padding-left: 90px">
+                                            <p>{{ $k->instructor_list[0]->name }}</p>
+                                            <span>{{ $k->instructor_list[0]->title }}</span>
+                                            @auth
+                                            <a href="class/{{ $k->unique_id }}/{{ urlencode(str_ireplace(['\'', '/', '//', '"', '
+                                                ,', ';' , '<' , '>' ], '' , $k->title)) }}">
+                                                <button class="btn btn-primary btn-sm" width='100%'>Detail</button>
+                                            </a>
+                                            @else
+                                            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId"
+                                                data-backdrop="static" data-keyboard="false">Detail</a>
+                                            @endauth
+                                        </div>
                                     </div>
+                                </div>
                                 @endforeach
+                            </div>
+                            @endforeach
                             @endif
                         </div>
                     </div>
                     <div class="col-lg-8 mb-4">
                         @if (isset($banner_bawah))
-                            @if (count($banner_bawah) > 0)
-                                <div id="img_card" class="card text-white click-col"
-                                    style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
-                                </div>
-                                <div class="d-flex mt-4">
-                                    <div id="oc-testi"
-                                        class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                                        data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2"
-                                        style="height: 155px">
-                                        <div class="owl-stage-outer">
-                                            <div class="owl-stage"
-                                                style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
-                                                @for ($i = 1; $i < count($banner_bawah); $i++)
-                                                    <div class="owl-item active"
-                                                        style="width: 418.667px; margin-right: 20px;">
-                                                        <div class="oc-item">
-                                                            <div class="testimonial"
-                                                                style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
+                        @if (count($banner_bawah) > 0)
+                        <div id="img_card" class="card text-white click-col"
+                            style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
+                        </div>
+                        <div class="d-flex mt-4">
+                            <div id="oc-testi"
+                                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2"
+                                style="height: 155px">
+                                <div class="owl-stage-outer">
+                                    <div class="owl-stage"
+                                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                        @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active"
+                                            style="width: 418.667px; margin-right: 20px;">
+                                            <div class="oc-item">
+                                                <div class="testimonial"
+                                                    style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
                                                     border-radius: 20px !important; height: 208px !important; background-size:100%;">
-                                                                <a href="#"></a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endfor
+                                                    <a href="#"></a>
+                                                </div>
                                             </div>
-                                        </div>
                                     </div>
-                                @else
-                                    <div id="img_card" class="card text-white click-col"
-                                        style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); min-height:0px; background-size:contain !important;">
-                                    </div>
-                                    <div class="d-flex mt-4">
-                                        <div id="oc-testi"
-                                            class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
-                                            data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
-                                            <div class="owl-stage-outer">
-                                                <div class="owl-stage"
-                                                    style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
-                                                    <div class="owl-item active"
-                                                        style="width: 418.667px; margin-right: 20px;">
-                                                        <div class="oc-item">
-                                                            <div class="testimonial"
-                                                                style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
-                                                                <a href="#"><img
-                                                                        src="{{ asset('Backend/assets/img/1280x857.jpg') }}"
-                                                                        alt="Customer Testimonails"
-                                                                        height="100%"></a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                        <div id="img_card" class="card text-white click-col"
+                            style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); min-height:0px; background-size:contain !important;">
+                        </div>
+                        <div class="d-flex mt-4">
+                            <div id="oc-testi"
+                                class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
+                                data-margin="20" data-items-sm="1" data-items-md="2" data-items-xl="2">
+                                <div class="owl-stage-outer">
+                                    <div class="owl-stage"
+                                        style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
+                                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                                            <div class="oc-item">
+                                                <div class="testimonial"
+                                                    style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
+                                                    <a href="#"><img
+                                                            src="{{ asset('Backend/assets/img/1280x857.jpg') }}"
+                                                            alt="Customer Testimonails" height="100%"></a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                            @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         @endif
                     </div>
                 </div>
@@ -393,27 +398,27 @@
                             </div>
                         </div> --}}
                         @if (isset($testimoni))
-                            @foreach ($testimoni as $key => $t)
-                                <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                                    <div class="oc-item">
-                                        <div class="testimonial"
-                                            style="background-color: #ffffffa1 !important; border-radius: 9px !important">
-                                            <div class="testi-image">
-                                                <a href="#"><img
-                                                        src="{{ $t->picture ? $t->picture : asset('avatars/avatar-' . ($key + 1) . '.png') }}"
-                                                        alt="Customer Testimonails"></a>
-                                            </div>
-                                            <div class="testi-content">
-                                                <p>{{ $t->review }}</p>
-                                                <div class="testi-meta">
-                                                    {{ $t->name }}
-                                                    {{-- <span>XYZ Inc.</span> --}}
-                                                </div>
-                                            </div>
+                        @foreach ($testimoni as $key => $t)
+                        <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
+                            <div class="oc-item">
+                                <div class="testimonial"
+                                    style="background-color: #ffffffa1 !important; border-radius: 9px !important">
+                                    <div class="testi-image">
+                                        <a href="#"><img
+                                                src="{{ $t->picture ? $t->picture : asset('avatars/avatar-' . ($key + 1) . '.png') }}"
+                                                alt="Customer Testimonails"></a>
+                                    </div>
+                                    <div class="testi-content">
+                                        <p>{{ $t->review }}</p>
+                                        <div class="testi-meta">
+                                            {{ $t->name }}
+                                            {{-- <span>XYZ Inc.</span> --}}
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
+                        </div>
+                        @endforeach
                         @endif
                     </div>
                 </div>

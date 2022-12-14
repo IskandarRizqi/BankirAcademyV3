@@ -20,7 +20,8 @@ return new class extends Migration
             $table->date('mulai')->nullable();
             $table->date('selesai')->nullable();
             $table->text('image');
-            $table->double('nominal')->default(0);
+            $table->double('nominal')->default(0)->nullable();
+            $table->string('kode')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

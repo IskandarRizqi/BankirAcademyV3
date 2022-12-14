@@ -24,19 +24,21 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="row mb-1">
-                                    <div class="col-lg-6">
-                                        <label for="form-control">Judul</label>
-                                        <input type="text" class="form-control" name="judul" id="judul"
-                                            placeholder="Judul banner">
-                                        <input type="hidden" class="form-control" name="id" id="idbanner">
+                                    {{-- <div class="col-lg-6">
+                                    </div> --}}
+                                    <div class="col-lg-12 d-flex">
+                                        <div class="form-group mr-4">
+                                            <label for="form-control">Judul</label>
+                                            <input type="text" class="form-control" name="judul" id="judul"
+                                                placeholder="Judul banner">
+                                            <input type="hidden" class="form-control" name="id" id="idbanner">
 
-                                        @if($errors->has('judul'))
-                                        <div class="error" style="color: red; display:block;">{{
-                                            $errors->first('judul') }}</div>
-                                        @endif
-                                    </div>
-                                    <div class="col-lg-6 d-flex">
-                                        <div class="form-group">
+                                            @if($errors->has('judul'))
+                                            <div class="error" style="color: red; display:block;">{{
+                                                $errors->first('judul') }}</div>
+                                            @endif
+                                        </div>
+                                        <div class="form-group mr-4">
                                             <label for="form-control">Type banner</label>
                                             <select name="jenis" class="form-control" id="type">
                                                 <option value="0" selected>Banner Slide</option>
@@ -59,13 +61,22 @@
                                                 $errors->first('jenis') }}</div>
                                             @endif
                                         </div>
-                                        <div id="form_nominal" class="form-group" hidden>
+                                        <div id="form_nominal" class="form-group mr-4" hidden>
                                             <label for="">Nominal (%)</label>
                                             <input type="number" name="nominal" id="nominal" step="any"
                                                 class="form-control" value="{{old('nominal')}}">
                                             @if($errors->has('nominal'))
                                             <div class="error" style="color: red; display:block;">{{
                                                 $errors->first('nominal') }}</div>
+                                            @endif
+                                        </div>
+                                        <div id="form_kode" class="form-group" hidden>
+                                            <label for="">Kode</label>
+                                            <input type="text" name="kode" id="kode" class="form-control"
+                                                value="{{old('kode')}}">
+                                            @if($errors->has('kode'))
+                                            <div class="error" style="color: red; display:block;">{{
+                                                $errors->first('kode') }}</div>
                                             @endif
                                         </div>
                                     </div>
@@ -193,8 +204,10 @@
         let t = $('#type').val();
         if (t == 2) {
             $('#form_nominal').removeAttr('hidden')
+            $('#form_kode').removeAttr('hidden')
         }else{
             $('#form_nominal').attr('hidden',true)
+            $('#form_kode').attr('hidden',true)
         }
     })
     function viewimage(image) {
@@ -229,6 +242,7 @@
                 $("#type").val(result.jenis)
                 $("#selesai").val(result.selesai)
                 $("#nominal").val(result.nominal)
+                $("#kode").val(result.kode)
                 $("#urlbanner").val(result.public_id)
                 $(".custom-file-container__image-preview").css("background-image", "url(/image/" + result.image + ")")
                 $('#type').change();

@@ -143,7 +143,6 @@
 
 
 <script>
-    console.log('27-10-2022 20:25');
     var tpj = jQuery;
     tpj.noConflict();
     var $ = jQuery.noConflict();

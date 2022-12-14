@@ -17,5 +17,6 @@ class BannerModel extends Model
         'selesai',
         'image',
         'nominal',
+        'kode',
     ];
 }

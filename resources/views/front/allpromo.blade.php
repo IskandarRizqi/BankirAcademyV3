@@ -16,14 +16,13 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card" style="min-height: 0px !important">
-                                            <a href="/pages/blog">
-                                                <img src="{{ '/image/promo/image/' . json_decode($v['image'])->url }}"
-                                                    width="100%">
-                                            </a>
+                                            <img src="{{ '/Image/' . $v['image'] }}" width="100%">
+                                            {{-- <a href="/pages/blog">
+                                            </a> --}}
                                         </div>
                                         <h5 class="text-uppercase text-center mt-2"
                                             style="margin-bottom: 0px !important" @if ($v['kode'])
-                                            onclick="handleCopyTextFromParagraph({{ $v['kode'] }})" @endif>
+                                            onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')" @endif>
                                             {{ $v['kode'] }}</h5>
                                     </div>
                                 </div>
@@ -66,7 +65,11 @@
         const cb = navigator.clipboard;
         const paragraph = promo;
         //   const paragraph = document.querySelector('#promo');
-        cb.writeText(paragraph).then(() => alert('Text copied'));
+        cb.writeText(paragraph).then(() => iziToast.success({
+                        title: 'Success',
+                        message: 'copy to clipboard',
+                        position: 'topRight',
+                    }));
     }
 </script>
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
