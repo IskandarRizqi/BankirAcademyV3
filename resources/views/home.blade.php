@@ -1,9 +1,9 @@
-@include("front.layout.head")
+@include('front.layout.head')
 
 <section id="content">
     <div class="content-wrap" style="padding: 0px !important">
-        <img src="{{asset('bgdesktop.webp')}}" alt="">
-        <img class="d-block d-md-none" src="{{asset('bgmobile3.webp')}}" alt="">
+        <img class="d-none d-lg-block" src="{{ asset('bgdesktop.webp') }}" alt="">
+        <img class="d-block d-md-none" src="{{ asset('bgmobile3.webp') }}" alt="">
     </div>
 </section><!-- #content end -->
 {{-- @extends('layouts.app')
