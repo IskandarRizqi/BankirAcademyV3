@@ -43,6 +43,9 @@ class PagesController extends Controller
 			'title' => $r->txtTitle,
 			'content' => $r->txaPageAbout,
 			'type' => $r->type,
+			'description' => $r->description,
+			'date_start' => $r->date_start,
+			'date_end' => $r->date_end,
 		];
 		if ($r->file('txtThumbnail')) {
 			$name = $r->file('txtThumbnail')->getClientOriginalName();

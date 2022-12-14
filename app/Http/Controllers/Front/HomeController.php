@@ -42,6 +42,7 @@ class HomeController extends Controller
             $now->endOfWeek()->format('Y-m-d')
         ])
             ->whereDate('date_start', '>=', Carbon::now())
+            ->where('status', 1)
             ->orderBy('date_start', 'ASC')
             ->get();
         $class = [];
@@ -74,9 +75,9 @@ class HomeController extends Controller
         if ($request->ajax()) {
             $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
             $dx['kelas'] = [];
-            $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
+            $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(6)->toArray();
             foreach ($categori as $key => $value) {
-                $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->paginate(6)->toArray();
+                $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(6)->toArray();
             }
             return response()->json($dx);
         }
@@ -95,12 +96,12 @@ class HomeController extends Controller
             </div>';
         $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
-        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->paginate(6)->toArray();
+        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(6)->toArray();
         $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
         foreach ($categori as $key => $value) {
             $data['o']['kelas'][] = preg_replace('/\s+/', '', $value);
             $owl = '';
-            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->paginate(6)->toArray();
+            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(6)->toArray();
             $owl .= '<div class="owl-item" style="margin:0px !important;">';
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
@@ -118,12 +119,12 @@ class HomeController extends Controller
             $html .= '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden>';
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
-                $html .= '    <div class=card>';
+                $html .= '    <div class="card d-flex flex-column">';
                 $html .= '        <div class=card-body>';
                 $html .= '            <div class="card" style="min-height: 0px !important">';
                 $html .= '                <img src="' . $v['image'] . '" width=100%>';
                 $html .= '            </div>';
-                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' . $v['title'] . '</h5>';
+                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:12px !important;">' . $v['title'] . '</h5>';
                 if ($v['date_start'] == $v['date_end']) {
                     $html .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</h6>';
                 } else {
@@ -135,6 +136,7 @@ class HomeController extends Controller
                     $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
                 }
                 $html .= '                <div class=>';
+                $html .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
                 $html .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
                 $html .= '                    </label>';
                 $html .= '                    <small>' . $v['instructor_list'][0]->title . '</small>';
@@ -144,10 +146,12 @@ class HomeController extends Controller
                 $html .= '                    </label>';
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
-                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>';
+                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
                     } else {
                         $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
                     }
+                } else {
+                    $html .= '<small> Rp. -</small>';
                 }
                 $html .= '                </div>';
                 $html .= '            </a>';
@@ -155,11 +159,14 @@ class HomeController extends Controller
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
                         $html .=
-                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '<span class="badge badge-danger badge-sm ml-2">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</span></h3>';
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
                     }
+                } else {
+                    $html .=
+                        '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
                 }
                 $html .=
-                    '                <a class="btn btn-primary btn-block btn-rounded"';
+                    '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
                 $html .=
                     '                    style="border-radius:10px !important"';
                 $html .= '                    href="class/' . $v['unique_id'] .
@@ -172,12 +179,12 @@ class HomeController extends Controller
                 $html .= '</div>';
 
                 $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
-                $semua .= '    <div class=card>';
+                $semua .= '    <div class="card d-flex flex-column">';
                 $semua .= '        <div class=card-body>';
                 $semua .= '            <div class="card" style="min-height: 0px !important">';
                 $semua .= '                <img src="' . $v['image'] . '" width=100%>';
                 $semua .= '            </div>';
-                $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' . $v['title'] . '</h5>';
+                $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:12px !important;">' . $v['title'] . '</h5>';
                 if ($v['date_start'] == $v['date_end']) {
                     $semua .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</h6>';
                 } else {
@@ -189,6 +196,7 @@ class HomeController extends Controller
                     $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
                 }
                 $semua .= '                <div class=>';
+                $semua .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
                 $semua .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
                 $semua .= '                    </label>';
                 $semua .= '                    <small>' . $v['instructor_list'][0]->title . '</small>';
@@ -198,10 +206,12 @@ class HomeController extends Controller
                 $semua .= '                    </label>';
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
-                        $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>';
+                        $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
                     } else {
                         $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
                     }
+                } else {
+                    $semua .= '<small> Rp. -</small>';
                 }
                 $semua .= '                </div>';
                 $semua .= '            </a>';
@@ -209,11 +219,14 @@ class HomeController extends Controller
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
                         $semua .=
-                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '<span class="badge badge-danger badge-sm ml-2">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</span></h3>';
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
                     }
+                } else {
+                    $semua .=
+                        '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
                 }
                 $semua .=
-                    '                <a class="btn btn-primary btn-block btn-rounded"';
+                    '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
                 $semua .=
                     '                    style="border-radius:10px !important"';
                 $semua .= '                    href="class/' . $v['unique_id'] .
