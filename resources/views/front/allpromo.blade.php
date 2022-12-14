@@ -13,13 +13,11 @@
                         <div class="row">
                             @foreach ($data['data'] as $v)
                             <div class="col-lg-3 col-sm-6 mb-4">
-                                <div class="card">
+                                <div class="card" style="border-radius: 25px">
                                     <div class="card-body">
-                                        <div class="card" style="min-height: 0px !important">
-                                            <img src="{{ '/Image/' . $v['image'] }}" width="100%">
-                                            {{-- <a href="/pages/blog">
-                                            </a> --}}
-                                        </div>
+                                        <img src="{{ '/Image/' . $v['image'] }}" width="100%">
+                                        {{-- <a href="/pages/blog">
+                                        </a> --}}
                                         <h5 class="text-uppercase text-center mt-2"
                                             style="margin-bottom: 0px !important" @if ($v['kode'])
                                             onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')" @endif>

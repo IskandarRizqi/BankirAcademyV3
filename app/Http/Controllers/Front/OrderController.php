@@ -88,6 +88,9 @@ class OrderController extends Controller
         if (!$auth) {
             Redirect::back()->with('error', 'Belum Login');
         }
+        if ($auth->role == 3) {
+            Redirect::back()->with('error', 'Silahkan Pakai Akum Member');
+        }
         $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->where('expired', '>=', now())->get();
         if (count($cpm) > 0) {
             $data['data'] = ClassPaymentModel::where('user_id', $request->class_id)->get();

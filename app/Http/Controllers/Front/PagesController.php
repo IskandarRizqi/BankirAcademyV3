@@ -68,13 +68,14 @@ class PagesController extends Controller
 	}
 	public function getAbout(Request $r)
 	{
-		$data['about'] = Pages::where('type', 1)->first();
+		$data['about'] = Pages::where('type', 7)->first();
 
 		return view('pages/aboutinput', $data);
 	}
 
 	public function setAbout(Request $r)
 	{
+		// return $r;
 		$tobeins = [
 			'title' => $r->txtTitle,
 			'content' => $r->txaPageAbout,
@@ -90,13 +91,26 @@ class PagesController extends Controller
 			$tobeins['thumbnail'] = ('/image/pages/' . $filename);
 		}
 
-		Pages::UpdateOrCreate(['type' => 1], $tobeins);
+		$contents = [];
+		if ($r->judul) {
+			array_push($contents, $r->judul);
+		}
+		if ($r->content) {
+			array_push($contents, $r->content);
+		}
+
+		if ($r->judul && $r->content) {
+			$tobeins['content'] = json_encode($contents);
+		}
+
+		// return $tobeins;
+		Pages::UpdateOrCreate(['type' => 7], $tobeins);
 		return Redirect::back();
 	}
 
 	public function showAbout(Request $r)
 	{
-		$data['about'] = Pages::where('type', 1)->first();
+		$data['about'] = Pages::where('type', 7)->first();
 
 		return view('pages/about', $data);
 	}

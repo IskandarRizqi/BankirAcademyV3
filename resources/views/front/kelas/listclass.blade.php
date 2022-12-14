@@ -44,17 +44,17 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="accordion" id="accordionExample">
                             <div class="row">
-                                <div class="form-group col">
+                                {{-- <div class="form-group col">
                                     <label for="">Tag:</label>
                                     <button class="btn btn-light btn-block text-left" type="button"
                                         data-toggle="collapse" data-target="#collapseTag" aria-expanded="true"
                                         aria-controls="collapseTag">
                                         <label for="">Pilih</label>
                                     </button>
-                                </div>
+                                </div> --}}
                                 <div class="form-group col">
                                     <label for="">Jenis:</label>
                                     <button class="btn btn-light btn-block text-left" type="button"
@@ -128,17 +128,18 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-sm mt-2">Cari</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-sm mt-2"
+                        style="padding-left: 15px !important; padding-right: 15px !important">Cari</button>
                 </div>
 
             </form>
             <div class="row gutter-40 col-mb-80">
-                <div class="postcontent col-lg-9">
+                <div class="postcontent col-lg-12">
                     @if ($class['data'])
                     <div class="single-event">
                         <div class="row">
                             @foreach ($class['data'] as $v)
-                            <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="col-lg-3 col-sm-6 mb-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card" style="min-height: 0px !important">
@@ -156,10 +157,9 @@
                                             @endif
                                         </h6>
                                         <a href="/profile-instructor/3/Dani" class="d-flex mt-2">
-                                            <img class="mr-3 rounded-circle"
-                                                src="/Image/{{ json_decode($v['instructor_list'][0]->picture)->url }}"
-                                                alt="Generic" placeholder="" image=""
-                                                style="max-width:50px; max-height:50px;">
+                                            <img class="mr-3 rounded-circle" src="@if (json_decode($v['instructor_list'][0]->picture)){{ asset('Image/' . json_decode($v['instructor_list'][0]->picture)->url) }}
+                                                @else{{$v['instructor_list'][0]->picture}} @endif" alt="Generic"
+                                                placeholder="" image="" style="max-width:50px; max-height:50px;">
                                             <div class="">
                                                 <label class="d-block mb-0">{{ $v['instructor_list'][0]->name }}
                                                     {{-- <small>{{$v['instructor_list'][0]->title}}</small> --}}
@@ -227,9 +227,8 @@
                     </div>
                     @endif
                 </div>
-                <div class="col-lg-3">
-                    {{-- --}}
-                </div>
+                {{-- <div class="col-lg-3">
+                </div> --}}
             </div>
 
         </div>

@@ -52,7 +52,7 @@
     <title>{{env('APP_NAME','E-class Akarindo')}}</title>
 
     @isset($class->meta)
-    @if ($class->meta)
+    @if ($class->meta != null && is_object(json_decode($class->meta)))
     @for ($i=0;$i<count(json_decode($class->meta)->name);$i++)
         <meta name="{{json_decode($class->meta)->name[$i]}}" content="{{json_decode($class->meta)->content[$i]}}" />
         @endfor

@@ -200,7 +200,7 @@
 								<div class="form-group">
 									<label for="">Title <b class="text-danger">*</b></label>
 									<input type="text" name="meta_title" id="meta_title"
-										value="{{$classes->og?json_decode($classes->og)->title:''}}"
+										value="@isset(json_decode($classes->og)->title){{json_decode($classes->og)->title}}@endisset"
 										class="form-control">
 									@error('meta_title')
 									<small class="text-danger">Harus Diisi</small>
@@ -209,7 +209,7 @@
 								<div class="form-group">
 									<label for="">Description <b class="text-danger">*</b></label>
 									<input type="text" name="meta_description" id="meta_description"
-										value="{{$classes->og?json_decode($classes->og)->description:''}}"
+										value="@isset(json_decode($classes->og)->description){{json_decode($classes->og)->description}}@endisset"
 										class="form-control">
 									@error('meta_description')
 									<small class="text-danger">Harus Diisi</small>
@@ -217,15 +217,20 @@
 								</div>
 								<div class="form-group">
 									<input type="text" name="oldmetaimage"
-										value="{{$classes->og?json_decode($classes->og)->image:''}}" hidden>
+										value="@isset(json_decode($classes->og)->image){{json_decode($classes->og)->image}}@endisset"
+										hidden>
 									<input type="text" name="oldsizemetaimage"
-										value="{{$classes->og?json_decode($classes->og)->size:''}}" hidden>
+										value="@isset(json_decode($classes->og)->size){{json_decode($classes->og)->size}}@endisset"
+										hidden>
 									<label>Image: <b class="text-danger">*</b></label>
 									<input type="file" class="form-control" name="meta_image" id="image"
 										accept="image/*">
-									<img src="{{$classes->og?'/Image/laman/meta_image/'.json_decode($classes->og)->image:'/Backend/assets/img/90x90.jpg'}}"
-										alt="Image Preview" id="prvImageMeta" class="previewImage"
-										style="max-width: 100%;max-height:97px;">
+									<img src="/Image/laman/meta_image/@isset(json_decode($classes->og)->image){{json_decode($classes->og)->image}}@endisset"
+										{{--
+										{{$classes->og?'/Image/laman/meta_image/'.json_decode($classes->og)->image:'/Backend/assets/img/90x90.jpg'}}
+									--}}
+									alt="Image Preview" id="prvImageMeta" class="previewImage" style="max-width:
+									100%;max-height:97px;">
 									@error('meta_image')
 									<small class="text-danger">Harus Diisi</small>
 									@enderror
@@ -234,7 +239,8 @@
 							<hr>
 							<h4>Additional Meta <small>(optional)</small></h4>
 							<div id="meta_form">
-								@if ($classes->meta)
+								{{-- @if ($classes->meta) --}}
+								@if (json_decode($classes->meta))
 								@for ($i=0; $i < count(json_decode($classes->meta)->name); $i++) <div
 										class="form-group">
 										<div class="d-flex">
@@ -255,6 +261,7 @@
 										@endfor
 									</div>
 									@endif
+									{{-- @endif --}}
 							</div>
 							<div class="d-flex">
 								<span class="btn btn-primary btn-sm" id="add_meta">+</span>

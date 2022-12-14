@@ -22,7 +22,7 @@
                                 <option value="4" {{isset($page->title)==4?'selected':''}}>Calon Bankir</option>
                                 <option value="5" {{isset($page->title)==5?'selected':''}}>Bankir</option>
                                 <option value="6" {{isset($page->title)==6?'selected':''}}>Bootcamp Bankir</option>
-                                <option value="7" {{isset($page->title)==7?'selected':''}}>Bantuan</option>
+                                {{-- <option value="7" {{isset($page->title)==7?'selected':''}}>Bantuan</option> --}}
                             </select>
                         </div>
                     </div>

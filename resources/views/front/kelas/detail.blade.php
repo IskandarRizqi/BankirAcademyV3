@@ -58,11 +58,11 @@
                                     <div class="col-md-12" style="padding-bottom: 10px;">
                                         <h4>Kelas Timeline</h4>
                                         <div class="row">
-                                            <div class="col-4">
+                                            <div class="col">
                                                 <a href="/profile-instructor/{{ $class->instructor_list[0]->id }}/{{ $class->instructor_list[0]->name }}"
                                                     class="d-flex mt-2">
-                                                    <img class="mr-3 rounded-circle"
-                                                        src="{{ asset('Image/' . json_decode($class->instructor_list[0]->picture)->url) }}"
+                                                    <img class="mr-3 rounded-circle" src="@if (json_decode($class->instructor_list[0]->picture)){{ asset('Image/' . json_decode($class->instructor_list[0]->picture)->url) }}
+                                                        @else{{$class->instructor_list[0]->picture}}" @endif
                                                         alt=Generic placeholder image
                                                         style="max-width:50px; max-height:50px;">
                                                     <div class=>
@@ -111,22 +111,22 @@
                                                 </p>
                                             </div>
                                             <div class="col">
-                                                <label for="">Tanggal</label>
+                                                <p for="" style="margin: 0px">Tanggal</p>
                                                 <span class="badge badge-info">
                                                     @if (\Carbon\Carbon::parse($time_start)->format('d-m-Y') ==
                                                     \Carbon\Carbon::parse($time_end)->format('d-m-Y'))
                                                     {{ \Carbon\Carbon::parse($time_start)->format('d-m-Y')}}
-                                                    <p style="margin: 0px">
+                                                    <div style="margin: 0px">
                                                         {{ \Carbon\Carbon::parse($time_start)->format('H:i:s')}} -
                                                         {{ \Carbon\Carbon::parse($time_end)->format('H:i:s')}}
-                                                    </p>
+                                                    </div>
                                                     @else
                                                     {{ \Carbon\Carbon::parse($time_start)->format('d-m-Y') .' -'
                                                     .\Carbon\Carbon::parse($time_end)->format('d-m-Y') }}
-                                                    <p style="margin: 0px">
+                                                    <div style="margin: 0px">
                                                         {{ \Carbon\Carbon::parse($time_start)->format('H:i:s') .' -'
                                                         .\Carbon\Carbon::parse($time_end)->format('H:i:s') }}
-                                                    </p>
+                                                    </div>
                                                     @endif
                                                 </span>
                                             </div>

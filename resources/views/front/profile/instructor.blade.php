@@ -15,17 +15,18 @@
                                 <div class="fslider" data-pagi="false" data-arrows="false" data-thumbs="true">
                                     <div class="flexslider">
                                         <div class="flex-viewport"
-                                            style="overflow: hidden; position: relative; height: auto;">
-                                            <img src="{{asset('Image/'.json_decode($data->picture)->url)}}" alt="">
+                                            style="overflow: hidden; position: relative; height: auto;"><img
+                                                src="@if (json_decode($data->picture)){{asset('Image/'.json_decode($data->picture)->url)}}@else{{$data->picture}}@endif"
+                                                alt="">
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="sale-flash badge bg-danger p-2">Sale!</div> --}}
+                                {{-- <div class=" sale-flash badge bg-danger p-2">Sale!
+                                </div> --}}
                             </div>
                         </div>
                         {{-- <div class="col-md-5 product-desc">
                         </div> --}}
-
                         <div class="col mt-5">
                             <div class="tabs clearfix mb-0 ui-tabs ui-corner-all ui-widget ui-widget-content"
                                 id="tab-1">
@@ -114,7 +115,8 @@
                                                             </div>
                                                             {{$r->review_msg}}
                                                             <div class="review-comment-ratings">
-                                                                @for ($i=1; $i <= 5; $i++) @if ($i <=$r->review_val)
+                                                                @for ($i=1; $i <= 5; $i++) @if ($i <=$r->
+                                                                    review_val)
                                                                     <i class="icon-star3"></i>
                                                                     @else
                                                                     <i class="icon-star-empty"></i>
@@ -130,13 +132,15 @@
                                             </ol>
 
                                             {{-- <button data-toggle="modal" data-target="#reviewFormModal"
-                                                class="button button-3d m-0 float-end">Add a Review</button> --}}
+                                                class="button button-3d m-0 float-end">Add a Review</button>
+                                            --}}
                                             <div class="modal fade" id="reviewFormModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="reviewFormModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h4 class="modal-title" id="reviewFormModalLabel">Submit a
+                                                            <h4 class="modal-title" id="reviewFormModalLabel">
+                                                                Submit a
                                                                 Review
                                                             </h4>
                                                             <button type="button" class="btn-close btn-sm"
@@ -176,7 +180,8 @@
                                                                 </div>
                                                                 @else
                                                                 <div class="col-12">
-                                                                    <p class="text-danger">Pastikan Sudah Login!</p>
+                                                                    <p class="text-danger">Pastikan Sudah Login!
+                                                                    </p>
                                                                 </div>
                                                                 @endauth
                                                             </form>

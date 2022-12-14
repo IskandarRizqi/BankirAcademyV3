@@ -61,7 +61,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get("/admin/pages/kelas/{tipe}", [App\Http\Controllers\Front\PagesController::class, "getPageKelas"]);
     Route::get("/admin/pages/getsdank", [App\Http\Controllers\Front\PagesController::class, "getsdank"]);
     Route::post("/admin/pages/setsdank", [App\Http\Controllers\Front\PagesController::class, "setsdank"]);
-    Route::get("/admin/pages/getabout", [App\Http\Controllers\Front\PagesController::class, "getAbout"]);
+    Route::get("/admin/pages/getbantuan", [App\Http\Controllers\Front\PagesController::class, "getAbout"]); //Page Bantuan
     Route::post("/admin/pages/setabout", [App\Http\Controllers\Front\PagesController::class, "setAbout"]);
     Route::get("/admin/pages/getcontact", [App\Http\Controllers\Front\PagesController::class, "getContact"]);
     Route::post("/admin/pages/setcontact", [App\Http\Controllers\Front\PagesController::class, "setContact"]);

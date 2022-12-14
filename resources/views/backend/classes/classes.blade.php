@@ -122,7 +122,7 @@
 										<form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
 										</form>
 										<a class="dropdown-item" title="Activated"
-											onclick="activedClasses({{$v->id}},{{$v->status}})">Activated</a>
+											onclick="activedClasses({{$v->id}},{{$v->status}})">{{$v->status==1?'De-Activated':'Activated'}}</a>
 										<form action="#" method="get" id="formacclasses">@csrf
 										</form>
 									</div>

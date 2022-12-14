@@ -2,11 +2,8 @@
 
 <section id="content">
     <div class="content-wrap" style="padding: 0px !important">
-        <div class="container clearfix">
-            <div class="entry-image mb-0">
-                <img src="{{asset('526x417-05.png')}}" alt="">
-            </div>
-        </div>
+        <img src="{{asset('bgdesktop.webp')}}" alt="">
+        <img class="d-block d-md-none" src="{{asset('bgmobile3.webp')}}" alt="">
     </div>
 </section><!-- #content end -->
 {{-- @extends('layouts.app')
