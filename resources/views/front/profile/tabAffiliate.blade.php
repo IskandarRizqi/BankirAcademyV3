@@ -49,5 +49,4 @@
     </tbody>
 </table>
 <script>
-    createDataTable('#affiliate')
 </script>

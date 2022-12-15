@@ -20,7 +20,6 @@ class InvoiceController extends Controller
 {
 	public function getInvoice(Request $r, $id)
 	{
-
 		$data['payment'] = ClassPaymentModel::where('id', $id)->where(function ($q) {
 			$role = Auth::user()->role;
 			if ($role == 2) {
@@ -52,13 +51,17 @@ class InvoiceController extends Controller
 		// Deklarasi referral
 		$data['payment']['reff'] = 0;
 		$data['payment']['reff_nominal'] = 0;
-		$data['payment']['totalAkhir'] = 0;
-		// Cek referral Tersedia
 		$n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+		$data['payment']['totalAkhir'] = $n;
+		// Cek referral Tersedia
+		$available = 0;
 		$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
 		if ($reff) {
+			if ($reff->available == 1) {
+				$available = 1;
+			}
 			// Bila referral status 0 maka belum terpakai
-			if ($reff->status == 0) {
+			if ($available == 0) {
 				// Ambil Master Referral Yang Dibuat Admin
 				$mr = MasterRefferralModel::first();
 				if ($mr) {
@@ -78,5 +81,85 @@ class InvoiceController extends Controller
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_PENDING', 'invoice/invoicepending'), $data);
 		}
 		return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
+	}
+
+	public function multiInvoice(Request $request)
+	{
+		// return $request->all();
+		$id = [];
+		$class_id = [];
+		if ($request->dataInvoice) {
+			foreach (json_decode($request->dataInvoice) as $key => $value) {
+				if ($value) {
+					// return response()->json([
+					// 	'status' => false,
+					// 	'message' => 'kosong',
+					// ]);
+					array_push($id, $value->id);
+					array_push($class_id, $value->class_id);
+				}
+			}
+
+			$numbers = ClassPaymentModel::select('no_invoice')->pluck('no_invoice')->toArray();
+			do {
+				$no_invoice = uniqid();
+			} while (in_array($no_invoice, $numbers));
+			if (count($id) <= 0) {
+				return Redirect::back()->with('error', 'Data Tidak Ditemukan');
+			}
+
+			$data['payment'] = ClassPaymentModel::select('class_payment.*', 'class_payment.id as payment_id', 'class_payment.created_at as tanggal', 'class_pricing.*', 'classes.title')
+				->join('class_pricing', 'class_pricing.class_id', 'class_payment.class_id')
+				->join('classes', 'classes.id', 'class_payment.class_id')
+				->whereIn('class_payment.id', $id)
+				->orderBy('class_payment.price_final', 'ASC')
+				->get();
+			$data['profile'] = UserProfileModel::where('user_id', $data['payment'][0]['user_id'])->first();
+			$data['total'] = 0;
+			$available = 0;
+			foreach ($data['payment'] as $key => $value) {
+				// update nomor invoice
+				ClassPaymentModel::where('id', $value->payment_id)->update([
+					'no_invoice' => $no_invoice
+				]);
+				// Deklarasi variable kode promo
+				$kode = 0;
+				if ($value['promo']) {
+					// Cek kode promo Tersedia
+					$kode = $value['promo'];
+				}
+				// Deklarasi referral
+				$value->referral = 0;
+				$value->reff_nominal = 0;
+				$n = ($value['price_final'] * $value['jumlah']) - $kode;
+				$value->totalAkhir = $n;
+				// Cek referral Tersedia
+				$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+				if ($reff) {
+					if ($reff->available == 1) {
+						$available = 1;
+					}
+					// Bila referral status 0 maka belum terpakai
+					if ($available == 0) {
+						// Ambil Master Referral Yang Dibuat Admin
+						$mr = MasterRefferralModel::first();
+						if ($mr) {
+							$value->reff_nominal = $mr->nominal;
+							$value->referral = $n * ($mr->nominal / 100);
+							$value->totalAkhir = $n - $value->referral;
+						}
+					}
+					$available = 1;
+				}
+				$data['total'] += $value->totalAkhir;
+			}
+			$data['no_invoice'] = $no_invoice;
+			$data['terbilang'] = Terbilang::make($data['total'], '', 'Rp. ');
+			// return $data;
+			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/multiinvoice'), $data);
+			return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
+		} else {
+			return Redirect::back()->with('error', 'Data Tidak Ditemukan');
+		}
 	}
 }

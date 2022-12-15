@@ -24,6 +24,52 @@ class OrderController extends Controller
         // $data['class'] = ClassesModel::whereIn('id', $data['class_id'])->get();
         // return view('front.profile.profile', $data);
     }
+
+    public function multibayar(Request $request)
+    {
+        // return $request->all();
+        if (!$request->dataInvoiceMulti) {
+            return Redirect::back()->with('error', 'Data Tidak Ditemukan');
+        }
+        if (!$request->imageBuktiMulti) {
+            return Redirect::back()->with('error', 'Gambar Tidak Ditemukan');
+        }
+
+        $payment_id = [];
+        $inv_lama = '';
+        $inv_kini = '';
+        foreach (json_decode($request->dataInvoiceMulti) as $key => $value) {
+            // $update = ClassPaymentModel::where('id', $value->id)->update(
+            //     [
+            //         'file' => $gambar
+            //     ]
+            // );
+            if ($key == 0) {
+                $inv_lama = $value->no_invoice;
+            }
+
+            if ($key > 0) {
+                $inv_kini = $value->no_invoice;
+                if ($inv_kini !== $inv_lama) {
+                    return Redirect::back()->with('error', 'Cek Invoice Terlebih Dahulu');
+                }
+            }
+
+            array_push($payment_id, $value->id);
+        }
+
+
+        $size = $request->file('imageBuktiMulti')->getSize();
+        if (($size / 1024) > 100) {
+            return Redirect::back()->with('error', 'Size Maximum 100kb');
+        }
+        $gambar = $request->file('imageBuktiMulti')->store('order/' . Auth::user()->email . '/' . time());
+        ClassPaymentModel::whereIn('id', $payment_id)->update([
+            'file' => $gambar
+        ]);
+
+        return Redirect::back()->with('success', 'Upload Bukti Berhasil');
+    }
     public function bayar(Request $request)
     {
         if ($request->ajax()) {
@@ -88,7 +134,7 @@ class OrderController extends Controller
         if (!$auth) {
             Redirect::back()->with('error', 'Belum Login');
         }
-        if ($auth->role == 3) {
+        if (Auth::user()->role == 3) {
             Redirect::back()->with('error', 'Silahkan Pakai Akum Member');
         }
         $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->where('expired', '>=', now())->get();

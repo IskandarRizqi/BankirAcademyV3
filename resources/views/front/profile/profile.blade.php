@@ -119,13 +119,27 @@
                                                         </div>
                                                     </div>
                                                 </form>
+                                                <div>
+                                                    <span onclick="invoiceAjax()"><button
+                                                            class="btn btn-warning">Invoice</button></span>
+                                                    <span class="btn btn-info" data-toggle="modal"
+                                                        data-target="#bayarMultiModal">Upload Bukti</span>
+                                                    <p class="m-0">Pilih Checkbox Lalu Klik Button</p>
+                                                </div>
                                             </div>
                                         </div>
+                                        <form id="formmultiinvoice" action="/classes/multiinvoice" method="POST"
+                                            location.reload(); target="_blank">
+                                            @csrf
+                                            <textarea name="dataInvoice" id="dataInvoice" cols="30" rows="10"
+                                                hidden></textarea>
+                                        </form>
                                         <div class="table-responsive">
                                             <table id="datatable1" class="table table-striped table-bordered"
                                                 cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr class="text-center">
+                                                        <th></th>
                                                         <th>No</th>
                                                         <th>Status</th>
                                                         <th>Nama Kelas</th>
@@ -140,6 +154,16 @@
                                                     @foreach ($payment as $key => $d)
                                                     @if ($d->expired < \Carbon\Carbon::now()) {{ $expired=true }} @else
                                                         {{ $expired=false }} @endif <tr class="text-center">
+                                                        <td>
+                                                            <div>
+                                                                <input id="checkbox-{{$key}}" class="checkbox-style"
+                                                                    name="checkbox" type="checkbox"
+                                                                    {{$expired?'disabled':''}}
+                                                                    onclick="checkedBilling({{$d}},{{$key}})">
+                                                                <label for="checkbox-{{$key}}"
+                                                                    class="checkbox-style-3-label"></label>
+                                                            </div>
+                                                        </td>
                                                         <td width="1%">{{ $key + 1 }}</td>
                                                         <td>
                                                             @if ($expired)
@@ -229,6 +253,47 @@
                                                         @endforeach
                                                 </tbody>
                                             </table>
+                                            <!-- Modal Multi Bukti-->
+                                            <div class="modal fade" id="bayarMultiModal" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="/multi-bayar" method="POST"
+                                                            enctype="multipart/form-data">
+                                                            @csrf
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <textarea name="dataInvoiceMulti" id="dataInvoiceMulti"
+                                                                    cols="30" rows="10" hidden></textarea>
+                                                                <div class="col-lg-12 bottommargin">
+                                                                    <label>Upload Bukti Multi Pembayaran:</label><br>
+                                                                    <input id="input-3" name="imageBuktiMulti"
+                                                                        type="file" class="file"
+                                                                        data-show-upload="false"
+                                                                        data-show-caption="true"
+                                                                        data-show-preview="true" accept="image/*">
+                                                                    @error('imageBuktiMulti')
+                                                                    <span class="text-danger" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary">Save
+                                                                    changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <!-- Modal Bukti-->
                                             <div class="modal fade" id="bayarModal" tabindex="-1"
                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -796,6 +861,7 @@
     </div>
 </section><!-- #content end -->
 <script>
+    let checkedData = [];
     $(document).ready(function() {
         $('#datatable2').dataTable();
         $('#nilai').change(function() {
@@ -1043,6 +1109,63 @@
             });
         }
         $('#tableContent').html(html);
+    }
+
+    function checkedBilling(d,key) {
+        let check = false;
+        if ($('#checkbox-'+key).is(':checked')) {
+            check = true;
+        }
+
+        if (check) {
+            if (key in checkedData) {
+                checkedData[key]=d;
+            }else{
+                checkedData.push(d);
+            }
+        }else{
+            checkedData[key]=null;
+        }
+
+        $('#dataInvoice').val(JSON.stringify(checkedData));
+        $('#dataInvoiceMulti').val(JSON.stringify(checkedData));
+    }
+
+    function invoiceAjax() {
+        $('#formmultiinvoice').submit();
+        location.reload();
+        // $.ajaxSetup({
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     }
+        // });
+        // jQuery.ajax({
+        //     url: "/classes/multiinvoice" ,
+        //     method: 'post',
+        //     data: {data:data},
+        //     success: function(result) {
+        //         console.log(result);
+        //         if (result.status == 200) {
+        //             Swal.fire({
+        //                 icon: 'success',
+        //                 title: 'Berhasil',
+        //                 text: result.message,
+        //             })
+        //             // location.reload()
+        //         } else {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Maaf',
+        //                 text: result.message,
+        //             })
+        //         }
+        //     },
+        //     error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+        //         // var errors = jqXhr.responseJSON;
+        //         // var errorsHtml = '';
+        //         console.log(errors['errors']);
+        //     }
+        // })
     }
 </script>
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))

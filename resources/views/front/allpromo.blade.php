@@ -18,10 +18,20 @@
                                         <img src="{{ '/Image/' . $v['image'] }}" width="100%">
                                         {{-- <a href="/pages/blog">
                                         </a> --}}
-                                        <h5 class="text-uppercase text-center mt-2"
-                                            style="margin-bottom: 0px !important" @if ($v['kode'])
-                                            onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')" @endif>
-                                            {{ $v['kode'] }}</h5>
+                                        @if ($v['kode'])
+                                        <div class="row mt-2">
+                                            <div class="col-md-9">
+                                                <h5 class="text-uppercase" style="margin-bottom: 0px !important">
+                                                    {{ $v['kode'] }}</h5>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="d-flex flex-row-reverse">
+                                                    <button class="btn btn-secondary btn-sm flex-shrink-1"
+                                                        onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')">Copy</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +56,7 @@
                 </div>
             </div>
             @endif
-
+            <img src="{{asset('a_Cara_pakai_promo.jpg')}}" alt="">
         </div>
     </div>
 </section><!-- #content end -->

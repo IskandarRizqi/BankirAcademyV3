@@ -86,6 +86,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
     Route::get('/classes/getinvoice/{id}', [App\Http\Controllers\Front\InvoiceController::class, 'getInvoice']);
+    Route::post('/classes/multiinvoice', [App\Http\Controllers\Front\InvoiceController::class, 'multiInvoice']);
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
     Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
     // 
@@ -102,6 +103,7 @@ Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');
 Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar']);
+Route::post('/multi-bayar', [App\Http\Controllers\Front\OrderController::class, 'multibayar']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index_custom']);

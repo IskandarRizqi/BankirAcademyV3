@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
-            $table->integer('type')->default(0)->comment('0:Blog;1:About;2:Kontak;3:Syarat dan Ketentuan;4:Calon Bankir;5:Bankir;6:Bootcamp Bankir;7:Bantuan');
+            $table->integer('type')->default(0)->comment('0:Blog;1:About;2:Kontak;3:Syarat dan Ketentuan;4:Calon Bankir;5:Bankir;6:Bootcamp Bankir;7:Bantuan;8:Mitra');
             $table->string('title');
             $table->longText('thumbnail')->nullable();
             $table->longText('content');

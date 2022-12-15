@@ -178,6 +178,9 @@
                     <li>
                         <a href="/admin/pages"> Page </a>
                     </li>
+                    <li>
+                        <a href="/admin/pages/kelas/7"> Bantuan </a>
+                    </li>
                     {{-- <li>
                         <a href="/admin/pages/kelas/4"> Calon Bankir </a>
                     </li>
@@ -186,9 +189,6 @@
                     </li>
                     <li>
                         <a href="/admin/pages/kelas/6"> Bootcamp Bankir </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/kelas/7"> Bantuan </a>
                     </li>
                     <li>
                         <a href="/admin/pages/getabout"> About </a>

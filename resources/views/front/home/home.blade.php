@@ -34,7 +34,7 @@
 
     @media (max-width: 768px) {
         .card {
-            min-height: 350px;
+            min-height: 453px;
         }
 
         .testimonial {
@@ -198,7 +198,7 @@
             <div class="container text-center">
                 <div class="heading-block center">
                     <h2>Jelajahi Academy</h2>
-                    <p>Berbagai macam pilihan akademi dengan metode belajar yang cocok buat kamu</p>
+                    <p>Berbagai macam pilihan kelas bankir dengan metode belajar yang cocok buat kamu</p>
                 </div>
                 <div id="related-portfolio"
                     class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
@@ -368,7 +368,11 @@
             </div>
         </div>
     </div>
-
+    <div class="section border-top-0" style="background-color:#ffffff; padding-bottom: 0px">
+        <div class="container text-center">
+            <img src="{{asset('cari-kerja.webp')}}" alt="">
+        </div>
+    </div>
     <div class="section border-top-0" style="background-color:#FFA600; padding-bottom: 30px">
         <div class="container text-center">
             <div class="heading-block center text-white mt-4">
