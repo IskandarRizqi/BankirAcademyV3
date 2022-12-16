@@ -72,7 +72,7 @@ class HomeController extends Controller
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
                 $html .= '        <div class="card-body" style="min-height: 708px !important">';
-                $html .= '            <div class="card" style="min-height: 400px !important">';
+                $html .= '            <div class="card" style="min-height: 340px !important">';
                 $html .= '                <img src="' . $v['image'] . '" width=100%>';
                 $html .= '            </div>';
                 $html .= '            <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
@@ -141,7 +141,7 @@ class HomeController extends Controller
             $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
-            $semua .= '            <div class="card" style="min-height: 400px !important">';
+            $semua .= '            <div class="card" style="min-height: 340px !important">';
             $semua .= '                <img src="' . $v['image'] . '" width=100%>';
             $semua .= '            </div>';
             $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
@@ -296,7 +296,7 @@ class HomeController extends Controller
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
                 $html .= '        <div class="card-body" style="min-height: 708px !important">';
-                $html .= '            <div class="card" style="min-height: 400px !important">';
+                $html .= '            <div class="card" style="min-height: 340px !important">';
                 $html .= '                <img src="' . $v['image'] . '" width=100%>';
                 $html .= '            </div>';
                 $html .= '            <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
@@ -365,7 +365,7 @@ class HomeController extends Controller
             $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
-            $semua .= '            <div class="card" style="min-height: 400px !important">';
+            $semua .= '            <div class="card" style="min-height: 340px !important">';
             $semua .= '                <img src="' . $v['image'] . '" width=100%>';
             $semua .= '            </div>';
             $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
