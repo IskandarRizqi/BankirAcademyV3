@@ -18,5 +18,6 @@ class BannerModel extends Model
         'image',
         'nominal',
         'kode',
+        'description',
     ];
 }

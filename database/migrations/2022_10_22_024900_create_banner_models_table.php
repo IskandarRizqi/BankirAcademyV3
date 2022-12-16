@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('image');
             $table->double('nominal')->default(0)->nullable();
             $table->string('kode')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

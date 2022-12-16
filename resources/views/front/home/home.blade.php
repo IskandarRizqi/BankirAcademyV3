@@ -195,10 +195,10 @@
 <section id="content">
     <div class="content-wrap mt-6" style="padding: 0px;">
         <div class="section border-top-0 mb-6">
-            <div class="container text-center">
+            <div class="container">
                 <div class="heading-block center">
                     <h2>Jelajahi Academy</h2>
-                    <p>Berbagai macam pilihan kelas bankir dengan metode belajar yang cocok buat kamu</p>
+                    <p>Berbagai macam pilihan kelas bankir academy dengan metode belajar yang cocok buat kamu</p>
                 </div>
                 <div id="related-portfolio"
                     class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"

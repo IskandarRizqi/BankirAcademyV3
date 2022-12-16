@@ -100,6 +100,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-lg-12" id="form_description">
+                                        <label for="">Description</label>
+                                        <textarea name="description" id="description" cols="30" rows="3"
+                                            class="form-control" maxlength="350">{{old('description')}}</textarea>
+                                    </div>
                                     <div class="col-lg-12">
                                         <!-- <label for="form-control">Image banner</label> -->
                                         <div class="custom-file-container" data-upload-id="myFirstImage">
@@ -109,12 +114,14 @@
                                             <label class="custom-file-container__custom-file">
                                                 <input type="file"
                                                     class="custom-file-container__custom-file__custom-file-input"
-                                                    accept="image/*" name="banner">
+                                                    accept="image/*" name="banner" id="bannerprv">
                                                 <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
                                                 <span
                                                     class="custom-file-container__custom-file__custom-file-control"></span>
                                             </label>
-                                            <div class="custom-file-container__image-preview"></div>
+                                            <div class="custom-file-container__image-preview" id="imgprv">
+                                                <img id="preview" src="" alt="" width="200px">
+                                            </div>
                                         </div>
                                         @if($errors->has('banner'))
                                         <div class="error" style="color: red; display:block;">{{
@@ -199,15 +206,19 @@
     $(document).ready(function () {
         $('#type').change();
     })
-    
+    $('#bannerprv').change(function () {
+        $('#preview').attr('hidden',true)
+    })
     $('#type').change(function () {
         let t = $('#type').val();
         if (t == 2) {
             $('#form_nominal').removeAttr('hidden')
             $('#form_kode').removeAttr('hidden')
+            $('#form_description').removeAttr('hidden')
         }else{
             $('#form_nominal').attr('hidden',true)
             $('#form_kode').attr('hidden',true)
+            $('#form_description').attr('hidden',true)
         }
     })
     function viewimage(image) {
@@ -244,10 +255,9 @@
                 $("#nominal").val(result.nominal)
                 $("#kode").val(result.kode)
                 $("#urlbanner").val(result.public_id)
-                $(".custom-file-container__image-preview").css("background-image", "url(/image/" + result.image + ")")
+                $("#description").val(result.description)
                 $('#type').change();
-
-                // $("#judul").val()
+                $("#preview").attr("src", "/image/" + result.image)
             }
         });
     }

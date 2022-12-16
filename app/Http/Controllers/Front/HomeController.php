@@ -88,7 +88,7 @@ class HomeController extends Controller
                 <div class="oc-item">
                 <div class="portfolio-item">
                     <div class="portfolio-image">
-                        <button class="mr-2 Semua btn btn-outline-primary" style="border-radius: 10px"
+                        <button class="mr-2 Semua btn btn-outline-primary" style="border-radius: 10px; font-size:18px;"
                             onclick=tabsCategory("Semua")><small>Semua</small></button>
                     </div>
                 </div>
@@ -106,7 +106,7 @@ class HomeController extends Controller
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
             $owl .= '            <div class="portfolio-image">';
-            $owl .= '                <button class="mr-2 ' . preg_replace('/\s+/', '', $value) . ' btn btn-outline-primary" style="border-radius: 10px"';
+            $owl .= '                <button class="mr-2 ' . preg_replace('/\s+/', '', $value) . ' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
             $owl .= '                    onclick=tabsCategory("' . preg_replace('/\s+/', '', $value) . '")><small>' . $value . '</small></button>';
             $owl .= '            </div>';
             $owl .= '        </div>';
@@ -120,15 +120,16 @@ class HomeController extends Controller
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
-                $html .= '        <div class=card-body>';
-                $html .= '            <div class="card" style="min-height: 250px !important">';
+                $html .= '        <div class="card-body" style="min-height: 708px !important">';
+                $html .= '            <div class="card" style="min-height: 400px !important">';
                 $html .= '                <img src="' . $v['image'] . '" width=100%>';
                 $html .= '            </div>';
-                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:12px !important;">' . $v['title'] . '</h5>';
+                $html .= '            <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
+                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
                 if ($v['date_start'] == $v['date_end']) {
-                    $html .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</h6>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</p>';
                 } else {
-                    $html .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</h6>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</p>';
                 }
                 $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
                 if (json_decode($v['instructor_list'][0]->picture)) {
@@ -137,9 +138,8 @@ class HomeController extends Controller
                 }
                 $html .= '                <div class=>';
                 $html .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
-                $html .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
-                $html .= '                    </label>';
-                $html .= '                    <small>' . $v['instructor_list'][0]->title . '</small>';
+                $html .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
+                $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
                 $html .= '                </div>';
                 $html .= '                <div class="ml-2 flex-fill">';
                 $html .= '                    <label class="d-block mb-0"> Harga';
@@ -178,6 +178,7 @@ class HomeController extends Controller
                 $html .= '                </a>';
                 $html .= '            </div>';
                 $html .= '        </div>';
+                $html .= '        </div>';
                 $html .= '    </div>';
                 $html .= '</div>';
             }
@@ -188,28 +189,28 @@ class HomeController extends Controller
         foreach ($dx['kelas']['Semua']['data'] as $key => $v) {
             $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
             $semua .= '    <div class="card">';
-            $semua .= '        <div class=card-body>';
-            $semua .= '            <div class="card" style="min-height: 250px !important">';
+            $semua .= '        <div class="card-body" style="min-height: 708px !important">';
+            $semua .= '            <div class="card" style="min-height: 400px !important">>';
             $semua .= '                <img src="' . $v['image'] . '" width=100%>';
             $semua .= '            </div>';
-            $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:12px !important;">' . $v['title'] . '</h5>';
+            $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
+            $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
             if ($v['date_start'] == $v['date_end']) {
-                $semua .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</h6>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</p>';
             } else {
-                $semua .= '<h6 style="margin: 0px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</h6>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</p>';
             }
             $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
             if (json_decode($v['instructor_list'][0]->picture)) {
                 $semua .= '                <img class="mr-3 rounded-circle"';
                 $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
             }
-            $semua .= '                <div class=>';
+            $semua .= '                <div class="text-left">';
             $semua .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
-            $semua .= '                    <label class="d-block mb-0">' . $v['instructor_list']['0']->name;
-            $semua .= '                    </label>';
-            $semua .= '                    <small>' . $v['instructor_list'][0]->title . '</small>';
+            $semua .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
+            $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
             $semua .= '                </div>';
-            $semua .= '                <div class="ml-2 flex-fill">';
+            $semua .= '                <div class="ml-2 flex-fill text-center">';
             $semua .= '                    <label class="d-block mb-0"> Harga';
             $semua .= '                    </label>';
             if ($v['pricing']) {
@@ -227,14 +228,14 @@ class HomeController extends Controller
             if ($v['pricing']) {
                 if ($v['pricing']->promo) {
                     $semua .=
-                        '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
                 } else {
                     $semua .=
-                        '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
                 }
             } else {
                 $semua .=
-                    '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
+                    '<h3 class="text-primary mb-2"> Rp. -</h3>';
             }
             $semua .=
                 '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
@@ -244,6 +245,7 @@ class HomeController extends Controller
                 '/' . str_replace('/', '-', $v['title']) . '">';
             $semua .= '                    Detail';
             $semua .= '                </a>';
+            $semua .= '            </div>';
             $semua .= '            </div>';
             $semua .= '        </div>';
             $semua .= '    </div>';

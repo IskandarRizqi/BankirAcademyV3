@@ -45,6 +45,7 @@ class BannerslideController extends Controller
             'jenis' => 'required',
             'nominal' => 'required_if:jenis,2',
             'kode' => 'required_if:jenis,2',
+            'description' => 'required_if:jenis,2',
             'mulai_aktif' => 'required',
             'akhir_aktif' => 'required',
         ]);
@@ -62,6 +63,7 @@ class BannerslideController extends Controller
             'jenis' => $request->jenis,
             'nominal' => $request->nominal,
             'kode' => $request->kode,
+            'description' => $request->description,
             'mulai' => $request->mulai_aktif,
             'selesai' => $request->akhir_aktif,
             'image' => $filename,
@@ -126,6 +128,7 @@ class BannerslideController extends Controller
                 'jenis' => 'required',
                 'nominal' => 'required_if:jenis,2',
                 'kode' => 'required_if:jenis,2',
+                'description' => 'required_if:jenis,2',
                 'mulai_aktif' => 'required',
                 'akhir_aktif' => 'required',
             ]);
@@ -160,6 +163,7 @@ class BannerslideController extends Controller
                 'kode' => $request->kode,
                 'mulai' => $request->mulai_aktif,
                 'selesai' => $request->akhir_aktif,
+                'description' => $request->description,
                 'image' => $filename,
 
             ]);
@@ -170,6 +174,7 @@ class BannerslideController extends Controller
                 'jenis' => 'required',
                 'nominal' => 'required_if:jenis,2',
                 'kode' => 'required_if:jenis,2',
+                'description' => 'required_if:jenis,2',
                 'mulai_aktif' => 'required',
                 'akhir_aktif' => 'required',
             ]);
@@ -181,6 +186,7 @@ class BannerslideController extends Controller
                 'jenis' => $request->jenis,
                 'nominal' => $request->nominal,
                 'kode' => $request->kode,
+                'description' => $request->description,
                 'mulai' => $request->mulai_aktif,
                 'selesai' => $request->akhir_aktif,
             ]);

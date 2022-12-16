@@ -73,7 +73,7 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget clearfix">
                         <h4 style="color: black">Bantuan & Panduan</h4>
-                        <a href="/sdank" style="color: black">Register Instructor</a><br>
+                        {{-- <a href="/sdank" style="color: black">Register Instructor</a><br> --}}
                         <div class="form-result laman_footer" style="color: black">
                             {{-- <a href="#">Layanan Pengaduan</a><br>
                             <a href="#">Syarat & Ketentuan</a><br>
@@ -92,7 +92,7 @@
                         <img src="{{ asset('google-play-and-apple-app-store-logos-22.png') }}" alt="" width="200px">
                         <p></p>
                         <img src="{{ asset('pse-terdaftar.png') }}" alt="" width="50px">
-                        <p>001922.04/DJAI.PSE/12/2022</p>
+                        {{-- <p>001922.04/DJAI.PSE/12/2022</p> --}}
                     </div>
                 </div>
             </div>
