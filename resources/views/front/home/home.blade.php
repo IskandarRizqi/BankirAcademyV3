@@ -226,7 +226,7 @@
                     {!! $o['cateKelas'] !!}
                 </div>
                 <div class="center">
-                    <input type="text" id="halaman" value="2" hidden>
+                    <input type="text" id="halaman" value="{{$o['next_page']}}">
                     <a id="allClass" class="btn btn-primary btn-block">Semua Kelas</a>
                 </div>
             </div>
@@ -645,151 +645,18 @@
     }
 
     function lazyLoad(page) {
-        $('#halaman').val(page)
+        // $('#halaman').val(page)
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '?page=' + page,
+                url: $('#halaman').val(),
                 type: 'GET',
                 beforeSend: function() {
-                    // $('.ajax-load').show();
-                    console.log('getData');
+                    $('.ajax-load').show();
+                    // console.log('getData');
                 },
                 success: function(response) {
-                    let next_page = 0;
-                    // $('.owlCustom').html(null);
-                    for (const key in response.kelas) {
-                        if (Object.hasOwnProperty.call(response.kelas, key)) {
-                            arrkategori.push(key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g,
-                                ''));
-                            const element = response.kelas[key];
-                            let owl = '';
-                            owl += '<div class="owl-item" style="margin:0px !important;">';
-                            owl += '    <div class="oc-item">';
-                            owl += '        <div class="portfolio-item">';
-                            owl += '            <div class="portfolio-image">';
-                            owl += '                <button class="mr-2 ' + key.replace(
-                                    /([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g, '') +
-                                ' btn btn-outline-primary" style="border-radius: 10px"';
-                            owl += '                    onclick=tabsCategory("' + key.replace(
-                                    /([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g, '') + '")><small>' +
-                                key + '</small></button>';
-                            owl += '            </div>';
-                            owl += '        </div>';
-                            owl += '    </div>';
-                            owl += '</div>';
-                            if (page == 1) {
-                                $('.owlCustom').append(owl);
-                                $('#cateKelas').append('<div id="' + key.replace(
-                                        /([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g, '') +
-                                    '" class="row tabsCustom mt-2" hidden></div>');
-                            }
-
-                            let html = '';
-                            element.data.forEach(el => {
-                                html += '<div class="col-lg-4 col-sm-6 mb-4">';
-                                html += '    <div class=card>';
-                                html += '        <div class=card-body>';
-                                html +=
-                                    '            <div class="card" style="min-height: 0px !important">';
-                                html += '                <img src="' + el.image +
-                                    '" width=100%>';
-                                html += '            </div>';
-                                html +=
-                                    '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important">' +
-                                    el.title + '</h5>';
-                                if (el.date_start == el.date_end) {
-                                    html += '<h6 style="margin: 0px !important;">' +
-                                        new Intl
-                                        .DateTimeFormat('id-ID', {
-                                            dateStyle: 'medium'
-                                        }).format(new Date(el
-                                            .date_start)) + '</h6>';
-                                } else {
-                                    html += '<h6 style="margin: 0px !important;">' +
-                                        new Intl
-                                        .DateTimeFormat('id-ID', {
-                                            dateStyle: 'medium'
-                                        }).format(new Date(el
-                                            .date_start)) + ' - ' + new Intl
-                                        .DateTimeFormat('id-ID', {
-                                            dateStyle: 'medium'
-                                        }).format(new Date(el.date_end)) + '</h6>';
-                                }
-                                html += '            <a href="/profile-instructor/' + el
-                                    .instructor_list[0].id + '/' + el.instructor_list[0]
-                                    .name + '" class="d-flex mt-2">';
-                                html += '                <img class="mr-3 rounded-circle"';
-                                html += '                    src="Image/' + JSON.parse(el
-                                        .instructor_list[0].picture).url +
-                                    '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
-                                html += '                <div class=>';
-                                html += '                    <label class="d-block mb-0">' +
-                                    el.instructor_list[0].name;
-                                html += '                    </label>';
-                                html += '                    <small>' + el.instructor_list[
-                                    0].title + '</small>';
-                                html += '                </div>';
-                                html += '                <div class="ml-2 flex-fill">';
-                                html +=
-                                    '                    <label class="d-block mb-0"> Harga';
-                                html += '                    </label>';
-                                if (el.pricing) {
-                                    if (el.pricing.promo) {
-                                        html += '<del>' + new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            maximumFractionDigits: 0
-                                        }).format(el.pricing.price) + '</del>';
-                                    } else {
-                                        html += '<small>' + new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            maximumFractionDigits: 0
-                                        }).format(el.pricing.price) + '</small>';
-                                    }
-                                }
-                                html += '                </div>';
-                                html += '            </a>';
-                                html += '            <div class="text-center mt-2 w-100">';
-                                if (el.pricing) {
-                                    if (el.pricing.promo) {
-                                        html +=
-                                            '<h3 style=" color:#139700 !important;">' +
-                                            new Intl.NumberFormat('id-ID', {
-                                                style: 'currency',
-                                                currency: 'IDR',
-                                                maximumFractionDigits: 0
-                                            }).format(el.pricing.price - el.pricing
-                                                .promo_price) +
-                                            '<span class="badge badge-danger badge-sm ml-2">' +
-                                            ((el.pricing.promo_price / el.pricing.price) *
-                                                100) + ' %</span></h3>';
-                                    }
-                                }
-                                html +=
-                                    '                <a class="btn btn-primary btn-block btn-rounded"';
-                                html +=
-                                    '                    style="border-radius:10px !important"';
-                                html += '                    href="class/' + el.unique_id +
-                                    '/' + el.title.replace('/', '-') + '">';
-                                html += '                    Detail';
-                                html += '                </a>';
-                                html += '            </div>';
-                                html += '        </div>';
-                                html += '    </div>';
-                                html += '</div>';
-                            });
-                            if (element.next_page_url) {
-                                next_page++;
-                            }
-                            $('#' + key.replace(/([.*+?^$|(){}\[\]])/mg, "_").replace(/ /g, ''))
-                                .append(html);
-                        }
-                    }
-                    if (next_page <= 0) {
-                        $('#allClass').attr('disabled', true);
-                    }
-                    $('#halaman').val(parseInt(page) + 1);
+                    // $('#cateKelas').append(response.o.cateKelas)
+                    // console.log(response.o.next_page);
                     resolve();
                 }
             })

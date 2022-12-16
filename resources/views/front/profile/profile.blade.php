@@ -571,223 +571,342 @@
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
-                                        <div class="title-block">
-                                            <h4>Update Profile</h4>
-                                            <form action="{{ route('profile.store') }}" method="post">
-                                                @csrf
-                                                @if (isset($pfl))
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Nama lengkap</label>
-                                                        <input type="text" class="form-control" name="nama_lengkap"
-                                                            value="{{ $pfl['name'] }}">
-                                                        <input type="hidden" name="user_id"
-                                                            value="{{ Auth::user()->id }}">
-                                                        @if ($errors->has('nama_lengkap'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('nama_lengkap') }}
-                                                        </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Nomor handphone</label>
-                                                        <div class="input-group mb-3">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text">+62</span>
+                                        <div class="tabs tabs-alt clearfix ui-tabs ui-corner-all ui-widget ui-widget-content"
+                                            id="tab-7">
+                                            <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
+                                                role="tablist">
+                                                <li role="tab" tabindex="0"
+                                                    class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active"
+                                                    aria-controls="tabs-25" aria-labelledby="ui-id-9"
+                                                    aria-selected="true" aria-expanded="true"><a href="#tabs-25"
+                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-9">Profile</a>
+                                                </li>
+                                                <li role="tab" tabindex="-1"
+                                                    class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                    aria-controls="tabs-26" aria-labelledby="ui-id-10"
+                                                    aria-selected="false" aria-expanded="false"><a href="#tabs-26"
+                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-10">Rekening</a>
+                                                </li>
+                                                {{-- <li role="tab" tabindex="-1"
+                                                    class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                    aria-controls="tabs-27" aria-labelledby="ui-id-11"
+                                                    aria-selected="false" aria-expanded="false"><a href="#tabs-27"
+                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-11">Proin
+                                                        dolor</a></li>
+                                                <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                    role="tab" tabindex="-1" aria-controls="tabs-28"
+                                                    aria-labelledby="ui-id-12" aria-selected="false"
+                                                    aria-expanded="false"><a href="#tabs-28" tabindex="-1"
+                                                        class="ui-tabs-anchor" id="ui-id-12">Aenean lacinia</a></li>
+                                                --}}
+                                            </ul>
+                                            <div class="tab-container">
+                                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                                    id="tabs-25" aria-labelledby="ui-id-9" role="tabpanel"
+                                                    aria-hidden="false">
+                                                    <div class="title-block">
+                                                        <h4>Update Profile</h4>
+                                                        <form action="{{ route('profile.store') }}" method="post">
+                                                            @csrf
+                                                            @if (isset($pfl))
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <label for="form-control">Nama lengkap</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="nama_lengkap" value="{{ $pfl['name'] }}">
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ Auth::user()->id }}">
+                                                                    @if ($errors->has('nama_lengkap'))
+                                                                    <div class="error"
+                                                                        style="color: red; display:block;">
+                                                                        {{ $errors->first('nama_lengkap') }}
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label for="form-control">Nomor handphone</label>
+                                                                    <div class="input-group mb-3">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text">+62</span>
+                                                                        </div>
+                                                                        <input type="text" class="form-control"
+                                                                            name="nomor_handphone"
+                                                                            value="{{ $pfl['phone'] }}">
+                                                                    </div>
+                                                                    @if ($errors->has('nomor_handphone'))
+                                                                    <div class="error"
+                                                                        style="color: red; display:block;">
+                                                                        {{ $errors->first('nomor_handphone') }}
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label for="form-control">Company</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="company" value="{{ $pfl['instansi'] }}">
+                                                                    <small class="text-danger">Jika mempunyai wajib di
+                                                                        isi</small>
+                                                                </div>
                                                             </div>
-                                                            <input type="text" class="form-control"
-                                                                name="nomor_handphone" value="{{ $pfl['phone'] }}">
-                                                        </div>
-                                                        @if ($errors->has('nomor_handphone'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('nomor_handphone') }}
-                                                        </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Company</label>
-                                                        <input type="text" class="form-control" name="company"
-                                                            value="{{ $pfl['instansi'] }}">
-                                                        <small class="text-danger">Jika mempunyai wajib di
-                                                            isi</small>
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <label for="form-control">Tanggal
+                                                                                lahir</label>
+                                                                            <input type="date" name="tanggal_lahir"
+                                                                                class="form-control"
+                                                                                value="{{ $pfl['tanggal_lahir'] }}">
+                                                                            @if ($errors->has('tanggal_lahir'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{ $errors->first('tanggal_lahir') }}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col-lg-6" hidden>
+                                                                            <label for="">No. Rekening</label>
+                                                                            <input type="text" name="rekening"
+                                                                                id="rekening" class="form-control"
+                                                                                value="1">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <label for="form-control">Jenis
+                                                                                kelamin</label>
+                                                                            <select name="jenis_kelamin"
+                                                                                class="form-control" id="jkl">
+                                                                                <option value="">Pilih salah satu
+                                                                                </option>
+                                                                                <option value="0" {{ $pfl['gender']==0
+                                                                                    ? 'selected' : null }}>
+                                                                                    Perempuan</option>
+                                                                                <option value="1" {{ $pfl['gender']==1
+                                                                                    ? 'selected' : null }}>
+                                                                                    Laki-laki</option>
+                                                                            </select>
+                                                                            @if ($errors->has('jenis_kelamin'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{ $errors->first('jenis_kelamin') }}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <label for="form-control">Referral
+                                                                                (optional)</label>
+                                                                            <input type="text" id="referral"
+                                                                                name="referral" class="form-control"
+                                                                                onchange="referralKode('{{$pfl['user_id']}}',$(this).val())"
+                                                                                value="{{$referralku?$referralku->code:''}}"
+                                                                                {{-- {{$referralku?'readonly':''}} --}}>
+                                                                            @if (Session::has('referral'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{Session::get('referral')}}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <label for="form-control">Alamat</label>
+                                                                    <textarea class="form-control"
+                                                                        name="alamat">{{ $pfl['description'] }}</textarea>
+                                                                    @if ($errors->has('alamat'))
+                                                                    <div class="error"
+                                                                        style="color: red; display:block;">
+                                                                        {{ $errors->first('alamat') }}
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            @else
+                                                            <div class="row">
+                                                                <div class="col-lg-4">
+                                                                    <label for="form-control">Nama lengkap</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="nama_lengkap">
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ Auth::user()->id }}">
+                                                                    @if ($errors->has('nama_lengkap'))
+                                                                    <div class="error"
+                                                                        style="color: red; display:block;">
+                                                                        {{ $errors->first('nama_lengkap') }}
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label for="form-control">Nomor handphone</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="nomor_handphone">
+                                                                    @if ($errors->has('nomor_handphone'))
+                                                                    <div class="error"
+                                                                        style="color: red; display:block;">
+                                                                        {{ $errors->first('nomor_handphone') }}
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label for="form-control">Company</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="company">
+                                                                    <small class="text-danger">Jika mempunyai wajib di
+                                                                        isi</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <label for="form-control">Tanggal
+                                                                                lahir</label>
+                                                                            <input type="date" name="tanggal_lahir"
+                                                                                class="form-control">
+                                                                            @if ($errors->has('tanggal_lahir'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{ $errors->first('tanggal_lahir') }}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col-lg-6" hidden>
+                                                                            <label for="">No. Rekening</label>
+                                                                            <input type="text" name="rekening"
+                                                                                id="rekening" class="form-control"
+                                                                                value="1">
+                                                                            @if ($errors->has('rekening'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{ $errors->first('rekening') }}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6">
+                                                                            <label for="form-control">Jenis
+                                                                                kelamin</label>
+                                                                            <select name="jenis_kelamin"
+                                                                                class="form-control" id="jkl">
+                                                                                <option value="">Pilih salah satu
+                                                                                </option>
+                                                                                <option value="0">
+                                                                                    Perempuan</option>
+                                                                                <option value="1">
+                                                                                    Laki-laki</option>
+                                                                            </select>
+                                                                            @if ($errors->has('jenis_kelamin'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{ $errors->first('jenis_kelamin') }}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <label for="form-control">Referral
+                                                                                (optional)</label>
+                                                                            <input type="text" id="referral"
+                                                                                name="referral" class="form-control"
+                                                                                onchange="referralKode('{{Auth::user()->id}}',$(this).val())"
+                                                                                value="{{$referralku?$referralku->code:''}}"
+                                                                                {{-- {{$referralku?'readonly':''}} --}}>
+                                                                            @if (Session::has('referral'))
+                                                                            <div class="error"
+                                                                                style="color: red; display:block;">
+                                                                                {{Session::get('referral')}}
+                                                                            </div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <label for="form-control">Alamat</label>
+                                                                    <textarea class="form-control"
+                                                                        name="alamat"></textarea>
+                                                                    @if ($errors->has('alamat'))
+                                                                    <div class="error"
+                                                                        style="color: red; display:block;">
+                                                                        {{ $errors->first('alamat') }}
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            @endif
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <button class="button button-small"
+                                                                        type="submit">Update
+                                                                        profile</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <label for="form-control">Tanggal lahir</label>
-                                                                <input type="date" name="tanggal_lahir"
-                                                                    class="form-control"
-                                                                    value="{{ $pfl['tanggal_lahir'] }}">
-                                                                @if ($errors->has('tanggal_lahir'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{ $errors->first('tanggal_lahir') }}
+                                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                                    id="tabs-26" aria-labelledby="ui-id-10" role="tabpanel"
+                                                    aria-hidden="true" style="display: none;">
+                                                    <div class="title-block">
+                                                        <h4>Update Rekening</h4>
+                                                        <form action="#" method="post">
+                                                            @csrf
+                                                            <div class="row">
+                                                                <div class="form-group col">
+                                                                    <label for="">Nama Bank</label>
+                                                                    <input type="text" name="nama_bank" id="nama_bank"
+                                                                        class="form-control">
                                                                 </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="col-lg-6" hidden>
-                                                                <label for="">No. Rekening</label>
-                                                                <input type="text" name="rekening" id="rekening"
-                                                                    class="form-control" value="1">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <label for="form-control">Jenis kelamin</label>
-                                                                <select name="jenis_kelamin" class="form-control"
-                                                                    id="jkl">
-                                                                    <option value="">Pilih salah satu</option>
-                                                                    <option value="0" {{ $pfl['gender']==0 ? 'selected'
-                                                                        : null }}>
-                                                                        Perempuan</option>
-                                                                    <option value="1" {{ $pfl['gender']==1 ? 'selected'
-                                                                        : null }}>
-                                                                        Laki-laki</option>
-                                                                </select>
-                                                                @if ($errors->has('jenis_kelamin'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{ $errors->first('jenis_kelamin') }}
+                                                                <div class="form-group col">
+                                                                    <label for="">No Rekening</label>
+                                                                    <input type="text" name="no_rekening"
+                                                                        id="no_rekening" class="form-control">
                                                                 </div>
-                                                                @endif
                                                             </div>
-                                                            <div class="col-lg-6">
-                                                                <label for="form-control">Referral (optional)</label>
-                                                                <input type="text" id="referral" name="referral"
-                                                                    class="form-control"
-                                                                    onchange="referralKode('{{$pfl['user_id']}}',$(this).val())"
-                                                                    value="{{$referralku?$referralku->code:''}}" {{--
-                                                                    {{$referralku?'readonly':''}} --}}>
-                                                                @if (Session::has('referral'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{Session::get('referral')}}
-                                                                </div>
-                                                                @endif
-                                                            </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <label for="form-control">Alamat</label>
-                                                        <textarea class="form-control"
-                                                            name="alamat">{{ $pfl['description'] }}</textarea>
-                                                        @if ($errors->has('alamat'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('alamat') }}
-                                                        </div>
-                                                        @endif
-                                                    </div>
+                                                {{-- <div
+                                                    class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                                    id="tabs-27" aria-labelledby="ui-id-11" role="tabpanel"
+                                                    aria-hidden="true" style="display: none;">
+                                                    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti.
+                                                        Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum
+                                                        erat, eu congue orci lorem eget lorem. Vestibulum non ante.
+                                                        Class aptent taciti sociosqu ad litora torquent per conubia
+                                                        nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna
+                                                        vel enim commodo pellentesque. Praesent eu risus hendrerit
+                                                        ligula tempus pretium. Curabitur lorem enim, pretium nec,
+                                                        feugiat nec, luctus a, lacus.</p>
+                                                    Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper
+                                                    at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo
+                                                    vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti.
+                                                    Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros,
+                                                    id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero
+                                                    sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat
+                                                    porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu
+                                                    tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit.
+                                                    Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.
                                                 </div>
-                                                @else
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Nama lengkap</label>
-                                                        <input type="text" class="form-control" name="nama_lengkap">
-                                                        <input type="hidden" name="user_id"
-                                                            value="{{ Auth::user()->id }}">
-                                                        @if ($errors->has('nama_lengkap'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('nama_lengkap') }}
-                                                        </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Nomor handphone</label>
-                                                        <input type="text" class="form-control" name="nomor_handphone">
-                                                        @if ($errors->has('nomor_handphone'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('nomor_handphone') }}
-                                                        </div>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="form-control">Company</label>
-                                                        <input type="text" class="form-control" name="company">
-                                                        <small class="text-danger">Jika mempunyai wajib di
-                                                            isi</small>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <label for="form-control">Tanggal lahir</label>
-                                                                <input type="date" name="tanggal_lahir"
-                                                                    class="form-control">
-                                                                @if ($errors->has('tanggal_lahir'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{ $errors->first('tanggal_lahir') }}
-                                                                </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="col-lg-6" hidden>
-                                                                <label for="">No. Rekening</label>
-                                                                <input type="text" name="rekening" id="rekening"
-                                                                    class="form-control" value="1">
-                                                                @if ($errors->has('rekening'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{ $errors->first('rekening') }}
-                                                                </div>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <label for="form-control">Jenis kelamin</label>
-                                                                <select name="jenis_kelamin" class="form-control"
-                                                                    id="jkl">
-                                                                    <option value="">Pilih salah satu</option>
-                                                                    <option value="0">
-                                                                        Perempuan</option>
-                                                                    <option value="1">
-                                                                        Laki-laki</option>
-                                                                </select>
-                                                                @if ($errors->has('jenis_kelamin'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{ $errors->first('jenis_kelamin') }}
-                                                                </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <label for="form-control">Referral (optional)</label>
-                                                                <input type="text" id="referral" name="referral"
-                                                                    class="form-control"
-                                                                    onchange="referralKode('{{Auth::user()->id}}',$(this).val())"
-                                                                    value="{{$referralku?$referralku->code:''}}" {{--
-                                                                    {{$referralku?'readonly':''}} --}}>
-                                                                @if (Session::has('referral'))
-                                                                <div class="error" style="color: red; display:block;">
-                                                                    {{Session::get('referral')}}
-                                                                </div>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <label for="form-control">Alamat</label>
-                                                        <textarea class="form-control" name="alamat"></textarea>
-                                                        @if ($errors->has('alamat'))
-                                                        <div class="error" style="color: red; display:block;">
-                                                            {{ $errors->first('alamat') }}
-                                                        </div>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                @endif
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <button class="button button-small" type="submit">Update
-                                                            profile</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                                    id="tabs-28" aria-labelledby="ui-id-12" role="tabpanel"
+                                                    aria-hidden="true" style="display: none;">
+                                                    Praesent in eros vestibulum mi adipiscing adipiscing. Morbi
+                                                    facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut
+                                                    posuere viverra nulla. Aliquam erat volutpat. Pellentesque
+                                                    convallis. Maecenas feugiat, tellus pellentesque pretium posuere,
+                                                    felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris
+                                                    consectetur tortor et purus.
+                                                </div> --}}
+                                            </div>
                                         </div>
                                         <div class="divider divider-border divider-center"><i class="icon-email2"></i>
                                         </div>
