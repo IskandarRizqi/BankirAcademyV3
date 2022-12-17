@@ -20,8 +20,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-		'google_id',
-		'role',
+        'google_id',
+        'role',
         'password',
     ];
 
@@ -43,4 +43,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    protected $appends = ['profile', 'rekening'];
+    public function getProfileAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return UserProfileModel::where('user_id', $this->attributes['id'])->first();
+        }
+    }
+    public function getRekeningAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DataRekeningModel::where('user_id', $this->attributes['id'])->first();
+        }
+    }
 }

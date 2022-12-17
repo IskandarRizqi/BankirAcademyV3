@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
+use App\Models\DataRekeningModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
 use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
+use App\Models\User;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +31,7 @@ class ProfileController extends Controller
     public function index(Request $r)
     {
         $auth = Auth::user()->id;
+        $data['user'] = User::where('id', Auth::user()->id)->first();
         $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
         $data['pop'] = ClassesModel::limit(6)->get();
         $data['param'] = [];
@@ -252,7 +255,7 @@ class ProfileController extends Controller
             'status' => $status
         ]);
         if (!$i) {
-            return Redirect::back()->with('success', 'Review Gagal Disimpan');
+            return Redirect::back()->with('error', 'Review Gagal Disimpan');
         }
         return Redirect::back()->with('success', 'Review Berhasil Disimpan');
     }
@@ -272,5 +275,27 @@ class ProfileController extends Controller
             return response()->json(['message' => 'Kode Benar', 'status' => true]);
         }
         return response()->json(['message' => 'Kupon Tidak Tersedia', 'status' => false]);
+    }
+    public function updaterekening(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'nama_bank' => 'required',
+            'no_rekening' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
+        }
+
+        $u = DataRekeningModel::updateOrCreate([
+            'user_id' => $request->user_id
+        ], [
+            'nama_bank' => $request->nama_bank,
+            'no_rekening' => $request->no_rekening,
+        ]);
+        if ($u) {
+            return Redirect::back()->with('success', 'Update Rekening Berhasil Disimpan');
+        }
+        return Redirect::back()->with('error', 'Update Rekening Gagal Disimpan');
     }
 }

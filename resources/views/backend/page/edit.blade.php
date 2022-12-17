@@ -56,7 +56,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Title:</label>
-                            <input type="text" class="form-control" name="txtTitle" id="txtTitle"
+                            <input type="text" class="form-control" name="txtTitle" id="txtTitle" maxlength="70"
                                 value="{{ isset($page->title) ? $page->title : null }}" required>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                         <div class="form-group">
                             <label>Description:</label>
                             <textarea type="text" class="form-control" name="description" id="description"
-                                maxlength="120"
+                                maxlength="300"
                                 required>{{ isset($page->description) ? $page->description : null }}</textarea>
                         </div>
                     </div>

@@ -605,7 +605,7 @@
                                                     id="tabs-25" aria-labelledby="ui-id-9" role="tabpanel"
                                                     aria-hidden="false">
                                                     <div class="title-block">
-                                                        <h4>Update Profile</h4>
+                                                        {{-- <h4>Update Profile</h4> --}}
                                                         <form action="{{ route('profile.store') }}" method="post">
                                                             @csrf
                                                             @if (isset($pfl))
@@ -846,7 +846,7 @@
                                                                 <div class="col-lg-12">
                                                                     <button class="button button-small"
                                                                         type="submit">Update
-                                                                        profile</button>
+                                                                        Profile</button>
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -856,19 +856,32 @@
                                                     id="tabs-26" aria-labelledby="ui-id-10" role="tabpanel"
                                                     aria-hidden="true" style="display: none;">
                                                     <div class="title-block">
-                                                        <h4>Update Rekening</h4>
-                                                        <form action="#" method="post">
+                                                        {{-- <h4>Update Rekening</h4> --}}
+                                                        <form action="/updaterekening" method="post">
                                                             @csrf
+                                                            <input type="text" name="user_id" id="user_id"
+                                                                value="{{Auth::user()->id}}" hidden>
                                                             <div class="row">
                                                                 <div class="form-group col">
                                                                     <label for="">Nama Bank</label>
                                                                     <input type="text" name="nama_bank" id="nama_bank"
-                                                                        class="form-control">
+                                                                        class="form-control"
+                                                                        value="{{$user->rekening?$user->rekening->nama_bank:''}}"
+                                                                        required>
                                                                 </div>
                                                                 <div class="form-group col">
                                                                     <label for="">No Rekening</label>
                                                                     <input type="text" name="no_rekening"
-                                                                        id="no_rekening" class="form-control">
+                                                                        id="no_rekening" class="form-control"
+                                                                        value="{{$user->rekening?$user->rekening->no_rekening:''}}"
+                                                                        required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <button class="button button-small"
+                                                                        type="submit">Update
+                                                                        Rekening</button>
                                                                 </div>
                                                             </div>
                                                         </form>

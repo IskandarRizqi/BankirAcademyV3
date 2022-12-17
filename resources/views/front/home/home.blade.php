@@ -111,11 +111,11 @@
 
     .card:hover {
         cursor: pointer;
-        transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 500ms cubic-bezier(0.28, 1.02, 1, 0.14);
     }
 
     .card:hover .card-body {
-        margin-top: 30px;
+        margin-top: 10px;
         transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
     }
 
@@ -226,7 +226,7 @@
                     {!! $o['cateKelas'] !!}
                 </div>
                 <div class="center">
-                    <input type="text" id="halaman" value="{{$o['next_page']}}">
+                    <input type="text" id="halaman" value="{{$o['next_page']}}" hidden>
                     <a id="allClass" class="btn btn-primary btn-block">Semua Kelas</a>
                 </div>
             </div>
@@ -643,22 +643,34 @@
         });
         // $('#allClass').attr('href','/list-class/'+params);
     }
-
+    
     function lazyLoad(page) {
         // $('#halaman').val(page)
+        if(!page){
+            iziToast.error({
+                title: 'Info',
+                message: 'Semua Kelas Sudah Tampil',
+                position: 'topRight',
+            });
+            return $('#allClass').attr('hidden', true)
+        }
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: $('#halaman').val(),
+                url: page,
                 type: 'GET',
                 beforeSend: function() {
                     $('.ajax-load').show();
                     // console.log('getData');
                 },
                 success: function(response) {
-                    // let html = '';
-                    // html += '<div class="col-lg-4 col-sm-6 mb-4">    <div class="card">        <div class="card-body" style="min-height: 708px !important">            <div class="card" style="min-height: 400px !important">                <img src="/image/classes/1669866568-Bank academy logo-03.png" width="100%">            </div>            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">Memajukan Hal Yang Mundur</h5><p class="text-left" style="margin: 0px !important; font-size:10px !important;">01-12-2022 - 31-12-2022</p>            <a href="/profile-instructor/5/bim" class="d-flex mt-2">                <img class="mr-3 rounded-circle" src="Image/1668585110-qxECqC2Kn5ENmsFS5xSqaAoW2l7yG9RAXagWqeYm.png" alt="Generic" placeholder="" image="" style="max-width:50px; max-height:50px;">                <div class="text-left">                    <small class="d-block mb-0">INSTRUCTOR</small>                    <h5 class="text-uppercase d-block mb-0">bim</h5>                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">e-class ehr system</small>                </div>                <div class="ml-2 flex-fill text-center">                    <label class="d-block mb-0"> Harga                    </label><del> Rp. 1,000,000</del><sup class="badge badge-danger" style="font-size: 8px">6 %</sup>                </div>            </a>            <div class="text-center mt-2 w-100"><h3 class="text-primary mb-2"> Rp. 945,000</h3>                <a class="btn btn-primary btn-block btn-rounded mt-auto" style="border-radius:10px !important" href="class/63882448470cf/Memajukan Hal Yang Mundur">                    Detail                </a>            </div>            </div>        </div>    </div></div>';
-                    // $('#Semua').append(html)
-                    // console.log(response.o.next_page);
+                    Object.keys(response).forEach(key => {
+                        // console.log(key, response[key]);
+                        $('#'+key).append(response[key]);
+                    });
+                    $('#halaman').val(null)
+                    if (response.next_page_url) {
+                        $('#halaman').val(response.next_page_url)
+                    }
                     resolve();
                 }
             })

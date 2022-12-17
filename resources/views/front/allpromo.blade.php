@@ -11,8 +11,8 @@
                 @foreach ($data['data'] as $v)
                 <div class="col-lg-4 col-sm-6">
                     <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 550px">
-                        <div class="card-body">
-                            <img src="{{ '/Image/' . $v['image'] }}" width="100%" style="border-radius: 8px">
+                        <img src="{{ '/Image/' . $v['image'] }}" width="100%" style="border-radius: 8px">
+                        <div class="card-body" style="padding: 0.75rem">
                             <h3 class="text-capitalize m-0">{{$v['nama']}}</h3>
                             {{$v['description']}}
                             @if ($v['kode'])

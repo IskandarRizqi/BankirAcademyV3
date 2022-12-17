@@ -46,13 +46,14 @@ class HomeController extends Controller
         </div>';
         $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
-        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(1)->toArray();
-        $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
+        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(9)->toArray();
+        // $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
+        $semua = '';
+        $kelas = [];
         foreach ($categori as $key => $value) {
-            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(1)->toArray();
+            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(9)->toArray();
             $data['o']['kelas'][] = preg_replace('/\s+/', '', $value);
             $owl = '';
-            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(1)->toArray();
             $owl .= '<div class="owl-item" style="margin:0px !important;">';
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
@@ -67,7 +68,7 @@ class HomeController extends Controller
             // array_push($data['o']['cateKelas'], '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden></div>');
             $html = '';
 
-            $html .= '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden>';
+            // $html .= '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden>';
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
@@ -133,7 +134,8 @@ class HomeController extends Controller
                 $html .= '    </div>';
                 $html .= '</div>';
             }
-            $html .= '</div>';
+            $kelas[$value] = $html;
+            // $html .= '</div>';
             // $semua .= $html;
             $data['o']['cateKelas'] .= $html;
         }
@@ -202,12 +204,13 @@ class HomeController extends Controller
             $semua .= '    </div>';
             $semua .= '</div>';
         }
-        $semua .= '</div>';
-        $data['o']['cateKelas'] .= $semua;
-        $data['o']['next_page'] = $dx['kelas']['Semua']['next_page_url'];
+        $kelas['Semua'] = $semua;
+        // $semua .= '</div>';
+        // $data['o']['cateKelas'] .= $semua;
+        $kelas['next_page_url'] = $dx['kelas']['Semua']['next_page_url'];
 
-        // return $data;
-        return $dx;
+        return $kelas;
+        // return $dx;
     }
     public function index(Request $request)
     {
@@ -271,12 +274,12 @@ class HomeController extends Controller
             </div>';
         $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
-        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(1)->toArray();
+        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(9)->toArray();
         $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
         foreach ($categori as $key => $value) {
             $data['o']['kelas'][] = preg_replace('/\s+/', '', $value);
             $owl = '';
-            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(1)->toArray();
+            $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(9)->toArray();
             $owl .= '<div class="owl-item" style="margin:0px !important;">';
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
