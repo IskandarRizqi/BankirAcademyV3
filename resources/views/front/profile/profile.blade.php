@@ -2,7 +2,7 @@
 @include('front.layout.topbar')
 @include(env('CUSTOM_HEADER', 'front.layout.header'))
 @error('error')
-{{ $message }}
+    {{ $message }}
 @enderror
 <style>
     /* .badge {
@@ -66,7 +66,7 @@
                                             <span class="badge bg-danger text-white">
                                                 <div class="spinner-grow spinner-grow-sm">
                                                 </div>
-                                                {{$count_payment}}
+                                                {{ $count_payment }}
                                             </span>
                                         </a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
@@ -93,16 +93,16 @@
                                                         <div class="form-check form-check-inline">
                                                             <label class="form-check-label">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="param_checked_lunas[]" value="0" {{
-                                                                    in_array(0, $param['status']) ? 'checked' : '' }}>
+                                                                    name="param_checked_lunas[]" value="0"
+                                                                    {{ in_array(0, $param['status']) ? 'checked' : '' }}>
                                                                 Belum Lunas
                                                             </label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
                                                             <label class="form-check-label">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    name="param_checked_lunas[]" value="1" {{
-                                                                    in_array(1, $param['status']) ? 'checked' : '' }}>
+                                                                    name="param_checked_lunas[]" value="1"
+                                                                    {{ in_array(1, $param['status']) ? 'checked' : '' }}>
                                                                 Lunas
                                                             </label>
                                                         </div>
@@ -131,8 +131,7 @@
                                         <form id="formmultiinvoice" action="/classes/multiinvoice" method="POST"
                                             location.reload(); target="_blank">
                                             @csrf
-                                            <textarea name="dataInvoice" id="dataInvoice" cols="30" rows="10"
-                                                hidden></textarea>
+                                            <textarea name="dataInvoice" id="dataInvoice" cols="30" rows="10" hidden></textarea>
                                         </form>
                                         <div class="table-responsive">
                                             <table id="datatable1" class="table table-striped table-bordered"
@@ -152,105 +151,119 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($payment as $key => $d)
-                                                    @if ($d->expired < \Carbon\Carbon::now()) {{ $expired=true }} @else
-                                                        {{ $expired=false }} @endif <tr class="text-center">
-                                                        <td>
-                                                            <div>
-                                                                <input id="checkbox-{{$key}}" class="checkbox-style"
-                                                                    name="checkbox" type="checkbox"
-                                                                    {{$expired?'disabled':''}}
-                                                                    onclick="checkedBilling({{$d}},{{$key}})">
-                                                                <label for="checkbox-{{$key}}"
-                                                                    class="checkbox-style-3-label"></label>
-                                                            </div>
-                                                        </td>
-                                                        <td width="1%">{{ $key + 1 }}</td>
-                                                        <td>
-                                                            @if ($expired)
-                                                            <span class="badge badge-danger text-uppercase">
-                                                                Expired
-                                                            </span>
-                                                            @else
-                                                            @if (!$d->file && $d->status == 0)
-                                                            <span class="badge badge-danger text-uppercase">
-                                                                Belum Lunas
-                                                            </span>
-                                                            @elseif ($d->file && $d->status == 0)
-                                                            <span class="badge badge-secondary text-uppercase">
-                                                                Sedang Diproses
-                                                            </span>
-                                                            @else
-                                                            <span class="badge badge-primary text-uppercase">
-                                                                Lunas
-                                                            </span>
-                                                            @endif
-                                                            @endif
-                                                        </td>
-                                                        <td class="longtextoverflow" title="{{ $d->title }}">
-                                                            {{ $d->title }}
-                                                        </td>
-                                                        <td class="text-danger">
-                                                            <b>{{ \Carbon\Carbon::parse($d->expired)->format('d-m-Y
-                                                                H:i:s') }}</b>
-                                                        </td>
-                                                        <td class="longtextoverflow">
-                                                            @if ($expired)
-                                                            <input type="number" name="jmlPeserta[]"
-                                                                class="form-control" value="{{ $d->jumlah }}" readonly>
-                                                            @else
-                                                            @if ($d->file)
-                                                            {{ $d->jumlah }} Order Peserta
-                                                            @else
-                                                            <input type="number" name="jmlPeserta[]"
-                                                                class="form-control"
-                                                                onchange="tambahPeserta('{{ $d->id }}','{{ $d->participant_limit }}','{{ $d->class_id }}',$(this).val(),{{$referralku?$referralku->code:''}})"
-                                                                value="{{ $d->jumlah }}">
-                                                            @endif
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if ($d->file)
-                                                            <a href="/getBerkas?rf={{ $d->file }}" target="_blank"
-                                                                data-lightbox="gallery-item"><img
-                                                                    src="/getBerkas?rf={{ $d->file }}"
-                                                                    width="110px"></a>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if ($d->kode_promo || $d->file)
-                                                            {{ $d->kode_promo }}
-                                                            @else
-                                                            <input type="text" name="kode_promo[]" class="form-control"
-                                                                onchange="kodePromo('{{ $d->title }}',$(this).val(),'{{ $d->id }}')"
-                                                                @if ($expired) readonly @endif>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-warning dropdown-toggle btn-sm"
-                                                                    type="button" data-toggle="dropdown"
-                                                                    aria-expanded="false" title="Opsi">
-                                                                    <i class="icon-cog"></i>
-                                                                </button>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="btn btn-primary dropdown-item"
-                                                                        href="/classes/getinvoice/{{ $d->id }}"
-                                                                        target="_blank" title="Invoice">Invoice</a>
-                                                                    @if ($d->status == 0)
-                                                                    <button id="btnModal" type="button"
-                                                                        class="btn btn-primary dropdown-item"
-                                                                        data-toggle="modal" data-target="#bayarModal"
-                                                                        onclick="bukti({{ $d->class_id }},{{ $d->id }},{{$referralku?$referralku->code:''}})"
-                                                                        title="Upload Bukti" @if ($d->expired <=
-                                                                            Carbon\Carbon::now()) disabled @endif>
-                                                                            Upload Bukti
-                                                                    </button>
-                                                                    @endif
+                                                        @if ($d->expired < \Carbon\Carbon::now())
+                                                            {{ $expired = true }}
+                                                        @else
+                                                            {{ $expired = false }}
+                                                        @endif
+                                                        <tr class="text-center">
+                                                            <td>
+                                                                <div>
+                                                                    <input id="checkbox-{{ $key }}"
+                                                                        class="checkbox-style" name="checkbox"
+                                                                        type="checkbox"
+                                                                        {{ $expired ? 'disabled' : '' }}
+                                                                        onclick="checkedBilling({{ $d }},{{ $key }})">
+                                                                    <label for="checkbox-{{ $key }}"
+                                                                        class="checkbox-style-3-label"></label>
                                                                 </div>
-                                                            </div>
-                                                        </td>
+                                                            </td>
+                                                            <td width="1%">{{ $key + 1 }}</td>
+                                                            <td>
+                                                                @if ($expired)
+                                                                    <span class="badge badge-danger text-uppercase">
+                                                                        Expired
+                                                                    </span>
+                                                                @else
+                                                                    @if (!$d->file && $d->status == 0)
+                                                                        <span
+                                                                            class="badge badge-danger text-uppercase">
+                                                                            Belum Lunas
+                                                                        </span>
+                                                                    @elseif ($d->file && $d->status == 0)
+                                                                        <span
+                                                                            class="badge badge-secondary text-uppercase">
+                                                                            Sedang Diproses
+                                                                        </span>
+                                                                    @else
+                                                                        <span
+                                                                            class="badge badge-primary text-uppercase">
+                                                                            Lunas
+                                                                        </span>
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+                                                            <td class="longtextoverflow" title="{{ $d->title }}">
+                                                                {{ $d->title }}
+                                                            </td>
+                                                            <td class="text-danger">
+                                                                <b>{{ \Carbon\Carbon::parse($d->expired)->format('d-m-Y
+                                                                                                                                                                                                                                                                H:i:s') }}</b>
+                                                            </td>
+                                                            <td class="longtextoverflow">
+                                                                @if ($expired)
+                                                                    <input type="number" name="jmlPeserta[]"
+                                                                        class="form-control"
+                                                                        value="{{ $d->jumlah }}" readonly>
+                                                                @else
+                                                                    @if ($d->file)
+                                                                        {{ $d->jumlah }} Order Peserta
+                                                                    @else
+                                                                        <input type="number" name="jmlPeserta[]"
+                                                                            class="form-control"
+                                                                            onchange="tambahPeserta('{{ $d->id }}','{{ $d->participant_limit }}','{{ $d->class_id }}',$(this).val(),{{ $referralku ? $referralku->code : '' }})"
+                                                                            value="{{ $d->jumlah }}">
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($d->file)
+                                                                    <a href="/getBerkas?rf={{ $d->file }}"
+                                                                        target="_blank"
+                                                                        data-lightbox="gallery-item"><img
+                                                                            src="/getBerkas?rf={{ $d->file }}"
+                                                                            width="110px"></a>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($d->kode_promo || $d->file)
+                                                                    {{ $d->kode_promo }}
+                                                                @else
+                                                                    <input type="text" name="kode_promo[]"
+                                                                        class="form-control"
+                                                                        onchange="kodePromo('{{ $d->title }}',$(this).val(),'{{ $d->id }}')"
+                                                                        @if ($expired) readonly @endif>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <button
+                                                                        class="btn btn-warning dropdown-toggle btn-sm"
+                                                                        type="button" data-toggle="dropdown"
+                                                                        aria-expanded="false" title="Opsi">
+                                                                        <i class="icon-cog"></i>
+                                                                    </button>
+                                                                    <div class="dropdown-menu">
+                                                                        <a class="btn btn-primary dropdown-item"
+                                                                            href="/classes/getinvoice/{{ $d->id }}"
+                                                                            target="_blank"
+                                                                            title="Invoice">Invoice</a>
+                                                                        @if ($d->status == 0)
+                                                                            <button id="btnModal" type="button"
+                                                                                class="btn btn-primary dropdown-item"
+                                                                                data-toggle="modal"
+                                                                                data-target="#bayarModal"
+                                                                                onclick="bukti({{ $d->class_id }},{{ $d->id }},{{ $referralku ? $referralku->code : '' }})"
+                                                                                title="Upload Bukti"
+                                                                                @if ($d->expired <= Carbon\Carbon::now()) disabled @endif>
+                                                                                Upload Bukti
+                                                                            </button>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
-                                                        @endforeach
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                             <!-- Modal Multi Bukti-->
@@ -262,14 +275,13 @@
                                                             enctype="multipart/form-data">
                                                             @csrf
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
+                                                                <button type="button" class="close"
+                                                                    data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <textarea name="dataInvoiceMulti" id="dataInvoiceMulti"
-                                                                    cols="30" rows="10" hidden></textarea>
+                                                                <textarea name="dataInvoiceMulti" id="dataInvoiceMulti" cols="30" rows="10" hidden></textarea>
                                                                 <div class="col-lg-12 bottommargin">
                                                                     <label>Upload Bukti Multi Pembayaran:</label><br>
                                                                     <input id="input-3" name="imageBuktiMulti"
@@ -278,9 +290,9 @@
                                                                         data-show-caption="true"
                                                                         data-show-preview="true" accept="image/*">
                                                                     @error('imageBuktiMulti')
-                                                                    <span class="text-danger" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
+                                                                        <span class="text-danger" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
@@ -303,16 +315,18 @@
                                                             enctype="multipart/form-data">
                                                             @csrf
                                                             <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
+                                                                <button type="button" class="close"
+                                                                    data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <input type="text" id="class_id" name="class_id" hidden>
-                                                                <input type="text" id="payment_id" name="payment_id"
+                                                                <input type="text" id="class_id" name="class_id"
                                                                     hidden>
-                                                                <input type="text" id="ref" name="ref" hidden>
+                                                                <input type="text" id="payment_id"
+                                                                    name="payment_id" hidden>
+                                                                <input type="text" id="ref" name="ref"
+                                                                    hidden>
                                                                 <div class="form-group" hidden>
                                                                     <label for="">Jumlah Peserta</label>
                                                                     <input class="form-control" type="number"
@@ -320,14 +334,15 @@
                                                                 </div>
                                                                 <div class="col-lg-12 bottommargin">
                                                                     <label>Upload Bukti Pembayaran:</label><br>
-                                                                    <input id="input-3" name="input2[]" type="file"
-                                                                        class="file" data-show-upload="false"
+                                                                    <input id="input-3" name="input2[]"
+                                                                        type="file" class="file"
+                                                                        data-show-upload="false"
                                                                         data-show-caption="true"
                                                                         data-show-preview="true" accept="image/*">
                                                                     @error('input2')
-                                                                    <span class="text-danger" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
+                                                                        <span class="text-danger" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
@@ -353,7 +368,8 @@
                                                             value="{{ $param['date'][0] }}" placeholder="Date Start"
                                                             aria-label="Date Start" name="param_date_start">
                                                         <div class="input-group-append">
-                                                            <span class="input-group-text" id="basic-addon5">s/d</span>
+                                                            <span class="input-group-text"
+                                                                id="basic-addon5">s/d</span>
                                                         </div>
                                                         <input type="date" class="form-control"
                                                             value="{{ $param['date'][1] }}" placeholder="Date End"
@@ -388,68 +404,75 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($class as $key => $c)
-                                                    @foreach ($c->class as $cl)
-                                                    <tr class="text-center">
-                                                        <td width="1%">{{ $key + 1 }}</td>
-                                                        <td class="longtextoverflow">{{ $cl->title }}</td>
-                                                        <td>
-                                                            @foreach ($cl->instructor_list as $instructor_list)
-                                                            <span class="badge badge-primary">{{ $instructor_list->name
-                                                                }}</span>
-                                                            @endforeach
-                                                        </td>
-                                                        <td><span class="badge badge-info">
-                                                                @if(\Carbon\Carbon::parse($cl->date_start)->format('d-m-Y')==\Carbon\Carbon::parse($cl->date_end)->format('d-m-Y'))
-                                                                {{
-                                                                \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y')
-                                                                }}
+                                                        @foreach ($c->class as $cl)
+                                                            <tr class="text-center">
+                                                                <td width="1%">{{ $key + 1 }}</td>
+                                                                <td class="longtextoverflow">{{ $cl->title }}</td>
+                                                                <td>
+                                                                    @foreach ($cl->instructor_list as $instructor_list)
+                                                                        <span
+                                                                            class="badge badge-primary">{{ $instructor_list->name }}</span>
+                                                                    @endforeach
+                                                                </td>
+                                                                <td><span class="badge badge-info">
+                                                                        @if (\Carbon\Carbon::parse($cl->date_start)->format('d-m-Y') ==
+                                                                            \Carbon\Carbon::parse($cl->date_end)->format('d-m-Y'))
+                                                                            {{ \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y') }}
+                                                                        @else
+                                                                            {{ \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y') . '-' . \Carbon\Carbon::parse($cl->date_end)->format('d-m-Y') }}
+                                                                        @endif
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <button id="evModal"
+                                                                        class="button button-circle button-mini"
+                                                                        data-toggle="modal" data-target="#eventModal"
+                                                                        onclick="onEvent({{ $c->event }})"
+                                                                        title="Event">
+                                                                        Open
+                                                                    </button>
+                                                                    @if (count($c->event) > 0)
+                                                                        @foreach ($c->event as $e)
+                                                                            @if ($e->link)
+                                                                                <a href="{{ $e->link }}">
+                                                                                    <button
+                                                                                        class="button button-mini button-circle">Link</button>
+                                                                                </a>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
+                                                                </td>
+                                                                <td width="5%">
+                                                                    <div class="dropdown">
+                                                                        <button
+                                                                            class="btn btn-warning dropdown-toggle btn-sm"
+                                                                            type="button" data-toggle="dropdown"
+                                                                            aria-expanded="false" title="Opsi">
+                                                                            <i class="icon-cog"></i>
+                                                                        </button>
+                                                                        <div class="dropdown-menu">
+                                                                            <a class="dropdown-item"
+                                                                                href="/classes/getcertificate/{{ $c->class_id }}"
+                                                                                target="_blank">
+                                                                                Get Certificate
+                                                                            </a>
+                                                                            <span class="dropdown-item"
+                                                                                onclick="onContent({{ $cl->content_list }})">Content/Material</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <button class="button button-circle button-mini"
+                                                                        {{-- --}}
+                                                                        @if ($c->review) onclick="onReview('{{ $c->review }}','{{ $c->review_point }}')"
                                                                 @else
-                                                                {{
-                                                                \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y').'-'.\Carbon\Carbon::parse($cl->date_end)->format('d-m-Y')
-                                                                }}
-                                                                @endif
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <button id="evModal"
-                                                                class="button button-circle button-mini"
-                                                                data-toggle="modal" data-target="#eventModal"
-                                                                onclick="onEvent({{ $c->event }})" title="Event">
-                                                                Open
-                                                            </button>
-                                                            <button
-                                                                class="button button-mini button-circle">Link</button>
-                                                        </td>
-                                                        <td width="5%">
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-warning dropdown-toggle btn-sm"
-                                                                    type="button" data-toggle="dropdown"
-                                                                    aria-expanded="false" title="Opsi">
-                                                                    <i class="icon-cog"></i>
-                                                                </button>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="dropdown-item"
-                                                                        href="/classes/getcertificate/{{ $c->class_id }}"
-                                                                        target="_blank">
-                                                                        Get Certificate
-                                                                    </a>
-                                                                    <span class="dropdown-item"
-                                                                        onclick="onContent({{ $cl->content_list }})">Content/Material</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <button class="button button-circle button-mini" {{-- --}}
-                                                                @if ($c->review) onclick="onReview('{{ $c->review
-                                                                }}','{{ $c->review_point }}')"
-                                                                @else
-                                                                onclick="review({{ $c->participant_id }})"
-                                                                @endif>Class</button>
-                                                            <button class="button button-circle button-mini" {{-- --}}
-                                                                onclick="reviewIns({{ $c->class[0]->instructor_list[0]->id }})">Intructor</button>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
+                                                                onclick="review({{ $c->participant_id }})" @endif>Class</button>
+                                                                    <button class="button button-circle button-mini"
+                                                                        {{-- --}}
+                                                                        onclick="reviewIns({{ $c->class[0]->instructor_list[0]->id }})">Intructor</button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -465,33 +488,33 @@
                                                         @csrf
                                                         <div class="modal-header">
                                                             <h3>Review</h3>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
+                                                            <button type="button" class="close"
+                                                                data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <input type="text" id="participant_id" name="participant_id"
-                                                                hidden>
+                                                            <input type="text" id="participant_id"
+                                                                name="participant_id" hidden>
                                                             <div class="col-lg-12">
                                                                 <label>Nilai = </label><span id="nilai_val"></span><br>
-                                                                <input type="range" class="form-range form-control p-0"
-                                                                    id="nilai" name="nilai" value="{{ old('nilai') }}"
+                                                                <input type="range"
+                                                                    class="form-range form-control p-0" id="nilai"
+                                                                    name="nilai" value="{{ old('nilai') }}"
                                                                     min="1" max="5">
                                                                 @error('nilai')
-                                                                <span class="text-danger" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
+                                                                    <span class="text-danger" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
                                                                 @enderror
                                                             </div>
                                                             <div class="col-lg-12 bottommargin">
                                                                 <label>Pesan</label><br>
-                                                                <textarea name="review" id="review" cols="30" rows="10"
-                                                                    class="form-control"></textarea>
+                                                                <textarea name="review" id="review" cols="30" rows="10" class="form-control"></textarea>
                                                                 @error('input2')
-                                                                <span class="text-danger" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
+                                                                    <span class="text-danger" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
                                                                 @enderror
                                                             </div>
                                                         </div>
@@ -511,12 +534,13 @@
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
-                                                    <form action="#" method="POST" enctype="multipart/form-data">
+                                                    <form action="#" method="POST"
+                                                        enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="modal-header">
                                                             <h3>Content</h3>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
+                                                            <button type="button" class="close"
+                                                                data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -542,12 +566,13 @@
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
-                                                    <form action="#" method="POST" enctype="multipart/form-data">
+                                                    <form action="#" method="POST"
+                                                        enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="modal-header">
                                                             <h3>Rincian kelas</h3>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
+                                                            <button type="button" class="close"
+                                                                data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -579,13 +604,15 @@
                                                     class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active"
                                                     aria-controls="tabs-25" aria-labelledby="ui-id-9"
                                                     aria-selected="true" aria-expanded="true"><a href="#tabs-25"
-                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-9">Profile</a>
+                                                        tabindex="-1" class="ui-tabs-anchor"
+                                                        id="ui-id-9">Profile</a>
                                                 </li>
                                                 <li role="tab" tabindex="-1"
                                                     class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
                                                     aria-controls="tabs-26" aria-labelledby="ui-id-10"
                                                     aria-selected="false" aria-expanded="false"><a href="#tabs-26"
-                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-10">Rekening</a>
+                                                        tabindex="-1" class="ui-tabs-anchor"
+                                                        id="ui-id-10">Rekening</a>
                                                 </li>
                                                 {{-- <li role="tab" tabindex="-1"
                                                     class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
@@ -609,238 +636,255 @@
                                                         <form action="{{ route('profile.store') }}" method="post">
                                                             @csrf
                                                             @if (isset($pfl))
-                                                            <div class="row">
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Nama lengkap</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="nama_lengkap" value="{{ $pfl['name'] }}">
-                                                                    <input type="hidden" name="user_id"
-                                                                        value="{{ Auth::user()->id }}">
-                                                                    @if ($errors->has('nama_lengkap'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('nama_lengkap') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Nomor handphone</label>
-                                                                    <div class="input-group mb-3">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text">+62</span>
-                                                                        </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-4">
+                                                                        <label for="form-control">Nama lengkap</label>
                                                                         <input type="text" class="form-control"
-                                                                            name="nomor_handphone"
-                                                                            value="{{ $pfl['phone'] }}">
-                                                                    </div>
-                                                                    @if ($errors->has('nomor_handphone'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('nomor_handphone') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Company</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="company" value="{{ $pfl['instansi'] }}">
-                                                                    <small class="text-danger">Jika mempunyai wajib di
-                                                                        isi</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-6">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <label for="form-control">Tanggal
-                                                                                lahir</label>
-                                                                            <input type="date" name="tanggal_lahir"
-                                                                                class="form-control"
-                                                                                value="{{ $pfl['tanggal_lahir'] }}">
-                                                                            @if ($errors->has('tanggal_lahir'))
+                                                                            name="nama_lengkap"
+                                                                            value="{{ $pfl['name'] }}">
+                                                                        <input type="hidden" name="user_id"
+                                                                            value="{{ Auth::user()->id }}">
+                                                                        @if ($errors->has('nama_lengkap'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
-                                                                                {{ $errors->first('tanggal_lahir') }}
+                                                                                {{ $errors->first('nama_lengkap') }}
                                                                             </div>
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col-lg-6" hidden>
-                                                                            <label for="">No. Rekening</label>
-                                                                            <input type="text" name="rekening"
-                                                                                id="rekening" class="form-control"
-                                                                                value="1">
-                                                                        </div>
+                                                                        @endif
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-lg-6">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-6">
-                                                                            <label for="form-control">Jenis
-                                                                                kelamin</label>
-                                                                            <select name="jenis_kelamin"
-                                                                                class="form-control" id="jkl">
-                                                                                <option value="">Pilih salah satu
-                                                                                </option>
-                                                                                <option value="0" {{ $pfl['gender']==0
-                                                                                    ? 'selected' : null }}>
-                                                                                    Perempuan</option>
-                                                                                <option value="1" {{ $pfl['gender']==1
-                                                                                    ? 'selected' : null }}>
-                                                                                    Laki-laki</option>
-                                                                            </select>
-                                                                            @if ($errors->has('jenis_kelamin'))
+                                                                    <div class="col-lg-4">
+                                                                        <label for="form-control">Nomor
+                                                                            handphone</label>
+                                                                        <div class="input-group mb-3">
+                                                                            <div class="input-group-prepend">
+                                                                                <span
+                                                                                    class="input-group-text">+62</span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control"
+                                                                                name="nomor_handphone"
+                                                                                value="{{ $pfl['phone'] }}">
+                                                                        </div>
+                                                                        @if ($errors->has('nomor_handphone'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
-                                                                                {{ $errors->first('jenis_kelamin') }}
+                                                                                {{ $errors->first('nomor_handphone') }}
                                                                             </div>
-                                                                            @endif
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <label for="form-control">Company</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="company"
+                                                                            value="{{ $pfl['instansi'] }}">
+                                                                        <small class="text-danger">Jika mempunyai wajib
+                                                                            di
+                                                                            isi</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <label for="form-control">Tanggal
+                                                                                    lahir</label>
+                                                                                <input type="date"
+                                                                                    name="tanggal_lahir"
+                                                                                    class="form-control"
+                                                                                    value="{{ $pfl['tanggal_lahir'] }}">
+                                                                                @if ($errors->has('tanggal_lahir'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ $errors->first('tanggal_lahir') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col-lg-6" hidden>
+                                                                                <label for="">No.
+                                                                                    Rekening</label>
+                                                                                <input type="text" name="rekening"
+                                                                                    id="rekening"
+                                                                                    class="form-control"
+                                                                                    value="1">
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-lg-6">
-                                                                            <label for="form-control">Referral
-                                                                                (optional)</label>
-                                                                            <input type="text" id="referral"
-                                                                                name="referral" class="form-control"
-                                                                                onchange="referralKode('{{$pfl['user_id']}}',$(this).val())"
-                                                                                value="{{$referralku?$referralku->code:''}}"
-                                                                                {{-- {{$referralku?'readonly':''}} --}}>
-                                                                            @if (Session::has('referral'))
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <label for="form-control">Jenis
+                                                                                    kelamin</label>
+                                                                                <select name="jenis_kelamin"
+                                                                                    class="form-control"
+                                                                                    id="jkl">
+                                                                                    <option value="">Pilih salah
+                                                                                        satu
+                                                                                    </option>
+                                                                                    <option value="0"
+                                                                                        {{ $pfl['gender'] == 0 ? 'selected' : null }}>
+                                                                                        Perempuan</option>
+                                                                                    <option value="1"
+                                                                                        {{ $pfl['gender'] == 1 ? 'selected' : null }}>
+                                                                                        Laki-laki</option>
+                                                                                </select>
+                                                                                @if ($errors->has('jenis_kelamin'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ $errors->first('jenis_kelamin') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <label for="form-control">Referral
+                                                                                    (optional)</label>
+                                                                                <input type="text" id="referral"
+                                                                                    name="referral"
+                                                                                    class="form-control"
+                                                                                    onchange="referralKode('{{ $pfl['user_id'] }}',$(this).val())"
+                                                                                    value="{{ $referralku ? $referralku->code : '' }}"
+                                                                                    {{-- {{$referralku?'readonly':''}} --}}>
+                                                                                @if (Session::has('referral'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ Session::get('referral') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <label for="form-control">Alamat</label>
+                                                                        <textarea class="form-control" name="alamat">{{ $pfl['description'] }}</textarea>
+                                                                        @if ($errors->has('alamat'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
-                                                                                {{Session::get('referral')}}
+                                                                                {{ $errors->first('alamat') }}
                                                                             </div>
-                                                                            @endif
-                                                                        </div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <label for="form-control">Alamat</label>
-                                                                    <textarea class="form-control"
-                                                                        name="alamat">{{ $pfl['description'] }}</textarea>
-                                                                    @if ($errors->has('alamat'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('alamat') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
                                                             @else
-                                                            <div class="row">
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Nama lengkap</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="nama_lengkap">
-                                                                    <input type="hidden" name="user_id"
-                                                                        value="{{ Auth::user()->id }}">
-                                                                    @if ($errors->has('nama_lengkap'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('nama_lengkap') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Nomor handphone</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="nomor_handphone">
-                                                                    @if ($errors->has('nomor_handphone'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('nomor_handphone') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Company</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="company">
-                                                                    <small class="text-danger">Jika mempunyai wajib di
-                                                                        isi</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-6">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <label for="form-control">Tanggal
-                                                                                lahir</label>
-                                                                            <input type="date" name="tanggal_lahir"
-                                                                                class="form-control">
-                                                                            @if ($errors->has('tanggal_lahir'))
+                                                                <div class="row">
+                                                                    <div class="col-lg-4">
+                                                                        <label for="form-control">Nama lengkap</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="nama_lengkap">
+                                                                        <input type="hidden" name="user_id"
+                                                                            value="{{ Auth::user()->id }}">
+                                                                        @if ($errors->has('nama_lengkap'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
-                                                                                {{ $errors->first('tanggal_lahir') }}
+                                                                                {{ $errors->first('nama_lengkap') }}
                                                                             </div>
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col-lg-6" hidden>
-                                                                            <label for="">No. Rekening</label>
-                                                                            <input type="text" name="rekening"
-                                                                                id="rekening" class="form-control"
-                                                                                value="1">
-                                                                            @if ($errors->has('rekening'))
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <label for="form-control">Nomor
+                                                                            handphone</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="nomor_handphone">
+                                                                        @if ($errors->has('nomor_handphone'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
-                                                                                {{ $errors->first('rekening') }}
+                                                                                {{ $errors->first('nomor_handphone') }}
                                                                             </div>
-                                                                            @endif
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <label for="form-control">Company</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="company">
+                                                                        <small class="text-danger">Jika mempunyai wajib
+                                                                            di
+                                                                            isi</small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <label for="form-control">Tanggal
+                                                                                    lahir</label>
+                                                                                <input type="date"
+                                                                                    name="tanggal_lahir"
+                                                                                    class="form-control">
+                                                                                @if ($errors->has('tanggal_lahir'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ $errors->first('tanggal_lahir') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col-lg-6" hidden>
+                                                                                <label for="">No.
+                                                                                    Rekening</label>
+                                                                                <input type="text" name="rekening"
+                                                                                    id="rekening"
+                                                                                    class="form-control"
+                                                                                    value="1">
+                                                                                @if ($errors->has('rekening'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ $errors->first('rekening') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6">
+                                                                                <label for="form-control">Jenis
+                                                                                    kelamin</label>
+                                                                                <select name="jenis_kelamin"
+                                                                                    class="form-control"
+                                                                                    id="jkl">
+                                                                                    <option value="">Pilih salah
+                                                                                        satu
+                                                                                    </option>
+                                                                                    <option value="0">
+                                                                                        Perempuan</option>
+                                                                                    <option value="1">
+                                                                                        Laki-laki</option>
+                                                                                </select>
+                                                                                @if ($errors->has('jenis_kelamin'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ $errors->first('jenis_kelamin') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <label for="form-control">Referral
+                                                                                    (optional)</label>
+                                                                                <input type="text" id="referral"
+                                                                                    name="referral"
+                                                                                    class="form-control"
+                                                                                    onchange="referralKode('{{ Auth::user()->id }}',$(this).val())"
+                                                                                    value="{{ $referralku ? $referralku->code : '' }}"
+                                                                                    {{-- {{$referralku?'readonly':''}} --}}>
+                                                                                @if (Session::has('referral'))
+                                                                                    <div class="error"
+                                                                                        style="color: red; display:block;">
+                                                                                        {{ Session::get('referral') }}
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-lg-6">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-6">
-                                                                            <label for="form-control">Jenis
-                                                                                kelamin</label>
-                                                                            <select name="jenis_kelamin"
-                                                                                class="form-control" id="jkl">
-                                                                                <option value="">Pilih salah satu
-                                                                                </option>
-                                                                                <option value="0">
-                                                                                    Perempuan</option>
-                                                                                <option value="1">
-                                                                                    Laki-laki</option>
-                                                                            </select>
-                                                                            @if ($errors->has('jenis_kelamin'))
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <label for="form-control">Alamat</label>
+                                                                        <textarea class="form-control" name="alamat"></textarea>
+                                                                        @if ($errors->has('alamat'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
-                                                                                {{ $errors->first('jenis_kelamin') }}
+                                                                                {{ $errors->first('alamat') }}
                                                                             </div>
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col-lg-6">
-                                                                            <label for="form-control">Referral
-                                                                                (optional)</label>
-                                                                            <input type="text" id="referral"
-                                                                                name="referral" class="form-control"
-                                                                                onchange="referralKode('{{Auth::user()->id}}',$(this).val())"
-                                                                                value="{{$referralku?$referralku->code:''}}"
-                                                                                {{-- {{$referralku?'readonly':''}} --}}>
-                                                                            @if (Session::has('referral'))
-                                                                            <div class="error"
-                                                                                style="color: red; display:block;">
-                                                                                {{Session::get('referral')}}
-                                                                            </div>
-                                                                            @endif
-                                                                        </div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <label for="form-control">Alamat</label>
-                                                                    <textarea class="form-control"
-                                                                        name="alamat"></textarea>
-                                                                    @if ($errors->has('alamat'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('alamat') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
                                                             @endif
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -860,20 +904,20 @@
                                                         <form action="/updaterekening" method="post">
                                                             @csrf
                                                             <input type="text" name="user_id" id="user_id"
-                                                                value="{{Auth::user()->id}}" hidden>
+                                                                value="{{ Auth::user()->id }}" hidden>
                                                             <div class="row">
                                                                 <div class="form-group col">
                                                                     <label for="">Nama Bank</label>
-                                                                    <input type="text" name="nama_bank" id="nama_bank"
-                                                                        class="form-control"
-                                                                        value="{{$user->rekening?$user->rekening->nama_bank:''}}"
+                                                                    <input type="text" name="nama_bank"
+                                                                        id="nama_bank" class="form-control"
+                                                                        value="{{ $user->rekening ? $user->rekening->nama_bank : '' }}"
                                                                         required>
                                                                 </div>
                                                                 <div class="form-group col">
                                                                     <label for="">No Rekening</label>
                                                                     <input type="text" name="no_rekening"
                                                                         id="no_rekening" class="form-control"
-                                                                        value="{{$user->rekening?$user->rekening->no_rekening:''}}"
+                                                                        value="{{ $user->rekening ? $user->rekening->no_rekening : '' }}"
                                                                         required>
                                                                 </div>
                                                             </div>
@@ -943,15 +987,16 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="reviewFormModal" tabindex="-1" role="dialog" aria-labelledby="reviewFormModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="reviewFormModal" tabindex="-1" role="dialog"
+        aria-labelledby="reviewFormModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="reviewFormModalLabel">Submit a
                         Review
                     </h4>
-                    <button type="button" class="btn-close btn-sm" data-dismiss="modal" aria-hidden="true">x</button>
+                    <button type="button" class="btn-close btn-sm" data-dismiss="modal"
+                        aria-hidden="true">x</button>
                 </div>
                 <div class="modal-body">
                     <form class="row mb-0" id="template-reviewform" name="template-reviewform"
@@ -961,27 +1006,27 @@
                         <div class="col-12 mb-3">
                             <label for="template-reviewform-rating">Rating</label>
                             <span id="nilai_value" class="ml-1"></span>
-                            <input type="range" class="form-range form-control p-0" id="nilai_review" name="nilai"
-                                value="1" min="1" max="5" required>
+                            <input type="range" class="form-range form-control p-0" id="nilai_review"
+                                name="nilai" value="1" min="1" max="5" required>
 
                         </div>
                         <div class="w-100"></div>
                         <div class="col-12 mb-3">
                             <label for="template-reviewform-comment">Comment
                                 <small>*</small></label>
-                            <textarea class="required form-control" id="template-reviewform-comment" name="comment"
-                                rows="6" cols="30" required></textarea>
+                            <textarea class="required form-control" id="template-reviewform-comment" name="comment" rows="6"
+                                cols="30" required></textarea>
                         </div>
                         @auth
-                        <div class="col-12">
-                            <button class="button button-3d m-0" type="submit" id="template-reviewform-submit"
-                                name="template-reviewform-submit" value="submit">Submit
-                                Review</button>
-                        </div>
+                            <div class="col-12">
+                                <button class="button button-3d m-0" type="submit" id="template-reviewform-submit"
+                                    name="template-reviewform-submit" value="submit">Submit
+                                    Review</button>
+                            </div>
                         @else
-                        <div class="col-12">
-                            <p class="text-danger">Pastikan Sudah Login!</p>
-                        </div>
+                            <div class="col-12">
+                                <p class="text-danger">Pastikan Sudah Login!</p>
+                            </div>
                         @endauth
                     </form>
                 </div>
@@ -1030,7 +1075,7 @@
         $('#nilai_value').html(nilai);
     })
 
-    function tambahPeserta(params, limit, classid, val,ref) {
+    function tambahPeserta(params, limit, classid, val, ref) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1115,7 +1160,7 @@
             }
         });
         jQuery.ajax({
-            url: "/join/referral/" + id_user + '/' + referral ,
+            url: "/join/referral/" + id_user + '/' + referral,
             method: 'get',
             success: function(result) {
                 console.log(result);
@@ -1173,7 +1218,7 @@
         })
     }
 
-    function bukti(class_id, payment,ref) {
+    function bukti(class_id, payment, ref) {
         $('#class_id').val(class_id);
         $('#payment_id').val(payment);
         $('#ref').val(ref);
@@ -1243,20 +1288,20 @@
         $('#tableContent').html(html);
     }
 
-    function checkedBilling(d,key) {
+    function checkedBilling(d, key) {
         let check = false;
-        if ($('#checkbox-'+key).is(':checked')) {
+        if ($('#checkbox-' + key).is(':checked')) {
             check = true;
         }
 
         if (check) {
             if (key in checkedData) {
-                checkedData[key]=d;
-            }else{
+                checkedData[key] = d;
+            } else {
                 checkedData.push(d);
             }
-        }else{
-            checkedData[key]=null;
+        } else {
+            checkedData[key] = null;
         }
 
         $('#dataInvoice').val(JSON.stringify(checkedData));

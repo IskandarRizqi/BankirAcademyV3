@@ -1,6 +1,6 @@
-@include("front.layout.head")
-@include("front.layout.topbar")
-@include(env("CUSTOM_HEADER","front.layout.header"))
+@include('front.layout.head')
+@include('front.layout.topbar')
+@include(env('CUSTOM_HEADER', 'front.layout.header'))
 <style>
     ul {
         margin-left: 20px;
@@ -15,19 +15,19 @@
     <div class="content-wrap">
         <div class="container clearfix">
             @if ($blog)
-            <div class="row col-mb-50">
-                @if ($blog->thumbnail)
-                <div class="col-md-12 col-lg-12">
-                    <div class="entry-image mb-0">
-                        <a href="#"><img src="{{$blog->thumbnail}}" alt="Event Single"></a>
-                        {{-- <div class="entry-overlay d-flex align-items-center justify-content-center">
+                <div class="row col-mb-50">
+                    @if ($blog->thumbnail)
+                        <div class="col-md-12 col-lg-12">
+                            <div class="entry-image mb-0">
+                                <a href="#"><img src="{{ $blog->thumbnail }}" alt="Event Single"></a>
+                                {{-- <div class="entry-overlay d-flex align-items-center justify-content-center">
                             <span class="d-none d-md-flex">Starts in: </span>
                             <div class="countdown d-block d-md-flex" data-year="2020" data-month="12"></div>
                         </div> --}}
-                    </div>
-                </div>
-                @endif
-                {{-- <div class="col-md-5 col-lg-4">
+                            </div>
+                        </div>
+                    @endif
+                    {{-- <div class="col-md-5 col-lg-4">
                     <div class="card event-meta mb-3">
                         <div class="card-header">
                             <h5 class="mb-0">Kelas Info:</h5>
@@ -43,13 +43,13 @@
                     </div>
                     <a href="#" class="btn btn-success btn-block btn-lg">Buy Tickets</a>
                 </div> --}}
-                <div class="col-md-10 col-lg-12">
-                    <h3>{{$blog->title}}</h3>
-                    {!!$blog->content!!}
+                    <div class="col-md-10 col-lg-12">
+                        <h3>{{ $blog->title }}</h3>
+                        {!! $blog->content !!}
+                    </div>
                 </div>
-            </div>
             @endif
         </div>
     </div>
 </section><!-- #content end -->
-@include(env("CUSTOM_FOOTER","front.layout.footer"))
+@include(env('CUSTOM_FOOTER', 'front.layout.footer'))
