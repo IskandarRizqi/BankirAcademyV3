@@ -24,8 +24,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <abbr title="Phone Number"><strong>Phone:</strong></abbr> (024) 76435498<br>
-                                    <abbr title="Fax"><strong>Whatsapp 1:</strong></abbr> (+62) 895 3122 9494<br>
-                                    <abbr title="Fax"><strong>Whatsapp 2:</strong></abbr> (+62) 895 3330 17060<br>
+                                    {{-- <abbr title="Fax"><strong>Whatsapp 1:</strong></abbr> (+62) 895 3122 9494<br>
+                                    --}}
+
+                                    <abbr title="Fax"><strong>Whatsapp:</strong></abbr> (+62) 895 3330 17060<br>
                                     <abbr title="Email Address"
                                         style="display: inline-block;margin-bottom: 7px;"><strong>Email:</strong></abbr>
                                     info@bankiracademy.com<br>
@@ -89,8 +91,7 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="widget quick-contact-widget form-widget clearfix" style="color: black">
                         <h4 style="color: black">Up coming</h4>
-                        <img src="{{ asset('google-play-and-apple-app-store-logos-22.png') }}" alt=""
-                            width="200px">
+                        <img src="{{ asset('google-play-and-apple-app-store-logos-22.png') }}" alt="" width="200px">
                         <p></p>
                         <img src="{{ asset('pse-terdaftar.png') }}" alt="" width="50px">
                         {{-- <p>001922.04/DJAI.PSE/12/2022</p> --}}
@@ -225,13 +226,22 @@
     $(document).ready(function() {
         getLaman();
     })
-
+    function getImgData(fil, prv) {
+		const files = fil.files[0];
+		if (files) {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(files);
+			fileReader.addEventListener("load", function() {
+				$(prv).attr('src', this.result);
+			});
+		}
+	}
     function popc() {
         Swal.fire({
             icon: 'info',
             title: 'Oops...',
             text: 'UP COMING',
-            footer: '<a href="https://akarindo.id/">By akarindo.id</a>'
+            footer: '<a href="https://bankiracademy.com/">By akarindo.id</a>'
         })
     }
     $('#login').removeAttr('disabled')

@@ -522,7 +522,7 @@
                                 \NumberFormatter::CURRENCY),$p->unique_code,"IDR"),0,-3) }}
                             </td>
                             <td class="unit">
-                                @if ($p->promo==1)
+                                @if ($p->promo_price)
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$p->promo_price,"IDR"),0,-3) }}
                                 @endif

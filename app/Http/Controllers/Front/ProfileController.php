@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
@@ -116,7 +117,7 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-
+        // return $request->all();
         $validator = Validator::make($request->all(), [
             'nama_lengkap' => 'required',
             'jenis_kelamin' => 'required',
@@ -146,9 +147,7 @@ class ProfileController extends Controller
         //     );
         // }
 
-        UserProfileModel::updateOrCreate([
-            'user_id' => $request->user_id,
-        ], [
+        $d = [
             'name' => $request->nama_lengkap,
             'phone' => $request->nomor_handphone,
             'rekening' => $request->rekening,
@@ -156,7 +155,26 @@ class ProfileController extends Controller
             'gender' => $request->jenis_kelamin,
             'description' => $request->alamat,
             'instansi' => $request->company,
-        ]);
+        ];
+
+        if ($request->picture) {
+            $name = $request->file('picture')->getClientOriginalName(); // Name File
+            $size = $request->file('picture')->getSize(); // Size File
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $request->file('picture');
+            $file->move(public_path('Image/Member'), $filename);
+            // $d['picture'] = json_encode(['url' => $filename, 'size' => $size]);
+            $d['picture'] = 'Image/Member/' . $filename;
+        }
+
+        UserProfileModel::updateOrCreate([
+            'user_id' => $request->user_id,
+        ], $d);
 
         // return view('front.profile.profile');
         return redirect('/profile')->with('success', 'Berhasil memperbarui profile');
@@ -265,12 +283,20 @@ class ProfileController extends Controller
         $validasi = InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->id_instructor)->get();
         return $validasi;
     }
-    public function setKodePromo($title_kelas, $kode_promo, $id_payment)
+    public function setKodePromo(Request $request)
     {
-        $kp = KodePromoModel::where('kode', $kode_promo)->where('class_title', 'like', '%"' . $title_kelas . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        $bp = BannerModel::where('jenis', 2)->where('kode', $request->kode)->where('mulai', '<', Carbon::now())->where('selesai', '>=', Carbon::now())->get();
+        $kp = KodePromoModel::where('kode', $request->kode)->where('class_title', 'like', '%"' . urldecode($request->id) . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        // $kp = KodePromoModel::where('kode', $kode_promo)->where('class_title', 'like', '%"' . $title_kelas . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
         if (count($kp) > 0) {
-            ClassPaymentModel::where('id', $id_payment)->update([
-                'kode_promo' => $kode_promo,
+            ClassPaymentModel::where('id', $request->idpayment)->update([
+                'kode_promo' => $request->kode,
+            ]);
+            return response()->json(['message' => 'Kode Promo Benar', 'status' => true]);
+        }
+        if (count($bp) > 0) {
+            ClassPaymentModel::where('id', $request->idpayment)->update([
+                'kode_promo' => $request->kode,
             ]);
             return response()->json(['message' => 'Kode Benar', 'status' => true]);
         }

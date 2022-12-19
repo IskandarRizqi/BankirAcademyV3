@@ -128,7 +128,7 @@ Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');
 });
 
-Route::post("/kode-promo/{id}/{kode}/{payment}", [App\Http\Controllers\Front\ProfileController::class, "setKodePromo"]);
+Route::post("/kode-promo", [App\Http\Controllers\Front\ProfileController::class, "setKodePromo"]);
 Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
 Route::post("/set-master-refferal", [App\Http\Controllers\Backend\RefferalController::class, "setMasterRefferal"]);
 

@@ -46,6 +46,7 @@ class HomeController extends Controller
         </div>';
         $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
+        $next_page_url = null;
         $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(9)->toArray();
         // $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
         $semua = '';
@@ -69,6 +70,9 @@ class HomeController extends Controller
             $html = '';
 
             // $html .= '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden>';
+            if ($dx['kelas'][$value]['next_page_url']) {
+                $next_page_url = $dx['kelas'][$value]['next_page_url'];
+            }
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
@@ -140,6 +144,9 @@ class HomeController extends Controller
             $data['o']['cateKelas'] .= $html;
         }
         foreach ($dx['kelas']['Semua']['data'] as $key => $v) {
+            if ($dx['kelas']['Semua']['next_page_url']) {
+                $next_page_url = $dx['kelas']['Semua']['next_page_url'];
+            }
             $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
@@ -207,7 +214,7 @@ class HomeController extends Controller
         $kelas['Semua'] = $semua;
         // $semua .= '</div>';
         // $data['o']['cateKelas'] .= $semua;
-        $kelas['next_page_url'] = $dx['kelas']['Semua']['next_page_url'];
+        $kelas['next_page_url'] = $next_page_url;
 
         return $kelas;
         // return $dx;
@@ -277,24 +284,26 @@ class HomeController extends Controller
         $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(9)->toArray();
         $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
         foreach ($categori as $key => $value) {
-            $data['o']['kelas'][] = preg_replace('/\s+/', '', $value);
+            $rep = preg_replace('/[^a-zA-Z0-9_ -]/s', '', $value);
+            $replace = preg_replace('/\s+/', '', $rep);
+            $data['o']['kelas'][] = $replace;
             $owl = '';
             $dx['kelas'][$value] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('category', $value)->where('status', 1)->paginate(9)->toArray();
             $owl .= '<div class="owl-item" style="margin:0px !important;">';
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
             $owl .= '            <div class="portfolio-image">';
-            $owl .= '                <button class="mr-2 ' . preg_replace('/\s+/', '', $value) . ' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
-            $owl .= '                    onclick=tabsCategory("' . preg_replace('/\s+/', '', $value) . '")><small>' . $value . '</small></button>';
+            $owl .= '                <button class="mr-2 ' . $replace . ' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
+            $owl .= '                    onclick=tabsCategory("' . $replace . '")><small>' . $value . '</small></button>';
             $owl .= '            </div>';
             $owl .= '        </div>';
             $owl .= '    </div>';
             $owl .= '</div>';
             $data['o']['owlCustom'] .= $owl;
-            // array_push($data['o']['cateKelas'], '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden></div>');
+            // array_push($data['o']['cateKelas'], '<div id="' . $replace . '" class="row tabsCustom mt-2" hidden></div>');
             $html = '';
 
-            $html .= '<div id="' . preg_replace('/\s+/', '', $value) . '" class="row tabsCustom mt-2" hidden>';
+            $html .= '<div id="' . $replace . '" class="row tabsCustom mt-2" hidden>';
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';

@@ -61,10 +61,12 @@
                                             <div class="col">
                                                 <a href="/profile-instructor/{{ $class->instructor_list[0]->id }}/{{ $class->instructor_list[0]->name }}"
                                                     class="d-flex mt-2">
-                                                    <img class="mr-3 rounded-circle" src="@if (json_decode($class->instructor_list[0]->picture)){{ asset('Image/' . json_decode($class->instructor_list[0]->picture)->url) }}
-                                                        @else{{$class->instructor_list[0]->picture}}" @endif
-                                                        alt=Generic placeholder image
-                                                        style="max-width:50px; max-height:50px;">
+                                                    <img class="mr-3 rounded-circle"
+                                                        src=@if(json_decode($class->instructor_list[0]->picture)){{asset('Image/'
+                                                    .json_decode($class->instructor_list[0]->picture)->url) }}
+                                                    @else{{$class->instructor_list[0]->picture}} @endif
+                                                    alt="Generic placeholder image"
+                                                    style="max-width:50px; max-height:50px;">
                                                     <div class=>
                                                         <label class="d-block mb-0">
                                                             {{ $class->instructor_list[0]->name }}

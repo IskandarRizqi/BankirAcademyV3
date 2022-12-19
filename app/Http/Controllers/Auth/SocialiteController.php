@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\InstructorModel;
 use App\Models\User;
+use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -44,6 +45,18 @@ class SocialiteController extends Controller
                 'email' => $socialUser->getEmail(),
                 'role' => $ins ? 3 : 2
             ]);
+
+            if ($user) {
+                UserProfileModel::create([
+                    'user_id' => $user->id,
+                    'name' => $socialUser->getName(),
+                    'phone_region' => 62,
+                    'phone' => 62,
+                    'picture' => $socialUser->getAvatar(),
+                    'tanggal_lahir' => now(),
+                    'gender' => 1,
+                ]);
+            }
 
             if ($ins) {
                 InstructorModel::create([

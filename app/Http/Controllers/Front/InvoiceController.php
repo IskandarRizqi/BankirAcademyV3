@@ -72,7 +72,7 @@ class InvoiceController extends Controller
 			}
 		}
 
-		$data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
+		// $data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
 		$data['terbilang'] = Terbilang::make($data['payment']['totalAkhir'], '', 'Rp. ');
 		// return $data;
 		if ($data['payment']->status == 1) {
