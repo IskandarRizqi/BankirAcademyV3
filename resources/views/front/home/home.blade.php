@@ -246,7 +246,7 @@
                             @foreach ($banner_promo as $bp)
                             <div class="owl-item active" style="margin-right: 20px;">
                                 <div class="oc-item">
-                                    <a href="#">
+                                    <a href="/promo">
                                         <img src="Image/{{ $bp->image }}" alt=""
                                             style="border-radius: 20px !important;">
                                         {{-- <div class="shadow p-3 mb-5 bg-white rounded">
@@ -320,9 +320,11 @@
                     <div class="col-lg-8 mb-4">
                         @if (isset($banner_bawah))
                         @if (count($banner_bawah) > 0)
-                        <div id="img_card" class="card text-white click-col"
-                            style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
-                        </div>
+                        <a href="https://forms.gle/yHh3WpMyHRduPL6W6">
+                            <div id="img_card" class="card text-white click-col"
+                                style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
+                            </div>
+                        </a>
                         <div class="d-flex mt-4">
                             <div id="oc-testi"
                                 class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"

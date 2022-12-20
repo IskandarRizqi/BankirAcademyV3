@@ -136,7 +136,7 @@
                                 </li>
                             </ul>
                         </li> -->
-                        <li class="menu-item"><a class="menu-link" href="/pages/page/8">
+                        <li class="menu-item"><a class="menu-link" href="#" onclick="popc()">
                                 <div>Mitra</div>
                             </a>
                         </li>

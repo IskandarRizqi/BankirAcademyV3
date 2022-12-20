@@ -35,6 +35,11 @@
         {{-- <span>Everything you need to know about our Company</span> --}}
     </div>
 </section>
+<style>
+    p {
+        margin: 0px;
+    }
+</style>
 <section id="content">
     <div class="content-wrap">
         <div class="container clearfix">

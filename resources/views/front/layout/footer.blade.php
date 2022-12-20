@@ -23,14 +23,31 @@
                                     </address>
                                 </div>
                                 <div class="col-md-6">
-                                    <abbr title="Phone Number"><strong>Phone:</strong></abbr> (024) 76435498<br>
+                                    <table>
+                                        <tr>
+                                            <td><abbr title="Phone Number"><strong>Phone</strong></abbr></td>
+                                            <td>:</td>
+                                            <td>(024) 76435498</td>
+                                        </tr>
+                                        <tr>
+                                            <td><abbr title="Fax"><strong>Whatsapp</strong></abbr></td>
+                                            <td>:</td>
+                                            <td>(+62) 895 3330 17060</td>
+                                        </tr>
+                                        <tr>
+                                            <td><abbr title="Email Address"
+                                                    style="display: inline-block;margin-bottom: 7px;"><strong>Email</strong></abbr>
+                                            </td>
+                                            <td>:</td>
+                                            <td>info@bankiracademy.com</td>
+                                        </tr>
+                                    </table>
+                                    {{-- <br> --}}
                                     {{-- <abbr title="Fax"><strong>Whatsapp 1:</strong></abbr> (+62) 895 3122 9494<br>
                                     --}}
+                                    {{-- <br> --}}
 
-                                    <abbr title="Fax"><strong>Whatsapp:</strong></abbr> (+62) 895 3330 17060<br>
-                                    <abbr title="Email Address"
-                                        style="display: inline-block;margin-bottom: 7px;"><strong>Email:</strong></abbr>
-                                    info@bankiracademy.com<br>
+                                    {{-- <br> --}}
                                 </div>
                             </div>
                         </div>
@@ -244,7 +261,7 @@
             // html: true,
             // content:true,
             imageUrl:'<?= asset("coming_soon_loker-28.jpg") ?>',
-            showConfirmButton:false,
+            // showConfirmButton:false,
             footer: '<a href="https://bankiracademy.com/">By akarindo.id</a>'
         })
     }

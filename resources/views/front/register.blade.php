@@ -40,72 +40,138 @@
 		============================================= -->
         <section id="content">
             <div class="content-wrap py-0">
-
                 <div class="section dark p-0 m-0 h-100 position-absolute"
                     style="background-size: 100%; background-image: url('{{asset('Bg-register-01.jpg')}}')"></div>
-
                 <div class="section bg-transparent min-vh-100 p-0 m-0 d-flex">
                     <div class="vertical-middle">
                         <div class="container py-5">
-
-
                             <div class="card mx-auto rounded-0 border-0" style="max-width: 400px;">
                                 <div class="card-body" style="padding: 40px;">
-                                    <h3>Register Peserta/Member</h3>
-                                    <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize"
-                                            for="login-form-modal-username">USERNAME</label>
-                                        <input type="text" id="usernameregis" name="name" class="form-control" />
-                                    </div>
-                                    <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize"
-                                            for="login-form-modal-username">EMAIL</label>
-                                        <input type="email" id="emailregis" name="email" class="form-control" />
+                                    {{-- <h3>Register Peserta/Member</h3> --}}
+                                    <div class="tabs tabs-bb clearfix ui-tabs ui-corner-all ui-widget ui-widget-content"
+                                        id="tab-9">
+                                        <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
+                                            role="tablist">
+                                            <li role="tab" tabindex="-1"
+                                                class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                aria-controls="tabs-33" aria-labelledby="ui-id-17" aria-selected="false"
+                                                aria-expanded="false"><a href="#tabs-33" tabindex="-1"
+                                                    class="ui-tabs-anchor" id="ui-id-17">Member</a></li>
+                                            <li role="tab" tabindex="-1"
+                                                class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                aria-controls="tabs-34" aria-labelledby="ui-id-18" aria-selected="false"
+                                                aria-expanded="false"><a href="#tabs-34" tabindex="-1"
+                                                    class="ui-tabs-anchor" id="ui-id-18" hidden>Corporate</a></li>
+                                        </ul>
+                                        <div class="tab-container">
+                                            <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                                id="tabs-33" aria-labelledby="ui-id-17" role="tabpanel"
+                                                aria-hidden="true" style="display: none;">
+                                                <div class="col-12 form-group">
+                                                    <label class="font-body text-capitalize"
+                                                        for="login-form-modal-username">USERNAME</label>
+                                                    <input type="text" id="usernameregis" name="name"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="col-12 form-group">
+                                                    <label class="font-body text-capitalize"
+                                                        for="login-form-modal-username">EMAIL</label>
+                                                    <input type="email" id="emailregis" name="email"
+                                                        class="form-control" />
 
-                                    </div>
+                                                </div>
 
-                                    <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize"
-                                            for="login-form-modal-password">PASSWORD</label>
-                                        <input type="password" id="passwordregis" name="password" class="form-control"
-                                            required />
+                                                <div class="col-12 form-group">
+                                                    <label class="font-body text-capitalize"
+                                                        for="login-form-modal-password">PASSWORD</label>
+                                                    <input type="password" id="passwordregis" name="password"
+                                                        class="form-control" required />
 
-                                    </div>
-                                    <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize" for="login-form-modal-password">CONFIRM
-                                            PASSWORD</label>
-                                        <input type="password" id="confpassword" name="password_confirmation"
-                                            class="form-control" required />
-                                    </div>
-                                    <div class="col-12 form-group">
-                                        <label class="font-body text-capitalize"
-                                            for="login-form-modal-password">REFERRAL (optional)</label>
-                                        <input type="text" id="referral" name="referral" class="form-control" />
-                                    </div>
+                                                </div>
+                                                <div class="col-12 form-group">
+                                                    <label class="font-body text-capitalize"
+                                                        for="login-form-modal-password">CONFIRM
+                                                        PASSWORD</label>
+                                                    <input type="password" id="confpassword"
+                                                        name="password_confirmation" class="form-control" required />
+                                                </div>
+                                                <div class="col-12 form-group">
+                                                    <label class="font-body text-capitalize"
+                                                        for="login-form-modal-password">REFERRAL (optional)</label>
+                                                    <input type="text" id="referral" name="referral"
+                                                        class="form-control" />
+                                                </div>
 
-                                    <div class="col-12 form-group">
-                                        <button class="button button-rounded m-0" onclick="funcregis()"
-                                            type="submit">REGISTER</button>
+                                                <div class="col-12 form-group">
+                                                    <button class="button button-rounded m-0" onclick="funcregis()"
+                                                        type="submit">REGISTER</button>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    have an account? &nbsp;
+                                                    <a href="{{url('/')}}"> Login</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                            id="tabs-34" aria-labelledby="ui-id-18" role="tabpanel" aria-hidden="true"
+                                            style="display: none;">
+                                            <div class="col-12 form-group">
+                                                <label class="font-body text-capitalize"
+                                                    for="login-form-modal-username">USERNAME</label>
+                                                <input type="text" id="usernameregis" name="name"
+                                                    class="form-control" />
+                                            </div>
+                                            <div class="col-12 form-group">
+                                                <label class="font-body text-capitalize"
+                                                    for="login-form-modal-username">EMAIL</label>
+                                                <input type="email" id="emailregis" name="email" class="form-control" />
+
+                                            </div>
+
+                                            <div class="col-12 form-group">
+                                                <label class="font-body text-capitalize"
+                                                    for="login-form-modal-password">PASSWORD</label>
+                                                <input type="password" id="passwordregis" name="password"
+                                                    class="form-control" required />
+
+                                            </div>
+                                            <div class="col-12 form-group">
+                                                <label class="font-body text-capitalize"
+                                                    for="login-form-modal-password">CONFIRM
+                                                    PASSWORD</label>
+                                                <input type="password" id="confpassword" name="password_confirmation"
+                                                    class="form-control" required />
+                                            </div>
+                                            <div class="col-12 form-group">
+                                                <label class="font-body text-capitalize"
+                                                    for="login-form-modal-password">REFERRAL (optional)</label>
+                                                <input type="text" id="referral" name="referral" class="form-control" />
+                                            </div>
+
+                                            {{-- <div class="col-12 form-group">
+                                                <button class="button button-rounded m-0" onclick="funcregis()"
+                                                    type="submit">REGISTER</button>
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+                                                have an account? &nbsp;
+                                                <a href="{{url('/')}}"> Login</a>
+                                            </div> --}}
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-center">
-                                        have an account? &nbsp;
-                                        <a href="{{url('/')}}"> Login</a>
-                                    </div>
-                                    <div class="line line-sm"></div>
-                                    <a href="{{url('/auth/google')}}"
-                                        class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
-                                        with Google</a>
                                 </div>
                             </div>
-
-                            <!-- <div class="text-center text-muted mt-3"><small>Copyrights &copy; All Rights Reserved by Canvas Inc.</small></div> -->
-
+                            <div class="line line-sm"></div>
+                            <a href="{{url('/auth/google')}}"
+                                class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
+                                with Google</a>
                         </div>
                     </div>
+                    <!-- <div class="text-center text-muted mt-3"><small>Copyrights &copy; All Rights Reserved by Canvas Inc.</small></div> -->
                 </div>
-
             </div>
-        </section><!-- #content end -->
+    </div>
+    </div>
+    </section><!-- #content end -->
 
     </div><!-- #wrapper end -->
 
