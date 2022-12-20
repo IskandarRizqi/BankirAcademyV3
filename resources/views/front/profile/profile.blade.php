@@ -832,13 +832,15 @@
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-pnpt">
-                                        Coming Soon
+                                        <img src="{{asset('upcoming_absen_post_test_Cara pakai_promo_copy_2.jpg')}}"
+                                            alt="">
                                     </div>
                                     <div class="tab-content clearfix" id="tab-affiliate">
                                         @include('front.profile.tabAffiliate')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-absen">
-                                        Coming Soon
+                                        <img src="{{asset('upcoming_absen_post_test_Cara pakai_promo_copy_2.jpg')}}"
+                                            alt="">
                                     </div>
 
                                 </div>

@@ -238,9 +238,13 @@
 	}
     function popc() {
         Swal.fire({
-            icon: 'info',
-            title: 'Oops...',
-            text: 'UP COMING',
+            // icon: 'info',
+            // title: 'Oops...',
+            // text: "<img src='coming_soon_loker-28' style='width:150px;'>",
+            // html: true,
+            // content:true,
+            imageUrl:'<?= asset("coming_soon_loker-28.jpg") ?>',
+            showConfirmButton:false,
             footer: '<a href="https://bankiracademy.com/">By akarindo.id</a>'
         })
     }

@@ -196,7 +196,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="col-md-12" style="padding-bottom: 0px;">
+                                    {{-- <div class="col-md-12" style="padding-bottom: 0px;">
                                         <form id="orderForm" action="{{ '/order' }}" method="POST">
                                             @csrf
                                             <input type="text" id="class_id" name="class_id" value="{{ $class->id }}"
@@ -216,7 +216,9 @@
                                             <button class="button button-circle btn-block text-center" hidden>Order
                                                 sekarang</button>
                                         </form>
-                                    </div>
+                                    </div> --}}
+                                    <button class="button button-circle btn-block text-center" onclick="popc()">Order
+                                        sekarang</button>
 
                                 </div>
                             </div>

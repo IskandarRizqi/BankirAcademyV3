@@ -48,5 +48,6 @@
         @endforeach --}}
     </tbody>
 </table>
+<img src="{{asset('ccara_affiliate_Cara_pakai_promo_copy.jpg')}}" alt="">
 <script>
 </script>

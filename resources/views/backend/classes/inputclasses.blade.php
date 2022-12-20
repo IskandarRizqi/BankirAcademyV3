@@ -97,6 +97,7 @@
 												<option value="CALON_BANKIR">CALON BANKIR</option>
 												<option value="BANKIR">BANKIR</option>
 												<option value="BOOTCAMP_BANKIR">BOOTCAMP BANKIR</option>
+												<option value="MANAGEMENT_TRAINEE">MANAGEMENT TRAINEE</option>
 												</option>
 											</select>
 										</div>

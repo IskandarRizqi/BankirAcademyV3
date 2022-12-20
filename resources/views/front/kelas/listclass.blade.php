@@ -139,7 +139,7 @@
                     <div class="single-event">
                         <div class="row">
                             @foreach ($class['data'] as $v)
-                            <div class="col-lg-3 col-sm-6 mb-4">
+                            {{-- <div class="col-lg-3 col-sm-6 mb-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card" style="min-height: 0px !important">
@@ -162,7 +162,6 @@
                                                 placeholder="" image="" style="max-width:50px; max-height:50px;">
                                             <div class="">
                                                 <label class="d-block mb-0">{{ $v['instructor_list'][0]->name }}
-                                                    {{-- <small>{{$v['instructor_list'][0]->title}}</small> --}}
                                                 </label>
                                                 @if ($v['pricing'])
                                                 @if ($v['pricing']->promo)
@@ -175,8 +174,6 @@
                                                 @endif
                                                 @endif
                                             </div>
-                                            {{-- <div class="ml-2 flex-fill text-right">
-                                            </div> --}}
                                         </a>
                                         <div class="text-center mt-2 w-100">
                                             @if ($v['pricing'])
@@ -195,18 +192,92 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            {{-- <a href="/class/{{ $v['unique_id'] }}/{{ urlencode($v['title']) }}">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <img src="" alt="Thumbnail" style="width: 130px;max-height:75px;">
-                                        &nbsp;&nbsp;&nbsp;<span style="font-size: 19px; font-weight: bold;"></span>
-                                        <span class="text-secondary float-right">{{
-                                            Carbon\Carbon::parse($v['created_at'])->format('d-m-Y
-                                            H:i:s') }}</span>
+                            </div> --}}
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">
+                                    <img src="{{ $v['image'] }}" width="100%" style="border-radius: 8px;">
+                                    <div class="card-body" style="padding: 0.75rem">
+                                        <span class="btn mt-4"
+                                            style="border-radius: 8px;position: absolute; bottom: 10px; left: 10px; right: 10px;">
+                                            <h4 class="text-left text-capitalize m-0">{{$v['title']}}</h4>
+                                            <p class="text-left"
+                                                style="margin: 0px !important; font-size:10px !important;">
+                                                @if ($v['date_start'] == $v['date_end'])
+                                                {{$v['date_start']}}
+                                                @else
+                                                {{$v['date_start'] .' - '. $v['date_end']}}
+                                                @endif
+                                            </p>
+                                            <a href="/profile-instructor/{{$v['instructor_list'][0]->id}}/{{$v['instructor_list'][0]->name}}"
+                                                class="d-flex mt-2"> <img class="mr-3 rounded-circle"
+                                                    @if(json_decode($v['instructor_list'][0]->picture))
+                                                src="/Image/{{json_decode($v['instructor_list'][0]->picture)->url}}"
+                                                @else
+                                                src=""
+                                                @endif
+                                                alt="Generic" placeholder="" image=""
+                                                style="max-width:50px; max-height:50px;">
+                                                <div class="text-left"> <small class="d-block mb-0">INSTRUCTOR</small>
+                                                    <h5 class="text-uppercase d-block mb-0">
+                                                        {{$v['instructor_list'][0]->name}}</h5> <small
+                                                        class="text-uppercase d-block mb-0"
+                                                        style="font-size:10px !important">{{$v['instructor_list'][0]->title}}</small>
+                                                </div>
+                                                <div class="ml-2 flex-fill text-center">
+                                                    <label class="d-block mb-0">Harga </label>
+                                                    @if ($v['pricing'])
+                                                    @if ($v['pricing']->promo)
+                                                    <del> Rp.
+                                                        {{number_format($v['pricing']->price)}}</del>
+                                                    <sup class="badge badge-danger"
+                                                        style="font-size: 8px">{{number_format(($v['pricing']->promo_price
+                                                        / $v['pricing']->price) * 100)}} %</sup>
+                                                    @else
+                                                    <del> Rp.
+                                                        {{number_format($v['pricing']->price)}}</del>
+                                                    <sup class="badge badge-danger"
+                                                        style="font-size: 8px">{{number_format(($v['pricing']->promo_price
+                                                        / $v['pricing']->price) * 100)}} %</sup>
+                                                    @endif
+                                                    @else
+                                                    <small class="text-primary mb-2">Rp. -</small>
+                                                    @endif
+                                                </div>
+                                            </a>
+                                            <div class="text-center mt-2 w-100">
+                                                @if ($v['pricing'])
+                                                @if ($v['pricing']->promo)
+                                                <h3 class="text-primary mb-2">Rp. {{number_format($v['pricing']->price -
+                                                    $v['pricing']->promo_price)}}</h3>
+                                                @else
+                                                <h3 class="text-primary mb-2">Rp.
+                                                    {{number_format($v['pricing']->price)}}</h3>
+                                                @endif
+                                                @else
+                                                <h3 class="text-primary mb-2">Rp. -</h3>
+                                                @endif
+                                            </div>
+                                            <div class="row align-items-center">
+                                                <a class="btn btn-primary btn-block btn-rounded"
+                                                    style="border-radius:10px !important"
+                                                    href="/class/{{ $v['unique_id'] }}/{{ str_replace('/', '-', $v['title']) }}">
+                                                    Detail </a>
+                                                {{-- <div class="col text-left ml-2">
+                                                    <small class="fs-2">Kode Promo</small>
+                                                    <h4 class=""
+                                                        style="margin-bottom: 0px !important; font-weight: bold">
+                                                        {{ $v['kode']?$v['kode']:'-' }}</h4>
+                                                </div>
+                                                <div class="col">
+                                                    <span class="btn btn-outline-primary btn-sm float-right"
+                                                        style="border-radius: 8px"
+                                                        onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')">Copy</span>
+                                                </div> --}}
+                                            </div>
+                                        </span>
                                     </div>
                                 </div>
-                            </a> --}}
+                            </div>
                             @endforeach
                         </div>
                         <hr>

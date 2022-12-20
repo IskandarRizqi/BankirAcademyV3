@@ -572,7 +572,7 @@ class ClassesController extends Controller
 				}
 			})
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->paginate(8)->toArray();
+			->paginate(9)->toArray();
 
 		$data['pencarian'] = $this->pencarian();
 		// return $data;

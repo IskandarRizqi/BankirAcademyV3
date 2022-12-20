@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Backend\BannerslideController;
+use App\Http\Controllers\Backend\CorporateController;
 use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
 use App\Http\Controllers\Front\ProfileController;
@@ -51,6 +52,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
     Route::resource('/admin/kupon', PromoController::class);
     Route::resource('/admin/fee', FeeController::class);
+    Route::resource('/admin/corporate', CorporateController::class);
 
     //pages
     Route::delete("/admin/pages/delete/{id}", [App\Http\Controllers\Front\PagesController::class, "delete"]);
@@ -61,7 +63,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get("/admin/pages/kelas/{tipe}", [App\Http\Controllers\Front\PagesController::class, "getPageKelas"]);
     Route::get("/admin/pages/getsdank", [App\Http\Controllers\Front\PagesController::class, "getsdank"]);
     Route::post("/admin/pages/setsdank", [App\Http\Controllers\Front\PagesController::class, "setsdank"]);
-    Route::get("/admin/pages/getbantuan", [App\Http\Controllers\Front\PagesController::class, "getAbout"]); //Page Bantuan
+    Route::get("/admin/pages/getbantuan", [App\Http\Controllers\Front\PagesController::class, "getAbout"]); //Page Syarat Dan Ketentuan
     Route::post("/admin/pages/setabout", [App\Http\Controllers\Front\PagesController::class, "setAbout"]);
     Route::get("/admin/pages/getcontact", [App\Http\Controllers\Front\PagesController::class, "getContact"]);
     Route::post("/admin/pages/setcontact", [App\Http\Controllers\Front\PagesController::class, "setContact"]);
@@ -109,8 +111,8 @@ Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar
 Route::post('/multi-bayar', [App\Http\Controllers\Front\OrderController::class, 'multibayar']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
-Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index_custom']);
-Route::get('/index-custom', [App\Http\Controllers\Front\HomeController::class, 'index']);
+Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
+// Route::get('/index-custom', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::class, 'inputinstructor']);
 Route::get('/u-laman/{slug}', [App\Http\Controllers\Front\HomeController::class, 'laman']);

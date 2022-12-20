@@ -158,13 +158,25 @@
                         <td>{{$value->nama}}</td>
                         <td>
                             @if($value->jenis == 0)
-                            <span class="badge badge-info">Banner slide</span>
+                            <span class="badge badge-info">Banner Slide</span>
                             @elseif ($value->jenis == 1)
-                            <span class="badge badge-info">Banner bawah</span>
+                            <span class="badge badge-info">Banner Bawah</span>
                             @elseif ($value->jenis == 2)
-                            <span class="badge badge-info">Banner promo</span>
+                            <span class="badge badge-info">Banner Promo</span>
+                            @elseif ($value->jenis == 3)
+                            <span class="badge badge-info">Banner Slide Mobile</span>
+                            @elseif ($value->jenis == 4)
+                            <span class="badge badge-info">Calon Bankir</span>
+                            @elseif ($value->jenis == 5)
+                            <span class="badge badge-info">Bankir</span>
+                            @elseif ($value->jenis == 6)
+                            <span class="badge badge-info">Bootcampt Bankir</span>
+                            @elseif ($value->jenis == 7)
+                            <span class="badge badge-info">All Kelas</span>
+                            @elseif ($value->jenis == 8)
+                            <span class="badge badge-info">Management Trainee</span>
                             @else
-                            <span class="badge badge-info">Banner silde mobile</span>
+                            <span class="badge badge-info">Belum Ditentukan</span>
                             @endif
                         </td>
                         <td>{{ \Carbon\Carbon::parse($value->mulai)->format('Y-m-d') }} - {{

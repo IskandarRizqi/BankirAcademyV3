@@ -29,9 +29,9 @@
 @include(env('CUSTOM_HEADER', 'front.layout.header'))
 
 <section
-    style="padding: 250px 0; background-image: url('{{asset(json_decode($data->banner)?'/Image/laman/banner/'.json_decode($data->banner)->url:'526x417-05.png')}}'); background-size: contain; background-position: center; background-repeat:no-repeat;">
+    style="padding: 250px 0; background-image: url('{{asset(json_decode($data->banner)?'/image/laman/banner/'.json_decode($data->banner)->url:'526x417-05.png')}}'); background-size: contain; background-position: center; background-repeat:no-repeat;">
     <div class="container clearfix">
-        <h1>{{$data->title}}</h1>
+        <h1 class=" text-white">{{$data->title}}</h1>
         {{-- <span>Everything you need to know about our Company</span> --}}
     </div>
 </section>

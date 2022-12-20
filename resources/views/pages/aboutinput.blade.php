@@ -3,7 +3,7 @@
 <div class="col-lg-12">
 	<div class="widget">
 		<div class="widget-heading">
-			<h3>Bantuan</h3>
+			<h3>Syarat dan Ketentuan</h3>
 		</div>
 		<div class="widget-content">
 			<form action="/admin/pages/setabout" method="POST" enctype="multipart/form-data">

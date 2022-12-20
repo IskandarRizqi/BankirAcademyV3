@@ -179,7 +179,7 @@
                         <a href="/admin/pages"> Page </a>
                     </li>
                     <li>
-                        <a href="/admin/pages/kelas/7"> Bantuan </a>
+                        <a href="/admin/pages/getbantuan"> FAQ </a>
                     </li>
                     {{-- <li>
                         <a href="/admin/pages/kelas/4"> Calon Bankir </a>
@@ -228,6 +228,9 @@
                 <ul class="collapse submenu list-unstyled" id="pagesDropdownMaster" data-parent="#accordionExample">
                     <li>
                         <a href="/admin/fee"> Fee </a>
+                    </li>
+                    <li>
+                        <a href="/admin/corporate"> Corporate </a>
                     </li>
                 </ul>
             </li>
