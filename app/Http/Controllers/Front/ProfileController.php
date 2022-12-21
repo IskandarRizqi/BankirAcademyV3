@@ -33,7 +33,12 @@ class ProfileController extends Controller
     {
         $auth = Auth::user()->id;
         $data['user'] = User::where('id', Auth::user()->id)->first();
-        $data['pfl'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        $data['pfl'] = UserProfileModel::select()
+            ->where('user_id', Auth::user()->id)
+            ->first();
+        $data['pfl']['referral'] = RefferralModel::select()
+            ->where('user_aplicator', Auth::user()->id)
+            ->first();
         $data['pop'] = ClassesModel::limit(6)->get();
         $data['param'] = [];
         $data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
@@ -94,7 +99,10 @@ class ProfileController extends Controller
             $value->event = ClassEventModel::where('class_id', $value->class_id)->get();
         }
         $data['reff'] = RefferralPesertaModel::where('user_id', Auth::user()->id)->first();
-        $data['referralku'] = RefferralModel::select('code')->where('user_aplicator', Auth::user()->id)->first();
+        $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
+            ->join('users', 'users.id', 'referral.user_aplicator')
+            ->where('referral.user_id', Auth::user()->id)
+            ->get();
         // return $data;
         return view('front.profile.profile', $data);
     }

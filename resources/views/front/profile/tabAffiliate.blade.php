@@ -19,20 +19,24 @@
     </div>
     <button class="button button-primary">Set</button>
 </form>
-<table id="affiliate" class="table table-hover" style="width:100%" hidden>
+<table id="affiliate" class="table table-hover mb-2" style="width:100%" hidden>
     <thead>
         <tr>
             <th>No</th>
-            <th>Nominal</th>
+            <th>Name</th>
+            <th>Available</th>
             <th class="dt-no-sorting text-center">Aksi</th>
         </tr>
     </thead>
     <tbody>
+        @foreach ($referralku as $k => $r)
         <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
+            <td>{{$k +1}}</td>
+            <td>{{$r->name}}</td>
+            <td>{{$r->available?'Terpakai':'Belum Terpakai'}}</td>
+            <td>Aksi</td>
         </tr>
+        @endforeach
         {{-- @foreach ($data as $key => $l)
         <tr>
             <td>{{$key+1}}</td>
@@ -49,5 +53,3 @@
     </tbody>
 </table>
 <img src="{{asset('ccara_affiliate_Cara_pakai_promo_copy.jpg')}}" alt="">
-<script>
-</script>

@@ -203,7 +203,7 @@
                                                         {{ $d->jumlah }} Order Peserta
                                                         @else
                                                         <input type="number" name="jmlPeserta[]" class="form-control"
-                                                            onchange="tambahPeserta('{{ $d->id }}','{{ $d->participant_limit }}','{{ $d->class_id }}',$(this).val(),{{ $referralku ? $referralku->code : '' }})"
+                                                            onchange="tambahPeserta('{{ $d->id }}','{{ $d->participant_limit }}','{{ $d->class_id }}',$(this).val(),@if (isset($pfl)){{ $pfl['referral'] ? $pfl['referral'] : '' }}@endif)"
                                                             value="{{ $d->jumlah }}">
                                                         @endif
                                                         @endif
@@ -235,16 +235,16 @@
                                                                 <a class="btn btn-primary dropdown-item"
                                                                     href="/classes/getinvoice/{{ $d->id }}"
                                                                     target="_blank" title="Invoice">Invoice</a>
-                                                                @if ($d->status == 0)
+                                                                {{-- @if ($d->status == 0)
                                                                 <button id="btnModal" type="button"
                                                                     class="btn btn-primary dropdown-item"
                                                                     data-toggle="modal" data-target="#bayarModal"
-                                                                    onclick="bukti({{ $d->class_id }},{{ $d->id }},{{ $referralku ? $referralku->code : '' }})"
+                                                                    onclick="bukti({{ $d->class_id }},{{ $d->id }},{{ $reff ? $reff->code : '' }})"
                                                                     title="Upload Bukti" @if ($d->expired <=
                                                                         Carbon\Carbon::now()) disabled @endif>
                                                                         Upload Bukti
                                                                 </button>
-                                                                @endif
+                                                                @endif --}}
                                                             </div>
                                                         </div>
                                                     </td>
@@ -716,8 +716,8 @@
                                                                             <input type="text" id="referral"
                                                                                 name="referral" class="form-control"
                                                                                 onchange="referralKode('{{ isset($pfl)?$pfl['user_id']:'' }}',$(this).val())"
-                                                                                value="{{ $referralku ? $referralku->code : '' }}"
-                                                                                {{-- {{$referralku?'readonly':''}} --}}>
+                                                                                value="@if (isset($pfl)){{ $pfl['referral'] ? $pfl['referral'] : '' }}@endif"
+                                                                                {{-- {{$reff?'readonly':''}} --}}>
                                                                             @if (Session::has('referral'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
@@ -906,6 +906,7 @@
     $(document).ready(function() {
         $('#datatable1').dataTable();
         $('#datatable2').dataTable();
+        $('#affiliate').dataTable();
         $('#nilai').change(function() {
             let nilai = $('#nilai').val();
             $('#nilai_val').html(nilai);
