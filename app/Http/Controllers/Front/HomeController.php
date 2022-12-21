@@ -663,4 +663,33 @@ class HomeController extends Controller
             'error' => ''
         ], 200);
     }
+
+    public function registercorporate(Request $r)
+    {
+        $va = Validator::make($r->all(), [
+            'corporate' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        //response error validation
+        if ($va->fails()) {
+            return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
+        }
+
+        $u = User::create([
+            'name' => $r->name,
+            'email' => $r->email,
+            // 'google_id' => $r->google_id,
+            'role' => 2,
+            'password' => Hash::make($r->password),
+            'corporate' => $r->corporate,
+        ]);
+        if ($u) {
+            Auth::login($u);
+            return Redirect::to('/profile')->with('success', 'Register Success!');
+        }
+        return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
+    }
 }

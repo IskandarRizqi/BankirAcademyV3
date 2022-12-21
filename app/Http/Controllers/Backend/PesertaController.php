@@ -46,4 +46,17 @@ class PesertaController extends Controller
         // return $data;
         return view('backend.instructor.peserta.peserta', $data);
     }
+
+    public function corporate()
+    {
+        $data = [];
+        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'classes.title', 'user_profile.phone', 'users.corporate')
+            ->join('users', 'users.id', 'class_participant.user_id')
+            ->join('classes', 'classes.id', 'class_participant.class_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'class_participant.user_id')
+            ->whereNotNull('users.corporate')
+            ->get();
+        // return $data;
+        return view('backend.corporate.peserta', $data);
+    }
 }

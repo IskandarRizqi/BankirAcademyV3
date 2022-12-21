@@ -94,7 +94,7 @@
                 </a>
             </li>
             <li class="menu">
-                <a href="/admin/peserta" aria-expanded="false" class="dropdown-toggle">
+                <a href="#pagesDropdown" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             style="fill: rgba(0, 0, 0, 1);">
@@ -105,9 +105,24 @@
                                 d="M15.535 5.464 14.121 6.88C14.688 7.445 15 8.198 15 9s-.312 1.555-.879 2.12l1.414 1.416C16.479 11.592 17 10.337 17 9s-.521-2.592-1.465-3.536z">
                             </path>
                         </svg>
-                        <span>Daftar peserta</span>
+                        <span>Daftar Peserta</span>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-chevron-right">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
                     </div>
                 </a>
+                <ul class="collapse submenu list-unstyled" id="pagesDropdown" data-parent="#accordionExample">
+                    <li>
+                        <a href="/admin/peserta"> Non Corporate </a>
+                    </li>
+                    <li>
+                        <a href="/admin/peserta/corporate"> Corporate </a>
+                    </li>
+                </ul>
             </li>
             <li class="menu">
                 <a href="/admin/banner" aria-expanded="false" class="dropdown-toggle">

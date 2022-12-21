@@ -381,7 +381,7 @@
     </div>
     <div class="section border-top-0" style="background-color:#ffffff; padding-bottom: 0px">
         <div class="container text-center">
-            <img src="{{ asset('cari-kerja.webp') }}" alt="">
+            <img src="{{ asset('cariin-kerja.webp') }}" alt="">
         </div>
     </div>
     <div id="Testimonial" class="section border-top-0" style="background-color:#FFA600; padding-bottom: 30px">

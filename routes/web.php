@@ -48,6 +48,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/partner', [App\Http\Controllers\Backend\PartnerController::class, 'input_partner']);
     Route::post('/admin/partner/delete', [App\Http\Controllers\Backend\PartnerController::class, 'delete_partner']);
     Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
+    Route::get('/admin/peserta/corporate', [App\Http\Controllers\Backend\PesertaController::class, 'corporate']);
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
     Route::resource('/admin/kupon', PromoController::class);
@@ -118,13 +119,16 @@ Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::clas
 Route::get('/u-laman/{slug}', [App\Http\Controllers\Front\HomeController::class, 'laman']);
 Route::get('/all-laman', [App\Http\Controllers\Front\HomeController::class, 'getAllLaman']);
 Route::post('/registerUser', [App\Http\Controllers\Front\HomeController::class, 'registerUser']);
+Route::post('/registercorporate', [App\Http\Controllers\Front\HomeController::class, 'registercorporate']);
 
 Route::get('/sdank', [App\Http\Controllers\Front\PagesController::class, 'showsdank']);
 Route::get('/registerinstructor', function () {
     return view('front.registerinstructor');
 });
 Route::get('/registerc', function () {
-    return view('front.register');
+    $data = [];
+    $data['data'] = App\Models\CorporateModel::get();
+    return view('front.register', $data);
 });
 Route::get('/detail-kelas', function () {
     return view('front.kelas.detail');

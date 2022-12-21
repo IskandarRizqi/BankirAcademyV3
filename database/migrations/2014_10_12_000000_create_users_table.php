@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('role')->default('2')->comment('0=root;1=admin;2=member;');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->integer('corporate')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
