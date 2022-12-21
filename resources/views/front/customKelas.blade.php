@@ -44,14 +44,14 @@
                                 {!! $data->content !!}
                             </div>
                             <div class="w-100"></div>
-                            @if (Auth::user()->type == 3)
+                            {{-- @if (Auth::check() && Auth::user()->type == 3)
                             <div class="w-100">
                                 <a href="/registerinstructor" class="btn btn-success btn-rounded"
                                     style="border-radius:10px !important">Setuju</a>
                                 <a href="/" class="btn btn-secondary btn-rounded"
                                     style="border-radius:10px !important">Batal</a>
                             </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
                 </div>
