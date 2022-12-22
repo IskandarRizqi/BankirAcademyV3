@@ -180,6 +180,12 @@ class ProfileController extends Controller
             $d['picture'] = 'Image/Member/' . $filename;
         }
 
+        if ($request->company) {
+            User::where('id', $request->user_id)->update([
+                'corporate' => $request->company
+            ]);
+        }
+
         UserProfileModel::updateOrCreate([
             'user_id' => $request->user_id,
         ], $d);

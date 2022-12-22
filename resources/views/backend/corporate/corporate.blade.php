@@ -7,16 +7,29 @@
                 @csrf
                 <input name="id" id="id" value="{{old('id')}}" hidden>
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="">Nama</label>
                         <input type="text" name="nama" id="nama" value="{{old('nama')}}" class="form-control">
                         @error('nama')
                         <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="">No. Telp</label>
-                        <input type="text" name="no_telp" id="no_telp" value="{{old('no_telp')}}" class="form-control">
+                        <input type="number" name="no_telp" id="no_telp" value="{{old('no_telp')}}"
+                            class="form-control">
+                        @error('no_telp')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="">Lokasi/Wilayah</label>
+                        <select name="lokasi" id="lokasi" class="form-control">
+                            <option value=""></option>
+                            @foreach ($lokasi as $l)
+                            <option value="{{$l}}">{{$l}}</option>
+                            @endforeach
+                        </select>
                         @error('no_telp')
                         <small class="text-danger">Harus Diisi</small>
                         @enderror
@@ -39,6 +52,7 @@
                         <tr>
                             <th>Nama</th>
                             <th>No Telp</th>
+                            <th>Wilayah</th>
                             <th>Alamat</th>
                             <th>Aksi</th>
                         </tr>
@@ -48,10 +62,11 @@
                         <tr>
                             <td>{{$p->nama}}</td>
                             <td>{{$p->no_telp}}</td>
+                            <td>{{$p->lokasi}}</td>
                             <td>{{$p->alamat}}</td>
                             <td>
                                 <button class="btn btn-warning" id="edit" title="Edit"
-                                    onclick="editPromo('{{$p->id}}','{{$p->nama}}','{{$p->alamat}}','{{$p->no_telp}}')"><i
+                                    onclick="editPromo('{{$p->id}}','{{$p->nama}}','{{$p->alamat}}','{{$p->no_telp}}','{{$p->lokasi}}')"><i
                                         class='bx bx-edit'></i></button>
                                 <button class="btn btn-danger" onclick="deletePromo({{$p->id}})" title="Delete"> <i
                                         class='bx bx-trash'></i></button>
@@ -74,6 +89,10 @@
 @section('custom-js')
 <script>
     createDataTable('#tblpromo');
+    $('#lokasi').select2({
+        tags: "true",
+        placeholder: "Select an option",
+    })
     $('#image').change(function (e) { 
 		getImgData(this,'#prvImage');
 	});
@@ -97,17 +116,21 @@
 			}
 		})
 	}
-    function editPromo(id,nama,alamat,telp) {
+    function editPromo(id,nama,alamat,telp,lokasi) {
         $('#id').val(id);
         $('#nama').val(nama);
         $('#alamat').val(alamat);
         $('#no_telp').val(telp);
+        $('#lokasi').val(lokasi);
+        $('#lokasi').trigger('change');
     }
     function reset() {
         $('#id').val(null);
         $('#nama').val(null);
         $('#alamat').val(null);
         $('#no_telp').val(null);
+        $('#lokasi').val(null);
+        $('#lokasi').trigger('change');
     }
 </script>
 @endsection

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{asset('front/css/font-icons.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/css/animate.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/css/magnific-popup.css')}}" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/select2/select2.min.css')}}">
 
     <link rel="stylesheet" href="{{asset('front/css/custom.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/toast/dist/css/iziToast.min.css')}}">
@@ -123,8 +124,8 @@
                                                         for="login-form-modal-username">Corporate</label>
                                                     <select name="corporate" id="corporate" class="form-control">
                                                         <option value="">Select</option>
-                                                        @foreach ($data as $d)
-                                                        <option value="{{$d->id}}">{{$d->nama}}</option>
+                                                        @foreach ($lokasi as $d)
+                                                        <option value="{{$d}}">{{$d}}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('corporate')
@@ -209,12 +210,17 @@
         integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <script src="{{asset('front/js/plugins.min.js')}}"></script>
     <!-- <script src="{{asset('front/js/jquery.js')}}"></script> -->
+    <script src="{{asset('Backend/plugins/select2/select2.min.js')}}"></script>
 
     <!-- Footer Scripts
 ============================================= -->
     <script src="{{asset('front/js/functions.js')}}"></script>
     <script src="{{asset('front/toast/dist/js/iziToast.min.js')}}" type="text/javascript"></script>
     <script>
+        $('#corporate').select2({
+            tags: "true",
+        placeholder: "Select an option",
+        })
         function funcregis() {
             $.ajaxSetup({
                 headers: {

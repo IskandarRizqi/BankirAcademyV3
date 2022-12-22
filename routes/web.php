@@ -128,6 +128,7 @@ Route::get('/registerinstructor', function () {
 Route::get('/registerc', function () {
     $data = [];
     $data['data'] = App\Models\CorporateModel::get();
+    $data['lokasi'] = App\Models\CorporateModel::select('nama')->pluck('nama')->toArray();
     return view('front.register', $data);
 });
 Route::get('/detail-kelas', function () {

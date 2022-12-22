@@ -44,7 +44,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    protected $appends = ['profile', 'rekening'];
+    protected $appends = ['profile', 'rekening', 'corporates'];
     public function getProfileAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
@@ -55,6 +55,12 @@ class User extends Authenticatable
     {
         if (array_key_exists('id', $this->attributes)) {
             return DataRekeningModel::where('user_id', $this->attributes['id'])->first();
+        }
+    }
+    public function getCorporatesAttribute()
+    {
+        if (array_key_exists('corporate', $this->attributes)) {
+            return CorporateModel::where('nama', $this->attributes['corporate'])->first();
         }
     }
 }

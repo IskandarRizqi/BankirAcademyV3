@@ -621,7 +621,7 @@
                                                                     <label for="form-control">Nama lengkap</label>
                                                                     <input type="text" class="form-control"
                                                                         name="nama_lengkap"
-                                                                        value="{{ isset($pfl)?$pfl['name']:'' }}">
+                                                                        value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
                                                                     <input type="hidden" name="user_id"
                                                                         value="{{ Auth::user()->id }}">
                                                                     @if ($errors->has('nama_lengkap'))
@@ -640,7 +640,7 @@
                                                                         </div>
                                                                         <input type="text" class="form-control"
                                                                             name="nomor_handphone"
-                                                                            value="{{ isset($pfl)?$pfl['phone']:'' }}">
+                                                                            value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
                                                                     </div>
                                                                     @if ($errors->has('nomor_handphone'))
                                                                     <div class="error"
@@ -652,8 +652,10 @@
                                                                 <div class="col-lg-4">
                                                                     <label for="form-control">Company</label>
                                                                     <input type="text" class="form-control"
-                                                                        name="company"
-                                                                        value="{{ isset($pfl)?$pfl['instansi']:'' }}">
+                                                                        name="company" {{--
+                                                                        value="{{ isset($pfl['instansi'])?$pfl['instansi']:'' }}"
+                                                                        --}}
+                                                                        value="{{ Auth::user()->corporate?Auth::user()->corporate:'' }}">
                                                                     <small class="text-danger">Jika mempunyai wajib
                                                                         di
                                                                         isi</small>
@@ -667,7 +669,7 @@
                                                                                 lahir</label>
                                                                             <input type="date" name="tanggal_lahir"
                                                                                 class="form-control"
-                                                                                value="{{ isset($pfl)?$pfl['tanggal_lahir']:'' }}">
+                                                                                value="{{ isset($pfl['tanggal_lahir'])?$pfl['tanggal_lahir']:'' }}">
                                                                             @if ($errors->has('tanggal_lahir'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">
@@ -695,11 +697,11 @@
                                                                                     satu
                                                                                 </option>
                                                                                 <option value="0" {{
-                                                                                    isset($pfl)&&$pfl['gender']==0
+                                                                                    isset($pfl['gender'])&&$pfl['gender']==0
                                                                                     ? 'selected' : null }}>
                                                                                     Perempuan</option>
                                                                                 <option value="1" {{
-                                                                                    isset($pfl)&&$pfl['gender']==1
+                                                                                    isset($pfl['gender'])&&$pfl['gender']==1
                                                                                     ? 'selected' : null }}>
                                                                                     Laki-laki</option>
                                                                             </select>
@@ -715,8 +717,8 @@
                                                                                 (optional)</label>
                                                                             <input type="text" id="referral"
                                                                                 name="referral" class="form-control"
-                                                                                onchange="referralKode('{{ isset($pfl)?$pfl['user_id']:'' }}',$(this).val())"
-                                                                                value="@if (isset($pfl)){{ $pfl['referral'] ? $pfl['referral'] : '' }}@endif"
+                                                                                onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
+                                                                                value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral'] : '' }}@endif"
                                                                                 {{-- {{$reff?'readonly':''}} --}}>
                                                                             @if (Session::has('referral'))
                                                                             <div class="error"
@@ -732,7 +734,7 @@
                                                                 <div class="col-lg-9">
                                                                     <label for="form-control">Alamat</label>
                                                                     <textarea class="form-control"
-                                                                        name="alamat">{{ isset($pfl)?$pfl['description']:'' }}</textarea>
+                                                                        name="alamat">{{ isset($pfl['description'])?$pfl['description']:'' }}</textarea>
                                                                     @if ($errors->has('alamat'))
                                                                     <div class="error"
                                                                         style="color: red; display:block;">
@@ -745,7 +747,7 @@
                                                                     <input type="file" class="form-control"
                                                                         name="picture" id="picture">
                                                                     <img id="pictureprv"
-                                                                        src="{{ isset($pfl)?$pfl['picture']:'' }}"
+                                                                        src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
                                                                         alt="" width="80px">
                                                                 </div>
                                                             </div>

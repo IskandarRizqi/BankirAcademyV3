@@ -19,6 +19,7 @@ class CorporateController extends Controller
     {
         $x = [];
         $x['data'] = CorporateModel::get();
+        $x['lokasi'] = CorporateModel::select('lokasi')->pluck('lokasi')->toArray();
         return view('backend.corporate.corporate', $x);
     }
 
@@ -45,6 +46,7 @@ class CorporateController extends Controller
             'nama' => 'required',
             'no_telp' => 'required',
             'alamat' => 'required',
+            'lokasi' => 'required',
         ]);
         //response error validation
         if ($valid->fails()) {
@@ -57,6 +59,7 @@ class CorporateController extends Controller
             'nama' => $request->nama,
             'no_telp' => $request->no_telp,
             'alamat' => $request->alamat,
+            'lokasi' => $request->lokasi,
         ]);
         if ($u) {
             return Redirect::back()->with('success', 'Simpan Data Berhasil');
