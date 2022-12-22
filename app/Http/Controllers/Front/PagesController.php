@@ -206,7 +206,8 @@ class PagesController extends Controller
 	public function showBlog(Request $r, $id)
 	{
 		$data['blog'] = Pages::where('id', $id)->first();
-
+		$data['literasi'] = Pages::where('id', '!=', $id)->where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->inRandomOrder()->get();
+		// return $data;
 		return view('pages/blog', $data);
 	}
 

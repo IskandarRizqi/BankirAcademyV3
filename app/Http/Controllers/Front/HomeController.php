@@ -471,7 +471,7 @@ class HomeController extends Controller
                 ->format('Y-m-d'))
             ->limit(3)
             ->get();
-        $data['literasi'] = Pages::where('type', 0)->limit(3)->inRandomOrder()->get();
+        $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->inRandomOrder()->get();
         // return $data;
         return view('front.kelas.detail', $data);
     }

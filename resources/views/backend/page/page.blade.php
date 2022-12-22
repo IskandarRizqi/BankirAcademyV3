@@ -15,8 +15,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Type</th>
                         <th>Title</th>
-                        <th>Tanggal Tayang</th>
+                        <th>Date</th>
                         <th>Description</th>
                         <th>Banner</th>
                         <th class="dt-no-sorting text-center">Aksi</th>
@@ -26,6 +27,39 @@
                     @foreach ($data as $key => $l)
                     <tr>
                         <td>{{$key+1}}</td>
+                        <td>
+                            @switch($l->type)
+                            @case(0)
+                            Blog
+                            @break
+                            @case(1)
+                            About
+                            @break
+                            @case(2)
+                            About
+                            @break
+                            @case(3)
+                            Syarat dan Ketentuan
+                            @break
+                            @case(4)
+                            Calon Bankir
+                            @break
+                            @case(5)
+                            Bankir
+                            @break
+                            @case(6)
+                            Bootcampt Bankir
+                            @break
+                            @case(7)
+                            Bantuan
+                            @break
+                            @case(8)
+                            Mitra
+                            @break
+                            @default
+                            Tidak Ditemukan
+                            @endswitch
+                        </td>
                         <td class="text-truncate" style="max-width: 350px;" title="{{$l->title}}">{{$l->title}}
                         </td>
                         <td>
