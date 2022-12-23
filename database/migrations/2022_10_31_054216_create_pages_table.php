@@ -22,6 +22,8 @@ return new class extends Migration
             $table->text('description');
             $table->date('date_start');
             $table->date('date_end');
+            $table->json('meta')->nullable();
+            $table->json('og')->nullable();
             $table->timestamps();
         });
     }

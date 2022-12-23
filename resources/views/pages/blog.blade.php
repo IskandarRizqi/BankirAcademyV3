@@ -15,11 +15,11 @@
     <div class="content-wrap">
         <div class="container clearfix">
             <div class="row col-mb-50">
-                @if ($blog)
-                @if ($blog->thumbnail)
+                @if ($class)
+                @if ($class->thumbnail)
                 <div class="col-md-12 col-lg-12">
                     <div class="entry-image mb-0">
-                        <a href="#"><img src="{{ $blog->thumbnail }}" alt="Event Single"></a>
+                        <a href="#"><img src="{{ $class->thumbnail }}" alt="Event Single"></a>
                         {{-- <div class="entry-overlay d-flex align-items-center justify-content-center">
                             <span class="d-none d-md-flex">Starts in: </span>
                             <div class="countdown d-block d-md-flex" data-year="2020" data-month="12"></div>
@@ -28,8 +28,8 @@
                 </div>
                 @endif
                 <div class="col-md-9 col-lg-9">
-                    <h3>{{ $blog->title }}</h3>
-                    {!! $blog->content !!}
+                    <h3>{{ $class->title }}</h3>
+                    {!! $class->content !!}
                 </div>
                 <div class="sidebar col-md-3 col-lg-3">
                     <div class="sidebar-widgets-wrap">

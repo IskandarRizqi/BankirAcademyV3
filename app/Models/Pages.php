@@ -17,5 +17,7 @@ class Pages extends Model
 		'description',
 		'date_start',
 		'date_end',
+		'og',
+		'meta',
 	];
 }

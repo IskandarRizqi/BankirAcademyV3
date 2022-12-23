@@ -11,7 +11,7 @@
                             Back
                         </button>
                     </a>
-                    <h4 class="title ml-auto ">Tambah</h4>
+                    <h4 class="title ml-auto ">Laman</h4>
                 </div>
                 <div class="widget-content">
                     <input type="text" class="form-control" name="id" id="id" value="{{old('id')}}" hidden>

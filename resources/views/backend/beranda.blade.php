@@ -40,7 +40,7 @@
     </div>
 </div>
 @if (Auth::user()->email == 'root@root.root')
-<button class="btn btn-primary" id="sitemap" onclick="sitemap()">Create Sitemap</button>
+<button class="btn btn-primary" id="sitemap" onclick="sitemap()" hidden>Create Sitemap</button>
 @endif
 @endsection
 @section('custom-js')

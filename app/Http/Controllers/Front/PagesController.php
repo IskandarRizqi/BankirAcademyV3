@@ -21,9 +21,29 @@ class PagesController extends Controller
 	}
 	public function edit($id)
 	{
+		$data = [];
 		$page = [];
-		if ($id) {
+		if ($id !== 'null') {
 			$page['page'] = Pages::where('id', $id)->first();
+
+			$m = [];
+			$me = [];
+			$m = json_decode($page['page']->og);
+			$me = json_decode($page['page']->meta);
+
+			$page['page']['meta_description'] = $m->description;
+			$page['page']['meta_title'] = $m->title;
+			$page['page']['meta_image'] = $m->image;
+			$page['page']['meta_size_image'] = $m->size;
+			$page['page']['meta_name'] = $me;
+			if (is_object($me)) {
+				if (property_exists($me, 'name')) {
+					$page['page']['meta_name'] = $me->name;
+				}
+				if (property_exists($me, 'content')) {
+					$page['page']['meta_content'] = $me->content;
+				}
+			}
 		}
 		// return $page;
 		return view('backend.page.edit', $page);
@@ -58,8 +78,52 @@ class PagesController extends Controller
 			$tobeins['thumbnail'] = ('/image/pages/' . $filename);
 		}
 
+		// Data Meta
+		$meta = [];
+		if ($r->meta_name) {
+			if (count($r->meta_name) > 0) {
+				for ($i = 0; $i < count($r->meta_name); $i++) {
+					if ($r->meta_name[$i]) {
+						$meta['name'][$i] = $r->meta_name[$i];
+					}
+				}
+			}
+		}
+		if ($r->meta_content) {
+			if (count($r->meta_content) > 0) {
+				for ($i = 0; $i < count($r->meta_content); $i++) {
+					if ($r->meta_content[$i]) {
+						$meta['content'][$i] = $r->meta_content[$i];
+					}
+				}
+			}
+		}
+		$tobeins['meta'] = json_encode($meta);
+		$og = [
+			'description' => $r->meta_description,
+			'title' => $r->meta_title,
+		];
+		if ($r->oldsizemetaimage) {
+			$og['image'] = $r->oldmetaimage;
+			$og['size'] = $r->oldsizemetaimage;
+		}
+		// Data Meta Image
+		if ($r->meta_image) {
+			$namemeta_image = $r->file('meta_image')->getClientOriginalName();
+			$sizemeta_image = $r->file('meta_image')->getSize();
+			if ($sizemeta_image >= 1048576) {
+				return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+			}
+			$filename2 = time() . '-' . $namemeta_image;
+			$file = $r->file('meta_image');
+			$file->move(public_path('image/laman/meta_image'), $filename2);
+			$og['image'] = $filename2;
+			$og['size'] = $sizemeta_image;
+		}
+		$tobeins['og'] = json_encode($og);
+
 		Pages::UpdateOrCreate(['id' => $r->id], $tobeins);
-		return Redirect::to('admin/pages');
+		return Redirect::to('admin/pages')->with('success', 'Data Tersimpan');
 	}
 	public function delete(Request $r, $id)
 	{
@@ -205,8 +269,8 @@ class PagesController extends Controller
 
 	public function showBlog(Request $r, $id)
 	{
-		$data['blog'] = Pages::where('id', $id)->first();
 		$data['literasi'] = Pages::where('id', '!=', $id)->where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->inRandomOrder()->get();
+		$data['class'] = Pages::where('id', $id)->first();
 		// return $data;
 		return view('pages/blog', $data);
 	}
