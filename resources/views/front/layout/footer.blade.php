@@ -12,7 +12,8 @@
                             sebagai media
                             pembelajaran untuk seluruh calon dan karyawan bank.
                         </p>
-                        <div class="py-2" style="background: url('images/world-map.png') no-repeat center center;">
+                        {{-- style="background: url('images/world-map.png') no-repeat center center;" --}}
+                        <div class="py-2">
                             <div class="row col-mb-30">
                                 <div class="col-md-6">
                                     <address class="mb-0">
@@ -138,9 +139,8 @@
 <script src="{{ asset('front/js/functions.js') }}"></script>
 
 <!-- SLIDER REVOLUTION 5.x SCRIPTS  -->
-<script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.tools.min.js') }}"></script>
+{{-- <script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.tools.min.js') }}"></script>
 <script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.revolution.min.js') }}"></script>
-
 <script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.video.min.js') }}"></script>
 <script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
 <script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.actions.min.js') }}"></script>
@@ -149,16 +149,16 @@
 <script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.navigation.min.js') }}"></script>
 <script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.migration.min.js') }}"></script>
 <script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-<script src="{{ asset('front/js/components/rangeslider.min.js') }}"></script>
+<script src="{{ asset('front/js/components/rangeslider.min.js') }}"></script> --}}
 <script src="{{ asset('front/js/components/bs-datatable.js') }}"></script>
 <script src="{{ asset('front/js/components/bs-filestyle.js') }}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="{{ asset('front/toast/dist/js/iziToast.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('front/js/components/moment.js') }}"></script>
+{{-- <script src="{{ asset('front/js/components/moment.js') }}"></script>
 <script src="{{ asset('front/js/components/timepicker.js') }}"></script>
 <script src="{{ asset('front/js/components/datepicker.js') }}"></script>
-<script src="{{ asset('front/js/components/daterangepicker.js') }}"></script>
+<script src="{{ asset('front/js/components/daterangepicker.js') }}"></script> --}}
 
 
 <script>
@@ -240,8 +240,9 @@
 </script>
 
 <script>
+    getLaman();
     $(document).ready(function() {
-        getLaman();
+        $('#loader-loading').remove();
     })
     function getImgData(fil, prv) {
 		const files = fil.files[0];

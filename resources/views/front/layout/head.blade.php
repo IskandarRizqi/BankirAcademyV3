@@ -31,10 +31,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- SLIDER REVOLUTION 5.x CSS SETTINGS -->
+    {{--
     <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/settings.css')}}"
         media="screen" />
     <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/layers.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/navigation.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('front/include/rs-plugin/css/navigation.css')}}"> --}}
     <link rel="stylesheet" href="{{asset('front/css/components/ion.rangeslider.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/css/components/radio-checkbox.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/css/components/bs-datatable.css')}}" type="text/css" />
@@ -44,9 +45,10 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{asset('front/toast/dist/css/iziToast.min.css')}}">
 
+    {{--
     <link rel="stylesheet" href="{{asset('front/css/components/datepicker.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{asset('front/css/components/timepicker.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{asset('front/css/components/daterangepicker.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{asset('front/css/components/daterangepicker.css')}}" type="text/css" /> --}}
     <!-- Document Title
         ============================================= -->
     <title>{{env('APP_NAME','E-class Akarindo')}}</title>

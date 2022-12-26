@@ -286,9 +286,8 @@
                                             <a href="#"><img src="{{ $k->image }}" alt="Customer Testimonails"></a>
                                         </div>
                                         <p>{{ $k->title }}</p>
-                                        <small><i class="far fa-clock"></i>
-                                            {{ \Carbon\Carbon::parse($k->date_start)->format('F d, Y') }}</small>
-                                        <div class="testi-meta" style="padding-left: 90px">
+                                        <small>{{ \Carbon\Carbon::parse($k->date_start)->format('F d, Y') }}</small>
+                                        <div class="testi-meta" style="padding-left: 90px;">
                                             <p>{{ $k->instructor_list[0]->name }}</p>
                                             <span>{{ $k->instructor_list[0]->title }}</span>
                                             @auth
@@ -308,6 +307,8 @@
                                             <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId"
                                                 data-backdrop="static" data-keyboard="false">Detail</a>
                                             @endauth
+                                        </div>
+                                        <div style="text-center">
                                         </div>
                                     </div>
                                 </div>
