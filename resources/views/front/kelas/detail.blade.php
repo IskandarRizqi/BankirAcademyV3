@@ -58,7 +58,7 @@
                                     <div class="col-md-12" style="padding-bottom: 10px;">
                                         <h4>Kelas Timeline</h4>
                                         <div class="row">
-                                            <div class="col">
+                                            <div class="col-lg-4">
                                                 <a href="/profile-instructor/{{ $class->instructor_list[0]->id }}/{{ $class->instructor_list[0]->name }}"
                                                     class="d-flex mt-2">
                                                     <img class="mr-3 rounded-circle"
@@ -73,27 +73,18 @@
                                                         </label>
                                                         <small>{{ $class->instructor_list[0]->title }}</small>
                                                     </div>
-                                                    {{-- <div class="ml-2 flex-fill">
+                                                    <div class="ml-2 flex-fill">
                                                         <label class="d-block mb-0"> Harga
                                                         </label>
-                                                        @if ($class->pricing) {
-                                                        @if ($class->pricing->promo) {
-                                                        <del>' + new Intl.NumberFormat('id-ID', {
-                                                            style: 'currency',
-                                                            currency: 'IDR',
-                                                            maximumFractionDigits: 0
-                                                            }).format(el.pricing.price) + '</del>
-                                                        } @else {
-                                                        <small>' + new Intl.NumberFormat('id-ID', {
-                                                            style: 'currency',
-                                                            currency: 'IDR',
-                                                            maximumFractionDigits: 0
-                                                            }).format(el.pricing.price) + '</small>
-                                                        }
+                                                        @if ($class->pricing)
+                                                        @if ($class->pricing->promo)
+                                                        <small>Rp.
+                                                            {{number_format($class->pricing->price-$class->pricing->promo_price)}}</small>
+                                                        @else
+                                                        <small>Rp. {{number_format($class->pricing->price)}}</small>
                                                         @endif
-                                                        }
                                                         @endif
-                                                    </div> --}}
+                                                    </div>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -197,7 +188,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12" style="padding-bottom: 0px;">
-                                        {{-- <form id="orderForm" action="{{ '/order' }}" method="POST">
+                                        <form id="orderForm" action="{{ '/order' }}" method="POST">
                                             @csrf
                                             <input type="text" id="class_id" name="class_id" value="{{ $class->id }}"
                                                 hidden>
@@ -215,10 +206,10 @@
                                             @endauth
                                             <button class="button button-circle btn-block text-center" hidden>Order
                                                 sekarang</button>
-                                        </form> --}}
-                                        <button class="button button-circle btn-block text-center"
+                                        </form>
+                                        {{-- <button class="button button-circle btn-block text-center"
                                             onclick="popc()">Order
-                                            sekarang</button>
+                                            sekarang</button> --}}
                                     </div>
 
                                 </div>

@@ -56,6 +56,7 @@ class InvoiceController extends Controller
 		// Cek referral Tersedia
 		$available = 0;
 		$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+		$additional_discount = [];
 		if ($reff) {
 			if ($reff->available == 1) {
 				$available = 1;
@@ -66,11 +67,20 @@ class InvoiceController extends Controller
 				$mr = MasterRefferralModel::first();
 				if ($mr) {
 					$data['payment']['reff_nominal'] = $mr->nominal;
-					$data['payment']['reff'] = $n * ($mr->nominal / 100);
+					$data['payment']['reff'] = $n * ($mr->potongan_harga / 100);
+					$komisi = $data['payment']['reff'] * ($mr->nominal / 100);
 					$data['payment']['totalAkhir'] = $n - $data['payment']['reff'];
+
+					$additional_discount['reff_nominal'] = $mr->nominal;
+					$additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
+					$additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
+					$additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
 				}
 			}
 		}
+		$reff = ClassPaymentModel::where('id', $id)->update([
+			'additional_discount' => json_encode($additional_discount),
+		]);
 
 		// $data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
 		$data['terbilang'] = Terbilang::make($data['payment']['totalAkhir'], '', 'Rp. ');
@@ -135,6 +145,7 @@ class InvoiceController extends Controller
 				$value->totalAkhir = $n;
 				// Cek referral Tersedia
 				$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+				$additional_discount = [];
 				if ($reff) {
 					if ($reff->available == 1) {
 						$available = 1;
@@ -145,12 +156,21 @@ class InvoiceController extends Controller
 						$mr = MasterRefferralModel::first();
 						if ($mr) {
 							$value->reff_nominal = $mr->nominal;
-							$value->referral = $n * ($mr->nominal / 100);
+							$value->referral = $n * ($mr->potongan_harga / 100);
+							$komisi = $value->reff_nominal * ($mr->nominal / 100);
 							$value->totalAkhir = $n - $value->referral;
+
+							$additional_discount['reff_nominal'] = $mr->nominal;
+							$additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
+							$additional_discount['komisi'] = $komisi;
+							$additional_discount['totalAkhir'] = $n - $value->referral;
 						}
 					}
 					$available = 1;
 				}
+				$cpm = ClassPaymentModel::where('id', $value->payment_id)->update([
+					'additional_discount' => json_encode($additional_discount),
+				]);
 				$data['total'] += $value->totalAkhir;
 			}
 			$data['no_invoice'] = $no_invoice;

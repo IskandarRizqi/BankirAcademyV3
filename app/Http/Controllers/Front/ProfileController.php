@@ -57,6 +57,7 @@ class ProfileController extends Controller
         $data['count_payment'] = ClassPaymentModel::select()
             ->whereDate('class_payment.expired', '>=', Carbon::now()->format('Y-m-d'))
             ->where('class_payment.user_id', $auth)
+            ->where('class_payment.status', 0)
             ->count();
         $data['payment'] = ClassPaymentModel::select(
             'class_payment.*',

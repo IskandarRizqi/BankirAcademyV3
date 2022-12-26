@@ -34,11 +34,15 @@
 
     @media (max-width: 768px) {
         .card {
-            min-height: 453px;
+            min-height: 345px;
         }
 
         .testimonial {
-            height: 166px !important;
+            height: 200px !important;
+            border-radius: 20px !important;
+            background-size: 120%;
+            background-position: center;
+            background-repeat: no-repeat
         }
 
     }
@@ -53,7 +57,11 @@
         }
 
         .testimonial {
-            height: 180px !important;
+            height: 214px !important;
+            border-radius: 20px !important;
+            background-size: 120%;
+            background-position: center;
+            background-repeat: no-repeat
         }
     }
 
@@ -337,9 +345,12 @@
                                         @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active"
                                             style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial"
-                                                    style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
-                                                    border-radius: 20px !important; height: 208px !important; background-size:100%;">
+                                                <div class="testimonial" style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
+                                                    border-radius: 20px !important;
+                                                    background-size: 120%;
+                                                    background-position: center;
+                                                    background-repeat: no-repeat;
+                                                    height:200px;">
                                                     <a href="#"></a>
                                                 </div>
                                             </div>
@@ -361,8 +372,10 @@
                                         style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
                                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial"
-                                                    style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important; height: 285px;">
+                                                <div class="testimonial" style="background-image:url('{{ asset('Backend/assets/img/1280x857.jpg') }}'); border-radius: 20px !important;
+                                                    background-size: 120%;
+                                                    background-position: center;
+                                                    background-repeat: no-repeat">
                                                     <a href="#"><img
                                                             src="{{ asset('Backend/assets/img/1280x857.jpg') }}"
                                                             alt="Customer Testimonails" height="100%"></a>

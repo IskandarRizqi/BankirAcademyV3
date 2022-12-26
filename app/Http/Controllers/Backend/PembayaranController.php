@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
+use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -45,7 +46,7 @@ class PembayaranController extends Controller
             ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
             ->whereDate('class_payment.created_at', '<=', $data['param']['date'][1])
             ->whereIn('class_payment.status', $data['param']['status'])
-            ->orderBy('class_payment.status')
+            // ->orderBy('class_payment.status')
             ->orderBy('class_payment.created_at', 'desc')
             ->get();
         // return $data;
@@ -64,6 +65,10 @@ class PembayaranController extends Controller
     public function approved(Request $request)
     {
         $status = $request->status ? 0 : 1;
+        $masterReferral = MasterRefferralModel::first();
+        if (!$masterReferral) {
+            return Redirect::back()->with('error', 'Master Referral Belum Ditentukan');
+        }
         $cs = ClassPaymentModel::where('id', $request->id)->update(['status' => $status]);
         if ($cs) {
             $cp = ClassPaymentModel::where('id', $request->id)->first();

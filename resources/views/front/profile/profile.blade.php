@@ -235,7 +235,7 @@
                                                                 <a class="btn btn-primary dropdown-item"
                                                                     href="/classes/getinvoice/{{ $d->id }}"
                                                                     target="_blank" title="Invoice">Invoice</a>
-                                                                {{-- @if ($d->status == 0)
+                                                                @if ($d->status == 0)
                                                                 <button id="btnModal" type="button"
                                                                     class="btn btn-primary dropdown-item"
                                                                     data-toggle="modal" data-target="#bayarModal"
@@ -244,7 +244,7 @@
                                                                         Carbon\Carbon::now()) disabled @endif>
                                                                         Upload Bukti
                                                                 </button>
-                                                                @endif --}}
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </td>
@@ -690,7 +690,7 @@
                                                                     <div class="row">
                                                                         <div class="col-lg-6">
                                                                             <label for="form-control">Jenis
-                                                                                kelamin</label>
+                                                                                Kelamin</label>
                                                                             <select name="jenis_kelamin"
                                                                                 class="form-control" id="jkl">
                                                                                 <option value="">Pilih salah
@@ -718,8 +718,10 @@
                                                                             <input type="text" id="referral"
                                                                                 name="referral" class="form-control"
                                                                                 onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
-                                                                                value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral'] : '' }}@endif"
-                                                                                {{-- {{$reff?'readonly':''}} --}}>
+                                                                                value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
+                                                                                @if (isset($pfl['user_id'])){{
+                                                                                $pfl['referral'] ? 'readonly' : ''
+                                                                                }}@endif>
                                                                             @if (Session::has('referral'))
                                                                             <div class="error"
                                                                                 style="color: red; display:block;">

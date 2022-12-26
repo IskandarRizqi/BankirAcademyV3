@@ -7,6 +7,8 @@ use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\ClassPricingModel;
+use App\Models\MasterRefferralModel;
+use App\Models\RefferralModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,26 +105,54 @@ class OrderController extends Controller
             }
             $gambar = $value->store('order/' . Auth::user()->email . '/' . time());
         }
-        $update = ClassPaymentModel::where('id', $request->payment_id)->update(
-            [
-                'file' => $gambar
-            ]
-        );
-        // if ($update) {
-        //     ClassParticipantModel::updateOrCreate(
-        //         [
-        //             'payment_id' => $request->payment_id,
-        //             'user_id' => Auth::user()->id
-        //         ],
-        //         [
-        //             'jumlah' => $request->jml_peserta,
-        //             'class_id' => $request->class_id,
-        //             'user_id' => Auth::user()->id,
-        //         ]
-        //     );
-        //     return Redirect::back();
-        // }
-        return Redirect::back();
+
+        $data['payment'] = ClassPaymentModel::where('id', $request->payment_id)->first();
+        $data['profile'] = UserProfileModel::where('user_id', $data['payment']->user_id)->first();
+        $kode = 0;
+        if ($data['payment']['promo']) {
+            // Cek kode promo Tersedia
+            $kode = $data['payment']['promo'];
+        }
+        // Deklarasi referral
+        $data['payment']['reff'] = 0;
+        $data['payment']['reff_nominal'] = 0;
+        $n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+        $data['payment']['totalAkhir'] = $n;
+        // Cek referral Tersedia
+        $available = 0;
+        $reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+        $additional_discount = [];
+        if ($reff) {
+            if ($reff->available == 1) {
+                $available = 1;
+            }
+            // Bila referral status 0 maka belum terpakai
+            if ($available == 0) {
+                // Ambil Master Referral Yang Dibuat Admin
+                $mr = MasterRefferralModel::first();
+                if ($mr) {
+                    $data['payment']['reff_nominal'] = $mr->nominal;
+                    $data['payment']['reff'] = $n * ($mr->potongan_harga / 100);
+                    $komisi = $data['payment']['reff'] * ($mr->nominal / 100);
+                    $data['payment']['totalAkhir'] = $n - $data['payment']['reff'];
+
+                    $additional_discount['reff_nominal'] = $mr->nominal;
+                    $additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
+                    $additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
+                    $additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
+                }
+            }
+        }
+
+        $data = [
+            'file' => $gambar,
+            'additional_discount' => json_encode($additional_discount)
+        ];
+        $update = ClassPaymentModel::where('id', $request->payment_id)->update($data);
+        if ($update) {
+            return Redirect::back()->with('success', 'Upload Bukti Berhasil');
+        }
+        return Redirect::back()->with('error', 'Upload Bukti Gagal');
     }
     public function order_class(Request $request)
     {

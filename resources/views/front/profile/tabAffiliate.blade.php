@@ -19,7 +19,7 @@
     </div>
     <button class="button button-primary">Set</button>
 </form>
-<table id="affiliate" class="table table-hover mb-2" style="width:100%" hidden>
+<table id="affiliate" class="table table-hover mb-2" style="width:100%">
     <thead>
         <tr>
             <th>No</th>
