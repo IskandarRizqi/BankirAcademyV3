@@ -15,5 +15,6 @@ class MasterRefferralModel extends Model
         'max',
         'date_start',
         'date_end',
+        'potongan_harga',
     ];
 }

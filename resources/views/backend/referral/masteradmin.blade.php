@@ -15,6 +15,14 @@
                         <span class="text-center">{{$message}}</span>
                         @enderror
                     </div>
+                    <div class="col-md-4">
+                        <label for="">Potongan Harga</label>
+                        <input type="number" name="potongan_harga" id="potongan_harga" class="form-control"
+                            value="{{old('potongan_harga')}}" step="any" required>
+                        @error('potongan_harga')
+                        <span class="text-center">{{$message}}</span>
+                        @enderror
+                    </div>
                 </div>
                 <button class="btn btn-primary btn-sm">Simpan</button>
                 <span class="btn btn-warning btn-sm" id="reset">Reset</span>
@@ -24,6 +32,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nominal</th>
+                        <th>Potongan Harga</th>
                         <th class="dt-no-sorting text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -31,9 +40,10 @@
                     @foreach ($data as $key => $l)
                     <tr>
                         <td>{{$key+1}}</td>
-                        <td>{{$l->nominal}}</td>
+                        <td>{{$l->nominal}} %</td>
+                        <td>{{$l->potongan_harga}} %</td>
                         <td>
-                            <button class="btn btn-warning" id="edit" title="Edit" onclick="edit({{$data}})"><i
+                            <button class="btn btn-warning" id="edit" title="Edit" onclick="edit('{{$l}}')"><i
                                     class='bx bx-edit'></i></button>
                             <button class="btn btn-danger" onclick="deleteLaman({{$l->id}})" title="Delete"> <i
                                     class='bx bx-trash'></i></button>
@@ -55,9 +65,16 @@
 <script>
     // var firstUpload = new FileUploadWithPreview('myFirstImage')
     createDataTable('#banner')
+    $('#reset').click(function () {
+        $('#id').val(null);
+        $('#nominal').val(null);
+        $('#potongan_harga').val(null);
+    })
     function edit(p) {
         let js = JSON.parse(p)
-        console.log(js.nominal);
+        $('#id').val(js.id);
+        $('#nominal').val(js.nominal);
+        $('#potongan_harga').val(js.potongan_harga);
     }
     function deleteLaman(id) {
 		swal({

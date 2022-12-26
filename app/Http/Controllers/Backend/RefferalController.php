@@ -23,10 +23,19 @@ class RefferalController extends Controller
     }
     public function storeMasterReff(Request $request)
     {
+        $valid = Validator::make($request->all(), [
+            'nominal' => 'required',
+            'potongan_harga' => 'required',
+        ]);
+        //response error validation
+        if ($valid->fails()) {
+            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Sesuai');
+        }
         $mr = MasterRefferralModel::updateOrCreate([
             'id' => $request->id
         ], [
-            'nominal' => $request->nominal
+            'nominal' => $request->nominal,
+            'potongan_harga' => $request->potongan_harga,
         ]);
         if ($mr) {
             return Redirect::back()->with('success', 'Simpan Data Berhasil');

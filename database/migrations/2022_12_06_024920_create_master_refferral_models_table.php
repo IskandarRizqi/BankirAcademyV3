@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('max')->nullable();
             $table->date('date_start')->nullable();
             $table->date('date_end')->nullable();
+            $table->double('potongan_harga');
             $table->timestamps();
         });
     }
