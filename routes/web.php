@@ -82,6 +82,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get("/admin/laman/activated/{id}/{status}", [App\Http\Controllers\Admin\LamanController::class, "activated"]);
 
     // Referral
+    Route::get("/admin/referral", [App\Http\Controllers\Backend\RefferalController::class, "dashboard"]);
     Route::get("/admin/master/index", [App\Http\Controllers\Backend\RefferalController::class, "masterReff"]);
     Route::post("/admin/master/store", [App\Http\Controllers\Backend\RefferalController::class, "storeMasterReff"]);
     Route::delete("/admin/master/del/{id}", [App\Http\Controllers\Backend\RefferalController::class, "delMasterReff"]);

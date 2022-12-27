@@ -65,31 +65,52 @@ class PembayaranController extends Controller
     public function approved(Request $request)
     {
         $status = $request->status ? 0 : 1;
+        // $status = 0;
+        $msg = $request->status ? 'Pembatalan Berhasil' : 'Pembayaran Berhasil';
         $masterReferral = MasterRefferralModel::first();
         if (!$masterReferral) {
             return Redirect::back()->with('error', 'Master Referral Belum Ditentukan');
         }
-        $cs = ClassPaymentModel::where('id', $request->id)->update(['status' => $status]);
+        $cs = ClassPaymentModel::where('no_invoice', $request->id)->update(['status' => $status]);
+        // return $cs;
         if ($cs) {
-            $cp = ClassPaymentModel::where('id', $request->id)->first();
-            ClassParticipantModel::updateOrCreate(
-                [
-                    'payment_id' => $cp->id,
-                    'user_id' => $cp->user_id
-                ],
-                [
-                    'jumlah' => $cp->jumlah,
-                    'class_id' => $cp->class_id,
-                    'user_id' => $cp->user_id,
-                ]
-            );
-            $r = RefferralModel::where('user_aplicator', $cp->user_id)->first();
-            if ($r) {
-                RefferralModel::where('user_aplicator', $cp->user_id)->update([
-                    'available' => $status
-                ]);
+            $cp = ClassPaymentModel::where('no_invoice', $request->id)->get();
+            foreach ($cp as $key => $v) {
+                ClassParticipantModel::updateOrCreate(
+                    [
+                        'payment_id' => $v->id,
+                        'user_id' => $v->user_id
+                    ],
+                    [
+                        'jumlah' => $v->jumlah,
+                        'class_id' => $v->class_id,
+                        'user_id' => $v->user_id,
+                    ]
+                );
+                $r = RefferralModel::where('user_aplicator', $v->user_id)->first();
+                if ($r) {
+                    $nominal_class = 0;
+                    $nominal_admin = 0;
+                    $total = 0;
+                    if ($v->additional_discount) {
+                        $jd = json_decode($v->additional_discount);
+                        if (count((array)$jd) > 0) {
+                            $nominal_class = $jd->reff;
+                            $nominal_admin = $jd->reff_nominal;
+                            $total = $jd->komisi;
+                        }
+                    }
+                    if ($r->available == 0) {
+                        RefferralModel::where('user_aplicator', $v->user_id)->update([
+                            'available' => $status,
+                            'nominal_class' => $nominal_class,
+                            'nominal_admin' => $nominal_admin,
+                            'total' => $total,
+                        ]);
+                    }
+                }
             }
-            return Redirect::back()->with(['success' => 'Pembayaran Berhasil']);
+            return Redirect::back()->with(['success' => $msg]);
         }
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $cs]);
     }

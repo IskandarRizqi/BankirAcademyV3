@@ -7,6 +7,7 @@ use App\Models\MasterRefferralModel;
 use App\Models\RefferralPesertaModelModel;
 use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
+use App\Models\User;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,21 @@ use Illuminate\Support\Facades\Validator;
 
 class RefferalController extends Controller
 {
+    public function dashboard()
+    {
+        $data = [];
+        $data['data'] = User::select('users.*', 'refferral_peserta.code', 'refferral_peserta.url')
+            ->leftJoin('refferral_peserta', 'refferral_peserta.user_id', 'users.id')
+            ->where('users.role', 2)
+            ->get();
+        foreach ($data['data'] as $key => $v) {
+            $v->aplicator = RefferralModel::select()
+                ->where('user_id', $v->id)
+                ->get();
+        }
+        // return $data;
+        return view('backend.referral.dashboard', $data);
+    }
     public function masterReff()
     {
         $data = [];

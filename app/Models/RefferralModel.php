@@ -18,4 +18,17 @@ class RefferralModel extends Model
         'total',
         'available',
     ];
+    protected $appends = ['users', 'aplicator'];
+    public function getUsersAttribute()
+    {
+        if (array_key_exists('user_id', $this->attributes)) {
+            return User::where('id', $this->attributes['user_id'])->first();
+        }
+    }
+    public function getAplicatorAttribute()
+    {
+        if (array_key_exists('user_aplicator', $this->attributes)) {
+            return User::where('id', $this->attributes['user_aplicator'])->first();
+        }
+    }
 }

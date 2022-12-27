@@ -136,8 +136,8 @@
                                 </li>
                             </ul>
                         </li> -->
-                        <li class="menu-item"><a class="menu-link" href="#" onclick="popc()">
-                                <div>Mitra</div>
+                        <li class="menu-item"><a class="menu-link" href="https://bankiracademy.com/u-laman/kurikulum">
+                                <div>Kurikulum</div>
                             </a>
                         </li>
                         <li class="menu-item"><a class="menu-link" onclick="popc()" href="#">

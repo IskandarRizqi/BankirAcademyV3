@@ -77,8 +77,8 @@ class ProfileController extends Controller
             ->where(function ($q) {
                 // return $q->where('class_payment.expired', '>=', date('Y-m-d H:i:s'))->orWhere('status', '1')->orWhereNotNull('file');
             })
-            ->orderBy('class_payment.status')
-            ->orderBy('class_payment.created_at', 'desc')
+            ->orderBy('class_payment.status', 'desc')
+            ->orderBy('class_payment.updated_at', 'desc')
             ->get();
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',

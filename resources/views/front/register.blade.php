@@ -59,7 +59,7 @@
                                                 class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
                                                 aria-controls="tabs-33" aria-labelledby="ui-id-17" aria-selected="false"
                                                 aria-expanded="false"><a href="#tabs-33" tabindex="-1"
-                                                    class="ui-tabs-anchor" id="ui-id-17">Member</a></li>
+                                                    class="ui-tabs-anchor" id="ui-id-17">Perorangan</a></li>
                                             <li role="tab" tabindex="-1"
                                                 class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
                                                 aria-controls="tabs-34" aria-labelledby="ui-id-18" aria-selected="false"

@@ -122,8 +122,9 @@ class InvoiceController extends Controller
 				->join('class_pricing', 'class_pricing.class_id', 'class_payment.class_id')
 				->join('classes', 'classes.id', 'class_payment.class_id')
 				->whereIn('class_payment.id', $id)
-				->orderBy('class_payment.price_final', 'ASC')
+				->orderBy('class_payment.price_final', 'DESC')
 				->get();
+			// return $data;
 			$data['profile'] = UserProfileModel::where('user_id', $data['payment'][0]['user_id'])->first();
 			$data['total'] = 0;
 			$available = 0;

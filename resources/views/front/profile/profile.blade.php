@@ -122,8 +122,7 @@
                                                 <div>
                                                     <span onclick="invoiceAjax()"><button
                                                             class="btn btn-warning">Invoice</button></span>
-                                                    <span class="btn btn-info" data-toggle="modal"
-                                                        data-target="#bayarMultiModal">Upload Bukti</span>
+                                                    <span class="btn btn-info" id="buktiMulti">Upload Bukti</span>
                                                     <p class="m-0">Pilih Checkbox Lalu Klik Button</p>
                                                 </div>
                                             </div>
@@ -267,7 +266,7 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <textarea name="dataInvoiceMulti" id="dataInvoiceMulti"
-                                                                    cols="30" rows="10" hidden></textarea>
+                                                                    cols="30" rows="10" required hidden></textarea>
                                                                 <div class="col-lg-12 bottommargin">
                                                                     <label>Upload Bukti Multi Pembayaran:</label><br>
                                                                     <input id="input-3" name="imageBuktiMulti"
@@ -946,6 +945,25 @@
         let nilai = $('#nilai_review').val();
         $('#nilai_value').html(nilai);
     })
+    $('#buktiMulti').on('click',function () {
+        if ($('#dataInvoiceMulti').val() == '[null]') {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: 'Data Tidak Ditemukan',
+            })
+            return
+        }
+        if (!$('#dataInvoiceMulti').val()) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: 'Data Tidak Ditemukan',
+            })
+            return
+        }
+        $('#bayarMultiModal').modal('show');
+    })
 
     function tambahPeserta(params, limit, classid, val, ref) {
         $.ajaxSetup({
@@ -1186,6 +1204,22 @@
     }
 
     function invoiceAjax() {
+        if (!$('#dataInvoice').val()) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: 'Data Tidak Ditemukan',
+            })
+            return
+        }
+        if ($('#dataInvoice').val() == '[null]') {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: 'Data Tidak Ditemukan',
+            })
+            return
+        }
         $('#formmultiinvoice').submit();
         location.reload();
         // $.ajaxSetup({

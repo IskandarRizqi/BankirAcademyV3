@@ -41,11 +41,6 @@ class OrderController extends Controller
         $inv_lama = '';
         $inv_kini = '';
         foreach (json_decode($request->dataInvoiceMulti) as $key => $value) {
-            // $update = ClassPaymentModel::where('id', $value->id)->update(
-            //     [
-            //         'file' => $gambar
-            //     ]
-            // );
             if ($key == 0) {
                 $inv_lama = $value->no_invoice;
             }
@@ -56,19 +51,70 @@ class OrderController extends Controller
                     return Redirect::back()->with('error', 'Cek Invoice Terlebih Dahulu');
                 }
             }
-
             array_push($payment_id, $value->id);
         }
-
 
         $size = $request->file('imageBuktiMulti')->getSize();
         if (($size / 1024) > 100) {
             return Redirect::back()->with('error', 'Size Maximum 100kb');
         }
-        $gambar = $request->file('imageBuktiMulti')->store('order/' . Auth::user()->email . '/' . time());
-        ClassPaymentModel::whereIn('id', $payment_id)->update([
-            'file' => $gambar
-        ]);
+
+        $data['payment'] = ClassPaymentModel::select('class_payment.*', 'class_payment.id as payment_id', 'class_payment.created_at as tanggal', 'class_pricing.*', 'classes.title')
+            ->join('class_pricing', 'class_pricing.class_id', 'class_payment.class_id')
+            ->join('classes', 'classes.id', 'class_payment.class_id')
+            ->whereIn('class_payment.id', $payment_id)
+            ->orderBy('class_payment.price_final', 'DESC')
+            ->get();
+        // return $data;
+        $available = 0;
+        foreach ($data['payment'] as $key => $v) {
+            $data['profile'] = UserProfileModel::where('user_id', $v->user_id)->first();
+            $kode = 0;
+            if ($v->promo) {
+                // Cek kode promo Tersedia
+                $kode = $v->promo;
+            }
+            // Deklarasi referral
+            $v->reff = 0;
+            $v->reff_nominal = 0;
+            $n = ($v->price_final * $v->jumlah) - $kode;
+            $v->totalAkhir = $n;
+            // Cek referral Tersedia
+            $reff = RefferralModel::where('user_aplicator', $data['profile']->user_id)->first();
+            $additional_discount = [];
+            if ($reff) {
+                if ($reff->available == 1) {
+                    $available = 1;
+                }
+                // Bila referral status 0 maka belum terpakai
+                if ($available == 0) {
+                    // Ambil Master Referral Yang Dibuat Admin
+                    $mr = MasterRefferralModel::first();
+                    if ($mr) {
+                        $v->reff_nominal = $mr->nominal;
+                        $v->reff = $n * ($mr->potongan_harga / 100);
+                        $komisi = $v->reff * ($mr->nominal / 100);
+                        $v->totalAkhir = $n - $v->reff;
+
+                        $additional_discount['reff_nominal'] = $mr->nominal;
+                        $additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
+                        $additional_discount['komisi'] = $v->reff * ($mr->nominal / 100);
+                        $additional_discount['totalAkhir'] = $n - $v->reff;
+
+                        // RefferralModel::where('user_aplicator', $data['profile']->user_id)->update([
+                        //     'available' => 1
+                        // ]);
+                    }
+                }
+            }
+            $available = 1;
+
+            $gambar = $request->file('imageBuktiMulti')->store('order/' . Auth::user()->email . '/' . time());
+            ClassPaymentModel::where('id', $v->payment_id)->update([
+                'file' => $gambar,
+                'additional_discount' => json_encode($additional_discount)
+            ]);
+        }
 
         return Redirect::back()->with('success', 'Upload Bukti Berhasil');
     }
@@ -93,11 +139,6 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput($request->all());
         }
-        // $class = ClassesModel::where('id', $request->class_id)->first();
-        // $part = ClassParticipantModel::where('class_id', $request->class_id)->sum('jumlah');
-        // if ($class->participant_limit < ($part + $request->jml_peserta)) {
-        //     return Redirect::back()->with('error', 'Participant Sudah Penuh');
-        // }
         foreach ($request->input2 as $key => $value) {
             $size = $request->file('input2')[$key]->getSize();
             if (($size / 1024) > 100) {
