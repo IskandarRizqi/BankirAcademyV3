@@ -79,6 +79,10 @@
 		}
 	}
 
+	function toRupiah(params) {
+		return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(params);
+	}
+
 	// function globalgetactivemenu() {
 	// 	//deactivate menu
 

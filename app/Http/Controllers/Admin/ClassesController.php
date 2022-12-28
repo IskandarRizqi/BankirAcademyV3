@@ -51,7 +51,34 @@ class ClassesController extends Controller
 	{
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
 		$data['instructor'] = InstructorModel::get();
-
+		$subcategory = ClassesModel::select('sub_category')->distinct('sub_category')->pluck('sub_category')->toArray();
+		$data['subcategory'] = [];
+		foreach ($subcategory as $key => $value) {
+			if ($value) {
+				$js = json_decode($value);
+				if ($js) {
+					foreach ($js as $key => $v) {
+						if (!array_key_exists($v, $data['subcategory'])) {
+							array_push($data['subcategory'], $v);
+						}
+					}
+				}
+			}
+		}
+		$tags = ClassesModel::select('tags')->distinct('tags')->pluck('tags')->toArray();
+		$data['tags'] = [];
+		foreach ($tags as $key => $value) {
+			if ($value) {
+				$js = json_decode($value);
+				if ($js) {
+					foreach ($js as $key => $v) {
+						if (!array_key_exists($v, $data['tags'])) {
+							array_push($data['tags'], $v);
+						}
+					}
+				}
+			}
+		}
 		return view('backend/classes/inputclasses', $data);
 	}
 
@@ -140,6 +167,7 @@ class ClassesController extends Controller
 			'og' => json_encode($og),
 			'meta' => json_encode($meta),
 			'status' => $status,
+			'sub_category' => json_encode($r->subCategory),
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -150,7 +178,35 @@ class ClassesController extends Controller
 		$data['id'] = $id;
 		$data['classes'] = ClassesModel::where('id', $id)->first();
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
+		$subcategory = ClassesModel::select('sub_category')->distinct('sub_category')->pluck('sub_category')->toArray();
 		$data['instructor'] = InstructorModel::get();
+		$data['subcategory'] = [];
+		foreach ($subcategory as $key => $value) {
+			if ($value) {
+				$js = json_decode($value);
+				if ($js) {
+					foreach ($js as $key => $v) {
+						if (!array_key_exists($v, $data['subcategory'])) {
+							array_push($data['subcategory'], $v);
+						}
+					}
+				}
+			}
+		}
+		$tags = ClassesModel::select('tags')->distinct('tags')->pluck('tags')->toArray();
+		$data['tags'] = [];
+		foreach ($tags as $key => $value) {
+			if ($value) {
+				$js = json_decode($value);
+				if ($js) {
+					foreach ($js as $key => $v) {
+						if (!array_key_exists($v, $data['tags'])) {
+							array_push($data['tags'], $v);
+						}
+					}
+				}
+			}
+		}
 
 		return view('backend/classes/editclasses', $data);
 	}
@@ -175,6 +231,7 @@ class ClassesController extends Controller
 			'level' => $r->slcClassesLevel,
 			'jenis' => json_encode($r->slcClassesJenis),
 			'status' => $status,
+			'sub_category' => json_encode($r->subCategory),
 		];
 
 		// Data Meta

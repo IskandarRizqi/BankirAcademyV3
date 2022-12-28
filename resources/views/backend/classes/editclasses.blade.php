@@ -138,8 +138,17 @@
 										style="display: none;"></small>
 									<select class="form-control tagging slc2tag" multiple name="slcClassesTags[]"
 										id="slcClassesTags" required>
-										@foreach (json_decode($classes->tags) as $tag)
+										{{-- @foreach (json_decode($classes->tags) as $tag)
 										<option value="{{$tag}}" selected>{{$tag}}</option>
+										@endforeach --}}
+										@foreach ($tags as $ctg)
+										@foreach (json_decode($classes->tags) as $v)
+										@if ($ctg==$v)
+										<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
+										@else
+										<option value="{{$ctg}}">{{$ctg}}</option>
+										@endif
+										@endforeach
 										@endforeach
 									</select>
 								</div>
@@ -193,6 +202,26 @@
 						</div>
 					</div>
 					<div class="col-md-4">
+						<div class="col">
+							<div class="form-group">
+								<label for="slcClassesCategory">Sub Category</label>
+								<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
+									style="display: none;"></small>
+								<select class="form-control tagging slc2tag" name="subCategory[]" id="subCategory"
+									multiple required>
+									<option value=""></option>
+									@foreach ($subcategory as $ctg)
+									@foreach (json_decode($classes->sub_category) as $v)
+									@if ($ctg==$v)
+									<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
+									@else
+									<option value="{{$ctg}}">{{$ctg}}</option>
+									@endif
+									@endforeach
+									@endforeach
+								</select>
+							</div>
+						</div>
 						<div class="widget">
 							<div class="widget-heading">
 								<h4>Meta</h4>

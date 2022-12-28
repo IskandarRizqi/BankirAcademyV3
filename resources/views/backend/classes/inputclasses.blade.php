@@ -177,6 +177,20 @@
 						</div>
 					</div>
 					<div class="col-md-4">
+						<div class="col">
+							<div class="form-group">
+								<label for="slcClassesCategory">Sub Category</label>
+								<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
+									style="display: none;"></small>
+								<select class="form-control tagging slc2tag" name="subCategory[]" id="subCategory"
+									multiple required>
+									<option value=""></option>
+									@foreach ($subcategory as $ctg)
+									<option value="{{$ctg}}">{{$ctg}}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
 						<div class="widget">
 							<div class="widget-heading">
 								<h4>Meta</h4>
@@ -256,6 +270,9 @@
 	$('#slcClassesJenis').select2({
 		tagging:true,
 	})
+	// $('#subCategory').select2({
+	// 	tagging:true,
+	// })
 	createDataTable('#tblClasses');
 	$('#filClassesImage').change(function (e) { 
 		getImgData(this,'#prvClassesImage');
