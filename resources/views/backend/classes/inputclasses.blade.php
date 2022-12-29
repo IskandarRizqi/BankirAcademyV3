@@ -124,9 +124,9 @@
 										style="display: none;"></small>
 									<select class="form-control tagging slc2tag" multiple name="slcClassesTags[]"
 										id="slcClassesTags" required>
-										{{-- @foreach ($category as $ctg)
+										@foreach ($tags as $ctg)
 										<option value="{{$ctg}}">{{$ctg}}</option>
-										@endforeach --}}
+										@endforeach
 									</select>
 								</div>
 							</div>

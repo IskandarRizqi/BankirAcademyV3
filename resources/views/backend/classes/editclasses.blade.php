@@ -138,17 +138,12 @@
 										style="display: none;"></small>
 									<select class="form-control tagging slc2tag" multiple name="slcClassesTags[]"
 										id="slcClassesTags" required>
-										{{-- @foreach (json_decode($classes->tags) as $tag)
-										<option value="{{$tag}}" selected>{{$tag}}</option>
-										@endforeach --}}
 										@foreach ($tags as $ctg)
-										@foreach (json_decode($classes->tags) as $v)
-										@if ($ctg==$v)
+										@if (in_array($ctg,json_decode($classes->tags)))
 										<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
 										@else
 										<option value="{{$ctg}}">{{$ctg}}</option>
 										@endif
-										@endforeach
 										@endforeach
 									</select>
 								</div>

@@ -7,6 +7,7 @@ use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
+use App\Models\CorporateModel;
 use App\Models\DataRekeningModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
@@ -118,21 +119,62 @@ class ProfileController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function saveCorporate($data)
+    {
+        $pesan = 'Simpan data gagal';
+        $insert = [
+            'name' => $data->nama_lengkap,
+            'phone_region' => 62,
+            'phone' => $data->nomor_handphone,
+            'tanggal_lahir' => $data->tanggal_lahir,
+            'gender' => $data->jenis_kelamin,
+            'description' => $data->alamat,
+        ];
+        if ($data->picture) {
+            $name = $data->file('picture')->getClientOriginalName(); // Name File
+            $size = $data->file('picture')->getSize(); // Size File
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $data->file('picture');
+            $file->move(public_path('Image/Member'), $filename);
+            // $d['picture'] = json_encode(['url' => $filename, 'size' => $size]);
+            $insert['picture'] = 'Image/Member/' . $filename;
+        }
+        $p = UserProfileModel::updateOrCreate([
+            'user_id' => $data->user_id
+        ], $insert);
+        if ($p) {
+            User::where('id', $data->user_id)->update(['corporate' => json_encode($insert)]);
+            CorporateModel::create([
+                'nama' => $data->nama_lengkap,
+                'no_telp' => $data->nomor_handphone,
+                'alamat' => $data->alamat,
+                'lokasi' => 'Belum Ditentukan',
+                'jenis' => 'Belum Ditentukan',
+            ]);
+            $pesan = 'Simpan data berhasil';
+        }
+        return $pesan;
+    }
+
     public function store(Request $request)
     {
         // return $request->all();
+        if ($request->iscorporate) {
+            $pesan = $this->saveCorporate($request);
+            return Redirect::back()->with('success', $pesan);
+        }
+
         $validator = Validator::make($request->all(), [
             'nama_lengkap' => 'required',
-            'jenis_kelamin' => 'required',
+            // 'jenis_kelamin' => 'required',
             'nomor_handphone' => 'required|numeric',
             'alamat' => 'required',
-            'tanggal_lahir' => 'required',
+            // 'tanggal_lahir' => 'required',
             'rekening' => 'required',
             // 'image_produk' => 'image|mimes:jpeg,png,jpg|max:2048|required',
         ]);
@@ -181,11 +223,11 @@ class ProfileController extends Controller
             $d['picture'] = 'Image/Member/' . $filename;
         }
 
-        if ($request->company) {
-            User::where('id', $request->user_id)->update([
-                'corporate' => $request->company
-            ]);
-        }
+        // if ($request->company) {
+        // }
+        User::where('id', $request->user_id)->update([
+            'corporate' => $request->company
+        ]);
 
         UserProfileModel::updateOrCreate([
             'user_id' => $request->user_id,

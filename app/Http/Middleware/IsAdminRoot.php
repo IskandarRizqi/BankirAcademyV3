@@ -27,7 +27,8 @@ class IsAdminRoot
             return $next($request);
         }
         if (Auth::user()->role == 2) {
-            return response()->json(['data' => Auth::user()]);
+            return Redirect::to('/');
+            // return response()->json(['data' => Auth::user()]);
         }
         // return response()->json('Your account is inactive');
         return Redirect::back()->with('error', 'The page you were not found');

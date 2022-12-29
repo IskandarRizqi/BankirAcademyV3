@@ -60,7 +60,7 @@ class User extends Authenticatable
     public function getCorporatesAttribute()
     {
         if (array_key_exists('corporate', $this->attributes)) {
-            return CorporateModel::where('nama', $this->attributes['corporate'])->first();
+            return json_decode($this->attributes['corporate']);
         }
     }
 }

@@ -14,5 +14,6 @@ class CorporateModel extends Model
         'no_telp',
         'alamat',
         'lokasi',
+        'jenis',
     ];
 }

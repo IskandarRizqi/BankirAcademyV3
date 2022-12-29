@@ -217,10 +217,10 @@
     <script src="{{asset('front/js/functions.js')}}"></script>
     <script src="{{asset('front/toast/dist/js/iziToast.min.js')}}" type="text/javascript"></script>
     <script>
-        $('#corporate').select2({
-            tags: "true",
-        placeholder: "Select an option",
-        })
+        // $('#corporate').select2({
+        //     tags: "false",
+        // placeholder: "Select an option",
+        // })
         function funcregis() {
             $.ajaxSetup({
                 headers: {

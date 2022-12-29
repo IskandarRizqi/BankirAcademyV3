@@ -269,7 +269,7 @@
                                                                     cols="30" rows="10" required hidden></textarea>
                                                                 <div class="col-lg-12 bottommargin">
                                                                     <label>Upload Bukti Multi Pembayaran:</label><br>
-                                                                    <input id="input-3" name="imageBuktiMulti"
+                                                                    <input id="inputimagebukti" name="imageBuktiMulti"
                                                                         type="file" class="file"
                                                                         data-show-upload="false"
                                                                         data-show-caption="true"
@@ -341,498 +341,10 @@
                                         </div>
                                     </div>
                                     <div class="tab-content clearfix" id="tab-postss">
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <form action="/profile#tab-feeds" method="get">
-                                                    <label>Tanggal Pembayaran</label>
-                                                    <div class="input-group mb-4">
-                                                        <input type="date" class="form-control"
-                                                            value="{{ $param['date'][0] }}" placeholder="Date Start"
-                                                            aria-label="Date Start" name="param_date_start">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text" id="basic-addon5">s/d</span>
-                                                        </div>
-                                                        <input type="date" class="form-control"
-                                                            value="{{ $param['date'][1] }}" placeholder="Date End"
-                                                            aria-label="Date End" name="param_date_end">
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-lg-8">
-                                                            <button class="btn btn-primary btn-block"
-                                                                type="submit">Cari</button>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <a href="/profile#tab-feeds"
-                                                                class="btn btn-warning btn-block"
-                                                                type="button">Reset</a>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table id="datatable2" class="table table-bordered">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th>No</th>
-                                                        <th>Kelas</th>
-                                                        <th>Instruktor</th>
-                                                        <th>Tanggal</th>
-                                                        <th>Rincian Kelas</th>
-                                                        <th>Unduhan</th>
-                                                        <th>Review</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($class as $key => $c)
-                                                    @foreach ($c->class as $cl)
-                                                    <tr class="text-center">
-                                                        <td width="1%">{{ $key + 1 }}</td>
-                                                        <td class="longtextoverflow">{{ $cl->title }}</td>
-                                                        <td>
-                                                            @foreach ($cl->instructor_list as $instructor_list)
-                                                            <span class="badge badge-primary">{{ $instructor_list->name
-                                                                }}</span>
-                                                            @endforeach
-                                                        </td>
-                                                        <td><span class="badge badge-info">
-                                                                @if(\Carbon\Carbon::parse($cl->date_start)->format('d-m-Y')==\Carbon\Carbon::parse($cl->date_end)->format('d-m-Y'))
-                                                                {{
-                                                                \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y')
-                                                                }}
-                                                                @else
-                                                                {{
-                                                                \Carbon\Carbon::parse($cl->date_start)->format('d-m-Y')
-                                                                . '-' .
-                                                                \Carbon\Carbon::parse($cl->date_end)->format('d-m-Y') }}
-                                                                @endif
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <button id="evModal"
-                                                                class="button button-circle button-mini"
-                                                                data-toggle="modal" data-target="#eventModal"
-                                                                onclick="onEvent({{ $c->event }})" title="Event">
-                                                                Open
-                                                            </button>
-                                                            @if (count($c->event) > 0)
-                                                            @foreach ($c->event as $e)
-                                                            @if ($e->link)
-                                                            <a href="{{ $e->link }}">
-                                                                <button
-                                                                    class="button button-mini button-circle">Link</button>
-                                                            </a>
-                                                            @endif
-                                                            @endforeach
-                                                            @endif
-                                                        </td>
-                                                        <td width="5%">
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-warning dropdown-toggle btn-sm"
-                                                                    type="button" data-toggle="dropdown"
-                                                                    aria-expanded="false" title="Opsi">
-                                                                    <i class="icon-cog"></i>
-                                                                </button>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="dropdown-item"
-                                                                        href="/classes/getcertificate/{{ $c->class_id }}"
-                                                                        target="_blank">
-                                                                        Get Certificate
-                                                                    </a>
-                                                                    <span class="dropdown-item"
-                                                                        onclick="onContent({{ $cl->content_list }})">Content/Material</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <button class="button button-circle button-mini" {{-- --}}
-                                                                @if ($c->review) onclick="onReview('{{ $c->review
-                                                                }}','{{ $c->review_point }}')"
-                                                                @else
-                                                                onclick="review({{ $c->participant_id }})"
-                                                                @endif>Class</button>
-                                                            <button class="button button-circle button-mini" {{-- --}}
-                                                                onclick="reviewIns({{ $c->class[0]->instructor_list[0]->id }})">Intructor</button>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <!-- Modal Participant-->
-                                        <div class="modal fade" id="reviewModal" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form action="/classes/review" method="POST"
-                                                        enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="modal-header">
-                                                            <h3>Review</h3>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="text" id="participant_id" name="participant_id"
-                                                                hidden>
-                                                            <div class="col-lg-12">
-                                                                <label>Nilai = </label><span id="nilai_val"></span><br>
-                                                                <input type="range" class="form-range form-control p-0"
-                                                                    id="nilai" name="nilai" value="{{ old('nilai') }}"
-                                                                    min="1" max="5">
-                                                                @error('nilai')
-                                                                <span class="text-danger" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-lg-12 bottommargin">
-                                                                <label>Pesan</label><br>
-                                                                <textarea name="review" id="review" cols="30" rows="10"
-                                                                    class="form-control"></textarea>
-                                                                @error('input2')
-                                                                <span class="text-danger" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
-                                                                @enderror
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary"
-                                                                id="btnReview">Save
-                                                                changes</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Modal Content-->
-                                        <div class="modal fade" id="contentModal" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <form action="#" method="POST" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="modal-header">
-                                                            <h3>Content</h3>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <table class="table table-bordered">
-                                                                <thead>
-                                                                    <tr class="text-center">
-                                                                        <th width="1%">No</th>
-                                                                        <th>Title</th>
-                                                                        <th>Url</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="tableContent">
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Modal Event-->
-                                        <div class="modal fade" id="eventModal" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <form action="#" method="POST" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="modal-header">
-                                                            <h3>Rincian kelas</h3>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <table class="table table-bordered">
-                                                                <thead>
-                                                                    <tr class="text-center">
-                                                                        <th width="1%">No</th>
-                                                                        <th>Link/Lokasi</th>
-                                                                        <th>Waktu</th>
-                                                                        <th>Keterangan</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="tableEvent">
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @include('front.profile.kelasanda')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
-                                        <div class="tabs tabs-alt clearfix ui-tabs ui-corner-all ui-widget ui-widget-content"
-                                            id="tab-7">
-                                            <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
-                                                role="tablist">
-                                                <li role="tab" tabindex="0"
-                                                    class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active"
-                                                    aria-controls="tabs-25" aria-labelledby="ui-id-9"
-                                                    aria-selected="true" aria-expanded="true"><a href="#tabs-25"
-                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-9">Profile</a>
-                                                </li>
-                                                <li role="tab" tabindex="-1"
-                                                    class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
-                                                    aria-controls="tabs-26" aria-labelledby="ui-id-10"
-                                                    aria-selected="false" aria-expanded="false"><a href="#tabs-26"
-                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-10">Rekening</a>
-                                                </li>
-                                                {{-- <li role="tab" tabindex="-1"
-                                                    class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
-                                                    aria-controls="tabs-27" aria-labelledby="ui-id-11"
-                                                    aria-selected="false" aria-expanded="false"><a href="#tabs-27"
-                                                        tabindex="-1" class="ui-tabs-anchor" id="ui-id-11">Proin
-                                                        dolor</a></li>
-                                                <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab"
-                                                    role="tab" tabindex="-1" aria-controls="tabs-28"
-                                                    aria-labelledby="ui-id-12" aria-selected="false"
-                                                    aria-expanded="false"><a href="#tabs-28" tabindex="-1"
-                                                        class="ui-tabs-anchor" id="ui-id-12">Aenean lacinia</a></li>
-                                                --}}
-                                            </ul>
-                                            <div class="tab-container">
-                                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
-                                                    id="tabs-25" aria-labelledby="ui-id-9" role="tabpanel"
-                                                    aria-hidden="false">
-                                                    <div class="title-block">
-                                                        {{-- <h4>Update Profile</h4> --}}
-                                                        <form action="{{ route('profile.store') }}" method="post"
-                                                            enctype="multipart/form-data">
-                                                            @csrf
-                                                            <div class="row">
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Nama lengkap</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="nama_lengkap"
-                                                                        value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
-                                                                    <input type="hidden" name="user_id"
-                                                                        value="{{ Auth::user()->id }}">
-                                                                    @if ($errors->has('nama_lengkap'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('nama_lengkap') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Nomor
-                                                                        handphone</label>
-                                                                    <div class="input-group mb-3">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text">+62</span>
-                                                                        </div>
-                                                                        <input type="text" class="form-control"
-                                                                            name="nomor_handphone"
-                                                                            value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
-                                                                    </div>
-                                                                    @if ($errors->has('nomor_handphone'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('nomor_handphone') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4">
-                                                                    <label for="form-control">Company</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="company" {{--
-                                                                        value="{{ isset($pfl['instansi'])?$pfl['instansi']:'' }}"
-                                                                        --}}
-                                                                        value="{{ Auth::user()->corporate?Auth::user()->corporate:'' }}">
-                                                                    <small class="text-danger">Jika mempunyai wajib
-                                                                        di
-                                                                        isi</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-6">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <label for="form-control">Tanggal
-                                                                                lahir</label>
-                                                                            <input type="date" name="tanggal_lahir"
-                                                                                class="form-control"
-                                                                                value="{{ isset($pfl['tanggal_lahir'])?$pfl['tanggal_lahir']:'' }}">
-                                                                            @if ($errors->has('tanggal_lahir'))
-                                                                            <div class="error"
-                                                                                style="color: red; display:block;">
-                                                                                {{ $errors->first('tanggal_lahir') }}
-                                                                            </div>
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col-lg-6" hidden>
-                                                                            <label for="">No.
-                                                                                Rekening</label>
-                                                                            <input type="text" name="rekening"
-                                                                                id="rekening" class="form-control"
-                                                                                value="1">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-6">
-                                                                            <label for="form-control">Jenis
-                                                                                Kelamin</label>
-                                                                            <select name="jenis_kelamin"
-                                                                                class="form-control" id="jkl">
-                                                                                <option value="">Pilih salah
-                                                                                    satu
-                                                                                </option>
-                                                                                <option value="0" {{
-                                                                                    isset($pfl['gender'])&&$pfl['gender']==0
-                                                                                    ? 'selected' : null }}>
-                                                                                    Perempuan</option>
-                                                                                <option value="1" {{
-                                                                                    isset($pfl['gender'])&&$pfl['gender']==1
-                                                                                    ? 'selected' : null }}>
-                                                                                    Laki-laki</option>
-                                                                            </select>
-                                                                            @if ($errors->has('jenis_kelamin'))
-                                                                            <div class="error"
-                                                                                style="color: red; display:block;">
-                                                                                {{ $errors->first('jenis_kelamin') }}
-                                                                            </div>
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col-lg-6">
-                                                                            <label for="form-control">Referral
-                                                                                (optional)</label>
-                                                                            <input type="text" id="referral"
-                                                                                name="referral" class="form-control"
-                                                                                onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
-                                                                                value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
-                                                                                @if (isset($pfl['user_id'])){{
-                                                                                $pfl['referral'] ? 'readonly' : ''
-                                                                                }}@endif>
-                                                                            @if (Session::has('referral'))
-                                                                            <div class="error"
-                                                                                style="color: red; display:block;">
-                                                                                {{ Session::get('referral') }}
-                                                                            </div>
-                                                                            @endif
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-9">
-                                                                    <label for="form-control">Alamat</label>
-                                                                    <textarea class="form-control"
-                                                                        name="alamat">{{ isset($pfl['description'])?$pfl['description']:'' }}</textarea>
-                                                                    @if ($errors->has('alamat'))
-                                                                    <div class="error"
-                                                                        style="color: red; display:block;">
-                                                                        {{ $errors->first('alamat') }}
-                                                                    </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-3">
-                                                                    <label for="form-control">Foto</label>
-                                                                    <input type="file" class="form-control"
-                                                                        name="picture" id="picture">
-                                                                    <img id="pictureprv"
-                                                                        src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
-                                                                        alt="" width="80px">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <button class="button button-small"
-                                                                        type="submit">Update
-                                                                        Profile</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
-                                                    id="tabs-26" aria-labelledby="ui-id-10" role="tabpanel"
-                                                    aria-hidden="true" style="display: none;">
-                                                    <div class="title-block">
-                                                        {{-- <h4>Update Rekening</h4> --}}
-                                                        <form action="/updaterekening" method="post">
-                                                            @csrf
-                                                            <input type="text" name="user_id" id="user_id"
-                                                                value="{{ Auth::user()->id }}" hidden>
-                                                            <div class="row">
-                                                                <div class="form-group col">
-                                                                    <label for="">Nama Bank</label>
-                                                                    <input type="text" name="nama_bank" id="nama_bank"
-                                                                        class="form-control"
-                                                                        value="{{ $user->rekening ? $user->rekening->nama_bank : '' }}"
-                                                                        required>
-                                                                </div>
-                                                                <div class="form-group col">
-                                                                    <label for="">No Rekening</label>
-                                                                    <input type="text" name="no_rekening"
-                                                                        id="no_rekening" class="form-control"
-                                                                        value="{{ $user->rekening ? $user->rekening->no_rekening : '' }}"
-                                                                        required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <button class="button button-small"
-                                                                        type="submit">Update
-                                                                        Rekening</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                {{-- <div
-                                                    class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
-                                                    id="tabs-27" aria-labelledby="ui-id-11" role="tabpanel"
-                                                    aria-hidden="true" style="display: none;">
-                                                    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti.
-                                                        Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum
-                                                        erat, eu congue orci lorem eget lorem. Vestibulum non ante.
-                                                        Class aptent taciti sociosqu ad litora torquent per conubia
-                                                        nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna
-                                                        vel enim commodo pellentesque. Praesent eu risus hendrerit
-                                                        ligula tempus pretium. Curabitur lorem enim, pretium nec,
-                                                        feugiat nec, luctus a, lacus.</p>
-                                                    Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper
-                                                    at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo
-                                                    vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti.
-                                                    Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros,
-                                                    id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero
-                                                    sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat
-                                                    porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu
-                                                    tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit.
-                                                    Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.
-                                                </div>
-                                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
-                                                    id="tabs-28" aria-labelledby="ui-id-12" role="tabpanel"
-                                                    aria-hidden="true" style="display: none;">
-                                                    Praesent in eros vestibulum mi adipiscing adipiscing. Morbi
-                                                    facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut
-                                                    posuere viverra nulla. Aliquam erat volutpat. Pellentesque
-                                                    convallis. Maecenas feugiat, tellus pellentesque pretium posuere,
-                                                    felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris
-                                                    consectetur tortor et purus.
-                                                </div> --}}
-                                            </div>
-                                        </div>
-                                        <div class="divider divider-border divider-center"><i class="icon-email2"></i>
-                                        </div>
+                                        @include('front.profile.setting')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-pnpt">
                                         <img src="{{asset('upcoming_absen_post_test_Cara pakai_promo_copy_2.jpg')}}"
@@ -903,6 +415,297 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalCorporate" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+        aria-labelledby="reviewFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="reviewFormModalLabel">Perorangan atau Corporate</h4>
+                    <button type="button" class="btn btn-close btn-sm" data-dismiss="modal"
+                        aria-hidden="true">x</button>
+                </div>
+                <div class="modal-body">
+                    <div id="pilihGambar" class="row">
+                        <div class="col">
+                            <img src="perorangan.jpg" alt="" id="peroranganPilih">
+                        </div>
+                        <div class="col">
+                            <img src="corporate.jpg" alt="" id="corporatePilih">
+                        </div>
+                    </div>
+                    <div id="formPerorangan" hidden>
+                        <button class="btn btn-secondary btn-sm" id="kembali" title="kembali">
+                            < Kembali </button>
+                                <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="text" name="iscorporate" hidden>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <label for="form-control">Nama lengkap</label>
+                                            <input type="text" class="form-control" name="nama_lengkap"
+                                                value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
+                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                            @if ($errors->has('nama_lengkap'))
+                                            <div class="error" style="color: red; display:block;">
+                                                {{ $errors->first('nama_lengkap') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label for="form-control">Nomor
+                                                handphone</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">+62</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="nomor_handphone"
+                                                    value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
+                                            </div>
+                                            @if ($errors->has('nomor_handphone'))
+                                            <div class="error" style="color: red; display:block;">
+                                                {{ $errors->first('nomor_handphone') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-lg-4" hidden>
+                                            <label for="form-control">Company</label>
+                                            <input type="text" class="form-control" name="company" {{--
+                                                value="{{ isset($pfl['instansi'])?$pfl['instansi']:'' }}" --}}
+                                                value="perorangan">
+                                            <small class="text-danger">Jika mempunyai wajib
+                                                di
+                                                isi</small>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <label for="form-control">Tanggal
+                                                        lahir</label>
+                                                    <input type="date" name="tanggal_lahir" class="form-control"
+                                                        value="{{ isset($pfl['tanggal_lahir'])?$pfl['tanggal_lahir']:'' }}">
+                                                    @if ($errors->has('tanggal_lahir'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ $errors->first('tanggal_lahir') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6" hidden>
+                                                    <label for="">No.
+                                                        Rekening</label>
+                                                    <input type="text" name="rekening" id="rekening"
+                                                        class="form-control" value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="form-control">Jenis
+                                                        Kelamin</label>
+                                                    <select name="jenis_kelamin" class="form-control" id="jkl">
+                                                        <option value="">Pilih salah
+                                                            satu
+                                                        </option>
+                                                        <option value="0" {{ isset($pfl['gender'])&&$pfl['gender']==0
+                                                            ? 'selected' : null }}>
+                                                            Perempuan</option>
+                                                        <option value="1" {{ isset($pfl['gender'])&&$pfl['gender']==1
+                                                            ? 'selected' : null }}>
+                                                            Laki-laki</option>
+                                                    </select>
+                                                    @if ($errors->has('jenis_kelamin'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ $errors->first('jenis_kelamin') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label for="form-control">Referral
+                                                        (optional)</label>
+                                                    <input type="text" id="referral" name="referral"
+                                                        class="form-control"
+                                                        onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
+                                                        value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
+                                                        @if (isset($pfl['user_id'])){{ $pfl['referral'] ? 'readonly'
+                                                        : '' }}@endif>
+                                                    @if (Session::has('referral'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ Session::get('referral') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <label for="form-control">Alamat</label>
+                                            <textarea class="form-control"
+                                                name="alamat">{{ isset($pfl['description'])?$pfl['description']:'' }}</textarea>
+                                            @if ($errors->has('alamat'))
+                                            <div class="error" style="color: red; display:block;">
+                                                {{ $errors->first('alamat') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label for="form-control">Foto</label>
+                                            <input type="file" class="form-control" name="picture" id="picture2">
+                                            <img id="pictureprv2" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
+                                                alt="" width="80px">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <button class="button button-small" type="submit">Simpan</button>
+                                        </div>
+                                    </div>
+                                </form>
+                    </div>
+                    <div id="formCorporate" hidden>
+                        <button class="btn btn-secondary btn-sm" id="kembali2" title="kembali2">
+                            < Kembali </button>
+                                <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="text" name="iscorporate" value="ada" hidden>
+                                    {{-- Tabel di User --}}
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label for="form-control">Nama Perusahaan</label>
+                                            <input type="text" class="form-control" name="nama_lengkap"
+                                                value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
+                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                            @if ($errors->has('nama_lengkap'))
+                                            <div class="error" style="color: red; display:block;">
+                                                {{ $errors->first('nama_lengkap') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="form-control">Nomor Telepon</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">+62</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="nomor_handphone"
+                                                    value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
+                                            </div>
+                                            @if ($errors->has('nomor_handphone'))
+                                            <div class="error" style="color: red; display:block;">
+                                                {{ $errors->first('nomor_handphone') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="col-lg-12" hidden>
+                                                    <label for="form-control">Tanggal
+                                                        lahir</label>
+                                                    <input type="date" name="tanggal_lahir" class="form-control"
+                                                        value="{{ isset($pfl['tanggal_lahir'])?$pfl['tanggal_lahir']:'' }}">
+                                                    @if ($errors->has('tanggal_lahir'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ $errors->first('tanggal_lahir') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6" hidden>
+                                                    <label for="">No.
+                                                        Rekening</label>
+                                                    <input type="text" name="rekening" id="rekening"
+                                                        class="form-control" value="1">
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <label for="">Email</label>
+                                                    <input type="text" name="email" id="email" class="form-control"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="form-control">Jenis Corporate</label>
+                                                    <select name="jenis_corporate" class="form-control" id="" required>
+                                                        <option value="">Pilih</option>
+                                                        <option value="bankumum">Bank Umum</option>
+                                                        <option value="bpr">BPR</option>
+                                                        <option value="koperasi">Koperasi</option>
+                                                        <option value="lkm">Lembaga Keuangan Mikro</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-6" hidden>
+                                                    <label for="form-control">Jenis
+                                                        Kelamin</label>
+                                                    <select name="jenis_kelamin" class="form-control" id="jkl">
+                                                        <option value="">Pilih salah
+                                                            satu
+                                                        </option>
+                                                        <option value="0" {{ isset($pfl['gender'])&&$pfl['gender']==0
+                                                            ? 'selected' : null }}>
+                                                            Perempuan</option>
+                                                        <option value="1" {{ isset($pfl['gender'])&&$pfl['gender']==1
+                                                            ? 'selected' : null }}>
+                                                            Laki-laki</option>
+                                                    </select>
+                                                    @if ($errors->has('jenis_kelamin'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ $errors->first('jenis_kelamin') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label for="form-control">Referral
+                                                        (optional)</label>
+                                                    <input type="text" id="referral" name="referral"
+                                                        class="form-control"
+                                                        onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
+                                                        value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
+                                                        @if (isset($pfl['user_id'])){{ $pfl['referral'] ? 'readonly'
+                                                        : '' }}@endif>
+                                                    @if (Session::has('referral'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ Session::get('referral') }}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <label for="form-control">Alamat</label>
+                                            <textarea class="form-control"
+                                                name="alamat">{{ isset($pfl['description'])?$pfl['description']:'' }}</textarea>
+                                            @if ($errors->has('alamat'))
+                                            <div class="error" style="color: red; display:block;">
+                                                {{ $errors->first('alamat') }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label for="form-control">Foto</label>
+                                            <input type="file" class="form-control" name="picture" id="picture3">
+                                            <img id="pictureprv3" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
+                                                alt="" width="80px">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <button class="button button-small" type="submit">Simpan</button>
+                                        </div>
+                                    </div>
+                                </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <textarea id="corporateUser" cols="30" rows="10" hidden>{{$user->corporate}}</textarea>
 </section><!-- #content end -->
 <script>
     let checkedData = [];
@@ -918,29 +721,74 @@
             var form = $(this).closest("form");
             event.preventDefault();
             swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                        Swal.fire(
-                            'Deleted!',
-                            'Your data has been deleted.',
-                            'success'
-                        )
-                    }
-                });
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                    Swal.fire(
+                        'Deleted!',
+                        'Your data has been deleted.',
+                        'success'
+                    )
+                }
+            });
         });
+
+        $('#kembali').click(function () {
+            $('#pilihGambar').removeAttr('hidden');
+            $('#formCorporate').attr('hidden', true);
+            $('#formPerorangan').attr('hidden',true)
+        })
+        $('#kembali2').click(function () {
+            $('#pilihGambar').removeAttr('hidden');
+            $('#formCorporate').attr('hidden', true);
+            $('#formPerorangan').attr('hidden',true)
+        })
+        $('#peroranganPilih').click(function () {
+            $('#pilihGambar').attr('hidden', true);
+            $('#formCorporate').attr('hidden', true);
+            $('#formPerorangan').removeAttr('hidden')
+        })
+        $('#corporatePilih').click(function () {
+            $('#pilihGambar').attr('hidden', true);
+            $('#formCorporate').removeAttr('hidden', true);
+            $('#formPerorangan').attr('hidden')
+        })
+            
+        let corporate = $('#corporateUser').val();
+        if (corporate && corporate != 'perorangan') {
+            try {
+                let js = JSON.parse(corporate)
+            } catch (error) {
+                $('#modalCorporate').modal('show');
+                
+            }
+        }
+        if (!corporate) {
+            try {
+                let js = JSON.parse(corporate)
+            } catch (error) {
+                $('#modalCorporate').modal('show');
+                
+            }
+        }
     })
     $('#picture').change(function(e) {
-            getImgData(this, '#pictureprv');
-        });
+        getImgData(this, '#pictureprv');
+    });
+    $('#picture2').change(function(e) {
+        getImgData(this, '#pictureprv2');
+    });
+    $('#picture3').change(function(e) {
+        getImgData(this, '#pictureprv3');
+    });
     $('#nilai_review').change(function() {
         let nilai = $('#nilai_review').val();
         $('#nilai_value').html(nilai);

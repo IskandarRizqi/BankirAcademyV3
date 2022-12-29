@@ -124,6 +124,16 @@
                                                 </span>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="">
+                                                    Sub Category :
+                                                    @if ($class->sub_category)
+                                                    {{implode(',',json_decode($class->sub_category))}}
+                                                    @endif
+                                                </label>
+                                            </div>
+                                        </div>
                                         <hr>
                                         <div class="mb-4">
                                             @if (count(json_decode($class->tipe)) > 0)

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('no_telp');
             $table->text('alamat');
             $table->string('lokasi');
+            $table->string('jenis')->nullable();
             $table->timestamps();
         });
     }

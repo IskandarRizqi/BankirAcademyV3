@@ -58,7 +58,7 @@ class ClassesController extends Controller
 				$js = json_decode($value);
 				if ($js) {
 					foreach ($js as $key => $v) {
-						if (!array_key_exists($v, $data['subcategory'])) {
+						if (!in_array($v, $data['subcategory'])) {
 							array_push($data['subcategory'], $v);
 						}
 					}
@@ -71,9 +71,9 @@ class ClassesController extends Controller
 			if ($value) {
 				$js = json_decode($value);
 				if ($js) {
-					foreach ($js as $key => $v) {
-						if (!array_key_exists($v, $data['tags'])) {
-							array_push($data['tags'], $v);
+					foreach ($js as $key => $va) {
+						if (!in_array($va, $data['tags'])) {
+							array_push($data['tags'], $va);
 						}
 					}
 				}
@@ -186,7 +186,7 @@ class ClassesController extends Controller
 				$js = json_decode($value);
 				if ($js) {
 					foreach ($js as $key => $v) {
-						if (!array_key_exists($v, $data['subcategory'])) {
+						if (!in_array($v, $data['subcategory'])) {
 							array_push($data['subcategory'], $v);
 						}
 					}
@@ -200,14 +200,14 @@ class ClassesController extends Controller
 				$js = json_decode($value);
 				if ($js) {
 					foreach ($js as $key => $v) {
-						if (!array_key_exists($v, $data['tags'])) {
+						if (!in_array($v, $data['tags'])) {
 							array_push($data['tags'], $v);
 						}
 					}
 				}
 			}
 		}
-
+		// return $data;
 		return view('backend/classes/editclasses', $data);
 	}
 

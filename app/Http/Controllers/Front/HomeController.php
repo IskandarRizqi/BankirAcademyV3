@@ -222,14 +222,17 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $now = Carbon::now();
+        // return Carbon::now()->addDays(14)->format('Y-m-d');
         $kelas_mingguan = [];
         $data['banner_promo'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_slide'] = BannerModel::where('jenis', 0)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_slide_mobile'] = BannerModel::where('jenis', 3)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['minggu_ini'] = ClassesModel::whereBetween("date_start", [
-            $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
-            $now->endOfWeek()->format('Y-m-d')
+            // $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
+            // $now->endOfWeek()->format('Y-m-d')
+            $now->format('Y-m-d'),
+            $now->addDays(14)->format('Y-m-d')
         ])
             ->whereDate('date_start', '>=', Carbon::now())
             ->where('status', 1)

@@ -7,14 +7,14 @@
                 @csrf
                 <input name="id" id="id" value="{{old('id')}}" hidden>
                 <div class="row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="">Nama</label>
                         <input type="text" name="nama" id="nama" value="{{old('nama')}}" class="form-control">
                         @error('nama')
                         <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="">No. Telp</label>
                         <input type="number" name="no_telp" id="no_telp" value="{{old('no_telp')}}"
                             class="form-control">
@@ -22,7 +22,7 @@
                         <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="">Lokasi/Wilayah</label>
                         <select name="lokasi" id="lokasi" class="form-control">
                             <option value=""></option>
@@ -31,6 +31,19 @@
                             @endforeach
                         </select>
                         @error('no_telp')
+                        <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="form-control">Jenis Corporate</label>
+                        <select name="jenis_corporate" class="form-control" id="jenis_corporate" required>
+                            <option value="">Pilih</option>
+                            <option value="bankumum">Bank Umum</option>
+                            <option value="bpr">BPR</option>
+                            <option value="koperasi">Koperasi</option>
+                            <option value="lkm">Lembaga Keuangan Mikro</option>
+                        </select>
+                        @error('jenis_corporate')
                         <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
@@ -66,7 +79,7 @@
                             <td>{{$p->alamat}}</td>
                             <td>
                                 <button class="btn btn-warning" id="edit" title="Edit"
-                                    onclick="editPromo('{{$p->id}}','{{$p->nama}}','{{$p->alamat}}','{{$p->no_telp}}','{{$p->lokasi}}')"><i
+                                    onclick="editPromo('{{$p->id}}','{{$p->nama}}','{{$p->alamat}}','{{$p->no_telp}}','{{$p->lokasi}}','{{$p->jenis}}')"><i
                                         class='bx bx-edit'></i></button>
                                 <button class="btn btn-danger" onclick="deletePromo({{$p->id}})" title="Delete"> <i
                                         class='bx bx-trash'></i></button>
@@ -116,12 +129,13 @@
 			}
 		})
 	}
-    function editPromo(id,nama,alamat,telp,lokasi) {
+    function editPromo(id,nama,alamat,telp,lokasi,jenis) {
         $('#id').val(id);
         $('#nama').val(nama);
         $('#alamat').val(alamat);
         $('#no_telp').val(telp);
         $('#lokasi').val(lokasi);
+        $('#jenis_corporate').val(jenis);
         $('#lokasi').trigger('change');
     }
     function reset() {
@@ -129,6 +143,7 @@
         $('#nama').val(null);
         $('#alamat').val(null);
         $('#no_telp').val(null);
+        $('#jenis_corporate').val(null);
         $('#lokasi').val(null);
         $('#lokasi').trigger('change');
     }
