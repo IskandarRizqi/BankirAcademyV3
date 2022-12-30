@@ -19,6 +19,67 @@
     </div>
     <button class="button button-primary">Set</button>
 </form>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4>Proses Saldo</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4>Saldo</h4>
+            </div>
+        </div>
+        <h4 class="text-center">Withdraw</h4>
+        <form action="">
+            <div class="row">
+                <div class="form-group col">
+                    <label for="">Nama Bank (Ulang)</label>
+                    <input type="text" name="nama_bank" id="nama_bank" class="form-control" required>
+                </div>
+                <div class="form-group col">
+                    <label for="">No Rekening (Ulang)</label>
+                    <input type="text" name="no_rekening" id="no_rekening" class="form-control" required>
+                </div>
+                <div class="form-group col">
+                    <label for="">Nominal Penarikan</label>
+                    <input type="text" name="nominal_penarikan" id="nominal_penarikan" class="form-control" required>
+                </div>
+            </div>
+            <button class="btn btn-success btn-sm">Proses</button>
+        </form>
+        <table id="withdraw1" class="table table-hover mb-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Nominal</th>
+                    <th>Available</th>
+                    <th class="dt-no-sorting text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>name</td>
+                    <td>rupiah</td>
+                    <td>1. Permohonan, 2. Proses, 3. Selesai</td>
+                    <td>Aksi</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4>Total Penarikan</h4>
+            </div>
+        </div>
+    </div>
+</div>
 <table id="affiliate" class="table table-hover mb-2" style="width:100%">
     <thead>
         <tr>

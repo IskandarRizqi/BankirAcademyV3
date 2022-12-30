@@ -416,14 +416,9 @@
         </div>
     </div>
     <div class="modal fade" id="modalCorporate" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
-        aria-labelledby="reviewFormModalLabel" aria-hidden="true">
+        aria-labelledby="reviewFormModalLabel" aria-hidden="true" style="background-color: #000000cc">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="reviewFormModalLabel">Perorangan atau Corporate</h4>
-                    <button type="button" class="btn btn-close btn-sm" data-dismiss="modal"
-                        aria-hidden="true">x</button>
-                </div>
                 <div class="modal-body">
                     <div id="pilihGambar" class="row">
                         <div class="col">
@@ -434,6 +429,7 @@
                         </div>
                     </div>
                     <div id="formPerorangan" hidden>
+                        <h4>Perorangan</h4>
                         <button class="btn btn-secondary btn-sm" id="kembali" title="kembali">
                             < Kembali </button>
                                 <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
@@ -565,6 +561,7 @@
                                 </form>
                     </div>
                     <div id="formCorporate" hidden>
+                        <h4>Corporate</h4>
                         <button class="btn btn-secondary btn-sm" id="kembali2" title="kembali2">
                             < Kembali </button>
                                 <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
@@ -572,35 +569,36 @@
                                     <input type="text" name="iscorporate" value="ada" hidden>
                                     {{-- Tabel di User --}}
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <label for="form-control">Nama Perusahaan</label>
+                                        <div class="col-md-3">
+                                            <label for="form-control">Jenis Corporate</label>
+                                            <select name="jenis_corporate" class="form-control jc" id="jenis_corporates"
+                                                data-show-subtext="true" data-live-search="true" required>
+                                                <option value="">Pilih</option>
+                                                <option value="bankumum">Bank Umum</option>
+                                                <option value="bpr">BPR</option>
+                                                <option value="koperasi">Koperasi</option>
+                                                <option value="lkm">Lembaga Keuangan Mikro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <label for="form-control">Nama Corporate</label>
+                                            <select name="nama_lengkap" class="form-control" id="nama_lengkaps"
+                                                data-show-subtext="true" data-live-search="true" required>
+                                                <option value="">Pilih</option>
+                                            </select>
+                                            {{-- <label for="form-control">Nama Perusahaan</label>
                                             <input type="text" class="form-control" name="nama_lengkap"
                                                 value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
-                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"> --}}
                                             @if ($errors->has('nama_lengkap'))
                                             <div class="error" style="color: red; display:block;">
                                                 {{ $errors->first('nama_lengkap') }}
                                             </div>
                                             @endif
                                         </div>
-                                        <div class="col-lg-6">
-                                            <label for="form-control">Nomor Telepon</label>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">+62</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="nomor_handphone"
-                                                    value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
-                                            </div>
-                                            @if ($errors->has('nomor_handphone'))
-                                            <div class="error" style="color: red; display:block;">
-                                                {{ $errors->first('nomor_handphone') }}
-                                            </div>
-                                            @endif
-                                        </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        <div class="col">
                                             <div class="row">
                                                 <div class="col-lg-12" hidden>
                                                     <label for="form-control">Tanggal
@@ -613,7 +611,7 @@
                                                     </div>
                                                     @endif
                                                 </div>
-                                                <div class="col-lg-6" hidden>
+                                                <div class="col" hidden>
                                                     <label for="">No.
                                                         Rekening</label>
                                                     <input type="text" name="rekening" id="rekening"
@@ -626,19 +624,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col">
                                             <div class="row">
-                                                <div class="col-lg-6">
-                                                    <label for="form-control">Jenis Corporate</label>
-                                                    <select name="jenis_corporate" class="form-control" id="" required>
-                                                        <option value="">Pilih</option>
-                                                        <option value="bankumum">Bank Umum</option>
-                                                        <option value="bpr">BPR</option>
-                                                        <option value="koperasi">Koperasi</option>
-                                                        <option value="lkm">Lembaga Keuangan Mikro</option>
-                                                    </select>
+                                                <div class="col">
+                                                    <label for="form-control">Nomor Telepon</label>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">+62</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="nomor_handphone"
+                                                            value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
+                                                    </div>
+                                                    @if ($errors->has('nomor_handphone'))
+                                                    <div class="error" style="color: red; display:block;">
+                                                        {{ $errors->first('nomor_handphone') }}
+                                                    </div>
+                                                    @endif
                                                 </div>
-                                                <div class="col-lg-6" hidden>
+                                                <div class="col" hidden>
                                                     <label for="form-control">Jenis
                                                         Kelamin</label>
                                                     <select name="jenis_kelamin" class="form-control" id="jkl">
@@ -658,7 +661,7 @@
                                                     </div>
                                                     @endif
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <div class="col">
                                                     <label for="form-control">Referral
                                                         (optional)</label>
                                                     <input type="text" id="referral" name="referral"
@@ -688,7 +691,7 @@
                                             @endif
                                         </div>
                                         <div class="col-lg-3">
-                                            <label for="form-control">Foto</label>
+                                            <label for="form-control">Logo</label>
                                             <input type="file" class="form-control" name="picture" id="picture3">
                                             <img id="pictureprv3" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
                                                 alt="" width="80px">
@@ -713,6 +716,7 @@
         $('#datatable1').dataTable();
         $('#datatable2').dataTable();
         $('#affiliate').dataTable();
+        $('#withdraw1').dataTable();
         $('#nilai').change(function() {
             let nilai = $('#nilai').val();
             $('#nilai_val').html(nilai);
@@ -812,6 +816,33 @@
         }
         $('#bayarMultiModal').modal('show');
     })
+    $('#jenis_corporates').on('change', function () {
+            let val = $('#jenis_corporates').val();
+            $('#corporate').val(null);
+            
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            jQuery.ajax({
+                url: "/admin/corporates/"+val,
+                method: 'get',
+                success: function(result) {
+                    console.log(result);
+                    let h = '';
+                    result.forEach(element => {
+                        h+='<option value="'+element.id+'">'+element.nama+'</option>';
+                    });
+                    $('#nama_lengkaps').html(h);
+                },
+                error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
+                    var errors = jqXhr.responseJSON;
+                    console.log(errors);
+    
+                }
+            })
+        })
 
     function tambahPeserta(params, limit, classid, val, ref) {
         $.ajaxSetup({

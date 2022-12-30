@@ -117,16 +117,31 @@
                                         <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
                                             id="tabs-34" aria-labelledby="ui-id-18" role="tabpanel" aria-hidden="true"
                                             style="display: none;">
-                                            <form action="/registercorporate" method="POST">
+                                            <form action="/registercorporate" method="POST"
+                                                enctype="multipart/form-data">
                                                 @csrf
+                                                <div class="col-12 form-group">
+                                                    <label for="form-control">Jenis Corporate</label>
+                                                    <select name="jenis_corporate" class="form-control"
+                                                        id="jenis_corporate" required>
+                                                        <option value="">Pilih</option>
+                                                        <option value="bankumum">Bank Umum</option>
+                                                        <option value="bpr">BPR</option>
+                                                        <option value="koperasi">Koperasi</option>
+                                                        <option value="lkm">Lembaga Keuangan Mikro</option>
+                                                    </select>
+                                                    @error('jenis_corporate')
+                                                    <small class="text-danger">Harus Diisi</small>
+                                                    @enderror
+                                                </div>
                                                 <div class="col-12 form-group">
                                                     <label class="font-body text-capitalize"
                                                         for="login-form-modal-username">Corporate</label>
                                                     <select name="corporate" id="corporate" class="form-control">
                                                         <option value="">Select</option>
-                                                        @foreach ($lokasi as $d)
+                                                        {{-- @foreach ($lokasi as $d)
                                                         <option value="{{$d}}">{{$d}}</option>
-                                                        @endforeach
+                                                        @endforeach --}}
                                                     </select>
                                                     @error('corporate')
                                                     <small class="text-danger">{{$message}}</small>
@@ -221,6 +236,33 @@
         //     tags: "false",
         // placeholder: "Select an option",
         // })
+        $('#jenis_corporate').on('change', function () {
+            let val = $('#jenis_corporate').val();
+            $('#corporate').val(null);
+            
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            jQuery.ajax({
+                url: "/admin/corporates/"+val,
+                method: 'get',
+                success: function(result) {
+                    console.log(result);
+                    let h = '';
+                    result.forEach(element => {
+                        h+='<option value="'+element.id+'">'+element.nama+'</option>';
+                    });
+                    $('#corporate').html(h);
+                },
+                error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
+                    var errors = jqXhr.responseJSON;
+                    console.log(errors);
+    
+                }
+            })
+        })
         function funcregis() {
             $.ajaxSetup({
                 headers: {

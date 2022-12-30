@@ -247,13 +247,9 @@
                             onclick="funclogin()">Login</button>
                         <a href="#" class="float-right">Forgot Password?</a>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        Don't have an account? &nbsp;
-                        <a href="{{ url('/registerc') }}"> Register Now</a>
-                    </div>
                     <div class="line line-sm"></div>
                     <a href="{{ url('/auth/google') }}"
-                        class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
+                        class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login/Register
                         with Google</a>
                 </div>
             </div>

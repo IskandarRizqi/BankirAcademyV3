@@ -122,8 +122,11 @@ class ProfileController extends Controller
     public function saveCorporate($data)
     {
         $pesan = 'Simpan data gagal';
+        $c = CorporateModel::where('id', $data->nama_lengkap)->first();
         $insert = [
-            'name' => $data->nama_lengkap,
+            'jenis_corporate' => $data->jenis_corporate,
+            'id_corporate' => $c->id,
+            'name' => $c->nama,
             'phone_region' => 62,
             'phone' => $data->nomor_handphone,
             'tanggal_lahir' => $data->tanggal_lahir,
@@ -145,12 +148,12 @@ class ProfileController extends Controller
             $insert['picture'] = 'Image/Member/' . $filename;
         }
         $p = UserProfileModel::updateOrCreate([
-            'user_id' => $data->user_id
+            'user_id' => Auth::user()->id
         ], $insert);
         if ($p) {
-            User::where('id', $data->user_id)->update(['corporate' => json_encode($insert)]);
+            User::where('id', Auth::user()->id)->update(['corporate' => json_encode($insert)]);
             CorporateModel::create([
-                'nama' => $data->nama_lengkap,
+                'nama' => $c->nama,
                 'no_telp' => $data->nomor_handphone,
                 'alamat' => $data->alamat,
                 'lokasi' => 'Belum Ditentukan',
@@ -171,6 +174,7 @@ class ProfileController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nama_lengkap' => 'required',
+            // 'jenis_corporate' => 'required',
             // 'jenis_kelamin' => 'required',
             'nomor_handphone' => 'required|numeric',
             'alamat' => 'required',
@@ -197,6 +201,15 @@ class ProfileController extends Controller
         //         ]
         //     );
         // }
+
+        // $c = CorporateModel::where('id', $request->jenis_corporate)->first();
+        // $co = [
+        //     'name' => $c->nama_lengkap,
+        //     'phone_region' => 64,
+        //     'phone' => $c->nomor_handphone,
+        //     'tanggal_lahir' => now(),
+        //     'gender' => 1,
+        // ];
 
         $d = [
             'name' => $request->nama_lengkap,
@@ -225,12 +238,12 @@ class ProfileController extends Controller
 
         // if ($request->company) {
         // }
-        User::where('id', $request->user_id)->update([
-            'corporate' => $request->company
+        User::where('id', Auth::user()->id)->update([
+            'corporate' => 'perorangan'
         ]);
 
         UserProfileModel::updateOrCreate([
-            'user_id' => $request->user_id,
+            'user_id' => Auth::user()->id,
         ], $d);
 
         // return view('front.profile.profile');

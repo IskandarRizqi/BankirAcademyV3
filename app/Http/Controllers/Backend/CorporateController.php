@@ -85,7 +85,9 @@ class CorporateController extends Controller
      */
     public function show($id)
     {
-        //
+        if ($id) {
+            return CorporateModel::where('jenis', $id)->get();
+        }
     }
 
     /**

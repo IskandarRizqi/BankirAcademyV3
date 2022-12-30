@@ -55,11 +55,6 @@
                                 </option> --}}
                                 {{-- <option value="7" {{isset($page->title)==7?'selected':''}}>Bantuan</option>
                                 --}}
-                                <option value="8" @if (isset($page->type)) {{ $page->type == 8 ? 'selected' : ''
-                                    }}
-                                    @endif>
-                                    Mitra
-                                </option>
                             </select>
                         </div>
                     </div>

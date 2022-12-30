@@ -163,6 +163,8 @@ Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class,
 Route::get('/join/referral/{url}', [App\Http\Controllers\Backend\RefferalController::class, "joinRef"]);
 Route::get('/join/referral/{iduser}/{referral}', [App\Http\Controllers\Backend\RefferalController::class, "joinRefAjax"]);
 
+Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
+
 
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();

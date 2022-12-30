@@ -9,6 +9,7 @@ use App\Models\ClassEventModel;
 use App\Models\ClassLamanModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
+use App\Models\CorporateModel;
 use App\Models\InstructorModel;
 use App\Models\KodePromoModel;
 use App\Models\Pages;
@@ -669,6 +670,7 @@ class HomeController extends Controller
 
     public function registercorporate(Request $r)
     {
+        // {"name":"b","phone_region":62,"phone":"3456456","tanggal_lahir":"2022-11-01","gender":"1"}
         $va = Validator::make($r->all(), [
             'corporate' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
@@ -681,13 +683,25 @@ class HomeController extends Controller
             return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
         }
 
+        $c = CorporateModel::where('id', $r->corporate)->first();
+        $co = [
+            'jenis_corporate' => $r->jenis_corporate,
+            'id_corporate' => $r->corporate,
+            'name' => $c->nama,
+            'phone_region' => 64,
+            'phone' => $c->no_telp,
+            'tanggal_lahir' => now(),
+            'gender' => 1,
+            'description' => 'Belum Ditentukan',
+        ];
+
         $u = User::create([
             'name' => $r->name,
             'email' => $r->email,
             // 'google_id' => $r->google_id,
             'role' => 2,
             'password' => Hash::make($r->password),
-            'corporate' => $r->corporate,
+            'corporate' => json_encode($co),
         ]);
         if ($u) {
             Auth::login($u);
