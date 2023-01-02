@@ -235,11 +235,12 @@
 
 
 
-
+        
     }); //ready
 </script>
 
 <script>
+    $('#datatable1').dataTable();
     getLaman();
     $(document).ready(function() {
         $('#loader-loading').remove();

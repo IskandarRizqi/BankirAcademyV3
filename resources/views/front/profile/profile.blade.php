@@ -582,8 +582,8 @@
                                         </div>
                                         <div class="col-md-9">
                                             <label for="form-control">Nama Corporate</label>
-                                            <select name="nama_lengkap" class="form-control" id="nama_lengkaps"
-                                                data-show-subtext="true" data-live-search="true" required>
+                                            <select name="nama_lengkap" autocomplete="off" id="nama_lengkaps"
+                                                class="form-control" required>
                                                 <option value="">Pilih</option>
                                             </select>
                                             {{-- <label for="form-control">Nama Perusahaan</label>
@@ -717,6 +717,8 @@
         $('#datatable2').dataTable();
         $('#affiliate').dataTable();
         $('#withdraw1').dataTable();
+        // let setting = {};
+        // new TomSelect("#nama_lengkaps",setting);
         $('#nilai').change(function() {
             let nilai = $('#nilai').val();
             $('#nilai_val').html(nilai);
@@ -818,6 +820,7 @@
     })
     $('#jenis_corporates').on('change', function () {
             let val = $('#jenis_corporates').val();
+            $('#nama_lengkaps').removeAttr('class');
             $('#corporate').val(null);
             
             $.ajaxSetup({
@@ -829,12 +832,35 @@
                 url: "/admin/corporates/"+val,
                 method: 'get',
                 success: function(result) {
-                    console.log(result);
-                    let h = '';
-                    result.forEach(element => {
-                        h+='<option value="'+element.id+'">'+element.nama+'</option>';
+                    new TomSelect("#nama_lengkaps",{
+                    	valueField: 'nama',
+	                    searchField: 'nama',
+                        persist: false,
+	                    createOnBlur: true,
+	                    create: true,
+	                    // options: [
+	                    // 	{id: 1, title: 'DIY', url: 'https://diy.org'},
+	                    // 	{id: 2, title: 'Google', url: 'http://google.com'},
+	                    // 	{id: 3, title: 'Yahoo', url: 'http://yahoo.com'},
+	                    // ],
+                        options: result,
+	                    render: {
+	                    	option: function(data, escape) {
+	                    		return '<div>' +
+	                    				'<span class="title">' + escape(data.nama) + '</span>' +
+	                    			'</div>';
+	                    	},
+	                    	item: function(data, escape) {
+	                    		return '<div title="' + escape(data.id) + '" value="'+escape(data.id)+'">' + escape(data.nama) + '</div>';
+	                    	}
+	                    }
                     });
-                    $('#nama_lengkaps').html(h);
+                    // console.log(result);
+                    // let h = '';
+                    // result.forEach(element => {
+                    //     h+='<option value="'+element.id+'">'+element.nama+'</option>';
+                    // });
+                    // $('#nama_lengkaps').html(h);
                 },
                 error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
                     var errors = jqXhr.responseJSON;

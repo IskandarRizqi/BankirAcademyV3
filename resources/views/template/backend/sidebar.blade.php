@@ -152,72 +152,38 @@
                 </a>
             </li>
             <li class="menu">
+                <a href="#referralDropdownMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path
+                                d="M21 5H3a1 1 0 0 0-1 1v4h.893c.996 0 1.92.681 2.08 1.664A2.001 2.001 0 0 1 3 14H2v4a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-4h-1a2.001 2.001 0 0 1-1.973-2.336c.16-.983 1.084-1.664 2.08-1.664H22V6a1 1 0 0 0-1-1zM11 17H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2z">
+                            </path>
+                        </svg>
+                        <span>Referral</span>
+                    </div>
+                </a>
+                <ul class="collapse submenu list-unstyled" id="referralDropdownMenu" data-parent="#accordionExample">
+                    <li>
+                        <a href="/admin/referral"> Referral </a>
+                    </li>
+                    <li>
+                        <a href="/admin/withdraw"> Withdraw </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu">
                 <a href="/admin/partner" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             style="fill: rgba(0, 0, 0, 1);">
                             <path
-                                d="M8 12c2.28 0 4-1.72 4-4s-1.72-4-4-4-4 1.72-4 4 1.72 4 4 4zm0-6c1.178 0 2 .822 2 2s-.822 2-2 2-2-.822-2-2 .822-2 2-2zm1 7H7c-2.757 0-5 2.243-5 5v1h2v-1c0-1.654 1.346-3 3-3h2c1.654 0 3 1.346 3 3v1h2v-1c0-2.757-2.243-5-5-5zm9.364-10.364L16.95 4.05C18.271 5.373 19 7.131 19 9s-.729 3.627-2.05 4.95l1.414 1.414C20.064 13.663 21 11.403 21 9s-.936-4.663-2.636-6.364z">
-                            </path>
-                            <path
-                                d="M15.535 5.464 14.121 6.88C14.688 7.445 15 8.198 15 9s-.312 1.555-.879 2.12l1.414 1.416C16.479 11.592 17 10.337 17 9s-.521-2.592-1.465-3.536z">
+                                d="M21 5H3a1 1 0 0 0-1 1v4h.893c.996 0 1.92.681 2.08 1.664A2.001 2.001 0 0 1 3 14H2v4a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-4h-1a2.001 2.001 0 0 1-1.973-2.336c.16-.983 1.084-1.664 2.08-1.664H22V6a1 1 0 0 0-1-1zM11 17H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2z">
                             </path>
                         </svg>
                         <span>Partner</span>
                     </div>
                 </a>
-            </li>
-            <li class="menu">
-                <a href="#pagesDropdownMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            style="fill: rgba(0, 0, 0, 1);">
-                            <path
-                                d="M2.165 19.551c.186.28.499.449.835.449h15c.4 0 .762-.238.919-.606l3-7A.998.998 0 0 0 21 11h-1V8c0-1.103-.897-2-2-2h-6.655L8.789 4H4c-1.103 0-2 .897-2 2v13h.007a1 1 0 0 0 .158.551zM18 8v3H6c-.4 0-.762.238-.919.606L4 14.129V8h14z">
-                            </path>
-                        </svg>
-                        <span>Pages</span>
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-chevron-right">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                </a>
-                <ul class="collapse submenu list-unstyled" id="pagesDropdownMenu" data-parent="#accordionExample">
-                    <li>
-                        <a href="/admin/laman"> Laman </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages"> Page </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/getbantuan"> FAQ </a>
-                    </li>
-                    {{-- <li>
-                        <a href="/admin/pages/kelas/4"> Calon Bankir </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/kelas/5"> Bankir </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/kelas/6"> Bootcamp Bankir </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/getabout"> About </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/getcontact"> Contact </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/getbloglist"> Literasi </a>
-                    </li>
-                    <li>
-                        <a href="/admin/pages/getsdank"> Syarat & Ketentuan </a>
-                    </li> --}}
-                </ul>
             </li>
             <li class="menu">
                 <a href="#pagesDropdownMaster" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">

@@ -82,6 +82,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get("/admin/laman/activated/{id}/{status}", [App\Http\Controllers\Admin\LamanController::class, "activated"]);
 
     // Referral
+    Route::resource('/admin/withdraw', App\Http\Controllers\Backend\WithdrawController::class);
     Route::get("/admin/referral", [App\Http\Controllers\Backend\RefferalController::class, "dashboard"]);
     Route::get("/admin/master/index", [App\Http\Controllers\Backend\RefferalController::class, "masterReff"]);
     Route::post("/admin/master/store", [App\Http\Controllers\Backend\RefferalController::class, "storeMasterReff"]);
@@ -105,6 +106,7 @@ Route::middleware('auth')->group(function () {
 
     // Rekening
     Route::post("/updaterekening", [App\Http\Controllers\Front\ProfileController::class, "updaterekening"]);
+    Route::post("/withdrawMember", [App\Http\Controllers\Backend\WithdrawController::class, "proses"]);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

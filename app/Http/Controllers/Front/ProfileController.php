@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Helper\GlobalHelper;
+use App\Models\RefferralWithdrawModel;
 
 class ProfileController extends Controller
 {
@@ -37,10 +39,10 @@ class ProfileController extends Controller
         $data['pfl'] = UserProfileModel::select()
             ->where('user_id', Auth::user()->id)
             ->first();
-        $data['pfl']['referral'] = RefferralModel::select()
-            ->where('user_aplicator', Auth::user()->id)
-            ->first();
-        $data['pop'] = ClassesModel::limit(6)->get();
+        // $data['pfl']['referral'] = RefferralModel::select()
+        //     ->where('user_aplicator', Auth::user()->id)
+        //     ->first();
+        // $data['pop'] = ClassesModel::limit(6)->get();
         $data['param'] = [];
         $data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
         $data['param']['status'] = [0, 1];
@@ -105,6 +107,10 @@ class ProfileController extends Controller
             ->join('users', 'users.id', 'referral.user_aplicator')
             ->where('referral.user_id', Auth::user()->id)
             ->get();
+        $data['saldo'] = GlobalHelper::currentSaldoById($auth);
+        $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth);
+        $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth);
+        $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth)->get();
         // return $data;
         return view('front.profile.profile', $data);
     }
