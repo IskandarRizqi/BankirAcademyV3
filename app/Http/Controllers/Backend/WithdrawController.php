@@ -69,7 +69,7 @@ class WithdrawController extends Controller
             if (!$request->user_id) {
                 return Redirect::back()->with('error', 'Data Member Tidak Ditemukan');
             }
-            $amount = GlobalHelper::countReferralAvailableById($request->user_id);
+            $amount = GlobalHelper::currentSaldoById($request->user_id);
             if ($request->status == 3) {
                 if ($amount < $request->acc_amount) {
                     return Redirect::back()->with('error', 'Saldo Tidak Mencukupi');
