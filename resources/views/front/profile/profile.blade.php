@@ -420,8 +420,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <a href="/" type="button" class="btn btn-secondary btn-sm">Beranda</a>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
+                    <a href="/" type="button" class="btn btn-secondary btn-sm">kembali</a>
                 </div>
                 <div class="modal-body">
                     <div id="pilihGambar" class="row">
