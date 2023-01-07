@@ -515,8 +515,8 @@
                                                 <option value="lkm">Lembaga Keuangan Mikro</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-9">
-                                            <label for="form-control">Nama Corporate</label>
+                                        <div class="col-md-9 select-custom">
+                                            <label for="form-control nama_lengkaps">Nama Corporate</label>
                                             <select name="nama_lengkap" autocomplete="off" id="nama_lengkaps" class="form-control" required>
                                                 <option value="">Pilih</option>
                                             </select>
@@ -744,6 +744,14 @@
     })
     $('#jenis_corporates').on('change', function() {
         let val = $('#jenis_corporates').val();
+        $('#nama_lengkaps').remove();
+        $('.nama_lengkaps').remove();
+        let z = '';
+        z += '<label for="form-control nama_lengkaps">Nama Corporate</label>';
+        z += '<select name="nama_lengkap" autocomplete="off" id="nama_lengkaps" class="form-control" required>';
+        z += '<option value="">Pilih</option>';
+        z += '</select>';
+        $('.select-custom').html(z)
         $('#nama_lengkaps').removeAttr('class');
         $('#corporate').val(null);
 
