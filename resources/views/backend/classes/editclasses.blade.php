@@ -206,6 +206,7 @@
 									multiple required>
 									<option value=""></option>
 									@foreach ($subcategory as $ctg)
+									@if($classes->sub_category)
 									@foreach (json_decode($classes->sub_category) as $v)
 									@if ($ctg==$v)
 									<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
@@ -213,6 +214,7 @@
 									<option value="{{$ctg}}">{{$ctg}}</option>
 									@endif
 									@endforeach
+									@endif
 									@endforeach
 								</select>
 							</div>

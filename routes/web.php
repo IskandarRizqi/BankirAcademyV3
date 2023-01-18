@@ -96,7 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
     // 
     Route::post("/instructor/classes/store", [App\Http\Controllers\Backend\InstructorController::class, "classesStore"]);
-    Route::get("/instructor/classes/create", [App\Http\Controllers\Backend\InstructorController::class, "classesCreate"]);
+    Route::get("/instructor/classes/create/{id}", [App\Http\Controllers\Backend\InstructorController::class, "classesCreate"]);
     Route::get("/instructor/classes", [App\Http\Controllers\Backend\InstructorController::class, "classes"]);
     Route::get("/instructor/profile", [App\Http\Controllers\Backend\InstructorController::class, "profile"]);
     Route::post("/instructor/profile", [App\Http\Controllers\Backend\InstructorController::class, "profileUpdate"]);

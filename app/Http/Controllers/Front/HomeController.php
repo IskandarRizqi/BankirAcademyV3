@@ -99,32 +99,32 @@ class HomeController extends Controller
                 $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
                 $html .= '                </div>';
                 $html .= '                <div class="ml-2 flex-fill">';
-                // $html .= '                    <label class="d-block mb-0"> Harga';
-                // $html .= '                    </label>';
-                // if ($v['pricing']) {
-                //     if ($v['pricing']->promo) {
-                //         $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
-                //     } else {
-                //         $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
-                //     }
-                // } else {
-                //     $html .= '<small> Rp. -</small>';
-                // }
+                $html .= '                    <label class="d-block mb-0"> Harga';
+                $html .= '                    </label>';
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                    } else {
+                        $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                    }
+                } else {
+                    $html .= '<small> Rp. -</small>';
+                }
                 $html .= '                </div>';
                 $html .= '            </a>';
                 $html .= '            <div class="text-center mt-2 w-100">';
-                // if ($v['pricing']) {
-                //     if ($v['pricing']->promo) {
-                //         $html .=
-                //             '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
-                //     } else {
-                //         $html .=
-                //             '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
-                //     }
-                // } else {
-                //     $html .=
-                //         '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
-                // }
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $html .=
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                    } else {
+                        $html .=
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                    }
+                } else {
+                    $html .=
+                        '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
+                }
                 $html .=
                     '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
                 $html .=
@@ -172,32 +172,32 @@ class HomeController extends Controller
             $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
             $semua .= '                </div>';
             $semua .= '                <div class="ml-2 flex-fill text-center">';
-            // $semua .= '                    <label class="d-block mb-0"> Harga';
-            // $semua .= '                    </label>';
-            // if ($v['pricing']) {
-            //     if ($v['pricing']->promo) {
-            //         $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
-            //     } else {
-            //         $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
-            //     }
-            // } else {
-            //     $semua .= '<small> Rp. -</small>';
-            // }
+            $semua .= '                    <label class="d-block mb-0"> Harga';
+            $semua .= '                    </label>';
+            if ($v['pricing']) {
+                if ($v['pricing']->promo) {
+                    $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                } else {
+                    $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                }
+            } else {
+                $semua .= '<small> Rp. -</small>';
+            }
             $semua .= '                </div>';
             $semua .= '            </a>';
             $semua .= '            <div class="text-center mt-2 w-100">';
-            // if ($v['pricing']) {
-            //     if ($v['pricing']->promo) {
-            //         $semua .=
-            //             '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
-            //     } else {
-            //         $semua .=
-            //             '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
-            //     }
-            // } else {
-            //     $semua .=
-            //         '<h3 class="text-primary mb-2"> Rp. -</h3>';
-            // }
+            if ($v['pricing']) {
+                if ($v['pricing']->promo) {
+                    $semua .=
+                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                } else {
+                    $semua .=
+                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                }
+            } else {
+                $semua .=
+                    '<h3 class="text-primary mb-2"> Rp. -</h3>';
+            }
             $semua .=
                 '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
             $semua .=
@@ -333,32 +333,32 @@ class HomeController extends Controller
                 $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
                 $html .= '                </div>';
                 $html .= '                <div class="ml-2 flex-fill">';
-                // $html .= '                    <label class="d-block mb-0"> Harga';
-                // $html .= '                    </label>';
-                // if ($v['pricing']) {
-                //     if ($v['pricing']->promo) {
-                //         $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
-                //     } else {
-                //         $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
-                //     }
-                // } else {
-                //     $html .= '<small> Rp. -</small>';
-                // }
+                $html .= '                    <label class="d-block mb-0"> Harga';
+                $html .= '                    </label>';
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                    } else {
+                        $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                    }
+                } else {
+                    $html .= '<small> Rp. -</small>';
+                }
                 $html .= '                </div>';
                 $html .= '            </a>';
                 $html .= '            <div class="text-center mt-2 w-100">';
-                // if ($v['pricing']) {
-                //     if ($v['pricing']->promo) {
-                //         $html .=
-                //             '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
-                //     } else {
-                //         $html .=
-                //             '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
-                //     }
-                // } else {
-                //     $html .=
-                //         '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
-                // }
+                if ($v['pricing']) {
+                    if ($v['pricing']->promo) {
+                        $html .=
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                    } else {
+                        $html .=
+                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                    }
+                } else {
+                    $html .=
+                        '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
+                }
                 $html .=
                     '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
                 $html .=
@@ -402,32 +402,32 @@ class HomeController extends Controller
             $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
             $semua .= '                </div>';
             $semua .= '                <div class="ml-2 flex-fill text-center">';
-            // $semua .= '                    <label class="d-block mb-0"> Harga';
-            // $semua .= '                    </label>';
-            // if ($v['pricing']) {
-            //     if ($v['pricing']->promo) {
-            //         $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
-            //     } else {
-            //         $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
-            //     }
-            // } else {
-            //     $semua .= '<small> Rp. -</small>';
-            // }
+            $semua .= '                    <label class="d-block mb-0"> Harga';
+            $semua .= '                    </label>';
+            if ($v['pricing']) {
+                if ($v['pricing']->promo) {
+                    $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                } else {
+                    $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                }
+            } else {
+                $semua .= '<small> Rp. -</small>';
+            }
             $semua .= '                </div>';
             $semua .= '            </a>';
             $semua .= '            <div class="text-center mt-2 w-100">';
-            // if ($v['pricing']) {
-            //     if ($v['pricing']->promo) {
-            //         $semua .=
-            //             '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
-            //     } else {
-            //         $semua .=
-            //             '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
-            //     }
-            // } else {
-            //     $semua .=
-            //         '<h3 class="text-primary mb-2"> Rp. -</h3>';
-            // }
+            if ($v['pricing']) {
+                if ($v['pricing']->promo) {
+                    $semua .=
+                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                } else {
+                    $semua .=
+                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                }
+            } else {
+                $semua .=
+                    '<h3 class="text-primary mb-2"> Rp. -</h3>';
+            }
             $semua .=
                 '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
             $semua .=

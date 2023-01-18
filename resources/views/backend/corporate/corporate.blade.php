@@ -67,6 +67,7 @@
                             <th>No Telp</th>
                             <th>Wilayah</th>
                             <th>Alamat</th>
+                            <th>Jenis Corporate</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -77,6 +78,7 @@
                             <td>{{$p->no_telp}}</td>
                             <td>{{$p->lokasi}}</td>
                             <td>{{$p->alamat}}</td>
+                            <td class="text-uppercase">{{$p->jenis}}</td>
                             <td>
                                 <button class="btn btn-warning" id="edit" title="Edit"
                                     onclick="editPromo('{{$p->id}}','{{$p->nama}}','{{$p->alamat}}','{{$p->no_telp}}','{{$p->lokasi}}','{{$p->jenis}}')"><i

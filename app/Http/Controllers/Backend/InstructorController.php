@@ -214,42 +214,60 @@ class InstructorController extends Controller
         return view('backend.instructor.class.classess', $data);
     }
 
-    public function classesCreate()
+    public function classesCreate($id)
     {
+        $data = [];
+        if ($id !== 'null') {
+            $c = ClassesModel::where('id', $id)->first();
+            $data['old']['id'] = $c->id;
+            $data['old']['txtClassesTitle'] = $c->title;
+            $data['old']['slcClassesCategory'] = $c->category;
+            $data['old']['slcClassesType'] = $c->tipe;
+            $data['old']['datClassesDateStart'] = $c->date_start;
+            $data['old']['datClassesDateEnd'] = $c->date_end;
+            $data['old']['tags'] = json_decode($c->tags);
+            $data['old']['filClassesImage'] = $c->image;
+            $data['old']['filClassesImageMobile'] = $c->image_mobile;
+            $data['old']['numClassesLimit'] = $c->participant_limit;
+            $data['old']['txaClassesContent'] = $c->content;
+        }
         $data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
         $data['instructor'] = InstructorModel::where('user_id', Auth::user()->id)->get();
+        $tags = ClassesModel::select('tags')->distinct('tags')->pluck('tags')->toArray();
+        $data['tags'] = [];
+        foreach ($tags as $key => $value) {
+            if ($value) {
+                $js = json_decode($value);
+                if ($js) {
+                    foreach ($js as $key => $v) {
+                        if (!in_array($v, $data['tags'])) {
+                            array_push($data['tags'], $v);
+                        }
+                    }
+                }
+            }
+        }
+        // return $data;
         return view('backend.instructor.class.classcreate', $data);
     }
 
     public function classesStore(Request $r)
     {
-        $nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
-        $sizeMobile = $r->file('filClassesImageMobile')->getSize();
-        $name = $r->file('filClassesImage')->getClientOriginalName();
-        $size = $r->file('filClassesImage')->getSize();
-
-        if ($size >= 1048576) {
-            return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+        // return $r->all();
+        if (!$r->id && !$r->filClassesImage) {
+            return Redirect::back()->with('error', 'Gambar Tidak Ditemukan')->withInput($r->all());
         }
-        if ($sizeMobile >= 1048576) {
-            return Redirect::back()->with('error', 'Ukuran File Mobile Melebihi 1 MB');
+        if (!$r->id && !$r->filClassesImageMobile) {
+            return Redirect::back()->with('error', 'Gambar Tidak Ditemukan')->withInput($r->all());
         }
 
-        $filename = time() . '-' . $name;
-        $file = $r->file('filClassesImage');
-        $file->move(public_path('image/classes'), $filename);
-        $filenameMobile = time() . '-' . $nameMobile;
-        $fileMobile = $r->file('filClassesImageMobile');
-        $fileMobile->move(public_path('image/classes'), $filenameMobile);
-
-
-        ClassesModel::create([
+        $input = [
             'title' => $r->txtClassesTitle,
             'instructor' => json_encode($r->txtClassesInstructor),
             'category' => $r->slcClassesCategory,
             'tags' => json_encode($r->slcClassesTags),
-            'image' => ('/image/classes/' . $filename),
-            'image_mobile' => ('/image/classes/' . $filenameMobile),
+            // 'image' => ('/image/classes/' . $filename),
+            // 'image_mobile' => ('/image/classes/' . $filenameMobile),
             'content' => $r->txaClassesContent,
             'unique_id' => uniqid(),
             'participant_limit' => $r->numClassesLimit,
@@ -257,7 +275,37 @@ class InstructorController extends Controller
             'date_end' => $r->datClassesDateEnd,
             'tipe' => $r->slcClassesType,
             'level' => $r->slcClassesLevel,
-        ]);
+        ];
+        if ($r->filClassesImageMobile) {
+            $nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
+            $sizeMobile = $r->file('filClassesImageMobile')->getSize();
+
+            if ($sizeMobile >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Mobile Melebihi 1 MB')->withInput($r->all());
+            }
+
+            $filenameMobile = time() . '-' . $nameMobile;
+            $fileMobile = $r->file('filClassesImageMobile');
+            $fileMobile->move(public_path('image/classes'), $filenameMobile);
+            $input['image_mobile'] = '/image/classes/' . $filenameMobile;
+        }
+        if ($r->filClassesImage) {
+            $name = $r->file('filClassesImage')->getClientOriginalName();
+            $size = $r->file('filClassesImage')->getSize();
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB')->withInput($r->all());
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $r->file('filClassesImage');
+            $file->move(public_path('image/classes'), $filename);
+            $input['image'] = '/image/classes/' . $filename;
+        }
+
+        ClassesModel::updateOrCreate([
+            'id' => $r->id
+        ], $input);
 
         return Redirect::back()->with('success', 'Class Saved');
     }

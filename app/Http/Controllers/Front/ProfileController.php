@@ -128,7 +128,7 @@ class ProfileController extends Controller
     public function saveCorporate($data)
     {
         $pesan = 'Simpan data gagal';
-        $c = CorporateModel::where('id', $data->nama_lengkap)->first();
+        $c = CorporateModel::where('nama', $data->nama_lengkap)->first();
         $insert = [
             'jenis_corporate' => $data->jenis_corporate,
             'id_corporate' => $c->id,
@@ -136,7 +136,7 @@ class ProfileController extends Controller
             'phone_region' => 62,
             'phone' => $data->nomor_handphone,
             'tanggal_lahir' => $data->tanggal_lahir,
-            'gender' => $data->jenis_kelamin,
+            'gender' => 0,
             'description' => $data->alamat,
         ];
         if ($data->picture) {

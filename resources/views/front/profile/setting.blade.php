@@ -158,9 +158,9 @@
                         </div>
                         <div class="col-lg-3">
                             <label for="form-control">{{$corporate?'Logo':'Foto'}}</label>
-                            <input type="file" class="form-control" name="picture" id="picture">
+                            <input type="file" class="form-control" name="picture" id="picture" accept="image/png, image/gif, image/jpeg">
                             <img id="pictureprv" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}" alt=""
-                                width="80px">
+                                width="80px" >
                         </div>
                     </div>
                     <div class="row">

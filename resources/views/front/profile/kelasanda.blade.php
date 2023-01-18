@@ -40,7 +40,7 @@
             @foreach ($c->class as $cl)
             <tr class="text-center">
                 <td width="1%">{{ $key + 1 }}</td>
-                <td class="longtextoverflow">{{ $cl->title }}</td>
+                <td class="longtextoverflow" title="{{ $cl->title }}">{{ $cl->title }}</td>
                 <td>
                     @foreach ($cl->instructor_list as $instructor_list)
                     <span class="badge badge-primary">{{ $instructor_list->name
@@ -90,16 +90,20 @@
                         </div>
                     </div>
                 </td>
+                @if($cl->date_end < \Carbon\Carbon::now()->subDay())
                 <td>
-                    <button class="button button-circle button-mini" {{-- --}} @if ($c->review) onclick="onReview('{{
+                    <button class="button button-circle button-mini" @if ($c->review) onclick="onReview('{{
                         $c->review
                         }}','{{ $c->review_point }}')"
                         @else
                         onclick="review({{ $c->participant_id }})"
                         @endif>Class</button>
-                    <button class="button button-circle button-mini" {{-- --}}
+                    <button class="button button-circle button-mini"
                         onclick="reviewIns({{ $c->class[0]->instructor_list[0]->id }})">Intructor</button>
                 </td>
+                    @else
+                    <td>Kelas Belum Selesai</td>
+                @endif
             </tr>
             @endforeach
             @endforeach

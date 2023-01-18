@@ -29,6 +29,7 @@ class WithdrawController extends Controller
 
     public function proses(Request $request)
     {
+        // return $request->all();
         $validator = Validator::make($request->all(), [
             'nama_bank' => 'required',
             'no_rekening' => 'required|numeric',
@@ -36,6 +37,10 @@ class WithdrawController extends Controller
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
+        }
+        $saldoTersedia = GlobalHelper::currentSaldoById(Auth::user()->id);
+        if ($request->nominal_penarikan > $saldoTersedia) {
+            return Redirect::back()->withInput($request->all())->with('error', 'Saldo Tidak Cukup');
         }
 
         $d = RefferralWithdrawModel::create([

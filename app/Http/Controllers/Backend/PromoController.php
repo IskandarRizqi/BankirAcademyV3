@@ -42,7 +42,7 @@ class PromoController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->image;
+        // return $request->all();
         $valid = Validator::make($request->all(), [
             'tgl_mulai' => 'required',
             'tgl_selesai' => 'required',
@@ -54,6 +54,7 @@ class PromoController extends Controller
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
+
         $kode = KodePromoModel::where('kode', $request->kode)->where('id', '!=', $request->id)->first();
         if ($kode) {
             return Redirect::back()->withInput($request->all())->with('error', 'Kode Sudah Tersedia');
@@ -80,7 +81,8 @@ class PromoController extends Controller
             $data['image'] = json_encode(['url' => $filename1, 'size' => $sizeimage]);
         }
 
-        $p = KodePromoModel::UpdateOrCreate([
+        // return json_decode($data['image']);
+        $p = KodePromoModel::updateOrCreate([
             'id' => $request->id
         ], $data);
         if ($p) {

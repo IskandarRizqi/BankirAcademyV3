@@ -16,5 +16,6 @@ class KodePromoModel extends Model
         'nominal',
         'class_title',
         'image',
+        'class_id',
     ];
 }

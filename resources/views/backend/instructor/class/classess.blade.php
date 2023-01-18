@@ -26,7 +26,7 @@
 						</div>
 					</div>
 					<div class="col-lg-6 text-right">
-						<A class="btn btn-primary btn-large" type="button" href="/instructor/classes/create">New</A>
+						<A class="btn btn-primary btn-large" type="button" href="/instructor/classes/create/null">New</A>
 					</div>
 				</div>
 			</form>
@@ -116,7 +116,7 @@
 									</button>
 									<div class="dropdown-menu">
 										<a class="dropdown-item" title="Edit"
-											href="/admin/classes/{{$v->id}}/edit">Edit</a>
+											href="/instructor/classes/create/{{$v->id}}">Edit</a>
 										<a class="dropdown-item" title="Delete"
 											onclick="deleteClasses({{$v->id}})">Hapus</a>
 										<form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
