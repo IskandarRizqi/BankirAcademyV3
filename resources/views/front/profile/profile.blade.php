@@ -369,10 +369,10 @@
                 <div class="modal-body">
                     <div id="pilihGambar" class="row">
                         <div class="col">
-                            <img src="perorangan.jpg" alt="" id="peroranganPilih">
+                            <img src="/a_peorangan.jpg" alt="" id="peroranganPilih">
                         </div>
                         <div class="col">
-                            <img src="corporate.jpg" alt="" id="corporatePilih">
+                            <img src="/a_perusahaan.jpg" alt="" id="corporatePilih">
                         </div>
                     </div>
                     <div id="formPerorangan" hidden>
