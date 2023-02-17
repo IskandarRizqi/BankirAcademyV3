@@ -75,6 +75,12 @@ class HomeController extends Controller
                 $next_page_url = $dx['kelas'][$value]['next_page_url'];
             }
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
+                $tglawal = $v['date_start'];
+                $tglakhir = $v['date_end'];
+                if (count($v['event_list']) > 0) {
+                    $tglawal = $v['event_list'][0]->time_start;
+                    $tglakhir = $v['event_list'][count($v['event_list']) - 1]->time_end;
+                }
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
                 $html .= '        <div class="card-body" style="min-height: 708px !important">';
@@ -83,10 +89,10 @@ class HomeController extends Controller
                 $html .= '            </div>';
                 $html .= '            <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
                 $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
-                if ($v['date_start'] == $v['date_end']) {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</p>';
+                if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
                 } else {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</p>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
                 }
                 $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
                 if (json_decode($v['instructor_list'][0]->picture)) {
@@ -148,6 +154,12 @@ class HomeController extends Controller
             if ($dx['kelas']['Semua']['next_page_url']) {
                 $next_page_url = $dx['kelas']['Semua']['next_page_url'];
             }
+            $tglawal = $v['date_start'];
+            $tglakhir = $v['date_end'];
+            if (count($v['event_list']) > 0) {
+                $tglawal = $v['event_list'][0]->time_start;
+                $tglakhir = $v['event_list'][count($v['event_list']) - 1]->time_end;
+            }
             $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
@@ -156,10 +168,10 @@ class HomeController extends Controller
             $semua .= '            </div>';
             $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
             $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
-            if ($v['date_start'] == $v['date_end']) {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</p>';
+            if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
             } else {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</p>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
             }
             $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
             if (json_decode($v['instructor_list'][0]->picture)) {
@@ -309,30 +321,42 @@ class HomeController extends Controller
 
             $html .= '<div id="' . $replace . '" class="row tabsCustom mt-2" hidden>';
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
+                $tglawal = $v['date_start'];
+                $tglakhir = $v['date_end'];
+                if (count($v['event_list']) > 0) {
+                    $tglawal = $v['event_list'][0]->time_start;
+                    $tglakhir = $v['event_list'][count($v['event_list']) - 1]->time_end;
+                }
+                $tglawal = $v['date_start'];
+                $tglakhir = $v['date_end'];
+                if (count($v['event_list']) > 0) {
+                    $tglawal = $v['event_list'][0]->time_start;
+                    $tglakhir = $v['event_list'][count($v['event_list']) - 1]->time_end;
+                }
                 $html .= '<div class="col-lg-4 col-sm-6 mb-4">';
                 $html .= '    <div class="card">';
                 $html .= '        <div class="card-body" style="min-height: 708px !important">';
                 $html .= '            <div class="card" style="min-height: 340px !important">';
                 $html .= '                <img src="' . $v['image'] . '" width=100%>';
                 $html .= '            </div>';
-                $html .= '            <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
+                $html .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
                 $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
-                if ($v['date_start'] == $v['date_end']) {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</p>';
+                if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
                 } else {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</p>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
                 }
                 $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
                 if (json_decode($v['instructor_list'][0]->picture)) {
                     $html .= '                <img class="mr-3 rounded-circle"';
                     $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
                 }
-                $html .= '                <div class=>';
+                $html .= '                <div class="text-left">';
                 $html .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
                 $html .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
                 $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
                 $html .= '                </div>';
-                $html .= '                <div class="ml-2 flex-fill">';
+                $html .= '                <div class="ml-2 flex-fill text-center">';
                 $html .= '                    <label class="d-block mb-0"> Harga';
                 $html .= '                    </label>';
                 if ($v['pricing']) {
@@ -350,14 +374,14 @@ class HomeController extends Controller
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
                         $html .=
-                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                            '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
                     } else {
                         $html .=
-                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                            '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
                     }
                 } else {
                     $html .=
-                        '<h3 style=" color:#139700 !important;"> Rp. -</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. -</h3>';
                 }
                 $html .=
                     '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
@@ -368,7 +392,7 @@ class HomeController extends Controller
                 $html .= '                    Detail';
                 $html .= '                </a>';
                 $html .= '            </div>';
-                $html .= '        </div>';
+                $html .= '            </div>';
                 $html .= '        </div>';
                 $html .= '    </div>';
                 $html .= '</div>';
@@ -378,6 +402,12 @@ class HomeController extends Controller
             $data['o']['cateKelas'] .= $html;
         }
         foreach ($dx['kelas']['Semua']['data'] as $key => $v) {
+            $tglawal = $v['date_start'];
+            $tglakhir = $v['date_end'];
+            if (count($v['event_list']) > 0) {
+                $tglawal = $v['event_list'][0]->time_start;
+                $tglakhir = $v['event_list'][count($v['event_list']) - 1]->time_end;
+            }
             $semua .= '<div class="col-lg-4 col-sm-6 mb-4">';
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
@@ -386,10 +416,10 @@ class HomeController extends Controller
             $semua .= '            </div>';
             $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
             $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
-            if ($v['date_start'] == $v['date_end']) {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . '</p>';
+            if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
             } else {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($v['date_start'])->format('d-m-Y') . ' - ' . Carbon::parse($v['date_end'])->format('d-m-Y') . '</p>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
             }
             $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
             if (json_decode($v['instructor_list'][0]->picture)) {
@@ -446,7 +476,7 @@ class HomeController extends Controller
         $data['o']['cateKelas'] .= $semua;
         $data['o']['next_page'] = $dx['kelas']['Semua']['next_page_url'];
         // return $dx['kelas']['Semua']['next_page_url'];
-        // return $data;
+        // return $dx;
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
     }
 

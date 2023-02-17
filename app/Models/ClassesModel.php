@@ -31,12 +31,18 @@ class ClassesModel extends Model
 		'status',
 	];
 
-	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list', 'total_peserta'];
+	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list', 'total_peserta', 'event_list'];
 
 	public function getInstructorListAttribute()
 	{
 		if (array_key_exists('instructor', $this->attributes)) {
 			return DB::table('instructor')->whereIn('id', json_decode($this->attributes['instructor']))->get();
+		}
+	}
+	public function getEventListAttribute()
+	{
+		if (array_key_exists('id', $this->attributes)) {
+			return DB::table('class_event')->where('class_id', $this->attributes['id'])->orderBy('time_start')->get();
 		}
 	}
 
