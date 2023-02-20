@@ -148,8 +148,8 @@
                                 (optional)</label>
                             <input type="text" id="referral" name="referral" class="form-control"
                                 onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
-                                value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
-                                @if (isset($pfl['user_id'])){{ $pfl['referral'] ? 'readonly' : '' }}@endif>
+                                value="@if (isset($pfl['code'])){{ $pfl['code'] ? $pfl['code'] : '' }}@endif" {{
+                                $pfl['code'] ? 'readonly' : '' }}>
                             @if (Session::has('referral'))
                             <div class="error" style="color: red; display:block;">
                                 {{ Session::get('referral') }}
@@ -158,9 +158,10 @@
                         </div>
                         <div class="col-lg-3">
                             <label for="form-control">{{$corporate?'Logo':'Foto'}}</label>
-                            <input type="file" class="form-control" name="picture" id="picture" accept="image/png, image/gif, image/jpeg">
+                            <input type="file" class="form-control" name="picture" id="picture"
+                                accept="image/png, image/gif, image/jpeg">
                             <img id="pictureprv" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}" alt=""
-                                width="80px" >
+                                width="80px">
                         </div>
                     </div>
                     <div class="row">
