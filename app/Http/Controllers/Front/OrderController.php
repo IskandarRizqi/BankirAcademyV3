@@ -70,9 +70,9 @@ class OrderController extends Controller
         foreach ($data['payment'] as $key => $v) {
             $data['profile'] = UserProfileModel::where('user_id', $v->user_id)->first();
             $kode = 0;
-            if ($v->promo) {
+            if ($v->promo == 1) {
                 // Cek kode promo Tersedia
-                $kode = $v->promo;
+                $kode = $v->promo_price;
             }
             // Deklarasi referral
             $v->reff = 0;
@@ -232,10 +232,14 @@ class OrderController extends Controller
         $price_final = 0;
         $cp = ClassPricingModel::where('class_id', $request->class_id)->first();
         if ($cp) {
-            $price = $cp->price - $cp->promo_price;
+            $price = $cp->price;
             $price_final = $price + $randomNumber;
+            if ($cp->promo == 1) {
+                $price = $cp->price - $cp->promo_price;
+                $price_final = $price + $randomNumber;
+            }
         }
-
+        // return $price_final;
         ClassPaymentModel::create([
             'status' => 0,
             'user_id' => $auth,
