@@ -244,7 +244,7 @@
                                                     @endif
                                                 </div> --}}
                                             </a>
-                                            {{-- <div class="text-center mt-2 w-100">
+                                            <div class="text-center mt-2 w-100">
                                                 @if ($v['pricing'])
                                                 @if ($v['pricing']->promo)
                                                 <h3 class="text-primary mb-2">Rp. {{number_format($v['pricing']->price -
@@ -256,7 +256,7 @@
                                                 @else
                                                 <h3 class="text-primary mb-2">Rp. -</h3>
                                                 @endif
-                                            </div> --}}
+                                            </div>
                                             <div class="row align-items-center">
                                                 <a class="btn btn-primary btn-block btn-rounded"
                                                     style="border-radius:10px !important"

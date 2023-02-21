@@ -36,8 +36,9 @@ class ProfileController extends Controller
     {
         $auth = Auth::user()->id;
         $data['user'] = User::where('id', Auth::user()->id)->first();
-        $data['pfl'] = UserProfileModel::select()
-            ->where('user_id', Auth::user()->id)
+        $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
+            ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
+            ->where('user_profile.user_id', Auth::user()->id)
             ->first();
         // $data['pfl']['referral'] = RefferralModel::select()
         //     ->where('user_aplicator', Auth::user()->id)
