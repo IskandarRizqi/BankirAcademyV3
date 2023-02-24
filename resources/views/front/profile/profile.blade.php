@@ -70,6 +70,7 @@
                                             </span>
                                         </a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
+                                    <li><a href="#tab-posting-loker" @if (isset($pfl['code'])){{ $pfl['code'] ? 'hidden' : '' }}@endif><i class="icon-suitcase"></i> Posting Loker</a></li>
                                 </ul>
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
@@ -289,6 +290,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="tab-content clearfix" id="tab-posting-loker">
+                                        @include('front.profile.postingloker')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-postss">
                                         @include('front.profile.kelasanda')
@@ -511,8 +515,10 @@
                                                 <option value="">Pilih</option>
                                                 <option value="bankumum">Bank Umum</option>
                                                 <option value="bpr">BPR</option>
+                                                <option value="bprs">BPRS</option>
                                                 <option value="koperasi">Koperasi</option>
                                                 <option value="lkm">Lembaga Keuangan Mikro</option>
+                                                <option value="lainnya">Lainnya</option>
                                             </select>
                                         </div>
                                         <div class="col-md-9 select-custom">

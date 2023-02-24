@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Imports\CorporateImport;
 use App\Models\CorporateModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CorporateController extends Controller
 {
@@ -75,6 +77,27 @@ class CorporateController extends Controller
             return Redirect::back()->with('success', 'Simpan Data Berhasil');
         }
         return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Simpan Data Gagal');
+    }
+
+    public function download()
+    {
+        //PDF file is stored under project/public/download/info.pdf
+        $file = public_path() . "/download/importcorporate.xlsx";
+
+        $headers = array(
+            'Content-Type: application/pdf',
+        );
+
+        return response()->download($file, 'template-corporate.xlsx', $headers);
+    }
+
+    public function importcorporate(Request $request)
+    {
+        // return $request->all();
+        if ($request->excel) {
+            Excel::import(new CorporateImport, $request->excel);
+            return Redirect::back()->with('success', 'Import Berhasil');
+        }
     }
 
     /**

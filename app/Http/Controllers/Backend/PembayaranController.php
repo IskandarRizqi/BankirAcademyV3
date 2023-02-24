@@ -10,6 +10,7 @@ use App\Models\RefferralModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
@@ -113,5 +114,20 @@ class PembayaranController extends Controller
             return Redirect::back()->with(['success' => $msg]);
         }
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $cs]);
+    }
+    public function update_bukti(Request $request)
+    {
+        if ($request->foto) {
+            $size = $request->file('foto')->getSize();
+            if (($size / 1024) > 100) {
+                return Redirect::back()->with('error', 'Size Maximum 100kb');
+            }
+            $gambar = $request->foto->store('order/' . Auth::user()->email . '/' . time());
+
+            ClassPaymentModel::where('id', $request->idpembayaran)->update([
+                'file' => $gambar
+            ]);
+            return Redirect::back()->with('success', 'Update Berhasil');
+        }
     }
 }

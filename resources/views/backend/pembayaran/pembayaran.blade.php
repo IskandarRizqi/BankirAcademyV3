@@ -119,7 +119,10 @@
                                 <button class="btn bs-tooltip btn-info" title="Lunas"
                                     onclick="approved('{{ $p->no_invoice }}',{{ $p->status }})"><i
                                         class='bx bx-wallet'></i></button>
-                                @endif
+                                        @endif
+                                        <button class="btn bs-tooltip btn-info" title="Edit Bukti"
+                                            onclick="updatebukti('{{$p}}')"><i
+                                                class='bx bx-user'></i></button>
                             </td>
                         </tr>
                         @endforeach
@@ -130,6 +133,31 @@
                     <input type="text" name="status" id="status" hidden>
                 </form>
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="cardupdateprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <form action="/admin/pembayaran/updatebukti" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                        @csrf
+                        <input type="text" name="idpembayaran" id="idpembayaran" hidden>
+                        <label for="">Foto</label>
+                            <div class="form-group">
+                                <input type="file" name="foto" id="foto" accept="image/*" onchange="loadFile(event)" required>
+                                <img id="output" width="300px">
+                            </div>
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -137,7 +165,20 @@
 @section('custom-js')
 <script>
     createDataTable('#tblPembayaran');
-
+    var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) // free memory
+    }
+  };
+    function updatebukti(params) {
+        let j = JSON.parse(params)
+        console.log(j);
+        $('#cardupdateprofile').modal('show')
+        $('#idpembayaran').val(j.id)
+        $('#output').attr('src',j.file)
+    }
         function viewimage(image) {
             swal.fire({
                 imageUrl: '/image/' + image,

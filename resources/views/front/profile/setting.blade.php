@@ -33,11 +33,11 @@
                         @else
                         <?php $corporate = false; ?>
                         @endif
-                        <input type="text" name="iscorporate" value="ada" hidden>
+                        <input type="text" name="iscorporate" value="<?= $corporate ?>" hidden>
                         <div class="col-md-3" {{$corporate?'':'hidden'}}>
                             <label for="form-control">Jenis Corporate</label>
                             <select name="jenis_corporate" class="form-control" id="jenis_corporate"
-                                data-show-subtext="true" data-live-search="true" required>
+                                data-show-subtext="true" data-live-search="true">
                                 <option value="">Pilih</option>
                                 @if ($corporate)
                                 <option value="bankumum" {{$user->
@@ -60,7 +60,7 @@
                         <div class="col-md-6" {{$corporate?'':'hidden'}}>
                             <label for="form-control">Nama Corporate</label>
                             <select name="nama_lengkap" class="form-control" id="nama_lengkap" data-show-subtext="true"
-                                data-live-search="true" required>
+                                data-live-search="true">
                                 <option value="">Pilih</option>
                             </select>
                         </div>
@@ -148,8 +148,7 @@
                                 (optional)</label>
                             <input type="text" id="referral" name="referral" class="form-control"
                                 onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
-                                value="@if (isset($pfl['code'])){{ $pfl['code'] ? $pfl['code'] : '' }}@endif" {{
-                                $pfl['code'] ? 'readonly' : '' }}>
+                                value="@if (isset($pfl['code'])){{ $pfl['code'] ? $pfl['code'] : '' }}@endif" @if (isset($pfl['code'])){{ $pfl['code'] ? 'readonly' : '' }}@endif>
                             @if (Session::has('referral'))
                             <div class="error" style="color: red; display:block;">
                                 {{ Session::get('referral') }}

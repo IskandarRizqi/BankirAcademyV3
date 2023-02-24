@@ -129,7 +129,12 @@ class ProfileController extends Controller
     public function saveCorporate($data)
     {
         $pesan = 'Simpan data gagal';
-        $c = CorporateModel::where('nama', $data->nama_lengkap)->first();
+        // $c = CorporateModel::where('nama', $data->nama_lengkap)->first();
+        $c = CorporateModel::updateOrCreate([
+            'nama' => $data->nama_lengkap
+        ], [
+            'jenis' => $data->jenis_corporate
+        ]);
         $insert = [
             'jenis_corporate' => $data->jenis_corporate,
             'id_corporate' => $c->id,
@@ -159,13 +164,13 @@ class ProfileController extends Controller
         ], $insert);
         if ($p) {
             User::where('id', Auth::user()->id)->update(['corporate' => json_encode($insert)]);
-            CorporateModel::create([
-                'nama' => $c->nama,
-                'no_telp' => $data->nomor_handphone,
-                'alamat' => $data->alamat,
-                'lokasi' => 'Belum Ditentukan',
-                'jenis' => 'Belum Ditentukan',
-            ]);
+            // CorporateModel::create([
+            //     'nama' => $c->nama,
+            //     'no_telp' => $data->nomor_handphone,
+            //     'alamat' => $data->alamat,
+            //     'lokasi' => 'Belum Ditentukan',
+            //     'jenis' => 'Belum Ditentukan',
+            // ]);
             $pesan = 'Simpan data berhasil';
         }
         return $pesan;

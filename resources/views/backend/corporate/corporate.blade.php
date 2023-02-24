@@ -3,6 +3,18 @@
 <div class="col-lg-12">
     <div class="widget">
         <div class="widget-content">
+            <div class="container">
+                <label for="">Import Corporate</label>
+                <form action="/admin/importcorporate" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input class="form-control" type="file" name="excel" id="excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                    <div class="d-flex mt-2">
+                        <button class="btn btn-primary mr-4" type="submit">Import</button>
+                        <a href="/admin/downloadcorporate" target="_blank" class="btn btn-info">Download Contoh</a>
+                    </div>
+                </form>
+            </div>
+            <hr>
             <form action="/admin/corporate" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input name="id" id="id" value="{{old('id')}}" hidden>
@@ -40,8 +52,10 @@
                             <option value="">Pilih</option>
                             <option value="bankumum">Bank Umum</option>
                             <option value="bpr">BPR</option>
+                            <option value="bprs">BPRS</option>
                             <option value="koperasi">Koperasi</option>
                             <option value="lkm">Lembaga Keuangan Mikro</option>
+                            <option value="lainnya">Lainnya</option>
                         </select>
                         @error('jenis_corporate')
                         <small class="text-danger">Harus Diisi</small>

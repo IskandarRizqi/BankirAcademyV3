@@ -44,6 +44,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
     Route::post('/admin/pembayaran/approved', [App\Http\Controllers\Backend\PembayaranController::class, 'approved']);
     Route::post('/admin/pembayaran/certificate', [App\Http\Controllers\Backend\PembayaranController::class, 'publish_certificate']);
+    Route::post('/admin/pembayaran/updatebukti', [App\Http\Controllers\Backend\PembayaranController::class, 'update_bukti']);
     Route::get('/admin/partner', [App\Http\Controllers\Backend\PartnerController::class, 'index']);
     Route::post('/admin/partner', [App\Http\Controllers\Backend\PartnerController::class, 'input_partner']);
     Route::post('/admin/partner/delete', [App\Http\Controllers\Backend\PartnerController::class, 'delete_partner']);
@@ -54,6 +55,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/kupon', PromoController::class);
     Route::resource('/admin/fee', FeeController::class);
     Route::resource('/admin/corporate', CorporateController::class);
+    Route::post('/admin/importcorporate', [CorporateController::class, 'importcorporate']);
+    Route::get('/admin/downloadcorporate', [CorporateController::class, 'download']);
 
     //pages
     Route::delete("/admin/pages/delete/{id}", [App\Http\Controllers\Front\PagesController::class, "delete"]);
