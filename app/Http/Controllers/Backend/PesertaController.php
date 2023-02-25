@@ -14,7 +14,7 @@ class PesertaController extends Controller
     public function index()
     {
         $data = [];
-        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'classes.title', 'user_profile.phone')
+        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'users.google_id', 'classes.title', 'user_profile.picture', 'user_profile.phone')
             ->join('users', 'users.id', 'class_participant.user_id')
             ->join('classes', 'classes.id', 'class_participant.class_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'class_participant.user_id')
@@ -50,7 +50,7 @@ class PesertaController extends Controller
     public function corporate()
     {
         $data = [];
-        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'classes.title', 'user_profile.phone', 'users.corporate')
+        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'users.google_id', 'classes.title', 'user_profile.phone', 'user_profile.picture', 'users.corporate')
             ->join('users', 'users.id', 'class_participant.user_id')
             ->join('classes', 'classes.id', 'class_participant.class_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'class_participant.user_id')

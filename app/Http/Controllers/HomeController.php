@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClassesModel;
+use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
+use App\Models\DashboardModel;
 use App\Models\FeeModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Spatie\Sitemap\SitemapGenerator;
 
 class HomeController extends Controller
@@ -65,6 +69,13 @@ class HomeController extends Controller
                 $value->data_fee = FeeModel::where('class_id', 'null')->get();
             }
         }
+
+        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'users.google_id', 'classes.title', 'user_profile.phone', 'user_profile.picture', 'users.corporate')
+            ->join('users', 'users.id', 'class_participant.user_id')
+            ->join('classes', 'classes.id', 'class_participant.class_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'class_participant.user_id')
+            ->whereNotNull('users.corporate')
+            ->get();
         // return $data;
         return view('backend.beranda', $data);
     }
@@ -72,5 +83,21 @@ class HomeController extends Controller
     public function createSitemap()
     {
         SitemapGenerator::create(env('APP_URL'))->writeToFile(public_path('sitemap.xml'));
+    }
+
+    public function inputlogopurusahaan(Request $request)
+    {
+        if ($request->checked) {
+            $d = DashboardModel::updateOrCreate([
+                'id' => $request->id
+            ], [
+                'logo_perusahaan' => json_encode($request->checked)
+            ]);
+
+            if ($d) {
+                return Redirect::back()->with('success', 'Data Tersimpan');
+            }
+            return Redirect::back()->with('info', 'Data Tidak Tersimpan');
+        }
     }
 }

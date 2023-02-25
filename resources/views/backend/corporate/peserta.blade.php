@@ -8,6 +8,7 @@
                     <thead>
                         <tr>
                             <th>Nomor</th>
+                            <th>Foto</th>
                             <th>Nama</th>
                             <th>No HP</th>
                             <th>Kelas</th>
@@ -18,6 +19,11 @@
                         @foreach ($peserta as $key => $p)
                         <tr>
                             <td>{{ $key + 1 }}</td>
+                            @if($p->google_id)
+                                <td><img src="{{$p->picture}}" alt="" width="100px"></td>
+                                @else
+                                <td><img src="{{asset($p->picture)}}" alt="" width="100px"></td>
+                            @endif
                             <td>{{ $p->name }}</td>
                             <td>{{ $p->phone ? $p->phone : '' }}</td>
                             <td>{{ $p->title }}</td>
