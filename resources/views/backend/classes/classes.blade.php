@@ -112,6 +112,8 @@
                                             <a class="dropdown-item" title="Preview"
                                                 href="/admin/classes/getreview/{{ $v->id }}" target="_blank">Show
                                                 Review</a>
+                                            <span class="dropdown-item" title="Preview" data-toggle="modal" data-target="#modalSertifikat" onclick="biayasertifikat('{{$v->id}}','{{$v->tipebs}}','{{$v->nominal}}')"
+                                                >Biaya Sertifikat</span>
                                         </div>
                                         <div class="dropdown">
                                         </div>
@@ -175,6 +177,42 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Modal Sertifikat-->
+                    <div class="modal fade" id="modalSertifikat" tabindex="-1" aria-labelledby="modalSertifikatLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form action="/classes/biaya_certificate" method="POST">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalSertifikatLabel">List Peserta</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                        @csrf
+                                        <input type="text" name="id_kelas" id="id_kelas" hidden>
+                                        <div class="form-group">
+                                            <label for="">Tipe</label>
+                                            <select name="tipe" id="tipe" class="form-control" required>
+                                                <option value="0">Nominal</option>
+                                                <option value="1">Persentase</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Nominal</label>
+                                            <input type="text" name="nominal" id="nominal" class="form-control" required>
+                                            <small id="labelNominal"></small>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" >Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,6 +228,30 @@
 
 
 
+        $('#tipe').on('input change', function() {
+            var v = $('#nominal').val();
+            if ($('#tipe').val()==0) {
+                var n = Number(v).toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                });
+                $('#labelNominal').text(n);
+            }else{
+                $('#labelNominal').text(v+' %');
+            }
+        });
+        $('#nominal').on('input change', function() {
+            var v = $(this).val();
+            if ($('#tipe').val()==0) {
+                var n = Number(v).toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                });
+                $('#labelNominal').text(n);
+            }else{
+                $('#labelNominal').text(v+' %');
+            }
+        });
         $('#numClassPrice').on('input change', function() {
             var v = $(this).val();
             var n = Number(v).toLocaleString('id-ID', {
@@ -226,6 +288,13 @@
             $('#numClassPromo').val(rp);
             // $('#numClassPromoPrctg').val(rs);
         });
+
+        function biayasertifikat(id,tipe,nominal) {
+            $('#id_kelas').val(id);
+            $('#tipe').val(tipe);
+            $('#nominal').val(nominal);
+            $('#nominal').change();
+        }
 
         function openPeserta(data) {
             let = html = '';

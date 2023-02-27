@@ -506,6 +506,7 @@
                             <th style="text-align: right;">(-)PROMO</th>
                             <th style="text-align: right;">(-)KUPON</th>
                             <th style="text-align: right;">(-)REFERRAL</th>
+                            <th style="text-align: right;">SERTIFIKAT</th>
                             <th style="text-align: right;">QTY</th>
                             <th style="text-align: right;">TOTAL</th>
                         </tr>
@@ -536,6 +537,10 @@
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->reff,"IDR"),0,-3)}}
+                            </td>
+                            <td class="unit">
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$payment->sertifikat,"IDR"),0,-3)}}
                             </td>
                             <td class="unit">
                                 {{$payment->jumlah}}

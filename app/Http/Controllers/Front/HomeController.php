@@ -10,6 +10,7 @@ use App\Models\ClassLamanModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
 use App\Models\CorporateModel;
+use App\Models\DashboardModel;
 use App\Models\InstructorModel;
 use App\Models\KodePromoModel;
 use App\Models\Pages;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class HomeController extends Controller
 {
@@ -234,8 +236,10 @@ class HomeController extends Controller
     }
     public function index(Request $request)
     {
+        $data = [];
         $now = Carbon::now();
-        // return Carbon::now()->addDays(14)->format('Y-m-d');
+        $data['logo_perusahaan'] = DashboardModel::select()->first();
+        // return $data;
         $kelas_mingguan = [];
         $data['banner_promo'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();

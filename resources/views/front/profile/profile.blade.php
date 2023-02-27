@@ -207,7 +207,10 @@
                                                                 <i class="icon-cog"></i>
                                                             </button>
                                                             <div class="dropdown-menu">
-                                                                <a class="btn btn-primary dropdown-item" href="/classes/getinvoice/{{ $d->id }}" target="_blank" title="Invoice">Invoice</a>
+                                                                {{-- <a class="btn btn-primary dropdown-item" href="/classes/getinvoice/{{ $d->id }}" target="_blank" title="Invoice">Invoice</a> --}}
+                                                                <button id="btnInvoice" type="button" class="btn btn-info dropdown-item" data-toggle="modal" data-target="#invoiceModal" onclick="invoice({{ $d->id }})" title="Invoice">
+                                                                        Inovice
+                                                                </button>
                                                                 @if ($d->status == 0)
                                                                 <button id="btnModal" type="button" class="btn btn-primary dropdown-item" data-toggle="modal" data-target="#bayarModal" onclick="bukti({{ $d->class_id }},{{ $d->id }},{{ $reff ? $reff->code : '' }})" title="Upload Bukti" @if ($d->expired <= Carbon\Carbon::now()) disabled @endif>
                                                                         Upload Bukti
@@ -284,6 +287,29 @@
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                                 <button type="submit" class="btn btn-primary">Save
                                                                     changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Modal Invoice-->
+                                            <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="" method="GET" enctype="multipart/form-data" id="formInvoice" target="_blank">
+                                                            @csrf
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="text" id="payment_invoice" name="payment_invoice" hidden>
+                                                                <input type="text" id="sertifikat_invoice" name="sertifikat_invoice" hidden>
+                                                                <div class="d-flex">
+                                                                    <span class="btn btn-primary" target="_blank" title="Invoice" onclick="cetakInvoice()">Invoice</span>
+                                                                    <span class="btn btn-info ml-auto" target="_blank" title="Invoice" onclick="cetakInvoiceSertifikat()">Invoice Sertifikat</span>
+                                                                </div>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -807,6 +833,22 @@
             }
         })
     })
+
+    function invoice(id) {
+        $('#invoiceModal').modal('show');
+        $('#payment_invoice').val(id);
+    }
+    
+    function cetakInvoice() {
+        $('#sertifikat_invoice').val(0);
+        $('#formInvoice').attr('action','/classes/getinvoice/id');
+        $('#formInvoice').submit();
+    }
+    function cetakInvoiceSertifikat() {
+        $('#sertifikat_invoice').val(1);
+        $('#formInvoice').attr('action','/classes/getinvoice/id');
+        $('#formInvoice').submit();
+    }
 
     function tambahPeserta(params, limit, classid, val, ref) {
         $.ajaxSetup({

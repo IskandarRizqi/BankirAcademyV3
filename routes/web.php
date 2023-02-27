@@ -94,6 +94,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/admin/inputlogopurusahaan', [App\Http\Controllers\HomeController::class, 'inputlogopurusahaan']);
 
+    Route::post('/classes/biaya_certificate', [App\Http\Controllers\Admin\ClassesController::class, 'biayacertificate']);
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
     Route::get('/classes/getinvoice/{id}', [App\Http\Controllers\Front\InvoiceController::class, 'getInvoice']);
     Route::post('/classes/multiinvoice', [App\Http\Controllers\Front\InvoiceController::class, 'multiInvoice']);

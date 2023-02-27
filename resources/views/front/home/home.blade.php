@@ -494,6 +494,24 @@
             <img src="{{ asset('gambar-footer-03.png') }}" alt="">
         </div>
     </div>
+        <div class="section border-top-0 mb-6 mt-4">
+            <div class="container text-center">
+                <div class="logo-perusahaan">
+                    @if($logo_perusahaan)
+                        @foreach(json_decode($logo_perusahaan->logo_perusahaan) as $key => $v)
+                            @if($v)
+                                <?php $f = explode('|',$v); ?>
+                                @if(stripos($f[0],'https')>=0)
+                                    <div><img src="{{$f[0]}}" alt=""></div>
+                                @else
+                                    <div><img src="{{asset($f[0])}}" alt=""></div>
+                                @endif
+                            @endif
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
     <textarea name="" id="kelas" cols="30" rows="10" hidden>{{ json_encode($o['kelas']) }}</textarea>
 </section>
@@ -511,6 +529,40 @@
         setTimeout(() => {
             tabsCategory('Semua');
         }, 500);
+        $('.logo-perusahaan').slick({
+            dots: true,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
         $('#sldall').slick({
             dots: true,
             infinite: false,

@@ -22,6 +22,7 @@ class ClassPaymentModel extends Model
 		'file',
 		'jumlah',
 		'kode_promo',
+		'biaya_sertifikat',
 	];
 	protected $appends = ['promo'];
 	public function getPromoAttribute()

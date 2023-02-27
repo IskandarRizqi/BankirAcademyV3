@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
@@ -20,7 +21,8 @@ class InvoiceController extends Controller
 {
 	public function getInvoice(Request $r, $id)
 	{
-		$data['payment'] = ClassPaymentModel::where('id', $id)->where(function ($q) {
+		// return $r->all();
+		$data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)->where(function ($q) {
 			$role = Auth::user()->role;
 			if ($role == 2) {
 				$q->where('user_id', Auth::user()->id);
@@ -78,8 +80,23 @@ class InvoiceController extends Controller
 				}
 			}
 		}
-		$reff = ClassPaymentModel::where('id', $id)->update([
+
+		// Deklarasi vaiable sertifikat
+		$data['payment']['sertifikat'] = 0;
+		if ($r->sertifikat_invoice > 0) {
+			$s = BiayaSertifikatModel::where('class_id', $data['payment']->class_id)->first();
+			if ($s) {
+				$data['payment']['sertifikat'] = $s->nominal;
+				if ($s->type > 0) {
+					$data['payment']['sertifikat'] = $n * ($s->nominal / 100);
+				}
+			}
+		}
+
+		$data['payment']['totalAkhir'] += $data['payment']['sertifikat'];
+		$reff = ClassPaymentModel::where('id', $r->payment_invoice)->update([
 			'additional_discount' => json_encode($additional_discount),
+			'biaya_sertifikat' => $data['payment']['sertifikat'],
 		]);
 
 		// $data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');

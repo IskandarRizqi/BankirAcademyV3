@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('file')->nullable();
             $table->integer('jumlah')->default(1);
             $table->string('kode_promo')->nullable();
+            $table->double('biaya_sertifikat')->nullable()->default(0);
             $table->timestamps();
         });
     }

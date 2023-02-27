@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
+use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassCertificateTemplate;
 use App\Models\ClassPricingModel;
@@ -32,12 +33,15 @@ class ClassesController extends Controller
 		$data['param']['category'] = ($r->param_category) ? $r->param_category : null;
 
 		//Classes
-		$data['classes'] = ClassesModel::where(function ($q) use ($data) {
-			$q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
-			if ($data['param']['category']) {
-				$q->where('category', $data['param']['category']);
-			}
-		})->get();
+		$data['classes'] = ClassesModel::select('classes.*', 'biaya_sertifikat.type as tipebs', 'biaya_sertifikat.nominal')
+			->where(function ($q) use ($data) {
+				$q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
+				if ($data['param']['category']) {
+					$q->where('category', $data['param']['category']);
+				}
+			})
+			->leftJoin('biaya_sertifikat', 'biaya_sertifikat.class_id', 'classes.id')
+			->get();
 
 		//Additional
 		$data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();
@@ -172,6 +176,7 @@ class ClassesController extends Controller
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
 	}
+
 
 	public function edit(Request $r, $id)
 	{
@@ -699,5 +704,19 @@ class ClassesController extends Controller
 		$data['tipe'] = $request->tipe;
 		$data['jeniss'] = $request->jeniss;
 		return view('front.kelas.listclass', $data);
+	}
+
+	public function biayacertificate(Request $request)
+	{
+		$b = BiayaSertifikatModel::updateOrCreate([
+			'class_id' => $request->id_kelas
+		], [
+			'tipe' => $request->tipe,
+			'nominal' => $request->nominal,
+		]);
+		if ($b) {
+			return Redirect::back()->with('success', 'Biaya Sertifikat Tesimpan');
+		}
+		return Redirect::back()->with('info', 'Biaya Sertifikat Tidak Tesimpan');
 	}
 }
