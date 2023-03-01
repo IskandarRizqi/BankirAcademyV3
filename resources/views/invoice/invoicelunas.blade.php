@@ -499,6 +499,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th class="text-left">NO.</th>
                             <th class="text-left">KELAS</th>
                             <th style="text-align: right;">HARGA</th>
                             <th style="text-align: right;">PROMO</th>
@@ -513,6 +514,7 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <td>1</td>
                             <th class="text-left"
                                 style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
                                 {{$class->title}}</th>

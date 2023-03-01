@@ -144,8 +144,7 @@
                                                     </p>
                                                     <td>
                                                         <div>
-                                                            <input id="checkbox-{{ $key }}" class="checkbox-style" name="checkbox" type="checkbox" {{ $expired ? 'disabled'
-                                                                : '' }} onclick="checkedBilling({{ $d }},{{ $key }})">
+                                                            <input id="checkbox-{{ $key }}" class="checkbox-style" name="checkbox" type="checkbox"  onclick="checkedBilling({{ $d }},{{ $key }})">
                                                             <label for="checkbox-{{ $key }}" class="checkbox-style-3-label"></label>
                                                         </div>
                                                     </td>
@@ -294,21 +293,28 @@
                                             </div>
                                             <!-- Modal Invoice-->
                                             <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
+                                                <div class="modal-dialog modal-md">
                                                     <div class="modal-content">
                                                         <form action="" method="GET" enctype="multipart/form-data" id="formInvoice" target="_blank">
                                                             @csrf
                                                             <div class="modal-header">
+                                                                <h3 style="margin: 0px">Invoice</h3>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <div class="modal-body">
+                                                            <div class="modal-body text-center">
                                                                 <input type="text" id="payment_invoice" name="payment_invoice" hidden>
                                                                 <input type="text" id="sertifikat_invoice" name="sertifikat_invoice" hidden>
-                                                                <div class="d-flex">
-                                                                    <span class="btn btn-primary" target="_blank" title="Invoice" onclick="cetakInvoice()">Invoice</span>
-                                                                    <span class="btn btn-info ml-auto" target="_blank" title="Invoice" onclick="cetakInvoiceSertifikat()">Invoice Sertifikat</span>
+                                                                <p style="margin: 0px; font-size: 21px">Apakah anda ingin mencetak dengan sertifikat?</p>
+                                                                <span class="badge bg-danger text-white">
+                                                                    <div class="spinner-grow spinner-grow-sm">
+                                                                    </div>
+                                                                    <small style="font-size: 12px">Biaya cetak dan pengiriman Rp. 100.000/kelas ditambahkan ke invoice anda. </small>
+                                                                </span>
+                                                                <div class="d-flex justify-content-center mt-4">
+                                                                    <span class="btn btn-warning" target="_blank" title="Invoice" onclick="cetakInvoice()">Tidak</span>
+                                                                    <span class="btn btn-primary ml-2" target="_blank" title="Invoice" onclick="cetakInvoiceSertifikat()">Ya</span>
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -327,7 +333,7 @@
                                         @include('front.profile.setting')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-pnpt">
-                                        <img src="{{asset('upcoming_absen_post_test_Cara pakai_promo_copy_2.jpg')}}" alt="">
+                                        @include('front.profile.prepotes')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-affiliate">
                                         @include('front.profile.tabAffiliate')

@@ -499,6 +499,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th class="text-left">NO.</th>
                             <th class="text-left">KELAS</th>
                             <th style="text-align: right;">HARGA</th>
                             <th style="text-align: right;">KODE UNIK</th>
@@ -510,8 +511,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($payment as $p)
+                        @foreach ($payment as $key => $p)
                         <tr>
+                            <td>{{$key+1}}</td>
                             <th class="text-left"
                                 style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
                                 {{$p->title}}</th>

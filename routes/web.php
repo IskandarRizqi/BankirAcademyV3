@@ -28,6 +28,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin', function () {
         return redirect('/home');
     });
+    Route::resource('/admin/prepotes', App\Http\Controllers\Backend\PrepotestController::class);
     Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
     Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class, 'setpricing']);
     Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class, 'setcontent']);
@@ -113,6 +114,9 @@ Route::middleware('auth')->group(function () {
     // Rekening
     Route::post("/updaterekening", [App\Http\Controllers\Front\ProfileController::class, "updaterekening"]);
     Route::post("/withdrawMember", [App\Http\Controllers\Backend\WithdrawController::class, "proses"]);
+
+    // Prepotes
+    Route::post('/prepotes/savejawaban', [App\Http\Controllers\Backend\PrepotestController::class, 'savejawaban']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

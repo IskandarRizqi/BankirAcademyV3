@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Helper\GlobalHelper;
+use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
 
 class ProfileController extends Controller
@@ -84,6 +85,10 @@ class ProfileController extends Controller
             ->orderBy('class_payment.status', 'desc')
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
+        $id_class = [];
+        foreach ($data['payment'] as $key => $value) {
+            array_push($id_class, $value->class_id);
+        }
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',
             'class_participant.review',
@@ -112,6 +117,10 @@ class ProfileController extends Controller
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth)->get();
+        $data['prepotes'] = PrepotesModel::select('prepotes.*', 'prepotes_user.nilai')
+            ->leftJoin('prepotes_user', 'prepotes_user.class_id', 'prepotes.class_id')
+            ->whereIn('prepotes.class_id', $id_class)
+            ->get();
         // return $data;
         return view('front.profile.profile', $data);
     }
