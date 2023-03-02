@@ -118,7 +118,7 @@
     }
 
     .card:hover {
-        cursor: pointer;
+        /* cursor: pointer; */
         transition: all 500ms cubic-bezier(0.28, 1.02, 1, 0.14);
     }
 
@@ -156,15 +156,14 @@
 </style>
 
 <!-- Content -->
-@if (isset($banner_slide))
 <section id="content">
     <div id="carouselExampleControls" class="carousel slide d-none d-sm-block" data-ride="carousel">
         <div class="carousel-inner">
-            @foreach ($banner_slide as $key => $value)
+            {{-- @foreach ($banner_slide as $key => $value)
             <div class="carousel-item @if ($key == 0) active @endif">
                 <img class="d-block w-100" src="/Image/{{ $value->image }}" alt="First slide">
             </div>
-            @endforeach
+            @endforeach --}}
         </div>
         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -180,7 +179,7 @@
         <div class="owl-stage-outer">
             <div class="owl-stage"
                 style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1843px;">
-                @if (isset($banner_slide_mobile))
+                {{-- @if (isset($banner_slide_mobile))
                 @foreach ($banner_slide_mobile as $key => $value)
                 <div class="owl-item" style=" margin-right: 20px;">
                     <div class="oc-item">
@@ -194,12 +193,11 @@
                         <a href="#"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}" alt="Image 1"></a>
                     </div>
                 </div>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>
 </section>
-@endif
 <section id="content">
     <div class="content-wrap mt-6" style="padding: 0px;">
         <div class="section border-top-0 mb-6">
@@ -208,16 +206,47 @@
                     <h2>Jelajahi Academy</h2>
                     <p>Berbagai macam pilihan kelas bankir academy dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div id="related-portfolio"
+                <div class="row mb-2">
+                    @foreach($data as $key => $value)
+                    <div class="col-lg-4">
+                        <div class="card" style="min-height: auto">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    @if($value->google_id)
+                                    <img src="{{$value->picture}}" alt="" width="60px" height="60px" style="border-radius: 13px">
+                                    @else
+                                    <img src="{{asset($value->picture)}}" alt="" width="60px" height="60px" style="border-radius: 13px">
+                                    @endif
+                                    <div class="ml-2">
+                                        <h3 style="margin: 0px">{{substr($value->title,0,16)}}</h3> {{--maksimal 15 karakters--}}
+                                        <small>{{json_decode($value->corporate)->name}}</small>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>{{$value->description}}</p>
+                                    @if($value->gaji_max > 0)
+                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Rp. {{number_format($value->gaji_min)}} - {{number_format($value->gaji_max)}} / Bulan</p>
+                                    @else
+                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Rp. {{number_format($value->gaji_min)}} / Bulan</p>
+                                    @endif
+                                </div>
+                                
+                                <a class="btn btn-primary btn-sm btn-block" href="/loker/{{$value->id}}/detail">Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                {{-- <div id="related-portfolio"
                     class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
                     data-margin="0" data-autoplay="5000" data-items-xs="0" data-items-sm="0" data-items-md="0"
                     data-items-xl="0">
                     <div class="owl-stage-outer">
                         <div class="owl-stage owlCustom"
                             style="transform: translate3d(-1989px, 0px, 0px); transition: all 0.25s ease 0s; width: 3315px;">
-                            {{-- @foreach ($o['owlCustom'] as $k => $v)
+                            @foreach ($o['owlCustom'] as $k => $v)
                             {!!$v!!}
-                            @endforeach --}}
+                            @endforeach
                             {!! $o['owlCustom'] !!}
                         </div>
                     </div>
@@ -228,19 +257,19 @@
                 </div>
                 <hr style="width: 1100px">
                 <div id="cateKelas">
-                    {{-- @foreach ($o['cateKelas'] as $k => $v)
+                    @foreach ($o['cateKelas'] as $k => $v)
                     {!!$v!!}
-                    @endforeach --}}
+                    @endforeach
                     {!! $o['cateKelas'] !!}
-                </div>
-                <div class="center">
+                </div> --}}
+                {{-- <div class="center">
                     <input type="text" id="halaman" value="{{ $o['next_page'] }}" hidden>
                     <a id="allClass" class="btn btn-primary btn-block">Semua Kelas</a>
-                </div>
+                </div> --}}
             </div>
         </div>
 
-        <div class="section border-top-0" style="background-color:#0076f5">
+        {{-- <div class="section border-top-0" style="background-color:#0076f5">
             <div class="container text-center">
                 <div class="heading-block center mt-4">
                     <h2 id="hrefpromo" class="text-white">Promo</h2>
@@ -257,8 +286,6 @@
                                     <a href="/promo">
                                         <img src="Image/{{ $bp->image }}" alt=""
                                             style="border-radius: 20px !important;">
-                                        {{-- <div class="shadow p-3 mb-5 bg-white rounded">
-                                        </div> --}}
                                     </a>
                                 </div>
                             </div>
@@ -281,7 +308,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4 mb-4">
-                        {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
+                        <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
                             data-items-sm="1" data-items-md="1" data-items-xl="1">
                             @if (isset($kelas_mingguan))
                             @foreach ($kelas_mingguan as $km)
@@ -324,42 +351,6 @@
                             </div>
                             @endforeach
                             @endif
-                        </div> --}}
-                        <div class="card" style="height:650px">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="class-upcoming" class="table table-bordered">
-                                        <thead>
-                                            <tr class="text-center">
-                                                <th>No</th>
-                                                <th>Title</th>
-                                                <th>Instructor</th>
-                                                <th>Harga</th>
-                                                {{-- <th>Status</th>
-                                                <th>Aksi</th> --}}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($class_upcoming as $key => $v)
-                                                <tr>
-                                                    <td>{{$key+1}}</td>
-                                                    <td>{{substr($v->title,0,17)}}...</td>
-                                                    <td>{{$v->instructor_list[0]->name}}</td>
-                                                    @if($v->pricing)
-                                                    @if(!$v->pricing->promo)
-                                                        <td>Rp. {{number_format($v->pricing->price-$v->pricing->promo_price)}}</td>
-                                                    @else
-                                                        <td>Rp. {{number_format($v->pricing->price)}}</td>
-                                                    @endif
-                                                    @else
-                                                        <td>Rp. 0</td>
-                                                    @endif
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="col-lg-8 mb-4">
@@ -427,14 +418,16 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
     <div class="section border-top-0" style="background-color:#ffffff; padding-bottom: 0px">
         <div class="container text-center">
             <img src="{{ asset('cariin-kerja.webp') }}" alt="">
         </div>
     </div>
-    <div id="Testimonial" class="section border-top-0" style="background-color:#FFA600; padding-bottom: 30px">
+
+    {{-- Testimonial --}}
+    {{-- <div id="Testimonial" class="section border-top-0" style="background-color:#FFA600; padding-bottom: 30px">
         <div class="container text-center">
             <div class="heading-block center text-white mt-4">
                 <h2 class="text-white">Testimonial</h2>
@@ -445,23 +438,6 @@
                 <div class="owl-stage-outer">
                     <div class="owl-stage"
                         style="transform: translate3d(-877px, 0px, 0px); transition: all 0.25s ease 0s; width: 2194px;">
-                        {{-- <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
-                            <div class="oc-item">
-                                <div class="testimonial"
-                                    style="background-color: #ffffffa1 !important; border-radius: 9px !important">
-                                    <div class="testi-image">
-                                        <a href="#"><img src="" alt="Customer Testimonails"></a>
-                                    </div>
-                                    <div class="testi-content">
-                                        <p>$t->review</p>
-                                        <div class="testi-meta">
-                                            $t->name
-                                            <span>XYZ Inc.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                         @if (isset($testimoni))
                         @foreach ($testimoni as $key => $t)
                         <div class="owl-item active" style="width: 418.667px; margin-right: 20px;">
@@ -477,7 +453,6 @@
                                         <p>{{ $t->review }}</p>
                                         <div class="testi-meta">
                                             {{ $t->name }}
-                                            {{-- <span>XYZ Inc.</span> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -487,53 +462,20 @@
                         @endif
                     </div>
                 </div>
-                {{-- <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><i
-                            class="icon-angle-left"></i></button><button type="button" role="presentation"
-                        class="owl-next disabled"><i class="icon-angle-right"></i></button></div>
-                <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button"
-                        class="owl-dot active"><span></span></button></div> --}}
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <div class="section border-top-0 mb-6 mt-4">
+    {{-- Gambar Bawah --}}
+    {{-- <div class="section border-top-0 mb-6 mt-4">
         <div class="container text-center">
-            {{-- <div class="heading-block center">
-                <h2>Partner</h2>
-            </div> --}}
-            {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
-                data-items-sm="1" data-items-md="2" data-items-xl="3">
-                @if (isset($partner))
-                @foreach ($partner as $p)
-                <div class="oc-item">
-                    <div class="testimonial"
-                        style="background-image: url('{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}')">
-                        <div class="testi-content">
-                            <div class="testi-image">
-                                <a href="#"><img src="{{asset('front/one-page/images/portfolio/mixed/6.jpg')}}"
-                                        alt="Customer Testimonails"></a>
-                            </div>
-                            <p>Incidunt deleniti blanditiis quas</p>
-                            <div class="testi-meta">
-                                John Doe
-                                <span>XYZ Inc.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="{{ $p->link }}">
-                        <img src="Image/Partner/{{ json_decode($p->image)->url }}" alt="">
-                    </a>
-                </div>
-                @endforeach
-                @endif
-            </div> --}}
             <img src="{{ asset('gambar-footer-03.png') }}" alt="">
         </div>
-    </div>
+    </div> --}}
         <div class="section border-top-0 mb-6 mt-4">
             <div class="container text-center">
                 <div class="logo-perusahaan">
-                    @if($logo_perusahaan)
+                    {{-- @if($logo_perusahaan)
                         @foreach(json_decode($logo_perusahaan->logo_perusahaan) as $key => $v)
                             @if($v)
                                 <?php $f = explode('|',$v); ?>
@@ -544,12 +486,12 @@
                                 @endif
                             @endif
                         @endforeach
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
     </div>
-    <textarea name="" id="kelas" cols="30" rows="10" hidden>{{ json_encode($o['kelas']) }}</textarea>
+    {{-- <textarea name="" id="kelas" cols="30" rows="10" hidden>{{ json_encode($o['kelas']) }}</textarea> --}}
 </section>
 <!-- #content end -->
 
@@ -557,9 +499,6 @@
 <script>
     let arrkategori = JSON.parse($('#kelas').val());
     $(document).ready(function() {
-        $('#class-upcoming').dataTable({
-            "pageLength":6
-        });
         // lazyLoad(1);
         $('#allClass').click(function() {
             let hal = $('#halaman').val();

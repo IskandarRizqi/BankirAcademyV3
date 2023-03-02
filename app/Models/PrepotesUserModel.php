@@ -13,6 +13,8 @@ class PrepotesUserModel extends Model
         'class_id',
         'user_id',
         'jawaban',
-        'nilai',
+        'nilai_awal',
+        'nilai_akhir',
+        'jml_jawaban',
     ];
 }

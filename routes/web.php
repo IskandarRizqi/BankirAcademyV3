@@ -177,6 +177,9 @@ Route::get('/join/referral/{iduser}/{referral}', [App\Http\Controllers\Backend\R
 
 Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 
-
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
+
+// Loker
+Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);
+Route::get('/loker/{id}/detail', [App\Http\Controllers\Loker\BerandaLoker::class, "detail"]);

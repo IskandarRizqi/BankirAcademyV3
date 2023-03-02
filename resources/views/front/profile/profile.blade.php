@@ -49,9 +49,44 @@
         <div class="container clearfix">
             <div class="row clearfix">
                 <div class="col-md-12">
-                    <div class="heading-block border-0">
-                        <h3>{{ Auth::user()->name }}</h3>
-                        <span>Your Profile Bio</span>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="heading-block border-0">
+                                <h3>{{ Auth::user()->name }}</h3>
+                                <span>Your Profile Bio</span>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-4">
+                            <div class="card" style="border-radius: 13px">
+                                <div class="card-body text-center">
+                                    <span class="badge bg-info text-white" style="font-size: 110%">
+                                        Jumlah Kelas :
+                                        <div class="spinner-grow spinner-grow-sm">
+                                        </div>
+                                        {{count($class)}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div> --}}
+                        <div class="col-md-4">
+                            {{-- <span>Poin</span> --}}
+                            <div class="card" style="border-radius: 13px">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <span>Poin Anda : </span> <h3 style="margin: 0px">00</h3>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Tukar Poin Anda Dengan</label>
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Pilih</option>
+                                            <option value="pulsa">Pulsa</option>
+                                            <option value="tokenlistrik">Token Listrik</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary btn-block" disabled>Tukar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="clear"></div>
                     <div class="row clearfix">

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Helper\GlobalHelper;
+use App\Models\LokerModel;
 use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
 
@@ -117,10 +118,13 @@ class ProfileController extends Controller
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth)->get();
-        $data['prepotes'] = PrepotesModel::select('prepotes.*', 'prepotes_user.nilai')
+        $data['prepotes'] = PrepotesModel::select('prepotes.*', 'prepotes_user.nilai_awal', 'prepotes_user.nilai_akhir')
             ->leftJoin('prepotes_user', 'prepotes_user.class_id', 'prepotes.class_id')
             ->whereIn('prepotes.class_id', $id_class)
             ->get();
+        $data['loker'] = LokerModel::where('user_id', Auth::user()->id)->get();
+        $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
+        $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         // return $data;
         return view('front.profile.profile', $data);
     }

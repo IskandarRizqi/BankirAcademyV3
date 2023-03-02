@@ -239,7 +239,8 @@ class HomeController extends Controller
         $data = [];
         $now = Carbon::now();
         $data['logo_perusahaan'] = DashboardModel::select()->first();
-        // return $data;
+        $data['class_upcoming'] = ClassesModel::select()->where('date_start', '<=', Carbon::now())->get();
+        // return $data['class_upcoming'][0]->pricing->price;
         $kelas_mingguan = [];
         $data['banner_promo'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();

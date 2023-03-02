@@ -140,7 +140,7 @@
                                 <div>Kurikulum</div>
                             </a>
                         </li>
-                        <li class="menu-item"><a class="menu-link" onclick="popc()" href="#">
+                        <li class="menu-item"><a class="menu-link" href="/loker">
                                 <div>Loker Bankir</div>
                             </a>
                         </li>
