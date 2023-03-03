@@ -21,5 +21,6 @@ class LokerModel extends Model
         'tanggal_akhir',
         'skill',
         'type',
+        'status',
     ];
 }

@@ -118,7 +118,7 @@
     }
 
     .card:hover {
-        cursor: pointer;
+        /* cursor: pointer; */
         transition: all 500ms cubic-bezier(0.28, 1.02, 1, 0.14);
     }
 
@@ -280,7 +280,7 @@
                     <h2 class="text-white">Kelas Terdekat</h2>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 mb-4">
+                    <div class="col-lg-6 mb-4">
                         {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
                             data-items-sm="1" data-items-md="1" data-items-xl="1">
                             @if (isset($kelas_mingguan))
@@ -327,42 +327,76 @@
                         </div> --}}
                         <div class="card" style="height:650px">
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="class-upcoming" class="table table-bordered">
-                                        <thead>
-                                            <tr class="text-center">
-                                                <th>No</th>
-                                                <th>Title</th>
-                                                <th>Instructor</th>
-                                                <th>Harga</th>
-                                                {{-- <th>Status</th>
-                                                <th>Aksi</th> --}}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($class_upcoming as $key => $v)
-                                                <tr>
-                                                    <td>{{$key+1}}</td>
-                                                    <td>{{substr($v->title,0,17)}}...</td>
-                                                    <td>{{$v->instructor_list[0]->name}}</td>
-                                                    @if($v->pricing)
-                                                    @if(!$v->pricing->promo)
-                                                        <td>Rp. {{number_format($v->pricing->price-$v->pricing->promo_price)}}</td>
-                                                    @else
-                                                        <td>Rp. {{number_format($v->pricing->price)}}</td>
-                                                    @endif
-                                                    @else
-                                                        <td>Rp. 0</td>
-                                                    @endif
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                <div class="tabs clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-1">
+                                    <ul class="tab-nav ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header" role="tablist">
+                                        @foreach($class_upcoming as $key => $value)
+                                        <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false" aria-expanded="false"><a href="#{{$key}}" tabindex="0" class="ui-tabs-anchor" id="tabs">{{$key}}</a></li>
+                                        @endforeach
+                                        {{-- <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true" aria-expanded="true"><a href="#tabs-1" tabindex="-1" class="ui-tabs-anchor" id="ui-id-1"><i class="icon-home2 me-0"></i></a></li>
+                                        <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false" aria-expanded="false"><a href="#tabs-3" tabindex="-1" class="ui-tabs-anchor" id="ui-id-3">Proin dolor</a></li>
+                                        <li class="d-none d-md-block ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-4" aria-selected="false" aria-expanded="false"><a href="#tabs-4" tabindex="-1" class="ui-tabs-anchor" id="ui-id-4">Aenean lacinia</a></li> --}}
+                                    </ul>
+                                    <div class="tab-container">
+                                        @foreach($class_upcoming as $key => $valu)
+                                        <?php $i = 0; ?>
+                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="{{$key}}" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false" style="">
+                                            <div class="table-responsive">
+                                                <table id="class-upcoming{{$i}}" class="table table-bordered">
+                                                    <?php $i++; ?>
+                                                    <thead>
+                                                        <tr class="text-center">
+                                                            <th style="font-size: 10px">No</th>
+                                                            <th style="font-size: 10px">Title</th>
+                                                            {{-- <th style="font-size: 10px">Bulan</th> --}}
+                                                            {{-- <th>Harga</th> --}}
+                                                            {{-- <th>Status</th>
+                                                            <th>Aksi</th> --}}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($valu as $k => $v)
+                                                        <tr>
+                                                            <td style="font-size: 10px">{{$k+1}}</td>
+                                                            {{-- <td>
+                                                                <a href="/class/{{$v->unique_id}}/{{str_replace('/', '-', $v->title)}}">
+                                                                    {{substr($v->title,0,17)}}...
+                                                                </a>
+                                                            </td> --}}
+                                                            <td style="font-size: 12px" class="text-left">{{$v->title}}</td>
+                                                            {{-- <td style="font-size: 10px">{{date_format(date_create($v->date_end),'Y-m')}}</td> --}}
+                                                            {{-- <td>{{$v->instructor_list[0]->name}}</td>
+                                                            @if($v->pricing)
+                                                            @if(!$v->pricing->promo)
+                                                                <td>Rp. {{number_format($v->pricing->price-$v->pricing->promo_price)}}</td>
+                                                            @else
+                                                                <td>Rp. {{number_format($v->pricing->price)}}</td>
+                                                            @endif
+                                                            @else
+                                                                <td>Rp. 0</td>
+                                                            @endif --}}
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                        {{-- <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-2" aria-labelledby="ui-id-2" role="tabpanel" aria-hidden="true" style="display: none;">
+                                        Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.
+                                        </div>
+                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-3" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="true" style="display: none;">
+                                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                                        Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.
+                                        </div>
+                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-4" aria-labelledby="ui-id-4" role="tabpanel" aria-hidden="true" style="display: none;">
+                                        Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.
+                                        </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8 mb-4">
+                    <div class="col-lg-6 mb-4">
                         @if (isset($banner_bawah))
                         @if (count($banner_bawah) > 0)
                         <a href="https://forms.gle/yHh3WpMyHRduPL6W6">
@@ -557,8 +591,26 @@
 <script>
     let arrkategori = JSON.parse($('#kelas').val());
     $(document).ready(function() {
-        $('#class-upcoming').dataTable({
-            "pageLength":6
+        $('#class-upcoming0').dataTable({
+            pageLength:9,
+            paging: true,
+            ordering: false,
+            info: false,
+            searching:false,
+        });
+        $('#class-upcoming1').dataTable({
+            pageLength:9,
+            paging: true,
+            ordering: false,
+            info: false,
+            searching:false,
+        });
+        $('#class-upcoming2').dataTable({
+            pageLength:9,
+            paging: true,
+            ordering: false,
+            info: false,
+            searching:false,
         });
         // lazyLoad(1);
         $('#allClass').click(function() {

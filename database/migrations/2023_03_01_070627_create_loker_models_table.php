@@ -26,6 +26,7 @@ return new class extends Migration
             $table->date('tanggal_akhir')->nullable();
             $table->json('skill')->nullable();
             $table->json('type')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

@@ -68,22 +68,24 @@
                                 </div>
                             </div>
                         </div> --}}
-                        <div class="col-md-4">
-                            {{-- <span>Poin</span> --}}
+                        <div class="col-md-8 d-flex">
                             <div class="card" style="border-radius: 13px">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <span>Poin Anda : </span> <h3 style="margin: 0px">00</h3>
-                                    </div>
+                                <div class="card-body d-flex">
                                     <div class="form-group">
-                                        <label for="">Tukar Poin Anda Dengan</label>
+                                        <h4 style="margin: 0px">Total Poin</h4>
+                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">00</p>
+                                        <label for="">Tukarkan Poin</label>
                                         <select name="" id="" class="form-control">
                                             <option value="">Pilih</option>
                                             <option value="pulsa">Pulsa</option>
                                             <option value="tokenlistrik">Token Listrik</option>
                                         </select>
+                                        <button class="btn btn-primary btn-block mt-2" disabled>Tukar</button>
                                     </div>
-                                    <button class="btn btn-primary btn-block" disabled>Tukar</button>
+                                    <div class="form-group ml-6">
+                                        <h4 style="margin: 0px">Total Kelas Diikuti</h4>
+                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">00</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

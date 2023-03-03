@@ -29,9 +29,29 @@ class BerandaLoker extends Controller
         )
             ->join('users', 'users.id', 'loker.user_id')
             ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->where('loker.status', 1)
             ->paginate(6);
         // return $data;
         return view('front.loker.loker', $data);
+    }
+    public function index_admin()
+    {
+        $data = [];
+        $data['data'] = LokerModel::select(
+            'loker.*',
+            'users.name',
+            'users.corporate',
+            'users.google_id',
+            'user_profile.picture',
+            'user_profile.description'
+        )
+            ->join('users', 'users.id', 'loker.user_id')
+            ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->get();
+        $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
+        $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
+        // return $data;
+        return view('backend.loker.loker', $data);
     }
 
     /**
@@ -92,6 +112,7 @@ class BerandaLoker extends Controller
             'tanggal_akhir' => $request->loker_tanggal_akhir,
             'skill' => json_encode($request->loker_skill),
             'type' => json_encode($request->loker_type),
+            'status' => $request->status ? $request->status : 0,
         ]);
         if ($l) {
             return Redirect::back()->with('success', 'Data Tersimpan');

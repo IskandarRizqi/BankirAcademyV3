@@ -269,7 +269,11 @@
                                             </div>
                                             <div class="entry-meta">
                                                 <ul>
+                                                    @if($p->date_start == $p->date_end)
                                                     <li>{{ $p->date_start }}</li>
+                                                    @else
+                                                    <li>{{ $p->date_start.' - '.$p->date_end }}</li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </div>

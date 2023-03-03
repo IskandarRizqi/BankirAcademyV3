@@ -26,6 +26,7 @@
     <fieldset class="border p-2">
 @csrf
 <input type="text" name="loker_id" id="loker_id" hidden>
+<input type="text" name="status" id="status" hidden>
     <legend class="w-auto">Form Loker</legend>
 <div class="row border-2">
     <div class="col-lg-6">
@@ -205,6 +206,7 @@
         })
     })
     function kosong() {
+        $('#status').val(null)
         $('#loker_id').val(null)
         $('#loker_title').val(null)
         $('#loker_gaji_min').val(null)
@@ -220,6 +222,7 @@
     }
     function editloker(data) {
         kosong();
+        $('#status').val(data.status)
         $('#loker_id').val(data.id)
         $('#loker_title').val(data.title)
         $('#loker_gaji_min').val(data.gaji_min)

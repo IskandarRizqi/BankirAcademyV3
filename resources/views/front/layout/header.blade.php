@@ -15,7 +15,7 @@
                 <!-- Logo
       ============================================= -->
                 <div id="logo">
-                    <a href="{{ url('/') }}" class="standard-logo" style="height:50px !important;"
+                    <a href="{{ url('/') }}" class="standard-logo" style="height:40px !important;"
                         data-dark-logo="{{ asset('Backend/logo_12.png') }}">
                         <img src="{{ env('CUSTOM_LOGO', '/Bank-academy-logo-03.png') }}" alt="E-class"
                             style="max-width: 340px; "></a>

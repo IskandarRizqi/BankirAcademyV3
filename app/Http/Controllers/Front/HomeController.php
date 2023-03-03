@@ -239,8 +239,11 @@ class HomeController extends Controller
         $data = [];
         $now = Carbon::now();
         $data['logo_perusahaan'] = DashboardModel::select()->first();
-        $data['class_upcoming'] = ClassesModel::select()->where('date_start', '<=', Carbon::now())->get();
-        // return $data['class_upcoming'][0]->pricing->price;
+        $data['class_upcoming'] = [];
+        for ($i = 0; $i < 3; $i++) {
+            $data['class_upcoming'][Carbon::now()->addMonths($i)->format('F')] = ClassesModel::select()->whereMonth('date_end', Carbon::now()->addMonths($i)->month)->whereYear('date_end', Carbon::now()->year)->get();;
+        }
+        // return $data;
         $kelas_mingguan = [];
         $data['banner_promo'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
@@ -490,7 +493,7 @@ class HomeController extends Controller
         $start = '';
         $end = '';
         $lokasi = '';
-        $data['pop'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('unique_id', '!=', $unique_id)->limit(3)->inRandomOrder()->get();
+        $data['pop'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('unique_id', '!=', $unique_id)->limit(3)->get();
         $data['class'] = ClassesModel::where('unique_id', $unique_id)->first();
         $data['event'] = ClassEventModel::where('class_id', $data['class']->id)->get();
 
@@ -510,7 +513,7 @@ class HomeController extends Controller
                 ->format('Y-m-d'))
             ->limit(3)
             ->get();
-        $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->inRandomOrder()->get();
+        $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->get();
         // return $data;
         return view('front.kelas.detail', $data);
     }
