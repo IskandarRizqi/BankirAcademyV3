@@ -47,7 +47,7 @@ class BerandaLoker extends Controller
             'user_profile.description'
         )
             ->join('users', 'users.id', 'loker.user_id')
-            ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where(function ($query) use ($auth) {
                 if ($auth->role > 0) {
                     return $query->where('loker.user_id', $auth->id);
@@ -56,7 +56,7 @@ class BerandaLoker extends Controller
             ->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
-        // return $data;
+        // return $auth;
         return view('backend.loker.loker', $data);
     }
 
@@ -120,12 +120,11 @@ class BerandaLoker extends Controller
             'type' => json_encode($request->loker_type),
             'status' => $request->status ? $request->status : 0,
         ];
-        if (Auth::user()->role > 0) {
-            $val['user_id'] = Auth::user()->id;
+        if (!$request->loker_id) {
             $data['user_id'] = Auth::user()->id;
         }
 
-        $l = LokerModel::updateOrCreate($val,);
+        $l = LokerModel::updateOrCreate($val, $data);
         if ($l) {
             return Redirect::back()->with('success', 'Data Tersimpan');
         }
