@@ -4,14 +4,14 @@
     <div class="card">
         <div class="card-header">
             <!-- Button trigger modal -->
-            <a href="/admin/pages/edit/null">
+            {{-- <a href="/admin/pages/edit/null">
                 <button type="button" class="btn btn-primary btn-sm">
                     Tambah
                 </button>
-            </a>
+            </a> --}}
         </div>
         <div class="card-body">
-            <form action="loker" method="POST" enctype="multipart/form-data">
+            <form action="/loker" method="POST" enctype="multipart/form-data">
                 <fieldset class="border p-2">
             @csrf
             <input type="text" name="loker_id" id="loker_id" hidden>

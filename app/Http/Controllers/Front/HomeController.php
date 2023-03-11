@@ -237,11 +237,12 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $data = [];
-        $now = Carbon::now();
+        $now = Carbon::now()->locale('id_ID');
         $data['logo_perusahaan'] = DashboardModel::select()->first();
         $data['class_upcoming'] = [];
         for ($i = 0; $i < 3; $i++) {
-            $data['class_upcoming'][Carbon::now()->addMonths($i)->format('F')] = ClassesModel::select()->whereMonth('date_end', Carbon::now()->addMonths($i)->month)->whereYear('date_end', Carbon::now()->year)->get();;
+            $data['class_upcoming'][$now->addMonths($i)->monthName] = ClassesModel::select()->whereMonth('date_end', Carbon::now()->addMonths($i)->month)->whereYear('date_end', Carbon::now()->year)->get();
+            // $data['class_upcoming'][$now->month($i)->monthName] = ClassesModel::select()->limit(9)->get();
         }
         // return $data;
         $kelas_mingguan = [];

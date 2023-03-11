@@ -73,7 +73,7 @@
                                 <div class="card-body d-flex">
                                     <div class="form-group">
                                         <h4 style="margin: 0px">Total Poin</h4>
-                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">00</p>
+                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">{{$poin}}</p>
                                         <label for="">Tukarkan Poin</label>
                                         <select name="" id="" class="form-control">
                                             <option value="">Pilih</option>
@@ -84,7 +84,7 @@
                                     </div>
                                     <div class="form-group ml-6">
                                         <h4 style="margin: 0px">Total Kelas Diikuti</h4>
-                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">00</p>
+                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">{{count($class)}}</p>
                                     </div>
                                 </div>
                             </div>

@@ -33,6 +33,7 @@ return new class extends Migration
             $table->json('og')->nullable();
             $table->json('meta')->nullable();
             $table->integer('status')->default(0);
+            $table->integer('poin')->default(0);
             $table->timestamps();
         });
     }

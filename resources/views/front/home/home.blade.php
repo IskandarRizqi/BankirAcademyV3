@@ -325,7 +325,7 @@
                             @endforeach
                             @endif
                         </div> --}}
-                        <div class="card" style="height:650px">
+                        <div class="card">
                             <div class="card-body">
                                 <div class="tabs clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-1">
                                     <ul class="tab-nav ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header" role="tablist">
@@ -346,7 +346,7 @@
                                                     <thead>
                                                         <tr class="text-center">
                                                             <th style="font-size: 10px">No</th>
-                                                            <th style="font-size: 10px">Title</th>
+                                                            <th style="font-size: 10px">Judul Kelas</th>
                                                             {{-- <th style="font-size: 10px">Bulan</th> --}}
                                                             {{-- <th>Harga</th> --}}
                                                             {{-- <th>Status</th>
@@ -399,11 +399,13 @@
                     <div class="col-lg-6 mb-4">
                         @if (isset($banner_bawah))
                         @if (count($banner_bawah) > 0)
+                        <div id="img_card" class="card text-white click-col" style="min-height: 0px"
+                        {{-- style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;" --}}
+                        >
                         <a href="https://forms.gle/yHh3WpMyHRduPL6W6">
-                            <div id="img_card" class="card text-white click-col"
-                                style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;">
-                            </div>
+                            <img src="Image/{{ $banner_bawah[0]->image }}" alt="" height="auto">
                         </a>
+                        </div>
                         <div class="d-flex mt-4">
                             <div id="oc-testi"
                                 class="owl-carousel testimonials-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
@@ -415,13 +417,18 @@
                                         @for ($i = 1; $i < count($banner_bawah); $i++) <div class="owl-item active"
                                             style="width: 418.667px; margin-right: 20px;">
                                             <div class="oc-item">
-                                                <div class="testimonial" style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
+                                                {{-- <div class="testimonial" style="background-image:url('Image/{{ $banner_bawah[$i]->image }}');
                                                     border-radius: 20px !important;
                                                     background-size: 120%;
                                                     background-position: center;
                                                     background-repeat: no-repeat;
                                                     height:200px;">
                                                     <a href="#"></a>
+                                                </div> --}}
+                                                <div id="img_card" class="card text-white click-col" style="min-height: 0px;">
+                                                    <a href="https://forms.gle/yHh3WpMyHRduPL6W6">
+                                                        <img src="Image/{{ $banner_bawah[$i]->image}}" alt="">
+                                                    </a>
                                                 </div>
                                             </div>
                                     </div>
@@ -592,21 +599,24 @@
     let arrkategori = JSON.parse($('#kelas').val());
     $(document).ready(function() {
         $('#class-upcoming0').dataTable({
-            pageLength:9,
+            pageLength:6,
+            lengthChange:false,
             paging: true,
             ordering: false,
             info: false,
             searching:false,
         });
         $('#class-upcoming1').dataTable({
-            pageLength:9,
+            pageLength:6,
+            lengthChange:false,
             paging: true,
             ordering: false,
             info: false,
             searching:false,
         });
         $('#class-upcoming2').dataTable({
-            pageLength:9,
+            pageLength:6,
+            lengthChange:false,
             paging: true,
             ordering: false,
             info: false,

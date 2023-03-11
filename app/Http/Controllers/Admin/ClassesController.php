@@ -172,6 +172,7 @@ class ClassesController extends Controller
 			'meta' => json_encode($meta),
 			'status' => $status,
 			'sub_category' => json_encode($r->subCategory),
+			'poin' => $r->numClassesPoin ? $r->numClassesPoin : 0,
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -237,6 +238,7 @@ class ClassesController extends Controller
 			'jenis' => json_encode($r->slcClassesJenis),
 			'status' => $status,
 			'sub_category' => json_encode($r->subCategory),
+			'poin' => $r->numClassesPoin ? $r->numClassesPoin : 0,
 		];
 
 		// Data Meta

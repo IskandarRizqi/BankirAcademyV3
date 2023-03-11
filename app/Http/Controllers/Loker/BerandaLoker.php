@@ -37,6 +37,7 @@ class BerandaLoker extends Controller
     public function index_admin()
     {
         $data = [];
+        $auth = Auth::user();
         $data['data'] = LokerModel::select(
             'loker.*',
             'users.name',
@@ -47,6 +48,11 @@ class BerandaLoker extends Controller
         )
             ->join('users', 'users.id', 'loker.user_id')
             ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->where(function ($query) use ($auth) {
+                if ($auth->role > 0) {
+                    return $query->where('loker.user_id', $auth->id);
+                }
+            })
             ->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
@@ -78,6 +84,7 @@ class BerandaLoker extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
         if (!$this->checkAuth()) {
             return Redirect::back()->with('info', 'Silahkan Login Dahulu');
         }
@@ -98,11 +105,10 @@ class BerandaLoker extends Controller
             return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Sesuai');
         }
 
-        $l = LokerModel::updateOrCreate([
+        $val = [
             'id' => $request->loker_id,
-            'user_id' => Auth::user()->id,
-        ], [
-            'user_id' => Auth::user()->id,
+        ];
+        $data = [
             'title' => $request->loker_title,
             'gaji_min' => $request->loker_gaji_min,
             'gaji_max' => $request->loker_gaji_max,
@@ -113,7 +119,13 @@ class BerandaLoker extends Controller
             'skill' => json_encode($request->loker_skill),
             'type' => json_encode($request->loker_type),
             'status' => $request->status ? $request->status : 0,
-        ]);
+        ];
+        if (Auth::user()->role > 0) {
+            $val['user_id'] = Auth::user()->id;
+            $data['user_id'] = Auth::user()->id;
+        }
+
+        $l = LokerModel::updateOrCreate($val,);
         if ($l) {
             return Redirect::back()->with('success', 'Data Tersimpan');
         }
@@ -156,7 +168,22 @@ class BerandaLoker extends Controller
 
     public function detail($id)
     {
-        // return $id;
+        $data = [];
+        $data['data'] = LokerModel::select(
+            'loker.*',
+            'users.name',
+            'users.google_id',
+            'users.corporate',
+            'user_profile.picture',
+            'user_profile.description'
+        )
+            ->join('users', 'users.id', 'loker.user_id')
+            ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->where('loker.status', 1)
+            ->where('loker.id', $id)
+            ->first();
+        // return $data;
+        return view('front.loker.detail', $data);
     }
 
     /**

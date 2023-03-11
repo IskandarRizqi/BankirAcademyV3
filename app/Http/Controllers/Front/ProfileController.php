@@ -105,14 +105,18 @@ class ProfileController extends Controller
             ->where('class_participant.user_id', $auth)
             ->orderBy('class_payment.created_at', 'desc')
             ->get();
+        $data['poin'] = 0;
         foreach ($data['class'] as $key => $value) {
-            $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id')->where('id', $value->class_id)->get();
+            $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id', 'poin')->where('id', $value->class_id)->get();
+            foreach ($value->class as $key => $v) {
+                $data['poin'] += $v->poin;
+            }
             $value->event = ClassEventModel::where('class_id', $value->class_id)->get();
         }
-        $data['reff'] = RefferralPesertaModel::where('user_id', Auth::user()->id)->first();
+        $data['reff'] = RefferralPesertaModel::where('user_id', $auth)->first();
         $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
             ->join('users', 'users.id', 'referral.user_aplicator')
-            ->where('referral.user_id', Auth::user()->id)
+            ->where('referral.user_id', $auth)
             ->get();
         $data['saldo'] = GlobalHelper::currentSaldoById($auth);
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth);
@@ -122,7 +126,7 @@ class ProfileController extends Controller
             ->leftJoin('prepotes_user', 'prepotes_user.class_id', 'prepotes.class_id')
             ->whereIn('prepotes.class_id', $id_class)
             ->get();
-        $data['loker'] = LokerModel::where('user_id', Auth::user()->id)->get();
+        $data['loker'] = LokerModel::where('user_id', $auth)->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         // return $data;

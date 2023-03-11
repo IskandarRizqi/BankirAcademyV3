@@ -269,11 +269,12 @@
                                             </div>
                                             <div class="entry-meta">
                                                 <ul>
-                                                    @if($p->date_start == $p->date_end)
+                                                    {{-- @if($p->date_start == $p->date_end)
                                                     <li>{{ $p->date_start }}</li>
                                                     @else
                                                     <li>{{ $p->date_start.' - '.$p->date_end }}</li>
-                                                    @endif
+                                                    @endif --}}
+                                                    <li>{{$p->date_end }}</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -327,7 +328,7 @@
                                             </div>
                                             <div class="entry-meta">
                                                 <ul>
-                                                    <li>{{ $p->date_start }}</li>
+                                                    <li>{{ $p->date_end }}</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -359,7 +360,7 @@
                                             </div>
                                             <div class="entry-meta">
                                                 <ul>
-                                                    <li>{{ $l->date_start }}</li>
+                                                    <li>{{ $l->date_end }}</li>
                                                 </ul>
                                             </div>
                                         </div>

@@ -29,6 +29,7 @@ class ClassesModel extends Model
 		'og',
 		'meta',
 		'status',
+		'poin',
 	];
 
 	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list', 'total_peserta', 'event_list'];
