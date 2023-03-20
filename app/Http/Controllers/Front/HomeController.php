@@ -13,6 +13,7 @@ use App\Models\CorporateModel;
 use App\Models\DashboardModel;
 use App\Models\InstructorModel;
 use App\Models\KodePromoModel;
+use App\Models\LokerModel;
 use App\Models\Pages;
 use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
@@ -484,6 +485,19 @@ class HomeController extends Controller
         $semua .= '</div>';
         $data['o']['cateKelas'] .= $semua;
         $data['o']['next_page'] = $dx['kelas']['Semua']['next_page_url'];
+        $data['loker'] = LokerModel::select(
+            'loker.*',
+            'users.name',
+            'users.corporate',
+            'users.google_id',
+            'user_profile.picture',
+            'user_profile.description'
+        )
+            ->join('users', 'users.id', 'loker.user_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->where('loker.status', 1)
+            ->limit(4)
+            ->get();
         // return $dx['kelas']['Semua']['next_page_url'];
         // return $dx;
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);

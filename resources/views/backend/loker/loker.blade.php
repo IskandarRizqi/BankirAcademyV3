@@ -32,12 +32,25 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Nama Perusahaan</label>
-                        <input type="text" name="loker_nama" id="loker_nama" class="form-control" value="{{old('loker_nama')}}">
-                        @error('loker_nama')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Nama Perusahaan</label>
+                                <input type="text" name="loker_nama" id="loker_nama" class="form-control" value="{{old('loker_nama')}}">
+                                @error('loker_nama')
+                                    <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input type="email" name="loker_email" id="loker_email" class="form-control" value="{{old('loker_email')}}">
+                                @error('loker_email')
+                                    <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -234,6 +247,7 @@
             let img = JSON.parse(data.image)
             $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
         }
+        $('#loker_email').val(data.email)
         $('#loker_nama').val(data.nama)
         $('#status').val(data.status)
         $('#loker_id').val(data.id)

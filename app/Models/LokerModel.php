@@ -23,5 +23,6 @@ class LokerModel extends Model
         'type',
         'status',
         'nama',
+        'email',
     ];
 }

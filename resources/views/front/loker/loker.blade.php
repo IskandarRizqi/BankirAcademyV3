@@ -235,11 +235,15 @@
                                             @endforeach
                                         @endif
                                     </p>
-                                    @if($value->gaji_max > 0)
-                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Rp. {{number_format($value->gaji_min)}} - {{number_format($value->gaji_max)}} / Bulan</p>
+                                    @if($value->gaji_min > 0)
+                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>{{$value->gaji_min}}</p>
                                     @else
-                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Rp. {{number_format($value->gaji_min)}} / Bulan</p>
+                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Gaji Tidak Ditampilkan</p>
                                     @endif
+                                <p class="text-center text-secondary mb-2">
+                                    {{\Carbon\Carbon::parse($value->tanggal_awal)->format('d-m-Y')}} -
+                                    {{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}
+                                </p>
                                 </div>
                                 
                                 <a class="btn btn-primary btn-sm btn-block" href="/loker/{{$value->id}}/detail">Detail</a>

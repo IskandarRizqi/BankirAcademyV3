@@ -32,6 +32,11 @@
                                 <span class="text-info">{{$value}}</span>
                                 @endforeach
                                 @endif
+                                <div class="w-100"></div>
+                                <span>
+                                    {{\Carbon\Carbon::parse($data->tanggal_awal)->format('d-m-Y')}} -
+                                    {{\Carbon\Carbon::parse($data->tanggal_akhir)->format('d-m-Y')}}
+                                </span>
                             </div>
                             <div class="w-100"></div>
                             <div class="card col">
@@ -62,8 +67,11 @@
                                                 hidden>
                                             <button class="button button-circle btn-block text-center" hidden>Order
                                                 sekarang</button>
-                                        </form>
-                                    </div>
+                                            </form>
+                                        </div>
+                                        <a href="mailto:{{$data->email}}">
+                                            <button class="button button-circle btn-block text-center">Kirim Lamaran</button>
+                                        </a>
                                 </div>
                             </div>
                             <script>

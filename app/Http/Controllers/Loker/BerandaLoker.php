@@ -109,6 +109,7 @@ class BerandaLoker extends Controller
             'id' => $request->loker_id,
         ];
         $data = [
+            'email' => $request->loker_email,
             'nama' => $request->loker_nama,
             'title' => $request->loker_title,
             'gaji_min' => $request->loker_gaji_min,
@@ -192,11 +193,10 @@ class BerandaLoker extends Controller
             'user_profile.description'
         )
             ->join('users', 'users.id', 'loker.user_id')
-            ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where('loker.status', 1)
             ->where('loker.id', $id)
             ->first();
-        // return $data;
         return view('front.loker.detail', $data);
     }
 
