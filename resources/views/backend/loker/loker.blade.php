@@ -65,14 +65,14 @@
                 <div class="col-lg-3">
                     <div class="form-group">
                         <label for="">Minimal Gaji</label>
-                        <input type="number" name="loker_gaji_min" id="loker_gaji_min" class="form-control" value="{{old('loker_gaji_min')}}">
+                        <input type="text" name="loker_gaji_min" id="loker_gaji_min" class="form-control" value="{{old('loker_gaji_min')}}">
                         <small id="labelgajimin"></small>
                         @error('loker_gaji_min')
                             <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-3" hidden>
                     <div class="form-group">
                         <label for="">Maksimal Gaji</label>
                         <input type="number" name="loker_gaji_max" id="loker_gaji_max" class="form-control" value="{{old('loker_gaji_max')}}">
