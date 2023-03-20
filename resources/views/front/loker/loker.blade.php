@@ -228,7 +228,13 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>{{$value->description}}</p>
+                                    <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>
+                                        @if($value->skill)
+                                            @foreach(json_decode($value->skill) as $key => $v)
+                                                <span class="badge badge-info">{{$v}}</span>
+                                            @endforeach
+                                        @endif
+                                    </p>
                                     @if($value->gaji_max > 0)
                                     <p style="margin: 0px"><i class="icon-print mr-2"></i>Rp. {{number_format($value->gaji_min)}} - {{number_format($value->gaji_max)}} / Bulan</p>
                                     @else

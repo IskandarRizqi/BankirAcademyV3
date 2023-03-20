@@ -234,7 +234,7 @@
             let img = JSON.parse(data.image)
             $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
         }
-        $('#loker_nama').val(data.loker_nama)
+        $('#loker_nama').val(data.nama)
         $('#status').val(data.status)
         $('#loker_id').val(data.id)
         $('#loker_title').val(data.title)
