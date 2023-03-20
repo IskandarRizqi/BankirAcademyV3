@@ -212,14 +212,15 @@
                         <div class="card" style="min-height: auto">
                             <div class="card-body">
                                 <div class="d-flex">
-                                    @if($value->google_id)
+                                    <img src="{{$value->image?'/image/loker/'.json_decode($value->image)->url:''}}" alt="" width="60px" height="60px" style="border-radius: 13px">
+                                    {{-- @if($value->google_id)
                                     <img src="{{$value->picture}}" alt="" width="60px" height="60px" style="border-radius: 13px">
                                     @else
-                                    <img src="{{asset($value->picture)}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                                    @endif
+                                    <img src="{{asset($value->picture?$value->picture:'aki.png')}}" alt="" width="60px" height="60px" style="border-radius: 13px">
+                                    @endif --}}
                                     <div class="ml-2">
                                         <h3 style="margin: 0px">{{substr($value->title,0,16)}}</h3> {{--maksimal 15 karakters--}}
-                                        <small>{{json_decode($value->corporate)->name}}</small>
+                                        <small>{{json_decode($value->corporate)?json_decode($value->corporate)->name:'Anugrah Karya'}}</small>
                                     </div>
                                 </div>
                                 <div class="mt-2">

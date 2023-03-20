@@ -10,13 +10,12 @@
                     <div class="single-event">
                         <div class="row col-mb-50">
                             <div class="col-md-3 col-lg-3 text-center">
-                                @if($data->google_id)
+                                <img src="{{$data->image?'/image/loker/'.json_decode($data->image)->url:''}}" alt="" width="100px" height="100%">
+                                {{-- @if($data->google_id)
                                     <img src="{{$data->google_id}}" alt="" width="100px" height="100%">
-                                    @else
+                                @else
                                     <img src="{{asset($data->picture)}}" alt="" width="100px" height="100%">
-                                @endif
-                                {{-- <div class="entry-image mb-0">
-                                </div> --}}
+                                @endif --}}
                             </div>
                             <div class="col-md-8 col-lg-8">
                                 <h3 style="margin: 0px">{{ $data->title }}</h3>
@@ -24,64 +23,35 @@
                                 <div class="w-100"></div>
                                 <span>Rp. {{number_format($data->gaji_min).' - '.number_format($data->gaji_max)}} /Bulan</span>
                                 <div class="w-100"></div>
-                                <span class="badge badge-info">a</span>
-                                <span class="badge badge-info">b</span>
+                                @if($data->type)
+                                @foreach(json_decode($data->type) as $key => $value)
+                                <span class="text-info">{{$value}}</span>
+                                @endforeach
+                                @endif
                             </div>
                             <div class="w-100"></div>
                             <div class="card col">
                                 <div class="card-body">
                                     <div class="col-md-12" style="padding-bottom: 10px;">
-                                        <h4>Kelas Timeline</h4>
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                {{--  --}}
-                                            </div>
-                                            <div class="col">
-                                                <label for="">Category</label>
-                                                <p>{{ '$data->category' }}</p>
-                                            </div>
-                                            <div class="col">
-                                                {{--  --}}
-                                            </div>
-                                            <div class="col">
-                                                <p for="" style="margin: 0px">Tanggal</p>
-                                                <span class="badge badge-info">
-                                                    {{--  --}}
-                                                </span>
-                                            </div>
+                                        <h4>Skill</h4>
+                                        <div class="row mb-4">
+                                @if($data->skill)
+                                @foreach(json_decode($data->skill) as $key => $value)
+                                <span class="badge badge-info">{{$value}}</span>
+                                @endforeach
+                                @endif
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="">
-                                                    {{--  --}}
-                                                </label>
-                                            </div>
+                                        <div class="mb-4">
+                                            <h4>Deskripsi</h4>
+                                            {{$data->deskripsi}}
                                         </div>
                                         <hr>
                                         <div class="mb-4">
-                                            {{--  --}}
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered" id="datatable1"
-                                                cellspacing="0" width="100%">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th>No</th>
-                                                        <th>Waktu</th>
-                                                        <th>Deskripsi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>2</td>
-                                                        <td>3</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <h4>Tanggung Jawab</h4>
+                                            {{$data->jobdesk}}
                                         </div>
                                     </div>
-                                    <div class="col-md-12" style="padding-bottom: 0px;">
+                                    <div class="col-md-12" style="padding-bottom: 0px;" hidden>
                                         <form id="orderForm" action="{{ '/order' }}" method="POST">
                                             @csrf
                                             <input type="text" id="class_id" name="class_id" value="{{ $data->id }}"

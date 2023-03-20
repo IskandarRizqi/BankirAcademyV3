@@ -28,7 +28,7 @@ class BerandaLoker extends Controller
             'user_profile.description'
         )
             ->join('users', 'users.id', 'loker.user_id')
-            ->join('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where('loker.status', 1)
             ->paginate(6);
         // return $data;
@@ -86,7 +86,7 @@ class BerandaLoker extends Controller
     {
         // return $request->all();
         if (!$this->checkAuth()) {
-            return Redirect::back()->with('info', 'Silahkan Login Dahulu');
+            return Redirect::back()->with('info', 'Silahkan Login Dahulu')->withInput($request->all());
         }
         // return $request->all();
         $valid = Validator::make($request->all(), [
@@ -122,6 +122,20 @@ class BerandaLoker extends Controller
         ];
         if (!$request->loker_id) {
             $data['user_id'] = Auth::user()->id;
+        }
+        if ($request->filClassesImage) {
+            $namemeta_image = $request->file('filClassesImage')->getClientOriginalName();
+            $sizemeta_image = $request->file('filClassesImage')->getSize();
+            if ($sizemeta_image >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+            $filename2 = time() . '-' . $namemeta_image;
+            $file = $request->file('filClassesImage');
+            $file->move(public_path('image/loker'), $filename2);
+            $data['image'] = json_encode([
+                'url' => $filename2,
+                'size' => $sizemeta_image
+            ]);
         }
 
         $l = LokerModel::updateOrCreate($val, $data);
