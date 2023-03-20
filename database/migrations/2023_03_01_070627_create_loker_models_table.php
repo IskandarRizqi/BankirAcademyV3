@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id')->comment('yang posting Loker');
             $table->string('title');
+            $table->string('nama');
             $table->double('gaji_min')->default(0);
             $table->double('gaji_max')->default(0);
             $table->text('deskripsi');

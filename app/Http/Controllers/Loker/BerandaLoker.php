@@ -109,6 +109,7 @@ class BerandaLoker extends Controller
             'id' => $request->loker_id,
         ];
         $data = [
+            'nama' => $request->loker_nama,
             'title' => $request->loker_title,
             'gaji_min' => $request->loker_gaji_min,
             'gaji_max' => $request->loker_gaji_max,

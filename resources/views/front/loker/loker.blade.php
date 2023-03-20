@@ -220,7 +220,11 @@
                                     @endif --}}
                                     <div class="ml-2">
                                         <h3 style="margin: 0px">{{substr($value->title,0,16)}}</h3> {{--maksimal 15 karakters--}}
+                                        @if($value->nama)
+                                        <small>{{$value->nama}}</small>
+                                        @else
                                         <small>{{json_decode($value->corporate)?json_decode($value->corporate)->name:'Anugrah Karya'}}</small>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="mt-2">

@@ -16,19 +16,30 @@
             @csrf
             <input type="text" name="loker_id" id="loker_id" hidden>
                 <legend class="w-auto">Form Loker</legend>
-                <div class="form-group">
-                    <label for="filClassesImage">Image</label>
-                    <small class="inputerrormessage text-danger" input-target="filClassesImage"
-                        style="display: none;"></small>
-                    <input type="file" name="filClassesImage" id="filClassesImage"
-                        class="form-control" accept="image/*" maxfilesize="1048576">
-                    <img src="#" alt="Image Preview" id="prvClassesImage" class="previewImage"
-                        style="max-width: 100%;max-height:97px;">
-                        @error('filClassesImage')
+                <div class="row border-2">
+                    <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="filClassesImage">Image</label>
+                        <small class="inputerrormessage text-danger" input-target="filClassesImage"
+                            style="display: none;"></small>
+                        <input type="file" name="filClassesImage" id="filClassesImage"
+                            class="form-control" accept="image/*" maxfilesize="1048576">
+                        <img src="#" alt="Image Preview" id="prvClassesImage" class="previewImage"
+                            style="max-width: 100%;max-height:97px;">
+                            @error('filClassesImage')
+                                <small class="text-danger">Harus Diisi</small>
+                            @enderror
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="">Nama Perusahaan</label>
+                        <input type="text" name="loker_nama" id="loker_nama" class="form-control" value="{{old('loker_nama')}}">
+                        @error('loker_nama')
                             <small class="text-danger">Harus Diisi</small>
                         @enderror
+                    </div>
                 </div>
-            <div class="row border-2">
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Title</label>
@@ -223,6 +234,7 @@
             let img = JSON.parse(data.image)
             $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
         }
+        $('#loker_nama').val(data.loker_nama)
         $('#status').val(data.status)
         $('#loker_id').val(data.id)
         $('#loker_title').val(data.title)

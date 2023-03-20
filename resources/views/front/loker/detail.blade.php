@@ -19,7 +19,11 @@
                             </div>
                             <div class="col-md-8 col-lg-8">
                                 <h3 style="margin: 0px">{{ $data->title }}</h3>
+                                @if($data->nama)
+                                <small>{{$data->nama}}</small>
+                                @else
                                 <small>{{json_decode($data->corporate)->name}}</small>
+                                @endif
                                 <div class="w-100"></div>
                                 <span>Rp. {{number_format($data->gaji_min).' - '.number_format($data->gaji_max)}} /Bulan</span>
                                 <div class="w-100"></div>

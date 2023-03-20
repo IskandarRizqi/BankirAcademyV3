@@ -22,5 +22,6 @@ class LokerModel extends Model
         'skill',
         'type',
         'status',
+        'nama',
     ];
 }
