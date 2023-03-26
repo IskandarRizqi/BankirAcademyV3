@@ -17,7 +17,7 @@
             <input type="text" name="loker_id" id="loker_id" hidden>
                 <legend class="w-auto">Form Loker</legend>
                 <div class="row border-2">
-                    <div class="col-lg-6">
+                    <div class="col-lg-3">
                     <div class="form-group">
                         <label for="filClassesImage">Image</label>
                         <small class="inputerrormessage text-danger" input-target="filClassesImage"
@@ -30,27 +30,33 @@
                                 <small class="text-danger">Harus Diisi</small>
                             @enderror
                     </div>
+                    </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Nama Perusahaan</label>
+                        <input type="text" name="loker_nama" id="loker_nama" class="form-control" value="{{old('loker_nama')}}">
+                        @error('loker_nama')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Nama Perusahaan</label>
-                                <input type="text" name="loker_nama" id="loker_nama" class="form-control" value="{{old('loker_nama')}}">
-                                @error('loker_nama')
-                                    <small class="text-danger">Harus Diisi</small>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Email</label>
-                                <input type="email" name="loker_email" id="loker_email" class="form-control" value="{{old('loker_email')}}">
-                                @error('loker_email')
-                                    <small class="text-danger">Harus Diisi</small>
-                                @enderror
-                            </div>
-                        </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input type="email" name="loker_email" id="loker_email" class="form-control" value="{{old('loker_email')}}">
+                        @error('loker_email')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Minimal Gaji</label>
+                        <input type="text" name="loker_gaji_min" id="loker_gaji_min" class="form-control" value="{{old('loker_gaji_min')}}">
+                        <small id="labelgajimin"></small>
+                        @error('loker_gaji_min')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -62,12 +68,11 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="">Minimal Gaji</label>
-                        <input type="text" name="loker_gaji_min" id="loker_gaji_min" class="form-control" value="{{old('loker_gaji_min')}}">
-                        <small id="labelgajimin"></small>
-                        @error('loker_gaji_min')
+                        <label for="">Alamat</label>
+                        <input type="text" name="loker_alamat" id="loker_alamat" class="form-control" value="{{old('loker_alamat')}}">
+                        @error('loker_alamat')
                             <small class="text-danger">Harus Diisi</small>
                         @enderror
                     </div>
@@ -213,6 +218,8 @@
 @endsection
 @section('custom-js')
 <script>
+    var loker_deskripsi = CKEDITOR.replace("loker_deskripsi");
+    var loker_jobdesk = CKEDITOR.replace("loker_jobdesk");
     // var firstUpload = new FileUploadWithPreview('myFirstImage')
     createDataTable('#banner')
 	$('#filClassesImage').change(function (e) { 
@@ -243,10 +250,12 @@
     }
     function editloker(data) {
         kosong();
+        console.log(data);
         if (data.image) {
             let img = JSON.parse(data.image)
             $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
         }
+        $('#loker_alamat').val(data.alamat)
         $('#loker_email').val(data.email)
         $('#loker_nama').val(data.nama)
         $('#status').val(data.status)
@@ -256,8 +265,10 @@
         $('#loker_gaji_max').val(data.gaji_max)
         $('#loker_gaji_min').change()
         $('#loker_gaji_max').change()
-        $('#loker_deskripsi').val(data.deskripsi)
-        $('#loker_jobdesk').val(data.jobdesk)
+        // $('#loker_deskripsi').val(data.deskripsi)
+        // $('#loker_jobdesk').val(data.jobdesk)
+        loker_deskripsi.setData(data.deskripsi)
+        loker_jobdesk.setData(data.jobdesk)
         $('#loker_tanggal_awal').val(data.tanggal_awal)
         $('#loker_tanggal_akhir').val(data.tanggal_akhir)
         $('#loker_skill').val(JSON.parse(data.skill))

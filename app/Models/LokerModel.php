@@ -24,5 +24,6 @@ class LokerModel extends Model
         'status',
         'nama',
         'email',
+        'alamat',
     ];
 }

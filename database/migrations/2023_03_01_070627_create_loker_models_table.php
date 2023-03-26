@@ -29,6 +29,7 @@ return new class extends Migration
             $table->json('skill')->nullable();
             $table->json('type')->nullable();
             $table->integer('status')->default(0);
+            $table->text('alamat');
             $table->timestamps();
         });
     }

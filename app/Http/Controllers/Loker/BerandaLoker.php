@@ -109,6 +109,7 @@ class BerandaLoker extends Controller
             'id' => $request->loker_id,
         ];
         $data = [
+            'alamat' => $request->loker_alamat,
             'email' => $request->loker_email,
             'nama' => $request->loker_nama,
             'title' => $request->loker_title,
@@ -197,6 +198,21 @@ class BerandaLoker extends Controller
             ->where('loker.status', 1)
             ->where('loker.id', $id)
             ->first();
+        $data['lain'] = LokerModel::select(
+            'loker.*',
+            'users.name',
+            'users.google_id',
+            'users.corporate',
+            'user_profile.picture',
+            'user_profile.description'
+        )
+            ->join('users', 'users.id', 'loker.user_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->where('loker.status', 1)
+            ->where('loker.id', '!=', $id)
+            ->limit(4)
+            ->get();
+        // return $data;
         return view('front.loker.detail', $data);
     }
 

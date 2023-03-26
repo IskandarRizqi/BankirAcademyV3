@@ -238,12 +238,16 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $data = [];
-        $now = Carbon::now()->locale('id_ID');
         $data['logo_perusahaan'] = DashboardModel::select()->first();
         $data['class_upcoming'] = [];
         for ($i = 0; $i < 3; $i++) {
-            $data['class_upcoming'][$now->addMonths($i)->monthName] = ClassesModel::select()->whereMonth('date_end', Carbon::now()->addMonths($i)->month)->whereYear('date_end', Carbon::now()->year)->get();
-            // $data['class_upcoming'][$now->month($i)->monthName] = ClassesModel::select()->limit(9)->get();
+            $now = Carbon::now()->locale('id_ID');
+            $data['class_upcoming'][$now->addMonths($i)->monthName] = ClassesModel::select()
+                ->whereMonth('date_end', Carbon::now()
+                    ->addMonths($i)->month)
+                ->whereYear('date_end', Carbon::now()->year)
+                ->where('status', 1)
+                ->get();
         }
         // return $data;
         $kelas_mingguan = [];
@@ -496,7 +500,7 @@ class HomeController extends Controller
             ->join('users', 'users.id', 'loker.user_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where('loker.status', 1)
-            ->limit(4)
+            ->limit(3)
             ->get();
         // return $dx['kelas']['Semua']['next_page_url'];
         // return $dx;

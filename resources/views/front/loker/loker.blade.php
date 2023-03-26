@@ -228,22 +228,19 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>
+                                    {{-- <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>
                                         @if($value->skill)
                                             @foreach(json_decode($value->skill) as $key => $v)
                                                 <span class="badge badge-info">{{$v}}</span>
                                             @endforeach
                                         @endif
-                                    </p>
-                                    @if($value->gaji_min > 0)
+                                    </p> --}}
+                                    {{-- @if($value->gaji_min > 0)
                                     <p style="margin: 0px"><i class="icon-print mr-2"></i>{{$value->gaji_min}}</p>
                                     @else
-                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Gaji Tidak Ditampilkan</p>
-                                    @endif
-                                <p class="text-center text-secondary mb-2">
-                                    {{\Carbon\Carbon::parse($value->tanggal_awal)->format('d-m-Y')}} -
-                                    {{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}
-                                </p>
+                                    @endif --}}
+                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Gaji Competitive</p>
+                                    <p style="margin: 0px"><i class="icon-wallet mr-2"></i>{{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}</p>
                                 </div>
                                 
                                 <a class="btn btn-primary btn-sm btn-block" href="/loker/{{$value->id}}/detail">Detail</a>
