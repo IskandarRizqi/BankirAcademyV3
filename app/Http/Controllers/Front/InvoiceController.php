@@ -22,12 +22,13 @@ class InvoiceController extends Controller
 	public function getInvoice(Request $r, $id)
 	{
 		// return $r->all();
-		$data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)->where(function ($q) {
-			$role = Auth::user()->role;
-			if ($role == 2) {
-				$q->where('user_id', Auth::user()->id);
-			}
-		})->first();
+		$data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)
+			->where(function ($q) {
+				$role = Auth::user()->role;
+				if ($role == 2) {
+					$q->where('user_id', Auth::user()->id);
+				}
+			})->first();
 
 		if (!$data['payment']) {
 			return Redirect::back()->with('error', 'Payment Data Not Found');
@@ -43,7 +44,6 @@ class InvoiceController extends Controller
 		if (!$data['profile']) {
 			return Redirect::back()->with('error', "Please Fill Your Profile Info");
 		}
-
 		// Deklarasi variable kode promo
 		$kode = 0;
 		if ($data['payment']['promo']) {
@@ -81,6 +81,15 @@ class InvoiceController extends Controller
 			}
 		}
 
+		// Deklarasi variable existing user
+		$data['diskon_existing'] = 0;
+		if ($data['profile']['existing_user'] == 1) {
+			// bila user existing maka dapat diskon 30%
+			$data['diskon_existing'] = 30;
+			$de = (30 / 100) * $data['payment']['price_final'];
+			$data['payment']['totalAkhir'] = $n - $de;
+		}
+
 		// Deklarasi vaiable sertifikat
 		$data['payment']['sertifikat'] = 0;
 		if ($r->sertifikat_invoice > 0) {
@@ -112,7 +121,7 @@ class InvoiceController extends Controller
 
 	public function multiInvoice(Request $request)
 	{
-		// return $request->all();
+		return $request->all();
 		$id = [];
 		$class_id = [];
 		if ($request->dataInvoice) {
@@ -145,6 +154,7 @@ class InvoiceController extends Controller
 			$data['profile'] = UserProfileModel::where('user_id', $data['payment'][0]['user_id'])->first();
 			$data['total'] = 0;
 			$available = 0;
+
 			foreach ($data['payment'] as $key => $value) {
 				// update nomor invoice
 				ClassPaymentModel::where('id', $value->payment_id)->update([
@@ -189,6 +199,16 @@ class InvoiceController extends Controller
 				$cpm = ClassPaymentModel::where('id', $value->payment_id)->update([
 					'additional_discount' => json_encode($additional_discount),
 				]);
+
+				// Deklarasi variable existing user
+				$data['diskon_existing'] = 0;
+				if ($data['profile']['existing_user'] == 1) {
+					// bila user existing maka dapat diskon 30%
+					$data['diskon_existing'] = 30;
+					$de = (30 / 100) * $value['price_final'];
+					$data['payment']['totalAkhir'] = $n - $de;
+				}
+
 				$data['total'] += $value->totalAkhir;
 			}
 			$data['no_invoice'] = $no_invoice;

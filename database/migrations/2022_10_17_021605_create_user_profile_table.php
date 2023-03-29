@@ -22,6 +22,7 @@ return new class extends Migration
             $table->longText('picture')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->integer('gender')->comment('0=Perempuan;1=Laki-Laki');
+            $table->integer('existing_user')->comment('0=false;1=true')->default(0);
             $table->text('description')->nullable();
             $table->text('instansi')->nullable();
             $table->text('rekening')->nullable();

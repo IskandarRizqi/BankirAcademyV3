@@ -55,7 +55,7 @@
                                     <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
                                         id="tabs-1" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false"
                                         style="">
-                                        {{$data->desc}}
+                                        {!!$data->desc!!}
                                     </div>
                                     <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
                                         id="tabs-2" aria-labelledby="ui-id-2" role="tabpanel" aria-hidden="true"

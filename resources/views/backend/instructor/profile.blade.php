@@ -113,6 +113,7 @@
 @section('custom-js')
     <script>
         // var firstUpload = new FileUploadWithPreview('myFirstImage')
+        var deskripsi = CKEDITOR.replace("deskripsi");
         $('#image').change(function(e) {
             getImgData(this, '#previewImage');
         });

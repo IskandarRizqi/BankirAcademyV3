@@ -280,7 +280,7 @@
         .invoice table th {
             white-space: nowrap;
             font-weight: 400;
-            font-size: 16px
+            font-size: 10px
         }
 
         .invoice table td h3 {
@@ -499,15 +499,17 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="text-left">NO.</th>
+                            <th width='5%' class="text-left">NO.</th>
                             <th class="text-left">KELAS</th>
-                            <th style="text-align: right;">HARGA</th>
-                            <th style="text-align: right;">KODE UNIK</th>
-                            <th style="text-align: right;">(-)PROMO</th>
-                            <th style="text-align: right;">(-)KUPON</th>
-                            <th style="text-align: right;">(-)REFERRAL</th>
-                            <th style="text-align: right;">SERTIFIKAT</th>
-                            <th style="text-align: right;">QTY</th>
+                            <th width='5%' style="text-align: right;">HARGA</th>
+                            {{-- <th width='5%' style="text-align: right;">PROMO</th> --}}
+                            <th width='5%' style="text-align: right;">ADD. DISKON</th>
+                            <th width='5%' style="text-align: right;">KODE UNIK</th>
+                            <th width='5%' style="text-align: right;">(-)PROMO</th>
+                            <th width='5%' style="text-align: right;">(-)KUPON</th>
+                            <th width='5%' style="text-align: right;">(-)REFERRAL</th>
+                            <th width='5%' style="text-align: right;">SERTIFIKAT</th>
+                            <th width='5%' style="text-align: right;">QTY</th>
                             <th style="text-align: right;">TOTAL</th>
                         </tr>
                     </thead>
@@ -519,6 +521,18 @@
                                 {{$class->title}}</th>
                             <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
+                                @if($diskon_existing>0)
+                                <td class="unit">
+                                    {{-- {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                    \NumberFormatter::CURRENCY),$diskon_existing,"IDR"),0,-3) }} --}}
+                                    {{$diskon_existing}} %
+                                </td>
+                                @else
+                                <td class="unit">
+                                    {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                    \NumberFormatter::CURRENCY),0,"IDR"),0,-3) }}
+                                </td>
+                                @endif
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}

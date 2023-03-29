@@ -1,6 +1,9 @@
 @extends('backend.template')
 @section('content')
 <div class="col-lg-12">
+    <form action="" id="formDinamis" enctype="multipart/form-data">
+        @csrf
+    </form>
     <div class="widget">
         <div class="widget-content">
             <div class="table-responsive">
@@ -13,6 +16,8 @@
                             <th>No HP</th>
                             <th>Kelas</th>
                             <th>Tanggal</th>
+                            <th>Existing User</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,6 +33,8 @@
                             <td>{{ $p->phone ? $p->phone : '' }}</td>
                             <td>{{ $p->title }}</td>
                             <td>{{ \Carbon\Carbon::parse($p->created_at)->format('d-m-Y') }}</td>
+                            <td>{{ $p->existing_user?'Existing':'Tidak Existing' }}</td>
+                            <td><span class="btn btn-info btn-sm" onclick="existing('{{$p}}')">Existing</span></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -44,5 +51,27 @@
 @section('custom-js')
 <script>
     createDataTable('#tblPeserta');
+    function existing(params) {
+        // console.log(JSON.parse(params))
+        let js = JSON.parse(params);
+        if (!js.profile_id) {
+            return alert('Profile ID Tidak Ditemukan');
+        }
+        swal.fire({
+            title: 'Ganti Status Existing?',
+            // icon: 'warning',
+            showCancelButton: true,
+            // confirmButtonColor: '#3085d6',
+            // cancelButtonColor: '#d33',
+            confirmButtonText: 'Ganti!'
+        })
+        .then((result) => {
+            if (result.value) {
+                $('#formDinamis').attr('action','/admin/peserta/change_existing/'+js.profile_id+'/'+js.existing_user);
+                $('#formDinamis').attr('method','GET');
+                $('#formDinamis').submit();
+            }
+        });
+    }
 </script>
 @endsection

@@ -245,7 +245,7 @@
                                                             <div class="dropdown-menu">
                                                                 {{-- <a class="btn btn-primary dropdown-item" href="/classes/getinvoice/{{ $d->id }}" target="_blank" title="Invoice">Invoice</a> --}}
                                                                 <button id="btnInvoice" type="button" class="btn btn-info dropdown-item" data-toggle="modal" data-target="#invoiceModal" onclick="invoice({{ $d->id }})" title="Invoice">
-                                                                        Inovice
+                                                                        Invoice
                                                                 </button>
                                                                 @if ($d->status == 0)
                                                                 <button id="btnModal" type="button" class="btn btn-primary dropdown-item" data-toggle="modal" data-target="#bayarModal" onclick="bukti({{ $d->class_id }},{{ $d->id }},{{ $reff ? $reff->code : '' }})" title="Upload Bukti" @if ($d->expired <= Carbon\Carbon::now()) disabled @endif>

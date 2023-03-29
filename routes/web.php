@@ -51,6 +51,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/partner/delete', [App\Http\Controllers\Backend\PartnerController::class, 'delete_partner']);
     Route::get('/admin/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'index']);
     Route::get('/admin/peserta/corporate', [App\Http\Controllers\Backend\PesertaController::class, 'corporate']);
+    Route::get('/admin/peserta/change_existing/{id}/{exs}', [App\Http\Controllers\Backend\PesertaController::class, 'change_existing']);
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
     Route::resource('/admin/kupon', PromoController::class);

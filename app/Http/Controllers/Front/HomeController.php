@@ -249,6 +249,7 @@ class HomeController extends Controller
                 ->where('status', 1)
                 ->get();
         }
+        $now = Carbon::now()->locale('id_ID');
         // return $data;
         $kelas_mingguan = [];
         $data['banner_promo'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();

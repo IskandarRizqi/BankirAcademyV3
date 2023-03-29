@@ -6,21 +6,46 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\InstructorModel;
+use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class PesertaController extends Controller
 {
     public function index()
     {
         $data = [];
-        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'users.google_id', 'classes.title', 'user_profile.picture', 'user_profile.phone')
+        $data['peserta'] = ClassParticipantModel::select(
+            'class_participant.*',
+            'users.name',
+            'users.google_id',
+            'classes.title',
+            'user_profile.id as profile_id',
+            'user_profile.picture',
+            'user_profile.phone',
+            'user_profile.existing_user',
+        )
             ->join('users', 'users.id', 'class_participant.user_id')
             ->join('classes', 'classes.id', 'class_participant.class_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'class_participant.user_id')
             ->get();
         // return $data;
         return view('backend.peserta.peserta', $data);
+    }
+
+    public function change_existing($id, $ext)
+    {
+        $e = 1;
+        if ($ext == 1) {
+            $e = 0;
+        }
+
+        $u = UserProfileModel::where('id', $id)->update(['existing_user' => $e]);
+        if ($u) {
+            return Redirect::back()->with('info', 'Data Tersimpan Tersimpan');
+        }
+        return Redirect::back()->with('info', 'Data Tidak Tersimpan');
     }
 
     public function instructor()
@@ -50,7 +75,17 @@ class PesertaController extends Controller
     public function corporate()
     {
         $data = [];
-        $data['peserta'] = ClassParticipantModel::select('class_participant.*', 'users.name', 'users.google_id', 'classes.title', 'user_profile.phone', 'user_profile.picture', 'users.corporate')
+        $data['peserta'] = ClassParticipantModel::select(
+            'class_participant.*',
+            'users.name',
+            'users.google_id',
+            'classes.title',
+            'user_profile.phone',
+            'user_profile.id as profile_id',
+            'user_profile.existing_user',
+            'user_profile.picture',
+            'users.corporate'
+        )
             ->join('users', 'users.id', 'class_participant.user_id')
             ->join('classes', 'classes.id', 'class_participant.class_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'class_participant.user_id')

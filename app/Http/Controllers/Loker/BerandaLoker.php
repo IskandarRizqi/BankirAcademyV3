@@ -92,7 +92,7 @@ class BerandaLoker extends Controller
         $valid = Validator::make($request->all(), [
             'loker_title' => 'required',
             'loker_gaji_min' => 'required',
-            'loker_gaji_max' => 'required',
+            // 'loker_gaji_max' => 'required',
             'loker_deskripsi' => 'required',
             'loker_jobdesk' => 'required',
             'loker_tanggal_awal' => 'required',
@@ -114,7 +114,7 @@ class BerandaLoker extends Controller
             'nama' => $request->loker_nama,
             'title' => $request->loker_title,
             'gaji_min' => $request->loker_gaji_min,
-            'gaji_max' => $request->loker_gaji_max,
+            'gaji_max' => 0,
             'deskripsi' => $request->loker_deskripsi,
             'jobdesk' => $request->loker_jobdesk,
             'tanggal_awal' => $request->loker_tanggal_awal,

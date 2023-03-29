@@ -477,7 +477,7 @@
         <div class="container">
         <div class="row p-4">
             @foreach($loker as $key => $value)
-            <div class="col-lg-4">
+            <div class="col-lg-4 mb-4">
                 <div class="card" style="min-height: auto">
                     <div class="card-body">
                         <div class="d-flex">

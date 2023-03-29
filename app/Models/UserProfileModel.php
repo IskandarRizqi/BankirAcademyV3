@@ -20,5 +20,6 @@ class UserProfileModel extends Model
 		'description',
 		'instansi',
 		'rekening',
+		'existing_user',
 	];
 }

@@ -208,7 +208,7 @@
                 </div>
                 <div class="row mb-2">
                     @foreach($data as $key => $value)
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 mb-4">
                         <div class="card" style="min-height: auto">
                             <div class="card-body">
                                 <div class="d-flex">
