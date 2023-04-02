@@ -206,49 +206,61 @@
                     <h2>Jelajahi Academy</h2>
                     <p>Berbagai macam pilihan kelas bankir academy dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div class="row mb-2">
-                    @foreach($data as $key => $value)
-                    <div class="col-lg-4 mb-4">
-                        <div class="card" style="min-height: auto">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <img src="{{$value->image?'/image/loker/'.json_decode($value->image)->url:''}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                                    {{-- @if($value->google_id)
-                                    <img src="{{$value->picture}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                                    @else
-                                    <img src="{{asset($value->picture?$value->picture:'aki.png')}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                                    @endif --}}
-                                    <div class="ml-2">
-                                        <h3 style="margin: 0px">{{substr($value->title,0,16)}}</h3> {{--maksimal 15 karakters--}}
-                                        @if($value->nama)
-                                        <small>{{$value->nama}}</small>
-                                        @else
-                                        <small>{{json_decode($value->corporate)?json_decode($value->corporate)->name:'Anugrah Karya'}}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    {{-- <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>
-                                        @if($value->skill)
-                                            @foreach(json_decode($value->skill) as $key => $v)
-                                                <span class="badge badge-info">{{$v}}</span>
-                                            @endforeach
-                                        @endif
-                                    </p> --}}
-                                    {{-- @if($value->gaji_min > 0)
-                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>{{$value->gaji_min}}</p>
-                                    @else
-                                    @endif --}}
-                                    <p style="margin: 0px"><i class="icon-print mr-2"></i>Gaji Competitive</p>
-                                    <p style="margin: 0px"><i class="icon-wallet mr-2"></i>{{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}</p>
-                                </div>
-                                
-                                <a class="btn btn-primary btn-sm btn-block" href="/loker/{{$value->id}}/detail">Detail</a>
-                            </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Provinsi</label>
+                            <select name="provinsi" id="provinsi" class="form-control" onchange="getkabupaten()" required>
+                                <option>Pilih</option>
+                                @foreach($provinsi as $key => $v)
+                                <option value="{{$v->id}}" {{old('provinsi')==$v->id?'selected':''}}>{{$v->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('provinsi')
+                                <small class="text-danger">Harus Diisi</small>
+                            @enderror
                         </div>
                     </div>
-                    @endforeach
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Kabupaten</label>
+                            <select name="kabupaten" id="kabupaten" class="form-control" onchange="getkecamatan()" required>
+                                <option>Pilih</option>
+                            </select>
+                            @error('kabupaten')
+                                <small class="text-danger">Harus Diisi</small>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <button class="btn btn-primary mt-4" id="cari"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgb(255, 255, 255);transform: ;msFilter:;"><path d="M19.023 16.977a35.13 35.13 0 0 1-1.367-1.384c-.372-.378-.596-.653-.596-.653l-2.8-1.337A6.962 6.962 0 0 0 16 9c0-3.859-3.14-7-7-7S2 5.141 2 9s3.14 7 7 7c1.763 0 3.37-.66 4.603-1.739l1.337 2.8s.275.224.653.596c.387.363.896.854 1.384 1.367l1.358 1.392.604.646 2.121-2.121-.646-.604c-.379-.372-.885-.866-1.391-1.36zM9 14c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z"></path></svg></button>
+                    </div>
+                    {{-- <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Kecamatan</label>
+                            <select name="kecamatan" id="kecamatan" class="form-control" onchange="getkelurahan()" required>
+                                <option>Pilih</option>
+                            </select>
+                            @error('kecamatan')
+                                <small class="text-danger">Harus Diisi</small>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="">Kelurahan</label>
+                            <select name="kelurahan" id="kelurahan" class="form-control" required>
+                                <option>Pilih</option>
+                            </select>
+                            @error('kelurahan')
+                                <small class="text-danger">Harus Diisi</small>
+                            @enderror
+                        </div>
+                    </div> --}}
                 </div>
+                <div class="row mb-2" id="dataloker">
+                </div>
+                <div id="datalokers" class="text-center"></div>
                 {{-- <div id="related-portfolio"
                     class="owl-carousel portfolio-carousel carousel-widget owl-loaded owl-drag with-carousel-dots"
                     data-margin="0" data-autoplay="5000" data-items-xs="0" data-items-sm="0" data-items-md="0"
@@ -509,16 +521,22 @@
 
 @include('front.layout.footer')
 <script>
-    let arrkategori = JSON.parse($('#kelas').val());
+    
+    var page = 0;
+    var load = true;
     $(document).ready(function() {
-        // lazyLoad(1);
-        $('#allClass').click(function() {
-            let hal = $('#halaman').val();
-            lazyLoad(hal);
-        })
-        setTimeout(() => {
-            tabsCategory('Semua');
-        }, 500);
+        $('#provinsi').select2({
+            placeholder: 'Input or Select',
+        });
+    $('#kabupaten').select2({
+            placeholder: 'Input or Select',
+        });
+    $('#kelurahan').select2({
+            placeholder: 'Input or Select',
+        });
+    $('#kecamatan').select2({
+            placeholder: 'Input or Select',
+        });
         $('.logo-perusahaan').slick({
             dots: true,
             infinite: false,
@@ -689,58 +707,145 @@
                 // instead of a settings object
             ]
         });
-    })
-
-    function tabsCategory(params) {
-        console.log(params);
-        $('.tabsCustom').each(function() {
-            $(this).attr('hidden', true);
-        })
-        $('#' + params).removeAttr('hidden');
-        // $('.' + params).removeClass('btn-outline-primary');
-        // $('.' + params).addClass('btn-primary');
-        arrkategori.forEach(element => {
-            if (params == element) {
-                $('.' + params).removeClass('btn-outline-primary');
-                $('.' + params).addClass('btn-primary');
-            } else {
-                $('.' + element).addClass('btn-outline-primary');
-                $('.' + element).removeClass('btn-primary');
+        $('#cari').on('click',function () {
+            let p =$('#provinsi').val();
+            let k =$('#kabupaten').val();
+            if (p=='pilih') {
+                return false;
             }
-        });
-        // $('#allClass').attr('href','/list-class/'+params);
-    }
-
-    function lazyLoad(page) {
-        // $('#halaman').val(page)
-        if (!page) {
-            iziToast.error({
-                title: 'Info',
-                message: 'Semua Kelas Sudah Tampil',
-                position: 'topRight',
-            });
-            return $('#allClass').attr('hidden', true)
-        }
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: page,
-                type: 'GET',
-                beforeSend: function() {
-                    $('.ajax-load').show();
-                    // console.log('getData');
-                },
-                success: function(response) {
-                    Object.keys(response).forEach(key => {
-                        console.log(key.replace(/[^a-zA-Z0-9]/g,''));
-                        $('#' + key.replace(/[^a-zA-Z0-9]/g,'')).append(response[key]);
-                    });
-                    $('#halaman').val(null)
-                    if (response.next_page_url) {
-                        $('#halaman').val(response.next_page_url)
-                    }
-                    resolve();
-                }
-            })
+            if (k=='pilih') {
+                return false;
+            }
+            page = 0;
+            load = true;
+            $("#dataloker").html('');
+            loadMoreData();
         })
-    };
+    })
+    window.onscroll = function (e)
+    {
+        if($(window).scrollTop() + $(window).height() >= ($(document).height()*(45/100))) {
+            loadMoreData();
+        }
+    }
+    
+	async function loadMoreData(){
+        page++;
+        if (!load) {
+            return false;
+        }
+        let myPromise = new Promise(function(resolve, reject) {
+    $.ajax(
+    {
+        url: '?page=' + page,
+        type: "get",
+        data:{
+            provinsi:$('#provinsi').val(),
+            kabupaten:$('#kabupaten').val()
+        },
+        beforeSend: function()
+        {
+            $('.ajax-load').show();
+        }
+    })
+    .done(function(data)
+    {
+        console.log(data.data.data);
+        if(data.data.data.length<=0){
+            $('#datalokers').html('<h3 class="text-center">Data Tidak Ditemukan</h3>');
+            load = false;
+            return;
+        }
+        let html = ''
+        data.data.data.forEach(e => {
+            let img= e.image?'/image/loker/'+JSON.parse(e.image).url:'kosong';
+            html +="<div class='col-lg-4 mb-4'>";
+            html +="        <div class='card' style='min-height: auto'>";
+            html +="            <div class='card-body'>";
+            html +="                <div class='d-flex'>";
+            html +="                    <img src='"+img+"' width='60px' height='60px' style='border-radius: 13px'/>";
+            html +="                    <div class='ml-2'>";
+            html +="                        <h3 style='margin: 0px'>"+e.title.substr(0,16)+"</h3>"; //maksimal 15 karakters
+            if (e.nama) {
+                html +="                        <small>"+e.nama+"</small>";
+            }else{
+                html +="                        <small>"+JSON.parse(e.corporate)?JSON.parse(e.corporate).name:'Anugrah Karya'+"</small>";
+            }
+            html +="                    </div>";
+            html +="                </div>";
+            html +="                <div class='mt-2'>";
+            let gaji = e.gaji_min?e.gaji_min:'Gaji Competitive';
+            html +="                    <p style='margin: 0px'><i class='icon-print mr-2'></i>"+gaji+"</p>";
+            let d = new Date(e.tanggal_akhir);
+            html +="                    <p style='margin: 0px'><i class='icon-wallet mr-2'></i>"+d.getDate()+"-"+d.getMonth()+"-"+d.getFullYear()+"</p>";
+            html +="                </div>";
+            html +="                ";
+            html +="                <a class='btn btn-primary btn-sm btn-block' href='/loker/"+e.id+"/detail'>Detail</a>";
+            html +="            </div>";
+            html +="        </div>";
+            html +="    </div>";
+        });
+        $("#dataloker").append(html);
+        page++;
+    })
+    .fail(function(jqXHR, ajaxOptions, thrownError)
+    {
+          alert('server not responding...');
+    });
+        });
+	}
+    function getkabupaten(){
+        let v = $('#provinsi').val();
+        $.ajax({
+                type:'GET',
+                url:'/admin/loker/getkabupaten/'+v,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    let t = '';
+                    if (data) {
+                        t+='<option>Pilih</option>';
+                        data.forEach(el => {
+                            t+='<option value='+el.id+'>'+el.name+'</option>';
+                        });
+                    }
+                    $('#kabupaten').html(t);
+                }
+            });
+    }
+    function getkecamatan(){
+        let v = $('#kabupaten').val();
+        $.ajax({
+                type:'GET',
+                url:'/admin/loker/getkecamatan/'+v,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    let t = '';
+                    if (data) {
+                        t+='<option>Pilih</option>';
+                        data.forEach(el => {
+                            t+='<option value='+el.id+'>'+el.name+'</option>';
+                        });
+                    }
+                    $('#kecamatan').html(t);
+                }
+            });
+    }
+    function getkelurahan(){
+        let v = $('#kecamatan').val();
+        $.ajax({
+                type:'GET',
+                url:'/admin/loker/getkelurahan/'+v,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    let t = '';
+                    if (data) {
+                        t+='<option>Pilih</option>';
+                        data.forEach(el => {
+                            t+='<option value='+el.id+'>'+el.name+'</option>';
+                        });
+                    }
+                    $('#kelurahan').html(t);
+                }
+            });
+    }
 </script>

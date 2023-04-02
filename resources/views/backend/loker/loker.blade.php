@@ -59,6 +59,53 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Provinsi</label>
+                        <select name="provinsi" id="provinsi" class="form-control" onchange="getkabupaten()" required>
+                            <option>Pilih</option>
+                            @foreach($provinsi as $key => $v)
+                            <option value="{{$v->id}}" {{old('provinsi')==$v->id?'selected':''}}>{{$v->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('provinsi')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Kabupaten</label>
+                        <select name="kabupaten" id="kabupaten" class="form-control" onchange="getkecamatan()" required>
+                            <option>Pilih</option>
+                        </select>
+                        @error('kabupaten')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Kecamatan</label>
+                        <select name="kecamatan" id="kecamatan" class="form-control" onchange="getkelurahan()" required>
+                            <option>Pilih</option>
+                        </select>
+                        @error('kecamatan')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="">Kelurahan</label>
+                        <select name="kelurahan" id="kelurahan" class="form-control" required>
+                            <option>Pilih</option>
+                        </select>
+                        @error('kelurahan')
+                            <small class="text-danger">Harus Diisi</small>
+                        @enderror
+                    </div>
+                </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Title</label>
@@ -195,7 +242,7 @@
                         <td><img src="{{$l->image?'/image/loker/'.json_decode($l->image)->url:''}}" alt="" style="max-width: 100%; max-height: 90px"></td>
                         <td>{{$l->name}}</td>
                         <td>{{$l->title}}</td>
-                        <td>Rp. {{number_format($l->gaji_min).'-'.number_format($l->gaji_max)}}</td>
+                        <td>{{$l->gaji_min?$l->gaji_min:'Gaji Competitive'}}</td>
                         <td>{{$l->status==1?'ACC':'Tidak ACC'}}</td>
                         <td>
                             <button class="btn btn-warning" onclick="editloker({{$l}})" title="Edit"> <i
@@ -225,14 +272,80 @@
 	$('#filClassesImage').change(function (e) { 
 		getImgData(this,'#prvClassesImage');
 	});
+    $('#provinsi').select2({
+            placeholder: 'Input or Select',
+        });
+    $('#kabupaten').select2({
+            placeholder: 'Input or Select',
+        });
+    $('#kelurahan').select2({
+            placeholder: 'Input or Select',
+        });
+    $('#kecamatan').select2({
+            placeholder: 'Input or Select',
+        });
     $('#loker_skill').select2({
             placeholder: 'Input or Select',
             tags:true
         });
-        $('#loker_type').select2({
-            placeholder: 'Input or Select',
-            tags:true
-        });
+    $('#loker_type').select2({
+        placeholder: 'Input or Select',
+        tags:true
+    });
+    function getkabupaten(){
+        let v = $('#provinsi').val();
+        $.ajax({
+                type:'GET',
+                url:'/admin/loker/getkabupaten/'+v,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    let t = '';
+                    if (data) {
+                        t+='<option>Pilih</option>';
+                        data.forEach(el => {
+                            t+='<option value='+el.id+'>'+el.name+'</option>';
+                        });
+                    }
+                    $('#kabupaten').html(t);
+                }
+            });
+    }
+    function getkecamatan(){
+        let v = $('#kabupaten').val();
+        $.ajax({
+                type:'GET',
+                url:'/admin/loker/getkecamatan/'+v,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    let t = '';
+                    if (data) {
+                        t+='<option>Pilih</option>';
+                        data.forEach(el => {
+                            t+='<option value='+el.id+'>'+el.name+'</option>';
+                        });
+                    }
+                    $('#kecamatan').html(t);
+                }
+            });
+    }
+    function getkelurahan(){
+        let v = $('#kecamatan').val();
+        $.ajax({
+                type:'GET',
+                url:'/admin/loker/getkelurahan/'+v,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    let t = '';
+                    if (data) {
+                        t+='<option>Pilih</option>';
+                        data.forEach(el => {
+                            t+='<option value='+el.id+'>'+el.name+'</option>';
+                        });
+                    }
+                    $('#kelurahan').html(t);
+                }
+            });
+    }
     function kosong() {
         $('#loker_id').val(null)
         $('#loker_title').val(null)
@@ -272,9 +385,26 @@
         $('#loker_tanggal_awal').val(data.tanggal_awal)
         $('#loker_tanggal_akhir').val(data.tanggal_akhir)
         $('#loker_skill').val(JSON.parse(data.skill))
-        $('#loker_type').val(JSON.parse(data.type))
         $('#loker_skill').trigger('change')
+        $('#loker_type').val(JSON.parse(data.type))
         $('#loker_type').trigger('change')
+        $('#provinsi').val(data.provinsi)
+        $('#provinsi').trigger('change')
+        getkabupaten()
+        setTimeout(() => {
+            $('#kabupaten').val(data.kabupaten)
+            $('#kabupaten').trigger('change')
+            getkecamatan()
+            setTimeout(() => {
+                $('#kecamatan').val(data.kecamatan)
+                $('#kecamatan').trigger('change')
+                getkelurahan()
+                setTimeout(() => {
+                    $('#kelurahan').val(data.kelurahan)
+                    $('#kelurahan').trigger('change')
+                }, 1000);
+            }, 1000);
+        }, 1000);
     }
     function deleteLoker(id) {
 		swal({

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LokerModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,28 +17,42 @@ class BerandaLoker extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = [];
-        $data['data'] = LokerModel::select(
-            'loker.*',
-            'users.name',
-            'users.corporate',
-            'users.google_id',
-            'user_profile.picture',
-            'user_profile.description'
-        )
-            ->join('users', 'users.id', 'loker.user_id')
-            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
-            ->where('loker.status', 1)
-            ->paginate(6);
-        // return $data;
-        return view('front.loker.loker', $data);
+        $x['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
+        if ($request->ajax()) {
+            $data = [];
+            $data['data'] = LokerModel::select(
+                'loker.*',
+                'users.name',
+                'users.corporate',
+                'users.google_id',
+                'user_profile.picture',
+                'user_profile.description'
+            )
+                ->join('users', 'users.id', 'loker.user_id')
+                ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+                ->where(function ($query) use ($request) {
+                    if ($request->provinsi != 'Pilih') {
+                        return $query->where('loker.provinsi', $request->provinsi);
+                    }
+                })
+                ->where(function ($query) use ($request) {
+                    if ($request->kabupaten != 'Pilih') {
+                        return $query->where('loker.kabupaten', $request->kabupaten);
+                    }
+                })
+                ->where('loker.status', 1)
+                ->paginate(6);
+            return $data;
+        }
+        return view('front.loker.loker', $x);
     }
     public function index_admin()
     {
         $data = [];
         $auth = Auth::user();
+        $data['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
         $data['data'] = LokerModel::select(
             'loker.*',
             'users.name',
@@ -58,6 +73,19 @@ class BerandaLoker extends Controller
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         // return $auth;
         return view('backend.loker.loker', $data);
+    }
+
+    public function getkabupaten($data)
+    {
+        return DB::table('kota')->where('provinsi_id', $data)->get();
+    }
+    public function getkecamatan($data)
+    {
+        return DB::table('kecamatan')->where('kota_id', $data)->get();
+    }
+    public function getkelurahan($data)
+    {
+        return DB::table('kelurahan')->where('kecamatan_id', $data)->get();
     }
 
     /**
@@ -99,6 +127,10 @@ class BerandaLoker extends Controller
             'loker_tanggal_akhir' => 'required',
             'loker_skill' => 'required',
             'loker_type' => 'required',
+            'provinsi' => 'required',
+            'kabupaten' => 'required',
+            'kecamatan' => 'required',
+            'kelurahan' => 'required',
         ]);
         //response error validation
         if ($valid->fails()) {
@@ -122,6 +154,10 @@ class BerandaLoker extends Controller
             'skill' => json_encode($request->loker_skill),
             'type' => json_encode($request->loker_type),
             'status' => $request->status ? $request->status : 0,
+            'provinsi' => $request->provinsi,
+            'kabupaten' => $request->kabupaten,
+            'kecamatan' => $request->kecamatan,
+            'kelurahan' => $request->kelurahan,
         ];
         if (!$request->loker_id) {
             $data['user_id'] = Auth::user()->id;

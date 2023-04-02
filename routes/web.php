@@ -187,3 +187,6 @@ Auth::routes();
 // Loker
 Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);
 Route::get('/loker/{id}/detail', [App\Http\Controllers\Loker\BerandaLoker::class, "detail"]);
+Route::get('/admin/loker/getkabupaten/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkabupaten']);
+Route::get('/admin/loker/getkecamatan/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkecamatan']);
+Route::get('/admin/loker/getkelurahan/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkelurahan']);

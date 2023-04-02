@@ -25,5 +25,9 @@ class LokerModel extends Model
         'nama',
         'email',
         'alamat',
+        'provinsi',
+        'kabupaten',
+        'kecamatan',
+        'kelurahan',
     ];
 }
