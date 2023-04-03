@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Loker;
 
 use App\Http\Controllers\Controller;
 use App\Models\LokerModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,8 @@ class BerandaLoker extends Controller
                         return $query->where('loker.kabupaten', $request->kabupaten);
                     }
                 })
+                ->whereDate('tanggal_awal', '<=', Carbon::now())
+                ->whereDate('tanggal_akhir', '>=', Carbon::now())
                 ->where('loker.status', 1)
                 ->paginate(6);
             return $data;

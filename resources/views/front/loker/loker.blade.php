@@ -153,6 +153,61 @@
         -o-transition: all .3s ease;
         transition: all .3s ease;
     }
+    .ribbon-wrapper {
+    width: 85px;
+    height: 88px;
+    overflow: hidden;
+    position: absolute;
+    top: -3px;
+    right: -3px
+}
+.ribbon {
+    font-size: 12px;
+    color: #FFF;
+    text-transform: uppercase;
+    font-family: 'Montserrat Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    letter-spacing: .05em;
+    line-height: 30px;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .4);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: relative;
+    padding: 7px 0;
+    right: -20px;
+    top: -2px;
+    width: 100px;
+    height: 35px;
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+    box-shadow: 0 0 3px rgba(0, 0, 0, .3);
+    background-color: #007bff;
+    background-image: -webkit-linear-gradient(top, #ffffff 45%, #dedede 100%);
+    background-image: -o-linear-gradient(top, #ffffff 45%, #dedede 100%);
+    background-image: linear-gradient(to bottom, #007bff 45%, #dedede 100%);
+    background-repeat: repeat-x;
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffdedede', GradientType=0)
+}
+
+.ribbon:before,
+.ribbon:after {
+    content: "";
+    border-top: 3px solid #9e9e9e;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    position: absolute;
+    bottom: -3px
+}
+
+.ribbon:before {
+    left: 0
+}
+
+.ribbon:after {
+    right: 0
+}
 </style>
 
 <!-- Content -->
@@ -752,15 +807,24 @@
     {
         console.log(data.data.data);
         if(data.data.data.length<=0){
-            $('#datalokers').html('<h3 class="text-center">Data Tidak Ditemukan</h3>');
+            // $('#datalokers').html('<h3 class="text-center">Data Tidak Ditemukan</h3>');
             load = false;
             return;
         }
         let html = ''
+        let now = new Date();
         data.data.data.forEach(e => {
+            let past = new Date(e.tanggal_awal);
+            let diff = new Date(now.getTime()-past.getTime());
+            let rentang = diff.getUTCDate()-1;
             let img= e.image?'/image/loker/'+JSON.parse(e.image).url:'kosong';
             html +="<div class='col-lg-4 mb-4'>";
             html +="        <div class='card' style='min-height: auto'>";
+                if (rentang <=4) {
+                    html +="<div class='ribbon-wrapper'>";
+                    html +="    <div class='ribbon'>New</div>";
+                    html +="</div>";
+                }
             html +="            <div class='card-body'>";
             html +="                <div class='d-flex'>";
             html +="                    <img src='"+img+"' width='60px' height='60px' style='border-radius: 13px'/>";
@@ -777,7 +841,7 @@
             let gaji = e.gaji_min?e.gaji_min:'Gaji Competitive';
             html +="                    <p style='margin: 0px'><i class='icon-print mr-2'></i>"+gaji+"</p>";
             let d = new Date(e.tanggal_akhir);
-            html +="                    <p style='margin: 0px'><i class='icon-wallet mr-2'></i>"+d.getDate()+"-"+d.getMonth()+"-"+d.getFullYear()+"</p>";
+            html +="                    <p style='margin: 0px'><i class='icon-wallet mr-2'></i>"+d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear()+"</p>";
             html +="                </div>";
             html +="                ";
             html +="                <a class='btn btn-primary btn-sm btn-block' href='/loker/"+e.id+"/detail'>Detail</a>";
