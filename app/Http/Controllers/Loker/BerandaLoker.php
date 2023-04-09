@@ -45,6 +45,7 @@ class BerandaLoker extends Controller
                 })
                 ->whereDate('tanggal_awal', '<=', Carbon::now())
                 ->whereDate('tanggal_akhir', '>=', Carbon::now())
+                ->orderBy('tanggal_akhir', 'asc')
                 ->where('loker.status', 1)
                 ->paginate(6);
             return $data;

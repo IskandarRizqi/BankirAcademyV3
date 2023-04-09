@@ -501,6 +501,9 @@ class HomeController extends Controller
             ->join('users', 'users.id', 'loker.user_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where('loker.status', 1)
+            ->whereDate('loker.tanggal_awal', '<=', Carbon::now())
+            ->whereDate('loker.tanggal_akhir', '>=', Carbon::now())
+            ->orderBy('loker.tanggal_akhir', 'asc')
             ->limit(3)
             ->get();
         // return $dx['kelas']['Semua']['next_page_url'];
