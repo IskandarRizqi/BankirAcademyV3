@@ -423,4 +423,9 @@ class ProfileController extends Controller
         }
         return Redirect::back()->with('error', 'Update Rekening Gagal Disimpan');
     }
+    public function datalamaran(Request $request)
+    {
+        $data = [];
+        return view('front.loker.datalamaran', $data);
+    }
 }

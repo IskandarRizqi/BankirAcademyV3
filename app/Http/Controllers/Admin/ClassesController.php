@@ -443,12 +443,15 @@ class ClassesController extends Controller
 	public function previewcertificate(Request $r, $id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
+		if (!$data['class']) {
+			return Redirect::back()->with('error', 'Kelas Tidak Ditemukan');
+		}
 		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
+		if (!$data['certs']) {
+			return Redirect::back()->with('error', 'Sertifikat Tidak Ditemukan');
+		}
 		$data['name'] = 'John Doe';
 		$data['contents'] = str_replace("[[date_expired]]", $data['certs']->certificate_expired, str_replace("[[date_active]]", $data['certs']->certificate_created, str_replace("[[class]]", $data['class']->title, str_replace("[[name]]", $data['name'], $data['certs']->content))));
-		if (!$data['certs']) {
-			return Redirect::back()->with('error', 'Certificate belum dibuat');
-		}
 
 		// return view('backend/certificate/certificate',$data);
 
@@ -636,7 +639,9 @@ class ClassesController extends Controller
 				}
 			})
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->paginate(9)->toArray();
+			->orderBy('date_end', 'asc')
+			->paginate(9)
+			->toArray();
 
 		$data['pencarian'] = $this->pencarian();
 		// return $data;

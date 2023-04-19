@@ -16,7 +16,7 @@
                                     <div class="flexslider">
                                         <div class="flex-viewport"
                                             style="overflow: hidden; position: relative; height: auto;"><img
-                                                src="@if (json_decode($data->picture)){{asset('Image/'.json_decode($data->picture)->url)}}@else{{$data->picture}}@endif"
+                                                src="@if(json_decode($data->picture)) {{asset('Image/'.json_decode($data->picture)->url)}} @else {{$data->picture}} @endif"
                                                 alt="">
                                         </div>
                                     </div>
@@ -55,6 +55,10 @@
                                     <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
                                         id="tabs-1" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false"
                                         style="">
+                                        {{-- @if(property_exists('desc',$data))
+                                        @else
+                                        Tidak Ditemukan
+                                        @endif --}}
                                         {!!$data->desc!!}
                                     </div>
                                     <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
@@ -152,7 +156,11 @@
                                                                 method="post">
                                                                 @csrf
                                                                 <input type="text" name="instructor_id"
-                                                                    id="instructor_id" value="{{$data->id}}" hidden>
+                                                                    id="instructor_id" value="@if(property_exists('id',$data))
+                                                                    {{$data->id}}
+                                                                    @else
+                                                                    null
+                                                                    @endif" hidden>
                                                                 <div class="col-12 mb-3">
                                                                     <label
                                                                         for="template-reviewform-rating">Rating</label>

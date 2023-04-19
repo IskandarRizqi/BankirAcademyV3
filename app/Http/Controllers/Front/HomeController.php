@@ -51,7 +51,7 @@ class HomeController extends Controller
         $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
         $next_page_url = null;
-        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(9)->toArray();
+        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->orderBy('date_end', 'asc')->paginate(9)->toArray();
         // $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
         $semua = '';
         $kelas = [];
@@ -312,7 +312,7 @@ class HomeController extends Controller
             </div>';
         $data['o']['cateKelas'] = '';
         $data['o']['kelas'] = ['Semua'];
-        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->paginate(9)->toArray();
+        $dx['kelas']['Semua'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->where('status', 1)->orderBy('date_end', 'asc')->paginate(9)->toArray();
         $semua = '<div id="Semua" class="row tabsCustom mt-2" hidden>';
         foreach ($categori as $key => $value) {
             $rep = preg_replace('/[^a-zA-Z0-9_ -]/s', '', $value);

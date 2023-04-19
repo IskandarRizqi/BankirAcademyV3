@@ -22,7 +22,7 @@
         </form>
     </div>
 </div> --}}
-<form action="loker" method="POST" enctype="multipart/form-data">
+<form action="loker" method="POST" enctype="multipart/form-data"{{Auth::user()->corporate=='perorangan'?'hidden':''}}>
     <fieldset class="border p-2">
 @csrf
 <input type="text" name="loker_id" id="loker_id" hidden>
@@ -100,7 +100,7 @@
 </div>
 </fieldset>
 </form>
-<div class="table-responsive">
+<div class="table-responsive" {{Auth::user()->corporate=='perorangan'?'hidden':''}}>
     <table id="datatable2" class="table table-bordered">
         <thead>
             <tr class="text-center">

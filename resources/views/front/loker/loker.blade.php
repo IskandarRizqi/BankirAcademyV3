@@ -779,7 +779,7 @@
     })
     window.onscroll = function (e)
     {
-        if($(window).scrollTop() + $(window).height() >= ($(document).height()*(45/100))) {
+        if(($(window).scrollTop() + $(window).height()) >= ($(document).height()*(45/100))) {
             loadMoreData();
         }
     }
@@ -829,7 +829,7 @@
             html +="                <div class='d-flex'>";
             html +="                    <img src='"+img+"' width='60px' height='60px' style='border-radius: 13px'/>";
             html +="                    <div class='ml-2'>";
-            html +="                        <h3 style='margin: 0px'>"+e.title.substr(0,16)+"</h3>"; //maksimal 15 karakters
+            html +="                        <h3 class='text-uppercase' title='"+e.title+"' style='margin: 0px'>"+e.title.substr(0,16)+"</h3>"; //maksimal 15 karakters
             if (e.nama) {
                 html +="                        <small>"+e.nama+"</small>";
             }else{

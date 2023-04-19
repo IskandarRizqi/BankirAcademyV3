@@ -12,7 +12,7 @@
         <div class="container clearfix">
             {{-- <h3 class="text-capitalize">{{ $judul }}</h3> --}}
             <div class="entry-image">
-                <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: 500px">
+                <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: auto">
             </div>
             <form action="/list-class" method="POST">
                 <div class="row">
@@ -202,11 +202,7 @@
                                             <h4 class="text-left text-capitalize m-0">{{$v['title']}}</h4>
                                             <p class="text-left"
                                                 style="margin: 0px !important; font-size:10px !important;">
-                                                @if ($v['date_start'] == $v['date_end'])
-                                                {{$v['date_start']}}
-                                                @else
-                                                {{$v['date_start'] .' - '. $v['date_end']}}
-                                                @endif
+                                                {{$v['date_end']}}
                                             </p>
                                             <a href="/profile-instructor/{{$v['instructor_list'][0]->id}}/{{$v['instructor_list'][0]->name}}"
                                                 class="d-flex mt-2"> <img class="mr-3 rounded-circle"
@@ -288,7 +284,11 @@
                                         @foreach ($class['links'] as $k => $p)
                                         <li class="page-item {{ $p['active'] ? 'active' : '' }}"><a class="page-link"
                                                 href="{{ $p['url'] }}">
+                                                @if(strpos( $p['label'], 'pagination' ) !== false)
+                                                <?= str_replace('pagination.','',$p['label']) ?>
+                                                @else
                                                 <?= $p['label'] ?>
+                                                @endif
                                             </a></li>
                                         @endforeach
                                     </ul>

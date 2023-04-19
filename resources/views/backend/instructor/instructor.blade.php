@@ -182,6 +182,7 @@
 @section('custom-js')
 <script>
     var firstUpload = new FileUploadWithPreview('myFirstImage')
+    var deskripsi = CKEDITOR.replace("desc");
         createDataTable('#zero-config')
 
         function login(data, user) {

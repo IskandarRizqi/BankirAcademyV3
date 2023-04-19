@@ -24,14 +24,14 @@
                                 <small>{{json_decode($data->corporate)->name}}</small>
                                 @endif
                                 <div class="w-100"></div>
-                                <span><i class="icon-wallet mr-2"></i>Rp. {{number_format($data->gaji_min).' - '.number_format($data->gaji_max)}} /Bulan</span>
+                                <span><i class="icon-wallet mr-2"></i>{{$data->gaji_min?$data->gaji_min:'Gaji Competitive'}}</span>
                                 <div class="w-100"></div>
-                                @if($data->type)
+                                {{-- @if($data->type)
                                 <i class="icon-medal mr-2"></i>
                                 @foreach(json_decode($data->type) as $key => $value)
                                 <span class="text-info">{{$value}}</span>
                                 @endforeach
-                                @endif
+                                @endif --}}
                                 <div class="w-100"></div>
                                 <span>
                                     <i class="icon-calendar-plus mr-2"></i>
