@@ -51,7 +51,8 @@
     <link rel="stylesheet" href="{{asset('front/css/components/daterangepicker.css')}}" type="text/css" /> --}}
     <!-- Document Title
         ============================================= -->
-    <title>{{env('APP_NAME','Bankir Academy')}}</title>
+    {{-- <title>{{env('APP_NAME','Bankir Academy')}}</title> --}}
+    <title>{{isset($title)?$title:'Bankir Academy'}}</title>
 
     @isset($class->meta)
     @if ($class->meta != null && is_object(json_decode($class->meta)))
@@ -76,6 +77,55 @@
         <meta name="twitter:image" content="{{asset('/Image/laman/meta_image/'.json_decode($class->og)->image)}}">
         @endif
         @endisset
+        
+    @isset($lokergoogle)
+    {{-- {{$lokergoogle}} --}}
+    <script type="application/ld+json">
+        {
+          "@context" : "https://schema.org/",
+          "@type" : "JobPosting",
+          "title" : "{{$lokergoogle['title']}}",
+          "description" : "{!!$lokergoogle['description']!!}",
+          "identifier": {
+            "@type": "PropertyValue",
+            "name": "Google",
+            "value": "1234567"
+          },
+          "datePosted" : "{{$lokergoogle['dateposted']}}",
+          "validThrough" : "{{$lokergoogle['validThrough']}}",
+          "applicantLocationRequirements": {
+            "@type": "Country",
+            "name": "INA"
+          },
+          "jobLocation": {
+            "@type": "Place",
+              "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "{{$lokergoogle['streetAddress']}}",
+              "addressLocality": "{{$lokergoogle['addressLocality']}}",
+              "addressRegion": "{{$lokergoogle['addressRegion']}}",
+              "postalCode": "{{$lokergoogle['postalCode']}}",
+              "addressCountry": "ID"
+              }
+            },
+          "hiringOrganization" : {
+            "@type" : "Organization",
+            "name" : "{{$lokergoogle['name']}}",
+            "sameAs" : "{{$lokergoogle['sameAs']}}",
+            "logo" : "{{$lokergoogle['logo']}}"
+          },
+          "baseSalary": {
+            "@type": "MonetaryAmount",
+            "currency": "IDR",
+            "value": {
+              "@type": "QuantitativeValue",
+              "value":00,
+              "unitText": "Month"
+            }
+          }
+        }
+        </script>
+    @endisset
         <!-- JavaScripts
             ============================================= -->
         <script src="https://code.jquery.com/jquery-3.6.1.js"

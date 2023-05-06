@@ -162,7 +162,9 @@
         <div class="carousel-inner">
             @foreach ($banner_slide as $key => $value)
             <div class="carousel-item @if ($key == 0) active @endif">
-                <img class="d-block w-100" src="/Image/{{ $value->image }}" alt="First slide">
+                <a href="{{$value->link}}">
+                    <img class="d-block w-100" src="/Image/{{ $value->image }}" alt="First slide">
+                </a>
             </div>
             @endforeach
         </div>
@@ -184,14 +186,14 @@
                 @foreach ($banner_slide_mobile as $key => $value)
                 <div class="owl-item" style=" margin-right: 20px;">
                     <div class="oc-item">
-                        <a href="#"><img src="/Image/{{ $value->image }}" alt="Image 1"></a>
+                        <a href="{{$value->link}}"><img src="/Image/{{ $value->image }}" alt="Image 1"></a>
                     </div>
                 </div>
                 @endforeach
                 @else
                 <div class="owl-item" style="margin-right: 20px;">
                     <div class="oc-item">
-                        <a href="#"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}" alt="Image 1"></a>
+                        <a href="{{$value->link}}"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}" alt="Image 1"></a>
                     </div>
                 </div>
                 @endif

@@ -121,6 +121,9 @@ Route::middleware('auth')->group(function () {
 
     // Prepotes
     Route::post('/prepotes/savejawaban', [App\Http\Controllers\Backend\PrepotestController::class, 'savejawaban']);
+
+    // Lamaran Kerja
+    Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

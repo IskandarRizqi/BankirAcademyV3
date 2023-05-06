@@ -555,6 +555,9 @@
                                 \NumberFormatter::CURRENCY),$p->referral,"IDR"),0,-3)}}
                             </td>
                             <td class="unit">
+                                Rp. 0
+                            </td>
+                            <td class="unit">
                                 {{$p->jumlah}}
                             </td>
                             <td class="unit">

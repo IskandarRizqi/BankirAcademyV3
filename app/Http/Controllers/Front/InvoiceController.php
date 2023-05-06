@@ -121,7 +121,7 @@ class InvoiceController extends Controller
 
 	public function multiInvoice(Request $request)
 	{
-		return $request->all();
+		// return $request->all();
 		$id = [];
 		$class_id = [];
 		if ($request->dataInvoice) {

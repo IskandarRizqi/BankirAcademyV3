@@ -266,6 +266,7 @@ class HomeController extends Controller
             ->where('status', 1)
             ->orderBy('date_start', 'ASC')
             ->get();
+        // return $data;
         $class = [];
         $empat = 4;
         if (count($data['minggu_ini']) > 3) {
@@ -376,7 +377,7 @@ class HomeController extends Controller
                 $html .= '                    </label>';
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
-                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->price / $v['pricing']->promo_price) * 100) . ' %</sup>';
                     } else {
                         $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
                     }

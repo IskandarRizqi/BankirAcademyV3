@@ -236,7 +236,7 @@
     function viewimage(image) {
         console.log(image)
         swal.fire({
-            imageUrl: '/image/' + image,
+            imageUrl: '/Image/' + image,
             imageWidth: 400,
             imageHeight: 200,
             imageAlt: 'Custom image',

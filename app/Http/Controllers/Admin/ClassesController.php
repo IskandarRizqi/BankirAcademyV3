@@ -484,6 +484,19 @@ class ClassesController extends Controller
 
 	public function setevent(Request $r)
 	{
+		$valid = Validator::make($r->all(), [
+			'hdnClassesId' => 'required',
+			'slcClassEventType.*' => 'required',
+			'txtClassEventLink.*' => 'required',
+			'txtClassEventLocation.*' => 'required',
+			'txaClassEventDescription.*' => 'required',
+			'datClassesDateStart.*' => 'required',
+			'datClassesDateEnd.*' => 'required',
+		]);
+		//response error validation
+		if ($valid->fails()) {
+			return Redirect::back()->withErrors($valid)->withInput($r->all());
+		}
 		$tobedel = $r->hdnEventTBDId;
 		if ($tobedel) {
 			ClassEventModel::whereIn('id', explode(',', $tobedel))->delete();

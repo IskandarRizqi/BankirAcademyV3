@@ -238,6 +238,9 @@ class BerandaLoker extends Controller
             ->where('loker.status', 1)
             ->where('loker.id', $id)
             ->first();
+        if (!$data['data']) {
+            return Redirect::back()->with('info', 'Data Tidak Ditemukan');
+        }
         $data['lain'] = LokerModel::select(
             'loker.*',
             'users.name',
@@ -252,6 +255,20 @@ class BerandaLoker extends Controller
             ->where('loker.id', '!=', $id)
             ->limit(4)
             ->get();
+        $html = [
+            'title' => $data['data']->title,
+            'dateposted' => Carbon::parse($data['data']->created_at)->format('Y-m-d'),
+            'validThrough' => Carbon::parse($data['data']->created_at),
+            'description' => $data['data']->deskripsi,
+            'streetAddress' => DB::table('kecamatan')->where('id', $data['data']->kecamatan)->first()->name,
+            'addressLocality' => DB::table('kota')->where('id', $data['data']->kabupaten)->first()->name,
+            'addressRegion' => DB::table('provinsi')->where('id', $data['data']->provinsi)->first()->name,
+            'postalCode' => null,
+            'name' => json_decode($data['data']->corporate)->name,
+            'sameAs' => 'https://bankiracademy.com',
+            'logo' => env('APP_URL') . '/' . $data['data']->picture,
+        ];
+        $data['lokergoogle'] = $html;
         // return $data;
         return view('front.loker.detail', $data);
     }
