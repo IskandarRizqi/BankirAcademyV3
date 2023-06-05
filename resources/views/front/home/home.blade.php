@@ -641,12 +641,15 @@
         </div>
     </div>
     <textarea name="" id="kelas" cols="30" rows="10" hidden>{{ json_encode($o['kelas']) }}</textarea>
+    <input type="text" id="isLogin" value="@auth 1 @endauth" hidden>
 </section>
 <!-- #content end -->
 
 @include('front.layout.footer')
 <script>
     let arrkategori = JSON.parse($('#kelas').val());
+    let no_scroll = 0;
+    let isLogin = $('#isLogin').val();
     $(document).ready(function() {
         $('#class-upcoming0').dataTable({
             pageLength:6,
@@ -874,6 +877,7 @@
 
     function lazyLoad(page) {
         // $('#halaman').val(page)
+        no_scroll++;
         if (!page) {
             iziToast.error({
                 title: 'Info',
@@ -881,6 +885,11 @@
                 position: 'topRight',
             });
             return $('#allClass').attr('hidden', true)
+        }
+        if (no_scroll > 1 && isLogin != 1) {
+            $('#modelId').modal('show');
+            $('#hidemodallogin').attr('hidden',true);
+            return false;
         }
         return new Promise((resolve, reject) => {
             $.ajax({

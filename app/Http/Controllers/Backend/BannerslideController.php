@@ -48,6 +48,7 @@ class BannerslideController extends Controller
             'description' => 'required_if:jenis,2',
             'mulai_aktif' => 'required',
             'akhir_aktif' => 'required',
+            'link' => 'required|url',
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
@@ -66,6 +67,7 @@ class BannerslideController extends Controller
             'description' => $request->description,
             'mulai' => $request->mulai_aktif,
             'selesai' => $request->akhir_aktif,
+            'link' => $request->link,
             'image' => $filename,
         ]);
 
@@ -131,6 +133,7 @@ class BannerslideController extends Controller
                 'description' => 'required_if:jenis,2',
                 'mulai_aktif' => 'required',
                 'akhir_aktif' => 'required',
+                'link' => 'required|url',
             ]);
             if ($validator->fails()) {
                 return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
@@ -164,6 +167,7 @@ class BannerslideController extends Controller
                 'mulai' => $request->mulai_aktif,
                 'selesai' => $request->akhir_aktif,
                 'description' => $request->description,
+                'link' => $request->link,
                 'image' => $filename,
 
             ]);
@@ -177,6 +181,7 @@ class BannerslideController extends Controller
                 'description' => 'required_if:jenis,2',
                 'mulai_aktif' => 'required',
                 'akhir_aktif' => 'required',
+                'link' => 'required|url',
             ]);
             if ($validator->fails()) {
                 return Redirect::back()->withErrors($validator)->withInput($request->all())->with('error', 'Harap Cek Data Kembali');
@@ -189,6 +194,7 @@ class BannerslideController extends Controller
                 'description' => $request->description,
                 'mulai' => $request->mulai_aktif,
                 'selesai' => $request->akhir_aktif,
+                'link' => $request->link,
             ]);
 
             return redirect('/admin/banner')->with('success', 'Update successfully!');

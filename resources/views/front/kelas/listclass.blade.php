@@ -298,18 +298,71 @@
                     </div>
                     @endif
                 </div>
-                {{-- <div class="col-lg-3">
-                </div> --}}
             </div>
-
         </div>
+        <input type="text" id="isLogin" value="@auth 1 @endauth" hidden>
+        <input type="text" id="longPage" value="{{$class['last_page']}}" hidden>
     </div>
 </section><!-- #content end -->
-@section('custom-js')
 <script>
+    let no_scroll = 0;
+    let page_scroll = 2;
+    let load_scoll = 1200;
+    let isLogin = $('#isLogin').val();
+    let longPage = $('#longPage').val();
+    $(document).ready(function () {
+        window.onscroll = function (e) {
+            if (window.pageYOffset != undefined) {
+                no_scroll = pageYOffset;
+            } else {
+                let x_axis, y_axis, doc = document,
+                    ele = doc.documentElement,
+                    b = doc.body;
+                x_axis = ele.scrollLeft || b.scrollLeft || 0;
+                y_axis = ele.scrollTop || b.scrollTop || 0;
+                no_scroll = y_axis;
+            }
+            console.log('no_scroll : '+no_scroll);
+            if (no_scroll >= 1200 && isLogin != 1) {
+                $('#modelId').modal('show');
+                $('#hidemodallogin').attr('hidden',true);
+                return false;
+            }
+            if (page_scroll > longPage) {
+                return false;
+            }
+            if (no_scroll > load_scoll) {
+                load_scoll+=1200;
+                console.log('load data '+page_scroll);
+                page_scroll++;
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: '/list-class',
+                    type: 'GET',
+                    beforeSend: function() {
+                        $('.ajax-load').show();
+                        // console.log('getData');
+                    },
+                    success: function(response) {
+                        Object.keys(response).forEach(key => {
+                            console.log(key.replace(/[^a-zA-Z0-9]/g,''));
+                            $('#' + key.replace(/[^a-zA-Z0-9]/g,'')).append(response[key]);
+                        });
+                        $('#halaman').val(null)
+                        if (response.next_page_url) {
+                            $('#halaman').val(response.next_page_url)
+                        }
+                        resolve();
+                    }
+                })
+            })
+            }
+        }
+    })
     $('#tags').select2({
             tagging: true,
         })
 </script>
+@section('custom-js')
 @endsection
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))

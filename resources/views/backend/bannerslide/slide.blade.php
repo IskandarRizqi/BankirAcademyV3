@@ -61,6 +61,15 @@
                                                 $errors->first('jenis') }}</div>
                                             @endif
                                         </div>
+                                        <div class="form-group mr-4">
+                                            <label for="">Link, <small>Contoh: https://bankiracademy.com/</small></label>
+                                            <input type="text" name="link" id="link" step="any"
+                                                class="form-control" value="{{old('link')}}">
+                                            @if($errors->has('link'))
+                                            <div class="error" style="color: red; display:block;">{{
+                                                $errors->first('link') }}</div>
+                                            @endif
+                                        </div>
                                         <div id="form_nominal" class="form-group mr-4" hidden>
                                             <label for="">Nominal (%)</label>
                                             <input type="number" name="nominal" id="nominal" step="any"
@@ -268,6 +277,7 @@
                 $("#kode").val(result.kode)
                 $("#urlbanner").val(result.public_id)
                 $("#description").val(result.description)
+                $("#link").val(result.link?result.link:'https://bankiracademy.com/')
                 $('#type').change();
                 $("#preview").attr("src", "/image/" + result.image)
             }
