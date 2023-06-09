@@ -260,11 +260,23 @@ class BerandaLoker extends Controller
             'dateposted' => Carbon::parse($data['data']->created_at)->format('Y-m-d'),
             'validThrough' => Carbon::parse($data['data']->created_at),
             'description' => $data['data']->deskripsi,
-            'streetAddress' => DB::table('kecamatan')->where('id', $data['data']->kecamatan)->first()->name,
-            'addressLocality' => DB::table('kota')->where('id', $data['data']->kabupaten)->first()->name,
-            'addressRegion' => DB::table('provinsi')->where('id', $data['data']->provinsi)->first()->name,
+            'streetAddress' => DB::table('kecamatan')->where(function ($query) use ($data) {
+                if ($data['data']->kecamatan != 'Pilih') {
+                    return $query->where('id', $data['data']->kecamatan);
+                }
+            })->first()->name,
+            'addressLocality' => DB::table('kota')->where(function ($query) use ($data) {
+                if ($data['data']->kabupaten != 'Pilih') {
+                    return $query->where('id', $data['data']->kabupaten);
+                }
+            })->first()->name,
+            'addressRegion' => DB::table('provinsi')->where(function ($query) use ($data) {
+                if ($data['data']->provinsi != 'Pilih') {
+                    return $query->where('id', $data['data']->provinsi);
+                }
+            })->first()->name,
             'postalCode' => null,
-            'name' => json_decode($data['data']->corporate)->name,
+            'name' => $data['data']->corporate ? json_decode($data['data']->corporate)->name : 'Bankir Academy',
             'sameAs' => 'https://bankiracademy.com',
             'logo' => env('APP_URL') . '/' . $data['data']->picture,
         ];
