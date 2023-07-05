@@ -486,16 +486,17 @@ class ClassesController extends Controller
 	{
 		$valid = Validator::make($r->all(), [
 			'hdnClassesId' => 'required',
+			'slcClassEventType' => 'required',
 			'slcClassEventType.*' => 'required',
-			'txtClassEventLink.*' => 'required',
-			'txtClassEventLocation.*' => 'required',
+			// 'txtClassEventLink.*' => 'required',
+			// 'txtClassEventLocation.*' => 'required',
 			'txaClassEventDescription.*' => 'required',
 			'datClassesDateStart.*' => 'required',
 			'datClassesDateEnd.*' => 'required',
 		]);
 		//response error validation
 		if ($valid->fails()) {
-			return Redirect::back()->withErrors($valid)->withInput($r->all());
+			return Redirect::back()->withErrors($valid)->withInput($r->all())->with('info', 'Data Tidak Sesuai');
 		}
 		$tobedel = $r->hdnEventTBDId;
 		if ($tobedel) {
@@ -503,8 +504,7 @@ class ClassesController extends Controller
 		}
 		$tobeins = [];
 		for ($i = 0; $i < count($r->slcClassEventType); $i++) {
-
-			$tobeins[$i] = [
+			$tobeins = [
 				'class_id' => $r->hdnClassesId,
 				'type' => $r->slcClassEventType[$i],
 				'link' => $r->txtClassEventLink[$i],
@@ -513,7 +513,7 @@ class ClassesController extends Controller
 				'time_start' => $r->datClassesDateStart[$i],
 				'time_end' => $r->datClassesDateEnd[$i],
 			];
-			ClassEventModel::UpdateOrCreate(['id' => $r->txtClassEventId[$i]], $tobeins[$i]);
+			ClassEventModel::UpdateOrCreate(['id' => $r->txtClassEventId[$i]], $tobeins);
 		}
 		return Redirect::back()->with('success', 'Event Updated');
 	}
@@ -652,10 +652,14 @@ class ClassesController extends Controller
 				}
 			})
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			->where('status', 1)
 			->orderBy('date_end', 'asc')
 			->paginate(9)
 			->toArray();
 
+		if ($request->ajax()) {
+			return $data['class'];
+		}
 		$data['pencarian'] = $this->pencarian();
 		// return $data;
 		return view('front.kelas.listclass', $data);
