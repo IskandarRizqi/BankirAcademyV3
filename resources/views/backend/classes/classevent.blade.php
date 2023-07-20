@@ -1,5 +1,10 @@
 @extends('backend.template')
 @section('content')
+@if ($errors->any())
+@foreach ($errors->all() as $error)
+    <div>{{$error}}</div>
+@endforeach
+@endif
     <div class="col-lg-12">
         <div class="widget">
             <div class="widget-heading">

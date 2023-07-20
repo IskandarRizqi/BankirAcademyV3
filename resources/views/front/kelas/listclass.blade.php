@@ -135,10 +135,10 @@
             </form>
             <div class="row gutter-40 col-mb-80">
                 <div class="postcontent col-lg-12">
-                    @if ($class['data'])
+                    {{-- @if ($class['data']) --}}
                     <div class="single-event">
-                        <div class="row">
-                            @foreach ($class['data'] as $v)
+                        <div class="row" id="listkelas">
+                            {{-- @foreach ($class['data'] as $v) --}}
                             {{-- <div class="col-lg-3 col-sm-6 mb-4">
                                 <div class="card">
                                     <div class="card-body">
@@ -193,7 +193,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-lg-4 col-sm-6">
+                            {{-- <div class="col-lg-4 col-sm-6">
                                 <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">
                                     <img src="{{ $v['image'] }}" width="100%" style="border-radius: 8px;">
                                     <div class="card-body" style="padding: 0.75rem">
@@ -219,7 +219,7 @@
                                                         class="text-uppercase d-block mb-0"
                                                         style="font-size:10px !important">{{$v['instructor_list'][0]->title}}</small>
                                                 </div>
-                                                {{-- <div class="ml-2 flex-fill text-center">
+                                                <div class="ml-2 flex-fill text-center">
                                                     <label class="d-block mb-0">Harga </label>
                                                     @if ($v['pricing'])
                                                     @if ($v['pricing']->promo)
@@ -238,7 +238,7 @@
                                                     @else
                                                     <small class="text-primary mb-2">Rp. -</small>
                                                     @endif
-                                                </div> --}}
+                                                </div>
                                             </a>
                                             <div class="text-center mt-2 w-100">
                                                 @if ($v['pricing'])
@@ -258,7 +258,7 @@
                                                     style="border-radius:10px !important"
                                                     href="/class/{{ $v['unique_id'] }}/{{ str_replace('/', '-', $v['title']) }}">
                                                     Detail </a>
-                                                {{-- <div class="col text-left ml-2">
+                                                <div class="col text-left ml-2">
                                                     <small class="fs-2">Kode Promo</small>
                                                     <h4 class=""
                                                         style="margin-bottom: 0px !important; font-weight: bold">
@@ -268,16 +268,16 @@
                                                     <span class="btn btn-outline-primary btn-sm float-right"
                                                         style="border-radius: 8px"
                                                         onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')">Copy</span>
-                                                </div> --}}
+                                                </div>
                                             </div>
                                         </span>
                                     </div>
                                 </div>
-                            </div>
-                            @endforeach
+                            </div> --}}
+                            {{-- @endforeach --}}
                         </div>
                         <hr>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-lg-12 text-center">
                                 <nav aria-label="Page navigation blog">
                                     <ul class="pagination justify-content-center">
@@ -294,9 +294,9 @@
                                     </ul>
                                 </nav>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
-                    @endif
+                    {{-- @endif --}}
                 </div>
             </div>
         </div>
@@ -306,8 +306,8 @@
 </section><!-- #content end -->
 <script>
     let no_scroll = 0;
-    let page_scroll = 2;
-    let load_scoll = 1200;
+    let page_scroll = 0;
+    let load_scoll = -1;
     let isLogin = $('#isLogin').val();
     let longPage = $('#longPage').val();
     $(document).ready(function () {
@@ -334,29 +334,114 @@
             if (no_scroll > load_scoll) {
                 load_scoll+=1200;
                 console.log('load data '+page_scroll);
-                page_scroll++;
+            page_scroll++;
             return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: '/list-class',
+                    url: '/list-class?page='+page_scroll,
                     type: 'GET',
                     beforeSend: function() {
                         $('.ajax-load').show();
                         // console.log('getData');
                     },
                     success: function(response) {
-                        Object.keys(response).forEach(key => {
-                            console.log(key.replace(/[^a-zA-Z0-9]/g,''));
-                            $('#' + key.replace(/[^a-zA-Z0-9]/g,'')).append(response[key]);
-                        });
-                        $('#halaman').val(null)
-                        if (response.next_page_url) {
-                            $('#halaman').val(response.next_page_url)
+                        // Object.keys(response).forEach(key => {
+                        //     console.log(key.replace(/[^a-zA-Z0-9]/g,''));
+                        //     $('#' + key.replace(/[^a-zA-Z0-9]/g,'')).append(response[key]);
+                        // });
+                        // $('#halaman').val(null)
+                        // if (response.next_page_url) {
+                        //     $('#halaman').val(response.next_page_url)
+                        // }
+                        // resolve();
+                        console.log(response.data);
+                        let html='';
+                        if (response.data) {
+                            response.data.forEach(dt => {
+                                html+='<div class="col-lg-4 col-sm-6">';
+                                html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">';
+                                html+='        <img src="'+dt.image+'" width="100%" style="border-radius: 8px;">';
+                                html+='        <div class="card-body" style="padding: 0.75rem">';
+                                html+='            <span class="btn mt-4"';
+                                html+='                style="border-radius: 8px;position: absolute; bottom: 10px; left: 10px; right: 10px;">';
+                                html+='                <h4 class="text-left text-capitalize m-0">'+dt.title+'</h4>';
+                                html+='                <p class="text-left"';
+                                html+='                    style="margin: 0px !important; font-size:10px !important;">'+dt.date_end;
+                                html+='                </p>';
+                                html+='                <a href="/profile-instructor/'+dt.instructor_list[0].id+'/'+dt.instructor_list[0].name+'}}"';
+                                html+='                    class="d-flex mt-2"> <img class="mr-3 rounded-circle"';
+                                if (dt.instructor_list[0].picture_src) {
+                                    html+='                    src="/Image/'+dt.instructor_list[0].picture_src.url+'"';
+                                }else{
+                                    html+='                    src=""';
+                                }
+                                html+='                    alt="Generic" placeholder="" image=""';
+                                html+='                    style="max-width:50px; max-height:50px;">';
+                                html+='                    <div class="text-left"> <small class="d-block mb-0">INSTRUCTOR</small>';
+                                html+='                        <h5 class="text-uppercase d-block mb-0">'+dt.instructor_list[0].name+'</h5> <small';
+                                html+='                            class="text-uppercase d-block mb-0"';
+                                html+='                            style="font-size:10px !important">'+dt['instructor_list'][0].title+'</small>';
+                                html+='                    </div>';
+                                // html+='                    {{-- <div class="ml-2 flex-fill text-center">';
+                                // html+='                        <label class="d-block mb-0">Harga </label>';
+                                // html+='                        @if ($v['pricing'])';
+                                // html+='                        @if ($v['pricing']->promo)';
+                                // html+='                        <del> Rp.';
+                                // html+='                            {{number_format($v['pricing']->price)}}</del>';
+                                // html+='                        <sup class="badge badge-danger"';
+                                // html+='                            style="font-size: 8px">{{number_format(($v['pricing']->promo_price';
+                                // html+='                            / $v['pricing']->price) * 100)}} %</sup>';
+                                // html+='                        @else';
+                                // html+='                        <del> Rp.';
+                                // html+='                            {{number_format($v['pricing']->price)}}</del>';
+                                // html+='                        <sup class="badge badge-danger"';
+                                // html+='                            style="font-size: 8px">{{number_format(($v['pricing']->promo_price';
+                                // html+='                            / $v['pricing']->price) * 100)}} %</sup>';
+                                // html+='                        @endif';
+                                // html+='                        @else';
+                                // html+='                        <small class="text-primary mb-2">Rp. -</small>';
+                                // html+='                        @endif';
+                                // html+='                    </div> --}}';
+                                html+='                </a>';
+                                html+='                <div class="text-center mt-2 w-100">';
+                                    if (dt.pricing) {
+                                        if (dt.pricing.promo) {
+                                            html+='                    <h3 class="text-primary mb-2">Rp. '+dt.pricing.price+' - '+dt.pricing.promo_price+'</h3>';
+                                        }else{
+                                            html+='                    <h3 class="text-primary mb-2">Rp.'+dt.pricing.price+'</h3>';
+                                        }
+                                    }else{
+                                        html+='                    <h3 class="text-primary mb-2">Rp. -</h3>';
+                                    }
+                                html+='                </div>';
+                                html+='                <div class="row align-items-center">';
+                                html+='                    <a class="btn btn-primary btn-block btn-rounded"';
+                                html+='                        style="border-radius:10px !important"';
+                                html+='                        href="/class/'+dt.unique_id+'/'+dt.title.replace('/','-')+'">';
+                                html+='                        Detail </a>';
+                                // html+='                    {{-- <div class="col text-left ml-2">';
+                                // html+='                        <small class="fs-2">Kode Promo</small>';
+                                // html+='                        <h4 class=""';
+                                // html+='                            style="margin-bottom: 0px !important; font-weight: bold">';
+                                // html+='                            {{ $v['kode']?$v['kode']:'-' }}</h4>';
+                                // html+='                    </div>';
+                                // html+='                    <div class="col">';
+                                // html+='                        <span class="btn btn-outline-primary btn-sm float-right"';
+                                // html+='                            style="border-radius: 8px"';
+                                // html+='                            onclick="handleCopyTextFromParagraph('{{ $v['kode'] }}')">Copy</span>';
+                                // html+='                    </div> --}}';
+                                html+='                </div>';
+                                html+='            </span>';
+                                html+='        </div>';
+                                html+='    </div>';
+                                html+='</div>';
+                            });
+                            $('#listkelas').append(html);
                         }
-                        resolve();
                     }
-                })
-            })
+                });
+            });
             }
+            
         }
     })
     $('#tags').select2({

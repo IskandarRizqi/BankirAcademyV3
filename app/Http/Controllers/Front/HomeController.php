@@ -33,7 +33,7 @@ class HomeController extends Controller
     {
         return view('home');
     }
-    public function paginateAjax()
+    public function paginateAjax($r)
     {
         $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
         $dx['kelas'] = [];
@@ -230,7 +230,7 @@ class HomeController extends Controller
         $kelas['Semua'] = $semua;
         // $semua .= '</div>';
         // $data['o']['cateKelas'] .= $semua;
-        $kelas['next_page_url'] = $next_page_url;
+        // $kelas['next_page_url'] = $r['page'] + 1;
 
         return $kelas;
         // return $dx;
@@ -295,7 +295,7 @@ class HomeController extends Controller
         $data['lucas'] = ClassesModel::where('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(6)->get();
 
         if ($request->ajax()) {
-            $dx = $this->paginateAjax();
+            $dx = $this->paginateAjax($request->all());
             return response()->json($dx);
         }
 

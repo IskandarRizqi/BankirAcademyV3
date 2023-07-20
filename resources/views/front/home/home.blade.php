@@ -906,7 +906,7 @@
                     });
                     $('#halaman').val(null)
                     if (response.next_page_url) {
-                        $('#halaman').val(response.next_page_url)
+                        $('#halaman').val('/?page='+response.next_page_url)
                     }
                     resolve();
                 }

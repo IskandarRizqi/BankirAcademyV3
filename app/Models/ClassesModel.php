@@ -37,7 +37,13 @@ class ClassesModel extends Model
 	public function getInstructorListAttribute()
 	{
 		if (array_key_exists('instructor', $this->attributes)) {
-			return DB::table('instructor')->whereIn('id', json_decode($this->attributes['instructor']))->get();
+			$d = DB::table('instructor')->whereIn('id', json_decode($this->attributes['instructor']))->get();
+			foreach ($d as $key => $value) {
+				if ($value->picture) {
+					$value->picture_src = json_decode($value->picture);
+				}
+			}
+			return $d;
 		}
 	}
 	public function getEventListAttribute()

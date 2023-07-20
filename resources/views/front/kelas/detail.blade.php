@@ -141,7 +141,7 @@
                                                 ',json_decode($class->tipe))}}</span>
                                             @endif
                                             <label for="">Location :</label>
-                                            <label for="" class="ml-auto">{{$lokasi?$location:'Online'}}</label>
+                                            <label for="" class="ml-auto">{{isset($lokasi)?$lokasi:'Online'}}</label>
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-striped table-bordered" id="datatable1"
