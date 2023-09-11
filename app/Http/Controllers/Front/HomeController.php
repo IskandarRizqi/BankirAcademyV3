@@ -29,6 +29,22 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class HomeController extends Controller
 {
+
+    public function apiberanda()
+    {
+        $data = [];
+        $data['banner'] = [];
+        $banner = BannerModel::where('jenis', '>', 0)
+            ->where('mulai', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('selesai', '>=', Carbon::now()->format('Y-m-d'))
+            ->limit(3)
+            ->pluck('image')
+            ->toArray();
+        foreach ($banner as $key => $v) {
+            array_push($data['banner'], 'https://bankiracademy.com/Image/' . $v);
+        }
+        return response()->json($data, 200);
+    }
     public function index_custom()
     {
         return view('home');
@@ -237,6 +253,7 @@ class HomeController extends Controller
     }
     public function index(Request $request)
     {
+        return $this->index_custom();
         $data = [];
         $data['logo_perusahaan'] = DashboardModel::select()->first();
         $data['class_upcoming'] = [];
