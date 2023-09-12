@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kecamatan', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('kota_id');
-            $table->string('name');
-        });
+        if (!Schema::hasTable('kecamatan')) {
+            Schema::create('kecamatan', function (Blueprint $table) {
+                $table->integer('id');
+                $table->string('kota_id');
+                $table->string('name');
+            });
+        }
     }
 
     /**

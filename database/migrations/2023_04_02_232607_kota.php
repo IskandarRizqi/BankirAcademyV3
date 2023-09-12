@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kota', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('provinsi_id');
-            $table->string('name');
-        });
+        if (!Schema::hasTable('kota')) {
+            Schema::create('kota', function (Blueprint $table) {
+                $table->integer('id');
+                $table->string('provinsi_id');
+                $table->string('name');
+            });
+        }
     }
 
     /**

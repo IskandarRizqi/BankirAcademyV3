@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('keluarahan', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('kecamatan_id');
-            $table->string('name');
-        });
+        if (!Schema::hasTable('kelurahan')) {
+            Schema::create('kelurahan', function (Blueprint $table) {
+                $table->integer('id');
+                $table->string('kecamatan_id');
+                $table->string('name');
+            });
+        }
     }
 
     /**
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('keluarahan');
+        Schema::dropIfExists('kelurahan');
     }
 };

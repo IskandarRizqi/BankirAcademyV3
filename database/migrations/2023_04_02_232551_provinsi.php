@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('provinsi', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('name');
-        });
+        if (!Schema::hasTable('provinsi')) {
+            Schema::create('provinsi', function (Blueprint $table) {
+                $table->integer('id');
+                $table->string('name');
+            });
+        }
     }
 
     /**

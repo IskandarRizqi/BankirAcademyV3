@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Helper\GlobalHelper;
+use App\Models\LamaranModel;
 use App\Models\LokerModel;
 use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
@@ -427,5 +428,105 @@ class ProfileController extends Controller
     {
         $data = [];
         return view('front.loker.datalamaran', $data);
+    }
+    function simpanlamaran(Request $request)
+    {
+        // return $request->all();
+        $validator = Validator::make($request->all(), [
+            'nama_lengkap' => 'required',
+            'nama_panggilan' => 'required',
+            'tmpttgllahir' => 'required',
+            'agama' => 'required',
+            'alamatdomisili' => 'required',
+            'telpdomisili' => 'required',
+            'kodepos' => 'required',
+            'namaorangtua' => 'required',
+            'jmlsaudara' => 'required',
+            'statusperkawinan' => 'required',
+            'namapasangan' => 'required',
+            'namaorangtuakandung' => 'required',
+            'namaorangtuasuamiistri' => 'required',
+            'namaanak' => 'required',
+            'namakakeknenek' => 'required',
+            'namacucu' => 'required',
+            'namasuamiistri' => 'required',
+            'namamertua' => 'required',
+            'namabesan' => 'required',
+            'namasuamiistrianak' => 'required',
+            'namakakeksuami' => 'required',
+            'namasuamiistricucu' => 'required',
+            'namasuamiistrisaudara' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
+        }
+        // return $request->all();
+        $dl = LamaranModel::updateOrCreate([
+            'id' => $request->id
+        ], [
+            'user_id' => Auth::user()->id,
+            'nama_lengkap' => $request->nama_lengkap,
+            'nama_panggilan' => $request->nama_panggilan,
+            'tmpttgllahir' => $request->tmpttgllahir,
+            'agama' => $request->agama,
+            'alamatdomisili' => $request->alamatdomisili,
+            'telpdomisili' => $request->telpdomisili,
+            'kodepos' => $request->kodepos,
+            'namaorangtua' => $request->namaorangtua,
+            'jmlsaudara' => $request->jmlsaudara,
+            'statusperkawinan' => $request->statusperkawinan,
+            'namapasangan' => $request->namapasangan,
+            'namaorangtuasuamiistri' => $request->namaorangtuasuamiistri,
+            'namaanak' => $request->namaanak,
+            'namakakeknenek' => $request->namakakeknenek,
+            'namacucu' => $request->namacucu,
+            'namasuamiistri' => $request->namasuamiistri,
+            'namamertua' => $request->namamertua,
+            'namabesan' => $request->namabesan,
+            'namasuamiistrianak' => $request->namasuamiistrianak,
+            'namakakeksuami' => $request->namakakeksuami,
+            'namasuamiistricucu' => $request->namasuamiistricucu,
+            'namasuamiistrisaudara' => $request->namasuamiistrisaudara,
+            'sdtahun' => $request->sdtahun,
+            'sdnama' => $request->sdnama,
+            'sdfakultas' => $request->sdfakultas,
+            'sdgelar' => $request->sdgelar,
+            'smptahun' => $request->smptahun,
+            'smpnama' => $request->smpnama,
+            'smpfakultas' => $request->smpfakultas,
+            'smpgelar' => $request->smpgelar,
+            'smatahun' => $request->smatahun,
+            'smanama' => $request->smanama,
+            'smafakultas' => $request->smafakultas,
+            'smagelar' => $request->smagelar,
+            'akademitahun' => $request->akademitahun,
+            'akademinama' => $request->akademinama,
+            'akademifakultas' => $request->akademifakultas,
+            'akademigelar' => $request->akademigelar,
+            'perguruantahun' => $request->perguruantahun,
+            'perguruannama' => $request->perguruannama,
+            'perguruanfakultas' => $request->perguruanfakultas,
+            'perguruangelar' => $request->perguruangelar,
+            'pascasarjanatahun' => $request->pascasarjanatahun,
+            'pascasarjananama' => $request->pascasarjananama,
+            'pascasarjanafakultas' => $request->pascasarjanafakultas,
+            'pascasarjanagelar' => $request->pascasarjanagelar,
+            'pelatihannama' => json_encode($request->pelatihannama),
+            'pelatihantahun' => json_encode($request->pelatihantahun),
+            'pelatihanpenyelanggara' => json_encode($request->pelatihanpenyelanggara),
+            'pelatihanlokasi' => json_encode($request->pelatihanlokasi),
+            'pekerjaantahun' => json_encode($request->pekerjaantahun),
+            'pekerjaanperusahaan' => json_encode($request->pekerjaanperusahaan),
+            'pekerjaanjabatan' => json_encode($request->pekerjaanjabatan),
+            'pekerjaantanggungjawab' => json_encode($request->pekerjaantanggungjawab),
+            'pekerjaanprestasi' => json_encode($request->pekerjaanprestasi),
+            'pekerjaanpenghargaan' => json_encode($request->pekerjaanpenghargaan),
+            'pekerjaantotalaset' => json_encode($request->pekerjaantotalaset),
+            'pengalamanspesifik' => json_encode($request->pengalamanspesifik),
+        ]);
+        if ($dl) {
+            return Redirect::to('profile')->with('success', 'Data Tersimpan');
+        }
+        return Redirect::back()->withErrors($validator)->withInput($request->all());
     }
 }

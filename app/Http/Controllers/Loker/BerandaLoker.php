@@ -255,6 +255,13 @@ class BerandaLoker extends Controller
             ->where('loker.id', '!=', $id)
             ->limit(4)
             ->get();
+        $name = 'Bankir Academy';
+        if ($data['data']->corporate) {
+            $x = json_decode($data['data']->corporate);
+            if (property_exists($x, 'name')) {
+                $name = $x->name;
+            }
+        }
         $html = [
             'title' => $data['data']->title,
             'dateposted' => Carbon::parse($data['data']->created_at)->format('Y-m-d'),
@@ -276,7 +283,7 @@ class BerandaLoker extends Controller
                 }
             })->first()->name,
             'postalCode' => null,
-            'name' => $data['data']->corporate ? json_decode($data['data']->corporate)->name : 'Bankir Academy',
+            'name' => $name,
             'sameAs' => 'https://bankiracademy.com',
             'logo' => env('APP_URL') . '/' . $data['data']->picture,
         ];

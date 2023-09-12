@@ -121,10 +121,10 @@ Route::middleware('auth')->group(function () {
 
     // Prepotes
     Route::post('/prepotes/savejawaban', [App\Http\Controllers\Backend\PrepotestController::class, 'savejawaban']);
-
-    // Lamaran Kerja
-    Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
 });
+// Lamaran Kerja
+Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
+Route::post('simpanlamaran', [App\Http\Controllers\Front\ProfileController::class, 'simpanlamaran']);
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');
@@ -187,6 +187,7 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
 
+Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
 // Loker
 Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);
 Route::get('/loker/{id}/detail', [App\Http\Controllers\Loker\BerandaLoker::class, "detail"]);
