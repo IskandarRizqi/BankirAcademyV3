@@ -44,7 +44,7 @@
 
                             <div class="w-100"></div>
 
-                            <div class="col-md-10 col-lg-12">
+                            <div class="col-md-10 col-lg-12 ml-2">
                                 <h3>{{ $class->title }}</h3>
                                 {!! $class->content !!}
                             </div>

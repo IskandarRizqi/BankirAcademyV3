@@ -405,7 +405,7 @@
                                 html+='                <div class="text-center mt-2 w-100">';
                                     if (dt.pricing) {
                                         if (dt.pricing.promo) {
-                                            html+='                    <h3 class="text-primary mb-2">Rp. '+dt.pricing.price+' - '+dt.pricing.promo_price+'</h3>';
+                                            html+='                    <h3 class="text-primary mb-2">Rp. '+(dt.pricing.price - dt.pricing.promo_price)+'</h3>';
                                         }else{
                                             html+='                    <h3 class="text-primary mb-2">Rp.'+dt.pricing.price+'</h3>';
                                         }

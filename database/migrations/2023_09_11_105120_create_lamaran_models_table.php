@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('lamaran_models', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->integer('job_id')->nullable();
+            $table->integer('status')->default(0);
             $table->string('nama_lengkap');
             $table->string('nama_panggilan');
             $table->string('tmpttgllahir');

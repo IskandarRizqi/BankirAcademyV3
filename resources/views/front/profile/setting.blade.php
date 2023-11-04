@@ -1,3 +1,14 @@
+<style>
+    .caption {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        font-weight: bold;
+    }
+</style>
 <div class="tabs tabs-alt clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-7">
     <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
         role="tablist">
@@ -107,8 +118,7 @@
                                     @endif
                                 </div>
                                 <div class="col-lg-6" hidden>
-                                    <label for="">No.
-                                        Rekening</label>
+                                    <label for="">No. Rekening</label>
                                     <input type="text" name="rekening" id="rekening" class="form-control" value="1">
                                 </div>
                             </div>
@@ -148,7 +158,8 @@
                                 (optional)</label>
                             <input type="text" id="referral" name="referral" class="form-control"
                                 onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
-                                value="@if (isset($pfl['code'])){{ $pfl['code'] ? $pfl['code'] : '' }}@endif" @if (isset($pfl['code'])){{ $pfl['code'] ? 'readonly' : '' }}@endif>
+                                value="@if (isset($pfl['code'])){{ $pfl['code'] ? $pfl['code'] : '' }}@endif"
+                                @if(isset($pfl['code'])){{ $pfl['code'] ? 'readonly' : '' }}@endif>
                             @if (Session::has('referral'))
                             <div class="error" style="color: red; display:block;">
                                 {{ Session::get('referral') }}
@@ -202,7 +213,49 @@
         </div>
     </div>
 </div>
-<div class="divider divider-border divider-center"><i class="icon-email2"></i>
+<div class="divider divider-border divider-center"><i class="icon-email2"></i></div>
+<h3 class="text-center text-uppercase">Upgrade Akun</h3>
+<div class="title-block">
+    <form action="/updatemember" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="text" name="user_id" id="user_id" value="{{ Auth::user()->id }}" hidden>
+        <input type="text" name="status_membership" id="status_membership" value="2" hidden>
+        <div class="row">
+            <div class="col-lg-3">
+                <label for="form-control">Bukti Pembayaran</label>
+                <input type="file" class="form-control" name="image_bukti_pembayaran" id="image_bukti_pembayaran"
+                    accept="image/png, image/gif, image/jpeg">
+                <img id="pctrbuktipembayaran" src="" alt="" width="500px">
+                @error('image_bukti_pembayaran')
+                <div class="text-danger">{{$message}}</div>
+                @enderror
+                <button class="btn btn-primary mt-2">Simpan</button>
+            </div>
+            @if($user->profile)
+            @if($user->profile->status_membership == 1)
+            <div class="col-lg-9">
+                <img src="{{asset('front/images/A_MEMBER.jpg')}}" alt="">
+                <div class="caption text-center" style="font-size: 2vw"><b>Masa Aktif :
+                        {{$user->profile->masa_aktif_membership}}</b></div>
+            </div>
+            @else
+            <div class="col-lg-9">
+                <img src="{{asset('front/images/A_BLM_MEMBER.jpg')}}" alt="">
+                <div class="caption text-center" style="font-size: 2vw">
+                    {{-- <b>Masa Aktif : 20/10/2030</b> --}}
+                </div>
+            </div>
+            @endif
+            @else
+            <div class="col-lg-9">
+                <img src="{{asset('front/images/A_BLM_MEMBER.jpg')}}" alt="">
+                <div class="caption text-center" style="font-size: 2vw">
+                    {{-- <b>Masa Aktif : 20/10/2030</b> --}}
+                </div>
+            </div>
+            @endif
+        </div>
+    </form>
 </div>
 
 <script>

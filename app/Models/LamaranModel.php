@@ -10,6 +10,8 @@ class LamaranModel extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
+        'job_id',
+        'status',
         'user_id',
         'nama_lengkap',
         'nama_panggilan',

@@ -21,5 +21,8 @@ class UserProfileModel extends Model
 		'instansi',
 		'rekening',
 		'existing_user',
+		'image_bukti_pembayaran',
+		'status_membership',
+		'masa_aktif_membership',
 	];
 }

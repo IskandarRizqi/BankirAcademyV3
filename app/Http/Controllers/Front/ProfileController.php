@@ -402,6 +402,38 @@ class ProfileController extends Controller
         }
         return response()->json(['message' => 'Kupon Tidak Tersedia', 'status' => false]);
     }
+    public function updatemember(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image_bukti_pembayaran' => 'image|mimes:jpeg,jpg,png|required|max:10000',
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput($request->all());
+        }
+        $inp = [
+            'status_membership' => $request->status_membership,
+            'masa_aktif_membership' => $request->masa_aktif_membership ? $request->masa_aktif_membership : Carbon::now()->addYears(5),
+        ];
+        if ($request->image_bukti_pembayaran) {
+            $name = $request->file('image_bukti_pembayaran')->getClientOriginalName(); // Name File
+            $size = $request->file('image_bukti_pembayaran')->getSize(); // Size File
+            $ext = $request->file('image_bukti_pembayaran')->extension(); // Extension File
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+
+            $filename = $request->user_id . '-' . time() . '-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $name) . '.' . $ext;
+            $file = $request->file('image_bukti_pembayaran');
+            $file->move(public_path('Image/Member'), $filename);
+            $inp['image_bukti_pembayaran'] = 'Image/Member/' . $filename;
+        }
+        $u = UserProfileModel::where('user_id', $request->user_id)->update($inp);
+        if ($u) {
+            return Redirect::back()->with('success', 'Update Akun Berhasil, Sedang Diproses Mohon Ditunggu');
+        }
+        return Redirect::back()->with('error', 'Update Akun Gagal Disimpan');
+    }
     public function updaterekening(Request $request)
     {
         $validator = Validator::make($request->all(), [

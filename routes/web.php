@@ -89,6 +89,9 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     // Loker
     Route::get('/admin/loker', [App\Http\Controllers\Loker\BerandaLoker::class, 'index_admin']);
 
+    // User
+    Route::resource('/admin/user', App\Http\Controllers\Backend\UserController::class);
+
     // Referral
     Route::resource('/admin/withdraw', App\Http\Controllers\Backend\WithdrawController::class);
     Route::get("/admin/referral", [App\Http\Controllers\Backend\RefferalController::class, "dashboard"]);
@@ -116,6 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/instructor/peserta', [App\Http\Controllers\Backend\PesertaController::class, 'instructor']);
 
     // Rekening
+    Route::post("/updatemember", [App\Http\Controllers\Front\ProfileController::class, "updatemember"]);
     Route::post("/updaterekening", [App\Http\Controllers\Front\ProfileController::class, "updaterekening"]);
     Route::post("/withdrawMember", [App\Http\Controllers\Backend\WithdrawController::class, "proses"]);
 
@@ -186,7 +190,6 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
-
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
 // Loker
 Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);

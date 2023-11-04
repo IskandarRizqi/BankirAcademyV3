@@ -43,6 +43,10 @@ class HomeController extends Controller
         foreach ($banner as $key => $v) {
             array_push($data['banner'], 'https://bankiracademy.com/Image/' . $v);
         }
+        $data['kelaspopuler'] = ClassesModel::select()
+            ->where('date_end', '>=', Carbon::now())
+            ->orderBy('date_end', 'DESC')
+            ->first();
         return response()->json($data, 200);
     }
     public function index_custom()
@@ -253,7 +257,7 @@ class HomeController extends Controller
     }
     public function index(Request $request)
     {
-        return $this->index_custom();
+        // return $this->index_custom();
         $data = [];
         $data['logo_perusahaan'] = DashboardModel::select()->first();
         $data['class_upcoming'] = [];
