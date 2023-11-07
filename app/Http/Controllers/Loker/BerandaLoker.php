@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Loker;
 
+use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LokerModel;
 use Carbon\Carbon;
@@ -20,6 +21,10 @@ class BerandaLoker extends Controller
      */
     public function index(Request $request)
     {
+        $next = GlobalHelper::getaksesmembership();
+        if (!$next) {
+            return Redirect::back()->with('info', 'Anda Tidak Memiliki Akses');
+        }
         $x['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
         if ($request->ajax()) {
             $data = [];
@@ -224,6 +229,10 @@ class BerandaLoker extends Controller
 
     public function detail($id)
     {
+        $next = GlobalHelper::getaksesmembership();
+        if (!$next) {
+            return Redirect::back()->with('info', 'Anda Tidak Memiliki Akses');
+        }
         $data = [];
         $data['data'] = LokerModel::select(
             'loker.*',
@@ -258,8 +267,10 @@ class BerandaLoker extends Controller
         $name = 'Bankir Academy';
         if ($data['data']->corporate) {
             $x = json_decode($data['data']->corporate);
-            if (property_exists($x, 'name')) {
-                $name = $x->name;
+            if ($x) {
+                if (property_exists($x, 'name')) {
+                    $name = $x->name;
+                }
             }
         }
         $html = [

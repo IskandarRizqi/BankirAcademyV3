@@ -5,6 +5,7 @@ namespace App\Helper;
 use App\Models\RefferralModel;
 use App\Models\RefferralWithdrawModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class  GlobalHelper
 {
@@ -43,5 +44,19 @@ class  GlobalHelper
             return $r;
         }
         return 0;
+    }
+    public static function getaksesmembership()
+    {
+        $auth = Auth::user();
+        $next = 0;
+        if ($auth) {
+            if ($auth->profile) {
+                // if ($auth->profile['status_membership'] == 1) {
+                //     $next = true;
+                // }
+                $next = $auth->profile['status_membership'];
+            }
+        }
+        return $next;
     }
 }

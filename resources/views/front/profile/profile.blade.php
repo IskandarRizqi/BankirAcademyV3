@@ -109,6 +109,7 @@
                                             </span>
                                         </a></li>
                                     <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
+                                    <li><a href="#tab-membership"><i class="icon-money"></i> Membership</a></li>
                                     <li><a href="#tab-posting-loker" @if (isset($pfl['code'])){{ $pfl['code'] ? 'hidden'
                                             : '' }}@endif><i class="icon-suitcase"></i> Posting Loker</a></li>
                                 </ul>
@@ -437,6 +438,9 @@
                                     </div>
                                     <div class="tab-content clearfix" id="tab-posts">
                                         @include('front.profile.setting')
+                                    </div>
+                                    <div class="tab-content clearfix" id="tab-membership">
+                                        @include('front.profile.membership')
                                     </div>
                                     <div class="tab-content clearfix" id="tab-pnpt">
                                         @include('front.profile.prepotes')

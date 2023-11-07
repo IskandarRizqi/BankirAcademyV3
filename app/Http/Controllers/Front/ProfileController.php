@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use App\Helper\GlobalHelper;
 use App\Models\LamaranModel;
 use App\Models\LokerModel;
+use App\Models\MembershipModel;
 use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
 
@@ -130,6 +131,8 @@ class ProfileController extends Controller
         $data['loker'] = LokerModel::where('user_id', $auth)->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
+        $data['ismember'] = GlobalHelper::getaksesmembership();
+        $data['member'] = MembershipModel::get();
         // return $data;
         return view('front.profile.profile', $data);
     }
@@ -412,6 +415,7 @@ class ProfileController extends Controller
         }
         $inp = [
             'status_membership' => $request->status_membership,
+            'id_member' => $request->id_member,
             'masa_aktif_membership' => $request->masa_aktif_membership ? $request->masa_aktif_membership : Carbon::now()->addYears(5),
         ];
         if ($request->image_bukti_pembayaran) {

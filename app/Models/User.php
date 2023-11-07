@@ -48,7 +48,7 @@ class User extends Authenticatable
     public function getProfileAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
-            return UserProfileModel::where('user_id', $this->attributes['id'])->first();
+            return UserProfileModel::with('membership')->where('user_id', $this->attributes['id'])->first();
         }
     }
     public function getRekeningAttribute()

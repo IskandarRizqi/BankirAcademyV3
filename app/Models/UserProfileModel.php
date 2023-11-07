@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserProfileModel extends Model
 {
@@ -24,5 +25,10 @@ class UserProfileModel extends Model
 		'image_bukti_pembayaran',
 		'status_membership',
 		'masa_aktif_membership',
+		'id_member',
 	];
+	public function membership(): HasOne
+	{
+		return $this->hasOne(MembershipModel::class, 'id', 'id_member');
+	}
 }

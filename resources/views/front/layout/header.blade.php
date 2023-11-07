@@ -8,6 +8,14 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+@if(Session::has('info'))
+<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+    {{Session::get('info')}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
 <header id="header">
     <div id="header-wrap">
         <div class="container">
@@ -223,7 +231,8 @@
 <!-- #header end -->
 
 <!-- Modal -->
-<div class="modal fade" id="modelId" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal fade" id="modelId" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog"
+    aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\BiayaSertifikatModel;
@@ -640,12 +641,29 @@ class ClassesController extends Controller
 	}
 	public function listClass(Request $request)
 	{
+		if ($request->jenis == 'calon_bankir') {
+			$next = GlobalHelper::getaksesmembership();
+			if (!$next) {
+				return Redirect::back()->with('info', 'Anda Tidak Memiliki Akses');
+			}
+		}
+		$limit = 0;
+		$auth = Auth::user();
+		if ($auth->profile->membership) {
+			$limit = $auth->profile->membership->limit;
+		}
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
 		}
 		$data['banner'] = $this->bannerClass($data['judul']);
+		$class_id = [];
+		$class = ClassesModel::select('id')->limit($limit)->get();
+		foreach ($class as $key => $value) {
+			array_push($class_id, $value->id);
+		}
 		$data['class'] = ClassesModel::select()
+			->whereIn('id', $class_id)
 			->where(function ($sql) use ($request) {
 				if ($request->jenis) {
 					return $sql->where('jenis', 'like', '%"' . strtoupper($request->jenis) . '"%');
@@ -656,7 +674,6 @@ class ClassesController extends Controller
 			->orderBy('date_end', 'asc')
 			->paginate(9)
 			->toArray();
-
 		if ($request->ajax()) {
 			return $data['class'];
 		}
