@@ -8,14 +8,6 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-@if(Session::has('info'))
-<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-    {{Session::get('info')}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-@endif
 <header id="header">
     <div id="header-wrap">
         <div class="container">
@@ -264,6 +256,19 @@
             </div>
         </div>
     </div>
-
 </div>
 <!-- end modal login -->
+<!-- Modal Member -->
+<div class="modal fade" id="modelmember" tabindex="-1" data-backdrop="modal" data-keyboard="false" role="dialog"
+    aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <img src="/front/images/A_BLM_MEMBER.jpg" alt="" width="100%">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end modal member -->

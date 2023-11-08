@@ -641,16 +641,14 @@ class ClassesController extends Controller
 	}
 	public function listClass(Request $request)
 	{
-		if ($request->jenis == 'calon_bankir') {
-			$next = GlobalHelper::getaksesmembership();
-			if (!$next) {
-				return Redirect::back()->with('info', 'Anda Tidak Memiliki Akses');
-			}
-		}
-		$limit = 0;
+		$limit = 3;
 		$auth = Auth::user();
-		if ($auth->profile->membership) {
-			$limit = $auth->profile->membership->limit;
+		if ($auth) {
+			if ($auth->profile) {
+				if ($auth->profile->membership) {
+					$limit = $auth->profile->membership->limit;
+				}
+			}
 		}
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {

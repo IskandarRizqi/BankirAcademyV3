@@ -3,7 +3,7 @@
     .caption {
         position: absolute;
         top: 25%;
-        left: 0%;
+        left: 10%;
         text-align: left;
         color: rgb(0, 0, 0);
         font-weight: 200;

@@ -35,7 +35,13 @@
                             @foreach ($blog['links'] as $k => $p)
                             <li class="page-item {{ $p['active'] ? 'active' : '' }}"><a class="page-link"
                                     href="{{ $p['url'] }}">
+                                    @if($p['label'] == 'pagination.previous')
+                                    Sebelumnya
+                                    @elseif($p['label'] == 'pagination.next')
+                                    Selanjutnya
+                                    @else
                                     <?= $p['label'] ?>
+                                    @endif
                                 </a></li>
                             @endforeach
                         </ul>

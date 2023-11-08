@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\ClassesModel;
@@ -535,6 +536,10 @@ class HomeController extends Controller
 
     public function detail_class($unique_id, $title)
     {
+        $next = GlobalHelper::getaksesmembership();
+        if (!$next) {
+            return Redirect::back()->with('akses', 'member');
+        }
         $start = '';
         $end = '';
         $lokasi = '';

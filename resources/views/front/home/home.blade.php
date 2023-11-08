@@ -193,7 +193,8 @@
                 @else
                 <div class="owl-item" style="margin-right: 20px;">
                     <div class="oc-item">
-                        <a href="{{$value->link}}"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}" alt="Image 1"></a>
+                        <a href="{{$value->link}}"><img src="{{ asset('Backend/assets/img/600x300.jpg') }}"
+                                alt="Image 1"></a>
                     </div>
                 </div>
                 @endif
@@ -283,8 +284,8 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 mb-4">
-                        {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget" data-margin="20"
-                            data-items-sm="1" data-items-md="1" data-items-xl="1">
+                        {{-- <div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget"
+                            data-margin="20" data-items-sm="1" data-items-md="1" data-items-xl="1">
                             @if (isset($kelas_mingguan))
                             @foreach ($kelas_mingguan as $km)
                             <div class="oc-item">
@@ -330,18 +331,36 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="tabs clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-1">
-                                    <ul class="tab-nav ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header" role="tablist">
+                                    <ul class="tab-nav ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
+                                        role="tablist">
                                         @foreach($class_upcoming as $key => $value)
-                                        <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false" aria-expanded="false"><a href="#{{$key}}" tabindex="0" class="ui-tabs-anchor" id="tabs">{{$key}}</a></li>
+                                        <li role="tab" tabindex="-1"
+                                            class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                            aria-controls="tabs-2" aria-labelledby="ui-id-2" aria-selected="false"
+                                            aria-expanded="false"><a href="#{{$key}}" tabindex="0"
+                                                class="ui-tabs-anchor" id="tabs">{{$key}}</a></li>
                                         @endforeach
-                                        {{-- <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true" aria-expanded="true"><a href="#tabs-1" tabindex="-1" class="ui-tabs-anchor" id="ui-id-1"><i class="icon-home2 me-0"></i></a></li>
-                                        <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false" aria-expanded="false"><a href="#tabs-3" tabindex="-1" class="ui-tabs-anchor" id="ui-id-3">Proin dolor</a></li>
-                                        <li class="d-none d-md-block ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-4" aria-selected="false" aria-expanded="false"><a href="#tabs-4" tabindex="-1" class="ui-tabs-anchor" id="ui-id-4">Aenean lacinia</a></li> --}}
+                                        {{-- <li role="tab" tabindex="0"
+                                            class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active"
+                                            aria-controls="tabs-1" aria-labelledby="ui-id-1" aria-selected="true"
+                                            aria-expanded="true"><a href="#tabs-1" tabindex="-1" class="ui-tabs-anchor"
+                                                id="ui-id-1"><i class="icon-home2 me-0"></i></a></li>
+                                        <li role="tab" tabindex="-1"
+                                            class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                            aria-controls="tabs-3" aria-labelledby="ui-id-3" aria-selected="false"
+                                            aria-expanded="false"><a href="#tabs-3" tabindex="-1" class="ui-tabs-anchor"
+                                                id="ui-id-3">Proin dolor</a></li>
+                                        <li class="d-none d-md-block ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                            role="tab" tabindex="-1" aria-controls="tabs-4" aria-labelledby="ui-id-4"
+                                            aria-selected="false" aria-expanded="false"><a href="#tabs-4" tabindex="-1"
+                                                class="ui-tabs-anchor" id="ui-id-4">Aenean lacinia</a></li> --}}
                                     </ul>
                                     <div class="tab-container">
                                         @foreach($class_upcoming as $key => $valu)
                                         <?php $i = 0; ?>
-                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="{{$key}}" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false" style="">
+                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                            id="{{$key}}" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false"
+                                            style="">
                                             <div class="table-responsive">
                                                 <table id="class-upcoming{{$i}}" class="table table-bordered">
                                                     <?php $i++; ?>
@@ -360,21 +379,27 @@
                                                         <tr>
                                                             <td style="font-size: 10px">{{$k+1}}</td>
                                                             {{-- <td>
-                                                                <a href="/class/{{$v->unique_id}}/{{str_replace('/', '-', $v->title)}}">
+                                                                <a
+                                                                    href="/class/{{$v->unique_id}}/{{str_replace('/', '-', $v->title)}}">
                                                                     {{substr($v->title,0,17)}}...
                                                                 </a>
                                                             </td> --}}
-                                                            <td style="font-size: 12px" class="text-left">{{$v->title}}</td>
-                                                            {{-- <td style="font-size: 10px">{{date_format(date_create($v->date_end),'Y-m')}}</td> --}}
+                                                            <td style="font-size: 12px" class="text-left">{{$v->title}}
+                                                            </td>
+                                                            {{-- <td style="font-size: 10px">
+                                                                {{date_format(date_create($v->date_end),'Y-m')}}</td>
+                                                            --}}
                                                             {{-- <td>{{$v->instructor_list[0]->name}}</td>
                                                             @if($v->pricing)
                                                             @if(!$v->pricing->promo)
-                                                                <td>Rp. {{number_format($v->pricing->price-$v->pricing->promo_price)}}</td>
+                                                            <td>Rp.
+                                                                {{number_format($v->pricing->price-$v->pricing->promo_price)}}
+                                                            </td>
                                                             @else
-                                                                <td>Rp. {{number_format($v->pricing->price)}}</td>
+                                                            <td>Rp. {{number_format($v->pricing->price)}}</td>
                                                             @endif
                                                             @else
-                                                                <td>Rp. 0</td>
+                                                            <td>Rp. 0</td>
                                                             @endif --}}
                                                         </tr>
                                                         @endforeach
@@ -383,15 +408,48 @@
                                             </div>
                                         </div>
                                         @endforeach
-                                        {{-- <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-2" aria-labelledby="ui-id-2" role="tabpanel" aria-hidden="true" style="display: none;">
-                                        Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.
+                                        {{-- <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                            id="tabs-2" aria-labelledby="ui-id-2" role="tabpanel" aria-hidden="true"
+                                            style="display: none;">
+                                            Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut
+                                            pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed
+                                            fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut
+                                            tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed
+                                            ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing
+                                            adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel
+                                            metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque
+                                            convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis
+                                            lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor
+                                            et purus.
                                         </div>
-                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-3" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="true" style="display: none;">
-                                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                                        Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.
+                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                            id="tabs-3" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="true"
+                                            style="display: none;">
+                                            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam
+                                                vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue
+                                                orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu
+                                                ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce
+                                                sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu
+                                                risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium
+                                                nec, feugiat nec, luctus a, lacus.</p>
+                                            Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at,
+                                            magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque.
+                                            Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede
+                                            vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor
+                                            eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut
+                                            sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae,
+                                            pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo.
+                                            Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus
+                                            hendrerit hendrerit.
                                         </div>
-                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-4" aria-labelledby="ui-id-4" role="tabpanel" aria-hidden="true" style="display: none;">
-                                        Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.
+                                        <div class="tab-content ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                            id="tabs-4" aria-labelledby="ui-id-4" role="tabpanel" aria-hidden="true"
+                                            style="display: none;">
+                                            Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis.
+                                            Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla.
+                                            Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus
+                                            pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi
+                                            vel felis. Mauris consectetur tortor et purus.
                                         </div> --}}
                                     </div>
                                 </div>
@@ -401,12 +459,12 @@
                     <div class="col-lg-6 mb-4">
                         @if (isset($banner_bawah))
                         @if (count($banner_bawah) > 0)
-                        <div id="img_card" class="card text-white click-col" style="min-height: 0px"
-                        {{-- style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;" --}}
-                        >
-                        <a href="https://forms.gle/yHh3WpMyHRduPL6W6">
-                            <img src="Image/{{ $banner_bawah[0]->image }}" alt="" height="auto">
-                        </a>
+                        <div id="img_card" class="card text-white click-col" style="min-height: 0px" {{--
+                            style="background-image:url('Image/{{ $banner_bawah[0]->image }}');  background-size:contain !important;"
+                            --}}>
+                            <a href="{{$banner_bawah[0]->link}}">
+                                <img src="Image/{{ $banner_bawah[0]->image }}" alt="" height="auto">
+                            </a>
                         </div>
                         <div class="d-flex mt-4">
                             <div id="oc-testi"
@@ -427,8 +485,9 @@
                                                     height:200px;">
                                                     <a href="#"></a>
                                                 </div> --}}
-                                                <div id="img_card" class="card text-white click-col" style="min-height: 0px;">
-                                                    <a href="https://forms.gle/yHh3WpMyHRduPL6W6">
+                                                <div id="img_card" class="card text-white click-col"
+                                                    style="min-height: 0px;">
+                                                    <a href="{{$banner_bawah[$i]->link}}">
                                                         <img src="Image/{{ $banner_bawah[$i]->image}}" alt="">
                                                     </a>
                                                 </div>
@@ -477,52 +536,66 @@
             <img src="{{ asset('cariin-kerja.webp') }}" alt="">
         </div>
         <div class="container">
-        <div class="row p-4">
-            @foreach($loker as $key => $value)
-            <div class="col-lg-4 mb-4">
-                <div class="card" style="min-height: auto">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <img src="{{$value->image?'/image/loker/'.json_decode($value->image)->url:''}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                            {{-- @if($value->google_id)
-                            <img src="{{$value->picture}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                            @else
-                            <img src="{{asset($value->picture?$value->picture:'aki.png')}}" alt="" width="60px" height="60px" style="border-radius: 13px">
-                            @endif --}}
-                            <div class="ml-2">
-                                <h3 style="margin: 0px">{{substr($value->title,0,16)}}</h3> {{--maksimal 15 karakters--}}
-                                @if($value->nama)
-                                <small>{{$value->nama}}</small>
+            <div class="row p-4">
+                @foreach($loker as $key => $value)
+                <div class="col-lg-4 mb-4">
+                    <div class="card" style="min-height: auto">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <img src="{{$value->image?'/image/loker/'.json_decode($value->image)->url:''}}" alt=""
+                                    width="60px" height="60px" style="border-radius: 13px">
+                                {{-- @if($value->google_id)
+                                <img src="{{$value->picture}}" alt="" width="60px" height="60px"
+                                    style="border-radius: 13px">
                                 @else
-                                <small>{{json_decode($value->corporate)?json_decode($value->corporate)->name:'Anugrah Karya'}}</small>
-                                @endif
+                                <img src="{{asset($value->picture?$value->picture:'aki.png')}}" alt="" width="60px"
+                                    height="60px" style="border-radius: 13px">
+                                @endif --}}
+                                <div class="ml-2">
+                                    <h3 style="margin: 0px">{{substr($value->title,0,16)}}</h3> {{--maksimal 15
+                                    karakters--}}
+                                    @if($value->nama)
+                                    <small>{{$value->nama}}</small>
+                                    @else
+                                    <small>{{json_decode($value->corporate)?json_decode($value->corporate)->name:'Anugrah
+                                        Karya'}}</small>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-2">
-                            {{-- <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>
-                                @if($value->skill)
+                            <div class="mt-2">
+                                {{-- <p style="margin: 0px"><i class="icon-suitcase mr-2"></i>
+                                    @if($value->skill)
                                     @foreach(json_decode($value->skill) as $key => $v)
-                                        <span class="badge badge-info">{{$v}}</span>
+                                    <span class="badge badge-info">{{$v}}</span>
                                     @endforeach
-                                @endif
-                            </p> --}}
-                            {{-- @if($value->gaji_min > 0)
-                            <p style="margin: 0px"><i class="icon-print mr-2"></i>{{$value->gaji_min}}</p>
-                            @else
-                            @endif --}}
-                            <p style="margin: 0px"><i class="icon-print mr-2"></i>Gaji Competitive</p>
-                            <p style="margin: 0px"><i class="icon-wallet mr-2"></i>{{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}</p>
+                                    @endif
+                                </p> --}}
+                                {{-- @if($value->gaji_min > 0)
+                                <p style="margin: 0px"><i class="icon-print mr-2"></i>{{$value->gaji_min}}</p>
+                                @else
+                                @endif --}}
+                                <p style="margin: 0px"><i class="icon-print mr-2"></i>Gaji Competitive</p>
+                                <p style="margin: 0px"><i
+                                        class="icon-wallet mr-2"></i>{{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}
+                                </p>
+                            </div>
+
+                            <a class="btn btn-primary btn-sm btn-block" href="/loker/{{$value->id}}/detail">Detail</a>
                         </div>
-                        
-                        <a class="btn btn-primary btn-sm btn-block" href="/loker/{{$value->id}}/detail">Detail</a>
                     </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
-        </div>
-        <div class="d-flex flex-row-reverse mb-2 mr-4">
-            <a href="/loker" class="badge badge-primary">Lebih Banyak <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgb(255, 255, 255);transform: ;msFilter:;"><path d="m10.998 16 5-4-5-4v3h-9v2h9z"></path><path d="M12.999 2.999a8.938 8.938 0 0 0-6.364 2.637L8.049 7.05c1.322-1.322 3.08-2.051 4.95-2.051s3.628.729 4.95 2.051S20 10.13 20 12s-.729 3.628-2.051 4.95-3.08 2.051-4.95 2.051-3.628-.729-4.95-2.051l-1.414 1.414c1.699 1.7 3.959 2.637 6.364 2.637s4.665-.937 6.364-2.637C21.063 16.665 22 14.405 22 12s-.937-4.665-2.637-6.364a8.938 8.938 0 0 0-6.364-2.637z"></path></svg></a>
-        </div>
+            <div class="d-flex flex-row-reverse mb-2 mr-4">
+                <a href="/loker" class="badge badge-primary">Lebih Banyak <svg xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" viewBox="0 0 24 24"
+                        style="fill: rgb(255, 255, 255);transform: ;msFilter:;">
+                        <path d="m10.998 16 5-4-5-4v3h-9v2h9z"></path>
+                        <path
+                            d="M12.999 2.999a8.938 8.938 0 0 0-6.364 2.637L8.049 7.05c1.322-1.322 3.08-2.051 4.95-2.051s3.628.729 4.95 2.051S20 10.13 20 12s-.729 3.628-2.051 4.95-3.08 2.051-4.95 2.051-3.628-.729-4.95-2.051l-1.414 1.414c1.699 1.7 3.959 2.637 6.364 2.637s4.665-.937 6.364-2.637C21.063 16.665 22 14.405 22 12s-.937-4.665-2.637-6.364a8.938 8.938 0 0 0-6.364-2.637z">
+                        </path>
+                    </svg></a>
+            </div>
         </div>
     </div>
     <div id="Testimonial" class="section border-top-0" style="background-color:#FFA600; padding-bottom: 30px">
@@ -621,24 +694,24 @@
             <img src="{{ asset('gambar-footer-03.png') }}" alt="">
         </div>
     </div>
-        <div class="section border-top-0 mb-6 mt-4">
-            <div class="container text-center">
-                <div class="logo-perusahaan">
-                    @if($logo_perusahaan)
-                        @foreach(json_decode($logo_perusahaan->logo_perusahaan) as $key => $v)
-                            @if($v)
-                                <?php $f = explode('|',$v); ?>
-                                @if(stripos($f[0],'https')>=0)
-                                    <div><img src="{{$f[0]}}" alt=""></div>
-                                @else
-                                    <div><img src="{{asset($f[0])}}" alt=""></div>
-                                @endif
-                            @endif
-                        @endforeach
-                    @endif
-                </div>
+    <div class="section border-top-0 mb-6 mt-4">
+        <div class="container text-center">
+            <div class="logo-perusahaan">
+                @if($logo_perusahaan)
+                @foreach(json_decode($logo_perusahaan->logo_perusahaan) as $key => $v)
+                @if($v)
+                <?php $f = explode('|',$v); ?>
+                @if(stripos($f[0],'https')>=0)
+                <div><img src="{{$f[0]}}" alt=""></div>
+                @else
+                <div><img src="{{asset($f[0])}}" alt=""></div>
+                @endif
+                @endif
+                @endforeach
+                @endif
             </div>
         </div>
+    </div>
     </div>
     <textarea name="" id="kelas" cols="30" rows="10" hidden>{{ json_encode($o['kelas']) }}</textarea>
     <input type="text" id="isLogin" value="@auth 1 @endauth" hidden>

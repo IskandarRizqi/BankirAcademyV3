@@ -120,6 +120,11 @@
     </div>
     </div>
 
+    @if(Session::has('akses'))
+    <input type="text" id="is_akses" value="{{Session::get('akses')}}">
+    @else
+    <input type="text" id="is_akses">
+    @endif
     <div id="copyrights" style="background-color:#0076f5">
         <div class="container">
             <div class="w-100 text-center text-white">
@@ -244,6 +249,13 @@
     getLaman();
     $(document).ready(function() {
         $('#loader-loading').remove();
+        let akses = $('#is_akses').val();
+        if (akses == 'auth') {
+            $('#modelId').modal('show')
+        }
+        if (akses == 'member') {
+            $('#modelmember').modal('show')
+        }
     })
     function getImgData(fil, prv) {
 		const files = fil.files[0];

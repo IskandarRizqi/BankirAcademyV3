@@ -21,9 +21,9 @@ class BerandaLoker extends Controller
      */
     public function index(Request $request)
     {
-        $next = GlobalHelper::getaksesmembership();
-        if (!$next) {
-            return Redirect::back()->with('info', 'Anda Tidak Memiliki Akses');
+        $auth = Auth::user();
+        if (!$auth) {
+            return Redirect::back()->with('akses', 'auth');
         }
         $x['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
         if ($request->ajax()) {
@@ -229,9 +229,13 @@ class BerandaLoker extends Controller
 
     public function detail($id)
     {
+        $auth = Auth::user();
+        if (!$auth) {
+            return Redirect::back()->with('akses', 'auth');
+        }
         $next = GlobalHelper::getaksesmembership();
         if (!$next) {
-            return Redirect::back()->with('info', 'Anda Tidak Memiliki Akses');
+            return Redirect::back()->with('akses', 'member');
         }
         $data = [];
         $data['data'] = LokerModel::select(
