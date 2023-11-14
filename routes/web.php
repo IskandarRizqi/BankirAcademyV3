@@ -129,11 +129,12 @@ Route::middleware('auth')->group(function () {
 
     // Prepotes
     Route::post('/prepotes/savejawaban', [App\Http\Controllers\Backend\PrepotestController::class, 'savejawaban']);
+
+    // Lamaran Kerja
+    Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
+    Route::get('/cetaklamaran', [App\Http\Controllers\Front\ProfileController::class, 'cetaklamaran']);
+    Route::post('simpanlamaran', [App\Http\Controllers\Front\ProfileController::class, 'simpanlamaran']);
 });
-// Lamaran Kerja
-Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
-Route::get('/cetaklamaran', [App\Http\Controllers\Front\ProfileController::class, 'cetaklamaran']);
-Route::post('simpanlamaran', [App\Http\Controllers\Front\ProfileController::class, 'simpanlamaran']);
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');
