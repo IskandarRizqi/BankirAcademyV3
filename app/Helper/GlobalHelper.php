@@ -50,13 +50,18 @@ class  GlobalHelper
         $auth = Auth::user();
         $next = 0;
         if ($auth) {
-            if ($auth->profile) {
-                // if ($auth->profile['status_membership'] == 1) {
-                //     $next = true;
-                // }
-                $next = $auth->profile['status_membership'];
+            $next = 1;
+            if ($auth->corporate == null || $auth->corporate == 'perorangan') {
+                $next = 0;
+                if ($auth->profile) {
+                    $next = $auth->profile['status_membership'];
+                }
+            }
+            if ($auth->role == 0) {
+                $next = 1;
             }
         }
+        // return 1;
         return $next;
     }
 }

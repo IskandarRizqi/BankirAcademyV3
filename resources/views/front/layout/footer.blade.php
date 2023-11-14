@@ -121,9 +121,9 @@
     </div>
 
     @if(Session::has('akses'))
-    <input type="text" id="is_akses" value="{{Session::get('akses')}}">
+    <input type="text" id="is_akses" value="{{Session::get('akses')}}" hidden>
     @else
-    <input type="text" id="is_akses">
+    <input type="text" id="is_akses" hidden>
     @endif
     <div id="copyrights" style="background-color:#0076f5">
         <div class="container">

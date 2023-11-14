@@ -13,6 +13,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="SemiColonWeb" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Stylesheets
         ============================================= -->
@@ -28,7 +29,6 @@
     <link rel="stylesheet" href="{{asset('front/css/magnific-popup.css')}}" type="text/css" />
 
     <link rel="stylesheet" href="{{asset('front/css/custom.css')}}" type="text/css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- SLIDER REVOLUTION 5.x CSS SETTINGS -->
     {{--
@@ -77,11 +77,11 @@
         <meta name="twitter:image" content="{{asset('/Image/laman/meta_image/'.json_decode($class->og)->image)}}">
         @endif
         @endisset
-        
-    @isset($lokergoogle)
-    {{-- {{$lokergoogle}} --}}
-    <script type="application/ld+json">
-        {
+
+        @isset($lokergoogle)
+        {{-- {{$lokergoogle}} --}}
+        <script type="application/ld+json">
+            {
           "@context" : "https://schema.org/",
           "@type" : "JobPosting",
           "title" : "{{$lokergoogle['title']}}",
@@ -125,7 +125,7 @@
           }
         }
         </script>
-    @endisset
+        @endisset
         <!-- JavaScripts
             ============================================= -->
         <script src="https://code.jquery.com/jquery-3.6.1.js"

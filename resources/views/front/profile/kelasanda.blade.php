@@ -91,19 +91,19 @@
                     </div>
                 </td>
                 @if($cl->date_end < \Carbon\Carbon::now()->subDay())
-                <td>
-                    <button class="button button-circle button-mini" @if ($c->review) onclick="onReview('{{
-                        $c->review
-                        }}','{{ $c->review_point }}')"
-                        @else
-                        onclick="review({{ $c->participant_id }})"
-                        @endif>Class</button>
-                    <button class="button button-circle button-mini"
-                        onclick="reviewIns({{ $c->class[0]->instructor_list[0]->id }})">Intructor</button>
-                </td>
+                    <td>
+                        <button class="button button-circle button-mini" @if ($c->review) onclick="onReview('{{
+                            $c->review
+                            }}','{{ $c->review_point }}')"
+                            @else
+                            onclick="review({{ $c->participant_id }})"
+                            @endif>Class</button>
+                        <button class="button button-circle button-mini"
+                            onclick="reviewIns({{ $c->class[0]->instructor_list[0]->id }})">Intructor</button>
+                    </td>
                     @else
                     <td>Kelas Belum Selesai</td>
-                @endif
+                    @endif
             </tr>
             @endforeach
             @endforeach
@@ -201,6 +201,7 @@
                             <tr class="text-center">
                                 <th width="1%">No</th>
                                 <th>Link/Lokasi</th>
+                                <th>Password</th>
                                 <th>Waktu</th>
                                 <th>Keterangan</th>
                             </tr>

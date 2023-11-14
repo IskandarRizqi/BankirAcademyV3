@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Loker;
 
 use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
+use App\Models\LokerApply;
 use App\Models\LokerModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -95,6 +96,18 @@ class BerandaLoker extends Controller
     public function getkelurahan($data)
     {
         return DB::table('kelurahan')->where('kecamatan_id', $data)->get();
+    }
+
+    public function apply(Request $request)
+    {
+        $l = LokerApply::create([
+            'user_id' => Auth::user()->id,
+            'loker_id' => $request->class_id
+        ]);
+        if ($l) {
+            return Redirect::back()->with('success', 'Lamaran Proses Terkirim');
+        }
+        return Redirect::back()->with('info', 'Lamaran Gagal Terkirim');
     }
 
     /**

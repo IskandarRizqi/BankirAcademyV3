@@ -19,15 +19,19 @@
             <div class="caption text-center" style="font-size: 2vw">
             </div>
         </div>
-        <div class="row layout-spacing p-2 ml-2 mr-2">
-            @foreach($member as $key => $v)
-            <div class="col">
-                <div class="captionmember" style="font-size: 12px">{!!$v->keterangan!!}</div>
-                <img src="{{asset($v->gambar)}}" onclick="openmember({{$v}})" alt="" style="cursor: pointer">
-                <div class="">
+        <div class="col-lg-12 layout-spacing align-middle">
+            <div class="row justify-content-center">
+                @foreach($member as $key => $v)
+                <div style="overflow: auto">
+                    <div class="col-md-3">
+                        <div class="captionmember">{!!$v->keterangan!!}</div>
+                        <img src="{{asset($v->gambar)}}" onclick="openmember({{$v}})" alt="" style="cursor: pointer">
+                        <div class="">
+                        </div>
+                    </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
         @endif
     </div>
@@ -45,6 +49,7 @@
                     <input type="text" name="user_id" id="user_id" value="{{ Auth::user()->id }}" hidden>
                     <input type="text" name="status_membership" id="status_membership" value="2" hidden>
                     <input type="text" name="id_member" id="id_member" hidden>
+                    <div id="detailmember"></div>
                     <div class="col-lg-12">
                         <label for="form-control">Bukti Pembayaran</label>
                         <input type="file" class="form-control" name="image_bukti_pembayaran"
@@ -63,6 +68,10 @@
 <script>
     function openmember(val) {
         $('#id_member').val(val['id']);
+        let p = '<h3>Harga Member : <strong>'+val.harga.toLocaleString()+'</strong></h3>';
+        p+='<span>No. Rekening : 8035559091</span><br>';
+        p+='<span>Atas Nama : PT. Bankir Academy Indonesia</span>';
+        $('#detailmember').html(p);
         $('#modalmember').modal('show');
     }
 </script>

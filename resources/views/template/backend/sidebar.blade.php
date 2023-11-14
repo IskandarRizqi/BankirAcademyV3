@@ -180,7 +180,7 @@
                 </ul>
             </li>
             <li class="menu">
-                <a href="/admin/loker" aria-expanded="false" class="dropdown-toggle">
+                <a href="#referralDropdownMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
@@ -188,9 +188,24 @@
                                 d="M20 6h-3V4c0-1.103-.897-2-2-2H9c-1.103 0-2 .897-2 2v2H4c-1.103 0-2 .897-2 2v4h5v-2h2v2h6v-2h2v2h5V8c0-1.103-.897-2-2-2zM9 4h6v2H9V4zm8 11h-2v-2H9v2H7v-2H2v6c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-6h-5v2z">
                             </path>
                         </svg>
-                        <span>Loker</span>
+                        <span>Referral</span>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-chevron-right">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
                     </div>
                 </a>
+                <ul class="collapse submenu list-unstyled" id="referralDropdownMenu" data-parent="#accordionExample">
+                    <li>
+                        <a href="/admin/loker"> Form </a>
+                    </li>
+                    <li>
+                        <a href="/admin/apply"> List Apply </a>
+                    </li>
+                </ul>
             </li>
             <li class="menu">
                 <a href="/admin/partner" aria-expanded="false" class="dropdown-toggle">

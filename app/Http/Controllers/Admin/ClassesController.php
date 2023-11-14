@@ -513,6 +513,7 @@ class ClassesController extends Controller
 				'description' => $r->txaClassEventDescription[$i],
 				'time_start' => $r->datClassesDateStart[$i],
 				'time_end' => $r->datClassesDateEnd[$i],
+				'password_link' => $r->txtClassEventPassword[$i],
 			];
 			ClassEventModel::UpdateOrCreate(['id' => $r->txtClassEventId[$i]], $tobeins);
 		}
@@ -641,7 +642,7 @@ class ClassesController extends Controller
 	}
 	public function listClass(Request $request)
 	{
-		$limit = 3;
+		$limit = 99;
 		$auth = Auth::user();
 		if ($auth) {
 			if ($auth->profile) {
@@ -650,6 +651,7 @@ class ClassesController extends Controller
 				}
 			}
 		}
+		$limit = 99;
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);

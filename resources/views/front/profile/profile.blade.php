@@ -43,6 +43,12 @@
             opacity: 0;
         }
     }
+
+    .tab-nav {
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
 </style>
 <section id="content">
     <div class="content-wrap" style="padding: 24px;">
@@ -75,6 +81,13 @@
                                         <h4 style="margin: 0px">Total Poin</h4>
                                         <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">
                                             {{$poin}}</p>
+                                    </div>
+                                    <div class="form-group ml-6">
+                                        <h4 style="margin: 0px">Total Kelas Diikuti</h4>
+                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">
+                                            {{count($class)}}</p>
+                                    </div>
+                                    <div class="form-group ml-6">
                                         <label for="">Tukarkan Poin</label>
                                         <select name="" id="" class="form-control">
                                             <option value="">Pilih</option>
@@ -83,16 +96,11 @@
                                         </select>
                                         <button class="btn btn-primary btn-block mt-2" disabled>Tukar</button>
                                     </div>
-                                    <div class="form-group ml-6">
-                                        <h4 style="margin: 0px">Total Kelas Diikuti</h4>
-                                        <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">
-                                            {{count($class)}}</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="clear"></div>
+                    <div class="clear m-2"></div>
                     <div class="row clearfix">
                         <div class="col-lg-12">
                             <div class="tabs tabs-alt clearfix" id="tabs-profile">
@@ -100,7 +108,9 @@
                                     <li><a href="#tab-postss"><i class="icon-line-book-open"></i> Kelas Anda</a></li>
                                     <li><a href="#tab-pnpt"><i class="icon-line-book-open"></i> Pre & Pos Tes</a></li>
                                     <li><a href="#tab-absen"><i class="icon-fingerprint"></i> Absen</a></li>
+                                    @if(!$user->corporates)
                                     <li><a href="#tab-affiliate"><i class="icon-users1"></i> Affiliate</a></li>
+                                    @endif
                                     <li><a href="#tab-feeds"><i class="icon-credit-cards"></i> Billing Kelas
                                             <span class="badge bg-danger text-white">
                                                 <div class="spinner-grow spinner-grow-sm">
@@ -108,10 +118,16 @@
                                                 {{ $count_payment }}
                                             </span>
                                         </a></li>
-                                    <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
+                                    @if(!$user->corporates)
                                     <li><a href="#tab-membership"><i class="icon-money"></i> Membership</a></li>
+                                    <li><a href="#tab-cv"><i class="icon-bookmark"></i> CV</a></li>
+                                    <li><a href="#tab-apply"><i class="icon-briefcase"></i> Apply</a></li>
+                                    @endif
+                                    @if($user->corporates)
                                     <li><a href="#tab-posting-loker" @if (isset($pfl['code'])){{ $pfl['code'] ? 'hidden'
                                             : '' }}@endif><i class="icon-suitcase"></i> Posting Loker</a></li>
+                                    @endif
+                                    <li><a href="#tab-posts"><i class="icon-cog"></i> Setting</a></li>
                                 </ul>
                                 <div class="tab-container">
                                     <div class="tab-content clearfix" id="tab-feeds">
@@ -442,6 +458,12 @@
                                     <div class="tab-content clearfix" id="tab-membership">
                                         @include('front.profile.membership')
                                     </div>
+                                    <div class="tab-content clearfix" id="tab-cv">
+                                        @include('front.profile.cv')
+                                    </div>
+                                    <div class="tab-content clearfix" id="tab-apply">
+                                        @include('front.profile.apply')
+                                    </div>
                                     <div class="tab-content clearfix" id="tab-pnpt">
                                         @include('front.profile.prepotes')
                                     </div>
@@ -529,7 +551,7 @@
                         </div>
                     </div>
                     <div id="formPerorangan" hidden>
-                        <h4>Perorangan</h4>
+                        <h4>Calon Bankir</h4>
                         <button class="btn btn-secondary btn-sm" id="kembali" title="kembali">
                             < Kembali </button>
                                 <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
@@ -661,7 +683,7 @@
                                 </form>
                     </div>
                     <div id="formCorporate" hidden>
-                        <h4>Corporate</h4>
+                        <h4>Bankir</h4>
                         <button class="btn btn-secondary btn-sm" id="kembali2" title="kembali2">
                             < Kembali </button>
                                 <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
@@ -1167,6 +1189,9 @@
                 } else {
                     html += '    <td>' + el.location + '</td>';
                 }
+                html += '<td>';
+                html += '<span class="badge badge-info">'+el.password_link+'</span>';
+                html += '</td>';
                 html += '<td>'
                 html += '<span class="badge badge-info">';
                 html += new Date(el.time_start).toLocaleDateString();

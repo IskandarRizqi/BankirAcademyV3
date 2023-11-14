@@ -24,6 +24,7 @@ class LamaranModel extends Model
         'jmlsaudara',
         'statusperkawinan',
         'namapasangan',
+        'namaorangtuakandung',
         'namaorangtuasuamiistri',
         'namaanak',
         'namakakeknenek',
@@ -72,4 +73,25 @@ class LamaranModel extends Model
         'pekerjaantotalaset',
         'pengalamanspesifik',
     ];
+    protected $appends = ['namaagama'];
+    public function getNamaAgamaAttribute()
+    {
+        $a = 'Islam';
+        if ($this->attributes['agama'] == 1) {
+            $a = 'Katholik';
+        }
+        if ($this->attributes['agama'] == 2) {
+            $a = 'Protestan';
+        }
+        if ($this->attributes['agama'] == 3) {
+            $a = 'Hindu';
+        }
+        if ($this->attributes['agama'] == 4) {
+            $a = 'Budha';
+        }
+        if ($this->attributes['agama'] == 5) {
+            $a = 'Tuhan Yang Maha Esa';
+        }
+        return $a;
+    }
 }

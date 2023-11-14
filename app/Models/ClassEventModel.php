@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClassEventModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'class_event';
 	protected $fillable = [
 		'class_id',
@@ -17,5 +17,6 @@ class ClassEventModel extends Model
 		'description',
 		'time_start',
 		'time_end',
+		'password_link',
 	];
 }

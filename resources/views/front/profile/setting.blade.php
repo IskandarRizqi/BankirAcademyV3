@@ -16,6 +16,22 @@
         text-align: left;
         color: rgb(0, 0, 0);
         font-weight: 400;
+        font-size: 12px;
+        width: 150px;
+    }
+
+    @media screen and (min-width: 720px) {
+        .captionmember {
+            position: absolute;
+            top: 25%;
+            left: 30%;
+            text-align: left;
+            color: rgb(0, 0, 0);
+            font-weight: 400;
+            font-size: 12px;
+            width: 140px;
+            height: 270px;
+        }
     }
 </style>
 <div class="tabs tabs-alt clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-7">
@@ -55,7 +71,7 @@
                         @endif
                         <input type="text" name="iscorporate" value="<?= $corporate ?>" hidden>
                         <div class="col-md-3" {{$corporate?'':'hidden'}}>
-                            <label for="form-control">Jenis Corporate</label>
+                            <label for="form-control">Jenis Bank</label>
                             <select name="jenis_corporate" class="form-control" id="jenis_corporate"
                                 data-show-subtext="true" data-live-search="true">
                                 <option value="">Pilih</option>
@@ -78,7 +94,7 @@
                             </select>
                         </div>
                         <div class="col-md-6" {{$corporate?'':'hidden'}}>
-                            <label for="form-control">Nama Corporate</label>
+                            <label for="form-control">Nama Bank</label>
                             <select name="nama_lengkap" class="form-control" id="nama_lengkap" data-show-subtext="true"
                                 data-live-search="true">
                                 <option value="">Pilih</option>

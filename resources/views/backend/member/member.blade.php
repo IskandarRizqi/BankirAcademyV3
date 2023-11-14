@@ -12,13 +12,13 @@
 @section('content')
 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
     <div class="widget-content widget-content-area br-6">
-        <button type="button" class="btn btn-primary btn-sm m-2" data-toggle="modal" data-target="#partnerModal">
+        <button type="button" class="btn btn-primary btn-sm m-2" onclick="edit(null)">
             Tambah
         </button>
         <div class="row layout-spacing p-2">
             @foreach($data as $key => $v)
-            <div class="col">
-                <div class="caption" style="font-size: 12px">{!!$v->keterangan!!}</div>
+            <div class="col-md-6">
+                <div class="caption" style="font-size: 12px; width: 170px">{!!$v->keterangan!!}</div>
                 <img src="{{asset($v->gambar)}}" alt="" onclick="edit({{$v}})" style="cursor: pointer">
                 <div class="">
                 </div>
@@ -145,12 +145,20 @@
     function edit(data) {
         openmodal('#partnerModal')
         // let data = JSON.parse($(this).attr('data-data'))
-        $('#id').val(data['id'])
-        $('#nama').val(data['nama'])
-        $('#harga').val(data['harga'])
-        $('#limit').val(data['limit'])
-        newClassCKEditor.setData(data['keterangan'])
-        document.getElementById('img_preview').style.backgroundImage="url('/"+data['gambar']+"')";
+        $('#id').val(null)
+        $('#nama').val(null)
+        $('#harga').val(null)
+        $('#limit').val(null)
+        newClassCKEditor.setData(null)
+        document.getElementById('img_preview').style.backgroundImage="url('/')";
+        if (data) {
+            $('#id').val(data['id'])
+            $('#nama').val(data['nama'])
+            $('#harga').val(data['harga'])
+            $('#limit').val(data['limit'])
+            newClassCKEditor.setData(data['keterangan'])
+            document.getElementById('img_preview').style.backgroundImage="url('/"+data['gambar']+"')";
+        }
     }
 
 </script>

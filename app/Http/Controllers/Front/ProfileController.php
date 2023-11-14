@@ -24,10 +24,12 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Helper\GlobalHelper;
 use App\Models\LamaranModel;
+use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\MembershipModel;
 use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProfileController extends Controller
 {
@@ -129,6 +131,14 @@ class ProfileController extends Controller
             ->whereIn('prepotes.class_id', $id_class)
             ->get();
         $data['loker'] = LokerModel::where('user_id', $auth)->get();
+        $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth)->get();
+        $data['lokerall'] = LokerModel::select()
+            ->whereDate('tanggal_awal', '<=', Carbon::now())
+            ->whereDate('tanggal_akhir', '>=', Carbon::now())
+            ->orderBy('tanggal_akhir', 'asc')
+            ->where('loker.status', 1)
+            ->limit(3)
+            ->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         $data['ismember'] = GlobalHelper::getaksesmembership();
@@ -251,7 +261,7 @@ class ProfileController extends Controller
             'tanggal_lahir' => $request->tanggal_lahir,
             'gender' => $request->jenis_kelamin,
             'description' => $request->alamat,
-            'instansi' => $request->company,
+            'instansi' => 'perorangan',
         ];
 
         if ($request->picture) {
@@ -463,6 +473,17 @@ class ProfileController extends Controller
     public function datalamaran(Request $request)
     {
         $data = [];
+        $data['datax'] = false;
+        $data['data'] = LamaranModel::where('user_id', Auth::user()->id)->first();
+        if ($data['data']) {
+            $data['datax'] = true;
+        }
+        // return $data;
+        if ($request->cetak) {
+            $pdf = Pdf::loadView('front.loker.cetaklamaran', $data);
+            return $pdf->stream();
+            return view('front.loker.cetaklamaran', $data);
+        }
         return view('front.loker.datalamaran', $data);
     }
     function simpanlamaran(Request $request)
@@ -512,6 +533,7 @@ class ProfileController extends Controller
             'jmlsaudara' => $request->jmlsaudara,
             'statusperkawinan' => $request->statusperkawinan,
             'namapasangan' => $request->namapasangan,
+            'namaorangtuakandung' => $request->namaorangtuakandung,
             'namaorangtuasuamiistri' => $request->namaorangtuasuamiistri,
             'namaanak' => $request->namaanak,
             'namakakeknenek' => $request->namakakeknenek,

@@ -132,6 +132,7 @@ Route::middleware('auth')->group(function () {
 });
 // Lamaran Kerja
 Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
+Route::get('/cetaklamaran', [App\Http\Controllers\Front\ProfileController::class, 'cetaklamaran']);
 Route::post('simpanlamaran', [App\Http\Controllers\Front\ProfileController::class, 'simpanlamaran']);
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
@@ -195,9 +196,16 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
+// Loker Apply
+Route::resource('admin/apply', App\Http\Controllers\Backend\LokerApplyController::class);
 // Loker
 Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);
 Route::get('/loker/{id}/detail', [App\Http\Controllers\Loker\BerandaLoker::class, "detail"]);
+Route::post('/loker/apply', [App\Http\Controllers\Loker\BerandaLoker::class, "apply"]);
 Route::get('/admin/loker/getkabupaten/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkabupaten']);
 Route::get('/admin/loker/getkecamatan/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkecamatan']);
 Route::get('/admin/loker/getkelurahan/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkelurahan']);
+
+Route::get('/template', function () {
+    return view('front.cvtemplate.cv');
+});

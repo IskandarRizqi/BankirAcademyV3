@@ -15,7 +15,7 @@
                 <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: auto">
             </div>
             <form action="/list-class" method="POST">
-                <div class="row">
+                <div class="row mr-1 ml-1">
                     @csrf
                     <div class="form-group col-md-2">
                         <label for="">Pencarian:</label>
