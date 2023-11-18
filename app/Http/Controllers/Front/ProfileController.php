@@ -30,6 +30,8 @@ use App\Models\MembershipModel;
 use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Query\Processors\Processor;
+use Illuminate\Support\Facades\Process;
 
 class ProfileController extends Controller
 {

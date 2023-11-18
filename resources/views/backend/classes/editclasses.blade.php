@@ -180,14 +180,13 @@
 									<label for="numClassesLimit">Participant Limit</label>
 									<small class="inputerrormessage text-danger" input-target="numClassesLimit"
 										style="display: none;"></small>
-									<input type="number" min="1" max="999" value="13" name="numClassesLimit"
-										id="numClassesLimit" class="form-control"
-										value="{{$classes->participant_limit}}" required>
+									<input type="number" min="1" max="999" name="numClassesLimit" id="numClassesLimit"
+										class="form-control" value="{{$classes->participant_limit}}" required>
 								</div>
 								<div class="form-group ml-4">
 									<label for="numClassesPoin">Poin</label>
-									<input type="number" min="1" name="numClassesPoin"
-										id="numClassesPoin" class="form-control" value="{{$classes->poin}}" required>
+									<input type="number" min="1" name="numClassesPoin" id="numClassesPoin"
+										class="form-control" value="{{$classes->poin}}" required>
 								</div>
 							</div>
 							<div class="col-lg-12">

@@ -405,9 +405,9 @@
                                 html+='                <div class="text-center mt-2 w-100">';
                                     if (dt.pricing) {
                                         if (dt.pricing.promo) {
-                                            html+='                    <h3 class="text-primary mb-2">Rp. '+(dt.pricing.price - dt.pricing.promo_price)+'</h3>';
+                                            html+='                    <h3 class="text-primary mb-2">Rp. '+(dt.pricing.price - dt.pricing.promo_price).toLocaleString()+'</h3>';
                                         }else{
-                                            html+='                    <h3 class="text-primary mb-2">Rp.'+dt.pricing.price+'</h3>';
+                                            html+='                    <h3 class="text-primary mb-2">Rp.'+dt.pricing.price.toLocaleString()+'</h3>';
                                         }
                                     }else{
                                         html+='                    <h3 class="text-primary mb-2">Rp. -</h3>';
@@ -416,7 +416,7 @@
                                 html+='                <div class="row align-items-center">';
                                 html+='                    <a class="btn btn-primary btn-block btn-rounded"';
                                 html+='                        style="border-radius:10px !important"';
-                                html+='                        href="/class/'+dt.unique_id+'/'+dt.title.replace('/','-')+'">';
+                                html+='                        href="/class/'+dt.unique_id+'/'+dt.title.replaceAll('/','-')+'">';
                                 html+='                        Detail </a>';
                                 // html+='                    {{-- <div class="col text-left ml-2">';
                                 // html+='                        <small class="fs-2">Kode Promo</small>';
