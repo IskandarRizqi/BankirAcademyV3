@@ -114,8 +114,14 @@ class ProfileController extends Controller
         $data['poin'] = 0;
         foreach ($data['class'] as $key => $value) {
             $value->class = ClassesModel::select('title', 'instructor', 'date_start', 'date_end', 'id', 'poin')->where('id', $value->class_id)->get();
+            $value->status_pembayaran = 0;
             foreach ($value->class as $key => $v) {
                 $data['poin'] += $v->poin;
+                foreach ($v->peserta_list['lunas'] as $key => $va) {
+                    if ($va->user_id == $auth) {
+                        $value->status_pembayaran = 1;
+                    }
+                }
             }
             $value->event = ClassEventModel::where('class_id', $value->class_id)->get();
         }
@@ -145,7 +151,6 @@ class ProfileController extends Controller
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         $data['ismember'] = GlobalHelper::getaksesmembership();
         $data['member'] = MembershipModel::get();
-        // return $data;
         return view('front.profile.profile', $data);
     }
 

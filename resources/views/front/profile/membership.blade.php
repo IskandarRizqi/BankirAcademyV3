@@ -22,12 +22,10 @@
         <div class="col-lg-12 layout-spacing align-middle">
             <div class="row justify-content-center">
                 @foreach($member as $key => $v)
-                <div style="overflow: auto">
-                    <div class="col-md-3">
-                        <div class="captionmember">{!!$v->keterangan!!}</div>
-                        <img src="{{asset($v->gambar)}}" onclick="openmember({{$v}})" alt="" style="cursor: pointer">
-                        <div class="">
-                        </div>
+                <div class="col-md-3" style="overflow: auto">
+                    <div class="captionmember">{!!$v->keterangan!!}</div>
+                    <img src="{{asset($v->gambar)}}" onclick="openmember({{$v}})" alt="" style="cursor: pointer">
+                    <div class="">
                     </div>
                 </div>
                 @endforeach

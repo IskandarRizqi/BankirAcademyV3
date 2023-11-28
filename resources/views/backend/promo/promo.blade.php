@@ -136,7 +136,8 @@
                                 <div class="badge badge-info">{{$cl}}</div>
                                 @endforeach
                             </td>
-                            <td> <img src="/image/promo/image/{{json_decode($p->image)->url}}" alt="" width="200px">
+                            <td> <img src="/image/promo/image/{{$p->image?json_decode($p->image)->url:''}}" alt=""
+                                    width="200px">
                             </td>
                             <td>
                                 <button class="btn btn-warning" id="edit" title="Edit"

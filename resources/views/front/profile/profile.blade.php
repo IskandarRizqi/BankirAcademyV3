@@ -74,20 +74,20 @@
                                 </div>
                             </div>
                         </div> --}}
-                        <div class="col-md-8 d-flex">
+                        <div class="col-md-8">
                             <div class="card" style="border-radius: 13px">
-                                <div class="card-body d-flex">
-                                    <div class="form-group">
+                                <div class="card-body row">
+                                    <div class="form-group col-md-4">
                                         <h4 style="margin: 0px">Total Poin</h4>
                                         <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">
                                             {{$poin}}</p>
                                     </div>
-                                    <div class="form-group ml-6">
+                                    <div class="form-group col-md-4">
                                         <h4 style="margin: 0px">Total Kelas Diikuti</h4>
                                         <p style="margin: 0px; font-weight:bold; font-size: 40px; color: #1d79ff">
                                             {{count($class)}}</p>
                                     </div>
-                                    <div class="form-group ml-6">
+                                    <div class="form-group col-md-4">
                                         <label for="">Tukarkan Poin</label>
                                         <select name="" id="" class="form-control">
                                             <option value="">Pilih</option>
@@ -1175,7 +1175,8 @@
         $('#ref').val(ref);
     }
 
-    function onEvent(event) {
+    function onEvent(event,status) {
+        console.log(event,status);
         let html = '<td colspan="4" class="text-center"> Tidak Ditemukan</td>';
         if (event.length > 0) {
             html = '';
@@ -1190,7 +1191,11 @@
                     html += '    <td>' + el.location + '</td>';
                 }
                 html += '<td>';
-                html += '<span class="badge badge-info">'+el.password_link+'</span>';
+                    if (status == 1) {
+                        html += '<span class="badge badge-info">'+el.password_link+'</span>';
+                    }else{
+                        html += '<span class="badge badge-warning">**********</span>';
+                    }
                 html += '</td>';
                 html += '<td>'
                 html += '<span class="badge badge-info">';

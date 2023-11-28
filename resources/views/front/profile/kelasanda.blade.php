@@ -62,7 +62,8 @@
                 </td>
                 <td>
                     <button id="evModal" class="button button-circle button-mini" data-toggle="modal"
-                        data-target="#eventModal" onclick="onEvent({{ $c->event }})" title="Event">
+                        data-target="#eventModal" onclick="onEvent({{ $c->event }},{{$c->status_pembayaran}})"
+                        title="Event">
                         Open
                     </button>
                     @if (count($c->event) > 0)

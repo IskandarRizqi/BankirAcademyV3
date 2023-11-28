@@ -135,7 +135,7 @@
         <div class="content-wrap">
             <div class="container clearfix">
                 <h3 class="text-center text-uppercase">daftar riwayat hidup</h3>
-                <p class="text-center">(Calon Pemegang Saham)</p>
+                {{-- <p class="text-center">(Calon Pemegang Saham)</p> --}}
                 <hr>
                 <h4>I. Data Pribadi</h4>
                 <table style="width: 100%">
