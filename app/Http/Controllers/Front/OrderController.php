@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
@@ -198,6 +199,10 @@ class OrderController extends Controller
     public function order_class(Request $request)
     {
         // return $request->all();
+        $next = GlobalHelper::getaksesmembership();
+        if (!$next) {
+            return Redirect::back()->with('akses', 'member');
+        }
         $auth = Auth::user()->id;
         if (!$request->class_id) {
             Redirect::back()->with('error', 'Kelas Ditemukan');

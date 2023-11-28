@@ -536,10 +536,10 @@ class HomeController extends Controller
 
     public function detail_class($unique_id, $title)
     {
-        $next = GlobalHelper::getaksesmembership();
-        if (!$next) {
-            return Redirect::back()->with('akses', 'member');
-        }
+        // $next = GlobalHelper::getaksesmembership();
+        // if (!$next) {
+        //     return Redirect::back()->with('akses', 'member');
+        // }
         $start = '';
         $end = '';
         $lokasi = '';

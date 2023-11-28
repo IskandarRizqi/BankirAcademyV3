@@ -643,15 +643,15 @@ class ClassesController extends Controller
 	public function listClass(Request $request)
 	{
 		$limit = 99;
-		$auth = Auth::user();
-		if ($auth) {
-			if ($auth->profile) {
-				if ($auth->profile->membership) {
-					$limit = $auth->profile->membership->limit;
-				}
-			}
-		}
-		$limit = 99;
+		// $auth = Auth::user();
+		// if ($auth) {
+		// 	if ($auth->profile) {
+		// 		if ($auth->profile->membership) {
+		// 			$limit = $auth->profile->membership->limit;
+		// 		}
+		// 	}
+		// }
+		// $limit = 99;
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
