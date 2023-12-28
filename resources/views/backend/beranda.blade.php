@@ -1,6 +1,5 @@
 @extends('backend.template')
 @section('content')
-<div class="row">
 <div class="col-lg-6">
     <div class="card" style="height: 800px">
         <div class="card-body">
@@ -24,13 +23,14 @@
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="{{$p->picture?$p->picture.'|'.$p->name:null}}" name="checked[]">
+                                    <input class="form-check-input" type="checkbox"
+                                        value="{{$p->picture?$p->picture.'|'.$p->name:null}}" name="checked[]">
                                 </div>
                             </td>
                             @if($p->google_id)
-                                <td><img src="{{$p->picture}}" alt="" width="80px"></td>
-                                @else
-                                <td><img src="{{asset($p->picture)}}" alt="" width="80px"></td>
+                            <td><img src="{{$p->picture}}" alt="" width="80px"></td>
+                            @else
+                            <td><img src="{{asset($p->picture)}}" alt="" width="80px"></td>
                             @endif
                             <td>{{ $p->name }}</td>
                         </tr>
@@ -79,7 +79,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 @if (Auth::user()->email == 'root@root.root')
 <button class="btn btn-primary" id="sitemap" onclick="sitemap()" hidden>Create Sitemap</button>

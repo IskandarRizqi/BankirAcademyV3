@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\KelasController;
+use App\Http\Controllers\API\LokerController;
+use App\Http\Controllers\Backend\PembayaranController;
 use App\Http\Controllers\Front\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// API Loker
+Route::get('/loker', [LokerController::class, 'index']);
+
+// API Kelas
+Route::get('/kelas', [KelasController::class, 'index']);
+
 Route::get('/apiberanda', [HomeController::class, 'apiberanda']);
+Route::get('/tripay/create', [PembayaranController::class, 'tripaycreate']);
+Route::get('/tripay/ppob', [PembayaranController::class, 'tripayppob']);

@@ -30,4 +30,9 @@ class LokerModel extends Model
         'kecamatan',
         'kelurahan',
     ];
+
+    protected $hidden = [
+        'id',
+        'user_id',
+    ];
 }

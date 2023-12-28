@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\ClassesModel;
+use Illuminate\Http\Request;
+
+class KelasController extends Controller
+{
+    public function index(Request $r)
+    {
+        $l = ClassesModel::select()
+            ->where(function ($q) use ($r) {
+                if ($r->date_start && $r->date_end) {
+                    return $q->whereDate('loker.date_start', '>=', $r->date_start)->whereDate('loker.date_end', '<=', $r->date_end);
+                }
+            })
+            ->where('status', 1)
+            ->paginate();
+        return response()->json($l);
+        // [
+        //     'msg' => 'Data berhasil',
+        //     'message' => true,
+        //     'data' => $l
+        // ]
+    }
+}

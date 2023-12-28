@@ -332,7 +332,7 @@
                 <div class="form-group">
                     <h4>III. PELATIHAN/KURSUS YANG PERNAH DIIKUTI</h4>
                     <div class="form-pelatihan">
-                        @if($datax)
+                        @if($datax && count(json_decode($data->pelatihannama)) >= 0)
                         @for($i = 0; $i < count(json_decode($data->pelatihannama)); $i++)
                             @php
                             $pn = json_decode($data->pelatihannama)[$i];
@@ -380,7 +380,7 @@
                 <div class="form-group">
                     <h4>IV. RIWAYAT PEKERJAAN</h4>
                     <div class="form-pekerjaan">
-                        @if($datax)
+                        @if($datax && count(json_decode($data->pekerjaantahun)) >= 0)
                         @for($i = 0; $i < count(json_decode($data->pekerjaantahun)); $i++)
                             @php
                             $pt = json_decode($data->pekerjaantahun)[$i];
@@ -452,7 +452,7 @@
         </div>
     </div>
     <input type="text" id="inidatax" value="{{$datax}}" hidden>
-    @if($data)
+    @if($data && count(json_decode($data->pelatihannama)) >= 0 && count(json_decode($data->pekerjaantahun)) >=0)
     <input type="text" id="no" value="{{count(json_decode($data->pelatihannama))}}" hidden>
     <input type="text" id="nom" value="{{count(json_decode($data->pekerjaantahun))}}" hidden>
     @endif
