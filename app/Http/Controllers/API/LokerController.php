@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
+use App\Models\HistoryIpAksesModel;
 use App\Models\LokerModel;
 use Illuminate\Http\Request;
 
@@ -23,11 +25,14 @@ class LokerController extends Controller
             })
             ->where('status', 1)
             ->paginate();
-        return response()->json($l);
-        // [
-        //     'msg' => 'Data berhasil',
-        //     'message' => true,
-        //     'data' => $l
-        // ]
+        $data = [
+            'message' => 'Data berhasil',
+            'status' => true,
+            'data' => $l
+        ];
+
+        GlobalHelper::sethistoryip('App\Models\HistoryIpAksesModel', 'get data loker');
+
+        return response()->json($data);
     }
 }

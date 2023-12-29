@@ -2,6 +2,8 @@
 
 namespace App\Helper;
 
+use App\Models\AllowIpAksesModel;
+use App\Models\HistoryIpAksesModel;
 use App\Models\RefferralModel;
 use App\Models\RefferralWithdrawModel;
 use Carbon\Carbon;
@@ -63,5 +65,35 @@ class  GlobalHelper
         }
         // return 1;
         return $next;
+    }
+    public static function getipaddress()
+    {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if (isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+        $akses = AllowIpAksesModel::where('ip', $ipaddress)->first();
+        return $akses ? $akses->id : false;
+    }
+    public static function sethistoryip($model, $desk)
+    {
+        $a = new GlobalHelper;
+        $i = $a->getipaddress();
+        return HistoryIpAksesModel::create([
+            'ip_id' => $i,
+            'model' => $model,
+            'deskripsi' => $desk,
+        ]);
     }
 }

@@ -5,6 +5,7 @@
 /storage/*.key
 /vendor
 /public/Image
+eclass.zip
 .env
 .env.backup
 .phpunit.result.cache

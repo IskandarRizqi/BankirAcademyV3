@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
@@ -258,6 +259,15 @@ class HomeController extends Controller
     }
     public function index(Request $request)
     {
+        // try {
+        //     $data = Http::connectTimeout(7)->withOptions(['verify' => false])->get('127.0.0.1:8888/api/berita', [
+        //         'limit' => 1,
+        //         'kategori' => 'umum'
+        //     ]);
+        //     return response()->json(json_decode($data));
+        // } catch (\Throwable $th) {
+        //     return $th;
+        // }
         // return $this->index_custom();
         $data = [];
         $data['logo_perusahaan'] = DashboardModel::select()->first();

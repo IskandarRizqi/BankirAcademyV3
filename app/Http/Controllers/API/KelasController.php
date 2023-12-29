@@ -18,11 +18,11 @@ class KelasController extends Controller
             })
             ->where('status', 1)
             ->paginate();
-        return response()->json($l);
-        // [
-        //     'msg' => 'Data berhasil',
-        //     'message' => true,
-        //     'data' => $l
-        // ]
+        $data  = [
+            'message' => 'Data berhasil',
+            'status' => true,
+            'data' => $l
+        ];
+        return response()->json($data);
     }
 }

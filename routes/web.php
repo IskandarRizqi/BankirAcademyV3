@@ -92,6 +92,9 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     // User
     Route::resource('/admin/user', App\Http\Controllers\Backend\UserController::class);
 
+    // IP
+    Route::resource('/admin/ipakses', App\Http\Controllers\Backend\IpController::class);
+
     // Member
     Route::resource('/admin/member', App\Http\Controllers\Backend\MembershipController::class);
     Route::post("/admin/member/delete", [App\Http\Controllers\Backend\MembershipController::class, "deletes"]);
