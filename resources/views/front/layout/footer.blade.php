@@ -1,6 +1,6 @@
 <!-- Footer
   ============================================= -->
-<footer id="footer" class="dark" style="background-color:#ededed; z-index: 1000">
+<footer id="footer" class="dark" style="background-color:#ffffff; z-index: 1000">
     <div class="container">
 
         <div class="footer-widgets-wrap" style="color: black">
@@ -125,12 +125,15 @@
     @else
     <input type="text" id="is_akses" hidden>
     @endif
-    <div id="copyrights" style="background-color:#0076f5">
+    <div id="copyrights" style="background-color:#0076f5; padding: 25px">
         <div class="container">
             <div class="w-100 text-center text-white">
+                Copyright 2022 PT. Bankir Academy
+            </div>
+            {{-- <div class="w-100 text-center text-white">
                 Management By PT. Bankir Academy Indonesia </br> Support Sistem By <a
                     href="https://akarindo.id/">Akarindo.id</a>
-            </div>
+            </div> --}}
         </div>
     </div>
 </footer><!-- #footer end -->
@@ -144,26 +147,12 @@
 <script src="{{ asset('front/js/functions.js') }}"></script>
 
 <!-- SLIDER REVOLUTION 5.x SCRIPTS  -->
-{{-- <script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.tools.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/jquery.themepunch.revolution.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.video.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.actions.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.navigation.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.migration.min.js') }}"></script>
-<script src="{{ asset('front/include/rs-plugin/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-<script src="{{ asset('front/js/components/rangeslider.min.js') }}"></script> --}}
+<script src="{{ asset('front/js/components/rangeslider.min.js') }}"></script>
 <script src="{{ asset('front/js/components/bs-datatable.js') }}"></script>
 <script src="{{ asset('front/js/components/bs-filestyle.js') }}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="{{ asset('front/toast/dist/js/iziToast.min.js') }}" type="text/javascript"></script>
-{{-- <script src="{{ asset('front/js/components/moment.js') }}"></script>
-<script src="{{ asset('front/js/components/timepicker.js') }}"></script>
-<script src="{{ asset('front/js/components/datepicker.js') }}"></script>
-<script src="{{ asset('front/js/components/daterangepicker.js') }}"></script> --}}
 
 
 <script>
@@ -237,9 +226,6 @@
         $('.component-datepicker.past-enabled').datepicker({
             autoclose: true,
         });
-
-
-
         
     }); //ready
 </script>
@@ -288,8 +274,12 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        // var emaillogin = ;
-        // var passwordlogin = ;
+        if (!$("#emaillogin").val()) {
+            return false;
+        }
+        if (!$("#passwordlogin").val()) {
+            return false;
+        }
         let data = {
             email: $("#emaillogin").val(),
             password: $("#passwordlogin").val(),

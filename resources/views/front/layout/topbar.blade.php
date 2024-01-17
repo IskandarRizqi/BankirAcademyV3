@@ -29,18 +29,19 @@
     <div id="wrapper" class="clearfix">
         <!-- Top Bar
 		============================================= -->
-        <div id="top-bar">
+        <div id="top-bar" hidden>
             <div class="container">
 
-                <!-- <div class="row justify-content-between align-items-center">
+                <div class="row justify-content-between align-items-center">
                     <div class="col-12 col-md-auto">
-                        <p class="mb-0 py-2 text-center text-md-left"><strong>Call:</strong> 1800-547-2145 | <strong>Email:</strong> info@canvas.com</p>
+                        <p class="mb-0 py-2 text-center text-md-left"><strong>Call:</strong> 1800-547-2145 |
+                            <strong>Email:</strong> info@canvas.com
+                        </p>
                     </div>
 
                     <div class="col-12 col-md-auto">
                         <div class="top-links on-click">
                             <ul class="top-links-container">
-
                                 <li class="top-links-item"><a href="#">Login</a>
                                     <div class="top-links-section">
                                         <form id="top-login" autocomplete="off">
@@ -50,11 +51,14 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Password</label>
-                                                <input type="password" class="form-control" placeholder="Password" required="">
+                                                <input type="password" class="form-control" placeholder="Password"
+                                                    required="">
                                             </div>
                                             <div class="form-group form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="top-login-checkbox">
-                                                <label class="form-check-label" for="top-login-checkbox">Remember Me</label>
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="top-login-checkbox">
+                                                <label class="form-check-label" for="top-login-checkbox">Remember
+                                                    Me</label>
                                             </div>
                                             <button class="btn btn-danger btn-block" type="submit">Sign in</button>
                                         </form>
@@ -62,9 +66,7 @@
                                 </li>
                             </ul>
                         </div>
-
                     </div>
-                </div> -->
-
+                </div>
             </div>
         </div><!-- #top-bar end -->

@@ -2,7 +2,7 @@
   ============================================= -->
 {{-- <div class="container">
 </div> --}}
-<div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+<div class="alert alert-info alert-dismissible fade show text-center m-0" role="alert">
     Upgrade Skill Tanpa Batas, Lampaui Batas <strong>#bankirhebat</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -208,8 +208,9 @@
                         </li>
                         @endif
                         @if (Auth::check() && Auth::user()->role !== 2)
-                        <li class="menu-item"><a class="menu-link" href="{{ url('/home') }}">
-                                <button class="btn btn-primary">Admin Area</button>
+                        <li class="menu-item"><a class="menu-link" href="{{ url('/home') }}"
+                                style="padding-right: 0px;">
+                                <button class="btn btn-primary" style="border-radius: 1.25rem;">Admin Area</button>
                             </a>
                         </li>
                         @endif

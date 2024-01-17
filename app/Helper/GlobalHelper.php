@@ -63,10 +63,10 @@ class  GlobalHelper
                 $next = 1;
             }
         }
-        // return 1;
+        return 1;
         return $next;
     }
-    public static function getipaddress()
+    public static function checkipaddress()
     {
         $ipaddress = '';
         if (isset($_SERVER['HTTP_CLIENT_IP']))
@@ -83,6 +83,12 @@ class  GlobalHelper
             $ipaddress = $_SERVER['REMOTE_ADDR'];
         else
             $ipaddress = 'UNKNOWN';
+        return $ipaddress;
+    }
+    public static function getipaddress()
+    {
+        $a = new GlobalHelper;
+        $ipaddress = $a->checkipaddress();
         $akses = AllowIpAksesModel::where('ip', $ipaddress)->first();
         return $akses ? $akses->id : false;
     }

@@ -257,17 +257,90 @@ class HomeController extends Controller
         return $kelas;
         // return $dx;
     }
+    public function indexv2($request)
+    {
+        $now = Carbon::now();
+        $data['carisearch'] = null;
+        if ($request->carisearch) {
+            $data['carisearch'] = $request->carisearch;
+        }
+        if ($request->ajax()) {
+            $data['kelas'] = ClassesModel::where('date_end', '>=', $now->format('Y-m-d'))
+                ->where('status', 1)
+                ->where(function ($query) use ($data) {
+                    if ($data['carisearch'] !== 'null') {
+                        $query->where('category', $data['carisearch']);
+                    }
+                })
+                ->orderBy('date_end', 'asc')
+                ->paginate(9)
+                ->toArray();
+            return response()->json([
+                'success' => true,
+                'msg' => 'Data Terkirim',
+                'data' => $data,
+            ], 200);
+        }
+        $data['banner_promo'] = [];
+        $data['banner_bawah'] = [];
+        $data['banner_slide'] = [];
+        $data['banner_slide_mobile'] = [];
+        $banner = BannerModel::where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
+        foreach ($banner as $key => $value) {
+            if ($value->jenis == 0) {
+                array_push($data['banner_slide'], $value);
+            }
+            if ($value->jenis == 1) {
+                array_push($data['banner_bawah'], $value);
+            }
+            if ($value->jenis == 2) {
+                array_push($data['banner_promo'], $value);
+            }
+            if ($value->jenis == 3) {
+                array_push($data['banner_slide_mobile'], $value);
+            }
+        }
+        $data['categori'] = ClassesModel::groupBy('category')->pluck('category')->toArray();
+
+        $data['kelas_populer'] = [];
+        $data['kelas'] = ClassesModel::select()
+            ->where('date_end', '>=', $now->format('Y-m-d'))
+            // ->whereMonth('date_end',  $now->month)
+            // ->whereYear('date_end',  $now->year)
+            ->where('status', 1)
+            ->orderBy('date_end', 'asc')
+            ->get();
+        foreach ($data['kelas'] as $key => $value) {
+            if ($value->total_peserta > 3) {
+                array_push($data['kelas_populer'], $value);
+            }
+        }
+        $data['loker'] = LokerModel::select(
+            'loker.*',
+            'users.name',
+            'users.corporate',
+            'users.google_id',
+            'user_profile.picture',
+            'user_profile.description'
+        )
+            ->join('users', 'users.id', 'loker.user_id')
+            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+            ->where('loker.status', 1)
+            // ->whereDate('loker.tanggal_awal', '<=', Carbon::now())
+            // ->whereDate('loker.tanggal_akhir', '>=', Carbon::now())
+            ->orderBy('loker.tanggal_akhir', 'asc')
+            ->limit(99)
+            ->get();
+        $data['testimoni'] = ClassParticipantModel::select('class_participant.*', 'user_profile.name', 'user_profile.picture')
+            ->join('user_profile', 'user_profile.user_id', 'class_participant.user_id')
+            ->where('class_participant.review_active', 1)
+            ->get();
+        // return $data;
+        return view('front.homev2.homev2', $data);
+    }
     public function index(Request $request)
     {
-        // try {
-        //     $data = Http::connectTimeout(7)->withOptions(['verify' => false])->get('127.0.0.1:8888/api/berita', [
-        //         'limit' => 1,
-        //         'kategori' => 'umum'
-        //     ]);
-        //     return response()->json(json_decode($data));
-        // } catch (\Throwable $th) {
-        //     return $th;
-        // }
+        return $this->indexv2($request);
         // return $this->index_custom();
         $data = [];
         $data['logo_perusahaan'] = DashboardModel::select()->first();
