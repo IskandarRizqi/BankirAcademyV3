@@ -109,9 +109,9 @@
                                                     <button class="button button-rounded m-0" onclick="funcregis()"
                                                         type="submit">REGISTER</button>
                                                 </div>
-                                                <a href="{{url('/auth/google')}}"
+                                                {{-- <a href="{{url('/auth/google')}}"
                                                     class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login
-                                                    with Google</a>
+                                                    with Google</a> --}}
                                             </div>
                                         </div>
                                         <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
