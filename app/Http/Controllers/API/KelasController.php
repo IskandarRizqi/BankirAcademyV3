@@ -17,7 +17,20 @@ class KelasController extends Controller
                 }
             })
             ->where('status', 1)
+            ->orderBy('created_at', 'DESC')
             ->paginate();
+        if ($r->limit) {
+            $l = ClassesModel::select()
+                ->where(function ($q) use ($r) {
+                    if ($r->date_start && $r->date_end) {
+                        return $q->whereDate('loker.date_start', '>=', $r->date_start)->whereDate('loker.date_end', '<=', $r->date_end);
+                    }
+                })
+                ->where('status', 1)
+                ->orderBy('created_at', 'DESC')
+                ->limit($r->limit)
+                ->get();
+        }
         $data  = [
             'message' => 'Data berhasil',
             'status' => true,

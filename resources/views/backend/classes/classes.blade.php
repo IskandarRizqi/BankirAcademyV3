@@ -1,188 +1,191 @@
 @extends('backend.template')
 @section('content')
-    <div class="col-lg-12">
-        <div class="widget">
-            <div class="widget-heading">
-                <form action="/admin/classes">
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="input-group mb-4">
-                                <input type="date" class="form-control" value="{{ $param['date_start'] }}"
-                                    placeholder="Date Start" aria-label="Date Start" name="param_date_start">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon5">s/d</span>
-                                </div>
-                                <input type="date" class="form-control" value="{{ $param['date_end'] }}"
-                                    placeholder="Date End" aria-label="Date End" name="param_date_end">
+<div class="col-lg-12">
+    <div class="widget">
+        <div class="widget-heading">
+            <form action="/admin/classes">
+                @csrf
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group mb-4">
+                            <input type="date" class="form-control" value="{{ $param['date_start'] }}"
+                                placeholder="Date Start" aria-label="Date Start" name="param_date_start">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon5">s/d</span>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <button class="btn btn-primary btn-block" type="submit">Cari</button>
-                                </div>
-                                <div class="col-lg-4">
-                                    <a href="/admin/classes" class="btn btn-warning btn-block" type="button">Reset</a>
-                                </div>
-                            </div>
+                            <input type="date" class="form-control" value="{{ $param['date_end'] }}"
+                                placeholder="Date End" aria-label="Date End" name="param_date_end">
                         </div>
-                        <div class="col-lg-6 text-right">
-                            <A class="btn btn-primary btn-large" type="button" href="/admin/classes/create">New</A>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <button class="btn btn-primary btn-block" type="submit">Cari</button>
+                            </div>
+                            <div class="col-lg-4">
+                                <a href="/admin/classes" class="btn btn-warning btn-block" type="button">Reset</a>
+                            </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="widget-content">
-                <div class="table-responsive">
-                    <table id="tblClasses" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Class</th>
-                                <th>Category</th>
-                                <th>Instructor</th>
-                                <th class="text-center">
-                                    <p>
-                                        Jml Peserta
-                                    </p>
-                                    <span class="bs-tooltip text-danger" title="All">A</span>|<span
-                                        class="bs-tooltip text-success" title="Lunas">L</span>
-                                </th>
-                                <th>Data</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($classes as $k => $v)
-                                <tr>
-                                    <td><span
-                                            class="badge badge-{{ $v->status == 1 ? 'info' : 'danger' }}">{{ $v->status == 1 ? 'Activated' : 'De-Activated' }}</span>
-                                    </td>
-                                    <td>
-                                        <span hidden>
-                                            {{ Carbon\Carbon::parse($v->date_start)->format('U') }}
-                                        </span>
-                                        {{ Carbon\Carbon::parse($v->date_start)->format('d-m-Y') }}
-                                        s/d
-                                        {{ Carbon\Carbon::parse($v->date_end)->format('d-m-Y') }}
-                                    </td>
-                                    <td class="text-truncate" style="max-width: 200px" title="{{ $v->title }}">
-                                        {{ $v->title }}</td>
-                                    <td>{{ $v->category }}</td>
-                                    <td>
-                                        @foreach ($v->instructor_list as $i)
-                                            <span class="badge badge-primary">{{ $i->name }}</span>
-                                        @endforeach
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-danger" data-toggle="modal" data-target="#listPesertaModal"
-                                            onclick="openPeserta({{ $v->peserta_list['all'] }})">
-                                            {{ count($v->peserta_list['all']) }}
-                                        </span>
-                                        |
-                                        <span class="badge badge-success" data-toggle="modal"
-                                            data-target="#listPesertaModal"
-                                            onclick="openPeserta({{ $v->peserta_list['lunas'] }})">
-                                            {{ count($v->peserta_list['lunas']) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn bs-tooltip {{ $v->pricing ? 'btn-info' : 'btn-dark' }}"
-                                            title="Pricing" onclick="classPricing({{ $v }})"><i
-                                                class="bx bx-dollar"></i></button>
-                                        <button
-                                            class="btn bs-tooltip {{ count($v->content_list) > 0 ? 'btn-success' : 'btn-dark' }}"
-                                            title="File" onclick="classContent({{ $v }})"><i
-                                                class="bx bx-file"></i></button>
-                                        <a class="btn bs-tooltip {{ $v->events_exist ? 'btn-primary' : 'btn-dark' }}"
-                                            title="Event" href="/admin/classes/createevent/{{ $v->id }}"><i
-                                                class="bx bx-calendar"></i></a>
-                                        <button
-                                            class="btn bs-tooltip  {{ $v->certif_exist ? 'btn-warning' : 'btn-dark' }} dropdown-toggle"
-                                            type="button" data-toggle="dropdown" aria-expanded="false" title="Certificate">
-                                            <i class="bx bx-cog"></i></button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" title="Certificate"
-                                                href="/admin/classes/createcertificate/{{ $v->id }}">Create
-                                                Certificate</a>
-                                            <a class="dropdown-item" title="Preview"
-                                                href="/admin/classes/previewcertificate/{{ $v->id }}"
-                                                target="_blank">Show
-                                                Certificate</a>
-                                            <a class="dropdown-item" title="Preview"
-                                                href="/admin/classes/getreview/{{ $v->id }}" target="_blank">Show
-                                                Review</a>
-                                            <span class="dropdown-item" title="Preview" data-toggle="modal" data-target="#modalSertifikat" onclick="biayasertifikat('{{$v->id}}','{{$v->tipebs}}','{{$v->nominal}}')"
-                                                >Biaya Sertifikat</span>
-                                        </div>
-                                        <div class="dropdown">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-warning dropdown-toggle btn-sm" type="button"
-                                                data-toggle="dropdown" aria-expanded="false" title="Opsi">
-                                                <i class="bx bx-cog"></i>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" title="Edit"
-                                                    href="/admin/classes/{{ $v->id }}/edit">Edit</a>
-                                                <a class="dropdown-item" title="Delete"
-                                                    onclick="deleteClasses({{ $v->id }})">Hapus</a>
-                                                <form action="#" method="post" id="formdelclasses">@csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <a class="dropdown-item" title="Activated"
-                                                    onclick="activedClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ? 'De-Activated' : 'Activated' }}</a>
-                                                <form action="#" method="get" id="formacclasses">@csrf
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <!-- Modal -->
-                    <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="listPesertaModalLabel">List Peserta</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                    <div class="col-lg-6 text-right">
+                        <A class="btn btn-primary btn-large" type="button" href="/admin/classes/create">New</A>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="widget-content">
+            <div class="table-responsive">
+                <table id="tblClasses" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Class</th>
+                            <th>Category</th>
+                            <th>Instructor</th>
+                            <th class="text-center">
+                                <p>
+                                    Jml Peserta
+                                </p>
+                                <span class="bs-tooltip text-danger" title="All">A</span>|<span
+                                    class="bs-tooltip text-success" title="Lunas">L</span>
+                            </th>
+                            <th>Data</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($classes as $k => $v)
+                        <tr>
+                            <td><span class="badge badge-{{ $v->status == 1 ? 'info' : 'danger' }}">{{ $v->status == 1 ?
+                                    'Activated' : 'De-Activated' }}</span>
+                            </td>
+                            <td>
+                                <span hidden>
+                                    {{ Carbon\Carbon::parse($v->date_start)->format('U') }}
+                                </span>
+                                {{ Carbon\Carbon::parse($v->date_start)->format('d-m-Y') }}
+                                s/d
+                                {{ Carbon\Carbon::parse($v->date_end)->format('d-m-Y') }}
+                            </td>
+                            <td class="text-truncate" style="max-width: 200px" title="{{ $v->title }}">
+                                {{ $v->title }}</td>
+                            <td>{{ $v->category }}</td>
+                            <td>
+                                @foreach ($v->instructor_list as $i)
+                                <span class="badge badge-primary">{{ $i->name }}</span>
+                                @endforeach
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-danger" data-toggle="modal" data-target="#listPesertaModal"
+                                    onclick="openPeserta({{ $v->peserta_list['all'] }})">
+                                    {{ count($v->peserta_list['all']) }}
+                                </span>
+                                |
+                                <span class="badge badge-success" data-toggle="modal" data-target="#listPesertaModal"
+                                    onclick="openPeserta({{ $v->peserta_list['lunas'] }})">
+                                    {{ count($v->peserta_list['lunas']) }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn bs-tooltip {{ $v->pricing ? 'btn-info' : 'btn-dark' }}"
+                                    title="Pricing" onclick="classPricing({{ $v }})"><i
+                                        class="bx bx-dollar"></i></button>
+                                <button
+                                    class="btn bs-tooltip {{ count($v->content_list) > 0 ? 'btn-success' : 'btn-dark' }}"
+                                    title="File" onclick="classContent({{ $v }})"><i class="bx bx-file"></i></button>
+                                <a class="btn bs-tooltip {{ $v->events_exist ? 'btn-primary' : 'btn-dark' }}"
+                                    title="Event" href="/admin/classes/createevent/{{ $v->id }}"><i
+                                        class="bx bx-calendar"></i></a>
+                                <button
+                                    class="btn bs-tooltip  {{ $v->certif_exist ? 'btn-warning' : 'btn-dark' }} dropdown-toggle"
+                                    type="button" data-toggle="dropdown" aria-expanded="false" title="Certificate">
+                                    <i class="bx bx-cog"></i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" title="Certificate"
+                                        href="/admin/classes/createcertificate/{{ $v->id }}">Create
+                                        Certificate</a>
+                                    <a class="dropdown-item" title="Preview"
+                                        href="/admin/classes/previewcertificate/{{ $v->id }}" target="_blank">Show
+                                        Certificate</a>
+                                    <a class="dropdown-item" title="Preview"
+                                        href="/admin/classes/getreview/{{ $v->id }}" target="_blank">Show
+                                        Review</a>
+                                    <span class="dropdown-item" title="Preview" data-toggle="modal"
+                                        data-target="#modalSertifikat"
+                                        onclick="biayasertifikat('{{$v->id}}','{{$v->tipebs}}','{{$v->nominal}}')">Biaya
+                                        Sertifikat</span>
                                 </div>
-                                <div class="modal-body">
-                                    <div class="table-responsive">
-                                        <table id="tblListPeserta" class="table table-bordered table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Status</th>
-                                                    <th>Nama</th>
-                                                    <th>No HP</th>
-                                                    <th>Instansi</th>
-                                                    <th>Price</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="listPeserta">
-                                            </tbody>
-                                        </table>
+                                <div class="dropdown">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-warning dropdown-toggle btn-sm" type="button"
+                                        data-toggle="dropdown" aria-expanded="false" title="Opsi">
+                                        <i class="bx bx-cog"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" title="Edit"
+                                            href="/admin/classes/{{ $v->id }}/edit">Edit</a>
+                                        <a class="dropdown-item" title="Delete"
+                                            onclick="deleteClasses({{ $v->id }})">Hapus</a>
+                                        <form action="#" method="post" id="formdelclasses">@csrf
+                                            @method('DELETE')
+                                        </form>
+                                        <a class="dropdown-item" title="Activated"
+                                            onclick="activedClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ?
+                                            'De-Activated' : 'Activated' }}</a>
+                                        <a class="dropdown-item" title="Open"
+                                            onclick="openClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ?
+                                            'Closed' : 'Open' }}</a>
+                                        <form action="#" method="get" id="formacclasses">@csrf
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn" data-dismiss="modal">Close</button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <!-- Modal -->
+                <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="listPesertaModalLabel">List Peserta</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table id="tblListPeserta" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Status</th>
+                                                <th>Nama</th>
+                                                <th>No HP</th>
+                                                <th>Instansi</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="listPeserta">
+                                        </tbody>
+                                    </table>
                                 </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
-                    <!-- Modal Sertifikat-->
-                    <div class="modal fade" id="modalSertifikat" tabindex="-1" aria-labelledby="modalSertifikatLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <form action="/classes/biaya_certificate" method="POST">
+                </div>
+                <!-- Modal Sertifikat-->
+                <div class="modal fade" id="modalSertifikat" tabindex="-1" aria-labelledby="modalSertifikatLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form action="/classes/biaya_certificate" method="POST">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalSertifikatLabel">List Peserta</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -190,40 +193,40 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                        @csrf
-                                        <input type="text" name="id_kelas" id="id_kelas" hidden>
-                                        <div class="form-group">
-                                            <label for="">Tipe</label>
-                                            <select name="tipe" id="tipe" class="form-control" required>
-                                                <option value="0">Nominal</option>
-                                                <option value="1">Persentase</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Nominal</label>
-                                            <input type="text" name="nominal" id="nominal" class="form-control" required>
-                                            <small id="labelNominal"></small>
-                                        </div>
+                                    @csrf
+                                    <input type="text" name="id_kelas" id="id_kelas" hidden>
+                                    <div class="form-group">
+                                        <label for="">Tipe</label>
+                                        <select name="tipe" id="tipe" class="form-control" required>
+                                            <option value="0">Nominal</option>
+                                            <option value="1">Persentase</option>
+                                        </select>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary" >Simpan</button>
+                                    <div class="form-group">
+                                        <label for="">Nominal</label>
+                                        <input type="text" name="nominal" id="nominal" class="form-control" required>
+                                        <small id="labelNominal"></small>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @include('backend.classes.newclassesmodal')
-    @include('backend.classes.classpricingmodal')
-    @include('backend.classes.classcontentmodal')
+</div>
+@include('backend.classes.newclassesmodal')
+@include('backend.classes.classpricingmodal')
+@include('backend.classes.classcontentmodal')
 @endsection
 @section('custom-js')
-    <script>
-        createDataTable('#tblClasses');
+<script>
+    createDataTable('#tblClasses');
         createDataTable('#tblListPeserta');
 
 
@@ -321,6 +324,23 @@
             }
         }
 
+        function openClasses(id, s) {
+            swal({
+                title: 'Are you sure?',
+                text: "You want change status class?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirm',
+                padding: '2em'
+            }).then(function(result) {
+                if (result.value) {
+                    $('#formacclasses').attr('action', '/admin/classes/open/' + id + '/' + s);
+                    $('#formacclasses').submit();
+                } else {
+                    $('#formacclasses').attr('action', '#');
+                }
+            })
+        }
         function activedClasses(id, s) {
             swal({
                 title: 'Are you sure?',
@@ -480,5 +500,5 @@
                 tr.remove();
             }
         }
-    </script>
+</script>
 @endsection

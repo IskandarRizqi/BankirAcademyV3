@@ -8,21 +8,22 @@
                 <div class="postcontent col-lg-9">
                     <div class="single-event">
                         <div class="row col-mb-50">
-                            <div class="col-md-3 col-lg-3 text-center">
+                            <div class="col-md-7 col-lg-7 text-center">
                                 <img src="{{$data->image?'/image/loker/'.json_decode($data->image)->url:''}}" alt=""
-                                    width="100px" height="100%">
+                                    width="100%" height="100%">
                                 {{-- @if($data->google_id)
                                 <img src="{{$data->google_id}}" alt="" width="100px" height="100%">
                                 @else
                                 <img src="{{asset($data->picture)}}" alt="" width="100px" height="100%">
                                 @endif --}}
                             </div>
-                            <div class="col-md-8 col-lg-8">
+                            <div class="col-md-5 col-lg-5">
                                 <h3 style="margin: 0px">{{ $data->title }}</h3>
                                 @if($data->nama)
                                 <small>{{$data->nama}}</small>
                                 @else
-                                <small>{{json_decode($data->corporate)->name}}</small>
+                                <small>{{json_decode($value->corporate)?json_decode($value->corporate)->name:'Anugrah
+                                    Karya'}}</small>
                                 @endif
                                 <div class="w-100"></div>
                                 <span><i class="icon-wallet mr-2"></i>{{$data->gaji_min?$data->gaji_min:'Gaji

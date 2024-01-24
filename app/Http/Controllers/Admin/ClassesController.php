@@ -331,13 +331,21 @@ class ClassesController extends Controller
 
 	public function activated($id, $status)
 	{
-		// $s = 0;
-		// if ($status == 1) {
-		// 	$s = 1;
-		// }
 		$s = $status == 1 ? 0 : 1;
 		$c = ClassesModel::where('id', $id)->update([
 			'status' => $s
+		]);
+		if ($c) {
+			return Redirect::back()->with('success', 'Class is Changed');
+		}
+		return Redirect::back()->with('success', 'Class not Changed');
+	}
+
+	public function open($id, $status)
+	{
+		$s = $status == 1 ? 0 : 1;
+		$c = ClassesModel::where('id', $id)->update([
+			'is_open' => $s
 		]);
 		if ($c) {
 			return Redirect::back()->with('success', 'Class is Changed');

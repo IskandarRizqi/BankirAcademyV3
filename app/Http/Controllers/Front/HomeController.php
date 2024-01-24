@@ -22,6 +22,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -303,6 +304,11 @@ class HomeController extends Controller
         $data['categori'] = ClassesModel::groupBy('category')->pluck('category')->toArray();
 
         $data['kelas_populer'] = [];
+        $data['kelas_lama'] = ClassesModel::select()
+            ->where('date_end', '<', $now->format('Y-m-d'))
+            ->where('status', 1)
+            ->orderBy('date_end', 'asc')
+            ->get();
         $data['kelas'] = ClassesModel::select()
             ->where('date_end', '>=', $now->format('Y-m-d'))
             // ->whereMonth('date_end',  $now->month)
@@ -321,7 +327,7 @@ class HomeController extends Controller
             'users.corporate',
             'users.google_id',
             'user_profile.picture',
-            'user_profile.description'
+            'user_profile.description',
         )
             ->join('users', 'users.id', 'loker.user_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
@@ -329,8 +335,11 @@ class HomeController extends Controller
             // ->whereDate('loker.tanggal_awal', '<=', Carbon::now())
             // ->whereDate('loker.tanggal_akhir', '>=', Carbon::now())
             ->orderBy('loker.tanggal_akhir', 'asc')
-            ->limit(99)
+            ->limit(4)
             ->get();
+        foreach ($data['loker'] as $key => $vv) {
+            $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
+        }
         $data['testimoni'] = ClassParticipantModel::select('class_participant.*', 'user_profile.name', 'user_profile.picture')
             ->join('user_profile', 'user_profile.user_id', 'class_participant.user_id')
             ->where('class_participant.review_active', 1)
@@ -640,15 +649,17 @@ class HomeController extends Controller
         $data['time_start'] = $start;
         $data['time_end'] = $end;
         $data['lokasi'] = $lokasi;
+        $data['title'] = $title;
 
-        $data['trend'] = ClassesModel::select()
+        $data['kelas_populer'] = ClassesModel::select()
             ->where('date_end', '>=', Carbon::now()
                 ->format('Y-m-d'))
-            ->limit(3)
+            ->limit(12)
             ->get();
         $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->get();
         // return $data;
-        return view('front.kelas.detail', $data);
+        // return view('front.kelas.detail', $data);
+        return view('front.kelasv2.detail', $data);
     }
 
     public function inputinstructor(Request $request)

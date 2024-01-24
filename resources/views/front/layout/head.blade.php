@@ -172,6 +172,16 @@
         border-radius: 1.25rem;
       }
 
+      .br-10 {
+        border-radius: 10px;
+        border-color: transparent;
+      }
+
+      .br-20 {
+        border-radius: 20px;
+        border-color: transparent;
+      }
+
       .page-menu-item a:hover {
         background-color: grey;
       }

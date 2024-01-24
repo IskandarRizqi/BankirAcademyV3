@@ -38,6 +38,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/classes/previewcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
     Route::get('/admin/classes/createcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'createcertificate']);
     Route::get('/admin/classes/activated/{id}/{status}', [App\Http\Controllers\Admin\ClassesController::class, 'activated']);
+    Route::get('/admin/classes/open/{id}/{status}', [App\Http\Controllers\Admin\ClassesController::class, 'open']);
     Route::resource('/admin/instructor', InstructorController::class);
     Route::post('/admin/logininstructor', [InstructorController::class, 'logininstructor']);
     Route::resource('/admin/banner', BannerslideController::class);
@@ -137,6 +138,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
     Route::get('/cetaklamaran', [App\Http\Controllers\Front\ProfileController::class, 'cetaklamaran']);
     Route::post('simpanlamaran', [App\Http\Controllers\Front\ProfileController::class, 'simpanlamaran']);
+
+    // Profile
+    Route::post('/updateprofile', [App\Http\Controllers\Front\ProfileController::class, 'updateprofile']);
+    Route::get('/getbillingkelas/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getbillingkelas']);
+    Route::get('/getkelasanda/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getkelasanda']);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

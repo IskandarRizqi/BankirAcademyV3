@@ -207,6 +207,10 @@ class OrderController extends Controller
         if (!$request->class_id) {
             Redirect::back()->with('error', 'Kelas Ditemukan');
         }
+        $kelas = ClassesModel::where('id', $request->class_id)->where('is_open', 1)->exists();
+        if (!$kelas) {
+            Redirect::back()->with('error', 'Kelas Sudah Penuh');
+        }
         if (!$auth) {
             Redirect::back()->with('error', 'Belum Login');
         }

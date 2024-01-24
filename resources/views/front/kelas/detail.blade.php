@@ -198,6 +198,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12" style="padding-bottom: 0px;">
+                                        @if($class->is_open == 1)
                                         <form id="orderForm" action="{{ '/order' }}" method="POST">
                                             @csrf
                                             <input type="text" id="class_id" name="class_id" value="{{ $class->id }}"
@@ -217,6 +218,10 @@
                                             <button class="button button-circle btn-block text-center" hidden>Order
                                                 sekarang</button>
                                         </form>
+                                        @else
+                                        <button class="button button-circle btn-block text-center" disabled>Kelas Sudah
+                                            Penuh</button>
+                                        @endif
                                         {{-- <button class="button button-circle btn-block text-center"
                                             onclick="popc()">Order
                                             sekarang</button> --}}

@@ -42,16 +42,13 @@ class ProfileController extends Controller
      */
     public function index(Request $r)
     {
+        return $this->indexv2($r);
         $auth = Auth::user()->id;
         $data['user'] = User::where('id', Auth::user()->id)->first();
         $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
             ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
             ->where('user_profile.user_id', Auth::user()->id)
             ->first();
-        // $data['pfl']['referral'] = RefferralModel::select()
-        //     ->where('user_aplicator', Auth::user()->id)
-        //     ->first();
-        // $data['pop'] = ClassesModel::limit(6)->get();
         $data['param'] = [];
         $data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
         $data['param']['status'] = [0, 1];
@@ -152,6 +149,132 @@ class ProfileController extends Controller
         $data['ismember'] = GlobalHelper::getaksesmembership();
         $data['member'] = MembershipModel::get();
         return view('front.profile.profile', $data);
+    }
+
+    public function indexv2($request)
+    {
+        $auth_id = Auth::user()->id;
+        $data['user'] = User::where('id', $auth_id)->first();
+        $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
+            ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
+            ->where('user_profile.user_id', $auth_id)
+            ->first();
+
+        $data['billingkelasall'] = $this->getbillingkelas(100);
+        $data['getkelasanda'] = $this->getkelasanda(100);
+        $data['reff'] = RefferralPesertaModel::where('user_id', $auth_id)->first();
+        $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
+            ->join('users', 'users.id', 'referral.user_aplicator')
+            ->where('referral.user_id', $auth_id)
+            ->get();
+        $data['saldo'] = GlobalHelper::currentSaldoById($auth_id);
+        $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
+        $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
+        $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
+        $data['member'] = MembershipModel::orderBy('harga')->limit(3)->get();
+        $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
+        // return $data;
+        return view('front.profilev2.index', $data);
+    }
+
+    public function getbillingkelas($type)
+    {
+        $status = 'Dibatalkan';
+        $data['billingkelasall'] = ClassPaymentModel::select(
+            'class_payment.*',
+            'classes.title',
+            'classes.participant_limit',
+            'class_participant.review',
+            'class_participant.id as participant_id'
+        )
+            ->join('classes', 'classes.id', 'class_payment.class_id')
+            ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
+            ->where('class_payment.user_id', Auth::user()->id)
+            // ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
+            // ->whereDate('class_payment.created_at', '<=', $data['param']['date'][1])
+            ->where(function ($query) use ($type) {
+                if ($type == 0) {
+                    return $query->where('class_payment.expired', '<', Carbon::now())->where('class_payment.status', 0);
+                }
+                if ($type == 1) {
+                    return $query->whereNotNull('class_payment.file')->where('class_payment.status', 1);
+                }
+                if ($type == 2) {
+                    return $query->whereNotNull('class_payment.file')->where('class_payment.status', 0);
+                }
+                if ($type == 3) {
+                    return $query->where('class_payment.expired', '>', Carbon::now())->whereNull('class_payment.file')->where('class_payment.status', 0);
+                }
+            })
+            ->orderBy('class_payment.status', 'desc')
+            ->orderBy('class_payment.updated_at', 'desc')
+            ->get();
+        foreach ($data['billingkelasall'] as $key => $value) {
+            if (!$value->file && $value->status == 0) {
+                $status = 'Menunggu Pembayaran';
+            }
+            if ($value->file && $value->status == 0) {
+                $status = 'Menunggu Konfirmasi';
+            }
+            if ($value->file && $value->status == 1) {
+                $status = 'Lunas';
+            }
+            if ($value->expired < Carbon::now() && $value->status == 0) {
+                $status = 'Expired';
+            }
+            $value->status_pembayaran = $status;
+        }
+
+        return response()->json([
+            'status' => 1,
+            'msg' => 'Data Success',
+            'data' => $data
+        ], 200);
+    }
+
+    public function getkelasanda($type)
+    {
+        $start = Carbon::now()->subYears(30)->format('Y-m-d');
+        $end = Carbon::now()->addDay()->format('Y-m-d');
+        $status = [1, 0];
+        // Dalam Proses
+        if ($type == 0) {
+            $start = Carbon::now()->subDays(10)->format('Y-m-d');
+            $status = [1];
+        }
+        // Menunggu Konfirmasi
+        if ($type == 1) {
+            $status = [0];
+        }
+        // Selesai
+        if ($type == 2) {
+            $start = Carbon::now()->subYears(10)->format('Y-m-d');
+            $status = [1];
+        }
+        $data['getkelasanda'] = ClassPaymentModel::select(
+            'class_payment.*',
+            'classes.title',
+            'classes.image',
+            'classes.participant_limit',
+            'class_participant.review',
+            'class_participant.id as participant_id'
+        )
+            ->join('classes', 'classes.id', 'class_payment.class_id')
+            ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
+            ->where('class_payment.user_id', Auth::user()->id)
+            ->whereBetween('class_payment.created_at', [$start, $end])
+            ->whereIn('class_payment.status', $status)
+            // ->whereDate('class_payment.created_at', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
+            // ->whereDate('class_payment.created_at', '<=', Carbon::now()->format('Y-m-d'))
+            // ->whereIn('class_payment.status', $data['param']['status'])
+            ->orderBy('class_payment.status', 'desc')
+            ->orderBy('class_payment.updated_at', 'desc')
+            ->get();
+        return response()->json([
+            'status' => 1,
+            'msg' => 'Data Success',
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -298,6 +421,32 @@ class ProfileController extends Controller
 
         // return view('front.profile.profile');
         return redirect('/profile')->with('success', 'Berhasil memperbarui profile');
+    }
+
+    public function updateprofile(Request $r)
+    {
+        $u = UserProfileModel::updateOrCreate([
+            'user_id' => Auth::user()->id,
+        ], [
+            'name' => $r->name,
+            'description' => $r->description,
+        ]);
+
+        if ($u) {
+            return response()->json([
+                'status' => 1,
+                'msg' => 'Data Tersimpan',
+                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
+            ], 200);
+        }
+        return response()->json(
+            [
+                'status' => 0,
+                'msg' => 'Data Tidak Tersimpan',
+                'data' => []
+            ],
+            400
+        );
     }
 
     /**

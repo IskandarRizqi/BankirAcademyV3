@@ -222,7 +222,6 @@
         apiRevoSlider.on("revolution.slide.onloaded", function(e) {
             SEMICOLON.slider.sliderDimensions();
         });
-        $('#datatable1').dataTable();
         $('.component-datepicker.past-enabled').datepicker({
             autoclose: true,
         });
@@ -232,6 +231,10 @@
 
 <script>
     $('#datatable1').dataTable();
+    $('#datatable2').dataTable();
+    $('#datatable3').dataTable();
+    $('#datatable4').dataTable();
+    $('#datatable5').dataTable();
     getLaman();
     $(document).ready(function() {
         $('#loader-loading').remove();
