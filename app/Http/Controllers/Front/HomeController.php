@@ -308,6 +308,7 @@ class HomeController extends Controller
             ->where('date_end', '<', $now->format('Y-m-d'))
             ->where('status', 1)
             ->orderBy('date_end', 'asc')
+            ->limit(8)
             ->get();
         $data['kelas'] = ClassesModel::select()
             ->where('date_end', '>=', $now->format('Y-m-d'))

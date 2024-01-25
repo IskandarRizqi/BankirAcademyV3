@@ -245,7 +245,7 @@
         </div>
         @endforeach
     </div>
-    <h3 class="text-blue m-0">Kelas Sebelumnya</h3>
+    <h3 class="text-blue m-0 mt-4">Kelas Sebelumnya</h3>
     <hr style="4px solid rgba(0, 0, 0, 0.1)">
     {{-- Kelas Populer --}}
     <div class="row mt-4">
@@ -269,9 +269,9 @@
             </div>
             <div class="title text-uppercase ml-1">
                 <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
-                    <h4 class="mb-2">
-                        {{strlen($val->title)>=30?substr($val->title,0,27).' ...':$val->title}}
-                    </h4>
+                    <h5 class="mb-2">
+                        {{strlen($val->title)>=50?substr($val->title,0,47).' ...':$val->title}}
+                    </h5>
                 </a>
             </div>
             <div class="author text-uppercase ml-1">
@@ -279,29 +279,6 @@
                     class="mb-2">
                     {{$val->instructor_list[0]->name}}
                 </a>
-            </div>
-            {{-- <div class="star text-uppercase ml-1 ">
-                <div class="d-flex align-items-center">
-                    <h4 class="m-0 mr-2">4.5</h4>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-star"
-                        viewBox="0 0 16 16">
-                        <path
-                            d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" />
-                    </svg>
-                </div>
-            </div> --}}
-            <div class="price text-uppercase ml-1">
-                <h3 class="mb-2">
-                    @if($val->pricing)
-                    @if($val->pricing->promo)
-                    Rp. {{number_format($val->pricing->price - $val->pricing->promo_price)}}
-                    @else
-                    Rp. {{number_format($val->pricing->price)}}
-                    @endif
-                    @else
-                    -
-                    @endif
-                </h3>
             </div>
         </div>
         @endforeach
