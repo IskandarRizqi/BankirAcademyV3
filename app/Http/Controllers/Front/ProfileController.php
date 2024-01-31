@@ -449,6 +449,76 @@ class ProfileController extends Controller
         );
     }
 
+    public function settingprofile(Request $r)
+    {
+        $ins = [
+            'name' => $r->name,
+            'phone' => $r->no_hp,
+            'jenis_kelamin' => $r->jenis_kelamin,
+            'tanggal_lahir' => $r->tgl_lahir,
+            'description' => $r->alamat,
+        ];
+        if ($r->gambar && $r->gambar != 'undefined') {
+            $name = $r->file('gambar')->getClientOriginalName(); // Name File
+            $size = $r->file('gambar')->getSize(); // Size File
+
+            if ($size >= 1048576) {
+                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $r->file('gambar');
+            $file->move(public_path('Image/Member'), $filename);
+            // $d['profile_gambar'] = json_encode(['url' => $filename, 'size' => $size]);
+            $ins['picture'] = 'Image/Member/' . $filename;
+        }
+        $u = UserProfileModel::updateOrCreate([
+            'user_id' => Auth::user()->id,
+        ], $ins);
+
+        if ($u) {
+            return response()->json([
+                'status' => 1,
+                'msg' => 'Data Tersimpan',
+                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
+            ], 200);
+        }
+        return response()->json(
+            [
+                'status' => 0,
+                'msg' => 'Data Tidak Tersimpan',
+                'data' => []
+            ],
+            400
+        );
+    }
+    public function rekeningprofile(Request $r)
+    {
+        $ins = [
+            'nama_bank' => $r->nama_bank,
+            'rekening' => $r->no_rekening,
+        ];
+        $u = UserProfileModel::updateOrCreate([
+            'user_id' => Auth::user()->id,
+        ], $ins);
+
+        if ($u) {
+            return response()->json([
+                'status' => 1,
+                'msg' => 'Data Tersimpan',
+                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
+            ], 200);
+        }
+        return response()->json(
+            [
+                'status' => 0,
+                'msg' => 'Data Tidak Tersimpan',
+                'data' => []
+            ],
+            400
+        );
+    }
+
     /**
      * Display the specified resource.
      *

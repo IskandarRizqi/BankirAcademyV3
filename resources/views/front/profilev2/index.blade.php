@@ -54,8 +54,8 @@
         <div class="container clearfix">
             <div class="row clearfix">
                 <div class="col-md-3 text-center">
-                    <img src="{{$pfl?asset($pfl->image):'/GambarV2/rectangle31.png'}}" alt="..." class="rounded-circle"
-                        height="150px" width=150px>
+                    <img id="imagebunder" src="{{$pfl?$pfl->picture:'/GambarV2/rectangle31.png'}}" alt="..."
+                        class="rounded-circle" height="150px" width=150px>
                 </div>
                 <div class="col-md-9 text-white">
                     <h5 class="text-white" id="updatename">{{$pfl?$pfl->name:''}}</h5>
@@ -208,6 +208,9 @@
                 if (response.status == 1) {
                     $('#editprofilenama').val(response.data.name),
                     $('#editprofiledeskripsi').val(response.data.description),
+
+                    $('#profile_nama').val(response.data.name),
+                    $('#profile_alamat').val(response.data.description),
 
                     $('#updatename').html(response.data.name),
                     $('#updatedescription').html(response.data.description),

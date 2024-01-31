@@ -33,13 +33,13 @@
             @foreach($banner_slide as $key => $va)
             <div>
                 <a href="{{$va->link}}">
-                    <img class="d-block w-100" src="/Image/{{$va->image}}" alt="First slide">
+                    <img class="d-block w-100" src="/Image/{{$va->image}}" alt="First slide" style="border-radiu:30px">
                 </a>
             </div>
             @endforeach
         </div>
         <h3 class="text-blue m-0">Kategori Terpopuler</h3>
-        <div id="page-menu" class="no-sticky">
+        <div id="page-menu" class="no-sticky" style="overflow-y: auto">
             <div id="page-menu-wrap" style="background-color: white">
                 <div class="container">
                     <div class="page-menu-row">
@@ -96,7 +96,7 @@
         <div class="col-lg-3 mb-2" style="max-height: 390px">
             <div class="card">
                 <div class="card-body br-10" style="padding: 1px; background-color: gold">
-                    <img src="{{asset($val->image)}}" alt="" width="100%">
+                    <img src="{{asset($val->image)}}" alt="" width="100%" style="border-radius:18px">
                     {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px"> --}}
                 </div>
             </div>
@@ -257,9 +257,9 @@
         <div id="sld5">
             @foreach($kelas_lama as $key => $val)
             <div>
-                <div class="card">
+                <div class="card mr-2">
                     <div class="card-body br-10" style="padding: 1px; background-color: gold">
-                        <img src="{{asset($val->image)}}" alt="" width="100%">
+                        <img src="{{asset($val->image)}}" alt="" width="100%" style="border-radius: 18px">
                         {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius: 18px"> --}}
                     </div>
                 </div>
@@ -562,7 +562,7 @@
                     h +='<div class="col-lg-3 mb-2" style="max-height: 390px">';
                     h +='    <div class="card">';
                     h +='        <div class="card-body br-10" style="padding: 1px; background-color: gold;">';
-                    h +='            <img src="'+v.image+'" alt="" width="100%" style="max-height:200px;">';
+                    h +='            <img src="'+v.image+'" alt="" width="100%" style="border-radius:18px">';
                     // h +='            <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px">';
                     h +='        </div>';
                     h +='    </div>';

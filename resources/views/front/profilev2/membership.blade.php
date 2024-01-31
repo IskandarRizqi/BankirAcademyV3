@@ -53,8 +53,8 @@
                             Basic
                         </div>
                         <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3>
-                        <div class="bodynya" style="">
-                            <div class="p-2 text-left">
+                        <div class="bodynya">
+                            <div class="p-2 text-left" style="margin-left: 20px">
                                 {!!html_entity_decode($value->keterangan)!!}
                             </div>
                             {{-- <div class="d-flex ml-1 mb-2">
@@ -86,8 +86,8 @@
                             Standard
                         </div>
                         <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3>
-                        <div class="bodynya" style="">
-                            <div class="p-2 text-left">
+                        <div class="bodynya">
+                            <div class="p-2 text-left" style="margin-left: 20px">
                                 {!!html_entity_decode($value->keterangan)!!}
                             </div>
                             {{-- <div class="d-flex ml-1 mb-2">
@@ -119,8 +119,8 @@
                             Premium
                         </div>
                         <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3>
-                        <div class="bodynya" style="">
-                            <div class="p-2 text-left">
+                        <div class="bodynya">
+                            <div class="p-2 text-left" style="margin-left: 20px">
                                 {!!$value->keterangan!!}
                             </div>
                             {{-- <div class="d-flex">

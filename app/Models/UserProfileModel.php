@@ -20,6 +20,7 @@ class UserProfileModel extends Model
 		'gender',
 		'description',
 		'instansi',
+		'nama_bank',
 		'rekening',
 		'existing_user',
 		'image_bukti_pembayaran',

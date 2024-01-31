@@ -141,6 +141,8 @@ Route::middleware('auth')->group(function () {
 
     // Profile
     Route::post('/updateprofile', [App\Http\Controllers\Front\ProfileController::class, 'updateprofile']);
+    Route::post('/settingprofile', [App\Http\Controllers\Front\ProfileController::class, 'settingprofile']);
+    Route::post('/rekeningprofile', [App\Http\Controllers\Front\ProfileController::class, 'rekeningprofile']);
     Route::get('/getbillingkelas/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getbillingkelas']);
     Route::get('/getkelasanda/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getkelasanda']);
 });
