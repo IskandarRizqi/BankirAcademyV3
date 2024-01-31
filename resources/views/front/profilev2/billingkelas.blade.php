@@ -204,6 +204,9 @@
                         if (v.status_pembayaran == 'Expired') {
                             r = 'readonly';
                         }
+                        if (v.status_pembayaran == 'Dibatalkan') {
+                            r = 'readonly';
+                        }
                         if (v.file) {
                             r = 'readonly';
                         }
@@ -215,7 +218,7 @@
                         h+='<div class="card br-10 mb-4" style="background-color: #f7f7f7">';
                         h+='<div class="card-body">';
                         h+='<div class="d-flex justify-content-between">';
-                        h+='    <div class="">';
+                        h+='    <div class="mr-1">';
                         h+='        <h5 class="m-0 text-capitalize">'+type+'</h5>';
                         h+='        <small class="text-secondary">No. Invoice</small>';
                         h+='        <p class="text-uppercase">';

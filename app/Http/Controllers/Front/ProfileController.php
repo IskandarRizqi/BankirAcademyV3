@@ -173,7 +173,6 @@ class ProfileController extends Controller
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
         $data['member'] = MembershipModel::orderBy('harga')->limit(3)->get();
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
-        // return $data;
         return view('front.profilev2.index', $data);
     }
 
