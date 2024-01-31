@@ -33,7 +33,7 @@
             @foreach($banner_slide as $key => $va)
             <div>
                 <a href="{{$va->link}}">
-                    <img class="d-block w-100" src="/Image/{{$va->image}}" alt="First slide" style="border-radiu:30px">
+                    <img class="d-block w-100" src="/Image/{{$va->image}}" alt="First slide" style="border-radius:30px">
                 </a>
             </div>
             @endforeach
