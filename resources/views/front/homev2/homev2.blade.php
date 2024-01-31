@@ -3,28 +3,32 @@
 @include(env('CUSTOM_HEADER', 'front.layout.header'))
 <section id="content">
     <div class="container mt-4">
-        <div class="d-flex">
-            <div class="mr-2 w-100">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text bg-white br-1" id="basic-addon1">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12.5 11H11.71L11.43 10.73C12.4439 9.55402 13.0011 8.0527 13 6.5C13 5.21442 12.6188 3.95772 11.9046 2.8888C11.1903 1.81988 10.1752 0.986756 8.98744 0.494786C7.79973 0.00281635 6.49279 -0.125905 5.23192 0.124899C3.97104 0.375703 2.81285 0.994767 1.90381 1.90381C0.994767 2.81285 0.375703 3.97104 0.124899 5.23192C-0.125905 6.49279 0.00281635 7.79973 0.494786 8.98744C0.986756 10.1752 1.81988 11.1903 2.8888 11.9046C3.95772 12.6188 5.21442 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z"
-                                    fill="#005CFF" />
-                            </svg>
-                        </span>
+        <form action="/list-class" method="POST">
+            @csrf
+            <div class="d-flex">
+                <div class="mr-2 w-100">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white br-1" id="basic-addon1">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M12.5 11H11.71L11.43 10.73C12.4439 9.55402 13.0011 8.0527 13 6.5C13 5.21442 12.6188 3.95772 11.9046 2.8888C11.1903 1.81988 10.1752 0.986756 8.98744 0.494786C7.79973 0.00281635 6.49279 -0.125905 5.23192 0.124899C3.97104 0.375703 2.81285 0.994767 1.90381 1.90381C0.994767 2.81285 0.375703 3.97104 0.124899 5.23192C-0.125905 6.49279 0.00281635 7.79973 0.494786 8.98744C0.986756 10.1752 1.81988 11.1903 2.8888 11.9046C3.95772 12.6188 5.21442 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z"
+                                        fill="#005CFF" />
+                                </svg>
+                            </span>
+                        </div>
+                        <input type="text" name="titlekelas" class="form-control"
+                            placeholder="Kamu mau upgrade skill apa hari ini?" aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            style="border-left-width: 0px; border-radius: 15px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;">
                     </div>
-                    <input type="text" class="form-control" placeholder="Kamu mau upgrade skill apa hari ini?"
-                        aria-label="Username" aria-describedby="basic-addon1"
-                        style="border-left-width: 0px; border-radius: 15px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;">
+                </div>
+                <div class="">
+                    <button class="btn btn-primary br-1 brn-block">Telusuri</button>
                 </div>
             </div>
-            <div class="">
-                <button class="btn btn-primary br-1 brn-block">Telusuri</button>
-            </div>
-        </div>
+        </form>
         <div id="sld1">
             @foreach($banner_slide as $key => $va)
             <div>
@@ -91,8 +95,9 @@
         @foreach($kelas_populer as $key => $val)
         <div class="col-lg-3 mb-2" style="max-height: 390px">
             <div class="card">
-                <div class="card-body" style="padding: 1px; background-color: gold">
+                <div class="card-body br-10" style="padding: 1px; background-color: gold">
                     <img src="{{asset($val->image)}}" alt="" width="100%">
+                    {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px"> --}}
                 </div>
             </div>
             <div class="d-flex align-items-center ml-2">
@@ -247,47 +252,55 @@
     </div>
     <h3 class="text-blue m-0 mt-4">Kelas Sebelumnya</h3>
     <hr style="4px solid rgba(0, 0, 0, 0.1)">
-    {{-- Kelas Populer --}}
-    <div class="row mt-4">
-        @foreach($kelas_lama as $key => $val)
-        <div class="col-lg-3 mb-2" style="max-height: 390px">
-            <div class="card">
-                <div class="card-body" style="padding: 1px; background-color: gold">
-                    <img src="{{asset($val->image)}}" alt="" width="100%">
+    {{-- Kelas Sebelumnya --}}
+    <div class="mt-4">
+        <div id="sld5">
+            @foreach($kelas_lama as $key => $val)
+            <div>
+                <div class="card">
+                    <div class="card-body br-10" style="padding: 1px; background-color: gold">
+                        <img src="{{asset($val->image)}}" alt="" width="100%">
+                        {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius: 18px"> --}}
+                    </div>
+                </div>
+                <div class="d-flex align-items-center ml-2">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M0.605225 5.68681C0.605225 4.48076 0.605225 3.87837 0.979957 3.50364C1.35469 3.12891 1.95707 3.12891 3.16312 3.12891H10.8368C12.0429 3.12891 12.6453 3.12891 13.02 3.50364C13.3947 3.87837 13.3947 4.48076 13.3947 5.68681C13.3947 5.988 13.3947 6.13892 13.3014 6.23292C13.2074 6.32628 13.0558 6.32628 12.7552 6.32628H1.2447C0.943507 6.32628 0.792591 6.32628 0.698588 6.23292C0.605225 6.13892 0.605225 5.98736 0.605225 5.68681ZM0.605225 11.4421C0.605225 12.6481 0.605225 13.2505 0.979957 13.6252C1.35469 14 1.95707 14 3.16312 14H10.8368C12.0429 14 12.6453 14 13.02 13.6252C13.3947 13.2505 13.3947 12.6481 13.3947 11.4421V8.24471C13.3947 7.94351 13.3947 7.7926 13.3014 7.69859C13.2074 7.60523 13.0558 7.60523 12.7552 7.60523H1.2447C0.943507 7.60523 0.792591 7.60523 0.698588 7.69859C0.605225 7.7926 0.605225 7.94415 0.605225 8.24471V11.4421Z"
+                            fill="#005CFF" />
+                        <path d="M3.80261 1.84998V3.7684M10.1974 1.84998V3.7684" stroke="#005CFF" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                    <p for="" class="text-capitalize text-blue m-0 ml-1">
+                        {{\Carbon\Carbon::parse($val->date_end)->format('d-m-Y')}}</p>
+                </div>
+                <div class="title text-uppercase ml-1">
+                    <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
+                        <h5 class="mb-2">
+                            {{strlen($val->title)>=50?substr($val->title,0,47).' ...':$val->title}}
+                        </h5>
+                    </a>
+                </div>
+                <div class="author text-uppercase ml-1">
+                    <a href="/profile-instructor/{{$val->instructor_list[0]->id}}/{{$val->instructor_list[0]->name}}"
+                        class="mb-2">
+                        {{$val->instructor_list[0]->name}}
+                    </a>
                 </div>
             </div>
-            <div class="d-flex align-items-center ml-2">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M0.605225 5.68681C0.605225 4.48076 0.605225 3.87837 0.979957 3.50364C1.35469 3.12891 1.95707 3.12891 3.16312 3.12891H10.8368C12.0429 3.12891 12.6453 3.12891 13.02 3.50364C13.3947 3.87837 13.3947 4.48076 13.3947 5.68681C13.3947 5.988 13.3947 6.13892 13.3014 6.23292C13.2074 6.32628 13.0558 6.32628 12.7552 6.32628H1.2447C0.943507 6.32628 0.792591 6.32628 0.698588 6.23292C0.605225 6.13892 0.605225 5.98736 0.605225 5.68681ZM0.605225 11.4421C0.605225 12.6481 0.605225 13.2505 0.979957 13.6252C1.35469 14 1.95707 14 3.16312 14H10.8368C12.0429 14 12.6453 14 13.02 13.6252C13.3947 13.2505 13.3947 12.6481 13.3947 11.4421V8.24471C13.3947 7.94351 13.3947 7.7926 13.3014 7.69859C13.2074 7.60523 13.0558 7.60523 12.7552 7.60523H1.2447C0.943507 7.60523 0.792591 7.60523 0.698588 7.69859C0.605225 7.7926 0.605225 7.94415 0.605225 8.24471V11.4421Z"
-                        fill="#005CFF" />
-                    <path d="M3.80261 1.84998V3.7684M10.1974 1.84998V3.7684" stroke="#005CFF" stroke-width="2"
-                        stroke-linecap="round" />
-                </svg>
-                <p for="" class="text-capitalize text-blue m-0 ml-1">
-                    {{\Carbon\Carbon::parse($val->date_end)->format('d-m-Y')}}</p>
-            </div>
-            <div class="title text-uppercase ml-1">
-                <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
-                    <h5 class="mb-2">
-                        {{strlen($val->title)>=50?substr($val->title,0,47).' ...':$val->title}}
-                    </h5>
-                </a>
-            </div>
-            <div class="author text-uppercase ml-1">
-                <a href="/profile-instructor/{{$val->instructor_list[0]->id}}/{{$val->instructor_list[0]->name}}"
-                    class="mb-2">
-                    {{$val->instructor_list[0]->name}}
-                </a>
-            </div>
+            @endforeach
         </div>
-        @endforeach
+    </div>
+    <div class="text-right">
+        <a href="/list-class">
+            <h5 class="text-blue">Kelas Selanjutnya</h5>
+        </a>
     </div>
     <h3 class="text-blue mt-4">Testimonial</h3>
     <div id="sld4" class="">
         @foreach($testimoni as $key => $value)
         <div class="card mr-2" style="">
-            <div class="card-body" style="font-size: 10px; height: 202px;">
+            <div class="card-body" style="font-size: 12px; height: 202px;">
                 <h3 class="text-blue m-0">"</h3>
                 <p class="m-0" style="font-size: 12px;font-weight: bold">
                     {{strlen($value->review)>=230?substr($value->review,0,230):$value->review}}</p> {{-- maksimal 230
@@ -466,6 +479,47 @@
                 // instead of a settings object
             ]
         });
+        $('#sld5').slick({
+            centerMode: false,
+            dots: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            variableWidth: false,
+            adaptiveHeight: true,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
         loadData(null)
     })
     function loadData(cate) {
@@ -507,8 +561,9 @@
                 data.data.kelas.data.forEach(v => {
                     h +='<div class="col-lg-3 mb-2" style="max-height: 390px">';
                     h +='    <div class="card">';
-                    h +='        <div class="card-body" style="padding: 1px; background-color: gold">';
+                    h +='        <div class="card-body br-10" style="padding: 1px; background-color: gold;">';
                     h +='            <img src="'+v.image+'" alt="" width="100%" style="max-height:200px;">';
+                    // h +='            <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px">';
                     h +='        </div>';
                     h +='    </div>';
                     h +='    <div class="d-flex align-items-center ml-2">';
@@ -533,7 +588,7 @@
                     h +=            v.instructor_list[0].name;
                     h +='        </a>';
                     h +='    </div>';
-                    h +='    <div class="star text-uppercase ml-1 ">';
+                    h +='    <div class="star text-uppercase ml-1" hidden>';
                     h +='        <div class="d-flex align-items-center">';
                     h +='            <h4 class="m-0 mr-2">4.5</h4>';
                     h +='            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-star"';

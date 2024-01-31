@@ -33,7 +33,16 @@ class ClassesModel extends Model
 		'is_open',
 	];
 
-	protected $appends = ['instructor_list', 'pricing', 'content_list', 'events_exist', 'certif_exist', 'peserta_list', 'total_peserta', 'event_list'];
+	protected $appends = [
+		'instructor_list',
+		'pricing',
+		'content_list',
+		'events_exist',
+		'certif_exist',
+		'peserta_list',
+		'total_peserta',
+		'event_list',
+	];
 
 	public function getInstructorListAttribute()
 	{
@@ -47,6 +56,7 @@ class ClassesModel extends Model
 			return $d;
 		}
 	}
+
 	public function getEventListAttribute()
 	{
 		if (array_key_exists('id', $this->attributes)) {
@@ -81,6 +91,7 @@ class ClassesModel extends Model
 			return DB::table('class_content')->where('class_id', $this->attributes['id'])->get();
 		}
 	}
+
 	public function getTotalPesertaAttribute()
 	{
 		if (array_key_exists('id', $this->attributes)) {
@@ -89,6 +100,7 @@ class ClassesModel extends Model
 				->sum('jumlah');
 		}
 	}
+
 	public function getPesertaListAttribute()
 	{
 		$data = [];

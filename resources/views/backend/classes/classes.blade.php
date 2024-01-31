@@ -135,7 +135,7 @@
                                             onclick="activedClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ?
                                             'De-Activated' : 'Activated' }}</a>
                                         <a class="dropdown-item" title="Open"
-                                            onclick="openClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ?
+                                            onclick="openClasses({{ $v->id }},{{ $v->is_open }})">{{ $v->is_open == 1 ?
                                             'Closed' : 'Open' }}</a>
                                         <form action="#" method="get" id="formacclasses">@csrf
                                         </form>

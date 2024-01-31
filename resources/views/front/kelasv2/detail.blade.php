@@ -41,13 +41,13 @@
                 <div class="col-lg-8">
                     <button class="btn btn-success mt-4 br-20">{{$class->category}}</button>
                     <h1 class="text-white">{{$title}}</h1>
-                    <div class="bintang text-white"><b>4.5</b> <svg width="18" height="16" viewBox="0 0 18 16"
+                    {{-- <div class="bintang text-white"><b>4.5</b> <svg width="18" height="16" viewBox="0 0 18 16"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M4.09812 15.6437L5.42894 9.99138L0.965576 6.18966L6.86213 5.68678L9.15523 0.356323L11.4483 5.68678L17.3449 6.18966L12.8815 9.99138L14.2123 15.6437L9.15523 12.6466L4.09812 15.6437Z"
                                 fill="#FF9900" />
                         </svg>
-                    </div>
+                    </div> --}}
                     <div class="d-flex">
                         <div class="form-group mr-auto">
                             <label for="" class="m-0 text-white text-capitalize">Speaker</label>
@@ -77,7 +77,8 @@
                     <div class="card mt-4"
                         style="border-top-left-radius: 10px; border-top-right-radius:10px; border-color: transparent;">
                         <div class="card-body p-2">
-                            <iframe width="100%" height="90%" src="https://www.youtube.com/embed/tgbNymZ7vqY">
+                            <iframe width="100%" height="90%"
+                                src="https://www.youtube.com/embed/Dt1PGv-toHU?si=G_8_3vfrY9mrBYaP">
                             </iframe>
                             <h5 class="m-2">{{$title}}</h5>
                         </div>
@@ -119,11 +120,21 @@
             <div class="col-lg-4">
                 @if($class->pricing)
                 <div class="d-flex">
+                    @if($class->pricing->promo)
                     <h3 class="ml-3">
-                        <b>Rp 129.000</b>
+                        <b>Rp.
+                            {{number_format($class->pricing->promo_price)}}</b>
                     </h3>
-                    <span class="ml-2" style="text-decoration: line-through; color:grey">Rp 200.000</span>
-                    <span class="ml-2" style="color:grey">20 %</span>
+                    <span class="ml-2" style="text-decoration: line-through; color:grey">Rp
+                        {{number_format($class->pricing->price)}}</span>
+                    <span class="ml-2" style="color:grey">{{($class->pricing->promo_price/$class->pricing->price)*100}}
+                        %</span>
+                    @else
+                    <h3 class="ml-3">
+                        <b>Rp.
+                            {{number_format($class->pricing->price)}}</b>
+                    </h3>
+                    @endif
                 </div>
                 @else
                 <h3 class="ml-3">

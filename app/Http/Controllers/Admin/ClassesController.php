@@ -660,6 +660,10 @@ class ClassesController extends Controller
 		// 	}
 		// }
 		// $limit = 99;
+		$data['titlekelas'] = '';
+		if ($request->titlekelas) {
+			$data['titlekelas'] = $request->titlekelas;
+		}
 		$data['judul'] = 'Kelas';
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
@@ -671,12 +675,16 @@ class ClassesController extends Controller
 			array_push($class_id, $value->id);
 		}
 		$data['class'] = ClassesModel::select()
-			->whereIn('id', $class_id)
+			// ->whereIn('id', $class_id)
 			->where(function ($sql) use ($request) {
 				if ($request->jenis) {
-					return $sql->where('jenis', 'like', '%"' . strtoupper($request->jenis) . '"%');
+					$sql->where('jenis', 'like', '%"' . strtoupper($request->jenis) . '"%');
+				}
+				if ($request->titlekelas) {
+					$sql->where('title', 'like', '%"' . strtoupper($request->titlekelas) . '"%');
 				}
 			})
+			->where('title', 'like', '%"' . strtoupper($request->titlekelas) . '"%')
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
 			->where('status', 1)
 			->orderBy('date_end', 'asc')
@@ -711,43 +719,45 @@ class ClassesController extends Controller
 		$data['banner'] = $this->bannerClass($data['judul']);
 		$data['class'] = ClassesModel::select()
 			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->where(function ($sql) use ($checbox) {
-				if (count($checbox) > 0) {
-					for ($i = 0; $i < count($checbox); $i++) {
-						$sql->orWhere('tags', 'like', '%"' . $checbox[$i] . '"%');
-					}
-				}
-			})
-			->where(function ($sql) use ($tipe) {
-				if (count($tipe) > 0) {
-					for ($i = 0; $i < count($tipe); $i++) {
-						$sql->orWhere('tipe', 'like', '%"' . $tipe[$i] . '"%');
-					}
-				}
-			})
-			->where(function ($sql) use ($jeniss) {
-				if (count($jeniss) > 0) {
-					for ($i = 0; $i < count($jeniss); $i++) {
-						$sql->orWhere('jenis', 'like', '%"' . $jeniss[$i] . '"%');
-					}
-				}
-			})
+			->where('title', 'like', '%' . $request->titlekelas . '%')
+			// ->where(function ($sql) use ($checbox) {
+			// 	if (count($checbox) > 0) {
+			// 		for ($i = 0; $i < count($checbox); $i++) {
+			// 			$sql->where('tags', 'like', '%"' . $checbox[$i] . '"%');
+			// 		}
+			// 	}
+			// })
+			// ->where(function ($sql) use ($tipe) {
+			// 	if (count($tipe) > 0) {
+			// 		for ($i = 0; $i < count($tipe); $i++) {
+			// 			$sql->where('tipe', 'like', '%"' . $tipe[$i] . '"%');
+			// 		}
+			// 	}
+			// })
+			// ->where(function ($sql) use ($jeniss) {
+			// 	if (count($jeniss) > 0) {
+			// 		for ($i = 0; $i < count($jeniss); $i++) {
+			// 			$sql->where('jenis', 'like', '%"' . $jeniss[$i] . '"%');
+			// 		}
+			// 	}
+			// })
 			->where(function ($sql) use ($request) {
-				if ($request->title) {
-					$sql->where('title', 'like', '%' . $request->title . '%');
-				}
+				// if ($request->titlekelas) {
+				// 	$sql->where('title', 'like', '%"' . $request->titlekelas . '"%');
+				// }
 				if ($request->instructor) {
-					$sql->where('instructor', 'like', '%' . $request->instructor . '%');
+					$sql->where('instructor', 'like', '%"' . $request->instructor . '"%');
 				}
 				if ($request->slcClassesCategory) {
-					$sql->where('category', 'like', '%' . $request->slcClassesCategory . '%');
+					$sql->where('category', 'like', '%"' . $request->slcClassesCategory . '"%');
 				}
 			})
-			->paginate(8)->toArray();
+			->paginate(8)
+			->toArray();
 
 		$data['pencarian'] = $this->pencarian();
 		$data['slcClassesCategory'] = $request->slcClassesCategory;
-		$data['title'] = $request->title;
+		$data['title'] = $request->titlekelas;
 		$data['instructor'] = $request->instructor;
 		$data['tags'] = $request->checkbox;
 		$data['tipe'] = $request->tipe;

@@ -197,16 +197,40 @@
             {
                 let h = '';
                 if (response.status == 1) {
+                    let n = 0;
                     response.data.billingkelasall.forEach(v => {
+                        n++;
+                        let r = '';
+                        if (v.status_pembayaran == 'Expired') {
+                            r = 'readonly';
+                        }
+                        if (v.file) {
+                            r = 'readonly';
+                        }
+                        // console.log(encodeURIComponent(v.title));
+                        let title = encodeURIComponent(v.title);
                         if (!s) {
                             s = v.status==1?'Lunas':'Batal';
                         }
                         h+='<div class="card br-10 mb-4" style="background-color: #f7f7f7">';
                         h+='<div class="card-body">';
-                        h+='    <p class="m-0 text-capitalize">'+type+'</p>';
-                        h+='    <p class="text-uppercase">';
-                        h+='        <b>'+v.no_invoice+'</b>';
-                        h+='    </p>';
+                        h+='<div class="d-flex justify-content-between">';
+                        h+='    <div class="">';
+                        h+='        <h5 class="m-0 text-capitalize">'+type+'</h5>';
+                        h+='        <small class="text-secondary">No. Invoice</small>';
+                        h+='        <p class="text-uppercase">';
+                        h+='            <b>'+v.no_invoice+'</b>';
+                        h+='        </p>';
+                        h+='    </div>';
+                        h+='    <div class="text-right">';
+                        h+='        <small class="text-secondary">Jumlah Peserta</small>';
+                        h+='        <input type="text" class="form-control jumlah_peserta'+n+'" onchange="tambahPeserta('+v.id+','+v.participant_limit+','+ v.class_id+','+n+','+' {{ $reff ? $reff->code : '' }}'+')" '+r+'>';
+                        h+='    </div>';
+                        h+='    <div class="text-right">';
+                        h+='        <small class="text-secondary">Kode Promo</small>';
+                        h+='        <input type="text" class="form-control kode_promo'+n+'" onchange="kodePromo(`'+v.title+'`,'+n+','+v.id+')" '+r+'>';
+                        h+='    </div>';
+                        h+='</div>';
                         h+='    <div class="row">';
                         h+='        <div class="col-lg-9">';
                         h+='            <h5 class="m-0">'+v.title+'</h5>';
@@ -217,8 +241,10 @@
                                 h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Menunggu Konfirmasi'){
                                 h+='            <div class="btn btn-info text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
+                            }else if(v.status_pembayaran == 'Dibatalkan'){
+                                h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Menunggu Pembayaran'){
-                                h+='            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.class_id+','+v.id+','+ {{ $reff ? $reff->code : '' }}+')">'+v.status_pembayaran+'</button>';
+                                h+='            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+')">'+v.status_pembayaran+'</button>';
                             }else{
                                 h+='            <div class="btn btn-success text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }
@@ -246,5 +272,86 @@
         $('#class_id').val(class_id);
         $('#payment_id').val(payment);
         $('#ref').val(ref);        
+    }
+    function kodePromo(id,n,idpaymnet) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "/kode-promo",
+            method: 'post',
+            data: {
+                id: id,
+                kode: $('.kode_promo'+n).val(),
+                idpayment: idpaymnet
+            },
+            success: function(result) {
+                if (result.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: result.message,
+                    })
+                    location.reload()
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Maaf',
+                        text: result.message,
+                    })
+                }
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 1000);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                // var errors = jqXhr.responseJSON;
+                // var errorsHtml = '';
+                // console.log(errors['errors']);
+            }
+        })
+    }
+    function tambahPeserta(params, limit, classid, n, ref) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "bayar",
+            method: 'post',
+            data: {
+                payment_id: params,
+                limit: limit,
+                classid: classid,
+                jumlah: val,
+                ref: ref,
+            },
+            success: function(result) {
+                if (result.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: result.message,
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: result.message,
+                    })
+                }
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 1000);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
+                // var errors = jqXhr.responseJSON;
+                // var errorsHtml = '';
+                // console.log(errors['errors']);
+            }
+        })
     }
 </script>
