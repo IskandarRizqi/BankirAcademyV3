@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Front;
 
 use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
+use App\Models\BannerModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\ClassPricingModel;
+use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
 use App\Models\UserProfileModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -118,6 +121,120 @@ class OrderController extends Controller
         }
 
         return Redirect::back()->with('success', 'Upload Bukti Berhasil');
+    }
+    public function bayarv2(Request $request)
+    {
+        $insert = [];
+        $validator = Validator::make($request->all(), [
+            'class_id' => 'required',
+            'payment_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => 'Data Tidak Sesuai', 'data' => $validator]);
+        }
+
+        // Input Jumlah Peserta
+        $part = ClassPaymentModel::where('class_id', $request->class_id)->where('id', '!=', $request->payment_id)->sum('jumlah');
+        if ($request->limit < ($part + $request->jumlah)) {
+            return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh', 'data' => $request->limit]);
+        }
+        $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
+            'jumlah' => $request->jumlah,
+        ]);
+        if (!$cpm) {
+            return response()->json(['status' => false, 'message' => 'Peserta Tidak Tersimpan']);
+        }
+
+        // Cek File Size
+        // foreach ($request->input2 as $key => $value) {
+        //     $size = $request->file('input2')[$key]->getSize();
+        //     if (($size / 1024) > 100) {
+        //         return response()->json(['status' => false, 'message' => 'Size Maximum 100kb']);
+        //     }
+        //     $gambar = $value->store('order/' . Auth::user()->email . '/' . time());
+        // }
+        if ($request->gambar && $request->gambar != 'undefined') {
+            $name = $request->file('gambar')->getClientOriginalName(); // Name File
+            $size = $request->file('gambar')->getSize(); // Size File
+
+            if ($size >= 1048576) {
+                return response()->json(['status' => false, 'message' => 'Size Maximum 1Mb']);
+            }
+
+            $filename = time() . '-' . $name;
+            $file = $request->file('gambar');
+            $insert['file'] = $file->store('order/' . Auth::user()->email . '/' . time());
+        }
+
+        // Promo dari Banner
+        $bp = BannerModel::where('jenis', 2)->where('kode', $request->kode)->where('mulai', '<', Carbon::now())->where('selesai', '>=', Carbon::now())->get();
+        $kp = KodePromoModel::where('kode', $request->kode)->where('class_title', 'like', '%"' . urldecode($request->class_title) . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        // $kp = KodePromoModel::where('kode', $kode_promo)->where('class_title', 'like', '%"' . $title_kelas . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        if (count($kp) > 0) {
+            $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
+                'kode_promo' => $request->kode,
+            ]);
+            if (!$cpm) {
+                return response()->json(['message' => 'Update Promo Banner Gagal', 'status' => false]);
+            }
+        }
+        if (count($bp) > 0) {
+            $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
+                'kode_promo' => $request->kode,
+            ]);
+            if (!$cpm) {
+                return response()->json(['message' => 'Update Kode Promo Gagal', 'status' => false]);
+            }
+        }
+
+        $data['payment'] = ClassPaymentModel::where('id', $request->payment_id)->first();
+        $data['profile'] = UserProfileModel::where('user_id', $data['payment']->user_id)->first();
+        $kode = 0;
+        if ($data['payment']['promo']) {
+            // Cek kode promo Tersedia
+            $kode = $data['payment']['promo'];
+        }
+
+        // Deklarasi referral
+        $data['payment']['reff'] = 0;
+        $data['payment']['reff_nominal'] = 0;
+        $n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+        $data['payment']['totalAkhir'] = $n;
+        // Cek referral Tersedia
+        $available = 0;
+        $reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+        $additional_discount = [];
+        if ($reff) {
+            if ($reff->available == 1) {
+                $available = 1;
+            }
+            // Bila referral status 0 maka belum terpakai
+            if ($available == 0) {
+                // Ambil Master Referral Yang Dibuat Admin
+                $mr = MasterRefferralModel::first();
+                if ($mr) {
+                    $data['payment']['reff_nominal'] = $mr->nominal;
+                    $data['payment']['reff'] = $n * ($mr->potongan_harga / 100);
+                    $komisi = $data['payment']['reff'] * ($mr->nominal / 100);
+                    $data['payment']['totalAkhir'] = $n - $data['payment']['reff'];
+
+                    $additional_discount['reff_nominal'] = $mr->nominal;
+                    $additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
+                    $additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
+                    $additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
+                }
+            }
+        }
+
+        $insert['additional_discount'] = json_encode($additional_discount);
+        if ($request->kode) {
+            $insert['kode_promo'] = $request->kode;
+        }
+        $update = ClassPaymentModel::where('id', $request->payment_id)->update($insert);
+        if ($update) {
+            return response()->json(['message' => 'Upload Bukti Berhasil', 'status' => true, 'data' => $insert]);
+        }
+        return response()->json(['message' => 'Upload Bukti Gagal', 'status' => false]);
     }
     public function bayar(Request $request)
     {

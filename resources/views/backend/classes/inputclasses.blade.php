@@ -62,14 +62,12 @@
 										style="display: none;"></small>
 									<div class="input-group mb-4">
 										<input type="date" class="form-control" name="datClassesDateStart"
-											id="datClassesDateStart" placeholder="Date Start" aria-label="Date Start"
-											required>
+											id="datClassesDateStart" placeholder="Date Start" aria-label="Date Start">
 										<div class="input-group-append">
 											<span class="input-group-text" id="basic-addon5">s/d</span>
 										</div>
 										<input type="date" class="form-control" name="datClassesDateEnd"
-											id="datClassesDateEnd" placeholder="Date End" aria-label="Date End"
-											required>
+											id="datClassesDateEnd" placeholder="Date End" aria-label="Date End">
 									</div>
 								</div>
 							</div>
@@ -166,8 +164,8 @@
 								</div>
 								<div class="form-group ml-4">
 									<label for="numClassesPoin">Poin</label>
-									<input type="number" min="1" name="numClassesPoin"
-										id="numClassesPoin" class="form-control" required>
+									<input type="number" min="1" name="numClassesPoin" id="numClassesPoin"
+										class="form-control" required>
 								</div>
 							</div>
 							<div class="col-lg-12">
@@ -294,7 +292,7 @@
 		$('.inputerrormessage').hide();
 		$('#txaClassesContent').val(newClassCKEditor.getData());
 		var saveable=true;
-		var req = ['txtClassesTitle','slcClassesCategory','datClassesDateStart','datClassesDateEnd','txtClassesInstructor','slcClassesTags','filClassesImage','numClassesLimit','txaClassesContent','filClassesImageMobile'];
+		var req = ['txtClassesTitle','slcClassesCategory','txtClassesInstructor','slcClassesTags','filClassesImage','numClassesLimit','txaClassesContent','filClassesImageMobile'];
 		$('#newClassesForm').find('input,select,textarea').each(function () {
 			var nm = $(this).attr('id');
 			if(req.includes(nm)){

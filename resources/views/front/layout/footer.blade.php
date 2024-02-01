@@ -297,13 +297,18 @@
             method: 'post',
             data: data,
             success: function(result) {
-                console.log(result);
                 $('#login').attr('disabled', true)
-                iziToast.success({
-                    title: 'Success',
-                    message: 'Login Berhasil',
-                    position: 'topRight',
-                });
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Berhasil',
+                    text: "Silahkan tunggu, anda akan redirect otomatis",
+                })
+                // iziToast.success({
+                //     title: 'Success',
+                //     message: 'Login Berhasil',
+                //     position: 'topRight',
+                // });
                 setTimeout(() => {
                     if (result.length > 500) {
                         window.location = '/home';

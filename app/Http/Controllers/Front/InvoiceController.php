@@ -21,7 +21,6 @@ class InvoiceController extends Controller
 {
 	public function getInvoice(Request $r, $id)
 	{
-		// return $r->all();
 		$data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)
 			->where(function ($q) {
 				$role = Auth::user()->role;

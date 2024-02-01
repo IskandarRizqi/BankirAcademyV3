@@ -150,6 +150,7 @@ Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');
 Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar']);
+Route::post('/bayarv2', [App\Http\Controllers\Front\OrderController::class, 'bayarv2']);
 Route::post('/multi-bayar', [App\Http\Controllers\Front\OrderController::class, 'multibayar']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);

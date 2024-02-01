@@ -62,9 +62,13 @@
                                 <span hidden>
                                     {{ Carbon\Carbon::parse($v->date_start)->format('U') }}
                                 </span>
+                                @if($v->date_start)
                                 {{ Carbon\Carbon::parse($v->date_start)->format('d-m-Y') }}
                                 s/d
                                 {{ Carbon\Carbon::parse($v->date_end)->format('d-m-Y') }}
+                                @else
+                                Akan Datang
+                                @endif
                             </td>
                             <td class="text-truncate" style="max-width: 200px" title="{{ $v->title }}">
                                 {{ $v->title }}</td>

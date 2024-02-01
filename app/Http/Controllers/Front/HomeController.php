@@ -273,8 +273,9 @@ class HomeController extends Controller
                         $query->where('category', $data['carisearch']);
                     }
                 })
+                ->orWhereNull('date_start')
                 ->orderBy('date_end', 'asc')
-                ->paginate(9)
+                ->paginate(8)
                 ->toArray();
             return response()->json([
                 'success' => true,

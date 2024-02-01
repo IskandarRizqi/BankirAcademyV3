@@ -36,7 +36,8 @@ class ClassesController extends Controller
 		//Classes
 		$data['classes'] = ClassesModel::select('classes.*', 'biaya_sertifikat.type as tipebs', 'biaya_sertifikat.nominal')
 			->where(function ($q) use ($data) {
-				$q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
+				$q->where('date_start', '<=', $data['param']['date_start'])->orWhereNull('date_start');
+				// $q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
 				if ($data['param']['category']) {
 					$q->where('category', $data['param']['category']);
 				}
@@ -668,7 +669,22 @@ class ClassesController extends Controller
 		if ($request->jenis) {
 			$data['judul'] = str_replace('_', ' ', $request->jenis);
 		}
-		$data['banner'] = $this->bannerClass($data['judul']);
+		$data['tipe'] = [];
+		if ($request->type) {
+			foreach (json_decode($request->type) as $key => $value) {
+				if (!array_key_exists($value, $data['tipe'])) {
+					array_push($data['tipe'], $value);
+				}
+			}
+		}
+		$data['jeniss'] = [];
+		if ($request->jenis) {
+			foreach (json_decode($request->jenis) as $key => $value) {
+				if (!array_key_exists($value, $data['jeniss'])) {
+					array_push($data['jeniss'], $value);
+				}
+			}
+		}
 		$class_id = [];
 		$class = ClassesModel::select('id')->limit($limit)->get();
 		foreach ($class as $key => $value) {
@@ -676,23 +692,30 @@ class ClassesController extends Controller
 		}
 		$data['class'] = ClassesModel::select()
 			// ->whereIn('id', $class_id)
-			->where(function ($sql) use ($request) {
+			->where(function ($sql) use ($request, $data) {
 				if ($request->jenis) {
-					$sql->where('jenis', 'like', '%"' . strtoupper($request->jenis) . '"%');
+					foreach ($data['jeniss'] as $key => $va) {
+						$sql->OrWhere('jenis', 'like', '%' . $va . '%');
+					}
+				}
+				if ($request->type) {
+					foreach ($data['tipe'] as $key => $v) {
+						$sql->OrWhere('tipe', 'like', '%' . $v . '%');
+					}
 				}
 				if ($request->titlekelas) {
-					$sql->where('title', 'like', '%"' . strtoupper($request->titlekelas) . '"%');
+					$sql->where('titles', 'like', '%' . $request->titlekelas . '%');
 				}
 			})
-			->where('title', 'like', '%"' . strtoupper($request->titlekelas) . '"%')
-			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->where('status', 1)
+			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			// ->where('status', 1)
 			->orderBy('date_end', 'asc')
 			->paginate(9)
 			->toArray();
 		if ($request->ajax()) {
 			return $data['class'];
 		}
+		$data['banner'] = $this->bannerClass($data['judul']);
 		$data['pencarian'] = $this->pencarian();
 		// return $data;
 		return view('front.kelas.listclass', $data);
@@ -718,8 +741,7 @@ class ClassesController extends Controller
 		}
 		$data['banner'] = $this->bannerClass($data['judul']);
 		$data['class'] = ClassesModel::select()
-			->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->where('title', 'like', '%' . $request->titlekelas . '%')
+			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
 			// ->where(function ($sql) use ($checbox) {
 			// 	if (count($checbox) > 0) {
 			// 		for ($i = 0; $i < count($checbox); $i++) {
@@ -742,14 +764,14 @@ class ClassesController extends Controller
 			// 	}
 			// })
 			->where(function ($sql) use ($request) {
-				// if ($request->titlekelas) {
-				// 	$sql->where('title', 'like', '%"' . $request->titlekelas . '"%');
-				// }
+				if ($request->titlekelas) {
+					$sql->where('title', $request->titlekelas);
+				}
 				if ($request->instructor) {
-					$sql->where('instructor', 'like', '%"' . $request->instructor . '"%');
+					$sql->where('instructor', '%"' . $request->instructor . '"%');
 				}
 				if ($request->slcClassesCategory) {
-					$sql->where('category', 'like', '%"' . $request->slcClassesCategory . '"%');
+					$sql->where('category', '%"' . $request->slcClassesCategory . '"%');
 				}
 			})
 			->paginate(8)
@@ -757,11 +779,12 @@ class ClassesController extends Controller
 
 		$data['pencarian'] = $this->pencarian();
 		$data['slcClassesCategory'] = $request->slcClassesCategory;
-		$data['title'] = $request->titlekelas;
+		$data['titlekelas'] = $request->titlekelas;
 		$data['instructor'] = $request->instructor;
 		$data['tags'] = $request->checkbox;
 		$data['tipe'] = $request->tipe;
 		$data['jeniss'] = $request->jeniss;
+		// return $request->all();
 		return view('front.kelas.listclass', $data);
 	}
 

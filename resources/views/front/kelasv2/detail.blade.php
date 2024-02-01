@@ -142,7 +142,9 @@
                 </h3>
                 @endif
                 {{-- Bila Date End Lebih Kecil Dari Sekarang --}}
-                @if(\Carbon\Carbon::parse($class->date_end) < \Carbon\Carbon::now()) <button
+                @if(!$class->date_end)
+                <button class="button button-circle btn-block text-center" disabled>Kelas Belum Tersedia</button>
+                @elseif(\Carbon\Carbon::parse($class->date_end) < \Carbon\Carbon::now()) <button
                     class="button button-circle btn-block text-center" disabled>Kelas Sudah
                     Penuh</button>
                     @else

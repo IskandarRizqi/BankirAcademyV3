@@ -276,9 +276,9 @@
                 </div>
                 <div class="title text-uppercase ml-1">
                     <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
-                        <h5 class="mb-2">
-                            {{strlen($val->title)>=50?substr($val->title,0,47).' ...':$val->title}}
-                        </h5>
+                        <h6 class="mb-2">
+                            {{strlen($val->title)>=90?substr($val->title,0,87).' ...':$val->title}}
+                        </h6>
                     </a>
                 </div>
                 <div class="author text-uppercase ml-1">
@@ -574,13 +574,17 @@
                     h +='            <path d="M3.80261 1.84998V3.7684M10.1974 1.84998V3.7684" stroke="#005CFF" stroke-width="2"';
                     h +='                stroke-linecap="round" />';
                     h +='        </svg>';
-                    h +='        <p for="" class="text-capitalize text-blue m-0 ml-1">'+new Date(v.date_end).toLocaleDateString('id-ID')+'</p>';
+                    if (v.date_end) {
+                        h +='        <p for="" class="text-capitalize text-blue m-0 ml-1">'+new Date(v.date_end).toLocaleDateString('id-ID')+'</p>';
+                    } else {
+                        h +='        <p for="" class="text-capitalize text-blue m-0 ml-1">Akan Datang</p>';
+                    }
                     h +='    </div>';
                     h +='    <div class="title text-uppercase ml-1">';
                     h +='        <a href="/class/'+v.unique_id+'/'+v.title.replace('/', '-')+'">';
-                    h +='            <h4 class="mb-2" title="'+v.title+'">';
-                    h +='                '+(v.title.length>=30?v.title.substring(0,27)+' ...':v.title)+' {{-- maksimal 60 huruf --}}';
-                    h +='            </h4>';
+                    h +='            <h6 class="mb-2" title="'+v.title+'">';
+                    h +='                '+(v.title.length>=60?v.title.substring(0,57)+' ...':v.title)+' {{-- maksimal 60 huruf --}}';
+                    h +='            </h6>';
                     h +='        </a>';
                     h +='    </div>';
                     h +='    <div class="author text-uppercase ml-1">';

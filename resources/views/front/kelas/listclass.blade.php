@@ -79,7 +79,7 @@
                                         @foreach ($pencarian['tags'] as $key => $ctg)
                                         <div>
                                             <div class="col d-flex">
-                                                <input id="checkbox-{{ $key }}" class="checkbox-style"
+                                                <input id="checkbox-{{ $key }}" class="checkbox-style ini-checkbox-1"
                                                     name="checkbox[{{ $ctg }}]" type="checkbox" @if (isset($tags)) {{
                                                     array_key_exists($ctg, $tags) ? 'checked' : '' }} @endif>
                                                 <label for="checkbox-{{ $key }}" class="checkbox-style-1-label">{{ $ctg
@@ -97,9 +97,10 @@
                                         @foreach ($pencarian['jenis'] as $key => $ctg)
                                         <div>
                                             <div class="col d-flex">
-                                                <input id="jenis-{{ $key }}" class="checkbox-style"
+                                                <input id="jenis-{{ $key }}" class="checkbox-style ini-checkbox-1"
                                                     name="jeniss[{{ $ctg }}]" type="checkbox" @if (isset($jeniss)) {{
-                                                    array_key_exists($ctg, $jeniss) ? 'checked' : '' }} @endif>
+                                                    array_key_exists($ctg, $jeniss) ? 'checked' : '' }} @endif
+                                                    value="{{$ctg}}">
                                                 <label for="jenis-{{ $key }}" class="checkbox-style-1-label">{{ $ctg
                                                     }}</label>
                                             </div>
@@ -115,9 +116,10 @@
                                         @foreach ($pencarian['tipe'] as $key => $ctg)
                                         <div>
                                             <div class="col d-flex">
-                                                <input id="tipe-{{ $key }}" class="checkbox-style"
+                                                <input id="tipe-{{ $key }}" class="checkbox-style ini-checkbox-2"
                                                     name="tipe[{{ $ctg }}]" type="checkbox" @if (isset($tipe)) {{
-                                                    array_key_exists($ctg, $tipe) ? 'checked' : '' }} @endif>
+                                                    array_key_exists($ctg, $tipe) ? 'checked' : '' }} @endif
+                                                    value="{{$ctg}}">
                                                 <label for="tipe-{{ $key }}" class="checkbox-style-1-label">{{ $ctg
                                                     }}</label>
                                             </div>
@@ -128,8 +130,9 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-sm mt-2"
-                        style="padding-left: 15px !important; padding-right: 15px !important">Cari</button>
+                    <span class="btn btn-primary btn-block btn-sm mt-2"
+                        style="padding-left: 15px !important; padding-right: 15px !important"
+                        id="btnlistkelascari">Cari</span>
                 </div>
 
             </form>
@@ -156,8 +159,10 @@
     let isLogin = $('#isLogin').val();
     let longPage = $('#longPage').val();
     $(document).ready(function () {
+        loaddata()
         window.onscroll = function (e) {
-            if (window.pageYOffset != undefined) {
+            
+        if (window.pageYOffset != undefined) {
                 no_scroll = pageYOffset;
             } else {
                 let x_axis, y_axis, doc = document,
@@ -179,10 +184,44 @@
             if (no_scroll > load_scoll) {
                 load_scoll+=1200;
                 console.log('load data '+page_scroll);
-            page_scroll++;
-            return new Promise((resolve, reject) => {
+                page_scroll++;
+            loaddata();
+            
+        }
+        }
+        $('#btnlistkelascari').on('click',function () {
+            loaddata();
+        })
+    })
+    function loaddata() {
+        const jenis = [];
+        const type = [];
+        $('.ini-checkbox-1').each(function(idx, el){
+        if($(el).is(':checked')){
+            if (!($(el).val() in jenis)) {
+                jenis.push($(el).val())
+            }
+        }
+        });
+        $('.ini-checkbox-2').each(function(idx, el){
+        if($(el).is(':checked')){ 
+            if (!($(el).val() in type)) {
+                type.push($(el).val())
+            }
+        }
+        });
+        // return console.log([jenis,type]);
+            // return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: '/list-class?page='+page_scroll,
+                    url: '/list-class',
+                    data:{
+                        page:page_scroll,
+                        titlekelas:$('#titlekelas').val(),
+                        kategori:$('#slcClassesCategory').val(),
+                        instructor:$('#instructor').val(),
+                        jenis:JSON.stringify(jenis),
+                        type:JSON.stringify(type),
+                    },
                     type: 'GET',
                     beforeSend: function() {
                         $('.ajax-load').show();
@@ -239,15 +278,12 @@
                                 html+='    </div>';
                                 html+='</div>';
                             });
-                            $('#listkelas').append(html);
+                            $('#listkelas').html(html);
                         }
                     }
                 });
-            });
-            }
-            
-        }
-    })
+            // });
+    }
     $('#tags').select2({
             tagging: true,
         })

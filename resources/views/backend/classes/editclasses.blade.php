@@ -69,13 +69,13 @@
 									<div class="input-group mb-4">
 										<input type="date" class="form-control" name="datClassesDateStart"
 											id="datClassesDateStart" placeholder="Date Start" aria-label="Date Start"
-											value="{{$classes->date_start}}" required>
+											value="{{$classes->date_start}}">
 										<div class="input-group-append">
 											<span class="input-group-text" id="basic-addon5">s/d</span>
 										</div>
 										<input type="date" class="form-control" name="datClassesDateEnd"
 											id="datClassesDateEnd" placeholder="Date End" aria-label="Date End"
-											value="{{$classes->date_end}}" required>
+											value="{{$classes->date_end}}">
 									</div>
 								</div>
 							</div>
