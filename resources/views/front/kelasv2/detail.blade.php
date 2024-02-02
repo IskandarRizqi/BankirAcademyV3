@@ -202,9 +202,9 @@
         <div id="sld3" class="mt-4">
             @foreach($kelas_populer as $key => $val)
             <div>
-                <div class="card">
-                    <div class="card-body" style="padding: 1px; background-color: gold">
-                        <img src="{{asset($val->image)}}" alt="" width="100%">
+                <div class="card mr-2">
+                    <div class="card-body br-10" style="padding: 1px;">
+                        <img src="{{asset($val->image)}}" alt="" width="100%" class="br-10">
                     </div>
                 </div>
                 <div class="d-flex align-items-center ml-2">
@@ -220,9 +220,9 @@
                 </div>
                 <div class="title text-uppercase ml-1">
                     <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
-                        <h4 class="mb-2">
-                            {{strlen($val->title)>=30?substr($val->title,0,27).' ...':$val->title}}
-                        </h4>
+                        <h6 class="mb-2">
+                            {{strlen($val->title)>=90?substr($val->title,0,87).' ...':$val->title}}
+                        </h6>
                     </a>
                 </div>
                 <div class="author text-uppercase ml-1">

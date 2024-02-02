@@ -51,8 +51,8 @@
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon5">s/d</span>
                                     </div>
-                                    <input type="date" class="form-control" name="datPromoDateEnd"
-                                        id="datPromoDateEnd" placeholder="Promo End" aria-label="Promo End">
+                                    <input type="date" class="form-control" name="datPromoDateEnd" id="datPromoDateEnd"
+                                        placeholder="Promo End" aria-label="Promo End">
                                 </div>
                             </div>
                         </div>
@@ -68,8 +68,7 @@
                                     <div class="col-lg-3">
                                         <div class="input-group mb-4">
                                             <input type="number" name="numClassPromoPrctg" step="any"
-                                                id="numClassPromoPrctg" class="form-control clsNumberOnPrice"
-                                                value="0">
+                                                id="numClassPromoPrctg" class="form-control clsNumberOnPrice" value="0">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                             </div>
@@ -79,8 +78,8 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn" data-dismiss="modal" onclick="closemodal('#classPricingModal')"><i
-                            class="flaticon-cancel-12"></i> Discard</button>
+                    <span class="btn" data-dismiss="modal" onclick="closemodal('#classPricingModal')"><i
+                            class="flaticon-cancel-12"></i> Discard</span>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>

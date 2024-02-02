@@ -5,7 +5,9 @@
             <div class="row">
                 <div class="col-lg-2 text-center">
                     <div class="card br-10">
+                        @if($value->lamaran->image)
                         <img src="image/loker/{{json_decode($value->lamaran->image)->url}}" alt="" width="100%">
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-10">
@@ -55,4 +57,38 @@
         </div>
     </div>
     @endforeach
+    <h3 class="mt-5">Daftar Lowongan Kerja</h3>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="datatable3" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Perusahaan</th>
+                            <th>Jabatan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($loker as $key => $value)
+                        <tr>
+                            <td>{{$key+1}}</td>
+                            <td>{{$value->nama?$value->nama:'PT. Anugrah Karya'}}</td>
+                            <td>{{$value->title}}</td>
+                            <td>
+                                <form id="orderForm" action="{{ '/loker/apply' }}" method="POST">
+                                    @csrf
+                                    <input type="text" id="class_id" name="class_id" value="{{ $value->id }}" hidden>
+                                    <button class="button button-circle">Kirim
+                                        Lamaran</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

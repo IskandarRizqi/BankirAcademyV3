@@ -30,6 +30,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     });
     Route::resource('/admin/prepotes', App\Http\Controllers\Backend\PrepotestController::class);
     Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
+    Route::post('/admin/classes/setadditional', [App\Http\Controllers\Admin\ClassesController::class, 'setadditional']);
     Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class, 'setpricing']);
     Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class, 'setcontent']);
     Route::post('/admin/classes/setevent', [App\Http\Controllers\Admin\ClassesController::class, 'setevent']);

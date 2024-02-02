@@ -159,7 +159,6 @@ class ProfileController extends Controller
             ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
             ->where('user_profile.user_id', $auth_id)
             ->first();
-
         $data['billingkelasall'] = $this->getbillingkelas(100);
         $data['getkelasanda'] = $this->getkelasanda(100);
         $data['reff'] = RefferralPesertaModel::where('user_id', $auth_id)->first();
@@ -173,6 +172,17 @@ class ProfileController extends Controller
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
         $data['member'] = MembershipModel::orderBy('harga')->limit(3)->get();
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
+        $lokerid = []; // id loker yang pernah di apply
+        foreach ($data['lamaran'] as $key => $value) {
+            if (!in_array($value->loker_id, $lokerid)) {
+                array_push($lokerid, $value->loker_id);
+            }
+        }
+        $limitloker = 10;
+        $data['loker'] = LokerModel::select()
+            ->whereNotIn('id', $lokerid)
+            ->limit($limitloker)
+            ->get();
         return view('front.profilev2.index', $data);
     }
 

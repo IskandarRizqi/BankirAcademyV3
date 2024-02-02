@@ -5,6 +5,7 @@
 /storage/*.key
 /vendor
 /public/Image
+/public/video
 *.zip
 .env
 .env.backup

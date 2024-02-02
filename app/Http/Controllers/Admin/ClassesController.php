@@ -354,6 +354,31 @@ class ClassesController extends Controller
 		return Redirect::back()->with('success', 'Class not Changed');
 	}
 
+	// set video
+	public function setadditional(Request $r)
+	{
+		$video = [];
+		// Data Meta Image
+		if ($r->video) {
+			$namevideo = $r->file('video')->getClientOriginalName();
+			$sizevideo = $r->file('video')->getSize();
+			// if ($sizevideo >= 1048576) {
+			// 	return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
+			// }
+			$filename2 = time() . '-' . $namevideo;
+			$file = $r->file('video');
+			$file->move(public_path('video/kelas/' . Auth::user()->email), $filename2);
+			$video['image'] = $filename2;
+			$video['size'] = $sizevideo;
+		}
+		ClassesModel::where('id', $r->hdnClassesId)->update([
+			'is_terpopuler' => $r->video_kelas_terpopuler,
+			'is_sebelumnya' => $r->video_kelas_sebelumnya,
+			'video' => json_encode($video),
+		]);
+		return Redirect::back()->with('success', 'Kelas Updated');
+	}
+
 	public function setpricing(Request $r)
 	{
 		$p = 0;
@@ -679,10 +704,14 @@ class ClassesController extends Controller
 		}
 		$data['jeniss'] = [];
 		if ($request->jenis) {
-			foreach (json_decode($request->jenis) as $key => $value) {
-				if (!array_key_exists($value, $data['jeniss'])) {
-					array_push($data['jeniss'], $value);
+			if (json_decode($request->jenis)) {
+				foreach (json_decode($request->jenis) as $key => $value) {
+					if (!array_key_exists($value, $data['jeniss'])) {
+						array_push($data['jeniss'], $value);
+					}
 				}
+			} else {
+				array_push($data['jeniss'], $request->jenis);
 			}
 		}
 		$class_id = [];
@@ -704,7 +733,7 @@ class ClassesController extends Controller
 					}
 				}
 				if ($request->titlekelas) {
-					$sql->where('titles', 'like', '%' . $request->titlekelas . '%');
+					$sql->where('title', 'like', '%' . $request->titlekelas . '%');
 				}
 			})
 			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))

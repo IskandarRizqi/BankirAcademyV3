@@ -118,8 +118,8 @@
                                         onclick="biayasertifikat('{{$v->id}}','{{$v->tipebs}}','{{$v->nominal}}')">Biaya
                                         Sertifikat</span>
                                 </div>
-                                <div class="dropdown">
-                                </div>
+                                <button class="btn bs-tooltip {{ $v->videos ? 'btn-info' : 'btn-dark' }}" title="Video"
+                                    onclick="classVideo({{ $v }})"><i class='bx bx-video-plus'></i></button>
                             </td>
                             <td>
                                 <div class="dropdown">
@@ -226,6 +226,7 @@
 </div>
 @include('backend.classes.newclassesmodal')
 @include('backend.classes.classpricingmodal')
+@include('backend.classes.classvideomodal')
 @include('backend.classes.classcontentmodal')
 @endsection
 @section('custom-js')
@@ -381,6 +382,14 @@
             })
         }
 
+        function classVideo(c) {
+            $('.hdnClassesId').val(c.id);
+            $('.activeClassTitle').text(c.title);
+            if (c.videos) {
+                $('#video_preview').attr('src','/video/kelas/'+`{{Auth::user()->email}}`+'/'+c.videos.image);
+            }
+            openmodal('#classVideoModal');
+        }
         function classPricing(c) {
             $('#numClassPrice').val(0);
             $('#numClassPromo').val(0);

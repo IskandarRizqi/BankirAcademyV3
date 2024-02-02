@@ -31,6 +31,9 @@ class ClassesModel extends Model
 		'status',
 		'poin',
 		'is_open',
+		'is_terpopuler',
+		'is_sebelumnya',
+		'video',
 	];
 
 	protected $appends = [
@@ -42,7 +45,19 @@ class ClassesModel extends Model
 		'peserta_list',
 		'total_peserta',
 		'event_list',
+		'videos',
 	];
+
+	public function getVideosAttribute()
+	{
+		if (array_key_exists('video', $this->attributes)) {
+			$v = json_decode($this->attributes['video']);
+			if ($v) {
+				return $v;
+			}
+			return null;
+		}
+	}
 
 	public function getInstructorListAttribute()
 	{

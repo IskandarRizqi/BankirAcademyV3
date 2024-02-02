@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="">
-                    <button class="btn btn-primary br-1 brn-block">Telusuri</button>
+                    <button class="btn btn-primary br-1 btn-block br-20">Telusuri</button>
                 </div>
             </div>
         </form>
@@ -95,7 +95,7 @@
         @foreach($kelas_populer as $key => $val)
         <div class="col-lg-3 mb-2" style="max-height: 390px">
             <div class="card">
-                <div class="card-body br-10" style="padding: 1px; background-color: gold">
+                <div class="card-body br-10" style="padding: 1px;">
                     <img src="{{asset($val->image)}}" alt="" width="100%" style="border-radius:18px">
                     {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px"> --}}
                 </div>
@@ -210,7 +210,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group m-0 p-2">
                                     <span>
-                                        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"
+                                        <svg class="mr-2" width="16" height="16" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M7.30248 7.41754C6.68717 7.41754 6.08566 7.23507 5.57404 6.89322C5.06242 6.55137 4.66367 6.06548 4.42819 5.497C4.19272 4.92851 4.13111 4.30297 4.25115 3.69948C4.3712 3.09598 4.6675 2.54163 5.1026 2.10654C5.53769 1.67144 6.09204 1.37514 6.69554 1.25509C7.29903 1.13505 7.92457 1.19666 8.49306 1.43213C9.06154 1.66761 9.54743 2.06636 9.88928 2.57798C10.2311 3.0896 10.4136 3.69111 10.4136 4.30643C10.4136 5.13154 10.0858 5.92287 9.50237 6.50631C8.91893 7.08976 8.1276 7.41754 7.30248 7.41754ZM7.30248 2.11976C6.86297 2.11976 6.43333 2.25009 6.06788 2.49427C5.70244 2.73845 5.41761 3.08552 5.24942 3.49157C5.08122 3.89763 5.03722 4.34445 5.12296 4.77552C5.20871 5.20658 5.42035 5.60255 5.73114 5.91333C6.04192 6.22411 6.43788 6.43576 6.86895 6.5215C7.30002 6.60725 7.74683 6.56324 8.15289 6.39505C8.55895 6.22685 8.90601 5.94202 9.15019 5.57658C9.39438 5.21114 9.52471 4.7815 9.52471 4.34198C9.52471 4.05015 9.46723 3.76119 9.35555 3.49157C9.24387 3.22196 9.08018 2.97698 8.87383 2.77063C8.66748 2.56428 8.4225 2.40059 8.15289 2.28892C7.88328 2.17724 7.59431 2.11976 7.30248 2.11976ZM9.77804 7.95531C7.37289 7.41411 4.85672 7.67478 2.6136 8.69754C2.3051 8.8449 2.04482 9.07686 1.86306 9.36642C1.6813 9.65598 1.58554 9.99122 1.58693 10.3331V12.9775C1.58693 13.0359 1.59842 13.0937 1.62076 13.1476C1.6431 13.2015 1.67583 13.2505 1.7171 13.2918C1.75837 13.3331 1.80737 13.3658 1.86129 13.3882C1.91521 13.4105 1.97301 13.422 2.03137 13.422C2.08974 13.422 2.14753 13.4105 2.20145 13.3882C2.25538 13.3658 2.30437 13.3331 2.34564 13.2918C2.38691 13.2505 2.41965 13.2015 2.44199 13.1476C2.46432 13.0937 2.47582 13.0359 2.47582 12.9775V10.3331C2.47195 10.1601 2.51867 9.98968 2.61025 9.84284C2.70184 9.69599 2.83429 9.57907 2.99137 9.50643C4.3426 8.88252 5.81418 8.56241 7.30248 8.56865C8.1364 8.56758 8.96746 8.66606 9.77804 8.86198V7.95531ZM9.84026 12.182H12.5692V12.8042H9.84026V12.182Z"
@@ -258,7 +258,7 @@
             @foreach($kelas_lama as $key => $val)
             <div>
                 <div class="card mr-2">
-                    <div class="card-body br-10" style="padding: 1px; background-color: gold">
+                    <div class="card-body br-10" style="padding: 1px;">
                         <img src="{{asset($val->image)}}" alt="" width="100%" style="border-radius: 18px">
                         {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius: 18px"> --}}
                     </div>
@@ -427,7 +427,7 @@
                 {
                     breakpoint: 480,
                     settings: {
-                        slidesToShow: 1,
+                        slidesToShow: 2,
                         slidesToScroll: 1,
                         infinite: true,
                         dots: false
@@ -560,8 +560,9 @@
                 let h = '';
                 data.data.kelas.data.forEach(v => {
                     h +='<div class="col-lg-3 mb-2" style="max-height: 390px">';
+                        h +='        <a href="/class/'+v.unique_id+'/'+v.title.replace('/', '-')+'">';
                     h +='    <div class="card">';
-                    h +='        <div class="card-body br-10" style="padding: 1px; background-color: gold;">';
+                    h +='        <div class="card-body br-10" style="padding: 1px;;">';
                     h +='            <img src="'+v.image+'" alt="" width="100%" style="border-radius:18px">';
                     // h +='            <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px">';
                     h +='        </div>';
@@ -581,12 +582,11 @@
                     }
                     h +='    </div>';
                     h +='    <div class="title text-uppercase ml-1">';
-                    h +='        <a href="/class/'+v.unique_id+'/'+v.title.replace('/', '-')+'">';
                     h +='            <h6 class="mb-2" title="'+v.title+'">';
                     h +='                '+(v.title.length>=60?v.title.substring(0,57)+' ...':v.title)+' {{-- maksimal 60 huruf --}}';
                     h +='            </h6>';
-                    h +='        </a>';
                     h +='    </div>';
+                    h +='        </a>';
                     h +='    <div class="author text-uppercase ml-1">';
                     h +='        <a href="/profile-instructor/'+v.instructor_list[0].id+'/'+v.instructor_list[0].name+'" class="mb-2">';
                     h +=            v.instructor_list[0].name;

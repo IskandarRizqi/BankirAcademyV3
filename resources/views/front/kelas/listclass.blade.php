@@ -227,9 +227,8 @@
                         $('.ajax-load').show();
                     },
                     success: function(response) {
-                        console.log(response.data);
                         let html='';
-                        if (response.data) {
+                        if (response.data.length > 0) {
                             response.data.forEach(dt => {
                                 html+='<div class="col-lg-4 col-sm-6">';
                                 html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">';

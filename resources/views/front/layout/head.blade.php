@@ -31,7 +31,6 @@
   <link rel="stylesheet" href="{{asset('front/css/magnific-popup.css')}}" type="text/css" />
 
   <link rel="stylesheet" href="{{asset('front/css/custom.css')}}" type="text/css" />
-
   <!-- SLIDER REVOLUTION 5.x CSS SETTINGS -->
   <link rel="stylesheet" href="{{asset('front/css/components/ion.rangeslider.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{asset('front/css/components/radio-checkbox.css')}}" type="text/css" />
