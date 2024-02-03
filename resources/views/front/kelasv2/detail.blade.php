@@ -202,8 +202,8 @@
         <div id="sld3" class="mt-4">
             @foreach($kelas_populer as $key => $val)
             <div>
-                <div class="card mr-2">
-                    <div class="card-body br-10" style="padding: 1px;">
+                <div class="card mr-2" style="border-color: transparent;">
+                    <div class="card-body br-10" style="padding: 1px; border-color: transparent;">
                         <img src="{{asset($val->image)}}" alt="" width="100%" class="br-10">
                     </div>
                 </div>

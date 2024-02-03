@@ -94,7 +94,7 @@
     <div class="row mt-4">
         @foreach($kelas_populer as $key => $val)
         <div class="col-lg-3 mb-2" style="max-height: 390px">
-            <div class="card">
+            <div class="card" style="border-color:transparent">
                 <div class="card-body br-10" style="padding: 1px;">
                     <img src="{{asset($val->image)}}" alt="" width="100%" style="border-radius:18px">
                     {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px"> --}}
@@ -257,7 +257,7 @@
         <div id="sld5">
             @foreach($kelas_lama as $key => $val)
             <div>
-                <div class="card mr-2">
+                <div class="card mr-2" style="border-color:transparent">
                     <div class="card-body br-10" style="padding: 1px;">
                         <img src="{{asset($val->image)}}" alt="" width="100%" style="border-radius: 18px">
                         {{-- <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius: 18px"> --}}
@@ -561,7 +561,7 @@
                 data.data.kelas.data.forEach(v => {
                     h +='<div class="col-lg-3 mb-2" style="max-height: 390px">';
                         h +='        <a href="/class/'+v.unique_id+'/'+v.title.replace('/', '-')+'">';
-                    h +='    <div class="card">';
+                    h +='    <div class="card" style="border-color:transparent">';
                     h +='        <div class="card-body br-10" style="padding: 1px;;">';
                     h +='            <img src="'+v.image+'" alt="" width="100%" style="border-radius:18px">';
                     // h +='            <img src="/GambarV2/rectangle31.png" alt="" width="100%" style="border-radius:18px">';
@@ -588,7 +588,7 @@
                     h +='    </div>';
                     h +='        </a>';
                     h +='    <div class="author text-uppercase ml-1">';
-                    h +='        <a href="/profile-instructor/'+v.instructor_list[0].id+'/'+v.instructor_list[0].name+'" class="mb-2">';
+                    h +='        <a href="/profile-instructor/'+v.instructor_list[0].id+'/'+v.instructor_list[0].name+'" class="mb-2" style="font-size:12px">';
                     h +=            v.instructor_list[0].name;
                     h +='        </a>';
                     h +='    </div>';
@@ -603,7 +603,7 @@
                     h +='        </div>';
                     h +='    </div>';
                     h +='    <div class="price text-uppercase ml-1">';
-                    h +='        <h3 class="mb-2">';
+                    h +='        <p class="mb-2" style="font-size:12px">';
                         if (v.pricing) {
                             if (v.pricing.promo) {
                                 h +='            Rp. '+formatCurrency((v.pricing.price - v.pricing.promo_price).toString());
@@ -613,7 +613,7 @@
                         }else{
                             h +='-';
                         }
-                    h +='        </h3>';
+                    h +='        </p>';
                     h +='    </div>';
                     h +='</div>';
                 });
