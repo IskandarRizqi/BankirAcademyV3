@@ -49,11 +49,14 @@ class BerandaLoker extends Controller
                         return $query->where('loker.kabupaten', $request->kabupaten);
                     }
                 })
-                ->whereDate('tanggal_awal', '<=', Carbon::now())
-                ->whereDate('tanggal_akhir', '>=', Carbon::now())
+                // ->whereDate('tanggal_awal', '<=', Carbon::now())
+                // ->whereDate('tanggal_akhir', '>=', Carbon::now())
                 ->orderBy('tanggal_akhir', 'asc')
                 ->where('loker.status', 1)
                 ->paginate(6);
+            foreach ($data['data'] as $key => $vv) {
+                $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
+            }
             return $data;
         }
         return view('front.loker.loker', $x);

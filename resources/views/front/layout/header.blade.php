@@ -110,7 +110,7 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a class="menu-link" href="/list-class?jenis=management_trainer">
+                                    <a class="menu-link" href="/list-class?jenis=management_trainee">
                                         <div>Management Trainee</div>
                                     </a>
                                 </li>

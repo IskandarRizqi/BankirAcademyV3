@@ -99,7 +99,7 @@
                                             <div class="col d-flex">
                                                 <input id="jenis-{{ $key }}" class="checkbox-style ini-checkbox-1"
                                                     name="jeniss[{{ $ctg }}]" type="checkbox" @if (isset($jeniss)) {{
-                                                    array_key_exists($ctg, $jeniss) ? 'checked' : '' }} @endif
+                                                    in_array(strtolower($ctg), $jeniss) ? 'checked' : '' }} @endif
                                                     value="{{$ctg}}">
                                                 <label for="jenis-{{ $key }}" class="checkbox-style-1-label">{{ $ctg
                                                     }}</label>
@@ -118,8 +118,7 @@
                                             <div class="col d-flex">
                                                 <input id="tipe-{{ $key }}" class="checkbox-style ini-checkbox-2"
                                                     name="tipe[{{ $ctg }}]" type="checkbox" @if (isset($tipe)) {{
-                                                    array_key_exists($ctg, $tipe) ? 'checked' : '' }} @endif
-                                                    value="{{$ctg}}">
+                                                    in_array($ctg, $tipe) ? 'checked' : '' }} @endif value="{{$ctg}}">
                                                 <label for="tipe-{{ $key }}" class="checkbox-style-1-label">{{ $ctg
                                                     }}</label>
                                             </div>

@@ -337,7 +337,7 @@
 		$('.inputerrormessage').hide();
 		$('#txaClassesContent').val(newClassCKEditor.getData());
 		var saveable=true;
-		var req = ['txtClassesTitle','slcClassesCategory','datClassesDateStart','datClassesDateEnd','txtClassesInstructor','slcClassesTags','numClassesLimit','txaClassesContent',];
+		var req = ['txtClassesTitle','slcClassesCategory','txtClassesInstructor','slcClassesTags','numClassesLimit','txaClassesContent',];
 		$('#newClassesForm').find('input,select,textarea').each(function () {
 			var nm = $(this).attr('id');
 			if(req.includes(nm)){

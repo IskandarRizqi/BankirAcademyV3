@@ -611,10 +611,7 @@ class ClassesController extends Controller
 		foreach ($tags as $key => $value) {
 			if ($value) {
 				foreach (json_decode($value) as $key => $v) {
-					// $data['tag'] = $v;
-					if (array_search($v, $data['tags'])) {
-						// 
-					} else {
+					if (!in_array($v, $data['tags'])) {
 						array_push($data['tags'], $v);
 					}
 				}
@@ -625,11 +622,8 @@ class ClassesController extends Controller
 		$data['jenis'] = [];
 		foreach ($jenis as $key => $value) {
 			if ($value) {
-				foreach (json_decode($value) as $key => $v) {
-					// $data['tag'] = $v;
-					if (array_search($v, $data['jenis'])) {
-						// 
-					} else {
+				foreach (json_decode($value) as $ke => $v) {
+					if (!in_array($v, $data['jenis'])) {
 						array_push($data['jenis'], $v);
 					}
 				}
@@ -641,10 +635,7 @@ class ClassesController extends Controller
 		foreach ($tipe as $key => $value) {
 			if ($value) {
 				foreach (json_decode($value) as $key => $v) {
-					// $data['tag'] = $v;
-					if (array_search($v, $data['tipe'])) {
-						// 
-					} else {
+					if (!in_array($v, $data['tipe'])) {
 						array_push($data['tipe'], $v);
 					}
 				}
@@ -720,16 +711,15 @@ class ClassesController extends Controller
 			array_push($class_id, $value->id);
 		}
 		$data['class'] = ClassesModel::select()
-			// ->whereIn('id', $class_id)
 			->where(function ($sql) use ($request, $data) {
 				if ($request->jenis) {
 					foreach ($data['jeniss'] as $key => $va) {
-						$sql->OrWhere('jenis', 'like', '%' . $va . '%');
+						$sql->where('jenis', 'like', '%' . strtoupper($va) . '%');
 					}
 				}
 				if ($request->type) {
 					foreach ($data['tipe'] as $key => $v) {
-						$sql->OrWhere('tipe', 'like', '%' . $v . '%');
+						$sql->where('tipe', 'like', '%' . strtoupper($v) . '%');
 					}
 				}
 				if ($request->titlekelas) {
@@ -737,7 +727,6 @@ class ClassesController extends Controller
 				}
 			})
 			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			// ->where('status', 1)
 			->orderBy('date_end', 'asc')
 			->paginate(9)
 			->toArray();
@@ -797,10 +786,10 @@ class ClassesController extends Controller
 					$sql->where('title', $request->titlekelas);
 				}
 				if ($request->instructor) {
-					$sql->where('instructor', '%"' . $request->instructor . '"%');
+					$sql->where('instructor', '%' . $request->instructor . '%');
 				}
 				if ($request->slcClassesCategory) {
-					$sql->where('category', '%"' . $request->slcClassesCategory . '"%');
+					$sql->where('category', '%' . $request->slcClassesCategory . '%');
 				}
 			})
 			->paginate(8)
