@@ -1,4 +1,4 @@
-<body class="stretched" style="font-family: Cambria">
+<body class="stretched" style="font-family: Cambria !important">
     @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
     <!-- Document Wrapper
 	============================================= -->

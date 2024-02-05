@@ -5,6 +5,10 @@
     .text-white {
         color: white;
     }
+
+    .card-body ul {
+        margin-left: 15px;
+    }
 </style>
 <section class="content">
     <div class="" style="background-image: url(/GambarV2/maskgroup.jpg); background-position: center; width: 100%;">

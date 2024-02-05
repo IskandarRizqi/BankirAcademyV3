@@ -1,6 +1,12 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
 @include(env('CUSTOM_HEADER', 'front.layout.header'))
+<style>
+    .slick-prev:before,
+    .slick-next:before {
+        color: #007bff;
+    }
+</style>
 <section id="content">
     <div class="container mt-4">
         <form action="/list-class" method="POST">
@@ -160,7 +166,9 @@
         @endforeach
     </div>
     {{-- </div> --}}
-    <img class="br-10" src="/GambarV2/BankirAcademy.png" alt="" width="100%">
+    <div class="container">
+        <img class="br-10" src="/GambarV2/BankirAcademy.png" alt="">
+    </div>
     {{-- <div class="container"> --}}
         {{-- lowongan kerja loker --}}
         <div id="sld3" class="mt-4">
@@ -171,9 +179,18 @@
                         <div class="card-body p-2" style="font-size: 12px">
                             <small for="" class="text-blue m-0">Dibutuhkan</small>
                             <p class="m-0" style="font-size: 16px;font-weight: bold">{{substr($value->title,0,26)}}</p>
-                            @if($value->image)
+                            {{-- @if($value->image)
                             <img src="image/loker/{{json_decode($value->image)->url}}" alt="" width="100%"
                                 height="103px">
+                            @endif --}}
+                            @if($value->perusahaan)
+                            @php
+                            $js = json_decode($value->perusahaan->image)
+                            @endphp
+                            <img src="{{$js?'/image/loker/'.$js->url:''}}" alt="" width="100%" height="103px">
+                            @else
+                            <img src="{{$value->image?'/image/loker/'.json_decode($value->image)->url:''}}" alt=""
+                                width="100%" height="103px">
                             @endif
                             <div class="form-group m-0 p-2">
                                 <span><svg class="mr-2" width="16" height="16" viewBox="0 0 18 18" fill="none"
@@ -241,7 +258,11 @@
                                                     d="M8.5 7.4375C8.78179 7.4375 9.05204 7.32556 9.2513 7.1263C9.45056 6.92704 9.5625 6.65679 9.5625 6.375C9.5625 6.09321 9.45056 5.82296 9.2513 5.6237C9.05204 5.42444 8.78179 5.3125 8.5 5.3125C8.21821 5.3125 7.94796 5.42444 7.7487 5.6237C7.54944 5.82296 7.4375 6.09321 7.4375 6.375C7.4375 6.65679 7.54944 6.92704 7.7487 7.1263C7.94796 7.32556 8.21821 7.4375 8.5 7.4375ZM8.5 8.5C7.93641 8.5 7.39591 8.27612 6.9974 7.8776C6.59888 7.47909 6.375 6.93859 6.375 6.375C6.375 5.81141 6.59888 5.27091 6.9974 4.8724C7.39591 4.47388 7.93641 4.25 8.5 4.25C9.06359 4.25 9.60409 4.47388 10.0026 4.8724C10.4011 5.27091 10.625 5.81141 10.625 6.375C10.625 6.93859 10.4011 7.47909 10.0026 7.8776C9.60409 8.27612 9.06359 8.5 8.5 8.5ZM14.2375 11.6875L15.9375 15.9375H11.1562V14.875H5.84375V15.9375H1.0625L2.7625 11.6875H14.2375ZM13.0932 11.6875H3.90681L2.63181 14.875H14.3682L13.0932 11.6875Z"
                                                     fill="black" />
                                             </svg>
+                                            @if($value->perusahaan)
+                                            {{$value->perusahaan->kabupaten_name}}
+                                            @else
                                             {{$value->kota_name?$value->kota_name->name:''}}
+                                            @endif
                                         </span>
                                     </div>
                                 </div>
@@ -252,6 +273,11 @@
                 </a>
             </div>
             @endforeach
+        </div>
+        <div class="text-right">
+            <a href="/loker">
+                <h5 class="text-blue">Lowongan Kerja Selanjutnya</h5>
+            </a>
         </div>
         <h3 class="text-blue m-0 mt-4">Kelas Sebelumnya</h3>
         <hr style="4px solid rgba(0, 0, 0, 0.1)">
@@ -333,7 +359,8 @@
             centerMode: false,
             dots: false,
             infinite: true,
-            speed: 300,
+            autoplay:true,
+            autoplaySpeed: 5000,
             slidesToShow: 1,
             slidesToScroll: 1,
             responsive: [{
@@ -410,9 +437,10 @@
             centerMode: false,
             dots: false,
             infinite: true,
-            speed: 300,
-            slidesToShow: 4,
-            slidesToScroll: 4,
+            autoplay:true,
+            arrows:true,
+            slidesToShow: 5,
+            slidesToScroll: 1,
             responsive: [{
                     breakpoint: 1024,
                     settings: {

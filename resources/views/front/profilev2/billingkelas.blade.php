@@ -135,14 +135,14 @@
                 <input type="text" id="class_limit" name="class_limit" hidden>
                 <input type="text" id="payment_id" name="payment_id" hidden>
                 <input type="text" id="ref" name="ref" hidden>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="">Kode Promo</label>
                     <input class="form-control" type="text" id="kode_promo" name="kode_promo">
                 </div>
                 <div class="form-group">
                     <label for="">Jumlah Peserta</label>
                     <input class="form-control" type="number" id="jml_peserta" name="jml_peserta">
-                </div>
+                </div> --}}
                 <div class="col-lg-12 bottommargin">
                     <label>Upload Bukti Pembayaran:</label><br>
                     <input id="input-3" name="input2[]" type="file" class="file" data-show-upload="false"
@@ -153,6 +153,48 @@
                     </span>
                     @enderror
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" onclick="simpanbukti()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Peserta-->
+<div class="modal fade" id="jumlahpesertaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="titlepayment"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="class_id" name="class_id" hidden>
+                <input type="text" id="class_title" name="class_title" hidden>
+                <input type="text" id="class_limit" name="class_limit" hidden>
+                <input type="text" id="payment_id" name="payment_id" hidden>
+                <input type="text" id="ref" name="ref" hidden>
+                <div class="form-group">
+                    <label for="">Kode Promo</label>
+                    <input class="form-control" type="text" id="kode_promo" name="kode_promo">
+                </div>
+                <div class="form-group">
+                    <label for="">Jumlah Peserta</label>
+                    <input class="form-control" type="number" id="jml_peserta" name="jml_peserta">
+                </div>
+                {{-- <div class="col-lg-12 bottommargin">
+                    <label>Upload Bukti Pembayaran:</label><br>
+                    <input id="input-3" name="input2[]" type="file" class="file" data-show-upload="false"
+                        data-show-caption="true" data-show-preview="true" accept="image/*">
+                    @error('input2')
+                    <span class="text-danger" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div> --}}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -267,10 +309,12 @@
                         // h+='        <input type="text" class="form-control jumlah_peserta'+n+'" onchange="tambahPeserta('+v.id+','+v.participant_limit+','+ v.class_id+','+n+','+' {{ $reff ? $reff->code : '' }}'+')" '+r+'>';
                         h+='    </div>';
                         h+='    <div class="text-right">';
-                        h+='        <a class="class_image'+n+'" href="/getBerkas?rf='+v.file+'" target="_blank"';
-                        h+='            ><img class="class_imagenya'+n+'" src="/getBerkas?rf='+v.file+'"';
-                        h+='            width="75%">';
-                        h+='        </a>';
+                            if (v.file) {
+                                h+='        <a class="class_image'+n+'" href="/getBerkas?rf='+v.file+'" target="_blank"';
+                                h+='            ><img class="class_imagenya'+n+'" src="/getBerkas?rf='+v.file+'"';
+                                h+='            width="75%">';
+                                h+='        </a>';
+                            }
                         // h+='        <small class="text-secondary">Kode Promo</small>';
                         // h+='        <input type="text" class="form-control kode_promo'+n+'" onchange="kodePromo(`'+v.title+'`,'+n+','+v.id+')" '+r+'>';
                         h+='    </div>';
@@ -281,6 +325,9 @@
                         h+='            <p class="m-0">'+new Date(v.created_at).toLocaleDateString('id-ID')+'</p>';
                         h+='        </div>';
                         h+='        <div class="col-lg-6 text-right">';
+                            if (v.status_pembayaran == 'Menunggu Pembayaran' || v.status_pembayaran == 'Menunggu Konfirmasi') {
+                        h+='            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Peserta</div>';
+                            }
                         h+='            <div class="btn btn-warning text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice('+v.id+')">Invoice</div>';
                             if (v.status_pembayaran == 'Expired') {
                                 h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
@@ -289,7 +336,7 @@
                             }else if(v.status_pembayaran == 'Dibatalkan'){
                                 h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Menunggu Pembayaran'){
-                                h+='            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">'+v.status_pembayaran+'</button>';
+                                h+='            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Upload Bukti</button>';
                             }else{
                                 h+='            <div class="btn btn-success text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }

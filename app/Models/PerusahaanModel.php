@@ -4,25 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
-class LokerModel extends Model
+class PerusahaanModel extends Model
 {
-    use HasFactory;
-    protected $table = 'loker';
+    use HasFactory, SoftDeletes;
     protected $fillable = [
-        'user_id',
-        'title',
-        'gaji_min',
-        'gaji_max',
-        'deskripsi',
-        'jobdesk',
-        'image',
-        'tanggal_awal',
-        'tanggal_akhir',
-        'skill',
-        'type',
-        'status',
         'nama',
         'email',
         'alamat',
@@ -30,19 +18,13 @@ class LokerModel extends Model
         'kabupaten',
         'kecamatan',
         'kelurahan',
-        'perusahaan_id',
+        'image',
     ];
-
-    protected $hidden = [
-        'user_id',
-    ];
-
     protected $appends = [
         'provinsi_name',
         'kabupaten_name',
         'kecamatan_name',
         'kelurahan_name',
-        'perusahaan',
     ];
 
     public function getKelurahanNameAttribute()
@@ -89,14 +71,6 @@ class LokerModel extends Model
             if ($d) {
                 $a = $d->name;
             }
-        }
-        return $a;
-    }
-    public function getPerusahaanAttribute()
-    {
-        $a = null;
-        if (array_key_exists('perusahaan_id', $this->attributes)) {
-            $a = PerusahaanModel::select()->where('id', $this->attributes['perusahaan_id'])->first();
         }
         return $a;
     }

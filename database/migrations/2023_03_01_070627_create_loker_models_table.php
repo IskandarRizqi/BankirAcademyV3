@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id')->comment('yang posting Loker');
             $table->string('title');
-            $table->string('nama');
-            $table->string('email');
+            $table->string('nama')->nullable();
+            $table->string('email')->nullable();
             $table->double('gaji_min')->default(0);
             $table->double('gaji_max')->default(0);
             $table->text('deskripsi');
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->json('skill')->nullable();
             $table->json('type')->nullable();
             $table->integer('status')->default(0);
-            $table->text('alamat');
+            $table->text('alamat')->nullable();
             $table->timestamps();
         });
     }

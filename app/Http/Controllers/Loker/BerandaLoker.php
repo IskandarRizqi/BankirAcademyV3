@@ -6,6 +6,7 @@ use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
+use App\Models\PerusahaanModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,14 +40,21 @@ class BerandaLoker extends Controller
             )
                 ->join('users', 'users.id', 'loker.user_id')
                 ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+                ->leftJoin('perusahaan_models', 'perusahaan_models.id', 'loker.perusahaan_id')
                 ->where(function ($query) use ($request) {
+                    // if ($request->provinsi != 'Pilih') {
+                    //     $query->where('loker.provinsi', $request->provinsi);
+                    // }
                     if ($request->provinsi != 'Pilih') {
-                        return $query->where('loker.provinsi', $request->provinsi);
+                        $query->where('perusahaan_models.provinsi', $request->provinsi);
                     }
                 })
                 ->where(function ($query) use ($request) {
+                    // if ($request->kabupaten != 'Pilih') {
+                    //     return $query->where('loker.kabupaten', $request->kabupaten);
+                    // }
                     if ($request->kabupaten != 'Pilih') {
-                        return $query->where('loker.kabupaten', $request->kabupaten);
+                        $query->where('perusahaan_models.kabupaten', $request->kabupaten);
                     }
                 })
                 // ->whereDate('tanggal_awal', '<=', Carbon::now())
@@ -54,9 +62,9 @@ class BerandaLoker extends Controller
                 ->orderBy('tanggal_akhir', 'asc')
                 ->where('loker.status', 1)
                 ->paginate(6);
-            foreach ($data['data'] as $key => $vv) {
-                $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
-            }
+            // foreach ($data['data'] as $key => $vv) {
+            //     $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
+            // }
             return $data;
         }
         return view('front.loker.loker', $x);
@@ -66,6 +74,7 @@ class BerandaLoker extends Controller
         $data = [];
         $auth = Auth::user();
         $data['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
+        $data['perusahaan'] = PerusahaanModel::get();
         $data['data'] = LokerModel::select(
             'loker.*',
             'users.name',
@@ -84,7 +93,7 @@ class BerandaLoker extends Controller
             ->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
-        // return $auth;
+        // return $data;
         return view('backend.loker.loker', $data);
     }
 
@@ -152,10 +161,7 @@ class BerandaLoker extends Controller
             'loker_tanggal_akhir' => 'required',
             'loker_skill' => 'required',
             'loker_type' => 'required',
-            'provinsi' => 'required',
-            'kabupaten' => 'required',
-            'kecamatan' => 'required',
-            'kelurahan' => 'required',
+            'perusahaan_id' => 'required',
         ]);
         //response error validation
         if ($valid->fails()) {
@@ -166,10 +172,11 @@ class BerandaLoker extends Controller
             'id' => $request->loker_id,
         ];
         $data = [
-            'alamat' => $request->loker_alamat,
-            'email' => $request->loker_email,
-            'nama' => $request->loker_nama,
+            // 'alamat' => $request->loker_alamat,
+            // 'email' => $request->loker_email,
+            // 'nama' => $request->loker_nama,
             'title' => $request->loker_title,
+            'perusahaan_id' => json_decode($request->perusahaan_id)->id,
             'gaji_min' => $request->loker_gaji_min,
             'gaji_max' => 0,
             'deskripsi' => $request->loker_deskripsi,
@@ -179,10 +186,10 @@ class BerandaLoker extends Controller
             'skill' => json_encode($request->loker_skill),
             'type' => json_encode($request->loker_type),
             'status' => $request->status ? $request->status : 0,
-            'provinsi' => $request->provinsi,
-            'kabupaten' => $request->kabupaten,
-            'kecamatan' => $request->kecamatan,
-            'kelurahan' => $request->kelurahan,
+            // 'provinsi' => $request->provinsi,
+            // 'kabupaten' => $request->kabupaten,
+            // 'kecamatan' => $request->kecamatan,
+            // 'kelurahan' => $request->kelurahan,
         ];
         if (!$request->loker_id) {
             $data['user_id'] = Auth::user()->id;

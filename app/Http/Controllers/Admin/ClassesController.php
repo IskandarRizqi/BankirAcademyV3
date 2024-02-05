@@ -36,8 +36,8 @@ class ClassesController extends Controller
 		//Classes
 		$data['classes'] = ClassesModel::select('classes.*', 'biaya_sertifikat.type as tipebs', 'biaya_sertifikat.nominal')
 			->where(function ($q) use ($data) {
-				$q->where('date_start', '<=', $data['param']['date_start'])->orWhereNull('date_start');
-				// $q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']]);
+				// $q->where('date_start', '>=', $data['param']['date_start'])->orWhereNull('date_start');
+				$q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']])->orWhereNull('date_start');
 				if ($data['param']['category']) {
 					$q->where('category', $data['param']['category']);
 				}
@@ -601,6 +601,20 @@ class ClassesController extends Controller
 		}
 		return Redirect::back()->withInput($request->all())->with('error', 'Review Tidak Tersimpan');
 	}
+	public function setupcoming(Request $request)
+	{
+		if (!$request->upcoming_id && !$request->upcoming) {
+			return Redirect::back()->with('error', 'Data Tidak Tersedia');
+		}
+
+		$u = ClassesModel::where('id', $request->upcoming_id)->update([
+			'custom_jadwal' => $request->upcoming
+		]);
+		if ($u) {
+			return Redirect::back()->with('success', 'Data Tersimpan');
+		}
+		return Redirect::back()->with('error', 'Data Tidak Tersimpan');
+	}
 	public function pencarian()
 	{
 		$data['instructor'] = InstructorModel::select('id', 'name')->where('status', 1)->distinct('id')->pluck('id', 'name')->toArray();
@@ -727,7 +741,7 @@ class ClassesController extends Controller
 				}
 			})
 			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
-			->orderBy('date_end', 'asc')
+			->orderBy('date_end', 'desc')
 			->paginate(9)
 			->toArray();
 		if ($request->ajax()) {

@@ -13,215 +13,149 @@
         <div class="card-body">
             <form action="/loker" method="POST" enctype="multipart/form-data">
                 <fieldset class="border p-2">
-            @csrf
-            <input type="text" name="loker_id" id="loker_id" hidden>
-                <legend class="w-auto">Form Loker</legend>
-                <div class="row border-2">
-                    <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="filClassesImage">Image</label>
-                        <small class="inputerrormessage text-danger" input-target="filClassesImage"
-                            style="display: none;"></small>
-                        <input type="file" name="filClassesImage" id="filClassesImage"
-                            class="form-control" accept="image/*" maxfilesize="1048576">
-                        <img src="#" alt="Image Preview" id="prvClassesImage" class="previewImage"
-                            style="max-width: 100%;max-height:97px;">
-                            @error('filClassesImage')
-                                <small class="text-danger">Harus Diisi</small>
-                            @enderror
-                    </div>
-                    </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Nama Perusahaan</label>
-                        <input type="text" name="loker_nama" id="loker_nama" class="form-control" value="{{old('loker_nama')}}">
-                        @error('loker_nama')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Email</label>
-                        <input type="email" name="loker_email" id="loker_email" class="form-control" value="{{old('loker_email')}}">
-                        @error('loker_email')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Minimal Gaji</label>
-                        <input type="text" name="loker_gaji_min" id="loker_gaji_min" class="form-control" value="{{old('loker_gaji_min')}}">
-                        <small id="labelgajimin"></small>
-                        @error('loker_gaji_min')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Provinsi</label>
-                        <select name="provinsi" id="provinsi" class="form-control" onchange="getkabupaten()" required>
-                            <option>Pilih</option>
-                            @foreach($provinsi as $key => $v)
-                            <option value="{{$v->id}}" {{old('provinsi')==$v->id?'selected':''}}>{{$v->name}}</option>
-                            @endforeach
-                        </select>
-                        @error('provinsi')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Kabupaten</label>
-                        <select name="kabupaten" id="kabupaten" class="form-control" onchange="getkecamatan()" required>
-                            <option>Pilih</option>
-                        </select>
-                        @error('kabupaten')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Kecamatan</label>
-                        <select name="kecamatan" id="kecamatan" class="form-control" onchange="getkelurahan()" required>
-                            <option>Pilih</option>
-                        </select>
-                        @error('kecamatan')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label for="">Kelurahan</label>
-                        <select name="kelurahan" id="kelurahan" class="form-control" required>
-                            <option>Pilih</option>
-                        </select>
-                        @error('kelurahan')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Title</label>
-                        <input type="text" name="loker_title" id="loker_title" class="form-control" value="{{old('loker_title')}}">
-                        @error('loker_title')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Alamat</label>
-                        <input type="text" name="loker_alamat" id="loker_alamat" class="form-control" value="{{old('loker_alamat')}}">
-                        @error('loker_alamat')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-3" hidden>
-                    <div class="form-group">
-                        <label for="">Maksimal Gaji</label>
-                        <input type="number" name="loker_gaji_max" id="loker_gaji_max" class="form-control" value="{{old('loker_gaji_max')}}">
-                        <small id="labelgajimax"></small>
-                        @error('loker_gaji_max')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Deskripsi</label>
-                        <textarea name="loker_deskripsi" id="loker_deskripsi" cols="30" rows="5" class="form-control">{{old('loker_deskripsi')}}</textarea>
-                        @error('loker_deskripsi')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Jobdesk</label>
-                        <textarea name="loker_jobdesk" id="loker_jobdesk" cols="30" rows="5" class="form-control">{{old('loker_jobdesk')}}</textarea>
-                        @error('loker_jobdesk')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-lg-12 d-flex">
-                    <div class="form-group">
-                        <label for="">Tanggal Awal</label>
-                        <input type="date" name="loker_tanggal_awal" id="loker_tanggal_awal" class="form-control" value="{{old('loker_tanggal_awal')}}">
-                        @error('loker_tanggal_awal')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                    <div class="form-group ml-2">
-                        <label for="">Tanggal Akhir</label>
-                        <input type="date" name="loker_tanggal_akhir" id="loker_tanggal_akhir" class="form-control" value="{{old('loker_tanggal_akhir')}}">
-                        @error('loker_tanggal_akhir')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
-                    </div>
-                    <div class="form-group ml-2">
-                        <label for="">Skill</label><br>
-                        <select name="loker_skill[]" id="loker_skill" class="form-control" multiple>
-                            <option value="">Pilih Skill</option>
-                            @if($lokerskill)
-                            @foreach(json_decode($lokerskill[0]) as $key => $va)
-                            <option value="{{$va}}"
-                                @if(old('loker_skill'))
-                                    @foreach(old('loker_skill') as $key => $value)
-                                        {{$value==$va?'selected':''}}
+                    @csrf
+                    <input type="text" name="loker_id" id="loker_id" hidden>
+                    <legend class="w-auto">Form Loker</legend>
+                    <div class="row border-2">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Perusahaan</label><br>
+                                <select name="perusahaan_id" id="perusahaan_id" class="form-control">
+                                    <option value="">Pilih Perusahaan</option>
+                                    @if($perusahaan)
+                                    @foreach($perusahaan as $key => $va)
+                                    <option value="{{$va}}" @if(old('perusahaan_id')==$va) selected @endif>{{$va->nama}}
+                                    </option>
                                     @endforeach
-                                @endif
-                            >{{$va}}</option>
-                            @endforeach
-                            @endif
-                        </select>
-                        @error('loker_skill')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
+                                    @endif
+                                </select>
+                                @error('perusahaan_id')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Minimal Gaji</label>
+                                <input type="text" name="loker_gaji_min" id="loker_gaji_min" class="form-control"
+                                    value="{{old('loker_gaji_min')}}">
+                                <small id="labelgajimin"></small>
+                                @error('loker_gaji_min')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Title</label>
+                                <input type="text" name="loker_title" id="loker_title" class="form-control"
+                                    value="{{old('loker_title')}}">
+                                @error('loker_title')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-3" hidden>
+                            <div class="form-group">
+                                <label for="">Maksimal Gaji</label>
+                                <input type="number" name="loker_gaji_max" id="loker_gaji_max" class="form-control"
+                                    value="{{old('loker_gaji_max')}}">
+                                <small id="labelgajimax"></small>
+                                @error('loker_gaji_max')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Deskripsi</label>
+                                <textarea name="loker_deskripsi" id="loker_deskripsi" cols="30" rows="5"
+                                    class="form-control">{{old('loker_deskripsi')}}</textarea>
+                                @error('loker_deskripsi')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Jobdesk</label>
+                                <textarea name="loker_jobdesk" id="loker_jobdesk" cols="30" rows="5"
+                                    class="form-control">{{old('loker_jobdesk')}}</textarea>
+                                @error('loker_jobdesk')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-12 d-flex">
+                            <div class="form-group">
+                                <label for="">Tanggal Awal</label>
+                                <input type="date" name="loker_tanggal_awal" id="loker_tanggal_awal"
+                                    class="form-control" value="{{old('loker_tanggal_awal')}}">
+                                @error('loker_tanggal_awal')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                            <div class="form-group ml-2">
+                                <label for="">Tanggal Akhir</label>
+                                <input type="date" name="loker_tanggal_akhir" id="loker_tanggal_akhir"
+                                    class="form-control" value="{{old('loker_tanggal_akhir')}}">
+                                @error('loker_tanggal_akhir')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                            <div class="form-group ml-2">
+                                <label for="">Skill</label><br>
+                                <select name="loker_skill[]" id="loker_skill" class="form-control" multiple>
+                                    <option value="">Pilih Skill</option>
+                                    @if($lokerskill)
+                                    @foreach(json_decode($lokerskill[0]) as $key => $va)
+                                    <option value="{{$va}}" @if(old('loker_skill')) {{-- @foreach(old('loker_skill') as
+                                        $key=> $value)
+                                        {{$value==$va?'selected':''}}
+                                        @endforeach --}}
+                                        @endif
+                                        >{{$va}}</option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                                @error('loker_skill')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                            <div class="form-group ml-2">
+                                <label for="">type</label><br>
+                                <select name="loker_type[]" id="loker_type" class="form-control" multiple>
+                                    <option value="">Pilih Type</option>
+                                    @if($lokertype)
+                                    @foreach(json_decode($lokertype[0]) as $key => $val)
+                                    <option value="{{$val}}" @if(old('loker_type')) @foreach(old('loker_type') as $key=>
+                                        $value)
+                                        {{$value==$val?'selected':''}}
+                                        @endforeach
+                                        @endif
+                                        >{{$val}}</option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                                @error('loker_type')
+                                <small class="text-danger">Harus Diisi</small>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-3 ml-2">
+                                <label for="">Status</label><br>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="">Pilih</option>
+                                    <option value="1">ACC</option>
+                                    <option value="0">Tidak ACC</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group ml-2">
-                        <label for="">type</label><br>
-                        <select name="loker_type[]" id="loker_type" class="form-control" multiple>
-                            <option value="">Pilih Type</option>
-                            @if($lokertype)
-                            @foreach(json_decode($lokertype[0]) as $key => $val)
-                            <option value="{{$val}}"
-                            @if(old('loker_type'))
-                            @foreach(old('loker_type') as $key => $value)
-                            {{$value==$val?'selected':''}}
-                            @endforeach
-                            @endif
-                            >{{$val}}</option>
-                            @endforeach
-                            @endif
-                        </select>
-                        @error('loker_type')
-                            <small class="text-danger">Harus Diisi</small>
-                        @enderror
+                    <div class="d-flex">
+                        <span class="btn btn-secondary" id="loker_reset" onclick="kosong()">Reset</span>
+                        <button type="submit" class="btn btn-primary ml-2">Simpan</button>
                     </div>
-                    <div class="form-group col-md-3 ml-2">
-                        <label for="">Status</label><br>
-                        <select name="status" id="status" class="form-control">
-                            <option value="">Pilih</option>
-                            <option value="1">ACC</option>
-                            <option value="0">Tidak ACC</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex">
-                <span class="btn btn-secondary" id="loker_reset" onclick="kosong()">Reset</span>
-                <button type="submit" class="btn btn-primary ml-2">Simpan</button>
-            </div>
-            </fieldset>
+                </fieldset>
             </form>
             <table id="banner" class="table table-hover" style="width:100%">
                 <thead>
@@ -239,7 +173,18 @@
                     @foreach ($data as $key => $l)
                     <tr>
                         <td>{{$key+1}}</td>
-                        <td><img src="{{$l->image?'/image/loker/'.json_decode($l->image)->url:''}}" alt="" style="max-width: 100%; max-height: 90px"></td>
+                        <td>
+                            @if($l->perusahaan)
+                            @php
+                            $js = json_decode($l->perusahaan->image)
+                            @endphp
+                            <img src="{{$js?'/image/loker/'.$js->url:''}}" alt=""
+                                style="max-width: 100%; max-height: 90px">
+                            @else
+                            <img src="{{$l->image?'/image/loker/'.json_decode($l->image)->url:''}}" alt=""
+                                style="max-width: 100%; max-height: 90px">
+                            @endif
+                        </td>
                         <td>{{$l->name}}</td>
                         <td>{{$l->title}}</td>
                         <td>{{$l->gaji_min?$l->gaji_min:'Gaji Competitive'}}</td>
@@ -292,60 +237,60 @@
         placeholder: 'Input or Select',
         tags:true
     });
-    function getkabupaten(){
-        let v = $('#provinsi').val();
-        $.ajax({
-                type:'GET',
-                url:'/admin/loker/getkabupaten/'+v,
-                data:'_token = <?php echo csrf_token() ?>',
-                success:function(data) {
-                    let t = '';
-                    if (data) {
-                        t+='<option>Pilih</option>';
-                        data.forEach(el => {
-                            t+='<option value='+el.id+'>'+el.name+'</option>';
-                        });
-                    }
-                    $('#kabupaten').html(t);
-                }
-            });
-    }
-    function getkecamatan(){
-        let v = $('#kabupaten').val();
-        $.ajax({
-                type:'GET',
-                url:'/admin/loker/getkecamatan/'+v,
-                data:'_token = <?php echo csrf_token() ?>',
-                success:function(data) {
-                    let t = '';
-                    if (data) {
-                        t+='<option>Pilih</option>';
-                        data.forEach(el => {
-                            t+='<option value='+el.id+'>'+el.name+'</option>';
-                        });
-                    }
-                    $('#kecamatan').html(t);
-                }
-            });
-    }
-    function getkelurahan(){
-        let v = $('#kecamatan').val();
-        $.ajax({
-                type:'GET',
-                url:'/admin/loker/getkelurahan/'+v,
-                data:'_token = <?php echo csrf_token() ?>',
-                success:function(data) {
-                    let t = '';
-                    if (data) {
-                        t+='<option>Pilih</option>';
-                        data.forEach(el => {
-                            t+='<option value='+el.id+'>'+el.name+'</option>';
-                        });
-                    }
-                    $('#kelurahan').html(t);
-                }
-            });
-    }
+    // function getkabupaten(){
+    //     let v = $('#provinsi').val();
+    //     $.ajax({
+    //             type:'GET',
+    //             url:'/admin/loker/getkabupaten/'+v,
+    //             data:'_token = <?php echo csrf_token() ?>',
+    //             success:function(data) {
+    //                 let t = '';
+    //                 if (data) {
+    //                     t+='<option>Pilih</option>';
+    //                     data.forEach(el => {
+    //                         t+='<option value='+el.id+'>'+el.name+'</option>';
+    //                     });
+    //                 }
+    //                 $('#kabupaten').html(t);
+    //             }
+    //         });
+    // }
+    // function getkecamatan(){
+    //     let v = $('#kabupaten').val();
+    //     $.ajax({
+    //             type:'GET',
+    //             url:'/admin/loker/getkecamatan/'+v,
+    //             data:'_token = <?php echo csrf_token() ?>',
+    //             success:function(data) {
+    //                 let t = '';
+    //                 if (data) {
+    //                     t+='<option>Pilih</option>';
+    //                     data.forEach(el => {
+    //                         t+='<option value='+el.id+'>'+el.name+'</option>';
+    //                     });
+    //                 }
+    //                 $('#kecamatan').html(t);
+    //             }
+    //         });
+    // }
+    // function getkelurahan(){
+    //     let v = $('#kecamatan').val();
+    //     $.ajax({
+    //             type:'GET',
+    //             url:'/admin/loker/getkelurahan/'+v,
+    //             data:'_token = <?php echo csrf_token() ?>',
+    //             success:function(data) {
+    //                 let t = '';
+    //                 if (data) {
+    //                     t+='<option>Pilih</option>';
+    //                     data.forEach(el => {
+    //                         t+='<option value='+el.id+'>'+el.name+'</option>';
+    //                     });
+    //                 }
+    //                 $('#kelurahan').html(t);
+    //             }
+    //         });
+    // }
     function kosong() {
         $('#loker_id').val(null)
         $('#loker_title').val(null)
@@ -357,8 +302,10 @@
         $('#loker_tanggal_akhir').val(null)
         $('#loker_skill').val(null)
         $('#loker_type').val(null)
+        $('#perusahaan_id').val(null)
         $('#loker_skill').trigger('change')
         $('#loker_type').trigger('change')
+        $('#perusahaan_id').trigger('change')
         $('#status').val(null)
     }
     function editloker(data) {
@@ -368,9 +315,9 @@
             let img = JSON.parse(data.image)
             $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
         }
-        $('#loker_alamat').val(data.alamat)
-        $('#loker_email').val(data.email)
-        $('#loker_nama').val(data.nama)
+        // $('#loker_alamat').val(data.alamat)
+        // $('#loker_email').val(data.email)
+        // $('#loker_nama').val(data.nama)
         $('#status').val(data.status)
         $('#loker_id').val(data.id)
         $('#loker_title').val(data.title)
@@ -388,23 +335,18 @@
         $('#loker_skill').trigger('change')
         $('#loker_type').val(JSON.parse(data.type))
         $('#loker_type').trigger('change')
-        $('#provinsi').val(data.provinsi)
-        $('#provinsi').trigger('change')
-        getkabupaten()
-        setTimeout(() => {
-            $('#kabupaten').val(data.kabupaten)
-            $('#kabupaten').trigger('change')
-            getkecamatan()
-            setTimeout(() => {
-                $('#kecamatan').val(data.kecamatan)
-                $('#kecamatan').trigger('change')
-                getkelurahan()
-                setTimeout(() => {
-                    $('#kelurahan').val(data.kelurahan)
-                    $('#kelurahan').trigger('change')
-                }, 1000);
-            }, 1000);
-        }, 1000);
+        $.ajax({
+            type:'GET',
+            url:'/admin/perusahaan/'+data.perusahaan_id,
+            data:'_token = <?php echo csrf_token() ?>',
+            success:function(data) {
+                let t = '';
+                if (data) {
+                        $('#perusahaan_id').val(JSON.stringify(data))
+                        $('#perusahaan_id').trigger('change')
+                    }
+                }
+            });
     }
     function deleteLoker(id) {
 		swal({

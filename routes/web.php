@@ -56,6 +56,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/peserta/change_existing/{id}/{exs}', [App\Http\Controllers\Backend\PesertaController::class, 'change_existing']);
     Route::get('/admin/classes/getreview/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getreview']);
     Route::get('/admin/classes/setreview/{id}/{review_active}', [App\Http\Controllers\Admin\ClassesController::class, 'setreview']);
+    Route::post('/admin/classes/setupcoming', [App\Http\Controllers\Admin\ClassesController::class, 'setupcoming']);
+
     Route::resource('/admin/kupon', PromoController::class);
     Route::resource('/admin/fee', FeeController::class);
     Route::resource('/admin/corporate', CorporateController::class);
@@ -90,6 +92,9 @@ Route::middleware([IsAdminRoot::class])->group(function () {
 
     // Loker
     Route::get('/admin/loker', [App\Http\Controllers\Loker\BerandaLoker::class, 'index_admin']);
+
+    // Perusahaan
+    Route::resource('/admin/perusahaan', App\Http\Controllers\Loker\PerusahaanController::class);
 
     // User
     Route::resource('/admin/user', App\Http\Controllers\Backend\UserController::class);

@@ -34,6 +34,7 @@ class ClassesModel extends Model
 		'is_terpopuler',
 		'is_sebelumnya',
 		'video',
+		'custom_jadwal',
 	];
 
 	protected $appends = [

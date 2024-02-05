@@ -141,6 +141,8 @@
                                         <a class="dropdown-item" title="Open"
                                             onclick="openClasses({{ $v->id }},{{ $v->is_open }})">{{ $v->is_open == 1 ?
                                             'Closed' : 'Open' }}</a>
+                                        <a class="dropdown-item" data-target="#upcomingmodal" data-toggle="modal"
+                                            title="Upcoming" onclick="setupcoming({{$v}})">Upcoming</a>
                                         <form action="#" method="get" id="formacclasses">@csrf
                                         </form>
                                     </div>
@@ -217,6 +219,62 @@
                                     <button type="submit" class="btn btn-primary">Simpan</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+                {{-- Upcoming --}}
+                <div class="modal fade" id="upcomingmodal" tabindex="-1" aria-labelledby="upcomingmodalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Upcoming, Reschedule, Runing</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/admin/classes/setupcoming" method="POST">
+                                    @csrf
+                                    <input type="text" name="upcoming_id" id="upcoming_id" hidden>
+                                    <div class="row">
+                                        <div class="form-group col-lg-4">
+                                            <div class="n-chk">
+                                                <label
+                                                    class="new-control new-radio square-radio new-radio-text radio-primary">
+                                                    <input type="radio" class="new-control-input" name="upcoming"
+                                                        id="upcoming0" value="0">
+                                                    <span class="new-control-indicator"></span><span
+                                                        class="new-radio-content">Running</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <div class="n-chk">
+                                                <label
+                                                    class="new-control new-radio square-radio new-radio-text radio-primary">
+                                                    <input type="radio" class="new-control-input" name="upcoming"
+                                                        id="upcoming2" value="2">
+                                                    <span class="new-control-indicator"></span><span
+                                                        class="new-radio-content">Re-Schedule</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <div class="n-chk">
+                                                <label
+                                                    class="new-control new-radio square-radio new-radio-text radio-primary">
+                                                    <input type="radio" class="new-control-input" name="upcoming"
+                                                        id="upcoming3" value="1">
+                                                    <span class="new-control-indicator"></span><span
+                                                        class="new-radio-content">Upcoming</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Simpan</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -327,6 +385,12 @@
                 })
                 $('#listPeserta').html(html);
             }
+        }
+
+        function setupcoming(data) {
+            console.log(data);
+            $('#upcoming_id').val(data.id);
+            $('#upcoming'+data.custom_jadwal).attr('checked',true);
         }
 
         function openClasses(id, s) {

@@ -566,13 +566,17 @@
         let html = ''
         let now = new Date();
         data.data.data.forEach(e => {
+            let js = null;
+            if (e.perusahaan) {
+                js = JSON.parse(e.perusahaan.image)
+            }
             let past = new Date(e.tanggal_awal);
             let diff = new Date(now.getTime()-past.getTime());
             let rentang = diff.getUTCDate()-1;
             let img= e.image?'/image/loker/'+JSON.parse(e.image).url:'kosong';
             
             html += '<div class="col-lg-4 mb-4">';
-            html += '    <a class="" href="/loker/"+e.id+"/detail">';
+            html += '    <a class="" href="/loker/'+e.id+'/detail">';
             html += '        <div class="card" style="min-height: auto">';
                 if (rentang <=4) {
                     html +='<div class="ribbon-wrapper">';
@@ -582,11 +586,16 @@
             html += '            <div class="card-body">';
             html += '                <small class="text-secondary">Dibutuhkan</small>';
             html += '                <h3 class="text-uppercase" title="'+e.title+'" style="margin: 0px">'+e.title.substr(0,16)+'</h3>'; //maksimal 15 karakters
-            if (e.image) {
-                html += '                <img src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px" />';
+            if (js) {
+                html += '                <img src="/image/loker/'+js.url+'" width="100%" style="border-radius: 13px" />';
             }else{
-                html += '                <img src="/GambarV2/image-38.png" width="100%" style="border-radius: 13px" />';
+                html += '                <img src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px" />';
             }
+            // if (e.image) {
+            //     html += '                <img src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px" />';
+            // }else{
+            //     html += '                <img src="/GambarV2/image-38.png" width="100%" style="border-radius: 13px" />';
+            // }
             html += '                <div class="row mt-2">';
             html += '                    <div class="col-lg-12">';
             html += '                <div class="form-group m-0 p-2">';
@@ -597,10 +606,14 @@
             html += '                                stroke="black" stroke-width="1.25" stroke-linecap="round"';
             html += '                                stroke-linejoin="round" />';
             html += '                        </svg>';
+            if (js) {
+                html +='                        <small>'+e.perusahaan.nama+'</small>';
+            }else{
             if (e.nama) {
                 html +='                        <small>'+e.nama+'</small>';
             }else{
                 html +='                        <small>'+JSON.parse(e.corporate)?JSON.parse(e.corporate).name:'Anugrah Karya'+'</small>';
+            }
             }
             html += '                    </span>';
             html += '                </div>';
@@ -657,7 +670,11 @@
             html += '                                        d="M8.5 7.4375C8.78179 7.4375 9.05204 7.32556 9.2513 7.1263C9.45056 6.92704 9.5625 6.65679 9.5625 6.375C9.5625 6.09321 9.45056 5.82296 9.2513 5.6237C9.05204 5.42444 8.78179 5.3125 8.5 5.3125C8.21821 5.3125 7.94796 5.42444 7.7487 5.6237C7.54944 5.82296 7.4375 6.09321 7.4375 6.375C7.4375 6.65679 7.54944 6.92704 7.7487 7.1263C7.94796 7.32556 8.21821 7.4375 8.5 7.4375ZM8.5 8.5C7.93641 8.5 7.39591 8.27612 6.9974 7.8776C6.59888 7.47909 6.375 6.93859 6.375 6.375C6.375 5.81141 6.59888 5.27091 6.9974 4.8724C7.39591 4.47388 7.93641 4.25 8.5 4.25C9.06359 4.25 9.60409 4.47388 10.0026 4.8724C10.4011 5.27091 10.625 5.81141 10.625 6.375C10.625 6.93859 10.4011 7.47909 10.0026 7.8776C9.60409 8.27612 9.06359 8.5 8.5 8.5ZM14.2375 11.6875L15.9375 15.9375H11.1562V14.875H5.84375V15.9375H1.0625L2.7625 11.6875H14.2375ZM13.0932 11.6875H3.90681L2.63181 14.875H14.3682L13.0932 11.6875Z"';
             html += '                                        fill="black" />';
             html += '                                </svg>';
-            html += '                                '+e.kota_name?e.kota_name.name:'';
+            if (js) {
+                html += '                                '+e.perusahaan.kabupaten_name?e.perusahaan.kabupaten_name:'';
+            }else{
+                html += '                                '+e.kabupaten_name?e.kabupaten_name:'';
+            }
             html += '                            </span>';
             html += '                        </div>';
             html += '                    </div>';
