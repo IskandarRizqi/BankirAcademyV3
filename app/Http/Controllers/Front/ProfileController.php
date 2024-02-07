@@ -262,7 +262,9 @@ class ProfileController extends Controller
         }
         $data['getkelasanda'] = ClassPaymentModel::select(
             'class_payment.*',
-            'classes.title',
+            'classes.video',
+            'classes.jenis',
+            'classes.tipe',
             'classes.image',
             'classes.participant_limit',
             'class_participant.review',

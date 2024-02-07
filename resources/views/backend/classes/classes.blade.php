@@ -127,7 +127,7 @@
                                         data-toggle="dropdown" aria-expanded="false" title="Opsi">
                                         <i class="bx bx-cog"></i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu" style="top: -20px !important">
                                         <a class="dropdown-item" title="Edit"
                                             href="/admin/classes/{{ $v->id }}/edit">Edit</a>
                                         <a class="dropdown-item" title="Delete"

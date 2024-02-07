@@ -172,11 +172,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="text" id="class_id" name="class_id" hidden>
-                <input type="text" id="class_title" name="class_title" hidden>
-                <input type="text" id="class_limit" name="class_limit" hidden>
-                <input type="text" id="payment_id" name="payment_id" hidden>
-                <input type="text" id="ref" name="ref" hidden>
+                <input type="text" id="class_id2" name="class_id" hidden>
+                <input type="text" id="class_title2" name="class_title" hidden>
+                <input type="text" id="class_limit2" name="class_limit" hidden>
+                <input type="text" id="payment_id2" name="payment_id" hidden>
+                <input type="text" id="ref2" name="ref" hidden>
                 <div class="form-group">
                     <label for="">Kode Promo</label>
                     <input class="form-control" type="text" id="kode_promo" name="kode_promo">
@@ -309,12 +309,12 @@
                         // h+='        <input type="text" class="form-control jumlah_peserta'+n+'" onchange="tambahPeserta('+v.id+','+v.participant_limit+','+ v.class_id+','+n+','+' {{ $reff ? $reff->code : '' }}'+')" '+r+'>';
                         h+='    </div>';
                         h+='    <div class="text-right">';
-                            if (v.file) {
-                                h+='        <a class="class_image'+n+'" href="/getBerkas?rf='+v.file+'" target="_blank"';
-                                h+='            ><img class="class_imagenya'+n+'" src="/getBerkas?rf='+v.file+'"';
-                                h+='            width="75%">';
-                                h+='        </a>';
-                            }
+                        if(v.file){
+                        h+='        <a class="class_image'+n+'" href="/getBerkas?rf='+v.file+'" target="_blank"';
+                        h+='            ><img class="class_imagenya'+n+'" src="/getBerkas?rf='+v.file+'"';
+                        h+='            width="75%">';
+                        h+='        </a>';
+                        }
                         // h+='        <small class="text-secondary">Kode Promo</small>';
                         // h+='        <input type="text" class="form-control kode_promo'+n+'" onchange="kodePromo(`'+v.title+'`,'+n+','+v.id+')" '+r+'>';
                         h+='    </div>';
@@ -326,17 +326,17 @@
                         h+='        </div>';
                         h+='        <div class="col-lg-6 text-right">';
                             if (v.status_pembayaran == 'Menunggu Pembayaran' || v.status_pembayaran == 'Menunggu Konfirmasi') {
-                        h+='            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Peserta</div>';
+                        h+='            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+`' {{ $reff ? $reff->code : '' }}'`+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Peserta</div>';
                             }
                         h+='            <div class="btn btn-warning text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice('+v.id+')">Invoice</div>';
                             if (v.status_pembayaran == 'Expired') {
                                 h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Menunggu Konfirmasi'){
-                                h+='            <div class="btn btn-info text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">'+v.status_pembayaran+'</div>';
+                                h+='            <div class="btn btn-info text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+`' {{ $reff ? $reff->code : '' }}'`+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Dibatalkan'){
                                 h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Menunggu Pembayaran'){
-                                h+='            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+' {{ $reff ? $reff->code : '' }}'+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Upload Bukti</button>';
+                                h+='            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+`' {{ $reff ? $reff->code : '' }}'`+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Upload Bukti</button>';
                             }else{
                                 h+='            <div class="btn btn-success text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }
@@ -366,8 +366,16 @@
         $('#class_title').val(title);
         $('#class_limit').val(limit);
         $('#ref').val(ref);
+        
+        $('#class_id2').val(class_id);
+        $('#payment_id2').val(payment);
+        $('#class_title2').val(title);
+        $('#class_limit2').val(limit);
+        $('#ref2').val(ref);
 
+        if(kodepromo !== 'null'){
         $('#kode_promo').val(kodepromo);
+        }
         $('#jml_peserta').val(jml_peserta);
         class_image = index;
 
@@ -405,14 +413,17 @@
             success:function(response)
             {
                 if (response.status == 1) {
-                    $('.class_image'+class_image).attr('href','/getBerkas?rf='+response.data.file)
-                    $('.class_imagenya'+class_image).attr('src','/getBerkas?rf='+response.data.file)
+                    if (response.data) {
+                        $('.class_image'+class_image).attr('href','/getBerkas?rf='+response.data.file)
+                        $('.class_imagenya'+class_image).attr('src','/getBerkas?rf='+response.data.file)
+                    }
                     iziToast.success({
                         title: 'Berhasil',
                         message: 'Input Berhasil',
                         position: 'topRight',
                     });
                     $('#bayarModal').modal('hide')
+                    location.reload()
                 }else{
                     iziToast.warning({
                         title: 'Gagal',

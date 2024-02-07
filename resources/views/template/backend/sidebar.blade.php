@@ -200,6 +200,9 @@
                 </a>
                 <ul class="collapse submenu list-unstyled" id="lokerDropdownMenu" data-parent="#accordionExample">
                     <li>
+                        <a href="/admin/perusahaan"> Perusahaan </a>
+                    </li>
+                    <li>
                         <a href="/admin/loker"> Form </a>
                     </li>
                     <li>

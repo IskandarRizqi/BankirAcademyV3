@@ -145,6 +145,9 @@
                     <b>Rp 0</b>
                 </h3>
                 @endif
+                @if($class->custom_jadwal>0)
+                <button class="button button-circle btn-block text-center" disabled>Kelas Belum Tersedia</button>
+                @else
                 {{-- Bila Date End Lebih Kecil Dari Sekarang --}}
                 @if(!$class->date_end)
                 <button class="button button-circle btn-block text-center" disabled>Kelas Belum Tersedia</button>
@@ -169,6 +172,7 @@
                             sekarang</span>
                         @endauth
                     </form>
+                    @endif
                     @endif
                     @endif
                     <div class="tambahan">

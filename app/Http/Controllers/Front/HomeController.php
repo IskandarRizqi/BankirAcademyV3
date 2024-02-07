@@ -275,7 +275,7 @@ class HomeController extends Controller
                 })
                 ->orWhereNull('date_start')
                 ->orderBy('date_end', 'asc')
-                ->paginate(8)
+                ->paginate(12)
                 ->toArray();
             return response()->json([
                 'success' => true,
@@ -306,7 +306,7 @@ class HomeController extends Controller
 
         $data['kelas_populer'] = [];
         $data['kelas_lama'] = ClassesModel::select()
-            ->where('date_end', '<', $now->format('Y-m-d'))
+            ->where('is_sebelumnya', 1)
             ->where('status', 1)
             ->orderBy('date_end', 'asc')
             ->limit(8)
@@ -319,7 +319,7 @@ class HomeController extends Controller
             ->orderBy('date_end', 'asc')
             ->get();
         foreach ($data['kelas'] as $key => $value) {
-            if ($value->total_peserta > 3) {
+            if ($value->is_terpopuler) {
                 array_push($data['kelas_populer'], $value);
             }
         }
@@ -337,7 +337,7 @@ class HomeController extends Controller
             // ->whereDate('loker.tanggal_awal', '<=', Carbon::now())
             // ->whereDate('loker.tanggal_akhir', '>=', Carbon::now())
             ->orderBy('loker.tanggal_akhir', 'asc')
-            ->limit(4)
+            ->limit(12)
             ->get();
         foreach ($data['loker'] as $key => $vv) {
             $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');

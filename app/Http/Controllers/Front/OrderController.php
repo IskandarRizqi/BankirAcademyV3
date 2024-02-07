@@ -234,7 +234,10 @@ class OrderController extends Controller
         if ($update) {
             return response()->json(['message' => 'Upload Bukti Berhasil', 'status' => true, 'data' => $insert]);
         }
-        return response()->json(['message' => 'Upload Bukti Gagal', 'status' => false]);
+        if ($cpm) {
+            return response()->json(['status' => true, 'message' => 'Data Tersimpan']);
+        }
+        return response()->json(['message' => 'Upload Bukti Gagal', 'status' => false, 'data' => $update]);
     }
     public function bayar(Request $request)
     {
