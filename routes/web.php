@@ -144,6 +144,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/datalamaran', [App\Http\Controllers\Front\ProfileController::class, 'datalamaran']);
     Route::get('/cetaklamaran', [App\Http\Controllers\Front\ProfileController::class, 'cetaklamaran']);
     Route::post('simpanlamaran', [App\Http\Controllers\Front\ProfileController::class, 'simpanlamaran']);
+    Route::post('simpancv', [App\Http\Controllers\Front\ProfileController::class, 'simpancv']);
 
     // Profile
     Route::post('/updateprofile', [App\Http\Controllers\Front\ProfileController::class, 'updateprofile']);

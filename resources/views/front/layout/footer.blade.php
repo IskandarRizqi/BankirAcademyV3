@@ -116,7 +116,7 @@
     <div id="copyrights" style="background-color:#0076f5; padding: 25px">
         <div class="container">
             <div class="w-100 text-center text-white">
-                Copyright 2022 PT. Bankir Academy
+                Copyright 2022 PT. Bankir Academy Indonesia
             </div>
             {{-- <div class="w-100 text-center text-white">
                 Management By PT. Bankir Academy Indonesia </br> Support Sistem By <a

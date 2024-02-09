@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Helper\GlobalHelper;
+use App\Models\ClassContentModel;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
@@ -171,6 +172,7 @@ class ProfileController extends Controller
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
         $data['member'] = MembershipModel::orderBy('harga')->limit(3)->get();
+        $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
         $lokerid = []; // id loker yang pernah di apply
         foreach ($data['lamaran'] as $key => $value) {
@@ -183,6 +185,7 @@ class ProfileController extends Controller
             ->whereNotIn('id', $lokerid)
             ->limit($limitloker)
             ->get();
+        // return $data;
         return view('front.profilev2.index', $data);
     }
 
@@ -262,13 +265,14 @@ class ProfileController extends Controller
         }
         $data['getkelasanda'] = ClassPaymentModel::select(
             'class_payment.*',
+            'classes.title',
             'classes.video',
             'classes.jenis',
             'classes.tipe',
             'classes.image',
             'classes.participant_limit',
             'class_participant.review',
-            'class_participant.id as participant_id'
+            'class_participant.id as participant_id',
         )
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
@@ -281,6 +285,10 @@ class ProfileController extends Controller
             ->orderBy('class_payment.status', 'desc')
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
+        foreach ($data['getkelasanda'] as $key => $v) {
+            $v->events = ClassContentModel::where('class_id', $v->class_id)->get();
+            // $v->events = $events ? json_encode($events) : null;
+        }
         return response()->json([
             'status' => 1,
             'msg' => 'Data Success',
@@ -719,7 +727,7 @@ class ProfileController extends Controller
         if ($request->cetak) {
             $pdf = Pdf::loadView('front.loker.cetaklamaran', $data);
             return $pdf->stream();
-            return view('front.loker.cetaklamaran', $data);
+            // return view('front.loker.cetaklamaran', $data);
         }
         return view('front.loker.datalamaran', $data);
     }
@@ -823,5 +831,132 @@ class ProfileController extends Controller
             return Redirect::to('profile')->with('success', 'Data Tersimpan');
         }
         return Redirect::back()->withErrors($validator)->withInput($request->all());
+    }
+    public function simpancv(Request $request)
+    {
+        // return response()->json([
+        //     'status' => false,
+        //     'message' => 'Tidak Tersimpan',
+        //     'data' => $request->all(),
+        // ]);
+        $validator = Validator::make($request->all(), [
+            'cvnamalengkap' => 'required',
+            'cvnamapanggilan' => 'required',
+            'cvntempattanggallahir' => 'required',
+            'cvagama' => 'required',
+            'cvalamatrumah' => 'required',
+            'cvtelprumah' => 'required',
+            'cvkodepos' => 'required',
+            'cvnamaorangtua' => 'required',
+            'cvjumlahsaudarakandung' => 'required',
+            'cvstatusperkawinan' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data Tidak Sesuai',
+                'data' => $validator,
+            ]);
+        }
+        $insert = [
+            'status' => 0,
+            'nama_lengkap' => $request->cvnamalengkap ? $request->cvnamalengkap : null,
+            'nama_panggilan' => $request->cvnamapanggilan ? $request->cvnamapanggilan : null,
+            'tmpttgllahir' => $request->cvntempattanggallahir ? $request->cvntempattanggallahir : null,
+            'agama' => $request->cvagama ? $request->cvagama : null,
+            'alamatdomisili' => $request->cvalamatrumah ? $request->cvalamatrumah : null,
+            'telpdomisili' => $request->cvtelprumah ? $request->cvtelprumah : null,
+            'kodepos' => $request->cvkodepos ? $request->cvkodepos : null,
+            'namaorangtua' => $request->cvnamaorangtua ? $request->cvnamaorangtua : null,
+            'jmlsaudara' => $request->cvjumlahsaudarakandung ? $request->cvjumlahsaudarakandung : null,
+            'statusperkawinan' => $request->cvstatusperkawinan ? $request->cvstatusperkawinan : null,
+            'namapasangan' => $request->cvnamaistri ? $request->cvnamaistri : null,
+            'namaorangtuakandung' => $request->cvorangtuakandung ? $request->cvorangtuakandung : null,
+            'namaorangtuasuamiistri' => $request->cvorangtuakandungistri ? $request->cvorangtuakandungistri : null,
+            'namaanak' => $request->cvanakkandung ? $request->cvanakkandung : null,
+            'namakakeknenek' => $request->cvkakekkandung ? $request->cvkakekkandung : null,
+            'namacucu' => $request->cvcucukandung ? $request->cvcucukandung : null,
+            'namasuamiistri' => $request->cvistrikandung ? $request->cvistrikandung : null,
+            'namasuamiistrianak' => $request->cvistrianakkandung ? $request->cvistrianakkandung : null,
+            'namakakeksuami' => $request->cvnenekistri ? $request->cvnenekistri : null,
+            'namasuamiistricucu' => $request->cvistricucukandung ? $request->cvistricucukandung : null,
+            'namasuamiistrisaudara' => $request->cvsaudaraistri ? $request->cvsaudaraistri : null,
+            // 
+            'sdtahun' => $request->cvsdtahun ? $request->cvsdtahun : null,
+            'sdnama' => $request->cvsdinstitusi ? $request->cvsdinstitusi : null,
+            'sdfakultas' => $request->cvsdfakultas ? $request->cvsdfakultas : null,
+            'sdgelar' => $request->cvsdgelar ? $request->cvsdgelar : null,
+            'smptahun' => $request->cvsmptahun ? $request->cvsmptahun : null,
+            'smpnama' => $request->cvsmpinstitusi ? $request->cvsmpinstitusi : null,
+            'smpfakultas' => $request->cvsmpfakultas ? $request->cvsmpfakultas : null,
+            'smpgelar' => $request->cvsmpgelar ? $request->cvsmpgelar : null,
+            'smatahun' => $request->cvsmutahun ? $request->cvsmutahun : null,
+            'smanama' => $request->cvsmuinstitusi ? $request->cvsmuinstitusi : null,
+            'smafakultas' => $request->cvsmufakultas ? $request->cvsmufakultas : null,
+            'smagelar' => $request->cvsmugelar ? $request->cvsmugelar : null,
+            'akademitahun' => $request->cvakademitahun ? $request->cvakademitahun : null,
+            'akademinama' => $request->cvakademiinstitusi ? $request->cvakademiinstitusi : null,
+            'akademifakultas' => $request->cvakademifakultas ? $request->cvakademifakultas : null,
+            'akademigelar' => $request->cvakademigelar ? $request->cvakademigelar : null,
+            'perguruantahun' => $request->cvperguruantinggitahun ? $request->cvperguruantinggitahun : null,
+            'perguruannama' => $request->cvperguruantinggiinstitusi ? $request->cvperguruantinggiinstitusi : null,
+            'perguruanfakultas' => $request->cvperguruantinggifakultas ? $request->cvperguruantinggifakultas : null,
+            'perguruangelar' => $request->cvperguruantinggigelar ? $request->cvperguruantinggigelar : null,
+            'pascasarjanatahun' => $request->cvpascasarjanatahun ? $request->cvpascasarjanatahun : null,
+            'pascasarjananama' => $request->cvpascasarjanainstitusi ? $request->cvpascasarjanainstitusi : null,
+            'pascasarjanafakultas' => $request->cvpascasarjanafakultas ? $request->cvpascasarjanafakultas : null,
+            'pascasarjanagelar' => $request->cvpascasarjanagelar ? $request->cvpascasarjanagelar : null,
+        ];
+
+        if ($request->cvpelatihannama) {
+            $insert['pelatihannama'] = json_encode($request->cvpelatihannama);
+        }
+        if ($request->cvpelatihantahun) {
+            $insert['pelatihantahun'] = json_encode($request->cvpelatihantahun);
+        }
+        if ($request->cvpelatihanpenyelengara) {
+            $insert['pelatihanpenyelanggara'] = json_encode($request->cvpelatihanpenyelengara);
+        }
+        if ($request->cvpelatihanlokasi) {
+            $insert['pelatihanlokasi'] = json_encode($request->cvpelatihanlokasi);
+        }
+        if ($request->cvpekerjaantahun) {
+            $insert['pekerjaantahun'] = json_encode($request->cvpekerjaantahun);
+        }
+        if ($request->cvpekerjaanperusahaan) {
+            $insert['pekerjaanperusahaan'] = json_encode($request->cvpekerjaanperusahaan);
+        }
+        if ($request->cvpekerjaanjabatan) {
+            $insert['pekerjaanjabatan'] = json_encode($request->cvpekerjaanjabatan);
+        }
+        if ($request->cvpekerjaantanggungjawab) {
+            $insert['pekerjaantanggungjawab'] = json_encode($request->cvpekerjaantanggungjawab);
+        }
+        if ($request->cvpekerjaanprestasi) {
+            $insert['pekerjaanprestasi'] = json_encode($request->cvpekerjaanprestasi);
+        }
+        if ($request->cvpekerjaanpenghargaan) {
+            $insert['pekerjaanpenghargaan'] = json_encode($request->cvpekerjaanpenghargaan);
+        }
+        if ($request->cvpekerjaanaset) {
+            $insert['pekerjaantotalaset'] = json_encode($request->cvpekerjaanaset);
+        }
+        if ($request->cvpengalamanspesifik) {
+            $insert['pengalamanspesifik'] = $request->cvpengalamanspesifik;
+        }
+
+        $i = LamaranModel::updateOrCreate(['user_id' => $request->cvuserid], $insert);
+        if ($i) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Tesimpan',
+                'data' => $request->all(),
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+            'message' => 'Data Tidak Sesuai',
+            'data' => $request->all(),
+        ]);
     }
 }

@@ -263,8 +263,37 @@
             </div>
         </div>
     </div>
+    {{-- Event Modal --}}
+    <div class="modal fade" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="eventtitle">Event Files</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Title</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyevent">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
+    let dataevent = [];
     function getkelasanda(status) {
         let s = 'Semua';
         let t = 3;
@@ -303,6 +332,7 @@
             {
                 let h = '';
                 if (response.status == 1) {
+                    dataevent = response.data.getkelasanda;
                     response.data.getkelasanda.forEach(v => {
                     h+='<div class="card br-10 mb-4" style="background-color: #f7f7f7">';
                     h+='    <div class="card-body">';
@@ -352,7 +382,7 @@
                     h+='                </div>';
                     h+='            </div>';
                     h+='            <div class="col-lg-3 text-center">';
-                    h+='                <div class="btn btn-success" style="cursor: auto">'+s+'</div>';
+                    h+='                <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor: auto" onclick="setevent(`'+v.title+'`,'+v.id+')">'+s+'</div>';
                     h+='            </div>';
                     h+='        </div>';
                     h+='    </div>';
@@ -372,5 +402,30 @@
                 Swal.close()
             }
         });
+    }
+    function setevent(title,id_event) {
+        console.log(dataevent);
+        $('#eventtitle').html(title);
+        let d = '';
+        dataevent.forEach(e => {
+            if (e.id == id_event) {
+                if (e.events) {
+                    let no = 1;
+                    e.events.forEach(eev => {
+                        d +='<tr>';
+                        d +='    <td>'+no+'</td>';
+                        d +='    <td>'+eev.title+'</td>';
+                        if (eev.type == 3) {
+                            d +='    <td><a href="'+eev.url+'" target="_blank">Link</a></td>';
+                        }else{
+                            d +='    <td><a href="getBerkas?rf='+eev.url+'" target="_blank">Download</a></td>';
+                        }
+                        d +='</tr>';
+                        no++;
+                    });
+                }
+            }
+        });
+        $('#bodyevent').html(d);
     }
 </script>

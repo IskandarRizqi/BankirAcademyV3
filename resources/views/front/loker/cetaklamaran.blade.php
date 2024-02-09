@@ -145,8 +145,8 @@
                         </td>
                         <td style="width: 8%">:</td>
                         <td style="width: 50%">
-                            <div class="text-uppercase"><input type="text" name="nama_lengkap" id="nama_lengkap"
-                                    class="form-control" value="{{$data?$data->nama_lengkap:old('nama_lengkap')}}">
+                            <div class=""><input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control"
+                                    value="{{$data?$data->nama_lengkap:old('nama_lengkap')}}">
                             </div>
                         </td>
                     </tr>
@@ -289,7 +289,7 @@
                             </div>
                     </tr>
                 </table> --}}
-                <div class="">11. Nama Lengkap Anggota Keluarga</div>
+                <div class=""><b>Nama Lengkap Anggota Keluarga</b></div>
                 <div class="row mb-2">
                     <table style="width: 100%">
                         <tr>
@@ -888,7 +888,7 @@
                                 <td style="width: 8%">:</td>
                                 <td style="width: 50%">
                                     <textarea name="pengalamanspesifik" id="pengalamanspesifik" cols="30" rows="10"
-                                        class="form-control">{{$data?json_decode($data->pengalamanspesifik):old('pengalamanspesifik')}}</textarea>
+                                        class="form-control">{{$data?$data->pengalamanspesifik:old('pengalamanspesifik')}}</textarea>
                             </tr>
                         </table>
                 </div>

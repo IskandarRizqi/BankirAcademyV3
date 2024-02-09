@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClassPricingModel extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	protected $table = 'class_pricing';
 	protected $fillable = [
 		'class_id',
@@ -16,5 +16,6 @@ class ClassPricingModel extends Model
 		'promo_price',
 		'promo_start',
 		'promo_end',
+		'gratis',
 	];
 }

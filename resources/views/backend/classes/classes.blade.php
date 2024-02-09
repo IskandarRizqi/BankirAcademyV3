@@ -458,6 +458,7 @@
             $('#numClassPrice').val(0);
             $('#numClassPromo').val(0);
             $('#bolClassPromo').prop('checked', false);
+            $('#bolClassGratis').prop('checked', false);
             $('#datPromoDateStart').val('')
             $('#datPromoDateEnd').val('')
             if (c.pricing) {
@@ -465,6 +466,9 @@
                 $('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
                 if (c.pricing.promo == 1) {
                     $('#bolClassPromo').prop('checked', true);
+                }
+                if (c.pricing.gratis == 1) {
+                    $('#bolClassGratis').prop('checked', true);
                 }
                 $('#datPromoDateStart').val(c.pricing.promo_start)
                 $('#datPromoDateEnd').val(c.pricing.promo_end)

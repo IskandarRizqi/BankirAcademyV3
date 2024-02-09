@@ -382,13 +382,18 @@ class ClassesController extends Controller
 	public function setpricing(Request $r)
 	{
 		$p = 0;
+		$g = 0;
 		if ($r->bolClassPromo) {
 			$p = 1;
+		}
+		if ($r->bolClassGratis) {
+			$g = 1;
 		}
 		ClassPricingModel::UpdateOrCreate(['class_id' => $r->hdnClassesId], [
 			'class_id' => $r->hdnClassesId,
 			'price' => $r->numClassPrice,
 			'promo' => $p,
+			'gratis' => $g,
 			'promo_price' => $r->numClassPromo,
 			'promo_start' => $r->datPromoDateStart,
 			'promo_end' => $r->datPromoDateEnd,
@@ -741,6 +746,7 @@ class ClassesController extends Controller
 				}
 			})
 			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			->where('status', 1)
 			->orderBy('date_end', 'desc')
 			->paginate(9)
 			->toArray();

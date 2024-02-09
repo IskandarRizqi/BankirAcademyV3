@@ -50,9 +50,9 @@
                     <div class="card-body m-0 p-0">
                         <div class="header text-center text-white p-4"
                             style="border-radius:10px; background-image: linear-gradient(#FF5252,#FFAF52)">
-                            Basic
+                            <h3 class="m-0 text-white">Basic</h3>
                         </div>
-                        <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3>
+                        {{-- <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3> --}}
                         <div class="bodynya">
                             <div class="p-2 text-left" style="margin-left: 20px">
                                 {!!html_entity_decode($value->keterangan)!!}
@@ -83,9 +83,9 @@
                     <div class="card-body m-0 p-0">
                         <div class="header text-center text-white p-4"
                             style="border-radius:10px; background-image: linear-gradient(#FF5F5F,#FF1F98)">
-                            Standard
+                            <h3 class="m-0 text-white">Standard</h3>
                         </div>
-                        <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3>
+                        {{-- <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3> --}}
                         <div class="bodynya">
                             <div class="p-2 text-left" style="margin-left: 20px">
                                 {!!html_entity_decode($value->keterangan)!!}
@@ -116,9 +116,9 @@
                     <div class="card-body m-0 p-0">
                         <div class="header text-center text-white p-4"
                             style="border-radius:10px; background-image: linear-gradient(#7F00FF,#FF00C7)">
-                            Premium
+                            <h3 class="m-0 text-white">Premium</h3>
                         </div>
-                        <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3>
+                        {{-- <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3> --}}
                         <div class="bodynya">
                             <div class="p-2 text-left" style="margin-left: 20px">
                                 {!!$value->keterangan!!}
