@@ -276,7 +276,7 @@
                                 html+='    </div>';
                                 html+='</div>';
                             });
-                            $('#listkelas').html(html);
+                            $('#listkelas').append(html);
                         }
                     }
                 });

@@ -745,9 +745,9 @@ class ClassesController extends Controller
 					$sql->where('title', 'like', '%' . $request->titlekelas . '%');
 				}
 			})
-			// ->where('date_end', '>=', Carbon::now()->format('Y-m-d'))
+			->where('date_end', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
 			->where('status', 1)
-			->orderBy('date_end', 'desc')
+			->orderBy('date_end', 'asc')
 			->paginate(9)
 			->toArray();
 		if ($request->ajax()) {
@@ -803,7 +803,7 @@ class ClassesController extends Controller
 			// })
 			->where(function ($sql) use ($request) {
 				if ($request->titlekelas) {
-					$sql->where('title', $request->titlekelas);
+					$sql->where('title', 'like', '%' . $request->titlekelas . '%');
 				}
 				if ($request->instructor) {
 					$sql->where('instructor', '%' . $request->instructor . '%');
@@ -812,6 +812,9 @@ class ClassesController extends Controller
 					$sql->where('category', '%' . $request->slcClassesCategory . '%');
 				}
 			})
+			->where('date_end', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
+			->where('status', 1)
+			->orderBy('date_end', 'asc')
 			->paginate(8)
 			->toArray();
 
