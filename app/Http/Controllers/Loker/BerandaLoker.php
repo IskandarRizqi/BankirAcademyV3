@@ -112,13 +112,22 @@ class BerandaLoker extends Controller
 
     public function apply(Request $request)
     {
+        $f = LokerApply::where('user_id', Auth::user()->id)
+            ->where('loker_id', $request->class_id)
+            ->get();
+        if (count($f) > 0) {
+            // return view('front.loker.successlamaran');
+            return Redirect::back()->with('info', 'Lamaran Sudah Terkirim');
+        }
         $l = LokerApply::create([
             'user_id' => Auth::user()->id,
             'loker_id' => $request->class_id
         ]);
         if ($l) {
+            // return view('front.loker.successlamaran');
             return Redirect::back()->with('success', 'Lamaran Proses Terkirim');
         }
+        // return view('front.loker.successlamaran');
         return Redirect::back()->with('info', 'Lamaran Gagal Terkirim');
     }
 

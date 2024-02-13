@@ -178,10 +178,409 @@
 
     </div>
 </div>
+<div class="modal fade" id="modalCorporate" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+    aria-labelledby="reviewFormModalLabel" aria-hidden="true" style="background-color: #000000cc">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" id="kembaliBeranda">
+                <span>
+                    <a href="/" type="button" class="btn btn-secondary btn-sm">x</a>
+                </span>
+            </div>
+            <div class="modal-body">
+                <div id="pilihGambar" class="row">
+                    <div class="col">
+                        <img src="/a_peorangan.jpg" alt="" id="peroranganPilih">
+                        <p class="text-center">( Pelajar, Mahasiswa, Pencari Kerja )</p>
+                    </div>
+                    <div class="col">
+                        <img src="/a_perusahaan.jpg" alt="" id="corporatePilih">
+                        <p class="text-center">( Karyawan, Institusi, Perusahaan )</p>
+                    </div>
+                </div>
+                <div id="formPerorangan" hidden>
+                    <h4>Calon Bankir</h4>
+                    <button class="btn btn-secondary btn-sm" id="kembali" title="kembali">
+                        < Kembali </button>
+                            <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="text" name="iscorporate" hidden>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <label for="form-control">Nama lengkap</label>
+                                        <input type="text" class="form-control" name="nama_lengkap"
+                                            value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                        @if ($errors->has('nama_lengkap'))
+                                        <div class="error" style="color: red; display:block;">
+                                            {{ $errors->first('nama_lengkap') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="form-control">Nomor
+                                            handphone</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">+62</span>
+                                            </div>
+                                            <input type="text" class="form-control" name="nomor_handphone"
+                                                value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
+                                        </div>
+                                        @if ($errors->has('nomor_handphone'))
+                                        <div class="error" style="color: red; display:block;">
+                                            {{ $errors->first('nomor_handphone') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-lg-4" hidden>
+                                        <label for="form-control">Company</label>
+                                        <input type="text" class="form-control" name="company" {{--
+                                            value="{{ isset($pfl['instansi'])?$pfl['instansi']:'' }}" --}}
+                                            value="perorangan">
+                                        <small class="text-danger">Jika mempunyai wajib
+                                            di
+                                            isi</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label for="form-control">Tanggal
+                                                    lahir</label>
+                                                <input type="date" name="tanggal_lahir" class="form-control"
+                                                    value="{{ isset($pfl['tanggal_lahir'])?$pfl['tanggal_lahir']:'' }}">
+                                                @if ($errors->has('tanggal_lahir'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ $errors->first('tanggal_lahir') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="col-lg-6" hidden>
+                                                <label for="">No.
+                                                    Rekening</label>
+                                                <input type="text" name="rekening" id="rekening" class="form-control"
+                                                    value="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="form-control">Jenis
+                                                    Kelamin</label>
+                                                <select name="jenis_kelamin" class="form-control" id="jkl">
+                                                    <option value="">Pilih salah
+                                                        satu
+                                                    </option>
+                                                    <option value="0" {{ isset($pfl['gender'])&&$pfl['gender']==0
+                                                        ? 'selected' : null }}>
+                                                        Perempuan</option>
+                                                    <option value="1" {{ isset($pfl['gender'])&&$pfl['gender']==1
+                                                        ? 'selected' : null }}>
+                                                        Laki-laki</option>
+                                                </select>
+                                                @if ($errors->has('jenis_kelamin'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ $errors->first('jenis_kelamin') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label for="form-control">Referral
+                                                    (optional)</label>
+                                                <input type="text" id="referral" name="referral" class="form-control"
+                                                    onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
+                                                    value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
+                                                    @if (isset($pfl['user_id'])){{ $pfl['referral'] ? 'readonly' : ''
+                                                    }}@endif>
+                                                @if (Session::has('referral'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ Session::get('referral') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <label for="form-control">Alamat</label>
+                                        <textarea class="form-control"
+                                            name="alamat">{{ isset($pfl['description'])?$pfl['description']:'' }}</textarea>
+                                        @if ($errors->has('alamat'))
+                                        <div class="error" style="color: red; display:block;">
+                                            {{ $errors->first('alamat') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <label for="form-control">Foto</label>
+                                        <input type="file" class="form-control" name="picture" id="picture2">
+                                        <img id="pictureprv2" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
+                                            alt="" width="80px">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <button class="button button-small" type="submit">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
+                </div>
+                <div id="formCorporate" hidden>
+                    <h4>Bankir</h4>
+                    <button class="btn btn-secondary btn-sm" id="kembali2" title="kembali2">
+                        < Kembali </button>
+                            <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="text" name="iscorporate" value="ada" hidden>
+                                {{-- Tabel di User --}}
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="form-control">Jenis Corporate</label>
+                                        <select name="jenis_corporate" class="form-control jc" id="jenis_corporates"
+                                            data-show-subtext="true" data-live-search="true" required>
+                                            <option value="">Pilih</option>
+                                            <option value="bankumum">Bank Umum</option>
+                                            <option value="bpr">BPR</option>
+                                            <option value="bprs">BPRS</option>
+                                            <option value="koperasi">Koperasi</option>
+                                            <option value="lkm">Lembaga Keuangan Mikro</option>
+                                            <option value="lainnya">Lainnya</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-9 select-custom">
+                                        <label for="form-control nama_lengkaps">Nama Corporate</label>
+                                        <select name="nama_lengkap" autocomplete="off" id="nama_lengkaps"
+                                            class="form-control" required>
+                                            <option value="">Pilih</option>
+                                        </select>
+                                        {{-- <label for="form-control">Nama Perusahaan</label>
+                                        <input type="text" class="form-control" name="nama_lengkap"
+                                            value="{{ isset($pfl['name'])?$pfl['name']:'' }}">
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"> --}}
+                                        @if ($errors->has('nama_lengkap'))
+                                        <div class="error" style="color: red; display:block;">
+                                            {{ $errors->first('nama_lengkap') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-lg-12" hidden>
+                                                <label for="form-control">Tanggal
+                                                    lahir</label>
+                                                <input type="date" name="tanggal_lahir" class="form-control"
+                                                    value="{{ isset($pfl['tanggal_lahir'])?$pfl['tanggal_lahir']:'' }}">
+                                                @if ($errors->has('tanggal_lahir'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ $errors->first('tanggal_lahir') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="col" hidden>
+                                                <label for="">No.
+                                                    Rekening</label>
+                                                <input type="text" name="rekening" id="rekening" class="form-control"
+                                                    value="1">
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <label for="">Email</label>
+                                                <input type="text" name="email" id="email" class="form-control"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="form-control">Nomor Telepon</label>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">+62</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" name="nomor_handphone"
+                                                        value="{{ isset($pfl['phone'])?$pfl['phone']:'' }}">
+                                                </div>
+                                                @if ($errors->has('nomor_handphone'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ $errors->first('nomor_handphone') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="col" hidden>
+                                                <label for="form-control">Jenis
+                                                    Kelamin</label>
+                                                <select name="jenis_kelamin" class="form-control" id="jkl">
+                                                    <option value="">Pilih salah
+                                                        satu
+                                                    </option>
+                                                    <option value="0" {{ isset($pfl['gender'])&&$pfl['gender']==0
+                                                        ? 'selected' : null }}>
+                                                        Perempuan</option>
+                                                    <option value="1" {{ isset($pfl['gender'])&&$pfl['gender']==1
+                                                        ? 'selected' : null }}>
+                                                        Laki-laki</option>
+                                                </select>
+                                                @if ($errors->has('jenis_kelamin'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ $errors->first('jenis_kelamin') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="col">
+                                                <label for="form-control">Referral
+                                                    (optional)</label>
+                                                <input type="text" id="referral" name="referral" class="form-control"
+                                                    onchange="referralKode('{{ isset($pfl['user_id'])?$pfl['user_id']:'' }}',$(this).val())"
+                                                    value="@if (isset($pfl['user_id'])){{ $pfl['referral'] ? $pfl['referral']['code'] : '' }}@endif"
+                                                    @if (isset($pfl['user_id'])){{ $pfl['referral'] ? 'readonly' : ''
+                                                    }}@endif>
+                                                @if (Session::has('referral'))
+                                                <div class="error" style="color: red; display:block;">
+                                                    {{ Session::get('referral') }}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <label for="form-control">Alamat</label>
+                                        <textarea class="form-control"
+                                            name="alamat">{{ isset($pfl['description'])?$pfl['description']:'' }}</textarea>
+                                        @if ($errors->has('alamat'))
+                                        <div class="error" style="color: red; display:block;">
+                                            {{ $errors->first('alamat') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <label for="form-control">Logo</label>
+                                        <input type="file" class="form-control" name="picture" id="picture3">
+                                        <img id="pictureprv3" src="{{ isset($pfl['picture'])?$pfl['picture']:'' }}"
+                                            alt="" width="80px">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <button class="button button-small" type="submit">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<textarea id="corporateUser" cols="30" rows="10" hidden>
+    {{$user->corporate}}
+</textarea>
 <script>
     $(document).ready(function () {
         loadbillingkelas('semua-billing')
         getkelasanda('semua-ka-billing')
+
+$('#kembali').click(function() {
+    $('#pilihGambar').removeAttr('hidden');
+    $('#formCorporate').attr('hidden', true);
+    $('#formPerorangan').attr('hidden', true);
+})
+$('#kembali2').click(function() {
+    $('#pilihGambar').removeAttr('hidden');
+    $('#formCorporate').attr('hidden', true);
+    $('#formPerorangan').attr('hidden', true);
+})
+$('#peroranganPilih').click(function() {
+    $('#pilihGambar').attr('hidden', true);
+    $('#formCorporate').attr('hidden', true);
+    $('#formPerorangan').removeAttr('hidden');
+})
+$('#corporatePilih').click(function() {
+    $('#pilihGambar').attr('hidden', true);
+    $('#formCorporate').removeAttr('hidden', true);
+    $('#formPerorangan').attr('hidden');
+})
+        let corporate = $('#corporateUser').val();
+        if (corporate) {
+            if (corporate.replace(/[^a-zA-Z0-9]/g,'') !== 'perorangan') {
+                try {
+                    let js = JSON.parse(corporate)
+                } catch (error) {
+                    $('#modalCorporate').modal('show');
+                }
+            }
+        }else{
+            try {
+                let js = JSON.parse(corporate)
+            } catch (error) {
+                $('#modalCorporate').modal('show');
+            }
+        }
+    $('#jenis_corporates').on('change', function() {
+        let val = $('#jenis_corporates').val();
+        $('#nama_lengkaps').remove();
+        $('.nama_lengkaps').remove();
+        let z = '';
+        z += '<label for="form-control nama_lengkaps">Nama Corporate</label>';
+        z += '<select name="nama_lengkap" autocomplete="off" id="nama_lengkaps" class="form-control" required>';
+        z += '<option value="">Pilih</option>';
+        z += '</select>';
+        $('.select-custom').html(z)
+        $('#nama_lengkaps').removeAttr('class');
+        $('#corporate').val(null);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        jQuery.ajax({
+            url: "/admin/corporates/" + val,
+            method: 'get',
+            success: function(result) {
+                new TomSelect("#nama_lengkaps", {
+                    valueField: 'nama',
+                    searchField: 'nama',
+                    persist: false,
+                    createOnBlur: true,
+                    create: true,
+                    // options: [
+                    // 	{id: 1, title: 'DIY', url: 'https://diy.org'},
+                    // 	{id: 2, title: 'Google', url: 'http://google.com'},
+                    // 	{id: 3, title: 'Yahoo', url: 'http://yahoo.com'},
+                    // ],
+                    options: result,
+                    render: {
+                        option: function(data, escape) {
+                            return '<div>' +
+                                '<span class="title">' + escape(data.nama) + '</span>' +
+                                '</div>';
+                        },
+                        item: function(data, escape) {
+                            return '<div title="' + escape(data.id) + '" value="' + escape(data.id) + '">' + escape(data.nama) + '</div>';
+                        }
+                    }
+                });
+                // console.log(result);
+                // let h = '';
+                // result.forEach(element => {
+                //     h+='<option value="'+element.id+'">'+element.nama+'</option>';
+                // });
+                // $('#nama_lengkaps').html(h);
+            },
+            error: function(jqXhr, json, errorThrown) { // this are default for ajax errors 
+                var errors = jqXhr.responseJSON;
+                console.log(errors);
+
+            }
+        })
+    })
     })
     $('.trigger-swal').on('click', function () {        
         $.ajaxSetup({

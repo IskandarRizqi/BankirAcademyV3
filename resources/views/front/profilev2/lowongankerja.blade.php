@@ -31,7 +31,7 @@
                         <div class="tengah"></div>
                         <div class="kanan text-right">
                             <h5 class="m-0">{{$value->lamaran->tanggal_akhir}}</h5>
-                            <p>
+                            <p class="m-0">
                                 <span class="badge badge-pill badge-info">
                                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +49,13 @@
                             <span class="text-secondary">
                                 Lamaran Sudah Tutup
                             </span>
+                            @else
+                            <span class="text-secondary">
+                                Lamaran Masih Terbuka
+                            </span>
                             @endif
+                            <a href="/loker/{{$value->loker_id}}/detail" target="_blank"
+                                class="btn btn-primary btn-sm btn-block br-10 mt-4">Detail</a>
                         </div>
                     </div>
                 </div>
@@ -77,12 +83,19 @@
                             <td>{{$value->nama?$value->nama:'PT. Anugrah Karya'}}</td>
                             <td>{{$value->title}}</td>
                             <td>
-                                <form id="orderForm" action="{{ '/loker/apply' }}" method="POST">
-                                    @csrf
-                                    <input type="text" id="class_id" name="class_id" value="{{ $value->id }}" hidden>
-                                    <button class="button button-circle">Kirim
-                                        Lamaran</button>
-                                </form>
+                                <div class="row">
+                                    <form id="orderForm" action="{{ '/loker/apply' }}" method="POST" target="_blank">
+                                        @csrf
+                                        <input type="text" id="class_id" name="class_id" value="{{ $value->id }}"
+                                            hidden>
+                                        <button class="button button-circle">Kirim
+                                            Lamaran</button>
+                                    </form>
+                                    <a href="/loker/{{$value->id}}/detail">
+                                        <button class="button button-circle button-aqua">Detail
+                                            Lamaran</button>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach

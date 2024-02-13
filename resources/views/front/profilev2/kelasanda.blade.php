@@ -382,7 +382,11 @@
                     h+='                </div>';
                     h+='            </div>';
                     h+='            <div class="col-lg-3 text-center">';
-                    h+='                <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor: auto" onclick="setevent(`'+v.title+'`,'+v.id+')">'+s+'</div>';
+                        if (t==1) {
+                            h+='                <div class="btn btn-success">'+s+'</div>';
+                        }else{
+                            h+='                <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor: auto" onclick="setevent(`'+v.title+'`,'+v.id+')">'+s+'</div>';
+                        }
                     h+='            </div>';
                     h+='        </div>';
                     h+='    </div>';
