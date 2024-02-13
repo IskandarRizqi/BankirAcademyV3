@@ -725,6 +725,9 @@ class ProfileController extends Controller
         }
         // return $data;
         if ($request->cetak) {
+            if (!$data['data']) {
+                return Redirect::back()->with('error', 'Data CV Tidak Tersedia');
+            }
             $pdf = Pdf::loadView('front.loker.cetaklamaran', $data);
             return $pdf->stream();
             // return view('front.loker.cetaklamaran', $data);

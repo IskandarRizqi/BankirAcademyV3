@@ -6,6 +6,14 @@
     .slick-next:before {
         color: #007bff;
     }
+
+    .slick-prev:before {
+        /* margin-left: 8px; */
+    }
+
+    .slick-next:before {
+        /* margin-right: 8px; */
+    }
 </style>
 <section id="content">
     <div class="container mt-4">
@@ -369,7 +377,8 @@
                         slidesToShow: 1,
                         slidesToScroll: 1,
                         infinite: true,
-                        dots: true
+                        dots: false,
+                        arrows:false,
                     }
                 },
                 {
@@ -378,7 +387,8 @@
                         slidesToShow: 1,
                         slidesToScroll: 1,
                         infinite: true,
-                        dots: true
+                        dots: false,
+                        arrows:false,
                     }
                 },
                 {
@@ -387,7 +397,8 @@
                         slidesToShow: 1,
                         slidesToScroll: 1,
                         infinite: true,
-                        dots: true
+                        dots: false,
+                        arrows:false,
                     }
                 }
             ]
