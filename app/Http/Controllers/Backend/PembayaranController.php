@@ -65,6 +65,15 @@ class PembayaranController extends Controller
         }
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $cs]);
     }
+    public function setsudahcetak(Request $request)
+    {
+        $certificate = $request->certificate == 1 ? 0 : 1;
+        $cs = ClassPaymentModel::where('id', $request->id)->update(['sudah_cetak' => $certificate]);
+        if ($cs) {
+            return Redirect::back()->with(['success' => 'Set Status Cetak Berhasil']);
+        }
+        return Redirect::back()->with(['error' => 'Set Status Cetak Gagal', 'msg' => $cs]);
+    }
     public function approved(Request $request)
     {
         $status = $request->status ? 0 : 1;

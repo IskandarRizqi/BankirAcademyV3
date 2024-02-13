@@ -56,6 +56,7 @@
                             <th>Class</th>
                             <th>Category</th>
                             <th>User</th>
+                            <th>Cetak</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -101,7 +102,13 @@
                                 {{ $p->title }} </td>
                             <td>{{ $p->category }}</td>
                             <td>{{ $p->name }}</td>
+                            <td>{{ $p->sudah_cetak }}</td>
                             <td>
+                                @if($p->sudah_cetak == 1)
+                                <button class="btn bs-tooltip btn-warning" title="Undo Status Cetak"
+                                    onclick="cancelsudahcetak({{ $p->id }},{{$p->sudah_cetak}})"><i
+                                        class='bx bx-wallet-alt'></i></button>
+                                @endif
                                 @if ($p->status == 1)
                                 @if ($p->certificate == 1)
                                 <button class="btn bs-tooltip btn-warning" title="Unpublish Certificate"
@@ -119,10 +126,9 @@
                                 <button class="btn bs-tooltip btn-info" title="Lunas"
                                     onclick="approved('{{ $p->no_invoice }}',{{ $p->status }})"><i
                                         class='bx bx-wallet'></i></button>
-                                        @endif
-                                        <button class="btn bs-tooltip btn-info" title="Edit Bukti"
-                                            onclick="updatebukti('{{$p}}')"><i
-                                                class='bx bx-user'></i></button>
+                                @endif
+                                <button class="btn bs-tooltip btn-info" title="Edit Bukti"
+                                    onclick="updatebukti('{{$p}}')"><i class='bx bx-user'></i></button>
                             </td>
                         </tr>
                         @endforeach
@@ -134,26 +140,28 @@
                 </form>
             </div>
             <!-- Modal -->
-            <div class="modal fade" id="cardupdateprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="cardupdateprofile" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <form action="/admin/pembayaran/updatebukti" method="POST" enctype="multipart/form-data">
-                        <div class="modal-body">
-                        @csrf
-                        <input type="text" name="idpembayaran" id="idpembayaran" hidden>
-                        <label for="">Foto</label>
-                            <div class="form-group">
-                                <input type="file" name="foto" id="foto" accept="image/*" onchange="loadFile(event)" required>
-                                <img id="output" width="300px">
+                            <div class="modal-body">
+                                @csrf
+                                <input type="text" name="idpembayaran" id="idpembayaran" hidden>
+                                <label for="">Foto</label>
+                                <div class="form-group">
+                                    <input type="file" name="foto" id="foto" accept="image/*" onchange="loadFile(event)"
+                                        required>
+                                    <img id="output" width="300px">
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save</button>
                             </div>
-                            <button class="btn btn-primary" type="submit">Save</button>
-                        </div>
                         </form>
                     </div>
                 </div>
@@ -231,7 +239,7 @@
             if (certificate == 1) {
                 s = {
                     title: 'Are you sure?',
-                    text: "Unublish certificate for this user!",
+                    text: "Unpublish certificate for this user!",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Done',
@@ -241,6 +249,25 @@
             swal(s).then(function(result) {
                 if (result.value) {
                     $('#formpembayaran').attr('action', '/admin/pembayaran/certificate');
+                    $('#id').val(id);
+                    $('#certificate').val(certificate);
+                    $('#formpembayaran').submit();
+                }
+            })
+        }
+
+        function cancelsudahcetak(id, certificate) {
+            var s = {
+                title: 'Are you sure?',
+                text: "Set Status Cetak 0, User dapat memilih cetak invoice dengan sertifikat atau tidak",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Done',
+                padding: '2em'
+            }
+            swal(s).then(function(result) {
+                if (result.value) {
+                    $('#formpembayaran').attr('action', '/admin/pembayaran/setsudahcetak');
                     $('#id').val(id);
                     $('#certificate').val(certificate);
                     $('#formpembayaran').submit();

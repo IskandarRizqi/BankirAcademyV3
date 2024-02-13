@@ -7,7 +7,8 @@
             <div class="row col-mb-50">
                 <div class="col-lg-4">
                     <div class="widget clearfix">
-                        <p><b>{{ env('APP_NAME', 'Bankir Akademi') }}</b> merupakan platform digital learning yang dapat
+                        <p class="mb-2"><b>{{ env('APP_NAME', 'Bankir Akademi') }}</b> merupakan platform digital
+                            learning yang dapat
                             digunakan
                             sebagai media
                             pembelajaran untuk seluruh calon dan karyawan bank.
@@ -70,17 +71,17 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="widget clearfix">
-                        <h4 style="color: #000000">Layanan</h4>
-                        <div class="form-result" style="color: black">
-                            <a href="#">Syarat & Ketentuan</a><br>
+                        <h4 class="mb-2" style="color: #000000">Layanan</h4>
+                        <div class="form-result layanan_footer mb-4" style="color: black">
+                            {{-- <a href="#">Syarat & Ketentuan</a><br>
                             <a href="#">Kebijakan Privasi</a><br>
                             <a href="#">Tentang Kami</a><br>
                             <a href="#">Kontak Kami</a><br>
                             <a href="#">Press Kit</a><br>
                             <a href="#">Bantuan</a><br>
-                            <a href="#">Karier</a><br>
+                            <a href="#">Karier</a><br> --}}
                         </div>
-                        <h4 style="color: black">Bantuan & Panduan</h4>
+                        <h4 class="mb-2" style="color: black">Bantuan & Panduan</h4>
                         <div class="form-result laman_footer" style="color: black">
                             {{-- <a href="#">Layanan</a><br>
                             <a href="#">Syarat & Ketentuan</a><br>
@@ -412,6 +413,13 @@
                         // $('.laman_footer').append(foo);
                     });
                 }
+                if (result.layanan.length > 0) {
+                    result.layanan.forEach(el => {
+                        let foo = '<a href="/pages/blog/'+el.id+'/'+createslug(el.title)+'" class="text-capitalize" style="color: black">' + el.title +
+                            '</a><br>';
+                        $('.layanan_footer').append(foo);
+                    });
+                }
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;
@@ -425,6 +433,13 @@
                 });
             }
         })
+    }
+    function createslug(string) {
+        return string.toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
     }
 </script>
 

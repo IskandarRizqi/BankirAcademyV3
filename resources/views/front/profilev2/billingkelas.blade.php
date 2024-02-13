@@ -328,7 +328,11 @@
                             if (v.status_pembayaran == 'Menunggu Pembayaran' || v.status_pembayaran == 'Menunggu Konfirmasi') {
                         h+='            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti('+v.participant_limit+',`'+encodeURIComponent(v.title)+'`,'+v.class_id+','+v.id+','+`' {{ $reff ? $reff->code : '' }}'`+',`'+v.kode_promo+'`,'+v.jumlah+',`'+v.file+'`,'+n+')">Peserta</div>';
                             }
-                        h+='            <div class="btn btn-warning text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice('+v.id+')">Invoice</div>';
+                            if (v.sudah_cetak == 1) {
+                                h+='            <div class="btn btn-warning text-capitalize mr-2" style="cursor: auto" onclick="langsungcetak('+v.id+','+v.biaya_sertifikat+')">Invoice</div>';
+                            }else{
+                                h+='            <div class="btn btn-warning text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice('+v.id+')">Invoice</div>';
+                            }
                             if (v.status_pembayaran == 'Expired') {
                                 h+='            <div class="btn btn-danger text-capitalize" style="cursor: auto">'+v.status_pembayaran+'</div>';
                             }else if(v.status_pembayaran == 'Menunggu Konfirmasi'){
@@ -443,6 +447,12 @@
                 Swal.close()
             }
         });
+    }
+    function langsungcetak(id,sertifikat) {
+        $('#payment_invoice').val(id);
+        $('#sertifikat_invoice').val(sertifikat);
+        $('#formInvoice').attr('action','/classes/getinvoice/id');
+        $('#formInvoice').submit();
     }
     function modalinvoice(id) {
         $('#payment_invoice').val(id);

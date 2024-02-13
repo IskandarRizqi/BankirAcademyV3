@@ -764,6 +764,7 @@ class HomeController extends Controller
         $now = Carbon::now();
         $data['laman_head'] = ClassLamanModel::where('type', 1)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->orderBy('no_urut', 'asc')->get();
         $data['laman_footer'] = ClassLamanModel::where('type', 2)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->orderBy('no_urut', 'asc')->get();
+        $data['layanan'] = Pages::where('type', 9)->where('date_start', '<=', $now->format('Y-m-d'))->where('date_end', '>=', $now->format('Y-m-d'))->get();
         return $data;
     }
 

@@ -105,6 +105,7 @@ class InvoiceController extends Controller
 		$reff = ClassPaymentModel::where('id', $r->payment_invoice)->update([
 			'additional_discount' => json_encode($additional_discount),
 			'biaya_sertifikat' => $data['payment']['sertifikat'],
+			'sudah_cetak' => 1,
 		]);
 
 		// $data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');

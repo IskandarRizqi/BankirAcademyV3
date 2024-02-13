@@ -53,6 +53,12 @@
                             @case(7)
                             Bantuan
                             @break
+                            @case(8)
+                            Mitra
+                            @break
+                            @case(9)
+                            Layanan
+                            @break
                             @default
                             Tidak Ditemukan
                             @endswitch

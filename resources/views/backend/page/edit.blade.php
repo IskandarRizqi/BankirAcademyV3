@@ -55,6 +55,14 @@
                                 </option> --}}
                                 {{-- <option value="7" {{isset($page->title)==7?'selected':''}}>Bantuan</option>
                                 --}}
+                                <option value="8" @if (isset($page->type)) {{ $page->type == 8 ? 'selected' : ''
+                                    }}
+                                    @endif>Mitra
+                                </option>
+                                <option value="9" @if (isset($page->type)) {{ $page->type == 9 ? 'selected' : ''
+                                    }}
+                                    @endif>Layanan
+                                </option>
                             </select>
                         </div>
                     </div>
