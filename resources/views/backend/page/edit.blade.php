@@ -64,6 +64,9 @@
                                     @endif>Layanan
                                 </option>
                             </select>
+                            @error('type')
+                            <small class="text-danger">Data Tidak Sesuai</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="col">
