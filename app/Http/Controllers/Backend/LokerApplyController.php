@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\LamaranModel;
 use App\Models\LokerApply;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class LokerApplyController extends Controller
 {
@@ -19,6 +22,31 @@ class LokerApplyController extends Controller
         $data['data'] = LokerApply::with('lamaran', 'user')->get();
         // return $data;
         return view('backend.loker.list', $data);
+    }
+
+    public function getdatacvpelamar()
+    {
+        $data['data'] = LamaranModel::select(
+            'lamaran_models.*',
+            'users.email',
+            'users.name',
+        )
+            ->join('users', 'users.id', 'lamaran_models.user_id')
+            ->get();
+        return view('backend.loker.cvpelamar', $data);
+    }
+
+    public function approvecvpelamar(Request $r)
+    {
+        $u = LamaranModel::where('id', $r->id)
+            ->update([
+                'is_approved' => $r->approved,
+                'is_approved_message' => $r->approved_message,
+            ]);
+        if ($u) {
+            return Redirect::back()->with('success', 'Data CV Tersimpan');
+        }
+        return Redirect::back()->with('error', 'Data Tidak CV Tersimpan');
     }
 
     /**

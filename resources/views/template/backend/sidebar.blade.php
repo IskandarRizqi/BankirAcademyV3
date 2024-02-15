@@ -208,6 +208,9 @@
                     <li>
                         <a href="/admin/apply"> List Apply </a>
                     </li>
+                    <li>
+                        <a href="/admin/getdatacvpelamar"> CV Apply </a>
+                    </li>
                 </ul>
             </li>
             <li class="menu">

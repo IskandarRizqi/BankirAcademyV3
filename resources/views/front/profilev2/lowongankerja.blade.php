@@ -84,7 +84,7 @@
                             <td>{{$value->title}}</td>
                             <td>
                                 <div class="row">
-                                    <form id="orderForm" action="{{ '/loker/apply' }}" method="POST" target="_blank">
+                                    <form id="orderForm" action="{{ '/loker/apply' }}" method="POST">
                                         @csrf
                                         <input type="text" id="class_id" name="class_id" value="{{ $value->id }}"
                                             hidden>
@@ -93,7 +93,7 @@
                                     </form>
                                     <a href="/loker/{{$value->id}}/detail">
                                         <button class="button button-circle button-aqua">Detail
-                                            Lamaran</button>
+                                            Loker</button>
                                     </a>
                                 </div>
                             </td>

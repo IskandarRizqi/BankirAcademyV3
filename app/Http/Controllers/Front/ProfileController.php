@@ -719,7 +719,11 @@ class ProfileController extends Controller
     {
         $data = [];
         $data['datax'] = false;
-        $data['data'] = LamaranModel::where('user_id', Auth::user()->id)->first();
+        $auth_id = Auth::user()->id;
+        if ($request->auth_id) {
+            $auth_id = $request->auth_id;
+        }
+        $data['data'] = LamaranModel::where('user_id', $auth_id)->first();
         if ($data['data']) {
             $data['datax'] = true;
         }

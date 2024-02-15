@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Loker;
 
 use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
+use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
@@ -112,6 +113,13 @@ class BerandaLoker extends Controller
 
     public function apply(Request $request)
     {
+        $l = LamaranModel::where('user_id', Auth::user()->id)->first();
+        if (!$l) {
+            return Redirect::back()->with('info', 'CV Tidak Ditemukan');
+        }
+        if ($l->is_approved == 0) {
+            return Redirect::back()->with('info', 'CV Belum Di Approved oleh Admin');
+        }
         $f = LokerApply::where('user_id', Auth::user()->id)
             ->where('loker_id', $request->class_id)
             ->get();

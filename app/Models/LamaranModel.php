@@ -72,6 +72,8 @@ class LamaranModel extends Model
         'pekerjaanpenghargaan',
         'pekerjaantotalaset',
         'pengalamanspesifik',
+        'is_approved',
+        'is_approved_message',
     ];
     protected $appends = ['namaagama'];
     public function getNamaAgamaAttribute()

@@ -217,8 +217,12 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
+
 // Loker Apply
 Route::resource('admin/apply', App\Http\Controllers\Backend\LokerApplyController::class);
+Route::get('admin/getdatacvpelamar', [App\Http\Controllers\Backend\LokerApplyController::class, 'getdatacvpelamar']);
+Route::post('admin/approvecvpelamar', [App\Http\Controllers\Backend\LokerApplyController::class, 'approvecvpelamar']);
+
 // Loker
 Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);
 Route::get('/loker/{id}/detail', [App\Http\Controllers\Loker\BerandaLoker::class, "detail"]);
