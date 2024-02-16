@@ -12,6 +12,10 @@ class LokerController extends Controller
 {
     public function index(Request $r)
     {
+        // $limit = 1000;
+        // if ($r->limit) {
+        //     $limit = $r->limit;
+        // }
         $l = LokerModel::select(
             'loker.*',
             'users.name',
@@ -42,6 +46,11 @@ class LokerController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->limit($r->limit)
                 ->get();
+        }
+        foreach ($l as $key => $v) {
+            if ($v->perusahaan_id) {
+                $v->image = $v->perusahaan->image;
+            }
         }
         $data = [
             'message' => 'Data berhasil',

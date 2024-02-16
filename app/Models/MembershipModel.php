@@ -16,5 +16,10 @@ class MembershipModel extends Model
         'gambar',
         'keterangan',
         'jenis_kelas',
+        'cvats',
+        'cvbankir',
+        'lamaran_online',
+        'lamara_offline',
+        'pelatihan_gratis',
     ];
 }

@@ -44,15 +44,31 @@ class MembershipController extends Controller
             'nama' => 'required',
             'limit' => 'required',
             'keterangan' => 'required',
+            'lamaran_online' => 'required',
+            'lamaran_offline' => 'required',
+            'pelatihan_gratis' => 'required',
         ]);
         //response error validation
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
+        $cvats = 0;
+        $cvbankir = 0;
+        if ($request->cvats == 1) {
+            $cvats = 1;
+        }
+        if ($request->cvbankir == 1) {
+            $cvbankir = 1;
+        }
         $inp = [
             'harga' => $request->harga,
             'limit' => $request->limit,
             'nama' => $request->nama,
+            'cvats' => $cvats,
+            'cvbankir' => $cvbankir,
+            'lamaran_online' => $request->lamaran_online,
+            'lamaran_offline' => $request->lamaran_offline,
+            'pelatihan_gratis' => $request->pelatihan_gratis,
             'keterangan' => $request->keterangan,
         ];
         if ($request->picture) {

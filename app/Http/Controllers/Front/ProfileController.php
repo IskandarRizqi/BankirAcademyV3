@@ -182,6 +182,8 @@ class ProfileController extends Controller
         }
         $limitloker = 10;
         $data['loker'] = LokerModel::select()
+            ->whereDate('tanggal_awal', '<=', Carbon::now())
+            ->whereDate('tanggal_akhir', '>=', Carbon::now())
             ->whereNotIn('id', $lokerid)
             ->limit($limitloker)
             ->get();

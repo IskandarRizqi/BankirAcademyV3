@@ -3,8 +3,12 @@
         <div class="col-lg-4 mb-2">
             <div class="card br-1" style="background-color: #005CFF">
                 <div class="card-body" style="padding-top: 5px;padding-bottom: 5px">
-                    <label for="" class="text-white">Proses Saldo</label>
-                    <h2 class="text-white text-center">Rp {{number_format(isset($saldoProses)?$saldoProses:0)}}</h2>
+                    <label for="" class="text-white m-0">Saldo Kredit</label>
+                    <p class="text-white" style="margin-bottom: 12px">Rp. 0</p>
+                    <label for="" class="text-white m-0">Saldo Affiliate</label>
+                    <p class="m-0 text-white" style="">Rp. 0</p>
+                    {{-- <h2 class="text-white text-center">Rp {{number_format(isset($saldoProses)?$saldoProses:0)}}
+                    </h2> --}}
                 </div>
             </div>
         </div>

@@ -15,8 +15,36 @@
         <button type="button" class="btn btn-primary btn-sm m-2" onclick="edit(null)">
             Tambah
         </button>
-        <div class="row layout-spacing p-2">
-            @foreach($data as $key => $v)
+        <div class="table-responsive">
+            <table id="zero-config" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Harga</th>
+                        <th>Limit</th>
+                        <th>Gambar</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data as $key => $value)
+                    <tr>
+                        <td>{{$key+1}}</td>
+                        <td>{{$value->nama}}</td>
+                        <td>Rp. {{number_format($value->harga)}}</td>
+                        <td>{{$value->limit}}</td>
+                        <td><img src="{{asset($value->gambar)}}" alt="" height="200px">
+                        </td>
+                        <td>
+                            <span class="btn btn-warning btn-sm" onclick="edit({{$value}})">Edit</span>
+                            <span class="btn btn-danger btn-sm" onclick="hapus({{$value->id}})">Delete</span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            {{-- @foreach($data as $key => $v)
             <div class="col-md-6">
                 <div class="caption" style="font-size: 12px; width: 170px">{!!$v->keterangan!!}</div>
                 <img src="{{asset($v->gambar)}}" alt="" onclick="edit({{$v}})" style="cursor: pointer">
@@ -24,7 +52,7 @@
                 </div>
                 <button onclick="hapus({{$v->id}})" class="btn btn-danger btn-sm">Hapus</button>
             </div>
-            @endforeach
+            @endforeach --}}
         </div>
     </div>
 </div>
@@ -64,7 +92,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="">Limit</label>
+                                <label for="">Limit Loker</label>
                                 <input type="number" name="limit" id="limit" class="form-control"
                                     value="{{old('limit')}}">
                                 <small id="smalllimit"></small>
@@ -75,12 +103,64 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="">Keterangan</label>
-                                <textarea type="text" class="form-control" id="keterangan"
-                                    name="keterangan">{{ old('keterangan') }}</textarea>
-                                @error('keterangan')
+                                <label for="">Digital CV</label>
+                                <div class="row">
+                                    <div class="n-chk col-lg-6">
+                                        <label
+                                            class="new-control new-checkbox new-checkbox-rounded new-checkbox-text checkbox-primary">
+                                            <input type="checkbox" class="new-control-input" name="cvats" value="1">
+                                            <span class="new-control-indicator"></span><span class="new-chk-content">ATS
+                                                Friendly</span>
+                                        </label>
+                                    </div>
+                                    <div class="n-chk col-lg-6">
+                                        <label
+                                            class="new-control new-checkbox new-checkbox-rounded new-checkbox-text checkbox-primary">
+                                            <input type="checkbox" class="new-control-input" name="cvbankir" value="1">
+                                            <span class="new-control-indicator"></span><span
+                                                class="new-chk-content">Bankir Friendly</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('limit')
+                                <span class="text-danger" role="alert">
+                                    <strong>Harap Diisi</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Lamaran Online ( Atas Nama Bankir )</label>
+                                <input type="number" name="lamaran_online" id="lamaran_online" class="form-control"
+                                    value="{{old('lamaran_online')}}">
+                                @error('lamaran_online')
+                                <span class="text-danger" role="alert">
+                                    <strong>Harap Diisi</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Lamaran Offline ( Atas Nama Bankir )</label>
+                                <input type="number" name="lamaran_offline" id="lamaran_offline" class="form-control"
+                                    value="{{old('lamaran_offline')}}">
+                                @error('lamaran_offline')
+                                <span class="text-danger" role="alert">
+                                    <strong>Harap Diisi</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Pelatihan Gratis</label>
+                                <input type="number" name="pelatihan_gratis" id="pelatihan_gratis" class="form-control"
+                                    value="{{old('pelatihan_gratis')}}">
+                                @error('pelatihan_gratis')
                                 <span class="text-danger" role="alert">
                                     <strong>Harap Diisi</strong>
                                 </span>
@@ -101,6 +181,18 @@
                                     <div id="img_preview" class="custom-file-container__image-preview"></div>
                                 </div>
                                 @error('picture')
+                                <span class="text-danger" role="alert">
+                                    <strong>Harap Diisi</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="">Keterangan</label>
+                                <textarea type="text" class="form-control" id="keterangan"
+                                    name="keterangan">{{ old('keterangan') }}</textarea>
+                                @error('keterangan')
                                 <span class="text-danger" role="alert">
                                     <strong>Harap Diisi</strong>
                                 </span>

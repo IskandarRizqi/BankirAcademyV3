@@ -48,29 +48,13 @@
             <div class="col-lg-4 mb-2">
                 <div class="card" style="border-radius:10px;">
                     <div class="card-body m-0 p-0">
-                        <div class="header text-center text-white p-4"
-                            style="border-radius:10px; background-image: linear-gradient(#FF5252,#FFAF52)">
-                            <h3 class="m-0 text-white">Basic</h3>
-                        </div>
-                        {{-- <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3> --}}
-                        <div class="bodynya">
-                            <div class="p-2 text-left" style="margin-left: 20px">
-                                {!!html_entity_decode($value->keterangan)!!}
+                        <div>
+                            <div class="img-fluid">
+                                <img src="{{$value->gambar}}" alt="" width="100%" onclick="openmember({{$value}})"
+                                    style="cursor: pointer">
                             </div>
-                            {{-- <div class="d-flex ml-1 mb-2">
-                                <svg class="mr-2" width="80" height="34" viewBox="0 0 34 34" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M25.2112 8.31299L27.4892 9.91099L17.6122 24.157H15.3342L9.82617 16.439L12.1042 14.314L16.4732 18.394L25.2112 8.31299Z"
-                                        fill="#0FA958" />
-                                </svg>
-                                <p class="m-0 text-left">
-                                    Limit loker 780 dawd awudwd uahw duahwidhawiudauh dua hduiahdiuawhd iuawdahidha
-                                    wdhuaiwdi
-                                </p>
-                            </div> --}}
-                            <button class="btn mt-2 btn-block" onclick="openmember({{$value}})"
-                                style="background-image: linear-gradient(#FF5252,#FFAF52)">Daftar</button>
+                            {{-- <button class="btn mt-2 btn-block text-white" onclick="openmember({{$value}})"
+                                style="background-image: linear-gradient(#FF5252,#FFAF52);">Daftar</button> --}}
                         </div>
                     </div>
                 </div>
@@ -81,29 +65,13 @@
             <div class="col-lg-4 mb-2">
                 <div class="card" style="border-radius:10px;">
                     <div class="card-body m-0 p-0">
-                        <div class="header text-center text-white p-4"
-                            style="border-radius:10px; background-image: linear-gradient(#FF5F5F,#FF1F98)">
-                            <h3 class="m-0 text-white">Standard</h3>
-                        </div>
-                        {{-- <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3> --}}
-                        <div class="bodynya">
-                            <div class="p-2 text-left" style="margin-left: 20px">
-                                {!!html_entity_decode($value->keterangan)!!}
+                        <div>
+                            <div class="img-fluid">
+                                <img src="{{$value->gambar}}" alt="" width="100%" onclick="openmember({{$value}})"
+                                    style="cursor: pointer">
                             </div>
-                            {{-- <div class="d-flex ml-1 mb-2">
-                                <svg class="mr-2" width="80" height="34" viewBox="0 0 34 34" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M25.2112 8.31299L27.4892 9.91099L17.6122 24.157H15.3342L9.82617 16.439L12.1042 14.314L16.4732 18.394L25.2112 8.31299Z"
-                                        fill="#0FA958" />
-                                </svg>
-                                <p class="m-0 text-left">
-                                    Limit loker 780 dawd awudwd uahw duahwidhawiudauh dua hduiahdiuawhd iuawdahidha
-                                    wdhuaiwdi
-                                </p>
-                            </div> --}}
-                            <button class="btn mt-2 btn-block" onclick="openmember({{$value}})"
-                                style="background-image: linear-gradient(#FF5F5F,#FF1F98)">Daftar</button>
+                            {{-- <button class="btn mt-2 btn-block text-white" onclick="openmember({{$value}})"
+                                style="background-image: linear-gradient(#FF5F5F,#FF1F98)">Daftar</button> --}}
                         </div>
                     </div>
                 </div>
@@ -114,29 +82,13 @@
             <div class="col-lg-4 mb-2">
                 <div class="card" style="border-radius:10px;">
                     <div class="card-body m-0 p-0">
-                        <div class="header text-center text-white p-4"
-                            style="border-radius:10px; background-image: linear-gradient(#7F00FF,#FF00C7)">
-                            <h3 class="m-0 text-white">Premium</h3>
-                        </div>
-                        {{-- <h3 class="" style="margin-top: 30px">Masa Aktif 3 Tahun</h3> --}}
-                        <div class="bodynya">
-                            <div class="p-2 text-left" style="margin-left: 20px">
-                                {!!$value->keterangan!!}
+                        <div>
+                            <div class="img-fluid">
+                                <img src="{{$value->gambar}}" alt="" width="100%" onclick="openmember({{$value}})"
+                                    style="cursor: pointer">
                             </div>
-                            {{-- <div class="d-flex">
-                                <svg class="mr-2" width="80" height="34" viewBox="0 0 34 34" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M25.2112 8.31299L27.4892 9.91099L17.6122 24.157H15.3342L9.82617 16.439L12.1042 14.314L16.4732 18.394L25.2112 8.31299Z"
-                                        fill="#0FA958" />
-                                </svg>
-                                <p class="m-0 text-left">
-                                    Limit loker 780 dawd awudwd uahw duahwidhawiudauh dua hduiahdiuawhd iuawdahidha
-                                    wdhuaiwdi
-                                </p>
-                            </div> --}}
-                            <button class="btn mt-2 btn-block" onclick="openmember({{$value}})"
-                                style="background-image: linear-gradient(#7F00FF,#FF00C7)">Daftar</button>
+                            {{-- <button class="btn mt-2 btn-block text-white" onclick="openmember({{$value}})"
+                                style="background-image: linear-gradient(#7F00FF,#FF00C7)">Daftar</button> --}}
                         </div>
                     </div>
                 </div>

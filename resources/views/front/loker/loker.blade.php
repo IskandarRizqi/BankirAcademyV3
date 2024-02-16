@@ -253,8 +253,8 @@
                     <h2>Jelajahi Academy</h2>
                     <p>Berbagai macam pilihan kelas bankir academy dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div class="row">
-                    <div class="col-lg-3">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="mr-2">
                         <div class="form-group">
                             <label for="">Cari Lowongan</label>
                             <input type="text" name="cari_lowongan" id="cari_lowongan" class="form-control"
@@ -264,7 +264,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="mr-2">
                         <div class="form-group">
                             <label for="">Provinsi</label>
                             <select name="provinsi" id="provinsi" class="form-control" onchange="getkabupaten()"
@@ -280,19 +280,19 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="mr-2">
                         <div class="form-group">
                             <label for="">Kabupaten</label>
                             <select name="kabupaten" id="kabupaten" class="form-control" onchange="getkecamatan()"
                                 required>
-                                <option>Pilih</option>
+                                <option>Pilih Provinsi Terlebih Dahulu</option>
                             </select>
                             @error('kabupaten')
                             <small class="text-danger">Harus Diisi</small>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="mr-2">
                         <button class="btn btn-primary mt-4 br-20" id="cari"><svg xmlns="http://www.w3.org/2000/svg"
                                 width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: rgb(255, 255, 255);transform: ;msFilter:;">
@@ -574,10 +574,10 @@
             let diff = new Date(now.getTime()-past.getTime());
             let rentang = diff.getUTCDate()-1;
             let img= e.image?'/image/loker/'+JSON.parse(e.image).url:'kosong';
-            
-            html += '<div class="col-lg-4 mb-4">';
+            let t = e.title.length>23?e.title.substr(0,21):e.title;
+            html += '<div class="col-lg-3 mb-4">';
             html += '    <a class="" href="/loker/'+e.id+'/detail">';
-            html += '        <div class="card" style="min-height: auto">';
+            html += '        <div class="card" style="max-height: 500px">';
                 if (rentang <=4) {
                     html +='<div class="ribbon-wrapper">';
                     html +='    <div class="ribbon">New</div>';
@@ -585,11 +585,11 @@
                 }
             html += '            <div class="card-body">';
             html += '                <small class="text-secondary">Dibutuhkan</small>';
-            html += '                <h3 class="text-uppercase" title="'+e.title+'" style="margin: 0px">'+e.title.substr(0,16)+'</h3>'; //maksimal 15 karakters
+            html += '                <h3 class="text-uppercase" title="'+e.title+'" style="margin: 0px">'+t+'</h3>';
             if (js) {
-                html += '                <img src="/image/loker/'+js.url+'" width="100%" style="border-radius: 13px" />';
+                html += '                <img class="" src="/image/loker/'+js.url+'" width="100%" style="border-radius: 13px; max-height: 170px" />';
             }else{
-                html += '                <img src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px" />';
+                html += '                <img class="" src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px; max-height: 170px" />';
             }
             // if (e.image) {
             //     html += '                <img src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px" />';
@@ -597,7 +597,7 @@
             //     html += '                <img src="/GambarV2/image-38.png" width="100%" style="border-radius: 13px" />';
             // }
             html += '                <div class="row mt-2">';
-            html += '                    <div class="col-lg-12">';
+            html += '                    <div class="col-lg-12 ">';
             html += '                <div class="form-group m-0 p-2">';
             html += '                    <span><svg class="mr-2" width="16" height="16" viewBox="0 0 18 18" fill="none"';
             html += '                            xmlns="http://www.w3.org/2000/svg">';
@@ -621,7 +621,7 @@
             html += '                    <div class="col-lg-12">';
             html += '                        <hr class="m-0">';
             html += '                    </div>';
-            html += '                    <div class="col-lg-6">';
+            html += '                    <div class="col-lg-5">';
             html += '                        <div class="form-group m-0 p-2">';
             html += '                            <span>';
             html += '                                <svg class="mr-2" width="16" height="16" viewBox="0 0 18 18"';
@@ -639,7 +639,7 @@
             html += '                            </span>';
             html += '                        </div>';
             html += '                    </div>';
-            html += '                    <div class="col-lg-6">';
+            html += '                    <div class="col-lg-7">';
             html += '                        <div class="form-group m-0 p-2">';
             html += '                            <span>';
             html += '                                <svg class="mr-2" width="16" height="16" viewBox="0 0 18 18"';

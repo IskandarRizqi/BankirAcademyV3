@@ -235,6 +235,11 @@
             $('#modelmember').modal('show')
         }
     })
+    function triggerresize() {
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 500);
+    }
     function getImgData(fil, prv) {
 		const files = fil.files[0];
 		if (files) {

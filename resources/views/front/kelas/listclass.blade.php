@@ -20,11 +20,12 @@
                     <div class="form-group col-md-2">
                         <label for="">Pencarian:</label>
                         <input type="text" name="titlekelas" id="titlekelas" class="form-control"
-                            value="{{ isset($titlekelas) ? $titlekelas : '' }}">
+                            value="{{ isset($titlekelas) ? $titlekelas : '' }}" style="border-radius: 20px;">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Kategori:</label>
-                        <select class="form-control tagging slc2tag" name="slcClassesCategory" id="slcClassesCategory">
+                        <select class="form-control tagging slc2tag" name="slcClassesCategory" id="slcClassesCategory"
+                            style="border-radius: 20px;">
                             <option value="">Pilih</option>
                             @foreach ($pencarian['category'] as $ctg)
                             <option value="{{ $ctg }}" @if (isset($slcClassesCategory)) {{ $slcClassesCategory==$ctg
@@ -35,7 +36,8 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Instructor:</label>
-                        <select class="form-control tagging" name="instructor" id="instructor">
+                        <select class="form-control tagging" name="instructor" id="instructor"
+                            style="border-radius: 20px;">
                             <option value="">Pilih</option>
                             @foreach ($pencarian['instructor'] as $key => $ctg)
                             <option value="{{ $ctg }}" @if (isset($instructor)) {{ $instructor==$ctg ? 'selected' : ''
@@ -44,17 +46,9 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="accordion" id="accordionExample">
                             <div class="row">
-                                {{-- <div class="form-group col">
-                                    <label for="">Tag:</label>
-                                    <button class="btn btn-light btn-block text-left" type="button"
-                                        data-toggle="collapse" data-target="#collapseTag" aria-expanded="true"
-                                        aria-controls="collapseTag">
-                                        <label for="">Pilih</label>
-                                    </button>
-                                </div> --}}
                                 <div class="form-group col">
                                     <label for="">Jenis:</label>
                                     <button class="btn btn-light btn-block text-left" type="button"
@@ -129,9 +123,11 @@
                             </div>
                         </div>
                     </div>
-                    <span class="btn btn-primary btn-block btn-sm mt-2"
-                        style="padding-left: 15px !important; padding-right: 15px !important"
-                        id="btnlistkelascari">Cari</span>
+                    <div class="col-lg-2 mt-5">
+                        <span class="btn btn-primary btn-block btn-sm"
+                            style="padding-left: 15px !important; padding-right: 15px !important; border-radius: 20px;"
+                            id="btnlistkelascari">Telusuri</span>
+                    </div>
                 </div>
 
             </form>
@@ -153,7 +149,7 @@
 </section><!-- #content end -->
 <script>
     let no_scroll = 0;
-    let page_scroll = 0;
+    let page_scroll = 1;
     let load_scoll = -1;
     let isLogin = $('#isLogin').val();
     let longPage = $('#longPage').val();
@@ -229,12 +225,19 @@
                         let html='';
                         if (response.data.length > 0) {
                             response.data.forEach(dt => {
-                                html+='<div class="col-lg-4 col-sm-6">';
+                                // const parser = new DOMParser();
+                                // const document = parser.parseFromString(dt.content, "application/xml");
+                                const document = dt.content.replaceAll(/<\/?[^>]+(>|$)/gi, "");
+                                console.log(document);
+                                let c = dt.content.length>100?dt.content.substr(0,97)+' ...':dt.content;
+                                // let c = document.length>100?document.substr(0,97)+' ...':document;
+                                html+='<div class="col-lg-3 col-sm-6">';
                                 html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">';
                                 html+='        <img src="'+dt.image+'" width="100%" style="border-radius: 8px;">';
                                 html+='        <div class="card-body" style="padding: 0.75rem">';
+                                html+='        <p class="m-0">'+d+'</p>';
                                 html+='            <span class="btn mt-4"';
-                                html+='                style="border-radius: 8px;position: absolute; bottom: 10px; left: 10px; right: 10px;">';
+                                html+='                style="border-radius: 8px;left: 10px; right: 10px;">';
                                 html+='                <h4 class="text-left text-capitalize m-0">'+dt.title+'</h4>';
                                 html+='                <p class="text-left"';
                                 html+='                    style="margin: 0px !important; font-size:10px !important;">'+dt.date_end;
@@ -248,15 +251,17 @@
                                 }
                                 html+='                    alt="Generic" placeholder="" image=""';
                                 html+='                    style="max-width:50px; max-height:50px;">';
-                                html+='                    <div class="text-left"> <small class="d-block mb-0">INSTRUCTOR</small>';
-                                html+='                        <h5 class="text-uppercase d-block mb-0">'+dt.instructor_list[0].name+'</h5> <small';
-                                html+='                            class="text-uppercase d-block mb-0"';
+                                html+='                    <div class="text-left"> <small class="d-block mb-0">Instructor</small>';
+                                html+='                        <h5 class="text-capitalize d-block mb-0">'+dt.instructor_list[0].name+'</h5> <small';
+                                html+='                            class="text-capitalize d-block mb-0"';
                                 html+='                            style="font-size:10px !important">'+dt['instructor_list'][0].title+'</small>';
                                 html+='                    </div>';
                                 html+='                </a>';
                                 html+='                <div class="text-center mt-2 w-100">';
                                     if (dt.pricing) {
-                                        if (dt.pricing.promo) {
+                                        if (dt.pricing.gratis) {
+                                            html+='                    <h3 class="text-primary mb-2">GRATIS</h3>';
+                                        }else if (dt.pricing.promo) {
                                             html+='                    <h3 class="text-primary mb-2">Rp. '+(dt.pricing.price - dt.pricing.promo_price).toLocaleString()+'</h3>';
                                         }else{
                                             html+='                    <h3 class="text-primary mb-2">Rp.'+dt.pricing.price.toLocaleString()+'</h3>';

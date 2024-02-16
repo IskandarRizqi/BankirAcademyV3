@@ -53,6 +53,9 @@ class InvoiceController extends Controller
 		$data['payment']['reff'] = 0;
 		$data['payment']['reff_nominal'] = 0;
 		$n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+		if ($data['class']->pricing->gratis == 1) {
+			$n = 0;
+		}
 		$data['payment']['totalAkhir'] = $n;
 		// Cek referral Tersedia
 		$available = 0;
@@ -170,6 +173,9 @@ class InvoiceController extends Controller
 				$value->referral = 0;
 				$value->reff_nominal = 0;
 				$n = ($value['price_final'] * $value['jumlah']) - $kode;
+				if ($value->gratis == 1) {
+					$n = 0;
+				}
 				$value->totalAkhir = $n;
 				// Cek referral Tersedia
 				$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
@@ -186,12 +192,12 @@ class InvoiceController extends Controller
 							$value->reff_nominal = $mr->nominal;
 							$value->referral = $n * ($mr->potongan_harga / 100);
 							$komisi = $value->reff_nominal * ($mr->nominal / 100);
-							$value->totalAkhir = $n - $value->referral;
+							$value->totalAkhir = $n > 0 ? $n - $value->referral : 0;
 
 							$additional_discount['reff_nominal'] = $mr->nominal;
 							$additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
 							$additional_discount['komisi'] = $komisi;
-							$additional_discount['totalAkhir'] = $n - $value->referral;
+							$additional_discount['totalAkhir'] = $n > 0 ? $n - $value->referral : 0;
 						}
 					}
 					$available = 1;

@@ -58,9 +58,9 @@ class BerandaLoker extends Controller
                         $query->where('perusahaan_models.kabupaten', $request->kabupaten);
                     }
                 })
-                // ->whereDate('tanggal_awal', '<=', Carbon::now())
-                // ->whereDate('tanggal_akhir', '>=', Carbon::now())
-                ->orderBy('tanggal_akhir', 'asc')
+                ->whereDate('tanggal_awal', '<=', Carbon::now())
+                ->whereDate('tanggal_akhir', '>=', Carbon::now())
+                ->orderBy('tanggal_awal', 'desc')
                 ->where('loker.status', 1)
                 ->paginate(6);
             // foreach ($data['data'] as $key => $vv) {

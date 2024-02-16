@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="">
         </div>
         <div class="col-lg-4">
             <div class="d-flex">

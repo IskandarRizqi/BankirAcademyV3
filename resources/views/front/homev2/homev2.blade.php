@@ -185,7 +185,7 @@
                 <a href="/loker/{{$value->id}}/detail">
                     <div class="card mr-2">
                         <div class="card-body p-2" style="font-size: 12px">
-                            <small for="" class="text-blue m-0">Dibutuhkan</small>
+                            <p class="m-0" for="" class="text-blue m-0">Dibutuhkan</p>
                             <p class="m-0" style="font-size: 16px;font-weight: bold">{{substr($value->title,0,26)}}</p>
                             {{-- @if($value->image)
                             <img src="image/loker/{{json_decode($value->image)->url}}" alt="" width="100%"
@@ -452,12 +452,12 @@
             infinite: true,
             autoplay:true,
             arrows:true,
-            slidesToShow: 5,
+            slidesToShow: 4,
             slidesToScroll: 1,
             responsive: [{
                     breakpoint: 1024,
                     settings: {
-                        slidesToShow: 5,
+                        slidesToShow: 4,
                         slidesToScroll: 1,
                         infinite: true,
                         dots: false
@@ -466,7 +466,7 @@
                 {
                     breakpoint: 600,
                     settings: {
-                        slidesToShow: 5,
+                        slidesToShow: 4,
                         slidesToScroll: 1,
                         infinite: true,
                         dots: false
@@ -500,7 +500,7 @@
                     breakpoint: 1024,
                     settings: {
                         centerPadding: '40px',
-                        slidesToShow: 6,
+                        slidesToShow: 4,
                         slidesToScroll: 1,
                         infinite: true,
                         dots: false
@@ -510,7 +510,7 @@
                     breakpoint: 600,
                     settings: {
                         centerPadding: '40px',
-                        slidesToShow: 6,
+                        slidesToShow: 4,
                         slidesToScroll: 1,
                         infinite: true,
                         dots: false

@@ -32,7 +32,7 @@
                             </div>
                             <hr>
                         </div>
-                        <div class="col-lg-2 d-flex">
+                        <div class="col-lg-12 d-flex">
                             <div class="form-group mr-2">
                                 <input type="checkbox" name="bolClassPromo" id="bolClassPromo" value="1">
                                 <label for="bolClassPromo">Promo</label>

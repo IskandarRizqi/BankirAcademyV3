@@ -21,7 +21,7 @@
             <div class="tab-pane fade show active" id="list-semua-ka" role="tabpanel"
                 aria-labelledby="list-semua-ka-list">
                 <div id="semua-ka-billing">
-                    <div class="card br-10 mb-4" style="background-color: #f7f7f7">
+                    {{-- <div class="card br-10 mb-4" style="background-color: #f7f7f7">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-9">
@@ -76,13 +76,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="tab-pane fade" id="list-dalam-progres" role="tabpanel"
                 aria-labelledby="list-dalam-progres-list">
                 <div id="dalam-progres-billing">
-                    <div class="card br-10 mb-4" style="background-color: #f7f7f7">
+                    {{-- <div class="card br-10 mb-4" style="background-color: #f7f7f7">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-9">
@@ -137,13 +137,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="tab-pane fade" id="list-konfirmasi-ka" role="tabpanel"
                 aria-labelledby="list-konfirmasi-ka-list">
                 <div id="konfirmasi-ka-billing">
-                    <div class="card br-10 mb-4" style="background-color: #f7f7f7">
+                    {{-- <div class="card br-10 mb-4" style="background-color: #f7f7f7">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-9">
@@ -198,12 +198,12 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="tab-pane fade" id="list-selesai-ka" role="tabpanel" aria-labelledby="list-selesai-ka-list">
                 <div id="selesai-ka-billing">
-                    <div class="card br-10 mb-4" style="background-color: #f7f7f7">
+                    {{-- <div class="card br-10 mb-4" style="background-color: #f7f7f7">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-9">
@@ -258,7 +258,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -295,7 +295,7 @@
 <script>
     let dataevent = [];
     function getkelasanda(status) {
-        let s = 'Semua';
+        let s = 'Materi';
         let t = 3;
         let p = 0;
         if (status == 'dalam-progres-billing') {
@@ -310,7 +310,7 @@
         }
         if (status == 'selesai-ka-billing') {
             t = 2;
-            s = 'Selesai';
+            s = 'Materi';
             p = 100;
         }
         $.ajaxSetup({
@@ -382,7 +382,7 @@
                     h+='                </div>';
                     h+='            </div>';
                     h+='            <div class="col-lg-3 text-center">';
-                        if (t==1) {
+                        if (t==0) {
                             h+='                <div class="btn btn-success">'+s+'</div>';
                         }else{
                             h+='                <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor: auto" onclick="setevent(`'+v.title+'`,'+v.id+')">'+s+'</div>';

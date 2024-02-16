@@ -161,6 +161,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Tanggal</th>
                         <th>Image</th>
                         <th>Nama</th>
                         <th>Title</th>
@@ -173,6 +174,7 @@
                     @foreach ($data as $key => $l)
                     <tr>
                         <td>{{$key+1}}</td>
+                        <td>{{$l->tanggal_awal.' - '.$l->tanggal_akhir}}</td>
                         <td>
                             @if($l->perusahaan)
                             @php

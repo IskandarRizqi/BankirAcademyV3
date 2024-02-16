@@ -126,7 +126,8 @@
             </li>
             <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"
                 aria-controls="tabs-38" aria-labelledby="ui-id-22" aria-selected="false" aria-expanded="false"><a
-                    href="#tabs-38" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-22">Lowongan
+                    href="#tabs-38" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-22"
+                    onclick="triggerresize()">Lowongan
                     Kerja</a>
             </li>
             <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"

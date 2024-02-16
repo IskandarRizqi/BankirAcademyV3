@@ -19,9 +19,11 @@
     crossorigin="anonymous"></script>
   <!-- Stylesheets
         ============================================= -->
+  {{--
   <link
     href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Poppins:300,400,500,600,700|PT+Serif:400,400i&display=swap"
-    rel="stylesheet" type="text/css" />
+    rel="stylesheet" type="text/css" /> --}}
+  <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
   <link rel="icon" type="image/x-icon" href="{{env('CUSTOM_FAVICON','/359x404.png')}}" />
   <link rel="stylesheet" href="{{asset('front/css/bootstrap.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{asset('front/style.css')}}" type="text/css" />

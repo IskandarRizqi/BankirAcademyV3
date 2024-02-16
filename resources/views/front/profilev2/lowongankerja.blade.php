@@ -66,11 +66,13 @@
     <h3 class="mt-5">Daftar Lowongan Kerja</h3>
     <div class="card">
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="">
                 <table id="datatable3" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Image</th>
                             <th>Perusahaan</th>
                             <th>Jabatan</th>
                             <th>Aksi</th>
@@ -80,20 +82,34 @@
                         @foreach($loker as $key => $value)
                         <tr>
                             <td>{{$key+1}}</td>
+                            <td>{{$value->tanggal_awal.' - '.$value->tanggal_akhir}}</td>
+                            <td>
+                                @if($value->perusahaan)
+                                @php
+                                $js = json_decode($value->perusahaan->image)
+                                @endphp
+                                <img src="{{$js?'/image/loker/'.$js->url:''}}" alt="" style="" width="70px"
+                                    height="30px">
+                                @else
+                                <img src="{{$value->image?'/image/loker/'.json_decode($value->image)->url:''}}" alt=""
+                                    style="" width="70px" height="30px">
+                                @endif
+                            </td>
                             <td>{{$value->nama?$value->nama:'PT. Anugrah Karya'}}</td>
                             <td>{{$value->title}}</td>
                             <td>
                                 <div class="row">
-                                    <form id="orderForm" action="{{ '/loker/apply' }}" method="POST">
+                                    <form id="orderForm" action="{{ '/loker/apply' }}" method="POST" class="m-0">
                                         @csrf
                                         <input type="text" id="class_id" name="class_id" value="{{ $value->id }}"
                                             hidden>
-                                        <button class="button button-circle">Kirim
+                                        <button
+                                            class="button button-mini button-border button-circle button-yellow">Kirim
                                             Lamaran</button>
                                     </form>
                                     <a href="/loker/{{$value->id}}/detail">
-                                        <button class="button button-circle button-aqua">Detail
-                                            Loker</button>
+                                        <button
+                                            class="button button-mini button-border button-circle button-aqua">Detail</button>
                                     </a>
                                 </div>
                             </td>
@@ -105,3 +121,5 @@
         </div>
     </div>
 </div>
+<script>
+</script>
