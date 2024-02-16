@@ -225,20 +225,16 @@
                         let html='';
                         if (response.data.length > 0) {
                             response.data.forEach(dt => {
-                                // const parser = new DOMParser();
-                                // const document = parser.parseFromString(dt.content, "application/xml");
-                                const document = dt.content.replaceAll(/<\/?[^>]+(>|$)/gi, "");
-                                console.log(document);
-                                let c = dt.content.length>100?dt.content.substr(0,97)+' ...':dt.content;
-                                // let c = document.length>100?document.substr(0,97)+' ...':document;
                                 html+='<div class="col-lg-3 col-sm-6">';
                                 html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">';
                                 html+='        <img src="'+dt.image+'" width="100%" style="border-radius: 8px;">';
                                 html+='        <div class="card-body" style="padding: 0.75rem">';
-                                html+='        <p class="m-0">'+d+'</p>';
-                                html+='            <span class="btn mt-4"';
-                                html+='                style="border-radius: 8px;left: 10px; right: 10px;">';
-                                html+='                <h4 class="text-left text-capitalize m-0">'+dt.title+'</h4>';
+                                html+='        <p class="m-0">'+dt.contents+'</p>';
+                                html+='            <span class="mt-4" style="border-radius: 8px;bottom: 15px; left: 15px; right: 15px; position: absolute;"';
+                                html+='                style="border-radius: 8px;">';
+                                html+='                <h4 class="text-left text-capitalize m-0">';
+                                html+='                     '+dt.title.length>55?dt.title.substring(0,50)+'...':dt.title;
+                                html+='                 </h4>';
                                 html+='                <p class="text-left"';
                                 html+='                    style="margin: 0px !important; font-size:10px !important;">'+dt.date_end;
                                 html+='                </p>';
@@ -269,12 +265,12 @@
                                     }else{
                                         html+='                    <h3 class="text-primary mb-2">Rp. -</h3>';
                                     }
-                                html+='                </div>';
-                                html+='                <div class="row align-items-center">';
                                 html+='                    <a class="btn btn-primary btn-block btn-rounded"';
                                 html+='                        style="border-radius:10px !important"';
                                 html+='                        href="/class/'+dt.unique_id+'/'+dt.title.replaceAll('/','-')+'">';
                                 html+='                        Detail </a>';
+                                html+='                </div>';
+                                html+='                <div class="row align-items-center">';
                                 html+='                </div>';
                                 html+='            </span>';
                                 html+='        </div>';

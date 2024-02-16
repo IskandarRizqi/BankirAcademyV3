@@ -74,7 +74,7 @@ class PagesController extends Controller
 		// return $r->all();
 		if ($r->type > 0) {
 			$validator = Validator::make($r->all(), [
-				'type' => 'required|unique:pages,type',
+				'type' => 'required|unique:type',
 			]);
 			if ($validator->fails()) {
 				return Redirect::back()->withErrors($validator)->with('error', 'Data Tidak Sesuai')->withInput($r->all());
