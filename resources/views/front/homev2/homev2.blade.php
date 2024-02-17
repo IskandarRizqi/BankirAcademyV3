@@ -334,6 +334,45 @@
                 <h5 class="text-blue">Kelas Selanjutnya</h5>
             </a>
         </div>
+        <h3 class="text-blue m-0 mt-4">Literasi</h3>
+        <hr style="4px solid rgba(0, 0, 0, 0.1)">
+        {{-- Literasi --}}
+        <div class="mt-4">
+            <div id="sld6">
+                @foreach($literasi as $key => $val)
+                <div>
+                    <a href="/pages/blog/{{ $val->id }}/{{ urlencode(str_ireplace(['\'', '/', '//', '"', ' ,', ';' , '<'
+                        , '>' ], '' , $val->title)) }}">
+                        <div class="card mr-2" style="border-color:transparent">
+                            <div class="card-body br-10" style="padding: 1px;">
+                                <img src="{{asset($val->thumbnail)}}" alt="" width="100%" style="border-radius: 18px">
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center ml-2">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M0.605225 5.68681C0.605225 4.48076 0.605225 3.87837 0.979957 3.50364C1.35469 3.12891 1.95707 3.12891 3.16312 3.12891H10.8368C12.0429 3.12891 12.6453 3.12891 13.02 3.50364C13.3947 3.87837 13.3947 4.48076 13.3947 5.68681C13.3947 5.988 13.3947 6.13892 13.3014 6.23292C13.2074 6.32628 13.0558 6.32628 12.7552 6.32628H1.2447C0.943507 6.32628 0.792591 6.32628 0.698588 6.23292C0.605225 6.13892 0.605225 5.98736 0.605225 5.68681ZM0.605225 11.4421C0.605225 12.6481 0.605225 13.2505 0.979957 13.6252C1.35469 14 1.95707 14 3.16312 14H10.8368C12.0429 14 12.6453 14 13.02 13.6252C13.3947 13.2505 13.3947 12.6481 13.3947 11.4421V8.24471C13.3947 7.94351 13.3947 7.7926 13.3014 7.69859C13.2074 7.60523 13.0558 7.60523 12.7552 7.60523H1.2447C0.943507 7.60523 0.792591 7.60523 0.698588 7.69859C0.605225 7.7926 0.605225 7.94415 0.605225 8.24471V11.4421Z"
+                                    fill="#005CFF" />
+                                <path d="M3.80261 1.84998V3.7684M10.1974 1.84998V3.7684" stroke="#005CFF"
+                                    stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="title text-uppercase ml-1">
+                            <h6 class="mb-2">
+                                {{strlen($val->title)>=90?substr($val->title,0,87).' ...':$val->title}}
+                            </h6>
+                        </div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="text-right">
+            <a href="/pages/blog">
+                <h5 class="text-blue">Literasi Lainnnya</h5>
+            </a>
+        </div>
         <h3 class="text-blue mt-4">Testimonial</h3>
         <div id="sld4" class="">
             @foreach($testimoni as $key => $value)
@@ -532,6 +571,51 @@
             ]
         });
         $('#sld5').slick({
+            centerMode: true,
+            centerPadding: '60px',
+            dots: false,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            variableWidth: false,
+            adaptiveHeight: true,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        centerPadding: '40px',
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        centerPadding: '40px',
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        centerPadding: '40px',
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
+        $('#sld6').slick({
             centerMode: true,
             centerPadding: '60px',
             dots: false,
