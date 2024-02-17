@@ -745,7 +745,7 @@ class ClassesController extends Controller
 					$sql->where('title', 'like', '%' . $request->titlekelas . '%');
 				}
 			})
-			->where('date_end', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
+			->where('date_start', '>=', Carbon::now()->format('Y-m-d'))
 			->where('status', 1)
 			->orderBy('date_end', 'asc')
 			->paginate(9)

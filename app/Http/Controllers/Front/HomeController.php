@@ -334,8 +334,8 @@ class HomeController extends Controller
             ->join('users', 'users.id', 'loker.user_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where('loker.status', 1)
-            // ->whereDate('loker.tanggal_awal', '<=', Carbon::now())
-            // ->whereDate('loker.tanggal_akhir', '>=', Carbon::now())
+            // ->whereDate('loker.tanggal_awal', '<=', $now)
+            // ->whereDate('loker.tanggal_akhir', '>=', $now)
             ->orderBy('loker.tanggal_akhir', 'asc')
             ->limit(12)
             ->get();
@@ -346,6 +346,8 @@ class HomeController extends Controller
             ->join('user_profile', 'user_profile.user_id', 'class_participant.user_id')
             ->where('class_participant.review_active', 1)
             ->get();
+
+        $data['literasi'] = Pages::select()->where('type', 0)->whereDate('date_start', '<=', $now->format('Y-m-d'))->whereDate('date_end', '>=', $now->format('Y-m-d'))->orderBy('created_at', 'desc')->limit(12)->get();
         // return $data;
         return view('front.homev2.homev2', $data);
     }
