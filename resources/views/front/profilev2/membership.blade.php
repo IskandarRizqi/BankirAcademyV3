@@ -93,7 +93,6 @@
                     </div>
                 </div>
             </div>
-
             @endif
             @endforeach
         </div>
@@ -130,14 +129,38 @@
             </div>
         </div>
     </div>
+    <div id="cetakinvvoicepdf">
+        <p>Testing pdf</p>
+    </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     function openmember(val) {
         $('#id_member').val(val['id']);
         let p = '<h3>Harga Member : <strong>'+val.harga.toLocaleString()+'</strong></h3>';
         p+='<span>No. Rekening : 8035559091</span><br>';
         p+='<span>Atas Nama : PT. Bankir Academy Indonesia</span>';
+        p+='<span id="btncetakinvoice" class="btn btn-info btn-block" onclick="cetakinvoice()">Invoice</span>';
         $('#detailmember').html(p);
         $('#modalmember').modal('show');
+    }
+    function cetakinvoice() {
+        // const page = document.getElementById('cetakinvvoicepdf');
+        $('#btncetakinvoice').attr('disabled',true);
+        let page = '<p>AAAAAAAAAAA</p>';
+        var opt = {
+            margin:       1,
+            filename:     'Demopdf.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        setTimeout(() => {
+            html2pdf().set(opt).from(page).save();
+            $('#btncetakinvoice').removeAttr('disabled');
+        }, 2000);
+        // Choose the element that our invoice is rendered in.
     }
 </script>

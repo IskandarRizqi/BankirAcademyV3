@@ -330,7 +330,7 @@
             </div>
         </div>
         <div class="text-right">
-            <a href="/list-class">
+            <a href="/list-class?sebelumnya=true">
                 <h5 class="text-blue">Kelas Selanjutnya</h5>
             </a>
         </div>

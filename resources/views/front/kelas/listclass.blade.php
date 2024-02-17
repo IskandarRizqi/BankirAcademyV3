@@ -145,6 +145,7 @@
         </div>
         <input type="text" id="isLogin" value="@auth 1 @endauth" hidden>
         <input type="text" id="longPage" value="{{$class['last_page']}}" hidden>
+        <input type="text" id="sebelumnya" value="{{$class['sebelumnya']}}" hidden>
     </div>
 </section><!-- #content end -->
 <script>
@@ -185,6 +186,9 @@
         }
         }
         $('#btnlistkelascari').on('click',function () {
+            page_scroll = 1;
+            $('#sebelumnya').val(null)
+            $('#listkelas').html('');
             loaddata();
         })
     })
@@ -211,6 +215,7 @@
                     url: '/list-class',
                     data:{
                         page:page_scroll,
+                        sebelumnya:$('#sebelumnya').val(),
                         titlekelas:$('#titlekelas').val(),
                         kategori:$('#slcClassesCategory').val(),
                         instructor:$('#instructor').val(),
@@ -229,7 +234,9 @@
                                 html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">';
                                 html+='        <img src="'+dt.image+'" width="100%" style="border-radius: 8px;">';
                                 html+='        <div class="card-body" style="padding: 0.75rem">';
-                                html+='        <p class="m-0">'+dt.contents+'</p>';
+                                    if (!$('#sebelumnya').val()) {
+                                        html+='        <p class="m-0">'+dt.contents+'</p>';
+                                    }
                                 html+='            <span class="mt-4" style="border-radius: 8px;bottom: 15px; left: 15px; right: 15px; position: absolute;"';
                                 html+='                style="border-radius: 8px;">';
                                 html+='                <h4 class="text-left text-capitalize m-0">';

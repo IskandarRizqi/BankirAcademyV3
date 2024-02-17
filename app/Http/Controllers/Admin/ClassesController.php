@@ -696,6 +696,10 @@ class ClassesController extends Controller
 		// 	}
 		// }
 		// $limit = 99;
+		$data['sebelumnya'] = '';
+		if ($request->sebelumnya) {
+			$data['sebelumnya'] = $request->sebelumnya;
+		}
 		$data['titlekelas'] = '';
 		if ($request->titlekelas) {
 			$data['titlekelas'] = $request->titlekelas;
@@ -731,6 +735,11 @@ class ClassesController extends Controller
 		}
 		$data['class'] = ClassesModel::select()
 			->where(function ($sql) use ($request, $data) {
+				if ($request->sebelumnya) {
+					return $sql->where('date_start', '<', Carbon::now()->format('Y-m-d'));
+				} else {
+					return $sql->where('date_start', '>=', Carbon::now()->format('Y-m-d'));
+				}
 				if ($request->jenis) {
 					foreach ($data['jeniss'] as $key => $va) {
 						$sql->where('jenis', 'like', '%' . strtoupper($va) . '%');
@@ -745,7 +754,6 @@ class ClassesController extends Controller
 					$sql->where('title', 'like', '%' . $request->titlekelas . '%');
 				}
 			})
-			->where('date_start', '>=', Carbon::now()->format('Y-m-d'))
 			->where('status', 1)
 			->orderBy('date_end', 'asc')
 			->paginate(9)
