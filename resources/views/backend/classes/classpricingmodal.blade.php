@@ -81,6 +81,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="numClassCashback">Cashback</label>
+                                <small id="nomClassCashback">Rp.0,00</small>
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <input type="number" name="numClassCashback" step="any" id="numClassCashback"
+                                            class="form-control" value="0" readonly>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="input-group mb-4">
+                                            <input type="number" name="numClassCashbackPrctg" step="any"
+                                                id="numClassCashbackPrctg" class="form-control clsNumberOnPrice"
+                                                value="0">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <span class="btn" data-dismiss="modal" onclick="closemodal('#classPricingModal')"><i
                             class="flaticon-cancel-12"></i> Discard</span>

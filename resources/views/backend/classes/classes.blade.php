@@ -340,18 +340,25 @@
             var n = $('#numClassPrice').val();
             var p = $('#numClassPromo').val();
             var s = $('#numClassPromoPrctg').val();
+            var c = $('#numClassCashbackPrctg').val();
 
             var rp = (Number(n) * Number(s)) / 100;
             var rs = (Number(p) * 100) / Number(n);
+            var rc = (Number(n) * Number(c)) / 100;
             console.log([n, p, s, rp, rs]);
             if ($(this).attr('id') == 'numClassPromo' || $(this).attr('id') == 'numClassPrice') {
-                rp = p;
+                // rp = p;
             }
             if ($(this).attr('id') == 'numClassPromoPrctg') {
-                rs = s;
+                // rs = s;
             }
+            if ($(this).attr('id') == 'numClassCashbackPrctg') {
+            }
+            $('#nomClassPromo').html('Rp. '+rp.toLocaleString());
+            $('#nomClassCashback').html('Rp. '+rc.toLocaleString());
 
             $('#numClassPromo').val(rp);
+            $('#numClassCashback').val(rc);
             // $('#numClassPromoPrctg').val(rs);
         });
 
@@ -455,6 +462,7 @@
             openmodal('#classVideoModal');
         }
         function classPricing(c) {
+            console.log('price',c);
             $('#numClassPrice').val(0);
             $('#numClassPromo').val(0);
             $('#bolClassPromo').prop('checked', false);
@@ -470,8 +478,13 @@
                 if (c.pricing.gratis == 1) {
                     $('#bolClassGratis').prop('checked', true);
                 }
+                $('#numClassPromoPrctg').val((c.pricing.promo_price/c.pricing.price)*100)
+
                 $('#datPromoDateStart').val(c.pricing.promo_start)
                 $('#datPromoDateEnd').val(c.pricing.promo_end)
+
+                $('#numClassCashback').val(c.pricing.cashback_nominal)
+                $('#numClassCashbackPrctg').val(c.pricing.cashback_persen)
             }
             $('.hdnClassesId').val(c.id);
             $('.activeClassTitle').text(c.title);

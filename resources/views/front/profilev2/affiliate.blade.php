@@ -6,7 +6,7 @@
                     <label for="" class="text-white m-0">Saldo Kredit</label>
                     <p class="text-white" style="margin-bottom: 12px">Rp. 0</p>
                     <label for="" class="text-white m-0">Saldo Affiliate</label>
-                    <p class="m-0 text-white" style="">Rp. 0</p>
+                    <p class="m-0 text-white" style="">Rp. {{number_format($cashback['amount'])}}</p>
                     {{-- <h2 class="text-white text-center">Rp {{number_format(isset($saldoProses)?$saldoProses:0)}}
                     </h2> --}}
                 </div>

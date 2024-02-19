@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Helper\GlobalHelper;
 use App\Models\ClassContentModel;
+use App\Models\ClassParticipantModel;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
@@ -171,6 +172,7 @@ class ProfileController extends Controller
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
+        $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
         $data['member'] = MembershipModel::orderBy('harga')->limit(3)->get();
         $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();

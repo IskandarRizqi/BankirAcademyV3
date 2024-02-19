@@ -17,5 +17,7 @@ class ClassPricingModel extends Model
 		'promo_start',
 		'promo_end',
 		'gratis',
+		'cashback_persen',
+		'cashback_nominal',
 	];
 }

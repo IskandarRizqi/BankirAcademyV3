@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use App\Models\AllowIpAksesModel;
+use App\Models\ClassParticipantModel;
 use App\Models\HistoryIpAksesModel;
 use App\Models\RefferralModel;
 use App\Models\RefferralWithdrawModel;
@@ -11,6 +12,22 @@ use Illuminate\Support\Facades\Auth;
 
 class  GlobalHelper
 {
+    public static function currentSaldoKreditById($i)
+    {
+        $s = [];
+        $amount = 0;
+        $cashback = ClassParticipantModel::select()
+            ->join('class_pricing', 'class_pricing.class_id', 'class_participant.class_id')
+            ->where('class_participant.user_id', $i)
+            ->get();
+        foreach ($cashback as $key => $value) {
+            if ($value->gratis == 0) {
+                $amount += $value->cashback_nominal;
+            }
+        }
+        $s['amount'] = $amount;
+        return $s;
+    }
     public static function currentSaldoById($i)
     {
         // return $i;

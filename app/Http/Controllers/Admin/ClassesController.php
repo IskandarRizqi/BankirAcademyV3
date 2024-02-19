@@ -397,6 +397,8 @@ class ClassesController extends Controller
 			'promo_price' => $r->numClassPromo,
 			'promo_start' => $r->datPromoDateStart,
 			'promo_end' => $r->datPromoDateEnd,
+			'cashback_persen' => $r->numClassCashbackPrctg,
+			'cashback_nominal' => $r->numClassCashback,
 		]);
 		return Redirect::back()->with('success', 'Price Updated');
 	}
