@@ -55,7 +55,7 @@ class ClassesModel extends Model
 		if (array_key_exists('content', $this->attributes)) {
 			$s = $this->attributes['content'];
 			if (strlen($s) > 0) {
-				$s = substr(strip_tags($this->attributes['content']), 0, 250) . '...';
+				$s = substr(strip_tags($this->attributes['content']), 0, 200) . '...';
 			}
 			return $s;
 		}

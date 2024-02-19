@@ -145,7 +145,7 @@
         </div>
         <input type="text" id="isLogin" value="@auth 1 @endauth" hidden>
         <input type="text" id="longPage" value="{{$class['last_page']}}" hidden>
-        <input type="text" id="sebelumnya" value="{{$class['sebelumnya']}}" hidden>
+        <input type="text" id="sebelumnya" value="{{$sebelumnya}}" hidden>
     </div>
 </section><!-- #content end -->
 <script>

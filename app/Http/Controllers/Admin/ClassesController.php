@@ -678,7 +678,7 @@ class ClassesController extends Controller
 		if ($judul == 'bootcamp bankir') {
 			$banner = BannerModel::where('jenis', 6)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
 		}
-		if ($judul == 'management trainer') {
+		if ($judul == 'management trainee') {
 			$banner = BannerModel::where('jenis', 8)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
 		}
 		if ($banner) {
