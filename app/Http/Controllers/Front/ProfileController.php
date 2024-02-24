@@ -173,7 +173,10 @@ class ProfileController extends Controller
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
         $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
-        $data['member'] = MembershipModel::orderBy('harga')->limit(3)->get();
+        $data['member'] = MembershipModel::orderBy('urutan', 'desc')
+            ->where('is_active', 1)
+            ->limit(3)
+            ->get();
         $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
         $lokerid = []; // id loker yang pernah di apply

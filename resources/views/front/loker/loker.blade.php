@@ -310,7 +310,7 @@
     </div>
     <div class="section border-top-0" style="background-color:#ffffff; padding-bottom: 0px">
         <div class="container text-center">
-            <img src="{{ asset('cariin-kerja.webp') }}" alt="">
+            <img src="{{ asset('GambarV2/BankirAcademy.png') }}" alt="">
         </div>
     </div>
     <div class="section border-top-0 mb-6 mt-4">

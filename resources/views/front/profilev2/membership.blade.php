@@ -44,7 +44,6 @@
     padding: 60px;
     ">
             @foreach($member as $key => $value)
-            @if($key == 0)
             <div class="col-lg-4 mb-2">
                 <div class="card" style="border-radius:10px;">
                     <div class="card-body m-0 p-0">
@@ -53,47 +52,10 @@
                                 <img src="{{$value->gambar}}" alt="" width="100%" onclick="openmember({{$value}})"
                                     style="cursor: pointer">
                             </div>
-                            {{-- <button class="btn mt-2 btn-block text-white" onclick="openmember({{$value}})"
-                                style="background-image: linear-gradient(#FF5252,#FFAF52);">Daftar</button> --}}
                         </div>
                     </div>
                 </div>
             </div>
-
-            @endif
-            @if($key == 1)
-            <div class="col-lg-4 mb-2">
-                <div class="card" style="border-radius:10px;">
-                    <div class="card-body m-0 p-0">
-                        <div>
-                            <div class="img-fluid">
-                                <img src="{{$value->gambar}}" alt="" width="100%" onclick="openmember({{$value}})"
-                                    style="cursor: pointer">
-                            </div>
-                            {{-- <button class="btn mt-2 btn-block text-white" onclick="openmember({{$value}})"
-                                style="background-image: linear-gradient(#FF5F5F,#FF1F98)">Daftar</button> --}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @endif
-            @if($key == 2)
-            <div class="col-lg-4 mb-2">
-                <div class="card" style="border-radius:10px;">
-                    <div class="card-body m-0 p-0">
-                        <div>
-                            <div class="img-fluid">
-                                <img src="{{$value->gambar}}" alt="" width="100%" onclick="openmember({{$value}})"
-                                    style="cursor: pointer">
-                            </div>
-                            {{-- <button class="btn mt-2 btn-block text-white" onclick="openmember({{$value}})"
-                                style="background-image: linear-gradient(#7F00FF,#FF00C7)">Daftar</button> --}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
             @endforeach
         </div>
     </div>
@@ -129,8 +91,10 @@
             </div>
         </div>
     </div>
-    <div id="cetakinvvoicepdf">
-        <p>Testing pdf</p>
+    <div id="element-container">
+        <p>This is page 1 content</p>
+        <div class="html2pdf__page-break"></div>
+        <p>This is page 2 content</p>
     </div>
 </section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
@@ -147,20 +111,22 @@
         $('#modalmember').modal('show');
     }
     function cetakinvoice() {
-        // const page = document.getElementById('cetakinvvoicepdf');
-        $('#btncetakinvoice').attr('disabled',true);
-        let page = '<p>AAAAAAAAAAA</p>';
-        var opt = {
-            margin:       1,
-            filename:     'Demopdf.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-        setTimeout(() => {
-            html2pdf().set(opt).from(page).save();
-            $('#btncetakinvoice').removeAttr('disabled');
-        }, 2000);
+        var element = document.getElementsByTagName('body')[0]
+  html2pdf().from(element).toPdf().save('my_document.pdf')
+
+        // const page = document.getElementById('element-container').innerHTML;
+        // $('#btncetakinvoice').attr('disabled',true);
+        // var opt = {
+        //     margin:       1,
+        //     filename:     'Demopdf.pdf',
+        //     image:        { type: 'jpeg', quality: 0.98 },
+        //     html2canvas:  { letterRendering: true, useCORS: true,     logging: true },
+        //     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        // };
+        // setTimeout(() => {
+        //     html2pdf().set(opt).from(page).toPdf().save();
+        //     $('#btncetakinvoice').removeAttr('disabled');
+        // }, 2000);
         // Choose the element that our invoice is rendered in.
     }
 </script>

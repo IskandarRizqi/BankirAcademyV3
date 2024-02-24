@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class BerandaLoker extends Controller
 {
@@ -54,7 +55,7 @@ class BerandaLoker extends Controller
                     // if ($request->kabupaten != 'Pilih') {
                     //     return $query->where('loker.kabupaten', $request->kabupaten);
                     // }
-                    if ($request->kabupaten != 'Pilih') {
+                    if ($request->kabupaten != 'Pilih Provinsi Terlebih Dahulu') {
                         $query->where('perusahaan_models.kabupaten', $request->kabupaten);
                     }
                 })
@@ -70,28 +71,91 @@ class BerandaLoker extends Controller
         }
         return view('front.loker.loker', $x);
     }
-    public function index_admin()
+    public function index_admin(Request $request)
     {
         $data = [];
         $auth = Auth::user();
+        if ($request->ajax()) {
+            $data = LokerModel::select(
+                'loker.*',
+                'users.name',
+                'users.corporate',
+                'users.google_id',
+                'user_profile.picture',
+                'user_profile.description'
+            )
+                ->join('users', 'users.id', 'loker.user_id')
+                ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+                ->where(function ($query) use ($request) {
+                    if ($request->search) {
+                        return $query->where('title', 'like', '%' . $request->search['value'] . '%');
+                    }
+                    // if ($request->tanggal_akhir) {
+                    //     $query->where('tanggal_akhir', 'like', '%' . $request->tanggal_akhir . '%');
+                    // }
+                })
+                ->where(function ($query) use ($auth) {
+                    if ($auth->role > 0) {
+                        return $query->where('loker.user_id', $auth->id);
+                    }
+                })
+                ->get();
+            return DataTables::of($data)
+                // ->filter(function ($query) {
+                //     if (request()->has('nama')) {
+                //         $query->where('nama', 'like', "%" . request('nama') . "%");
+                //     }
+                // })
+                ->addIndexColumn()
+                ->addColumn('e_tanggal_akhir', function ($row) {
+                    return Carbon::parse($row->tanggal_akhir)->format('d-m-Y');
+                })
+                ->addColumn('e_gambar', function ($row) {
+                    $img = '';
+                    if (json_decode($row->image)) {
+                        $img = json_decode($row->image)->url;
+                    }
+                    if ($row->perusahaan) {
+                        $img = json_decode($row->perusahaan->image)->url;
+                    }
+                    return $img;
+                })
+                ->addColumn('e_corporate', function ($row) {
+                    return json_decode($row->corporate);
+                })
+                ->addColumn('e_gaji', function ($row) {
+                    return $row->gaji_min > 0 ? $row->gaji_min : 'Gaji Competitive';
+                })
+                ->addColumn('e_status', function ($row) {
+                    return $row->status == 1 ? 'ACC' : 'Tidak ACC';
+                })
+                ->addColumn('aksi', function ($row) {
+                    $edit = "<span class='btn btn-warning btn-sm' onclick=editloker('" . $row->id . "')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z'></path><path d='M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z'></path></svg></span>";
+                    $hapus = "<span class='btn btn-danger btn-sm' onclick=deleteLoker('kelurahan?delete=1&id=" . $row->id . "')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2zM9 4h6v2H9V4zm8 16H7V8h10v12z'></path></svg></span>";
+                    return $edit . $hapus;
+                })
+                ->rawColumns(['aksi'])
+                ->make(true);
+            // $data['data'] = LokerModel::select(
+            //     'loker.*',
+            //     'users.name',
+            //     'users.corporate',
+            //     'users.google_id',
+            //     'user_profile.picture',
+            //     'user_profile.description'
+            // )
+            //     ->join('users', 'users.id', 'loker.user_id')
+            //     ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+            //     ->where(function ($query) use ($auth) {
+            //         if ($auth->role > 0) {
+            //             return $query->where('loker.user_id', $auth->id);
+            //         }
+            //     })
+            //     ->paginate(10);
+            // return response()->json($data);
+        }
         $data['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
         $data['perusahaan'] = PerusahaanModel::get();
-        $data['data'] = LokerModel::select(
-            'loker.*',
-            'users.name',
-            'users.corporate',
-            'users.google_id',
-            'user_profile.picture',
-            'user_profile.description'
-        )
-            ->join('users', 'users.id', 'loker.user_id')
-            ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
-            ->where(function ($query) use ($auth) {
-                if ($auth->role > 0) {
-                    return $query->where('loker.user_id', $auth->id);
-                }
-            })
-            ->get();
         $data['lokerskill'] = LokerModel::select('skill')->distinct('skill')->pluck('skill')->toArray();
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         // return $data;
@@ -113,6 +177,10 @@ class BerandaLoker extends Controller
 
     public function apply(Request $request)
     {
+
+        if ($request->ajax()) {
+            return $request->all();
+        }
         $l = LamaranModel::where('user_id', Auth::user()->id)->first();
         if (!$l) {
             return Redirect::back()->with('info', 'CV Tidak Ditemukan');
@@ -241,7 +309,7 @@ class BerandaLoker extends Controller
      */
     public function show($id)
     {
-        //
+        return LokerModel::where('id', $id)->first();
     }
 
     /**

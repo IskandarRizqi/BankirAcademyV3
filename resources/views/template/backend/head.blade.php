@@ -28,6 +28,7 @@
     <link href="{{asset('Backend/assets/css/scrollspyNav.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/assets/css/components/custom-modal.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/assets/css/elements/tooltip.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('Backend/assets/css/elements/custom-pagination.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('Backend/assets/css/forms/theme-checkbox-radio.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="{{asset('Backend/plugins/select2/select2.min.css')}}">
     <link href="{{asset('Backend/plugins/file-upload/file-upload-with-preview.min.css')}}" rel="stylesheet"

@@ -21,5 +21,8 @@ class MembershipModel extends Model
         'lamaran_online',
         'lamara_offline',
         'pelatihan_gratis',
+        'is_active',
+        'urutan',
+        'video_kursus',
     ];
 }

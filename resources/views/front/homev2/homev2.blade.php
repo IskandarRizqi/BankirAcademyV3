@@ -14,6 +14,41 @@
     .slick-next:before {
         /* margin-right: 8px; */
     }
+
+    .item {
+        width: 100%;
+        -webkit-transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+        transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    .item.slick-active {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-animation: cssAnimation 8s 1 ease-in-out forwards;
+        animation: cssAnimation 8s 1 ease-in-out forwards;
+    }
+
+    @keyframes cssAnimation {
+        from {
+            -webkit-transform: scale(1) translate(0px);
+        }
+
+        to {
+            -webkit-transform: scale(1.3) translate(0px);
+        }
+    }
+
+    @-webkit-keyframes cssAnimation {
+        from {
+            -webkit-transform: scale(1) translate(0px);
+        }
+
+        to {
+            -webkit-transform: scale(1.3) translate(0px);
+        }
+    }
 </style>
 <section id="content">
     <div class="container mt-4">
@@ -403,7 +438,7 @@
     $(document).ready(function(){
         $('#sld1').slick({
             arrows: true,
-            centerMode: true,
+            centerMode: false,
             dots: false,
             infinite: true,
             autoplay:true,

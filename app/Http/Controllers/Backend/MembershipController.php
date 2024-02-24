@@ -67,9 +67,12 @@ class MembershipController extends Controller
             'cvats' => $cvats,
             'cvbankir' => $cvbankir,
             'lamaran_online' => $request->lamaran_online,
-            'lamaran_offline' => $request->lamaran_offline,
+            'lamara_offline' => $request->lamaran_offline,
             'pelatihan_gratis' => $request->pelatihan_gratis,
             'keterangan' => $request->keterangan,
+            'is_active' => $request->is_active,
+            'urutan' => $request->urutan,
+            'video_kursus' => $request->video_kursus,
         ];
         if ($request->picture) {
             $name = $request->file('picture')->getClientOriginalName(); // Name File

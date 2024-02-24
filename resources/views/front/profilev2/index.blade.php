@@ -114,7 +114,7 @@
                     Anda</a></li>
             <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
                 aria-controls="tabs-35" aria-labelledby="ui-id-19" aria-selected="false" aria-expanded="false"><a
-                    href="#tabs-35" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-19">Affiliate</a>
+                    href="#tabs-35" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-19">Dompet</a>
             </li>
             <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"
                 aria-controls="tabs-36" aria-labelledby="ui-id-20" aria-selected="false" aria-expanded="false"><a
@@ -633,6 +633,6 @@ $('#corporatePilih').click(function() {
                 Swal.close()
             }
         });
-})
+    })
 </script>
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))

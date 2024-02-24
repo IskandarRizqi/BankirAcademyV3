@@ -11,7 +11,7 @@
             </a> --}}
         </div>
         <div class="card-body">
-            <form action="/loker" method="POST" enctype="multipart/form-data">
+            <form class="mb-4" action="/loker" method="POST" enctype="multipart/form-data">
                 <fieldset class="border p-2">
                     @csrf
                     <input type="text" name="loker_id" id="loker_id" hidden>
@@ -170,8 +170,8 @@
                         <th class="dt-no-sorting text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($data as $key => $l)
+                <tbody id="tableloker">
+                    {{-- @foreach ($data as $key => $l)
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$l->tanggal_awal.' - '.$l->tanggal_akhir}}</td>
@@ -196,14 +196,18 @@
                                     class='bx bx-pencil'></i></button>
                             <button class="btn btn-danger" onclick="deleteLoker({{$l->id}})" title="Delete"> <i
                                     class='bx bx-trash'></i></button>
-                            <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
-                            </form>
                         </td>
                     </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
             </table>
+            <div class="pagination-no_spacing">
+                <ul class="pagination custom-pagination">
+                </ul>
+            </div>
         </div>
+        <form action="#" method="post" id="formdelclasses">@csrf @method('DELETE')
+        </form>
     </div>
 </div>
 
@@ -215,10 +219,13 @@
     var loker_deskripsi = CKEDITOR.replace("loker_deskripsi");
     var loker_jobdesk = CKEDITOR.replace("loker_jobdesk");
     // var firstUpload = new FileUploadWithPreview('myFirstImage')
-    createDataTable('#banner')
+    gawetable();
 	$('#filClassesImage').change(function (e) { 
 		getImgData(this,'#prvClassesImage');
 	});
+    $('#perusahaan_id').select2({
+            placeholder: 'Input or Select',
+        });
     $('#provinsi').select2({
             placeholder: 'Input or Select',
         });
@@ -239,6 +246,39 @@
         placeholder: 'Input or Select',
         tags:true
     });
+        function gawetable(params) {
+            
+    $.ajaxSetup({
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+            });
+        var table = $('#banner').DataTable({
+        processing: false,
+        serverSide: false,
+        ajax: "/admin/loker?tanggal_akhir=24",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'}, //ini nomor
+            {data: 'e_tanggal_akhir', name: 'Tanggal'},
+            {
+                        "render": function (data, type, row, meta) {
+                            return '<img src="/image/loker/'+row.e_gambar+'" style="max-width: 100%; max-height: 90px">';
+                        }
+            },
+            {data: 'name', name: 'Nama'},
+            {data: 'title', name: 'Title'},
+            {data: 'e_gaji', name: 'Gaji'},
+            {data: 'e_status', name: 'Status'},
+            {
+                data: 'aksi',
+                name: 'aksi',
+                orderable: false,
+                searchable: false
+            },
+        ],
+        scrollX:true,
+        });
+        }
     // function getkabupaten(){
     //     let v = $('#provinsi').val();
     //     $.ajax({
@@ -310,43 +350,44 @@
         $('#perusahaan_id').trigger('change')
         $('#status').val(null)
     }
-    function editloker(data) {
+    function editloker(id) {
         kosong();
-        console.log(data);
-        if (data.image) {
-            let img = JSON.parse(data.image)
-            $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
-        }
-        // $('#loker_alamat').val(data.alamat)
-        // $('#loker_email').val(data.email)
-        // $('#loker_nama').val(data.nama)
-        $('#status').val(data.status)
-        $('#loker_id').val(data.id)
-        $('#loker_title').val(data.title)
-        $('#loker_gaji_min').val(data.gaji_min)
-        $('#loker_gaji_max').val(data.gaji_max)
-        $('#loker_gaji_min').change()
-        $('#loker_gaji_max').change()
-        // $('#loker_deskripsi').val(data.deskripsi)
-        // $('#loker_jobdesk').val(data.jobdesk)
-        loker_deskripsi.setData(data.deskripsi)
-        loker_jobdesk.setData(data.jobdesk)
-        $('#loker_tanggal_awal').val(data.tanggal_awal)
-        $('#loker_tanggal_akhir').val(data.tanggal_akhir)
-        $('#loker_skill').val(JSON.parse(data.skill))
-        $('#loker_skill').trigger('change')
-        $('#loker_type').val(JSON.parse(data.type))
-        $('#loker_type').trigger('change')
-        $.ajax({
-            type:'GET',
-            url:'/admin/perusahaan/'+data.perusahaan_id,
-            data:'_token = <?php echo csrf_token() ?>',
-            success:function(data) {
-                let t = '';
-                if (data) {
-                        $('#perusahaan_id').val(JSON.stringify(data))
-                        $('#perusahaan_id').trigger('change')
+            $.ajax({
+                type:'GET',
+                url:'/loker/'+id,
+                data:'_token = <?php echo csrf_token() ?>',
+                success:function(data) {
+                    if (data.image) {
+                        let img = JSON.parse(data.image)
+                        $('#prvClassesImage').attr('src', '/image/loker/'+img.url)
                     }
+                    $('#status').val(data.status)
+                    $('#loker_id').val(data.id)
+                    $('#loker_title').val(data.title)
+                    $('#loker_gaji_min').val(data.gaji_min)
+                    $('#loker_gaji_max').val(data.gaji_max)
+                    $('#loker_gaji_min').change()
+                    $('#loker_gaji_max').change()
+                    loker_deskripsi.setData(data.deskripsi)
+                    loker_jobdesk.setData(data.jobdesk)
+                    $('#loker_tanggal_awal').val(data.tanggal_awal)
+                    $('#loker_tanggal_akhir').val(data.tanggal_akhir)
+                    $('#loker_skill').val(JSON.parse(data.skill))
+                    $('#loker_skill').trigger('change')
+                    $('#loker_type').val(JSON.parse(data.type))
+                    $('#loker_type').trigger('change')
+                    $.ajax({
+                        type:'GET',
+                        url:'/admin/perusahaan/'+data.perusahaan_id,
+                        data:'_token = <?php echo csrf_token() ?>',
+                        success:function(data) {
+                            let t = '';
+                            if (data) {
+                                    $('#perusahaan_id').val(JSON.stringify(data))
+                                    $('#perusahaan_id').trigger('change')
+                                }
+                            }
+                        });
                 }
             });
     }
