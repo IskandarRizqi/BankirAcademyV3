@@ -91,7 +91,7 @@
             </div>
         </div>
     </div>
-    <div id="element-container">
+    <div id="element-container" hidden>
         <p>This is page 1 content</p>
         <div class="html2pdf__page-break"></div>
         <p>This is page 2 content</p>

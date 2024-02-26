@@ -268,7 +268,8 @@
                         class="button button-rounded btn-block font-weight-normal center text-capitalize si-gplus si-colored m-0">Login/Register
                         with Google</a>
                     <a href="/registerc"
-                        class="button button-rounded btn-block font-weight-normal center text-capitalize m-0">Register</a>
+                        class="button button-rounded btn-block font-weight-normal center text-capitalize m-0"
+                        hidden>Register</a>
                 </div>
             </div>
         </div>

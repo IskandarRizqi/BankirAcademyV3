@@ -253,8 +253,8 @@
                     <h2>Jelajahi Academy</h2>
                     <p>Berbagai macam pilihan kelas bankir academy dengan metode belajar yang cocok buat kamu</p>
                 </div>
-                <div class="d-flex justify-content-center align-items-center">
-                    <div class="mr-2">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-3">
                         <div class="form-group">
                             <label for="">Cari Lowongan</label>
                             <input type="text" name="cari_lowongan" id="cari_lowongan" class="form-control"
@@ -264,7 +264,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="mr-2">
+                    <div class="col-lg-3">
                         <div class="form-group">
                             <label for="">Provinsi</label>
                             <select name="provinsi" id="provinsi" class="form-control" onchange="getkabupaten()"
@@ -280,7 +280,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="mr-2">
+                    <div class="col-lg-3">
                         <div class="form-group">
                             <label for="">Kabupaten</label>
                             <select name="kabupaten" id="kabupaten" class="form-control" onchange="getkecamatan()"
@@ -293,7 +293,7 @@
                         </div>
                     </div>
                     <div class="mr-2">
-                        <button class="btn btn-primary mt-4 br-20" id="cari"><svg xmlns="http://www.w3.org/2000/svg"
+                        <button class="btn btn-primary mt-3 br-20" id="cari"><svg xmlns="http://www.w3.org/2000/svg"
                                 width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: rgb(255, 255, 255);transform: ;msFilter:;">
                                 <path
