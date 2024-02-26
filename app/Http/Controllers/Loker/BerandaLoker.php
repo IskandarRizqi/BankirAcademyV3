@@ -177,6 +177,19 @@ class BerandaLoker extends Controller
 
     public function apply(Request $request)
     {
+        $limit = GlobalHelper::getlimitlokermember();
+        $count = GlobalHelper::countApplyByUserId(null);
+        if ($limit['status']) {
+            if ($limit['limit'] <= $count['jumlah']) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Sudah melebihi limit harap pilih paket membership',
+                    ]);
+                }
+                return Redirect::back()->with('info', 'Sudah melebihi limit harap pilih paket membership');
+            }
+        }
         $l = LamaranModel::where('user_id', Auth::user()->id)->first();
         if (!$l) {
             if ($request->ajax()) {

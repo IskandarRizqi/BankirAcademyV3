@@ -5,8 +5,10 @@ namespace App\Helper;
 use App\Models\AllowIpAksesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\HistoryIpAksesModel;
+use App\Models\LokerApply;
 use App\Models\RefferralModel;
 use App\Models\RefferralWithdrawModel;
+use App\Models\UserProfileModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,6 +66,18 @@ class  GlobalHelper
         }
         return 0;
     }
+    public static function countApplyByUserId($i)
+    {
+        $auth = Auth::user()->id;
+        if ($i) {
+            $auth = $i;
+        }
+        $r = LokerApply::where('user_id', $auth)->get();
+        return [
+            'jumlah' => count($r),
+            'data' => $r,
+        ];
+    }
     public static function getaksesmembership()
     {
         $auth = Auth::user();
@@ -82,6 +96,27 @@ class  GlobalHelper
         }
         return 1;
         return $next;
+    }
+    public static function getlimitlokermember()
+    {
+        $limit = 0;
+        $message = 'Profile Belum Lengkap';
+        $status = false;
+        $p = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        if ($p) {
+            $status = false;
+            $message = 'Belum menjadi member';
+            if ($p->membership) {
+                $limit = $p->membership->limit;
+                $message = '';
+                $status = true;
+            }
+        }
+        return [
+            'limit' => $limit,
+            'message' => $message,
+            'status' => $status,
+        ];
     }
     public static function checkipaddress()
     {
