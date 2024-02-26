@@ -617,18 +617,20 @@
         let pekerjaantotalaset = JSON.parse(js.pekerjaantotalaset);
         let pekerjaanjabatan = JSON.parse(js.pekerjaanjabatan);
         let n = 0;
-        if (pekerjaanpenghargaan.length > 0) {
-            pekerjaanpenghargaan.forEach(e => {
-                addpekerjaan();
-                $('#cvpekerjaanpenghargaan'+n).val(pekerjaanpenghargaan[n]);
-                $('#cvpekerjaanperusahaan'+n).val(pekerjaanperusahaan[n]);
-                $('#cvpekerjaanprestasi'+n).val(pekerjaanprestasi[n]);
-                $('#cvpekerjaantahun'+n).val(pekerjaantahun[n]);
-                $('#cvpekerjaantanggungjawab'+n).val(pekerjaantanggungjawab[n]);
-                $('#cvpekerjaanaset'+n).val(pekerjaantotalaset[n]);
-                $('#cvpekerjaanjabatan'+n).val(pekerjaanjabatan[n]);
-            });
-            n++;
+        if (pekerjaanpenghargaan) {
+            if (pekerjaanpenghargaan.length > 0) {
+                pekerjaanpenghargaan.forEach(e => {
+                    addpekerjaan();
+                    $('#cvpekerjaanpenghargaan'+n).val(pekerjaanpenghargaan[n]);
+                    $('#cvpekerjaanperusahaan'+n).val(pekerjaanperusahaan[n]);
+                    $('#cvpekerjaanprestasi'+n).val(pekerjaanprestasi[n]);
+                    $('#cvpekerjaantahun'+n).val(pekerjaantahun[n]);
+                    $('#cvpekerjaantanggungjawab'+n).val(pekerjaantanggungjawab[n]);
+                    $('#cvpekerjaanaset'+n).val(pekerjaantotalaset[n]);
+                    $('#cvpekerjaanjabatan'+n).val(pekerjaanjabatan[n]);
+                });
+                n++;
+            }
         }
     }
     function addpelatihan() {

@@ -21,8 +21,10 @@ class LokerApply extends Model
     public function getStatusNameAttribute()
     {
         $s = 'Pending';
-        if ($this->attributes['status'] == 1) {
-            $s = 'Terkirim';
+        if (array_key_exists('status', $this->attributes)) {
+            if ($this->attributes['status'] == 1) {
+                $s = 'Terkirim';
+            }
         }
         return $s;
     }

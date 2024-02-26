@@ -106,7 +106,7 @@
             color: #495057;
             background-color: #fff;
             background-clip: padding-box;
-            border: 1px solid #ced4da;
+            border: transparent;
             /* border-radius: 0.25rem; */
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
             border-radius: 3px;
@@ -787,6 +787,16 @@
                 </div> --}}
                 <h4>IV. RIWAYAT PEKERJAAN</h4>
                 <div class="form-pekerjaan">
+                    @php
+                    $pt = false;
+                    $pp = false;
+                    $pj = false;
+                    $pa = false;
+                    $pr = false;
+                    $pe = false;
+                    $po = false;
+                    @endphp
+                    @if($data->pekerjaantahun)
                     @for($i = 0; $i < count(json_decode($data->pekerjaantahun)); $i++)
                         @php
                         $pt = json_decode($data->pekerjaantahun)[$i];
@@ -798,6 +808,7 @@
                         $po = json_decode($data->pekerjaantotalaset)[$i];
                         @endphp
                         @endfor
+                        @endif
                         <div class="riwayat-pekerjaan{{$i}}">
                             <div class="row">
                                 <table style="width: 100%">

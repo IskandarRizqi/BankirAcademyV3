@@ -21,7 +21,7 @@
                 <th>Aksi</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="listlamaran">
             @foreach($lamaran as $key => $value)
             <tr>
                 <td>{{$key+1}}</td>
@@ -71,11 +71,10 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="listloker">
                         @foreach($loker as $key => $value)
                         <tr>
                             <td>{{$key+1}}</td>
-                            {{-- <td>{{$value->tanggal_awal.' - '.$value->tanggal_akhir}}</td> --}}
                             <td>{{\Carbon\Carbon::parse($value->tanggal_akhir)->format('d-m-Y')}}</td>
                             <td>
                                 @if($value->perusahaan)
@@ -93,13 +92,8 @@
                             <td>{{$value->title}}</td>
                             <td>
                                 <div class="row">
-                                    {{-- <form id="orderForm" action="{{ '/loker/apply' }}" method="POST" class="m-0">
-                                        @csrf
-                                        <input type="text" id="class_id" name="class_id" value="{{ $value->id }}"
-                                            hidden>
-                                    </form> --}}
                                     <button class="button button-mini button-border button-circle button-yellow"
-                                        id="btnkirimloker">Kirim
+                                        id="btnkirimloker" onclick="kirimloker({{$value->id}})">Kirim
                                         Lamaran</button>
                                     <a href="/loker/{{$value->id}}/detail">
                                         <button
@@ -116,15 +110,14 @@
     </div>
 </div>
 <script>
-    $('#btnkirimloker').on('click',function () {
-        console.log('loker');
-        let id = 9999;
+    function kirimloker(id) {
         Swal.fire({
             background:'#0069d900',
             color: "#e1e1e1",
             width: 600,
             html:'',
             showConfirmButton: false,
+            allowOutsideClick: false,
             showClass: {
                 popup: `
                     animated
@@ -134,35 +127,135 @@
             },
             backdrop: `
                 rgba(0,0,0,0)
-                url("/GambarV2/Gif-loading-lowongan.gif")
+                url("/GambarV2/menunggu.gif")
                 center
                 no-repeat
             `,
         })
         setTimeout(() => {
-            Swal.close();
-            // $.ajax({
-            //     method: 'POST',
-            //     url: '/loker/apply',
-            //     data: {
-            //         class_id : id,
-            //     },
-            //     beforeSend: function() {
-            //         // 
-            //     },
-            //     success: function(data) {
-            //         console.log('success');
-            //         Swal.close()
-            //     },
-            //     error: function(xhr) { // if error occured
-            //         alert("Error occured.please try again");
-            //         Swal.close()
-            //     },
-            //     complete: function() {
-            //         console.log('complete');
-            //         Swal.close()
-            //     },
-            // });
-        }, 8000);
-    })
+            $.ajax({
+                method: 'POST',
+                url: '/loker/apply',
+                data: {
+                    class_id : id,
+                },
+                beforeSend: function() {
+                    // 
+                },
+                success: function(data) {
+                    let html = '';
+                    let html2 = '';
+                    setTimeout(() => {
+                        if (!data.success) {
+                            Swal.fire({
+                                title:'Info',
+                                text:data.message,
+                                icon:'info',
+                                showConfirmButton: false,
+                            });
+                            return false;
+                        }
+                        let no = 1;
+                        let no2 = 1;
+                        data.data.lamaran.forEach(v => {
+                            html += '<tr>';
+                            html += '<td>'+no+'</td>';
+                            html += '<td>'+dayjs(v.lamaran.tanggal_akhir).format('DD-MM-YYYY')+'</td>';
+                            html += '<td>';
+                                let image = '';
+                                if (v.lamaran.perusahaan) {
+                                    let js = JSON.parse(v.lamaran.perusahaan.image)
+                                    image = js?js.url:'';
+                                }else{
+                                    image = v.lamaran.image?JSON.parse(v.lamaran.image).url:'';
+                                }
+                                html += '    <img src="/image/loker/'+image+'" alt="" style="" width="70px"';
+                                html += '        height="30px">';
+                            html += '</td>';
+                            let nama = v.lamaran.nama;
+                            if (v.lamaran.perusahaan) {
+                                nama = v.lamaran.perusahaan.nama;
+                            }
+                            html += '<td>'+nama+'</td>';
+                            html += '<td>'+v.lamaran.title+'</td>';
+                            html += '<td>';
+                            html += '        <a href="/loker/'+v.lamaran.id+'/detail">';
+                            html += '            <button';
+                            html += '                class="button button-mini button-border button-circle button-aqua">Detail</button>';
+                            html += '        </a>';
+                            html += '</td>';
+                            html += '</tr>';
+                            no++;
+                        });
+                        data.data.loker.forEach(va => {
+                            html2+='<tr>';
+                            html2+='    <td>'+no2+'</td>';
+                            html2+='    <td>'+dayjs(va.tanggal_akhir).format('DD-MM-YYYY')+'</td>';
+                            html += '<td>';
+                                let image = '';
+                                if (va.lamaran.perusahaan) {
+                                    let js = JSON.parse(va.lamaran.perusahaan.image)
+                                    image = js?js.url:'';
+                                }else{
+                                    image = va.lamaran.image?JSON.parse(va.lamaran.image).url:'';
+                                }
+                                html += '    <img src="/image/loker/'+image+'" alt="" style="" width="70px"';
+                                html += '        height="30px">';
+                            html += '</td>';
+                            let nama = va.lamaran.nama;
+                            if (va.lamaran.perusahaan) {
+                                nama = va.lamaran.perusahaan.nama;
+                            }
+                            html += '<td>'+nama+'</td>';
+                            html2+='    <td>';
+                            html2+='        <div class="row">';
+                            html2+='            <button class="button button-mini button-border button-circle button-yellow"';
+                            html2+='                id="btnkirimloker" onclick="kirimloker('+va.id+')">Kirim';
+                            html2+='                Lamaran</button>';
+                            html2+='            <a href="/loker/'+va.id+'/detail">';
+                            html2+='                <button';
+                            html2+='                    class="button button-mini button-border button-circle button-aqua">Detail</button>';
+                            html2+='            </a>';
+                            html2+='        </div>';
+                            html2+='    </td>';
+                            html2+='</tr>';
+                            no2++;
+                        });
+
+                        Swal.fire({
+                            background:'#0069d900',
+                            color: "#e1e1e1",
+                            width: 600,
+                            html:'',
+                            showConfirmButton: false,
+                            allowOutsideClick: true,
+                            showClass: {
+                                popup: `
+                                    animated
+                                    fadeInUp
+                                    faster
+                                `
+                            },
+                            backdrop: `
+                                rgba(0,0,0,0)
+                                url("/GambarV2/success.gif")
+                                center
+                                no-repeat
+                            `,
+                        })
+                        $('#listlamaran').html(html);
+                        $('#listloker').html(html2);
+                    }, 100);
+                },
+                error: function(xhr) { // if error occured
+                    alert("Error occured.please try again");
+                    Swal.close()
+                },
+                complete: function() {
+                    console.log('complete');
+                    Swal.close()
+                },
+            });
+        }, 1000);
+    }
 </script>

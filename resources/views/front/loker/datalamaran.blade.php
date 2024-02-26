@@ -5,7 +5,7 @@
     <div class="content-wrap">
         <div class="container clearfix">
             <h3 class="text-center text-uppercase">daftar riwayat hidup</h3>
-            <p class="text-center">(Calon Pemegang Saham)</p>
+            {{-- <p class="text-center">(Calon Pemegang Saham)</p> --}}
             <hr>
             <form action="simpanlamaran" method="POST">
                 @csrf
@@ -332,6 +332,7 @@
                 <div class="form-group">
                     <h4>III. PELATIHAN/KURSUS YANG PERNAH DIIKUTI</h4>
                     <div class="form-pelatihan">
+                        @if($data->pelatihannama)
                         @if($datax && count(json_decode($data->pelatihannama)) >= 0)
                         @for($i = 0; $i < count(json_decode($data->pelatihannama)); $i++)
                             @php
@@ -370,6 +371,7 @@
                             </div>
                             @endfor
                             @endif
+                            @endif
                     </div>
                     <div class="col-md-3">
                         <div class="d-flex mt-4">
@@ -380,6 +382,7 @@
                 <div class="form-group">
                     <h4>IV. RIWAYAT PEKERJAAN</h4>
                     <div class="form-pekerjaan">
+                        @if($data->pekerjaantahun)
                         @if($datax && count(json_decode($data->pekerjaantahun)) >= 0)
                         @for($i = 0; $i < count(json_decode($data->pekerjaantahun)); $i++)
                             @php
@@ -438,6 +441,7 @@
                                 </div>
                                 <hr>
                             </div>
+                            @endif
                             @endif
                     </div>
                     <span class="btn btn-info btn-sm mt-2" onclick="addpekerjaan()">Tambah</span>

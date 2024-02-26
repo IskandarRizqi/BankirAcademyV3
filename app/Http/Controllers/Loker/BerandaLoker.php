@@ -177,21 +177,35 @@ class BerandaLoker extends Controller
 
     public function apply(Request $request)
     {
-
-        if ($request->ajax()) {
-            return $request->all();
-        }
         $l = LamaranModel::where('user_id', Auth::user()->id)->first();
         if (!$l) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'CV tidak ditemukan',
+                ]);
+            }
             return Redirect::back()->with('info', 'CV Tidak Ditemukan');
         }
         if ($l->is_approved == 0) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'cv belum di approved oleh admin',
+                ]);
+            }
             return Redirect::back()->with('info', 'CV Belum Di Approved oleh Admin');
         }
         $f = LokerApply::where('user_id', Auth::user()->id)
             ->where('loker_id', $request->class_id)
             ->get();
         if (count($f) > 0) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lamaran sudah terkirim',
+                ]);
+            }
             // return view('front.loker.successlamaran');
             return Redirect::back()->with('info', 'Lamaran Sudah Terkirim');
         }
@@ -199,6 +213,28 @@ class BerandaLoker extends Controller
             'user_id' => Auth::user()->id,
             'loker_id' => $request->class_id
         ]);
+
+        if ($request->ajax()) {
+            $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', Auth::user()->id)->get();
+            $lokerid = []; // id loker yang pernah di apply
+            foreach ($data['lamaran'] as $key => $value) {
+                if (!in_array($value->loker_id, $lokerid)) {
+                    array_push($lokerid, $value->loker_id);
+                }
+            }
+            $limitloker = 10;
+            $data['loker'] = LokerModel::select()
+                ->whereDate('tanggal_awal', '<=', Carbon::now())
+                ->whereDate('tanggal_akhir', '>=', Carbon::now())
+                ->whereNotIn('id', $lokerid)
+                ->limit($limitloker)
+                ->get();
+            return response()->json([
+                'data' => $data,
+                'success' => true,
+                'message' => 'Lamaran terkirim',
+            ]);
+        }
         if ($l) {
             // return view('front.loker.successlamaran');
             return Redirect::back()->with('success', 'Lamaran Proses Terkirim');
