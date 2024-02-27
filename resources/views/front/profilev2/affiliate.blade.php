@@ -37,9 +37,11 @@
                     id="list-kode-refferal-list" data-toggle="list" href="#list-kode-refferal" role="tab"
                     aria-controls="kode-refferal">Kode Refferal</a>
                 <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-withdraw-list"
-                    data-toggle="list" href="#list-withdraw" role="tab" aria-controls="withdraw">Withdraw</a>
+                    data-toggle="list" href="#list-withdraw" role="tab" aria-controls="withdraw">Withdraw & Top Up</a>
+                <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-ppob-list"
+                    data-toggle="list" href="#list-ppob" role="tab" aria-controls="ppob">PPOB</a>
                 <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-sdank-list"
-                    data-toggle="list" href="#list-sdank" role="tab" aria-controls="sdank">Syaran & Ketentuan</a>
+                    data-toggle="list" href="#list-sdank" role="tab" aria-controls="sdank">Syarat & Ketentuan</a>
             </div>
         </div>
         <div class="col-lg-9">
@@ -138,6 +140,7 @@
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>No Rekening</th>
+                                        <th>Nominal</th>
                                         <th>Status</th>
                                         {{-- <th>Aksi</th> --}}
                                     </tr>
@@ -165,17 +168,13 @@
                                             Tidak Ditemukan
                                             @endswitch
                                         </td>
+                                        <td>0</td>
                                         {{-- <td>Aksi</td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="list-sdank" role="tabpanel" aria-labelledby="list-sdank-list">
-                    <div class="">
-                        SDANK
                     </div>
                 </div>
             </div>
