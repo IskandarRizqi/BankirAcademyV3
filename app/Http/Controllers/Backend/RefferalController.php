@@ -70,7 +70,13 @@ class RefferalController extends Controller
     {
         $up = UserProfileModel::where('user_id', Auth::user()->id)->first();
         if (!$up) {
-            return Redirect::back()->with('error', 'Harap Lengkapi Data Terlebih Dahulu');
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Harap Lengkapi Data Profile Terlebih Dahulu',
+                ]);
+            }
+            return Redirect::back()->with('error', 'Harap Lengkapi Data Profile Terlebih Dahulu');
         }
         $valid = Validator::make($request->all(), [
             'kode' => 'required',
@@ -78,15 +84,33 @@ class RefferalController extends Controller
         ]);
         //response error validation
         if ($valid->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data Tidak Sesuai',
+                ]);
+            }
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
 
         $k = RefferralPesertaModel::where('code', $request->kode)->where('id', '!==', $request->id)->get();
         $u = RefferralPesertaModel::where('url', $request->url)->where('id', '!==', $request->id)->get();
         if (count($k) > 0) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kode Refferal Sudah Terpakai',
+                ]);
+            }
             return Redirect::back()->with('error', 'Kode Sudah Terpakai')->withInput($request->all());
         }
         if (count($u) > 0) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'URL Sudah Terpakai',
+                ]);
+            }
             return Redirect::back()->with('error', 'URL Sudah Terpakai')->withInput($request->all());
         }
 
@@ -98,6 +122,12 @@ class RefferalController extends Controller
             'url' => preg_replace('/[^a-zA-Z0-9_ -]/s', '-', str_replace(' ', '-', $request->url)),
         ]);
         if ($m) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Simpan Data Berhasil',
+                ]);
+            }
             return Redirect::back()->with('success', 'Simpan Data Berhasil');
         }
         return Redirect::back()->with('error', 'Simpan Data Gagal');

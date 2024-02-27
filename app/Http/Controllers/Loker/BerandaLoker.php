@@ -195,10 +195,10 @@ class BerandaLoker extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'CV tidak ditemukan',
+                    'message' => 'Anda belum mengisi cv di menu bankir',
                 ]);
             }
-            return Redirect::back()->with('info', 'CV Tidak Ditemukan');
+            return Redirect::back()->with('info', 'Anda belum mengisi cv di menu bankir');
         }
         if ($l->is_approved == 0) {
             if ($request->ajax()) {

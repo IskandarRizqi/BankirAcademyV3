@@ -73,8 +73,25 @@
                     </div>
                     <div class="col-lg-6">
                         <label for="" class="text-capitalize">Agama</label>
-                        <input type="text" name="cvagama" id="cvagama" class="form-control br-10 br-black"
-                            value="{{$datalamaran?$datalamaran->agama:''}}">
+                        <select name="cvagama" id="cvagama" class="form-control">
+                            @if($datalamaran)
+                            <option {{$datalamaran->agama=='Islam'?'selected':''}} value="Islam">Islam</option>
+                            <option {{$datalamaran->agama=='Kristen Protestan'?'selected':''}} value="Kristen
+                                Protestan">Kristen Protestan</option>
+                            <option {{$datalamaran->agama=='Kristen Katolik'?'selected':''}} value="Kristen
+                                Katolik">Kristen Katolik</option>
+                            <option {{$datalamaran->agama=='Hindu'?'selected':''}} value="Hindu">Hindu</option>
+                            <option {{$datalamaran->agama=='Buddha'?'selected':''}} value="Buddha">Buddha</option>
+                            <option {{$datalamaran->agama=='Konghucu'?'selected':''}} value="Konghucu">Konghucu</option>
+                            @else
+                            <option value="Islam">Islam</option>
+                            <option value="Kristen Protestan">Kristen Protestan</option>
+                            <option value="Kristen Katolik">Kristen Katolik</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Konghucu">Konghucu</option>
+                            @endif
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -105,16 +122,55 @@
                     </div>
                     <div class="col-lg-6">
                         <label for="" class="text-capitalize">Jumlah Saudara Kandung/Angkat</label>
-                        <input type="text" name="cvjumlahsaudarakandung" id="cvjumlahsaudarakandung"
-                            class="form-control br-10 br-black" value="{{$datalamaran?$datalamaran->jmlsaudara:''}}">
+                        <select name="cvjumlahsaudarakandung" id="cvjumlahsaudarakandung" class="form-control">
+                            @if($datalamaran)
+                            <option value="0" {{$datalamaran->jmlsaudara==0?'selected':''}}>0</option>
+                            <option value="1" {{$datalamaran->jmlsaudara==1?'selected':''}}>1</option>
+                            <option value="2" {{$datalamaran->jmlsaudara==2?'selected':''}}>2</option>
+                            <option value="3" {{$datalamaran->jmlsaudara==3?'selected':''}}>3</option>
+                            <option value="4" {{$datalamaran->jmlsaudara==4?'selected':''}}>4</option>
+                            <option value="5" {{$datalamaran->jmlsaudara==5?'selected':''}}>5</option>
+                            <option value="6" {{$datalamaran->jmlsaudara==6?'selected':''}}>6</option>
+                            <option value="7" {{$datalamaran->jmlsaudara==7?'selected':''}}>7</option>
+                            <option value="8" {{$datalamaran->jmlsaudara==8?'selected':''}}>8</option>
+                            <option value="9" {{$datalamaran->jmlsaudara==9?'selected':''}}>9</option>
+                            <option value="10" {{$datalamaran->jmlsaudara==10?'selected':''}}>10</option>
+                            @else
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            @endif
+                        </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <label for="" class="text-capitalize">Status Perkawinan</label>
-                        <input type="text" name="cvstatusperkawinan" id="cvstatusperkawinan"
-                            class="form-control br-10 br-black"
-                            value="{{$datalamaran?$datalamaran->statusperkawinan:''}}">
+                        <select name="cvstatusperkawinan" id="cvstatusperkawinan" class="form-control">
+                            @if($datalamaran)
+                            <option {{$datalamaran->statusperkawinan=='Belum Kawin'?'selected':''}}
+                                value="Belum Kawin">Belum Kawin</option>
+                            <option {{$datalamaran->statusperkawinan=='Kawin'?'selected':''}} value="Kawin">Kawin
+                            </option>
+                            <option {{$datalamaran->statusperkawinan=='Cerai Hidup'?'selected':''}}
+                                value="Cerai Hidup">Cerai Hidup</option>
+                            <option {{$datalamaran->statusperkawinan=='Cerai Mati'?'selected':''}}
+                                value="Cerai Mati">Cerai Mati</option>
+                            @else
+                            <option value="Belum Kawin">Belum Kawin</option>
+                            <option value="Kawin">Kawin</option>
+                            <option value="Cerai Hidup">Cerai Hidup</option>
+                            <option value="Cerai Mati">Cerai Mati</option>
+                            @endif
+                        </select>
                     </div>
                     <div class="col-lg-6">
                         <label for="" class="text-capitalize">Nama Istri/Suami</label>
@@ -201,8 +257,14 @@
                 <div class="row">
                     <div class="col-lg-3">
                         <label for="" class="text-uppercase">Tahun</label>
-                        <input type="text" name="cvsdtahun" value="{{$datalamaran?$datalamaran->sdtahun:''}}"
-                            id="cvsdtahun" class="form-control br-black br-10">
+                        <select name="cvsdtahun" id="cvsdtahun" class="form-control">
+                            @for($i = 1900; $i < 2050; $i++) @if($datalamaran) <option {{$datalamaran->sdtahun == $i ?
+                                'selected':''}} value="{{$i}}">{{$i}}</option>
+                                @else
+                                <option value="{{$i}}">{{$i}}</option>
+                                @endif
+                                @endfor
+                        </select>
                     </div>
                     <div class="col-lg-3">
                         <label for="" class="text-uppercase">Institusi</label>
@@ -521,11 +583,12 @@
             success:function(response){
                 Swal.close()
                 if (response.status == true) {
-                    kembali = 2;
-                    allclosed();
-                    $('#cvform1').removeAttr('hidden');
-                    $('#datapelatihan').removeAttr('hidden');
-                    scrollingtop();
+                    kembali = 0;
+                    btnback();
+                    // allclosed();
+                    // $('#cvform1').removeAttr('hidden');
+                    // $('#datapelatihan').removeAttr('hidden');
+                    // scrollingtop();
                     iziToast.success({
                         title: 'Berhasil',
                         message: 'Data tersimpan',

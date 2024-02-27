@@ -38,42 +38,45 @@
                     aria-controls="kode-refferal">Kode Refferal</a>
                 <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-withdraw-list"
                     data-toggle="list" href="#list-withdraw" role="tab" aria-controls="withdraw">Withdraw</a>
+                <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-sdank-list"
+                    data-toggle="list" href="#list-sdank" role="tab" aria-controls="sdank">Syaran & Ketentuan</a>
             </div>
         </div>
         <div class="col-lg-9">
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="list-kode-refferal" role="tabpanel"
                     aria-labelledby="list-kode-refferal-list">
-                    <form action="/set-master-refferal" method="POST">
+                    {{-- <form action="/set-master-refferal" method="POST">
                         @csrf
-                        <input type="text" name="id" id="id" class="form-control" value="{{$reff?$reff->id:''}}" hidden>
-                        <div class="row">
-                            <div class="col-lg-5">
-                                <div class="form-group">
-                                    <label for="" style="font-size: 10px">Kode Refferal</label>
-                                    <input type="text" name="kode" id="kode" class="form-control"
-                                        placeholder="1234567890" value="{{$reff?$reff->code:''}}">
-                                    @error('kode')
-                                    <p class="text-danger">{{$message}}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="form-group">
-                                    <label for="" style="font-size: 10px">SPESIAL KARAKTER AKAN DI RUBAH KE (-) ATAU
-                                        (_)</label>
-                                    <input type="text" name="url" id="url" class="form-control" placeholder="sitejo"
-                                        value="{{$reff?$reff->url:''}}">
-                                    @error('url')
-                                    <p class="text-danger">{{$message}}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <button class="btn btn-primary mt-4" type="submit">Simpan</button>
+                    </form> --}}
+                    <input type="text" name="id" id="id" class="form-control" value="{{$reff?$reff->id:''}}" hidden>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="" style="font-size: 10px">Kode Refferal <span class=""
+                                        style="color: red">*</span></label>
+                                <input type="text" name="kode" id="kode" class="form-control" placeholder="1234567890"
+                                    value="{{$reff?$reff->code:''}}">
+                                @error('kode')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
                             </div>
                         </div>
-                    </form>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="" style="font-size: 10px">SPESIAL KARAKTER AKAN DI RUBAH KE (-) ATAU
+                                    (_) <span class="" style="color: red">*</span></label>
+                                <input type="text" name="url" id="url" class="form-control" placeholder="sitejo"
+                                    value="{{$reff?$reff->url:''}}">
+                                @error('url')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <button class="btn btn-primary mt-4" onclick="setreferral()">Simpan</button>
+                        </div>
+                    </div>
                     <div class="">
                         <label for="">Data Pengguna Refferal</label>
                         <div class="table-responsive">
@@ -170,6 +173,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="list-sdank" role="tabpanel" aria-labelledby="list-sdank-list">
+                    <div class="">
+                        SDANK
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -195,12 +203,16 @@
                 }
             })
             $.ajax({
-                url: '/getkelasanda/'+t,
-                method: 'GET',
+                url: '/set-master-refferal',
+                method: 'POST',
+                data: {
+                    kode:$('#kode').val(),
+                    url:$('#url').val(),
+                },
                 success:function(response)
                 {
                     let h = '';
-                    if (response.status == 1) {
+                    if (response.success == 1) {
                         // 
                     }
                     Swal.close()

@@ -15,7 +15,7 @@
             <tr>
                 <th>No</th>
                 <th>Tanggal Akhir</th>
-                <th>Image</th>
+                <th>Logo</th>
                 <th>Perusahaan</th>
                 <th>Jabatan</th>
                 <th>Aksi</th>
@@ -65,7 +65,7 @@
                         <tr>
                             <th>No</th>
                             <th>Tanggal Akhir</th>
-                            <th>Image</th>
+                            <th>Logo</th>
                             <th>Perusahaan</th>
                             <th>Jabatan</th>
                             <th>Aksi</th>
@@ -191,22 +191,22 @@
                             html2+='<tr>';
                             html2+='    <td>'+no2+'</td>';
                             html2+='    <td>'+dayjs(va.tanggal_akhir).format('DD-MM-YYYY')+'</td>';
-                            html += '<td>';
+                            html2 += '<td>';
                                 let image = '';
-                                if (va.lamaran.perusahaan) {
-                                    let js = JSON.parse(va.lamaran.perusahaan.image)
+                                if (va.perusahaan) {
+                                    let js = JSON.parse(va.perusahaan.image)
                                     image = js?js.url:'';
                                 }else{
-                                    image = va.lamaran.image?JSON.parse(va.lamaran.image).url:'';
+                                    image = va.image?JSON.parse(va.image).url:'';
                                 }
-                                html += '    <img src="/image/loker/'+image+'" alt="" style="" width="70px"';
-                                html += '        height="30px">';
-                            html += '</td>';
-                            let nama = va.lamaran.nama;
-                            if (va.lamaran.perusahaan) {
-                                nama = va.lamaran.perusahaan.nama;
+                                html2 += '    <img src="/image/loker/'+image+'" alt="" style="" width="70px"';
+                                html2 += '        height="30px">';
+                            html2 += '</td>';
+                            let nama = va.nama;
+                            if (va.perusahaan) {
+                                nama = va.perusahaan.nama;
                             }
-                            html += '<td>'+nama+'</td>';
+                            html2 += '<td>'+nama+'</td>';
                             html2+='    <td>';
                             html2+='        <div class="row">';
                             html2+='            <button class="button button-mini button-border button-circle button-yellow"';
