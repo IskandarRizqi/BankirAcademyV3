@@ -168,6 +168,9 @@ class ProfileController extends Controller
             ->join('users', 'users.id', 'referral.user_aplicator')
             ->where('referral.user_id', $auth_id)
             ->get();
+        $data['reffdisabled'] = RefferralModel::select()
+            ->where('referral.user_id', $auth_id)
+            ->first();
         $data['saldo'] = GlobalHelper::currentSaldoById($auth_id);
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
@@ -477,6 +480,7 @@ class ProfileController extends Controller
 
     public function settingprofile(Request $r)
     {
+        $simpanreff = 1;
         $ins = [
             'name' => $r->name,
             'phone' => $r->no_hp,
@@ -498,12 +502,42 @@ class ProfileController extends Controller
             // $d['profile_gambar'] = json_encode(['url' => $filename, 'size' => $size]);
             $ins['picture'] = 'Image/Member/' . $filename;
         }
+        if ($r->kode_referral) {
+            $reff = RefferralPesertaModel::where('code', $r->kode_referral)->first();
+            if (!$reff) {
+                // return response()->json(
+                //     [
+                //         'status' => 0,
+                //         'msg' => 'Referral Tidak Ditemukan',
+                //         'data' => []
+                //     ],
+                //     400
+                // );
+                $simpanreff = 0;
+            }
+            if ($reff->user_aplicator == Auth::user()->id) {
+                $simpanreff = 0;
+            }
+            if ($simpanreff == 1) {
+                $rm = RefferralModel::updateOrCreate(
+                    [
+                        'user_id' => $reff->user_id,
+                    ],
+                    [
+                        'user_aplicator' => Auth::user()->id,
+                        'url' => $reff->url,
+                        'code' => $r->kode_referral,
+                    ]
+                );
+            }
+        }
         $u = UserProfileModel::updateOrCreate([
             'user_id' => Auth::user()->id,
         ], $ins);
 
         if ($u) {
             return response()->json([
+                'simpanreff' => $simpanreff,
                 'status' => 1,
                 'msg' => 'Data Tersimpan',
                 'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
@@ -511,6 +545,7 @@ class ProfileController extends Controller
         }
         return response()->json(
             [
+                'simpanreff' => $simpanreff,
                 'status' => 0,
                 'msg' => 'Data Tidak Tersimpan',
                 'data' => []

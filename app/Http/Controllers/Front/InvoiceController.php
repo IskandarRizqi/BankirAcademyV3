@@ -59,7 +59,10 @@ class InvoiceController extends Controller
 		$data['payment']['totalAkhir'] = $n;
 		// Cek referral Tersedia
 		$available = 0;
-		$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+		// $reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
+		$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])
+			->whereNull('class_id')
+			->first();
 		$additional_discount = [];
 		if ($reff) {
 			if ($reff->available == 1) {
@@ -79,6 +82,20 @@ class InvoiceController extends Controller
 					$additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
 					$additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
 					$additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
+
+					RefferralModel::updateOrCreate([
+						'user_aplicator' => $data['profile']['user_id'], // Pengguna Referral
+						'class_id' => $data['payment']->class_id
+					], [
+						'user_id' => $reff->user_id, // Pemilik Referral
+						'user_aplicator' => $reff->user_aplicator,
+						'code' => $reff->code,
+						'nominal_class' => $n,
+						'nominal_admin' => $additional_discount['komisi'],
+						'total' => $additional_discount['totalAkhir'],
+						'available' => 0,
+						'class_id' => $data['payment']->class_id,
+					]);
 				}
 			}
 		}

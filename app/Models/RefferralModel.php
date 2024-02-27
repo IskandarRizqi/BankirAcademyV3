@@ -17,6 +17,7 @@ class RefferralModel extends Model
         'nominal_admin',
         'total',
         'available',
+        'class_id',
     ];
     protected $appends = ['users', 'aplicator'];
     public function getUsersAttribute()

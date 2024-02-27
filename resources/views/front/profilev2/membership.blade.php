@@ -23,16 +23,34 @@
     }
 
     /* Small devices (portrait tablets and large phones, 600px and up) */
-    @media only screen and (min-width: 600px) {}
+    @media only screen and (min-width: 600px) {
+        .m-500 {
+            /* margin: 1670px; */
+            margin: 2300px;
+        }
+    }
 
     /* Medium devices (landscape tablets, 768px and up) */
-    @media only screen and (min-width: 768px) {}
+    @media only screen and (min-width: 768px) {
+        .m-500 {
+            /* margin: 1670px; */
+            margin: 3350px;
+        }
+    }
 
     /* Large devices (laptops/desktops, 992px and up) */
-    /* @media only screen and (min-width: 992px) {} */
+    @media only screen and (min-width: 992px) {
+        .m-500 {
+            margin: 371px;
+        }
+    }
 
     /* Extra large devices (large laptops and desktops, 1200px and up) */
-    /* @media only screen and (min-width: 1200px) {} */
+    @media only screen and (min-width: 1200px) {
+        .m-500 {
+            margin: 472px;
+        }
+    }
 </style>
 <section id="content">
     <img src="/GambarV2/frame.png" alt="" width="100%">

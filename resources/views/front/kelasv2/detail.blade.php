@@ -127,7 +127,7 @@
                     @if($class->pricing->promo)
                     <h3 class="ml-3">
                         <b>Rp.
-                            {{number_format($class->pricing->promo_price)}}</b>
+                            {{number_format($class->pricing->price-$class->pricing->promo_price)}}</b>
                     </h3>
                     <span class="ml-2" style="text-decoration: line-through; color:grey">Rp
                         {{number_format($class->pricing->price)}}</span>

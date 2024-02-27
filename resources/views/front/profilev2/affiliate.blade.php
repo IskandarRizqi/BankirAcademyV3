@@ -211,10 +211,17 @@
                 success:function(response)
                 {
                     let h = '';
-                    if (response.success == 1) {
-                        // 
-                    }
                     Swal.close()
+                    if (response.success == 1) {
+                        Swal.fire({
+                            title:'Refferal Tersimpan',
+                            icon:'success',
+                        });
+                    }
+                    Swal.fire({
+                        title:response.message,
+                        icon:'info',
+                    });
                 },
                 error: function(response) {
                     console.log(response);

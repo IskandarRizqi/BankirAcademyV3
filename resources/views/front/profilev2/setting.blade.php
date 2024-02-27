@@ -50,7 +50,8 @@
                 </div>
                 <div class="form-group">
                     <label for="">Kode Referral (Optional)</label>
-                    <input type="text" name="profile_kode_referral" id="profile_kode_referral" class="form-control">
+                    <input type="text" name="profile_kode_referral" id="profile_kode_referral" class="form-control"
+                        {{$reffdisabled?'readonly':''}}value="{{$reffdisabled?$reffdisabled->code:''}}">
                 </div>
                 <div class="form-group">
                     <label for="">Upload Foto</label>
@@ -112,18 +113,22 @@
             success:function(response)
             {
                 if (response.status == 1) {
+                    let msgreff = 'dan kode refferal tidak ditemukan';
+                    if (response.simpanreff == 1) {
+                        msgreff = '';
+                        $('#profile_kode_referral').attr('readonly',true)
+                    }
                     $('#profile_nama').val(response.data.name)
                     $('#profile_no_hp').val(response.data.phone)
                     $('#profile_tgl_lahir').val(response.data.tanggal_lahir)
                     $('#profile_jenis_kelamin').val(response.data.gender)
-                    // $('#profile_kode_referral').val(response.data.)
                     $('#imagebunder').attr('src',response.data.picture)
                     $('#updatedescription').html(response.data.description)
                     $('#updatename').html(response.data.name)
                     $('#profile_gambar').val('');
                     iziToast.success({
                         title: 'Berhasil',
-                        message: 'Input Berhasil',
+                        message: 'Input Berhasil '+msgreff,
                         position: 'topRight',
                     });
                     Swal.close()

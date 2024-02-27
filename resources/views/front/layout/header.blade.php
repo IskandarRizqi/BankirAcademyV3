@@ -236,7 +236,14 @@
     <div class="header-wrap-clone"></div>
 </header>
 <!-- #header end -->
-
+@if(Session::has('info'))
+<div class="alert alert-warning alert-dismissible fade show text-center m-0" role="alert">
+    {{Session::get('info')}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
 <!-- Modal -->
 <div class="modal fade" id="modelId" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog"
     aria-labelledby="modelTitleId" aria-hidden="true">

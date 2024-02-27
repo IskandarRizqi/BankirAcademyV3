@@ -93,8 +93,8 @@ class RefferalController extends Controller
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
 
-        $k = RefferralPesertaModel::where('code', $request->kode)->where('id', '!==', $request->id)->get();
-        $u = RefferralPesertaModel::where('url', $request->url)->where('id', '!==', $request->id)->get();
+        $k = RefferralPesertaModel::where('code', $request->kode)->where('user_id', '!=', Auth::user()->id)->get();
+        $u = RefferralPesertaModel::where('url', $request->url)->where('user_id', '!=', Auth::user()->id)->get();
         if (count($k) > 0) {
             if ($request->ajax()) {
                 return response()->json([
@@ -115,7 +115,7 @@ class RefferalController extends Controller
         }
 
         $m = RefferralPesertaModel::updateOrCreate([
-            'id' => $request->id
+            'user_id' => Auth::user()->id,
         ], [
             'user_id' => Auth::user()->id,
             'code' => $request->kode,
