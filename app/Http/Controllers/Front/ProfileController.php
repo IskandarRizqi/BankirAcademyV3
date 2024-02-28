@@ -176,7 +176,7 @@ class ProfileController extends Controller
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
-        $data['member'] = MembershipModel::orderBy('urutan', 'desc')
+        $data['member'] = MembershipModel::orderBy('urutan', 'asc')
             ->where('is_active', 1)
             ->limit(3)
             ->get();
