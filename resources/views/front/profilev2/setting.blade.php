@@ -51,7 +51,7 @@
                 <div class="form-group">
                     <label for="">Kode Referral (Optional)</label>
                     <input type="text" name="profile_kode_referral" id="profile_kode_referral" class="form-control"
-                        {{$reffdisabled?'readonly':''}}value="{{$reffdisabled?$reffdisabled->code:''}}">
+                        {{$reffdisabled?'readonly':''}} value="{{$reffdisabled?$reffdisabled->code:''}}">
                 </div>
                 <div class="form-group">
                     <label for="">Upload Foto</label>

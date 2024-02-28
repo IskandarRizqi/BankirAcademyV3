@@ -27,6 +27,10 @@ class  GlobalHelper
                 $amount += $value->cashback_nominal;
             }
         }
+        $r = RefferralModel::where('user_aplicator', $i)->where('available', 1)->sum('total');
+        if ($r) {
+            $amount += $r;
+        }
         $s['amount'] = $amount;
         return $s;
     }
@@ -61,7 +65,7 @@ class  GlobalHelper
     public static function countReferralDeAvailableById($i)
     {
         if ($i) {
-            $r = RefferralModel::where('user_id', $i)->where('available', 0)->sum('total');
+            $r = RefferralModel::where('user_id', $i)->where('available', 1)->sum('total');
             return $r;
         }
         return 0;

@@ -166,16 +166,16 @@ class ProfileController extends Controller
         $data['reff'] = RefferralPesertaModel::where('user_id', $auth_id)->first();
         $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
             ->join('users', 'users.id', 'referral.user_aplicator')
-            ->where('referral.user_id', $auth_id)
+            ->where('referral.user_aplicator', $auth_id)
             ->get();
         $data['reffdisabled'] = RefferralModel::select()
-            ->where('referral.user_id', $auth_id)
+            ->where('referral.user_aplicator', $auth_id)
             ->first();
-        $data['saldo'] = GlobalHelper::currentSaldoById($auth_id);
+        $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
+        $data['saldo'] = $data['cashback']['amount'];
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
-        $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
         $data['member'] = MembershipModel::orderBy('urutan', 'desc')
             ->where('is_active', 1)
             ->limit(3)

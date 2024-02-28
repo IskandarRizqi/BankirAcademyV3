@@ -89,6 +89,7 @@
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>Email</th>
+                                        <th>Status</th>
                                         {{-- <th>Aksi</th> --}}
                                     </tr>
                                 </thead>
@@ -97,6 +98,7 @@
                                     <tr>
                                         <td>{{$k +1}}</td>
                                         <td>{{$r->name}}</td>
+                                        <td>{{$r->users?$r->users->email:'Tidak ada'}}</td>
                                         <td>{{$r->available?'Terpakai':'Belum Terpakai'}}</td>
                                         {{-- <td>Aksi</td> --}}
                                     </tr>

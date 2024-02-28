@@ -121,28 +121,28 @@ class PembayaranController extends Controller
                             $total = $jd->komisi;
                         }
                     }
-                    if ($r->available == 0) {
-                        $mr = MasterRefferralModel::first();
-                        if ($mr) {
-                            $data['payment']['reff'] = $n * ($mr->potongan_harga / 100);
-                            $additional_discount['reff_nominal'] = $mr->nominal;
-                            $additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
-                            $additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
-                            $additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
-                            RefferralModel::updateOrCreate([
-                                'user_aplicator' => $v->user_id, // Pengguna Referral
-                                'class_id' => $v->class_id
-                            ], [
-                                'available' => 1,
-                                'user_id' => $r->user_id, // Pemilik Referral
-                                'user_aplicator' => $r->user_aplicator,
-                                'code' => $r->code,
-                                'nominal_class' => $n,
-                                'nominal_admin' => $additional_discount['komisi'],
-                                'total' => $additional_discount['totalAkhir'],
-                            ]);
-                        }
+                    // if ($r->available == 0) {
+                    $mr = MasterRefferralModel::first();
+                    if ($mr) {
+                        $data['payment']['reff'] = $n * ($mr->potongan_harga / 100);
+                        $additional_discount['reff_nominal'] = $mr->nominal;
+                        $additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
+                        $additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
+                        $additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
+                        RefferralModel::updateOrCreate([
+                            'user_aplicator' => $v->user_id, // Pengguna Referral
+                            'class_id' => $v->class_id
+                        ], [
+                            'available' => 1,
+                            'user_id' => $r->user_id, // Pemilik Referral
+                            'user_aplicator' => $r->user_aplicator,
+                            'code' => $r->code,
+                            'nominal_class' => $n,
+                            'nominal_admin' => $additional_discount['komisi'],
+                            'total' => $additional_discount['reff'],
+                        ]);
                     }
+                    // }
                 }
             }
             return Redirect::back()->with(['success' => $msg]);
