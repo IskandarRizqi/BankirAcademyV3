@@ -177,6 +177,138 @@
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="list-ppob" role="tabpanel" aria-labelledby="list-ppob-list">
+                    <img src="/upcoming_absen_post_test_Cara pakai_promo_copy_2.jpg" alt="">
+                    <div class="tabs tabs-alt tabs-justify clearfix ui-tabs ui-corner-all ui-widget ui-widget-content"
+                        id="tab-10">
+                        <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
+                            role="tablist">
+                            <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                aria-controls="tabs-1" aria-labelledby="ui-id-25" aria-selected="false"
+                                aria-expanded="false"><a href="#tabs-1" role="presentation" tabindex="-1"
+                                    class="ui-tabs-anchor" id="ui-id-25">Pascabayar</a></li>
+                            <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                aria-controls="tabs-2" aria-labelledby="ui-id-26" aria-selected="false"
+                                aria-expanded="false"><a href="#tabs-2" role="presentation" tabindex="-1"
+                                    class="ui-tabs-anchor" id="ui-id-26">Prabayar</a></li>
+                        </ul>
+                        <div class="tab-container">
+                            <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                id="tabs-1" aria-labelledby="ui-id-25" role="tabpanel" aria-hidden="true"
+                                style="display: none;">
+                                <div id="intro-onepages-container" class="row col-mb-50 mb-0">
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/pascabayar/ico_pln.png" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>PLN</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/pascabayar/ico_telkom.png" alt="Designer">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>Telkom</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/pascabayar/ico_pdam.png" alt="Parallax">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>PDAM</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/pascabayar/ico_pbb.png" alt="Tourism">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>PBB</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/pascabayar/ico_bpjs.png" alt="Developer">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>BPJS</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content"
+                                id="tabs-2" aria-labelledby="ui-id-26" role="tabpanel" aria-hidden="true"
+                                style="display: none;">
+                                <div id="intro-onepages-container" class="row col-mb-50 mb-0">
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/pascabayar/ico_pln.png" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>PLN</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="grid-intro-item col-lg-1-5 col-md-4 col-sm-6 col-12">
+                                        <div class="portfolio-item">
+                                            <a href="#" target="_blank">
+                                                <div class="card shadow-lg" style="border-radius: 20px;">
+                                                    <div class="card-body">
+                                                        <img src="/GambarV2/prabayar/ico_pulsa.png" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="portfolio-desc center pb-0">
+                                                    <h3>Pulsa</h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="list-sdank" role="tabpanel" aria-labelledby="list-sdank-list">
+                    <img src="/upcoming_absen_post_test_Cara pakai_promo_copy_2.jpg" alt="">
+                </div>
             </div>
         </div>
     </div>
