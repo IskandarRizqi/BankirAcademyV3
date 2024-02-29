@@ -184,6 +184,13 @@ class ProfileController extends Controller
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
         $lokerid = []; // id loker yang pernah di apply
         foreach ($data['lamaran'] as $key => $value) {
+            $value->tanggal_date = '';
+            if ($value->lamaran) {
+                if ($value->lamaran->tanggal_akhir) {
+                    $d = Carbon::parse($value->lamaran->tanggal_akhir);
+                    $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
+                }
+            }
             if (!in_array($value->loker_id, $lokerid)) {
                 array_push($lokerid, $value->loker_id);
             }

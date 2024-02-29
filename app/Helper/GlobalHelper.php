@@ -14,6 +14,25 @@ use Illuminate\Support\Facades\Auth;
 
 class  GlobalHelper
 {
+    public static function namabulan($n)
+    {
+        $bulan = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+        return $bulan[$n];
+    }
     public static function currentSaldoKreditById($i)
     {
         $s = [];
