@@ -34,6 +34,7 @@ use App\Models\RefferralWithdrawModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\Session;
 
 class ProfileController extends Controller
 {
@@ -180,6 +181,7 @@ class ProfileController extends Controller
             ->where('is_active', 1)
             ->limit(3)
             ->get();
+        $data['ismember'] = GlobalHelper::getaksesmembership();
         $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
         $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
         $lokerid = []; // id loker yang pernah di apply

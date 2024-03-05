@@ -48,11 +48,18 @@
     /* Extra large devices (large laptops and desktops, 1200px and up) */
     @media only screen and (min-width: 1200px) {
         .m-500 {
-            margin: 472px;
+            margin: 550px;
         }
     }
 </style>
 <section id="content">
+    @if($ismember)
+    <div class="col-lg-12">
+        <img src="{{asset('front/images/A_MEMBER.jpg')}}" alt="">
+        <div class="caption text-center" style="font-size: 2vw"><b>Masa Aktif :
+                {{\Carbon\Carbon::parse($user->profile->masa_aktif_membership)->format('d-m-Y')}}</b></div>
+    </div>
+    @else
     <img src="/GambarV2/frame.png" alt="" width="100%">
     <div class="bungkusframe">
         <div class="row text-center top-50" style="
@@ -79,7 +86,7 @@
     </div>
     <div class="dividers m-500">
     </div>
-
+    @endif
     <div class="modal" tabindex="-1" id="modalmember">
         <div class="modal-dialog">
             <div class="modal-content">

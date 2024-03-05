@@ -117,7 +117,7 @@ class  GlobalHelper
                 $next = 1;
             }
         }
-        return 1;
+        // return 1;
         return $next;
     }
     public static function getlimitlokermember()

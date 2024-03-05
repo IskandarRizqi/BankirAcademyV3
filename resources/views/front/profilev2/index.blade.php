@@ -103,36 +103,38 @@
     <div class="tabs tabs-bb clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-9">
         <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header"
             role="tablist" style="flex-wrap: nowrap; overflow-x: auto; width: 100%; overflow-y: hidden;">
-            <li role="tab" tabindex="-1"
-                class="ui-tabs-tab ui-corner-top ui-state-default ui-tabs-active ui-state-active ui-tab"
-                aria-controls="tabs-33" aria-labelledby="ui-id-17" aria-selected="true" aria-expanded="true"><a
-                    href="#tabs-33" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-17">
+            <li role="tab" id="li-tabs-33" tabindex="-1"
+                class="ui-tabs-tab ui-corner-top ui-state-default ui-state-active ui-tab" aria-controls="tabs-33"
+                aria-labelledby="ui-id-17" aria-selected="true" aria-expanded="true"><a href="#tabs-33"
+                    role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-17">
                     Billing Kelas</a></li>
-            <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+            <li id="li-tabs-34" role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
                 aria-controls="tabs-34" aria-labelledby="ui-id-18" aria-selected="false" aria-expanded="false"><a
                     href="#tabs-34" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-18">Kelas
                     Anda</a></li>
-            <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+            <li id="li-tabs-35" role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
                 aria-controls="tabs-35" aria-labelledby="ui-id-19" aria-selected="false" aria-expanded="false"><a
                     href="#tabs-35" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-19">Dompet</a>
             </li>
-            <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"
-                aria-controls="tabs-36" aria-labelledby="ui-id-20" aria-selected="false" aria-expanded="false"><a
-                    href="#tabs-36" role="presentation" tabindex="-1" class="ui-tabs-anchor"
+            <li id="li-tabs-36" class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab"
+                tabindex="-1" aria-controls="tabs-36" aria-labelledby="ui-id-20" aria-selected="false"
+                aria-expanded="false"><a href="#tabs-36" role="presentation" tabindex="-1" class="ui-tabs-anchor"
                     id="ui-id-20">Membership</a></li>
-            <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"
-                aria-controls="tabs-37" aria-labelledby="ui-id-21" aria-selected="false" aria-expanded="false"><a
-                    href="#tabs-37" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-21">Buat CV</a>
+            <li id="li-tabs-37" class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab"
+                tabindex="-1" aria-controls="tabs-37" aria-labelledby="ui-id-21" aria-selected="false"
+                aria-expanded="false"><a href="#tabs-37" role="presentation" tabindex="-1" class="ui-tabs-anchor"
+                    id="ui-id-21">Buat CV</a>
             </li>
-            <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"
-                aria-controls="tabs-38" aria-labelledby="ui-id-22" aria-selected="false" aria-expanded="false"><a
-                    href="#tabs-38" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-22"
-                    onclick="triggerresize()">Lowongan
+            <li id="li-tabs-38" class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab"
+                tabindex="-1" aria-controls="tabs-38" aria-labelledby="ui-id-22" aria-selected="false"
+                aria-expanded="false"><a href="#tabs-38" role="presentation" tabindex="-1" class="ui-tabs-anchor"
+                    id="ui-id-22" onclick="triggerresize()">Lowongan
                     Kerja</a>
             </li>
-            <li class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab" tabindex="-1"
-                aria-controls="tabs-39" aria-labelledby="ui-id-23" aria-selected="false" aria-expanded="false"><a
-                    href="#tabs-39" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-23">Setting</a>
+            <li id="li-tabs-39" class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab"
+                tabindex="-1" aria-controls="tabs-39" aria-labelledby="ui-id-23" aria-selected="false"
+                aria-expanded="false"><a href="#tabs-39" role="presentation" tabindex="-1" class="ui-tabs-anchor"
+                    id="ui-id-23">Setting</a>
             </li>
         </ul>
 
@@ -486,6 +488,49 @@
     $(document).ready(function () {
         loadbillingkelas('semua-billing')
         getkelasanda('semua-ka-billing')
+        
+        let ls = localStorage.getItem("menu");
+        $('#li-tabs-33').click(function () {
+            localStorage.setItem("menu", "li-tabs-33");
+            clearmenu();
+            activemenu();
+        })
+        $('#li-tabs-34').click(function () {
+            localStorage.setItem("menu", "li-tabs-34");
+            clearmenu();
+            activemenu();
+        })
+        $('#li-tabs-35').click(function () {
+            localStorage.setItem("menu", "li-tabs-35");
+            clearmenu();
+            activemenu();
+        })
+        $('#li-tabs-36').click(function () {
+            localStorage.setItem("menu", "li-tabs-36");
+            clearmenu();
+            activemenu();
+        })
+        $('#li-tabs-37').click(function () {
+            localStorage.setItem("menu", "li-tabs-37");
+            clearmenu();
+            activemenu();
+        })
+        $('#li-tabs-38').click(function () {
+            localStorage.setItem("menu", "li-tabs-38");
+            clearmenu();
+            activemenu();
+        })
+        $('#li-tabs-39').click(function () {
+            localStorage.setItem("menu", "li-tabs-39");
+            clearmenu();
+            activemenu();
+        })
+
+        // Set menu auto
+        setTimeout(() => {
+            clearmenu();
+            activemenu();
+        }, 1500);
 
 $('#kembali').click(function() {
     $('#pilihGambar').removeAttr('hidden');
@@ -634,5 +679,64 @@ $('#corporatePilih').click(function() {
             }
         });
     })
+    function clearmenu() {
+        $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-33').attr('aria-selected',true);
+        $('#li-tabs-33').attr('aria-expanded',true);
+        $('#tabs-33').attr('aria-hidden',true);
+        $('#tabs-33').css('display','none');
+
+        $('#li-tabs-34').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-34').attr('aria-selected',true);
+        $('#li-tabs-34').attr('aria-expanded',true);
+        $('#tabs-34').attr('aria-hidden',true);
+        $('#tabs-34').css('display','none');
+
+        $('#li-tabs-35').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-35').attr('aria-selected',true);
+        $('#li-tabs-35').attr('aria-expanded',true);
+        $('#tabs-35').attr('aria-hidden',true);
+        $('#tabs-35').css('display','none');
+
+        $('#li-tabs-36').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-36').attr('aria-selected',true);
+        $('#li-tabs-36').attr('aria-expanded',true);
+        $('#tabs-36').attr('aria-hidden',true);
+        $('#tabs-36').css('display','none');
+
+        $('#li-tabs-37').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-37').attr('aria-selected',true);
+        $('#li-tabs-37').attr('aria-expanded',true);
+        $('#tabs-37').attr('aria-hidden',true);
+        $('#tabs-37').css('display','none');
+
+        $('#li-tabs-38').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-38').attr('aria-selected',true);
+        $('#li-tabs-38').attr('aria-expanded',true);
+        $('#tabs-38').attr('aria-hidden',true);
+        $('#tabs-38').css('display','none');
+
+        $('#li-tabs-39').removeClass('ui-state-active ui-tabs-active');
+        $('#li-tabs-39').attr('aria-selected',true);
+        $('#li-tabs-39').attr('aria-expanded',true);
+        $('#tabs-39').attr('aria-hidden',true);
+        $('#tabs-39').css('display','none');
+    }
+    function activemenu() {
+        let ls = localStorage.getItem("menu");
+        if (ls) {
+                $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active');
+                $('#li-tabs-33').removeAttr('aria-selected',true);
+                $('#li-tabs-33').removeAttr('aria-expanded',true);
+
+                let a = $('#'+ls);
+                let s = ls.split('-');
+                a.addClass('ui-state-active ui-tabs-active');
+                a.attr('aria-selected',true);
+                a.attr('aria-expanded',true);
+                $('#tabs-'+s[2]).attr('aria-hidden',false);
+                $('#tabs-'+s[2]).css('display','block');
+            }
+    }
 </script>
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
