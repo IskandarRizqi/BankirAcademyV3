@@ -31,6 +31,7 @@ class LokerModel extends Model
         'kecamatan',
         'kelurahan',
         'perusahaan_id',
+        'perusahaan_user',
     ];
 
     protected $hidden = [
@@ -43,6 +44,8 @@ class LokerModel extends Model
         'kecamatan_name',
         'kelurahan_name',
         'perusahaan',
+        'perusahaan_users',
+        'tanggal_custom',
     ];
 
     public function getKelurahanNameAttribute()
@@ -92,11 +95,34 @@ class LokerModel extends Model
         }
         return $a;
     }
+    public function getTanggalCustomAttribute()
+    {
+        $a = null;
+        $b = null;
+        if (array_key_exists('tanggal_awal', $this->attributes)) {
+            $a = $this->attributes['tanggal_awal'];
+        }
+        if (array_key_exists('tanggal_akhir', $this->attributes)) {
+            $b = $this->attributes['tanggal_akhir'];
+        }
+        if ($a == $b) {
+            return $a;
+        }
+        return $a . ' - ' . $b;
+    }
     public function getPerusahaanAttribute()
     {
         $a = null;
         if (array_key_exists('perusahaan_id', $this->attributes)) {
             $a = PerusahaanModel::select()->where('id', $this->attributes['perusahaan_id'])->first();
+        }
+        return $a;
+    }
+    public function getPerusahaanUsersAttribute()
+    {
+        $a = null;
+        if (array_key_exists('perusahaan_user', $this->attributes)) {
+            $a = CorporateModel::select()->where('id', $this->attributes['perusahaan_user'])->first();
         }
         return $a;
     }

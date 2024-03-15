@@ -53,7 +53,7 @@
     }
 </style>
 <section id="content">
-    @if($ismember)
+    @if(!$ismember)
     <div class="col-lg-12">
         <img src="{{asset('front/images/A_MEMBER.jpg')}}" alt="">
         <div class="caption text-center" style="font-size: 2vw"><b>Masa Aktif :
@@ -131,7 +131,7 @@
         let p = '<h3>Harga Member : <strong>'+val.harga.toLocaleString()+'</strong></h3>';
         p+='<span>No. Rekening : 8035559091</span><br>';
         p+='<span>Atas Nama : PT. Bankir Academy Indonesia</span>';
-        p+='<span id="btncetakinvoice" class="btn btn-info btn-block" onclick="cetakinvoice()">Invoice</span>';
+        p+='<a href="/classes/cetakinvoicepending/'+val.id+'" target="_blank"> <span id="btncetakinvoice" class="btn btn-info btn-block">Invoice</span></a>';
         $('#detailmember').html(p);
         $('#modalmember').modal('show');
     }

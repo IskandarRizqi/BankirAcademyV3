@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\MembershipModel;
+use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Terbilang;
+use PDF;
 
 class MembershipController extends Controller
 {
@@ -19,6 +23,18 @@ class MembershipController extends Controller
     {
         $data['data'] = MembershipModel::get();
         return view('backend.member.member', $data);
+    }
+
+    public function cetakinvoicepending($id, Request $request)
+    {
+        $data['data'] = MembershipModel::where('id', $id)->first();
+        if (!$data['data']) {
+            return Redirect::back()->with('info', 'Data Tidak Ditemukan');
+        }
+        $data['profile'] = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        $data['terbilang'] = Terbilang::make($data['data']->harga, '', 'Rp. ');
+        $pdf = PDF::loadView('invoice/membershippending', $data);
+        return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
     }
 
     /**

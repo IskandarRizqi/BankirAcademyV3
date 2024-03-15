@@ -120,11 +120,13 @@
                 tabindex="-1" aria-controls="tabs-36" aria-labelledby="ui-id-20" aria-selected="false"
                 aria-expanded="false"><a href="#tabs-36" role="presentation" tabindex="-1" class="ui-tabs-anchor"
                     id="ui-id-20">Membership</a></li>
+            @if(!$isperusahaan)
             <li id="li-tabs-37" class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab"
                 tabindex="-1" aria-controls="tabs-37" aria-labelledby="ui-id-21" aria-selected="false"
                 aria-expanded="false"><a href="#tabs-37" role="presentation" tabindex="-1" class="ui-tabs-anchor"
                     id="ui-id-21">Buat CV</a>
             </li>
+            @endif
             <li id="li-tabs-38" class="hidden-phone ui-tabs-tab ui-corner-top ui-state-default ui-tab" role="tab"
                 tabindex="-1" aria-controls="tabs-38" aria-labelledby="ui-id-22" aria-selected="false"
                 aria-expanded="false"><a href="#tabs-38" role="presentation" tabindex="-1" class="ui-tabs-anchor"
@@ -170,7 +172,11 @@
             </div>
             <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-38"
                 aria-labelledby="ui-id-22" role="tabpanel" aria-hidden="true" style="display: none;">
+                @if(!$isperusahaan)
                 @include('front.profilev2.lowongankerja')
+                @else
+                @include('front.profilev2.lowongankerjaperusahaan')
+                @endif
             </div>
             <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-39"
                 aria-labelledby="ui-id-23" role="tabpanel" aria-hidden="true" style="display: none;">

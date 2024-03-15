@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\BannerslideController;
 use App\Http\Controllers\Backend\CorporateController;
 use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
+use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
@@ -123,6 +124,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/classes/multiinvoice', [App\Http\Controllers\Front\InvoiceController::class, 'multiInvoice']);
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
     Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
+    Route::get('/classes/cetakinvoicepending/{id}', [App\Http\Controllers\Backend\MembershipController::class, 'cetakinvoicepending']);
     // 
     Route::post("/instructor/classes/store", [App\Http\Controllers\Backend\InstructorController::class, "classesStore"]);
     Route::get("/instructor/classes/create/{id}", [App\Http\Controllers\Backend\InstructorController::class, "classesCreate"]);
@@ -153,6 +155,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/rekeningprofile', [App\Http\Controllers\Front\ProfileController::class, 'rekeningprofile']);
     Route::get('/getbillingkelas/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getbillingkelas']);
     Route::get('/getkelasanda/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getkelasanda']);
+
+    // Loker Front
+    Route::resource('/loker-front', LokerController::class);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

@@ -158,6 +158,7 @@ class ProfileController extends Controller
     {
         $auth_id = Auth::user()->id;
         $data['user'] = User::where('id', $auth_id)->first();
+        $data['isperusahaan'] = GlobalHelper::isperusahaan();
         $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
             ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
             ->where('user_profile.user_id', $auth_id)
@@ -177,33 +178,61 @@ class ProfileController extends Controller
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
-        $data['member'] = MembershipModel::orderBy('urutan', 'asc')
-            ->where('is_active', 1)
-            ->limit(3)
-            ->get();
-        $data['ismember'] = GlobalHelper::getaksesmembership();
-        $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
-        $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
-        $lokerid = []; // id loker yang pernah di apply
-        foreach ($data['lamaran'] as $key => $value) {
-            $value->tanggal_date = '';
-            if ($value->lamaran) {
-                if ($value->lamaran->tanggal_akhir) {
-                    $d = Carbon::parse($value->lamaran->tanggal_akhir);
-                    $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
+        $data['datalamaran'] = [];
+        $data['lamaran'] = [];
+        $data['loker'] = [];
+        $data['lokerskill'] = [];
+        $data['lokertype'] = [];
+        if ($data['isperusahaan']) {
+            $data['member'] = MembershipModel::orderBy('urutan', 'asc')
+                ->where('is_active', 1)
+                ->where('urutan', '>=', 4)
+                ->limit(3)
+                ->get();
+            $data['loker'] = LokerModel::where('user_id', Auth::user()->id)->get();
+            foreach ($data['loker'] as $key => $v) {
+                foreach (json_decode($v->type) as $key => $tipes) {
+                    if (!in_array($tipes, $data['lokertype'])) {
+                        array_push($data['lokertype'], $tipes);
+                    }
+                }
+                foreach (json_decode($v->skill) as $key => $skills) {
+                    if (!in_array($skills, $data['lokerskill'])) {
+                        array_push($data['lokerskill'], $skills);
+                    }
                 }
             }
-            if (!in_array($value->loker_id, $lokerid)) {
-                array_push($lokerid, $value->loker_id);
+        } else {
+            $data['member'] = MembershipModel::orderBy('urutan', 'asc')
+                ->where('is_active', 1)
+                ->where('urutan', '<', 4)
+                ->limit(3)
+                ->get();
+            $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
+            $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
+            $lokerid = []; // id loker yang pernah di apply
+            foreach ($data['lamaran'] as $key => $value) {
+                $value->tanggal_date = '';
+                if ($value->lamaran) {
+                    if ($value->lamaran->tanggal_akhir) {
+                        $d = Carbon::parse($value->lamaran->tanggal_akhir);
+                        $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
+                    }
+                }
+                if (!in_array($value->loker_id, $lokerid)) {
+                    array_push($lokerid, $value->loker_id);
+                }
             }
+            $limitloker = 10;
+            $data['loker'] = LokerModel::select()
+                ->whereDate('tanggal_awal', '<=', Carbon::now())
+                ->whereDate('tanggal_akhir', '>=', Carbon::now())
+                ->whereNotIn('id', $lokerid)
+                ->limit($limitloker)
+                ->get();
         }
-        $limitloker = 10;
-        $data['loker'] = LokerModel::select()
-            ->whereDate('tanggal_awal', '<=', Carbon::now())
-            ->whereDate('tanggal_akhir', '>=', Carbon::now())
-            ->whereNotIn('id', $lokerid)
-            ->limit($limitloker)
-            ->get();
+        $data['ismember'] = GlobalHelper::getaksesmembership();
+        // $data['ismember'] = false;
         // return $data;
         return view('front.profilev2.index', $data);
     }

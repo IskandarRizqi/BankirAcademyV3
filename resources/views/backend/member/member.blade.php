@@ -72,6 +72,9 @@
                                     <option value="1" {{old('urutan')==1 ? 'selected' :''}}>1</option>
                                     <option value="2" {{old('urutan')==2 ? 'selected' :''}}>2</option>
                                     <option value="3" {{old('urutan')==3 ? 'selected' :''}}>3</option>
+                                    <option value="4" {{old('urutan')==4 ? 'selected' :''}}>4</option>
+                                    <option value="5" {{old('urutan')==5 ? 'selected' :''}}>5</option>
+                                    <option value="6" {{old('urutan')==6 ? 'selected' :''}}>6</option>
                                 </select>
                                 @error('urutan')
                                 <span class="text-danger" role="alert">

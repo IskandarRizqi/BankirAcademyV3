@@ -42,7 +42,7 @@ class  GlobalHelper
             ->where('class_participant.user_id', $i)
             ->get();
         foreach ($cashback as $key => $value) {
-            if ($value->gratis == 0) {
+            if ($value->gratis == 1) {
                 $amount += $value->cashback_nominal;
             }
         }
@@ -119,6 +119,14 @@ class  GlobalHelper
         }
         // return 1;
         return $next;
+    }
+    public static function isperusahaan()
+    {
+        $p = true;
+        if (Auth::user()->corporate == null || Auth::user()->corporate == 'perorangan') {
+            $p = false;
+        }
+        return $p;
     }
     public static function getlimitlokermember()
     {
