@@ -53,7 +53,7 @@
     }
 </style>
 <section id="content">
-    @if(!$ismember)
+    @if($ismember)
     <div class="col-lg-12">
         <img src="{{asset('front/images/A_MEMBER.jpg')}}" alt="">
         <div class="caption text-center" style="font-size: 2vw"><b>Masa Aktif :
