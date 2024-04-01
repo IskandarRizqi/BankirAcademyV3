@@ -22,7 +22,8 @@ class AksesByIpAddress
         }
         return response()->json([
             'status' => false,
-            'message' => 'Akses dibatasi, harap hubungi admin'
+            'message' => 'Akses dibatasi, harap hubungi admin',
+            'ipaddress' => GlobalHelper::checkipaddress(),
         ]);
     }
 }

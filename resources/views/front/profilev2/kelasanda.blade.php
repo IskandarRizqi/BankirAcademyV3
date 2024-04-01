@@ -422,7 +422,7 @@
                         if (eev.type == 3) {
                             d +='    <td><a href="'+eev.url+'" target="_blank">Link</a></td>';
                         }else{
-                            d +='    <td><a href="getBerkas?rf='+eev.url+'" target="_blank">Download</a></td>';
+                            d +='    <td><a href="/getBerkas?rf='+eev.url+'" target="_blank">Download</a></td>';
                         }
                         d +='</tr>';
                         no++;

@@ -495,6 +495,7 @@
             $('#tbdClassContent').html('');
             $('.hdnClassesId').val(c.id);
             if (c.content_list) {
+                console.log(c.content_list);
                 c.content_list.forEach(e => {
                     var sd = '';
                     var sg = '';
@@ -530,7 +531,7 @@
                         e.title + '">' +
                         '	</td>' +
                         '	<td>' +
-                        '		<small>Change File Only If Needed</small>' +
+                        '		<small>Change File Only If Needed</small><a href="getBerkas?rf=/' + e.url + '" target="_blank"> Download</a>';
                         '		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc" ' +
                         dd + ' value="' + e.url + '">' +
                         '		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" ' +
