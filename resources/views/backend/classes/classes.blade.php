@@ -38,6 +38,8 @@
                         <tr>
                             <th>Status</th>
                             <th>Date</th>
+                            <th>Type</th>
+                            <th>Jam</th>
                             <th>Class</th>
                             <th>Category</th>
                             <th>Instructor</th>
@@ -70,8 +72,23 @@
                                 Akan Datang
                                 @endif
                             </td>
+                            <td>
+                                @if($v->kategori == 0)
+                                <span class="badge badge-primary">Online</span>
+                                @else
+                                <span class="badge badge-info">Offline</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($v->jam_acara != null)
+                                {{$v->jam_acara}}
+                                @else
+                                <span class="badge badge-danger">Belum di setting</span>
+                                @endif
+                            </td>
                             <td class="text-truncate" style="max-width: 200px" title="{{ $v->title }}">
-                                {{ $v->title }}</td>
+                                {{ $v->title }}
+                            </td>
                             <td>{{ $v->category }}</td>
                             <td>
                                 @foreach ($v->instructor_list as $i)
@@ -290,32 +307,30 @@
 @section('custom-js')
 <script>
     createDataTable('#tblClasses');
-        createDataTable('#tblListPeserta');
-
-
-
+    createDataTable('#tblListPeserta');
+    $(document).ready(function() {
         $('#tipe').on('input change', function() {
             var v = $('#nominal').val();
-            if ($('#tipe').val()==0) {
+            if ($('#tipe').val() == 0) {
                 var n = Number(v).toLocaleString('id-ID', {
                     style: 'currency',
                     currency: 'IDR'
                 });
                 $('#labelNominal').text(n);
-            }else{
-                $('#labelNominal').text(v+' %');
+            } else {
+                $('#labelNominal').text(v + ' %');
             }
         });
         $('#nominal').on('input change', function() {
             var v = $(this).val();
-            if ($('#tipe').val()==0) {
+            if ($('#tipe').val() == 0) {
                 var n = Number(v).toLocaleString('id-ID', {
                     style: 'currency',
                     currency: 'IDR'
                 });
                 $('#labelNominal').text(n);
-            }else{
-                $('#labelNominal').text(v+' %');
+            } else {
+                $('#labelNominal').text(v + ' %');
             }
         });
         $('#numClassPrice').on('input change', function() {
@@ -352,248 +367,249 @@
             if ($(this).attr('id') == 'numClassPromoPrctg') {
                 // rs = s;
             }
-            if ($(this).attr('id') == 'numClassCashbackPrctg') {
-            }
-            $('#nomClassPromo').html('Rp. '+rp.toLocaleString());
-            $('#nomClassCashback').html('Rp. '+rc.toLocaleString());
+            if ($(this).attr('id') == 'numClassCashbackPrctg') {}
+            $('#nomClassPromo').html('Rp. ' + rp.toLocaleString());
+            $('#nomClassCashback').html('Rp. ' + rc.toLocaleString());
 
             $('#numClassPromo').val(rp);
             $('#numClassCashback').val(rc);
             // $('#numClassPromoPrctg').val(rs);
         });
+    })
 
-        function biayasertifikat(id,tipe,nominal) {
-            $('#id_kelas').val(id);
-            $('#tipe').val(tipe);
-            $('#nominal').val(nominal);
-            $('#nominal').change();
-        }
+    function biayasertifikat(id, tipe, nominal) {
+        $('#id_kelas').val(id);
+        $('#tipe').val(tipe);
+        $('#nominal').val(nominal);
+        $('#nominal').change();
+    }
 
-        function openPeserta(data) {
-            let = html = '';
-            $('#listPeserta').html(html);
-            if (data.length > 0) {
-                data.forEach(el => {
-                    let status = 'Belum Lunas';
-                    if (el.status) {
-                        status = 'Lunas';
-                    }
-                    let price = Number(el.price_final).toLocaleString('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR'
-                    });
-                    html += '<tr>';
-                    html += '<td>' + status + '</td>';
-                    html += '<td>' + el.name + '</td>';
-                    html += '<td>' + el.phone_region + el.phone + '</td>';
-                    html += '<td>' + el.instansi + '</td>';
-                    html += '<td>' + price + '</td>';
-                    html += '</tr>';
-                })
-                $('#listPeserta').html(html);
-            }
-        }
-
-        function setupcoming(data) {
-            console.log(data);
-            $('#upcoming_id').val(data.id);
-            $('#upcoming'+data.custom_jadwal).attr('checked',true);
-        }
-
-        function openClasses(id, s) {
-            swal({
-                title: 'Are you sure?',
-                text: "You want change status class?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Confirm',
-                padding: '2em'
-            }).then(function(result) {
-                if (result.value) {
-                    $('#formacclasses').attr('action', '/admin/classes/open/' + id + '/' + s);
-                    $('#formacclasses').submit();
-                } else {
-                    $('#formacclasses').attr('action', '#');
+    function openPeserta(data) {
+        let = html = '';
+        $('#listPeserta').html(html);
+        if (data.length > 0) {
+            data.forEach(el => {
+                let status = 'Belum Lunas';
+                if (el.status) {
+                    status = 'Lunas';
                 }
-            })
-        }
-        function activedClasses(id, s) {
-            swal({
-                title: 'Are you sure?',
-                text: "You want change status class?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Confirm',
-                padding: '2em'
-            }).then(function(result) {
-                if (result.value) {
-                    $('#formacclasses').attr('action', '/admin/classes/activated/' + id + '/' + s);
-                    $('#formacclasses').submit();
-                } else {
-                    $('#formacclasses').attr('action', '#');
-                }
-            })
-        }
-
-        function deleteClasses(id) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Delete',
-                padding: '2em'
-            }).then(function(result) {
-                if (result.value) {
-                    $('#formdelclasses').attr('action', '/admin/classes/' + id);
-                    $('#formdelclasses').submit();
-                } else {
-                    $('#formdelclasses').attr('action', '#');
-                }
-            })
-        }
-
-        function classVideo(c) {
-            $('.hdnClassesId').val(c.id);
-            $('.activeClassTitle').text(c.title);
-            if (c.videos) {
-                $('#video_preview').attr('src','/video/kelas/'+`{{Auth::user()->email}}`+'/'+c.videos.image);
-            }
-            openmodal('#classVideoModal');
-        }
-        function classPricing(c) {
-            console.log('price',c);
-            $('#numClassPrice').val(0);
-            $('#numClassPromo').val(0);
-            $('#bolClassPromo').prop('checked', false);
-            $('#bolClassGratis').prop('checked', false);
-            $('#datPromoDateStart').val('')
-            $('#datPromoDateEnd').val('')
-            if (c.pricing) {
-                $('#numClassPrice').val(c.pricing.price).trigger('change').trigger('input');
-                $('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
-                if (c.pricing.promo == 1) {
-                    $('#bolClassPromo').prop('checked', true);
-                }
-                if (c.pricing.gratis == 1) {
-                    $('#bolClassGratis').prop('checked', true);
-                }
-                $('#numClassPromoPrctg').val((c.pricing.promo_price/c.pricing.price)*100)
-
-                $('#datPromoDateStart').val(c.pricing.promo_start)
-                $('#datPromoDateEnd').val(c.pricing.promo_end)
-
-                $('#numClassCashback').val(c.pricing.cashback_nominal)
-                $('#numClassCashbackPrctg').val(c.pricing.cashback_persen)
-            }
-            $('.hdnClassesId').val(c.id);
-            $('.activeClassTitle').text(c.title);
-            openmodal('#classPricingModal');
-        }
-
-        function classContent(c) {
-            $('#tbdClassContent').html('');
-            $('.hdnClassesId').val(c.id);
-            if (c.content_list) {
-                console.log(c.content_list);
-                c.content_list.forEach(e => {
-                    var sd = '';
-                    var sg = '';
-                    var sv = '';
-                    var dd = 'style="display:none;"';
-                    var dg = 'style="display:none;"';
-                    var dv = 'style="display:none;"';
-
-                    if (e.type == 1) {
-                        sd = 'selected';
-                        dd = '';
-                    } else if (e.type == 2) {
-                        sg = 'selected';
-                        dg = '';
-                    } else if (e.type == 3) {
-                        sv = 'selected';
-                        dv = '';
-                    }
-
-                    $('#tbdClassContent').append('' +
-                        '<tr>' +
-                        '	<td>' +
-                        '		<input type="hidden" name="txtClassContentId[]" class="form-control txtClassContentId" value="' +
-                        e.id + '">' +
-                        '		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">' +
-                        '			<option value="1" ' + sd + '>Dokumen</option>' +
-                        '			<option value="2" ' + sg + '>Gambar</option>' +
-                        '			<option value="3" ' + sv + '>Video</option>' +
-                        '		</select>' +
-                        '	</td>' +
-                        '	<td>' +
-                        '		<input type="text" name="txtClassContentTitle[]" class="form-control txtClassContentTitle" value="' +
-                        e.title + '">' +
-                        '	</td>' +
-                        '	<td>' +
-                        '		<small>Change File Only If Needed</small><a href="getBerkas?rf=/' + e.url + '" target="_blank"> Download</a>';
-                        '		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc" ' +
-                        dd + ' value="' + e.url + '">' +
-                        '		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" ' +
-                        dg + ' value="' + e.url + '">' +
-                        '		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" ' +
-                        dv + ' value="' + e.url + '">' +
-                        '	</td>' +
-                        '	<td>' +
-                        '		<button class="btn btn-danger" onclick="delClassContentRow($(this),' + e.id +
-                        ')"><i class="bx bx-trash"></i></button>' +
-                        '	</td>' +
-                        '</tr>' +
-                        '');
+                let price = Number(el.price_final).toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
                 });
-            }
-            openmodal('#classContentModal');
+                html += '<tr>';
+                html += '<td>' + status + '</td>';
+                html += '<td>' + el.name + '</td>';
+                html += '<td>' + el.phone_region + el.phone + '</td>';
+                html += '<td>' + el.instansi + '</td>';
+                html += '<td>' + price + '</td>';
+                html += '</tr>';
+            })
+            $('#listPeserta').html(html);
         }
+    }
 
-        function addNewClassContentRow() {
-            $('#tbdClassContent').append('' +
-                '<tr>' +
-                '	<td>' +
-                '		<input type="hidden" name="txtClassContentId[]" class="form-control txtClassContentId" value="0">' +
-                '		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">' +
-                '			<option value="1">Dokumen</option>' +
-                '			<option value="2">Gambar</option>' +
-                '			<option value="3">Video</option>' +
-                '		</select>' +
-                '	</td>' +
-                '	<td>' +
-                '		<input type="text" name="txtClassContentTitle[]" class="form-control txtClassContentTitle">' +
-                '	</td>' +
-                '	<td>' +
-                '		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc">' +
-                '		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" style="display: none;">' +
-                '		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" style="display: none;">' +
-                '	</td>' +
-                '	<td>' +
-                '		<button class="btn btn-danger" onclick="delClassContentRow($(this),0)"><i class="bx bx-trash"></i></button>' +
-                '	</td>' +
-                '</tr>' +
-                '');
-        }
+    function setupcoming(data) {
+        console.log(data);
+        $('#upcoming_id').val(data.id);
+        $('#upcoming' + data.custom_jadwal).attr('checked', true);
+    }
 
-        function slcClassContentTypeChanged(ths) {
-            ths.parent('td').parent('tr').find('.txtClassContentDoc,.txtClassContentImg,.txtClassContentVid').hide();
-            var v = ths.val();
-            if (v == 1) {
-                ths.parent('td').parent('tr').find('.txtClassContentDoc').show();
-            } else if (v == 2) {
-                ths.parent('td').parent('tr').find('.txtClassContentImg').show();
-            } else if (v == 3) {
-                ths.parent('td').parent('tr').find('.txtClassContentVid').show();
+    function openClasses(id, s) {
+        swal({
+            title: 'Are you sure?',
+            text: "You want change status class?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            padding: '2em'
+        }).then(function(result) {
+            if (result.value) {
+                $('#formacclasses').attr('action', '/admin/classes/open/' + id + '/' + s);
+                $('#formacclasses').submit();
+            } else {
+                $('#formacclasses').attr('action', '#');
             }
-        }
+        })
+    }
 
-        function delClassContentRow(ths, id) {
-            var tr = ths.parent('td').parent('tr');
-            $('.hdnContentTBDId').val($('.hdnContentTBDId').val() + ',' + id);
-            if (!tr.attr('clsCtnId') || tr.attr('clsCtnId') == 0) {
-                tr.remove();
+    function activedClasses(id, s) {
+        swal({
+            title: 'Are you sure?',
+            text: "You want change status class?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            padding: '2em'
+        }).then(function(result) {
+            if (result.value) {
+                $('#formacclasses').attr('action', '/admin/classes/activated/' + id + '/' + s);
+                $('#formacclasses').submit();
+            } else {
+                $('#formacclasses').attr('action', '#');
             }
+        })
+    }
+
+    function deleteClasses(id) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            padding: '2em'
+        }).then(function(result) {
+            if (result.value) {
+                $('#formdelclasses').attr('action', '/admin/classes/' + id);
+                $('#formdelclasses').submit();
+            } else {
+                $('#formdelclasses').attr('action', '#');
+            }
+        })
+    }
+
+    function classVideo(c) {
+        $('.hdnClassesId').val(c.id);
+        $('.activeClassTitle').text(c.title);
+        if (c.videos) {
+            $('#video_preview').attr('src', '/video/kelas/' + `{{Auth::user()->email}}` + '/' + c.videos.image);
         }
+        openmodal('#classVideoModal');
+    }
+
+    function classPricing(c) {
+        console.log('price', c);
+        $('#numClassPrice').val(0);
+        $('#numClassPromo').val(0);
+        $('#bolClassPromo').prop('checked', false);
+        $('#bolClassGratis').prop('checked', false);
+        $('#datPromoDateStart').val('')
+        $('#datPromoDateEnd').val('')
+        if (c.pricing) {
+            $('#numClassPrice').val(c.pricing.price).trigger('change').trigger('input');
+            $('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
+            if (c.pricing.promo == 1) {
+                $('#bolClassPromo').prop('checked', true);
+            }
+            if (c.pricing.gratis == 1) {
+                $('#bolClassGratis').prop('checked', true);
+            }
+            $('#numClassPromoPrctg').val((c.pricing.promo_price / c.pricing.price) * 100)
+
+            $('#datPromoDateStart').val(c.pricing.promo_start)
+            $('#datPromoDateEnd').val(c.pricing.promo_end)
+
+            $('#numClassCashback').val(c.pricing.cashback_nominal)
+            $('#numClassCashbackPrctg').val(c.pricing.cashback_persen)
+        }
+        $('.hdnClassesId').val(c.id);
+        $('.activeClassTitle').text(c.title);
+        openmodal('#classPricingModal');
+    }
+
+    function classContent(c) {
+        $('#tbdClassContent').html('');
+        $('.hdnClassesId').val(c.id);
+        if (c.content_list) {
+            console.log(c.content_list);
+            c.content_list.forEach(e => {
+                var sd = '';
+                var sg = '';
+                var sv = '';
+                var dd = 'style="display:none;"';
+                var dg = 'style="display:none;"';
+                var dv = 'style="display:none;"';
+
+                if (e.type == 1) {
+                    sd = 'selected';
+                    dd = '';
+                } else if (e.type == 2) {
+                    sg = 'selected';
+                    dg = '';
+                } else if (e.type == 3) {
+                    sv = 'selected';
+                    dv = '';
+                }
+
+                $('#tbdClassContent').append('' +
+                    '<tr>' +
+                    '	<td>' +
+                    '		<input type="hidden" name="txtClassContentId[]" class="form-control txtClassContentId" value="' +
+                    e.id + '">' +
+                    '		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">' +
+                    '			<option value="1" ' + sd + '>Dokumen</option>' +
+                    '			<option value="2" ' + sg + '>Gambar</option>' +
+                    '			<option value="3" ' + sv + '>Video</option>' +
+                    '		</select>' +
+                    '	</td>' +
+                    '	<td>' +
+                    '		<input type="text" name="txtClassContentTitle[]" class="form-control txtClassContentTitle" value="' +
+                    e.title + '">' +
+                    '	</td>' +
+                    '	<td>' +
+                    '		<small>Change File Only If Needed</small><a href="getBerkas?rf=/' + e.url + '" target="_blank"> Download</a>' +
+                    '		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc" ' +
+                    dd + ' value="' + e.url + '">' +
+                    '		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" ' +
+                    dg + ' value="' + e.url + '">' +
+                    '		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" ' +
+                    dv + ' value="' + e.url + '">' +
+                    '	</td>' +
+                    '	<td>' +
+                    '		<button class="btn btn-danger" onclick="delClassContentRow($(this),' + e.id +
+                    ')"><i class="bx bx-trash"></i></button>' +
+                    '	</td>' +
+                    '</tr>' +
+                    '');
+            });
+        }
+        openmodal('#classContentModal');
+    }
+
+    function addNewClassContentRow() {
+        $('#tbdClassContent').append(
+            '<tr>' +
+            '	<td>' +
+            '		<input type="hidden" name="txtClassContentId[]" class="form-control txtClassContentId" value="0">' +
+            '		<select name="slcClassContentType[]" class="form-control slcClassContentType" onchange="slcClassContentTypeChanged($(this))">' +
+            '			<option value="1">Dokumen</option>' +
+            '			<option value="2">Gambar</option>' +
+            '			<option value="3">Video</option>' +
+            '		</select>' +
+            '	</td>' +
+            '	<td>' +
+            '		<input type="text" name="txtClassContentTitle[]" class="form-control txtClassContentTitle">' +
+            '	</td>' +
+            '	<td>' +
+            '		<input type="file" name="txtClassContentDoc[]" class="form-control txtClassContentDoc">' +
+            '		<input type="file" name="txtClassContentImg[]" class="form-control txtClassContentImg" style="display: none;">' +
+            '		<input type="text" name="txtClassContentVid[]" class="form-control txtClassContentVid" style="display: none;">' +
+            '	</td>' +
+            '	<td>' +
+            '		<button class="btn btn-danger" onclick="delClassContentRow($(this),0)"><i class="bx bx-trash"></i></button>' +
+            '	</td>' +
+            '</tr>');
+    }
+
+    function slcClassContentTypeChanged(ths) {
+        ths.parent('td').parent('tr').find('.txtClassContentDoc,.txtClassContentImg,.txtClassContentVid').hide();
+        var v = ths.val();
+        if (v == 1) {
+            ths.parent('td').parent('tr').find('.txtClassContentDoc').show();
+        } else if (v == 2) {
+            ths.parent('td').parent('tr').find('.txtClassContentImg').show();
+        } else if (v == 3) {
+            ths.parent('td').parent('tr').find('.txtClassContentVid').show();
+        }
+    }
+
+    function delClassContentRow(ths, id) {
+        var tr = ths.parent('td').parent('tr');
+        $('.hdnContentTBDId').val($('.hdnContentTBDId').val() + ',' + id);
+        if (!tr.attr('clsCtnId') || tr.attr('clsCtnId') == 0) {
+            tr.remove();
+        }
+    }
 </script>
 @endsection

@@ -175,6 +175,9 @@ class ClassesController extends Controller
 			'status' => $status,
 			'sub_category' => json_encode($r->subCategory),
 			'poin' => $r->numClassesPoin ? $r->numClassesPoin : 0,
+			'kategori' => $r->type,
+			'jam_acara' => $r->jam_acara,
+			'lokasi' => $r->lokasi,
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -241,6 +244,9 @@ class ClassesController extends Controller
 			'status' => $status,
 			'sub_category' => json_encode($r->subCategory),
 			'poin' => $r->numClassesPoin ? $r->numClassesPoin : 0,
+			'kategori' => $r->type,
+			'jam_acara' => $r->jam_acara,
+			'lokasi' => $r->lokasi,
 		];
 
 		// Data Meta
@@ -835,6 +841,7 @@ class ClassesController extends Controller
 		$data['tags'] = $request->checkbox;
 		$data['tipe'] = $request->tipe;
 		$data['jeniss'] = $request->jeniss;
+		$data['sebelumnya'] = $request->sebelumnya ?? '';
 		// return $request->all();
 		return view('front.kelas.listclass', $data);
 	}

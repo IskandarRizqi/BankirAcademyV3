@@ -1,11 +1,17 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
-@include(env('CUSTOM_HEADER', 'front.layout.header'))
+@include(env('CUSTOM_HEADER', 'front.layout.headerv3'))
 
+{{-- 
+@extends('front.layout.v3.main')
+@section('content')
+<br>
+<br> --}}
 <section id="content">
     <div class="content-wrap">
         <div class="container clearfix">
-            <h3>Promo</h3>
+            <br>
+            <h5 style="font-size:25px;">Promo</h5>
             @if ($data['data'])
             <div class="row gutter-40 col-mb-80">
                 @foreach ($data['data'] as $v)
@@ -78,3 +84,4 @@
     }
 </script>
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
+{{-- @endsection --}}

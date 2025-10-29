@@ -67,7 +67,7 @@ class BerandaLoker extends Controller
             // foreach ($data['data'] as $key => $vv) {
             //     $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
             // }
-            return $data;
+            // return $data;
         }
         return view('front.loker.loker', $x);
     }

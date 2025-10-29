@@ -104,7 +104,7 @@
 							</div>
 							<div class="col-lg-6">
 								<div class="form-group">
-									<label for="txtClassesInstructor">Instruktor</label>
+									<label for="txtClassesInstructor">Narasumber</label>
 									<small class="inputerrormessage text-danger" input-target="txtClassesInstructor"
 										style="display: none;"></small>
 									<select class="form-control slc2" multiple name="txtClassesInstructor[]"
@@ -128,6 +128,7 @@
 									</select>
 								</div>
 							</div>
+
 							<div class="col-lg-6">
 								<div class="row">
 									<div class="col-lg-6 col-md-6">
@@ -166,6 +167,27 @@
 									<label for="numClassesPoin">Poin</label>
 									<input type="number" min="1" name="numClassesPoin" id="numClassesPoin"
 										class="form-control" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="slcClassesTags">Type</label>
+									<select name="type" class="form-control" required>
+										<option value="0">Online</option>
+										<option value="1">Offline</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="slcClassesTags">Jam</label>
+									<input type="time" name="jam_acara" required class="form-control">
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="slcClassesTags">Lokasi</label>
+									<textarea name="lokasi" class="form-control" rows="1" cols="1" placeholder="Input lokasi class apabila offline"></textarea>
 								</div>
 							</div>
 							<div class="col-lg-12">
@@ -268,50 +290,51 @@
 <script>
 	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
 	$('#slcClassesType').select2({
-		tagging:true,
+		tagging: true,
 	})
 	$('#slcClassesJenis').select2({
-		tagging:true,
+		tagging: true,
 	})
 	// $('#subCategory').select2({
 	// 	tagging:true,
 	// })
 	createDataTable('#tblClasses');
-	$('#filClassesImage').change(function (e) { 
-		getImgData(this,'#prvClassesImage');
+	$('#filClassesImage').change(function(e) {
+		getImgData(this, '#prvClassesImage');
 	});
-	$('#filClassesImageMobile').change(function (e) { 
-		getImgData(this,'#prvClassesImageMobile');
+	$('#filClassesImageMobile').change(function(e) {
+		getImgData(this, '#prvClassesImageMobile');
 	});
 
-	$('#newClassesForm').submit(function (e) { 
+	$('#newClassesForm').submit(function(e) {
 		e.preventDefault();
 		submitClassesForm($(this));
 	});
+
 	function submitClassesForm(formelm) {
 		$('.inputerrormessage').hide();
 		$('#txaClassesContent').val(newClassCKEditor.getData());
-		var saveable=true;
-		var req = ['txtClassesTitle','slcClassesCategory','txtClassesInstructor','slcClassesTags','filClassesImage','numClassesLimit','txaClassesContent','filClassesImageMobile'];
-		$('#newClassesForm').find('input,select,textarea').each(function () {
+		var saveable = true;
+		var req = ['txtClassesTitle', 'slcClassesCategory', 'txtClassesInstructor', 'slcClassesTags', 'filClassesImage', 'numClassesLimit', 'txaClassesContent', 'filClassesImageMobile'];
+		$('#newClassesForm').find('input,select,textarea').each(function() {
 			var nm = $(this).attr('id');
-			if(req.includes(nm)){
-				console.log(nm,$(this).val().length);
-				if ($(this).attr('type')=='file') {
-					if (this.files.length == 0 && $(this).siblings('.previewImage').attr('src')=='#') {
-						$('.inputerrormessage[input-target="'+nm+'"]').text('*This Field Is Required');
-						$('.inputerrormessage[input-target="'+nm+'"]').show();
-						saveable=false;
-					}else if (this.files[0].size > $(this).attr('maxfilesize')) {
-						$('.inputerrormessage[input-target="'+nm+'"]').text('*Maximum File Size Is '+($(this).attr('maxfilesize')/1048576)+'MB');
-						$('.inputerrormessage[input-target="'+nm+'"]').show();
-						saveable=false;
+			if (req.includes(nm)) {
+				console.log(nm, $(this).val().length);
+				if ($(this).attr('type') == 'file') {
+					if (this.files.length == 0 && $(this).siblings('.previewImage').attr('src') == '#') {
+						$('.inputerrormessage[input-target="' + nm + '"]').text('*This Field Is Required');
+						$('.inputerrormessage[input-target="' + nm + '"]').show();
+						saveable = false;
+					} else if (this.files[0].size > $(this).attr('maxfilesize')) {
+						$('.inputerrormessage[input-target="' + nm + '"]').text('*Maximum File Size Is ' + ($(this).attr('maxfilesize') / 1048576) + 'MB');
+						$('.inputerrormessage[input-target="' + nm + '"]').show();
+						saveable = false;
 					}
-				}else{
+				} else {
 					if (!$(this).val() || $(this).val() == '' || $(this).val().length == 0) {
-						$('.inputerrormessage[input-target="'+nm+'"]').text('*This Field Is Required');
-						$('.inputerrormessage[input-target="'+nm+'"]').show();
-						saveable=false;
+						$('.inputerrormessage[input-target="' + nm + '"]').text('*This Field Is Required');
+						$('.inputerrormessage[input-target="' + nm + '"]').show();
+						saveable = false;
 					}
 				}
 			}
@@ -320,31 +343,31 @@
 			formelm[0].submit();
 		}
 	}
-	$('#add_meta').on('click',function () {
-        let html = '';
-        html += '<div class="d-flex">';
-        html += '    <div class="form-group">';
-        html += '        <label for="">Name</label>';
-        html += '        <input type="text" name="meta_name[]" id="meta_name" value="" class="form-control">';
-        html += '    </div>';
-        html += '    <div class="form-group ml-auto">';
-        html += '        <label for="Content">Content</label>';
-        html += '        <input type="text" name="meta_content[]" id="meta_content" value=""';
-        html += '            class="form-control">';
-        html += '<span class="btn btn-danger btn-sm del_form" id="del_meta">-</span>';
-        html += '    </div>';
-        html += '</div>';
-        $('#meta_form').append(html);
-    })
-    // $('#del_meta').on('click', function () {
-    //     $(this).closest(".d-flex").remove();
-    //     console.log('aa');
-    // });
-	$("body").on("click",".del_form",function(){ 
-          $(this).parents(".d-flex").remove();
-      });
-	$('#image').change(function (e) { 
-		getImgData(this,'#prvImageMeta');
+	$('#add_meta').on('click', function() {
+		let html = '';
+		html += '<div class="d-flex">';
+		html += '    <div class="form-group">';
+		html += '        <label for="">Name</label>';
+		html += '        <input type="text" name="meta_name[]" id="meta_name" value="" class="form-control">';
+		html += '    </div>';
+		html += '    <div class="form-group ml-auto">';
+		html += '        <label for="Content">Content</label>';
+		html += '        <input type="text" name="meta_content[]" id="meta_content" value=""';
+		html += '            class="form-control">';
+		html += '<span class="btn btn-danger btn-sm del_form" id="del_meta">-</span>';
+		html += '    </div>';
+		html += '</div>';
+		$('#meta_form').append(html);
+	})
+	// $('#del_meta').on('click', function () {
+	//     $(this).closest(".d-flex").remove();
+	//     console.log('aa');
+	// });
+	$("body").on("click", ".del_form", function() {
+		$(this).parents(".d-flex").remove();
+	});
+	$('#image').change(function(e) {
+		getImgData(this, '#prvImageMeta');
 	});
 </script>
 @endsection

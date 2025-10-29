@@ -1,20 +1,21 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
-@include(env('CUSTOM_HEADER', 'front.layout.header'))
+@include(env('CUSTOM_HEADER', 'front.layout.headerv3'))
 
 {{-- <section id="page-title">
     <div class="entry-image">
         <img src="{{asset('Bg-register-01-Copy.jpg')}}" alt="{{$judul}}" style="max-height: 500px">
     </div>
 </section> --}}
+<br>
 <section id="content">
     <div class="content-wrap" style="padding: 0px !important">
         <div class="container clearfix">
             {{-- <h3 class="text-capitalize">{{ $judul }}</h3> --}}
-            <div class="entry-image">
-                <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: auto">
+            <div class="entry-image" style="margin-bottom:100px;">
+                <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: 200px; border-radius: 10px;">
             </div>
-            <form action="/list-class" method="POST">
+            {{-- <form action="/list-class" method="POST">
                 <div class="row mr-1 ml-1">
                     @csrf
                     <div class="form-group col-md-2">
@@ -130,7 +131,7 @@
                     </div>
                 </div>
 
-            </form>
+            </form> --}}
             <div class="row gutter-40 col-mb-80">
                 <div class="postcontent col-lg-12">
                     {{-- @if ($class['data']) --}}
@@ -231,20 +232,22 @@
                         if (response.data.length > 0) {
                             response.data.forEach(dt => {
                                 html+='<div class="col-lg-3 col-sm-6">';
-                                html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 708px">';
-                                html+='        <img src="'+dt.image+'" width="100%" style="border-radius: 8px;">';
-                                html+='        <div class="card-body" style="padding: 0.75rem">';
-                                    if (!$('#sebelumnya').val()) {
-                                        html+='        <p class="m-0">'+dt.contents+'</p>';
-                                    }
-                                html+='            <span class="mt-4" style="border-radius: 8px;bottom: 15px; left: 15px; right: 15px; position: absolute;"';
+                                html+='    <div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 640px">';
+                                html+='        <img src="'+dt.image+'" width="100%" style="border-radius: 8px; max-height: 300px;">';
+
+
+                                html+='            <span class="mt-0" style="border-radius: 8px;bottom: 15px; left: 15px; right: 15px; position: absolute;"';
                                 html+='                style="border-radius: 8px;">';
-                                html+='                <h4 class="text-left text-capitalize m-0">';
-                                html+='                     '+dt.title.length>55?dt.title.substring(0,50)+'...':dt.title;
-                                html+='                 </h4>';
-                                html+='                <p class="text-left"';
-                                html+='                    style="margin: 0px !important; font-size:10px !important;">'+dt.date_end;
-                                html+='                </p>';
+                                // html += '                <h4 class="text-center text-capitalize m-0" style="font-size:16px;">';
+                                // html += '                     ' + dt.title;
+                                // html += '                </h4>';
+
+
+                                html += '                <div style="text-align:center; margin-top:8px;">';
+                                html += '                    <h4 class="text-capitalize m-0" style="font-size:15px;">' + dt.title + '</h4>';
+                                html += '                    <p style="margin:4px 0 0 0; font-size:12px !important;">' + dt.date_end + '</p>';
+                                html += '                </div>';
+
                                 html+='                <a href="/profile-instructor/'+dt.instructor_list[0].id+'/'+dt.instructor_list[0].name+'}}"';
                                 html+='                    class="d-flex mt-2"> <img class="mr-3 rounded-circle"';
                                 if (dt.instructor_list[0].picture_src) {
@@ -275,7 +278,7 @@
                                 html+='                    <a class="btn btn-primary btn-block btn-rounded"';
                                 html+='                        style="border-radius:10px !important"';
                                 html+='                        href="/class/'+dt.unique_id+'/'+dt.title.replaceAll('/','-')+'">';
-                                html+='                        Detail </a>';
+                                html+='                        Daftar </a>';
                                 html+='                </div>';
                                 html+='                <div class="row align-items-center">';
                                 html+='                </div>';

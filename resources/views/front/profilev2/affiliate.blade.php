@@ -1,9 +1,9 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-4 mb-2">
-            <div class="card br-1" style="background-color: #005CFF">
+            <div class="card " style="background-color: #007bff; border-radius:10px;">
                 <div class="card-body" style="padding-top: 5px;padding-bottom: 5px">
-                    <label for="" class="text-white m-0">Saldo Kredit</label>
+                    <label for="" class="text-white m-0"> Saldo Kredit</label>
                     <p class="text-white" style="margin-bottom: 12px">Rp. 0</p>
                     <label for="" class="text-white m-0">Saldo Affiliate</label>
                     <p class="m-0 text-white" style="">Rp. {{number_format($cashback['amount'])}}</p>
@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="col-lg-4 mb-2">
-            <div class="card br-1" style="background-color: #005CFF">
+            <div class="card " style="background-color: #17a2b8;  border-radius:10px;">
                 <div class="card-body" style="padding-top: 5px;padding-bottom: 5px">
                     <label for="" class="text-white">Saldo</label>
                     <h2 class="text-white text-center">Rp {{number_format(isset($saldo)?$saldo:0)}}</h2>
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col-lg-4 mb-2">
-            <div class="card br-1" style="background-color: #005CFF">
+            <div class="card " style="background-color: #ffc107;  border-radius:10px;">
                 <div class="card-body" style="padding-top: 5px;padding-bottom: 5px">
                     <label for="" class="text-white">Total Penarikan</label>
                     <h2 class="text-white text-center">Rp {{number_format(isset($saldoPenarikan)?$saldoPenarikan:0)}}
@@ -30,6 +30,7 @@
             </div>
         </div>
     </div>
+    <br>
     <div class="row">
         <div class="col-lg-3">
             <div class="list-group" id="list-tab" role="tablist">

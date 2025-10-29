@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TITLE</title>
+    <title>Invoice</title>
     <style>
         body {
             font-size: 12px;
@@ -518,21 +518,22 @@
                             <td>1</td>
                             <th class="text-left"
                                 style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
-                                {{$class->title}}</th>
+                                {{$class->title}}
+                            </th>
                             <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
-                                @if($diskon_existing>0)
-                                <td class="unit">
-                                    {{-- {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                            @if($diskon_existing>0)
+                            <td class="unit">
+                                {{-- {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                     \NumberFormatter::CURRENCY),$diskon_existing,"IDR"),0,-3) }} --}}
-                                    {{$diskon_existing}} %
-                                </td>
-                                @else
-                                <td class="unit">
-                                    {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                {{$diskon_existing}} %
+                            </td>
+                            @else
+                            <td class="unit">
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                     \NumberFormatter::CURRENCY),0,"IDR"),0,-3) }}
-                                </td>
-                                @endif
+                            </td>
+                            @endif
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}
@@ -585,7 +586,7 @@
                             <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
                                 }}
-                            </td>
+                        </td>
                         </tr> --}}
                     </tfoot>
                 </table>
@@ -598,12 +599,12 @@
                 <div class="notices">
                     <div>Informasi:</div>
                     <div class="notice">
-                        Bank : BCA || No.Rekening : 8035559091 || Atas Nama
-                        : PT. Bankir Academy Indonesia
+                        Bank : BNI || No.Rekening : 1956061505 || Atas Nama
+                        : CV Anugrah Karya Indonesia
                     </div>
                     <div class="notice">
                         Apabila telah melakukan pembayaran harap melakukan
-                        Konfirmasi pada Whatsapp +6289531229494 atau pada
+                        Konfirmasi pada Whatsapp +62895333017060 atau pada
                         nomor (024) 76435498
                     </div>
                 </div>

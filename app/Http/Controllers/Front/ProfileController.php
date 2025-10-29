@@ -151,6 +151,7 @@ class ProfileController extends Controller
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         $data['ismember'] = GlobalHelper::getaksesmembership();
         $data['member'] = MembershipModel::get();
+        // return $data;
         return view('front.profile.profile', $data);
     }
 
@@ -230,6 +231,12 @@ class ProfileController extends Controller
                 ->whereNotIn('id', $lokerid)
                 ->limit($limitloker)
                 ->get();
+            $data['kelas'] = ClassesModel::select()
+                // ->where('date_end', '>=', $now->format('Y-m-d'))
+                ->where('status', 1)
+                ->orderBy('date_end', 'desc')
+                ->take(4)
+                ->get();
         }
         $data['ismember'] = GlobalHelper::getaksesmembership();
         // $data['ismember'] = false;
@@ -245,7 +252,9 @@ class ProfileController extends Controller
             'classes.title',
             'classes.participant_limit',
             'class_participant.review',
-            'class_participant.id as participant_id'
+            'class_participant.id as participant_id',
+            'classes.image as gmbr_desk',
+            'classes.image_mobile as gmbr_mobile',
         )
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')

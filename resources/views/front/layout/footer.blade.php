@@ -3,7 +3,7 @@
 <footer id="footer" class="dark" style="background-color:#ffffff; z-index: 1000">
     <div class="container">
         <div class="footer-widgets-wrap" style="color: black">
-            <img src="/logo bankir-12-2.png" alt="" width="20%">
+            <img src="/logo bankir-12-2.png" alt="" width="20%" style="margin-bottom: 10px;">
             <div class="row col-mb-50">
                 <div class="col-lg-4">
                     <div class="widget clearfix">
@@ -410,7 +410,7 @@
                         $('.laman_footer').append(foo);
                     });
                 }
-                let foo = '<a href="/pages/page/7" class="text-capitalize" style="color: black">Frequently Asked Questions (FAQ)</a><br>';
+                // let foo = '<a href="/pages/page/7" class="text-capitalize" style="color: black">Frequently Asked Questions (FAQ)</a><br>';
                 $('.laman_footer').append(foo);
                 if (result.laman_head.length > 0) {
                     result.laman_head.forEach(el => {

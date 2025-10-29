@@ -189,6 +189,32 @@
 										class="form-control" value="{{$classes->poin}}" required>
 								</div>
 							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="slcClassesTags">Type</label>
+									<select name="type" class="form-control" required>
+										@if($classes->kategori == 0)
+										<option value="0" selected>Online</option>
+										<option value="1">Offline</option>
+										@else
+										<option value="0">Online</option>
+										<option value="1" selected>Offline</option>
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="slcClassesTags">Jam</label>
+									<input type="time" name="jam_acara" required class="form-control" value="{{$classes->jam_acara}}">
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="slcClassesTags">Lokasi</label>
+									<textarea name="lokasi" class="form-control" rows="1" cols="1" placeholder="Input lokasi class apabila offline">{{$classes->lokasi}}</textarea>
+								</div>
+							</div>
 							<div class="col-lg-12">
 								<div class="form-group">
 									<label for="txaClassesContent">Description</label>
@@ -259,8 +285,8 @@
 									<img src="/Image/laman/meta_image/@isset(json_decode($classes->og)->image){{json_decode($classes->og)->image}}@endisset"
 										{{--
 										{{$classes->og?'/Image/laman/meta_image/'.json_decode($classes->og)->image:'/Backend/assets/img/90x90.jpg'}}
-									--}}
-									alt="Image Preview" id="prvImageMeta" class="previewImage" style="max-width:
+										--}}
+										alt="Image Preview" id="prvImageMeta" class="previewImage" style="max-width:
 									100%;max-height:97px;">
 									@error('meta_image')
 									<small class="text-danger">Harus Diisi</small>
@@ -308,83 +334,84 @@
 	@endsection
 	@section('custom-js')
 	<script>
-		$(document).ready(function () {
-		let old_type = $('#oldSlcClassesType').val();
-		$("#slcClassesType").val(JSON.parse(old_type)).trigger('change');
-		let old_jenis = $('#oldSlcClassesJenis').val();
-		$("#slcClassesJenis").val(JSON.parse(old_jenis)).trigger('change');
-	})
-	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
-	$('#slcClassesType').select2({
-		tagging:true,
-	})
-	$('#slcClassesJenis').select2({
-		tagging:true,
-	})
-	createDataTable('#tblClasses');
-	$('#filClassesImage').change(function (e) { 
-		getImgData(this,'#prvClassesImage');
-	});
-	$('#filClassesImageMobile').change(function (e) { 
-		getImgData(this,'#prvClassesImageMobile');
-	});
+		$(document).ready(function() {
+			let old_type = $('#oldSlcClassesType').val();
+			$("#slcClassesType").val(JSON.parse(old_type)).trigger('change');
+			let old_jenis = $('#oldSlcClassesJenis').val();
+			$("#slcClassesJenis").val(JSON.parse(old_jenis)).trigger('change');
+		})
+		var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
+		$('#slcClassesType').select2({
+			tagging: true,
+		})
+		$('#slcClassesJenis').select2({
+			tagging: true,
+		})
+		createDataTable('#tblClasses');
+		$('#filClassesImage').change(function(e) {
+			getImgData(this, '#prvClassesImage');
+		});
+		$('#filClassesImageMobile').change(function(e) {
+			getImgData(this, '#prvClassesImageMobile');
+		});
 
-	$('#newClassesForm').submit(function (e) { 
-		e.preventDefault();
-		submitClassesForm($(this));
-	});
-	function submitClassesForm(formelm) {
-		$('.inputerrormessage').hide();
-		$('#txaClassesContent').val(newClassCKEditor.getData());
-		var saveable=true;
-		var req = ['txtClassesTitle','slcClassesCategory','txtClassesInstructor','slcClassesTags','numClassesLimit','txaClassesContent',];
-		$('#newClassesForm').find('input,select,textarea').each(function () {
-			var nm = $(this).attr('id');
-			if(req.includes(nm)){
-				if ($(this).attr('type')=='file') {
-					if (this.files.length == 0 && $(this).siblings('.previewImage').attr('src')=='#') {
-						$('.inputerrormessage[input-target="'+nm+'"]').text('*This Field Is Required');
-						$('.inputerrormessage[input-target="'+nm+'"]').show();
-						saveable=false;
-					}else if ($(this).siblings('.previewImage').attr('src')=='#' && this.files[0].size > $(this).attr('maxfilesize')) {
-						$('.inputerrormessage[input-target="'+nm+'"]').text('*Maximum File Size Is '+($(this).attr('maxfilesize')/1048576)+'MB');
-						$('.inputerrormessage[input-target="'+nm+'"]').show();
-						saveable=false;
-					}
-				}else{
-					if (!$(this).val() || $(this).val() == '' || $(this).val().length == 0) {
-						$('.inputerrormessage[input-target="'+nm+'"]').text('*This Field Is Required');
-						$('.inputerrormessage[input-target="'+nm+'"]').show();
-						saveable=false;
+		$('#newClassesForm').submit(function(e) {
+			e.preventDefault();
+			submitClassesForm($(this));
+		});
+
+		function submitClassesForm(formelm) {
+			$('.inputerrormessage').hide();
+			$('#txaClassesContent').val(newClassCKEditor.getData());
+			var saveable = true;
+			var req = ['txtClassesTitle', 'slcClassesCategory', 'txtClassesInstructor', 'slcClassesTags', 'numClassesLimit', 'txaClassesContent', ];
+			$('#newClassesForm').find('input,select,textarea').each(function() {
+				var nm = $(this).attr('id');
+				if (req.includes(nm)) {
+					if ($(this).attr('type') == 'file') {
+						if (this.files.length == 0 && $(this).siblings('.previewImage').attr('src') == '#') {
+							$('.inputerrormessage[input-target="' + nm + '"]').text('*This Field Is Required');
+							$('.inputerrormessage[input-target="' + nm + '"]').show();
+							saveable = false;
+						} else if ($(this).siblings('.previewImage').attr('src') == '#' && this.files[0].size > $(this).attr('maxfilesize')) {
+							$('.inputerrormessage[input-target="' + nm + '"]').text('*Maximum File Size Is ' + ($(this).attr('maxfilesize') / 1048576) + 'MB');
+							$('.inputerrormessage[input-target="' + nm + '"]').show();
+							saveable = false;
+						}
+					} else {
+						if (!$(this).val() || $(this).val() == '' || $(this).val().length == 0) {
+							$('.inputerrormessage[input-target="' + nm + '"]').text('*This Field Is Required');
+							$('.inputerrormessage[input-target="' + nm + '"]').show();
+							saveable = false;
+						}
 					}
 				}
+			});
+			if (saveable) {
+				formelm[0].submit();
 			}
-		});
-		if (saveable) {
-			formelm[0].submit();
 		}
-	}
-	$('#add_meta').on('click',function () {
-        let html = '';
-        html += '<div class="d-flex">';
-        html += '    <div class="form-group">';
-        html += '        <label for="">Name</label>';
-        html += '        <input type="text" name="meta_name[]" id="meta_name" value="" class="form-control">';
-        html += '    </div>';
-        html += '    <div class="form-group ml-auto">';
-        html += '        <label for="Content">Content</label>';
-        html += '        <input type="text" name="meta_content[]" id="meta_content" value=""';
-        html += '            class="form-control">';
-        html += '<span class="btn btn-danger btn-sm del_form" id="del_meta">-</span>';
-        html += '    </div>';
-        html += '</div>';
-        $('#meta_form').append(html);
-    })
-	$("body").on("click",".del_form",function(){ 
-          $(this).parents(".d-flex").remove();
-      });
-	$('#image').change(function (e) { 
-		getImgData(this,'#prvImageMeta');
-	});
+		$('#add_meta').on('click', function() {
+			let html = '';
+			html += '<div class="d-flex">';
+			html += '    <div class="form-group">';
+			html += '        <label for="">Name</label>';
+			html += '        <input type="text" name="meta_name[]" id="meta_name" value="" class="form-control">';
+			html += '    </div>';
+			html += '    <div class="form-group ml-auto">';
+			html += '        <label for="Content">Content</label>';
+			html += '        <input type="text" name="meta_content[]" id="meta_content" value=""';
+			html += '            class="form-control">';
+			html += '<span class="btn btn-danger btn-sm del_form" id="del_meta">-</span>';
+			html += '    </div>';
+			html += '</div>';
+			$('#meta_form').append(html);
+		})
+		$("body").on("click", ".del_form", function() {
+			$(this).parents(".d-flex").remove();
+		});
+		$('#image').change(function(e) {
+			getImgData(this, '#prvImageMeta');
+		});
 	</script>
 	@endsection

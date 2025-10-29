@@ -195,8 +195,10 @@ Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\Profil
 Route::post("/set-master-refferal", [App\Http\Controllers\Backend\RefferalController::class, "setMasterRefferal"]);
 
 Route::get("/promo", [App\Http\Controllers\Front\HomeController::class, "showAllPromo"]);
-Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
-Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
+// Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
+// Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
+Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider'])->name('social.redirect');
+Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProviderCallback'])->name('social.callback');
 Route::resource('profile', ProfileController::class)->middleware('auth');
 Route::get("/review-instructor", [App\Http\Controllers\Front\ProfileController::class, "review_instructor"]);
 Route::get("/instructor/{provider}", [App\Http\Controllers\Front\HomeController::class, "redirectToProvider"]);
@@ -208,10 +210,14 @@ Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "
 Route::get("/pages/contact", [App\Http\Controllers\Front\PagesController::class, "showContact"]);
 Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "showListBlog"]);
 Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
-
+// Layanan
+Route::get("/pages/Banking-Solution", [App\Http\Controllers\Front\LayananController::class, "ShowBankingSolution"]);
+Route::get("/pages/Capacity-Building", [App\Http\Controllers\Front\LayananController::class, "ShowCapacityBuilding"]);
+Route::get("/pages/Talent-Solution", [App\Http\Controllers\Front\LayananController::class, "ShowCTalentSolution"]);
 // Class
 Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
 Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "findClass"]);
+
 
 // Referral
 Route::get('/join/referral/{url}', [App\Http\Controllers\Backend\RefferalController::class, "joinRef"]);

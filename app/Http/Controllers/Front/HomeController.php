@@ -311,13 +311,21 @@ class HomeController extends Controller
             ->orderBy('date_end', 'asc')
             ->limit(8)
             ->get();
+        // $data['kelas'] = ClassesModel::select()
+        //     ->where('date_end', '>=', $now->format('Y-m-d'))
+        //     // ->whereMonth('date_end',  $now->month)
+        //     // ->whereYear('date_end',  $now->year)
+        //     ->where('status', 1)
+        //     ->orderBy('date_end', 'asc')
+        //     ->get();
+        // untuk event
         $data['kelas'] = ClassesModel::select()
-            ->where('date_end', '>=', $now->format('Y-m-d'))
-            // ->whereMonth('date_end',  $now->month)
-            // ->whereYear('date_end',  $now->year)
-            ->where('status', 1)
-            ->orderBy('date_end', 'asc')
-            ->get();
+        ->where('date_end', '>=', $now->format('Y-m-d'))
+        ->where('status', 1)
+        ->orderBy('date_end', 'desc') 
+        ->take(4)                     
+        ->get();                      
+
         foreach ($data['kelas'] as $key => $value) {
             if ($value->is_terpopuler) {
                 array_push($data['kelas_populer'], $value);
@@ -349,7 +357,9 @@ class HomeController extends Controller
 
         $data['literasi'] = Pages::select()->where('type', 0)->whereDate('date_start', '<=', $now->format('Y-m-d'))->whereDate('date_end', '>=', $now->format('Y-m-d'))->orderBy('created_at', 'desc')->limit(12)->get();
         // return $data;
-        return view('front.homev2.homev2', $data);
+        // $data['use_new_template'] = true;
+        // return view('front.homev2.homev2', $data);
+        return view('front.homev3.index', $data);
     }
     public function index(Request $request)
     {
@@ -664,6 +674,7 @@ class HomeController extends Controller
         // return $data;
         // return view('front.kelas.detail', $data);
         return view('front.kelasv2.detail', $data);
+        //  return view('front.kelas.detailv3', $data);
     }
 
     public function inputinstructor(Request $request)

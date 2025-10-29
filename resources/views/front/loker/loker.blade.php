@@ -1,6 +1,6 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
-@include(env('CUSTOM_HEADER', 'front.layout.header'))
+@include(env('CUSTOM_HEADER', 'front.layout.headerv3'))
 <style>
     .scroll-no-ui {
         height: 100%;
@@ -310,7 +310,7 @@
     </div>
     <div class="section border-top-0" style="background-color:#ffffff; padding-bottom: 0px">
         <div class="container text-center">
-            <img src="{{ asset('GambarV2/BankirAcademy.png') }}" alt="">
+            <img src="{{ asset('FE/beranda/loker.png') }}" alt="">
         </div>
     </div>
     <div class="section border-top-0 mb-6 mt-4">

@@ -1,6 +1,6 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
-@include(env('CUSTOM_HEADER', 'front.layout.header'))
+@include(env('CUSTOM_HEADER', 'front.layout.headerv3'))
 <style>
     .slick-prev:before,
     .slick-next:before {

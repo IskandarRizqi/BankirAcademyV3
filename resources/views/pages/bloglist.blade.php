@@ -1,6 +1,6 @@
 @include('front.layout.head')
 @include('front.layout.topbar')
-@include(env('CUSTOM_HEADER', 'front.layout.header'))
+@include(env('CUSTOM_HEADER', 'front.layout.headerv3'))
 
 <section id="content">
     <div class="content-wrap">
@@ -53,3 +53,4 @@
     </div>
 </section><!-- #content end -->
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
+{{-- @endsection --}}

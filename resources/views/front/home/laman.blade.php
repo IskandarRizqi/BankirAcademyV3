@@ -1,5 +1,6 @@
 @include('front.layout.head')
 <!-- HTML Meta Tags -->
+@if ($data)
 @if ($data->og)
 <meta name="description" content="
 {{json_decode($data->og)->description}}">
@@ -73,4 +74,5 @@
         </div>
     </div>
 </section>
+@endif
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))

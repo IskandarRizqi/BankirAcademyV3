@@ -10,6 +10,7 @@ use App\Models\ClassPaymentModel;
 use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
+use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,12 @@ class InvoiceController extends Controller
 {
 	public function getInvoice(Request $r, $id)
 	{
+		// return $r->all();
+		if ($r->jml_peserta > 0) {
+			$cpm = ClassPaymentModel::where('id', $r->payment_invoice)->update([
+				'jumlah' => $r->jml_peserta,
+			]);
+		}
 		$data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)
 			->where(function ($q) {
 				$role = Auth::user()->role;
@@ -52,7 +59,8 @@ class InvoiceController extends Controller
 		// Deklarasi referral
 		$data['payment']['reff'] = 0;
 		$data['payment']['reff_nominal'] = 0;
-		$n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+		$n = ($data['payment']['price'] * $data['payment']['jumlah']) - $kode;
+		// $n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
 		if ($data['class']->pricing->gratis == 1) {
 			$n = 0;
 		}
@@ -116,24 +124,44 @@ class InvoiceController extends Controller
 			if ($s) {
 				$data['payment']['sertifikat'] = $s->nominal;
 				if ($s->type > 0) {
-					$data['payment']['sertifikat'] = $n * ($s->nominal / 100);
+					$data['payment']['sertifikat'] = ($n * ($s->nominal / 100));
 				}
 			}
 		}
+		// return $data['payment']['sertifikat'];
+		// $classlimit = ClassesModel::where('id', $r->class_id)->first();
+		// return $classlimit;
+		$part = ClassPaymentModel::where('class_id', $r->class_id)->where('id', '!=', $r->payment_invoice)->sum('jumlah');
+		if ($data['class']->participant_limit < ($part + $r->jml_peserta)) {
+			// return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh', 'data' => $classlimit['participant_limit']]);
+			return redirec('/profile')->with('erro', 'Participant Sudah Penuh');
+		}
+		$jmlpeserta = 1;
+		if ($r->jml_peserta != null || $r->jml_peserta < 1) {
+			$jmlpeserta = $data['payment']['jumlah'];
+		}
 
-		$data['payment']['totalAkhir'] += $data['payment']['sertifikat'];
+		$data['payment']['totalAkhir'] += $data['payment']['sertifikat'] * $jmlpeserta + $data['payment']['unique_code'];
 		$reff = ClassPaymentModel::where('id', $r->payment_invoice)->update([
 			'additional_discount' => json_encode($additional_discount),
-			'biaya_sertifikat' => $data['payment']['sertifikat'],
+			'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
 			'sudah_cetak' => 1,
 		]);
-
 		// $data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
 		$data['terbilang'] = Terbilang::make($data['payment']['totalAkhir'], '', 'Rp. ');
 		// return $data;
 		if ($data['payment']->status == 1) {
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/invoicelunas'), $data);
 		} else {
+			SertifikatPesertaModel::create([
+				'user_id' => Auth::user()->id,
+				'class_id' => $data['class']->id,
+				'payment_class_id' => $r->payment_invoice,
+				'nama' => json_encode($r->nama),
+				'email' => json_encode($r->email),
+				'nohp' => json_encode($r->nomor_handphone)
+			]);
+			// return $data;
 			$pdf = PDF::loadView(env('CUSTOM_INVOICE_PENDING', 'invoice/invoicepending'), $data);
 		}
 		return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');

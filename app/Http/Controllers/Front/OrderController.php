@@ -134,16 +134,16 @@ class OrderController extends Controller
         }
 
         // Input Jumlah Peserta
-        $part = ClassPaymentModel::where('class_id', $request->class_id)->where('id', '!=', $request->payment_id)->sum('jumlah');
-        if ($request->limit < ($part + $request->jumlah)) {
-            return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh', 'data' => $request->limit]);
-        }
-        $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
-            'jumlah' => $request->jumlah,
-        ]);
-        if (!$cpm) {
-            return response()->json(['status' => false, 'message' => 'Peserta Tidak Tersimpan']);
-        }
+        // $part = ClassPaymentModel::where('class_id', $request->class_id)->where('id', '!=', $request->payment_id)->sum('jumlah');
+        // if ($request->limit < ($part + $request->jumlah)) {
+        //     return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh', 'data' => $request->limit]);
+        // }
+        // $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
+        //     'jumlah' => $request->jumlah,
+        // ]);
+        // if (!$cpm) {
+        //     return response()->json(['status' => false, 'message' => 'Peserta Tidak Tersimpan']);
+        // }
 
         // Cek File Size
         // foreach ($request->input2 as $key => $value) {
@@ -355,28 +355,35 @@ class OrderController extends Controller
         // if (!$next) {
         //     return Redirect::back()->with('akses', 'member');
         // }
+
         $auth = Auth::user()->id;
         if (!$request->class_id) {
-            Redirect::back()->with('error', 'Kelas Ditemukan');
+            // Redirect::back()->with('error', 'Kelas Ditemukan');
+            return response()->json(['msg' => 'Kelas tidak ditemukan', 'rc' => '07']);
         }
         $kelas = ClassesModel::where('id', $request->class_id)->where('is_open', 1)->exists();
         if (!$kelas) {
-            Redirect::back()->with('error', 'Kelas Sudah Penuh');
+            return response()->json(['msg' => 'Kelas Sudah Penuh', 'rc' => '07']);
+            // Redirect::back()->with('error', 'Kelas Sudah Penuh');
         }
         if (!$auth) {
-            Redirect::back()->with('error', 'Belum Login');
+            return response()->json(['msg' => 'Silahkan login terlebih dahulu', 'rc' => '07']);
+            // Redirect::back()->with('error', 'Belum Login');
         }
         if (Auth::user()->role != 2) {
-            Redirect::back()->with('error', 'Silahkan Pakai Akun Member');
+            return response()->json(['msg' => 'Silahkan Pakai Akun Member', 'rc' => '07']);
+            // Redirect::back()->with('error', 'Silahkan Pakai Akun Member');
         }
         if ($auth && Auth::user()->corporate != null) {
-            return Redirect::to('profile')->with('error', 'Lengkapi Data Profile Terlebih Dahulu');
+            return response()->json(['msg' => 'Lengkapi Data Profile Terlebih Dahulu', 'rc' => '03']);
+            // return Redirect::to('profile')->with('error', 'Lengkapi Data Profile Terlebih Dahulu');
         }
-        $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->where('expired', '>=', now())->get();
-        if (count($cpm) > 0) {
-            $data['data'] = ClassPaymentModel::where('user_id', $request->class_id)->get();
-            return Redirect::to('profile')->with('success', 'Kelas Sudah Terdaftar');
-        }
+        // $cpm = ClassPaymentModel::where('user_id', $auth)->where('class_id', $request->class_id)->where('expired', '>=', now())->get();
+        // if (count($cpm) > 0) {
+        //     return response()->json(['msg' => 'Kelas Sudah Terdaftar', 'rc' => '04']);
+        //     // $data['data'] = ClassPaymentModel::where('user_id', $request->class_id)->get();
+        //     // return Redirect::to('profile')->with('success', 'Kelas Sudah Terdaftar');
+        // }
 
         // Unique Code
         $number = ClassPaymentModel::select('unique_code')->where('expired', '<', now())->pluck('unique_code')->toArray();
@@ -411,6 +418,10 @@ class OrderController extends Controller
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
         ]);
-        return Redirect::to('profile')->with('success', 'Order Berhasil');
+        return response()->json(['msg' => 'Order Berhasil', 'rc' => '00']);
+
+        // return Redirect::to('profile')->with('success', 'Order Berhasil');
+        // return Redirect::to('profile')->with('success', 'Order Berhasil');
+        // return Redirect(route('profile.index') . '#tabs-33')->with('success', 'Order Berhasil');
     }
 }
