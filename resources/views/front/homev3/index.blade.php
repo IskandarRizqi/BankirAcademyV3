@@ -385,7 +385,7 @@
 <!-- Section Keunggulan -->
 <section style="padding:60px 0; background:var(--bg-white);">
   <h4 style="font-size: 25px; text-align: center; color: #005CFF;">Tiga Pilar Utama</h4>
-  <div class="container" style="max-width:1200px; margin:0 auto;">
+  <div class="container" style="max-width:1200px; ">
     <div class="row text-center">
 
       <!-- Item 1 -->
@@ -421,8 +421,8 @@
 
 
 <!-- Section Visi Perusahaan -->
-<section style="padding:80px 0; background:var(--bg-white);">
-  <div class="container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:50px;">
+<section style="padding:80px 0; background:var(--bg-white); ">
+  <div class="container" style="max-width:1200px; margin-bottom: 50px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:50px;">
 
     <!-- Kolom Gambar -->
     <div class="image-stack" style="position:relative; flex:1 1 45%; min-width:320px; display:flex; justify-content:center;">

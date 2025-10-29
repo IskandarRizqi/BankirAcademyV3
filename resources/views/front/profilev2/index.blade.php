@@ -48,6 +48,29 @@
     .progress-bar {
         background-color: #00D789;
     }
+      @media (max-width:768px) {
+    #content .row.clearfix {
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+    #content .col-md-3,
+    #content .col-md-9 {
+      margin-left: 10px !important;
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+    #content .col-md-9 {
+      margin-top: 15px !important; /* jarak antara gambar & nama */
+    }
+    #content #imagebunder {
+      width: 100px !important;  /* diperkecil */
+      height: 100px !important; /* diperkecil */
+    }
+  }
 </style>
 <section id="content" style="background-color:#005CFF; height:220px; display:flex; align-items:center;">
     <div class="content-wrap w-100" style="display:flex; align-items:center;">
