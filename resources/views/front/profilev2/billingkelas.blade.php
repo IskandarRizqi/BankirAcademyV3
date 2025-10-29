@@ -381,11 +381,7 @@
                         // Kolom 5–8 (baris kedua)
                         h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
                         h += '        <small class="text-secondary">Gambar</small>';
-                        // h += '        <a class="class_image' + n + '" href="' + v.gmbr_desk + '" target="_blank"';
-                        // h += '         ><br><img class="class_imagenya' + n + '" src="' + v.gmbr_desk + '"';
-                        // h += '            width="65%">';
-                        // h += '        </a>';
-                        h += '          <br><button class="btn btn-primary btn-sm" id="btnimg" attimg=' + v.gmbr_desk + '>Preview</button>'
+                        h += '         <br><br> <a href="' + v.gmbr_desk + '" target="_blank" style="color: #007bff; text-decoration: underline; font-size:17px;  ">Preview</a>'
                         h += '    </div>';
 
                         h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';

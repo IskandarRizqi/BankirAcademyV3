@@ -4,6 +4,7 @@
 
 <section style="padding:70px 0; background-color:#fff;">
   <div class="container" style="max-width:1100px; margin:auto;">
+<<<<<<< HEAD
     <div class="row align-items-center">
 
       <!-- KIRI: GAMBAR (4 kolom) -->
@@ -24,6 +25,25 @@
         <h5 style="font-size:18px; font-weight:600; margin-bottom:15px;">Bangun Fondasi Kompetensi yang Kuat untuk Masa Depan Perbankan</h5>
         <p style="color:#555; line-height:1.6; margin-bottom:0; text-align:justify;">
           Industri keuangan terus berevolusi — menuntut tenaga kerja yang adaptif, inovatif, dan berorientasi masa depan. Capacity Building hadir sebagai solusi strategis untuk membangun fondasi kompetensi berkelanjutan (long-term skill development) melalui pelatihan, pendampingan, dan sistem pembelajaran yang terukur.
+=======
+    <div class="row align-items-center" style="display:flex; flex-wrap:wrap;">
+
+      <!-- KIRI: GAMBAR (4 kolom) -->
+      <div class="col-lg-4 col-md-5 col-12" style="position:relative; padding-right:0; flex:1 1 300px; min-width:280px; margin-bottom:25px;">
+        <img src="{{asset('FE/beranda/Rec.png')}}" 
+             alt="finance" 
+             style="width:100%; border-radius:8px; background:#ddd; display:block;">
+      </div>
+
+      <!-- KANAN: TEKS (8 kolom) -->
+      <div class="col-lg-8 col-md-7 col-12" style="padding-left:10px; flex:1 1 500px; min-width:280px;">
+        <h3 style="font-size:28px; font-weight:700; margin-bottom:8px;">Capacity Building</h3>
+        <h5 style="font-size:18px; font-weight:600; margin-bottom:15px;">Bangun Fondasi Kompetensi yang Kuat untuk Masa Depan Perbankan</h5>
+        <p style="color:#555; line-height:1.6; margin-bottom:0; text-align:justify;">
+          Industri keuangan terus berevolusi — menuntut tenaga kerja yang adaptif, inovatif, dan berorientasi masa depan.
+          Capacity Building hadir sebagai solusi strategis untuk membangun fondasi kompetensi berkelanjutan (long-term skill development)
+          melalui pelatihan, pendampingan, dan sistem pembelajaran yang terukur.
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
         </p>
       </div>
 
@@ -125,6 +145,7 @@
 
 
 <!-- SECTION KELEBIHAN PRODUK -->
+<<<<<<< HEAD
 <section style="background:linear-gradient(180deg, #3b82f6, #1e3a8a); padding:70px 40px; display:flex; align-items:center; justify-content:center; color:white; flex-wrap:wrap;">
   
   <!-- Kiri: Gambar ilustrasi (col-lg-5) -->
@@ -156,6 +177,39 @@
       <li style="display:flex; align-items:flex-start;">
         <span style="color:white; background:#2563eb; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:13px; margin-right:12px;">✔</span>
         <span>Mentor Profesional: Dipandu oleh praktisi dan pakar berpengalaman dari dunia keuangan dan pendidikan.</span>
+=======
+<section style="background:linear-gradient(180deg, #3b82f6, #1e3a8a); padding:70px 20px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; color:white; text-align:left;">
+
+  <!-- Kiri: Gambar ilustrasi -->
+  <div style="flex:1 1 300px; max-width:500px; display:flex; justify-content:center; padding:10px; width:100%;">
+    <img src="{{asset('FE/beranda/bs.png')}}" alt="Ilustrasi Produk" style="width:100%; max-width:300px; height:auto;">
+  </div>
+
+  <!-- Kanan: Teks -->
+  <div style="flex:1 1 400px; max-width:600px; padding:10px 20px; width:100%;">
+    <h2 style="font-size:28px; font-weight:700; margin-bottom:5px; color:white; text-align:left;">Kelebihan dari Produk Kami</h2>
+    <p style="font-size:16px; color:white; margin-bottom:25px; text-align:left;">Mengapa memilih Capacity Building?</p>
+
+    <ul style="list-style:none; padding:0; margin:0;">
+      <li style="display:flex; align-items:flex-start; margin-bottom:15px;">
+        <span style="color:white; background:#2563eb; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:13px; margin-right:12px; flex-shrink:0;">✔</span>
+        <span style="display:block;">Pendekatan Berbasis Dampak: Setiap pelatihan dirancang untuk menghasilkan perubahan nyata dalam kompetensi SDM.</span>
+      </li>
+
+      <li style="display:flex; align-items:flex-start; margin-bottom:15px;">
+        <span style="color:white; background:#2563eb; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:13px; margin-right:12px; flex-shrink:0;">✔</span>
+        <span style="display:block;">Fokus Jangka Panjang: Kami tidak hanya melatih, tetapi juga membangun sistem pembelajaran berkelanjutan.</span>
+      </li>
+
+      <li style="display:flex; align-items:flex-start; margin-bottom:15px;">
+        <span style="color:white; background:#2563eb; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:13px; margin-right:12px; flex-shrink:0;">✔</span>
+        <span style="display:block;">Teknologi dan Insight Terkini: Didukung platform pembelajaran adaptif dan modul berbasis tren industri terbaru.</span>
+      </li>
+
+      <li style="display:flex; align-items:flex-start;">
+        <span style="color:white; background:#2563eb; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:13px; margin-right:12px; flex-shrink:0;">✔</span>
+        <span style="display:block;">Mentor Profesional: Dipandu oleh praktisi dan pakar berpengalaman dari dunia keuangan dan pendidikan.</span>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
       </li>
     </ul>
   </div>
@@ -164,6 +218,7 @@
 
 
 
+<<<<<<< HEAD
     <!-- SECTION 3 -->
 {{-- <section style="padding:80px 0; display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start;">
   
@@ -235,6 +290,23 @@
         <input type="text" placeholder="Masukkan nama anda*" style="width:100%; padding:12px 15px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:30px;">
         <input type="email" placeholder="Masukkan email anda*" style="width:100%; padding:12px 15px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:30px;">
         <textarea placeholder="Masukkan pesan anda*" style="width:100%; padding:12px 15px; margin-bottom:20px; border:1px solid #d1d5db; border-radius:20px; height:110px;"></textarea>
+=======
+
+<!-- SECTION BAWAH (RESPONSIVE INLINE CSS) -->
+<section style="padding:60px 15px; background:#ffffff; display:flex; justify-content:center; align-items:center; flex-wrap:wrap;">
+  <div style="max-width:1150px; width:100%; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:stretch; gap:30px; padding:30px; box-sizing:border-box;">
+
+    <!-- Form -->
+    <div style="flex:1 1 450px; min-width:300px; background:#ffffff; color:#000; border-radius:8px; padding:30px; border:1px solid #1e90ff; box-sizing:border-box;">
+      <h3 style="font-size:26px; font-weight:700; margin-bottom:30px; text-align:center; color:#005CFF;">
+        Daftar Layanan <br> Capacity Building
+      </h3>
+
+      <form>
+        <input type="text" placeholder="Masukkan nama anda*" style="width:100%; padding:12px 15px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:30px; font-size:14px; box-sizing:border-box;">
+        <input type="email" placeholder="Masukkan email anda*" style="width:100%; padding:12px 15px; margin-bottom:15px; border:1px solid #d1d5db; border-radius:30px; font-size:14px; box-sizing:border-box;">
+        <textarea placeholder="Masukkan pesan anda*" style="width:100%; padding:12px 15px; margin-bottom:20px; border:1px solid #d1d5db; border-radius:20px; height:110px; font-size:14px; box-sizing:border-box;"></textarea>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
         <button type="submit" style="width:100%; padding:12px; background:#1e90ff; color:#fff; font-weight:700; border:none; border-radius:30px; cursor:pointer; font-size:16px;">Kirim</button>
         <p style="font-size:12px; color:#666; margin-top:10px; text-align:center;">
           Saya memahami bahwa data saya akan disimpan dengan aman sesuai dengan kebijakan privasi.
@@ -243,6 +315,7 @@
     </div>
 
     <!-- Testimonial -->
+<<<<<<< HEAD
     <div style="flex:0 0 48%; color:#000; display:flex; flex-direction:column; justify-content:flex-start; padding:50px 50px;">
       <p style="color:#005CFF; font-weight:600; margin-bottom:10px; font-size:14px;">Alasan bergabung pelayanan kami</p>
       <h3 style="font-size:25px; font-weight:700; line-height:1.4; margin-bottom:20px;">Review dari alumni dan klien kami</h3>
@@ -258,6 +331,24 @@
         <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px;">→</button>
       </div>
     </div>
+=======
+  <div style="flex:1 1 450px; min-width:300px; color:#000; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; padding:40px 30px; box-sizing:border-box;">
+    <p style="color:#005CFF; font-weight:600; margin-bottom:10px; font-size:14px;">Alasan bergabung pelayanan kami</p>
+    <h3 style="font-size:25px; font-weight:700; line-height:1.4; margin-bottom:20px;">Review dari alumni dan klien kami</h3>
+    <p style="color:#444; line-height:1.6; font-size:16px; max-width:500px; margin-bottom:20px;">
+       Program leadership dan mentorship-nya benar-benar membuka wawasan. Banyak insight baru yang bisa langsung diterapkan di pekerjaan.
+    </p>
+    <p style="font-weight:700; margin-bottom:5px;">Hartono S - Manager Bank BCP</p>
+    <p style="color:#f59e0b; font-size:22px; letter-spacing:2px; margin-bottom:15px;">★★★★★</p>
+
+    <!-- Navigation Arrows -->
+    <div style="display:flex; gap:10px; justify-content:flex-start;">
+      <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">←</button>
+      <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">→</button>
+    </div>
+  </div>
+
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
 
   </div>
 </section>
@@ -265,6 +356,10 @@
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
 
 <script>

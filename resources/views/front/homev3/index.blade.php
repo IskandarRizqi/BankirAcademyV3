@@ -73,8 +73,16 @@ p {
 .btn-primary:hover {
   background-color: #0047CC;
   transform: translateY(-2px);
+<<<<<<< HEAD
 }
 
+=======
+  color: white;
+  
+}
+
+
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
 .btn-secondary {
   background-color: #f4f4f4;
   color: var(--text-color);
@@ -156,7 +164,11 @@ p {
             <div class="banner-content">
                 <h1 class="fw-bold" style="color: white">Professional Consulting</h1>
                 <p style="color: white">Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
+<<<<<<< HEAD
                 <a href="#layanan" class="btn btn-primary mt-2">Let's Work Together</a>
+=======
+                <a href="#layanan" class="btn btn-primary mt-2">Mari Bekerja Sama</a>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             </div>
         </div>
 
@@ -275,11 +287,19 @@ p {
            style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column;">
 
         <!-- Gambar -->
+<<<<<<< HEAD
         <div style="width:100%; height:300px; flex-shrink:0; margin:0; padding:0;">
           <img 
             src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
             alt="{{ $class->title }}" 
             style="width:100%; height:100%; object-fit:cover; display:block; margin:0; padding:0; border:none;">
+=======
+        <div style="width:100%; height:300px; oject-fit:fill flex-shrink:0; margin:0; padding:0;">
+          <img 
+            src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
+            alt="{{ $class->title }}" 
+            style="width:100%; height:100%; object-fit:fill; display:block; margin:0; padding:0; border:none;">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
         </div>
 
         <!-- Konten -->
@@ -288,15 +308,27 @@ p {
             <p style="font-size:12px; color:#777; margin-bottom:4px;">
               {{ \Carbon\Carbon::parse($class->date_start)->format('Y-m-d') }}
             </p>
+<<<<<<< HEAD
             <h4 style="font-size:12px; margin:0; font-weight:600;">
               {{ strtoupper($class->title) }}
             </h4>
 
+=======
+            <h4 style="font-size:12px; margin:0; font-weight:600; font-family:Arial, sans-serif ;">
+              {{ strtoupper($class->title) }}
+            </h4>
+
+
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             @php
               $instructor = $class->instructor_list->first()->name ?? 'Instructor';
             @endphp
 
+<<<<<<< HEAD
             <p style="font-size:12px; color:#007bff; margin:4px 0 8px;">
+=======
+            <p style="font-size:12px; color:#007bff; margin:4px 0 8px; font-family:Arial, sans-serif ;">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
               {{ strtoupper($instructor) }}
             </p>
           </div>
@@ -304,14 +336,28 @@ p {
           <!-- Tombol (tetap di bawah) -->
            <button 
             onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'" 
+<<<<<<< HEAD
             style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;">
+=======
+            style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;font-family:Arial, sans-serif ;">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             Daftar
           </button>
         </div>
       </div>
     @endforeach
+<<<<<<< HEAD
 
   </div>
+=======
+  </div>
+      <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
+      <a href="/list-class?jenis=bankir" 
+         style="background:#007bff; color:white; text-decoration:none; padding:10px 20px; border-radius:25px; cursor:pointer; display:inline-block; margin-right:140px;">
+         Semua Event
+      </a>
+    </div>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
 </section>
 
 
@@ -356,7 +402,11 @@ p {
 
 
 <!-- Section Visi Perusahaan -->
+<<<<<<< HEAD
 <section style="padding:100px 0; background:var(--bg-white);">
+=======
+<section style="padding:80px 0; background:var(--bg-white);">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
   <div class="container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:50px;">
 
     <!-- Kolom Gambar -->
@@ -397,7 +447,11 @@ p {
 
 <!-- Section Layanan Konsultasi -->
 <section style="padding:60px 0; background:var(--bg-light); text-align:center;">
+<<<<<<< HEAD
   <p style="color:#005CFF; font-weight:600; font-size:14px; margin-bottom:10px;">SOLUSI INOVATIF</p>
+=======
+  <p style="text-transform:uppercase; color:#005CFF; font-weight:600; font-size:14px; margin-bottom:5px;">SOLUSI INOVATIF</p>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
   <h2 style="font-size: 30px;">Layanan Konsulting</h2>
 
   <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
@@ -527,16 +581,38 @@ p {
 
 <section class="py-5 text-center">
   <div class="container">
+<<<<<<< HEAD
     <p class="text-uppercase fw-bold small mb-1" style="color: #005CFF; font-size: 14px;">KENALI MENTOR KAMI</p>
     <h2 class="fw-bold mb-5" style="font-size: 30px;">Para Ahli Terkemuka</h2>
+=======
+    <p style="text-transform:uppercase; color:#005CFF; font-weight:600; font-size:14px; margin-bottom:5px;">KENALI MENTOR KAMI</p>
+    <h2 class="fw-bold mb-5" style="font-size: 30px;">Para Ahli Berpengalaman</h2>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
 
     <div class="row g-4 justify-content-center">
       <!-- Card 1 -->
       <div class="col-12 col-sm-6 col-md-3">
         <div class="position-relative overflow-hidden rounded" 
+<<<<<<< HEAD
              style="cursor:pointer; transition:all 0.4s ease;">
           <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
                style="top:0; left:0; background:rgba(11, 50, 245, 0.8); opacity:0; transition:opacity 0.4s ease;">
+=======
+               style="cursor:pointer;transition:.4s ease;"
+          onmouseover="
+            this.querySelector('.d-flex.position-absolute').style.opacity='1';
+            this.querySelectorAll('h5,p').forEach(e=>{
+              e.setAttribute('style','color:white !important;position:relative;z-index:3;transition:color .3s ease;');
+            });
+          "
+          onmouseout="
+            this.querySelector('.d-flex.position-absolute').style.opacity='0';
+            this.querySelector('h5').setAttribute('style','color:black;');
+            this.querySelector('p').setAttribute('style','color:#6c757d;');
+          ">
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
+               style="top:0; left:0;background-color:#007BFF;; opacity:0; transition:opacity 0.4s ease;">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             <div>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-facebook"></i></a>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-twitter"></i></a>
@@ -548,7 +624,11 @@ p {
                  style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
+<<<<<<< HEAD
             <h5 class="fw-semibold mb-0">Wahyu Muji Kristianto S.H</h5>
+=======
+            <h5 class="fw-semibold mb-0">Wahyu Muji Kristianto</h5>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             <p class="text-muted small mb-0">Consultant Professional</p>
           </div>
         </div>
@@ -557,9 +637,26 @@ p {
       <!-- Card 2 -->
       <div class="col-12 col-sm-6 col-md-3">
         <div class="position-relative overflow-hidden rounded" 
+<<<<<<< HEAD
              style="cursor:pointer; transition:all 0.4s ease;">
           <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
                style="top:0; left:0; background:rgba(11, 50, 245, 0.8); opacity:0; transition:opacity 0.4s ease;">
+=======
+               style="cursor:pointer;transition:.4s ease;"
+          onmouseover="
+            this.querySelector('.d-flex.position-absolute').style.opacity='1';
+            this.querySelectorAll('h5,p').forEach(e=>{
+              e.setAttribute('style','color:white !important;position:relative;z-index:3;transition:color .3s ease;');
+            });
+          "
+          onmouseout="
+            this.querySelector('.d-flex.position-absolute').style.opacity='0';
+            this.querySelector('h5').setAttribute('style','color:black;');
+            this.querySelector('p').setAttribute('style','color:#6c757d;');
+          ">
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
+               style="top:0; left:0;background-color:#007BFF; opacity:0; transition:opacity 0.4s ease;">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             <div>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-facebook"></i></a>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-twitter"></i></a>
@@ -571,7 +668,11 @@ p {
                  style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
+<<<<<<< HEAD
             <h5 class="fw-semibold mb-0">Riris Eriska S.H</h5>
+=======
+            <h5 class="fw-semibold mb-0">Riris Eriska</h5>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             <p class="text-muted small mb-0">Consultant Professional</p>
           </div>
         </div>
@@ -580,9 +681,26 @@ p {
       <!-- Card 3 -->
       <div class="col-12 col-sm-6 col-md-3">
         <div class="position-relative overflow-hidden rounded" 
+<<<<<<< HEAD
              style="cursor:pointer; transition:all 0.4s ease;">
           <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
                style="top:0; left:0; background:rgba(11, 50, 245, 0.8); opacity:0; transition:opacity 0.4s ease;">
+=======
+              style="cursor:pointer;transition:.4s ease;"
+          onmouseover="
+            this.querySelector('.d-flex.position-absolute').style.opacity='1';
+            this.querySelectorAll('h5,p').forEach(e=>{
+              e.setAttribute('style','color:white !important;position:relative;z-index:3;transition:color .3s ease;');
+            });
+          "
+          onmouseout="
+            this.querySelector('.d-flex.position-absolute').style.opacity='0';
+            this.querySelector('h5').setAttribute('style','color:black;');
+            this.querySelector('p').setAttribute('style','color:#6c757d;');
+          ">
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
+               style="top:0; left:0;background-color:#007BFF; opacity:0; transition:opacity 0.4s ease;">
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             <div>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-facebook"></i></a>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-twitter"></i></a>
@@ -594,7 +712,11 @@ p {
                  style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
+<<<<<<< HEAD
             <h5 class="fw-semibold mb-0">Baharudin S.E</h5>
+=======
+            <h5 class="fw-semibold mb-0">Baharudin</h5>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
             <p class="text-muted small mb-0">Consultant Professional</p>
           </div>
         </div>
@@ -602,6 +724,7 @@ p {
 
       <!-- Card 4 -->
       <div class="col-12 col-sm-6 col-md-3">
+<<<<<<< HEAD
         <div class="position-relative overflow-hidden rounded" 
              style="cursor:pointer; transition:all 0.4s ease;">
           <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
@@ -623,6 +746,44 @@ p {
         </div>
       </div>
     </div>
+=======
+      <div class="position-relative overflow-hidden rounded"
+          style="cursor:pointer;transition:.4s ease;"
+          onmouseover="
+            this.querySelector('.d-flex.position-absolute').style.opacity='1';
+            this.querySelectorAll('h5,p').forEach(e=>{
+              e.setAttribute('style','color:white !important;position:relative;z-index:3;transition:color .3s ease;');
+            });
+          "
+          onmouseout="
+            this.querySelector('.d-flex.position-absolute').style.opacity='0';
+            this.querySelector('h5').setAttribute('style','color:black;');
+            this.querySelector('p').setAttribute('style','color:#6c757d;');
+          ">
+
+        <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100"
+            style="top:0;left:0;background-color:#007BFF;opacity:0;transition:opacity .4s ease;">
+          <div>
+            <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-dribbble"></i></a>
+          </div>
+        </div>
+
+        <div style="width:100%;height:320px;overflow:hidden;border-radius:8px;">
+          <img src="FE/beranda/haris.png" class="img-fluid rounded"
+              style="width:100%;height:100%;object-fit:cover;transition:transform .6s ease;">
+        </div>
+
+        <div class="mt-3">
+          <h5 class="fw-semibold mb-0">Harizar Widianto</h5>
+          <p class="text-muted small mb-0">Consultant Professional</p>
+        </div>
+      </div>
+    </div>
+
+    </div>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
   </div>
 </section>
 
@@ -737,8 +898,17 @@ p {
       <br>
       <br>
       <br>
+<<<<<<< HEAD
       <p style="font-size:13px; margin:0; color:white;">
         Hubungi di <a href="mailto:info@example.com" style="color:white; text-decoration:none;">info@example.com</a>
+=======
+      <p style="font-size:15px; margin:0; color:white;">
+       Hubungi di 
+      <a href="https://wa.me/62895333017060" style="color: #ffcc33; text-decoration:none;">
+      0895333017060
+      </a>
+
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
       </p>
     </div>
 
