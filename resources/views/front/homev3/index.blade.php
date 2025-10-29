@@ -4,188 +4,244 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-/* Font dan warna konsisten untuk seluruh halaman */
-:root {
-  --primary-color: #005CFF;
-  --secondary-color: #c76b07;
-  --text-color: #333333;
-  --text-light: #666666;
-  --text-muted: #888888;
-  --bg-light: #fafafa;
-  --bg-white: #ffffff;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-* {
-  font-family: var(--font-family);
-}
-
-/* Animasi */
-@keyframes floatImage1 {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0); }
-}
-
-@keyframes floatImage2 {
-  0% { transform: translateY(10px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(10px); }
-}
-
-/* Gaya umum untuk judul */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-color);
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-h1 { font-size: 3.2rem; }
-h2 { font-size: 2.5rem; }
-h3 { font-size: 2rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
-h6 { font-size: 1rem; }
-
-p {
-  color: var(--text-light);
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-/* Gaya tombol */
-.btn {
-  padding: 12px 25px;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: #0047CC;
-  transform: translateY(-2px);
-  color: white;
-  
-}
-
-
-.btn-secondary {
-  background-color: #f4f4f4;
-  color: var(--text-color);
-  border: none;
-}
-
-.btn-secondary:hover {
-  background-color: #e0e0e0;
-}
-
-/* Gaya card */
-.card {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: all 0.4s ease;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.card img {
-  transition: transform 0.6s ease;
-}
-
-.card:hover img {
-  transform: scale(1.1);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  section .container {
-    flex-direction: column;
-    text-align: center;
+  /* Font dan warna konsisten untuk seluruh halaman */
+  :root {
+    --primary-color: #005CFF;
+    --secondary-color: #c76b07;
+    --text-color: #333333;
+    --text-light: #666666;
+    --text-muted: #888888;
+    --bg-light: #fafafa;
+    --bg-white: #ffffff;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  .image-stack img {
-    position: relative !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    margin: 10px 0;
+
+  * {
+    font-family: var(--font-family);
   }
-  
-  section {
-    flex-direction: column !important;
-    text-align: center;
-    gap: 20px !important;
-    padding: 25px 15px !important;
+
+  /* Animasi */
+  @keyframes floatImage1 {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-15px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
   }
-  
-  h1 { font-size: 2.5rem !important; }
-  h2 { font-size: 2rem !important; }
-  h3 { font-size: 1.5rem !important; }
-  h4 { font-size: 1.25rem !important; }
-  h5 { font-size: 1.1rem !important; }
-  h6 { font-size: 1rem !important; }
-  
+
+  @keyframes floatImage2 {
+    0% {
+      transform: translateY(10px);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+
+    100% {
+      transform: translateY(10px);
+    }
+  }
+
+  /* Gaya umum untuk judul */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text-color);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: 3.2rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  h5 {
+    font-size: 1.25rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
   p {
-    font-size: 0.9rem !important;
-    margin: 0 auto 15px auto !important;
+    color: var(--text-light);
+    font-size: 1rem;
+    line-height: 1.6;
   }
-  
+
+  /* Gaya tombol */
   .btn {
-    margin: 0 auto !important;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
   }
-}
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #0047CC;
+    transform: translateY(-2px);
+    color: white;
+
+  }
+
+
+  .btn-secondary {
+    background-color: #f4f4f4;
+    color: var(--text-color);
+    border: none;
+  }
+
+  .btn-secondary:hover {
+    background-color: #e0e0e0;
+  }
+
+  /* Gaya card */
+  .card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .card img {
+    transition: transform 0.6s ease;
+  }
+
+  .card:hover img {
+    transform: scale(1.1);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    section .container {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .image-stack img {
+      position: relative !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      margin: 10px 0;
+    }
+
+    section {
+      flex-direction: column !important;
+      text-align: center;
+      gap: 20px !important;
+      padding: 25px 15px !important;
+    }
+
+    h1 {
+      font-size: 2.5rem !important;
+    }
+
+    h2 {
+      font-size: 2rem !important;
+    }
+
+    h3 {
+      font-size: 1.5rem !important;
+    }
+
+    h4 {
+      font-size: 1.25rem !important;
+    }
+
+    h5 {
+      font-size: 1.1rem !important;
+    }
+
+    h6 {
+      font-size: 1rem !important;
+    }
+
+    p {
+      font-size: 0.9rem !important;
+      margin: 0 auto 15px auto !important;
+    }
+
+    .btn {
+      margin: 0 auto !important;
+    }
+  }
 </style>
 
 <!-- Banner Section -->
 <section class="banner-section position-relative overflow-hidden" style="width:100%;height:100vh;">
-    <div class="banner-slider" style="position:relative;width:100%;height:100%;overflow:hidden;">
+  <div class="banner-slider" style="position:relative;width:100%;height:100%;overflow:hidden;">
 
-        <!-- Slide 1 -->
-        <div class="banner-slide active d-flex flex-column justify-content-center align-items-center text-center text-white"
-            style="position:absolute;width:100%;height:100%;background:url('FE/beranda/44.jpg') center/cover no-repeat;
+    <!-- Slide 1 -->
+    <div class="banner-slide active d-flex flex-column justify-content-center align-items-center text-center text-white"
+      style="position:absolute;width:100%;height:100%;background:url('FE/beranda/44.jpg') center/cover no-repeat;
                    opacity:1;transform:translateY(0);transition:all 1.2s ease-in-out;">
-            <div class="banner-content">
-                <h1 class="fw-bold" style="color: white">Professional Consulting</h1>
-                <p style="color: white">Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
-                <a href="#layanan" class="btn btn-primary mt-2">Mari Bekerja Sama</a>
-            </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="banner-slide d-flex flex-column justify-content-center align-items-center text-center text-white"
-            style="position:absolute;width:100%;height:100%;background:url('FE/baner/3.png') center/cover no-repeat;
-                   opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
-            <div class="banner-content">
-                <h1 class="fw-bold" style="color: white">Upgrade Skill Tanpa Batas</h1>
-                <p style="color: white">Pelatihan & Sertifikasi Terbaik untuk Bankir Hebat.</p>
-                <a href="#program" class="btn btn-primary mt-2">Pelajari Lebih Lanjut</a>
-            </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="banner-slide d-flex flex-column justify-content-center align-items-center text-center text-white"
-            style="position:absolute;width:100%;height:100%;background:url('FE/baner/22.jpg') center/cover no-repeat;
-                   opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
-            <div class="banner-content">
-                <h1 class="fw-bold" style="color: white">Bergabunglah Bersama Kami</h1>
-                <p style="color: white">Raih karier gemilang di dunia finansial.</p>
-                <a href="#kontak" class="btn btn-primary mt-2">Hubungi Kami</a>
-            </div>
-        </div>
-
+      <div class="banner-content">
+        <h1 class="fw-bold" style="color: white">Professional Consulting</h1>
+        <p style="color: white">Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
+        <a href="#layanan" class="btn btn-primary mt-2">Mari Bekerja Sama</a>
+      </div>
     </div>
+
+    <!-- Slide 2 -->
+    <div class="banner-slide d-flex flex-column justify-content-center align-items-center text-center text-white"
+      style="position:absolute;width:100%;height:100%;background:url('FE/baner/3.png') center/cover no-repeat;
+                   opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
+      <div class="banner-content">
+        <h1 class="fw-bold" style="color: white">Upgrade Skill Tanpa Batas</h1>
+        <p style="color: white">Pelatihan & Sertifikasi Terbaik untuk Bankir Hebat.</p>
+        <a href="#program" class="btn btn-primary mt-2">Pelajari Lebih Lanjut</a>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="banner-slide d-flex flex-column justify-content-center align-items-center text-center text-white"
+      style="position:absolute;width:100%;height:100%;background:url('FE/baner/22.jpg') center/cover no-repeat;
+                   opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
+      <div class="banner-content">
+        <h1 class="fw-bold" style="color: white">Bergabunglah Bersama Kami</h1>
+        <p style="color: white">Raih karier gemilang di dunia finansial.</p>
+        <a href="#kontak" class="btn btn-primary mt-2">Hubungi Kami</a>
+      </div>
+    </div>
+
+  </div>
 </section>
 
 {{-- <section style="padding:60px 0; background:var(--bg-light); text-align:center;">
@@ -274,53 +330,53 @@ p {
   <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
 
     @foreach($kelas as $class)
-      <div class="card" 
-           style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column;">
+    <div class="card"
+      style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column;">
 
-        <!-- Gambar -->
-        <div style="width:100%; height:300px; oject-fit:fill flex-shrink:0; margin:0; padding:0;">
-          <img 
-            src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
-            alt="{{ $class->title }}" 
-            style="width:100%; height:100%; object-fit:fill; display:block; margin:0; padding:0; border:none;">
-        </div>
-
-        <!-- Konten -->
-        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:15px; text-align:center;">
-          <div>
-            <p style="font-size:12px; color:#777; margin-bottom:4px;">
-              {{ \Carbon\Carbon::parse($class->date_start)->format('Y-m-d') }}
-            </p>
-            <h4 style="font-size:12px; margin:0; font-weight:600; font-family:Arial, sans-serif ;">
-              {{ strtoupper($class->title) }}
-            </h4>
-
-
-            @php
-              $instructor = $class->instructor_list->first()->name ?? 'Instructor';
-            @endphp
-
-            <p style="font-size:12px; color:#007bff; margin:4px 0 8px; font-family:Arial, sans-serif ;">
-              {{ strtoupper($instructor) }}
-            </p>
-          </div>
-
-          <!-- Tombol (tetap di bawah) -->
-           <button 
-            onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'" 
-            style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;font-family:Arial, sans-serif ;">
-            Daftar
-          </button>
-        </div>
+      <!-- Gambar -->
+      <div style="width:100%; height:300px; oject-fit:fill flex-shrink:0; margin:0; padding:0;">
+        <img
+          src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
+          alt="{{ $class->title }}"
+          style="width:100%; height:100%; object-fit:fill; display:block; margin:0; padding:0; border:none;">
       </div>
+
+      <!-- Konten -->
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:15px; text-align:center;">
+        <div>
+          <p style="font-size:12px; color:#777; margin-bottom:4px;">
+            {{ \Carbon\Carbon::parse($class->date_start)->format('Y-m-d') }}
+          </p>
+          <h4 style="font-size:12px; margin:0; font-weight:600; font-family:Arial, sans-serif ;">
+            {{ strtoupper($class->title) }}
+          </h4>
+
+
+          @php
+          $instructor = $class->instructor_list->first()->name ?? 'Instructor';
+          @endphp
+
+          <p style="font-size:12px; color:#007bff; margin:4px 0 8px; font-family:Arial, sans-serif ;">
+            {{ strtoupper($instructor) }}
+          </p>
+        </div>
+
+        <!-- Tombol (tetap di bawah) -->
+        <button
+          onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'"
+          style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;font-family:Arial, sans-serif ;">
+          Daftar
+        </button>
+      </div>
+    </div>
     @endforeach
   </div>
-      <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
-      <a href="/list-class?jenis=bankir" 
-         style="background:#007bff; color:white; text-decoration:none; padding:10px 20px; border-radius:25px; cursor:pointer; display:inline-block; margin-right:140px;">
-         Semua Event
-      </a>
-    </div>
+  <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
+    <a href="/list-class?jenis=bankir"
+      style="background:#007bff; color:white; text-decoration:none; padding:10px 20px; border-radius:25px; cursor:pointer; display:inline-block; margin-right:140px;">
+      Semua Event
+    </a>
+  </div>
 </section>
 
 
@@ -371,10 +427,10 @@ p {
     <!-- Kolom Gambar -->
     <div class="image-stack" style="position:relative; flex:1 1 45%; min-width:320px; display:flex; justify-content:center;">
       <img src="FE/beranda/Rectangle 10.png" alt="Team Member 1"
-           style="width:320px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);
+        style="width:320px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);
                   position:relative; top:0; animation:floatImage1 6s ease-in-out infinite;">
       <img src="FE/beranda/Rectangle 11.png" alt="Team Member 2"
-           style="width:250px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);
+        style="width:250px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);
                   position:absolute; bottom:-100px; left:300px; animation:floatImage2 6s ease-in-out infinite alternate;">
     </div>
 
@@ -386,7 +442,7 @@ p {
 
       <div style="margin-bottom:40px;">
         <a href="#about" class="btn btn-primary" style="margin-right:10px;">
-           Tentang Kami
+          Tentang Kami
         </a>
         <a href="#work" class="btn btn-secondary">
           Cara Bekerja
@@ -414,7 +470,7 @@ p {
     <!-- Card 1 -->
     <div class="card" style="position:relative; width:250px; height:320px;">
       <img src="FE/beranda/ly1.png" alt="Audit assurance"
-           style="width:100%; height:100%; object-fit:cover;">
+        style="width:100%; height:100%; object-fit:cover;">
       <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; justify-content:flex-end; padding:20px;">
         {{-- <span style="font-size:13px; color:#fbb03b;">Featured</span> --}}
         <h4 style="font-size:18px;  color:#ddd; margin:5px 0;">Banking Solution</h4>
@@ -425,7 +481,7 @@ p {
     <!-- Card 2 -->
     <div class="card" style="position:relative; width:250px; height:320px;">
       <img src="FE/beranda/ly2.png" alt="Financial advisory"
-           style="width:100%; height:100%; object-fit:cover;">
+        style="width:100%; height:100%; object-fit:cover;">
       <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; justify-content:flex-end; padding:20px;">
         {{-- <span style="font-size:13px; color:#fbb03b;">Featured</span> --}}
         <h4 style="font-size:18px; color:#ddd; margin:5px 0;">Capacity Building</h4>
@@ -436,7 +492,7 @@ p {
     <!-- Card 3 -->
     <div class="card" style="position:relative; width:250px; height:320px;">
       <img src="FE/beranda/ly3.png" alt="Business analysis"
-           style="width:100%; height:100%; object-fit:cover;">
+        style="width:100%; height:100%; object-fit:cover;">
       <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; justify-content:flex-end; padding:20px;">
         {{-- <span style="font-size:13px; color:#fbb03b;">Featured</span> --}}
         <h4 style="font-size:18px; color:#ddd; margin:5px 0;">Banking Talent Solution</h4>
@@ -447,7 +503,7 @@ p {
     <!-- Card 4 -->
     <div class="card" style="position:relative; width:250px; height:320px;">
       <img src="FE/beranda/ly4.png" alt="Middle marketing"
-           style="width:100%; height:100%; object-fit:cover;">
+        style="width:100%; height:100%; object-fit:cover;">
       <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; justify-content:flex-end; padding:20px;">
         {{-- <span style="font-size:13px; color:#fbb03b;">Featured</span> --}}
         <h4 style="font-size:18px; color:#ddd; margin:5px 0;">Event</h4>
@@ -466,12 +522,12 @@ p {
     <div style="flex:1 1 400px;">
       <h2 style="color: #005CFF">Pertanyaan yang Sering <br> Diajukan</h2>
       <p style="color:#333333; font-size:15px; margin-bottom:25px; max-width:400px;">
-       Berikut daftar yang sering ditanyakan.
+        Berikut daftar yang sering ditanyakan.
       </p>
       <div style="text-align:left; margin-top:20px;">
-  <p style="margin-bottom:8px; font-size:16px; color:#4c4949;">Butuh bantuan?</p>
-  <button class="btn btn-primary" style="padding:10px 20px; font-size:14px;">Hubungi Lebih Lanjut</button>
-</div>
+        <p style="margin-bottom:8px; font-size:16px; color:#4c4949;">Butuh bantuan?</p>
+        <button class="btn btn-primary" style="padding:10px 20px; font-size:14px;">Hubungi Lebih Lanjut</button>
+      </div>
 
     </div>
 
@@ -513,13 +569,12 @@ p {
 <!-- Section Video -->
 <section style="position:relative; width:100%; height:450px; overflow:hidden; margin-top:40px;">
   <div style="position:relative; width:100%; height:100vh; overflow:hidden;">
-    <video 
-      autoplay 
-      muted 
-      loop 
-      playsinline 
-      style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
-    >
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
       <source src="{{ asset('FE/beranda/video.mp4') }}" type="video/mp4">
       Tidak Ada Video
     </video>
@@ -527,8 +582,8 @@ p {
 </section>
 
 
-  <!-- Optional overlay text -->
-  {{-- <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#fff; padding:0 15px;">
+<!-- Optional overlay text -->
+{{-- <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#fff; padding:0 15px;">
     <h2 style="color: black">Rasakan Kecanggihan Digital di Pelayanan Kami</h2>
     <p style="color: black">Penceritaan visual mendalam dan interaktif pada pelayanan program</p>
   </div> --}}
@@ -542,8 +597,8 @@ p {
     <div class="row g-4 justify-content-center">
       <!-- Card 1 -->
       <div class="col-12 col-sm-6 col-md-3">
-        <div class="position-relative overflow-hidden rounded" 
-               style="cursor:pointer;transition:.4s ease;"
+        <div class="position-relative overflow-hidden rounded"
+          style="cursor:pointer;transition:.4s ease;"
           onmouseover="
             this.querySelector('.d-flex.position-absolute').style.opacity='1';
             this.querySelectorAll('h5,p').forEach(e=>{
@@ -555,8 +610,8 @@ p {
             this.querySelector('h5').setAttribute('style','color:black;');
             this.querySelector('p').setAttribute('style','color:#6c757d;');
           ">
-          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
-               style="top:0; left:0;background-color:#007BFF;; opacity:0; transition:opacity 0.4s ease;">
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100"
+            style="top:0; left:0;background-color:#007BFF;; opacity:0; transition:opacity 0.4s ease;">
             <div>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-facebook"></i></a>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-twitter"></i></a>
@@ -564,8 +619,8 @@ p {
             </div>
           </div>
           <div style="width:100%; height:320px; overflow:hidden; border-radius:8px;">
-            <img src="FE/beranda/wahyu.png" class="img-fluid rounded" 
-                 style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
+            <img src="FE/beranda/wahyu.png" class="img-fluid rounded"
+              style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
             <h5 class="fw-semibold mb-0">Wahyu Muji Kristianto</h5>
@@ -576,8 +631,8 @@ p {
 
       <!-- Card 2 -->
       <div class="col-12 col-sm-6 col-md-3">
-        <div class="position-relative overflow-hidden rounded" 
-               style="cursor:pointer;transition:.4s ease;"
+        <div class="position-relative overflow-hidden rounded"
+          style="cursor:pointer;transition:.4s ease;"
           onmouseover="
             this.querySelector('.d-flex.position-absolute').style.opacity='1';
             this.querySelectorAll('h5,p').forEach(e=>{
@@ -589,8 +644,8 @@ p {
             this.querySelector('h5').setAttribute('style','color:black;');
             this.querySelector('p').setAttribute('style','color:#6c757d;');
           ">
-          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
-               style="top:0; left:0;background-color:#007BFF; opacity:0; transition:opacity 0.4s ease;">
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100"
+            style="top:0; left:0;background-color:#007BFF; opacity:0; transition:opacity 0.4s ease;">
             <div>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-facebook"></i></a>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-twitter"></i></a>
@@ -598,8 +653,8 @@ p {
             </div>
           </div>
           <div style="width:100%; height:320px; overflow:hidden; border-radius:8px;">
-            <img src="FE/beranda/riris.png" class="img-fluid rounded" 
-                 style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
+            <img src="FE/beranda/riris.png" class="img-fluid rounded"
+              style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
             <h5 class="fw-semibold mb-0">Riris Eriska</h5>
@@ -610,8 +665,8 @@ p {
 
       <!-- Card 3 -->
       <div class="col-12 col-sm-6 col-md-3">
-        <div class="position-relative overflow-hidden rounded" 
-              style="cursor:pointer;transition:.4s ease;"
+        <div class="position-relative overflow-hidden rounded"
+          style="cursor:pointer;transition:.4s ease;"
           onmouseover="
             this.querySelector('.d-flex.position-absolute').style.opacity='1';
             this.querySelectorAll('h5,p').forEach(e=>{
@@ -623,8 +678,8 @@ p {
             this.querySelector('h5').setAttribute('style','color:black;');
             this.querySelector('p').setAttribute('style','color:#6c757d;');
           ">
-          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100" 
-               style="top:0; left:0;background-color:#007BFF; opacity:0; transition:opacity 0.4s ease;">
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100"
+            style="top:0; left:0;background-color:#007BFF; opacity:0; transition:opacity 0.4s ease;">
             <div>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-facebook"></i></a>
               <a href="#" class="text-white fs-4 mx-2"> <i class="bi bi-twitter"></i></a>
@@ -632,8 +687,8 @@ p {
             </div>
           </div>
           <div style="width:100%; height:320px; overflow:hidden; border-radius:8px;">
-            <img src="FE/beranda/barudin.png" class="img-fluid rounded" 
-                 style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
+            <img src="FE/beranda/barudin.png" class="img-fluid rounded"
+              style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
             <h5 class="fw-semibold mb-0">Baharudin</h5>
@@ -644,7 +699,7 @@ p {
 
       <!-- Card 4 -->
       <div class="col-12 col-sm-6 col-md-3">
-      <div class="position-relative overflow-hidden rounded"
+        <div class="position-relative overflow-hidden rounded"
           style="cursor:pointer;transition:.4s ease;"
           onmouseover="
             this.querySelector('.d-flex.position-absolute').style.opacity='1';
@@ -658,26 +713,26 @@ p {
             this.querySelector('p').setAttribute('style','color:#6c757d;');
           ">
 
-        <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100"
+          <div class="d-flex justify-content-center align-items-center position-absolute w-100 h-100"
             style="top:0;left:0;background-color:#007BFF;opacity:0;transition:opacity .4s ease;">
-          <div>
-            <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-twitter"></i></a>
-            <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-dribbble"></i></a>
+            <div>
+              <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="text-white fs-4 mx-2"><i class="bi bi-dribbble"></i></a>
+            </div>
+          </div>
+
+          <div style="width:100%;height:320px;overflow:hidden;border-radius:8px;">
+            <img src="FE/beranda/haris.png" class="img-fluid rounded"
+              style="width:100%;height:100%;object-fit:cover;transition:transform .6s ease;">
+          </div>
+
+          <div class="mt-3">
+            <h5 class="fw-semibold mb-0">Harizar Widianto</h5>
+            <p class="text-muted small mb-0">Consultant Professional</p>
           </div>
         </div>
-
-        <div style="width:100%;height:320px;overflow:hidden;border-radius:8px;">
-          <img src="FE/beranda/haris.png" class="img-fluid rounded"
-              style="width:100%;height:100%;object-fit:cover;transition:transform .6s ease;">
-        </div>
-
-        <div class="mt-3">
-          <h5 class="fw-semibold mb-0">Harizar Widianto</h5>
-          <p class="text-muted small mb-0">Consultant Professional</p>
-        </div>
       </div>
-    </div>
 
     </div>
   </div>
@@ -729,7 +784,7 @@ p {
 
           <div style="padding:20px; text-align:left;">
             <h6 style="font-weight:600; font-size:17px; margin-bottom:8px; line-height:1.4; color:#111827;">
-              15 Pekerja Kompeten Lulusan Bankir Academy diterima di 
+              15 Pekerja Kompeten Lulusan Bankir Academy diterima di
             </h6>
             <p style="color:#6b7280; font-size:14px; line-height:1.5; margin:0;">
               1 November mendatang, 15 alumni program Bankir Academy akan mulai bekerja di perusahaan bank Internasional.
@@ -757,10 +812,10 @@ p {
 
           <div style="padding:20px; text-align:left;">
             <h6 style="font-weight:600; font-size:17px; margin-bottom:8px; line-height:1.4; color:#111827;">
-             Pelatihan berbasis Virtual <br> Reality
+              Pelatihan berbasis Virtual <br> Reality
             </h6>
             <p style="color:#6b7280; font-size:14px; line-height:1.5; margin:0;">
-             Layanan program terbaru dengan memanfaatkan Virtual Reality sehingga merasakan pelatihan di dunia nyata.
+              Layanan program terbaru dengan memanfaatkan Virtual Reality sehingga merasakan pelatihan di dunia nyata.
             </p>
           </div>
 
@@ -785,7 +840,7 @@ p {
 
 <section style="background:linear-gradient(180deg, #3b82f6 0%, #1e1b4b 100%); color:white; padding:40px 60px;">
   <div style="max-width:1100px; margin:auto; display:flex; align-items:center; justify-content:space-between;">
-    
+
     <!-- Kiri -->
     <div style="flex:1;">
       <h2 style="font-size:20px; font-weight:600; margin:0 0 8px 0; color:white;">
@@ -795,10 +850,10 @@ p {
       <br>
       <br>
       <p style="font-size:15px; margin:0; color:white;">
-       Hubungi di 
-      <a href="https://wa.me/62895333017060" style="color: #ffcc33; text-decoration:none;">
-      0895333017060
-      </a>
+        Hubungi di
+        <a href="https://wa.me/62895333017060" style="color: #ffcc33; text-decoration:none;">
+          0895333017060
+        </a>
 
       </p>
     </div>
@@ -815,78 +870,78 @@ p {
 
 @include('front.layout.footer')
 <script>
-// Script untuk slider banner
-document.addEventListener("DOMContentLoaded", function() {
+  // Script untuk slider banner
+  document.addEventListener("DOMContentLoaded", function() {
     const slides = document.querySelectorAll(".banner-slide");
     let current = 0;
 
     function showSlide(index) {
-        slides.forEach((slide, i) => {
-            if (i === index) {
-                slide.style.opacity = "1";
-                slide.style.transform = "translateY(0)";
-                slide.style.zIndex = "1";
-            } else {
-                slide.style.opacity = "0";
-                slide.style.transform = "translateY(100%)";
-                slide.style.zIndex = "0";
-            }
-        });
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.style.opacity = "1";
+          slide.style.transform = "translateY(0)";
+          slide.style.zIndex = "1";
+        } else {
+          slide.style.opacity = "0";
+          slide.style.transform = "translateY(100%)";
+          slide.style.zIndex = "0";
+        }
+      });
     }
 
     setInterval(() => {
-        current = (current + 1) % slides.length;
-        showSlide(current);
+      current = (current + 1) % slides.length;
+      showSlide(current);
     }, 5000);
-});
+  });
 
-// Script untuk accordion
-function toggleAccordion(el) {
+  // Script untuk accordion
+  function toggleAccordion(el) {
     const parent = el.parentElement;
     const para = parent.querySelector('p');
     const icon = el.querySelector('span');
     const isOpen = para.style.display === 'block';
-    
+
     // Tutup semua accordion
     document.querySelectorAll('section div[style*="border-bottom"]').forEach(item => {
-        item.querySelector('p').style.display = 'none';
-        item.querySelector('span').innerText = '+';
+      item.querySelector('p').style.display = 'none';
+      item.querySelector('span').innerText = '+';
     });
-    
+
     // Buka yang diklik
     if (!isOpen) {
-        para.style.display = 'block';
-        icon.innerText = '−';
+      para.style.display = 'block';
+      icon.innerText = '−';
     }
-}
+  }
 
-// Script untuk hover efek pada card tim
-document.querySelectorAll('.position-relative').forEach(card => {
+  // Script untuk hover efek pada card tim
+  document.querySelectorAll('.position-relative').forEach(card => {
     const overlay = card.querySelector('.position-absolute');
     const img = card.querySelector('img');
     card.addEventListener('mouseenter', () => {
-        if (overlay) overlay.style.opacity = '1';
-        img.style.transform = 'scale(1.1)';
+      if (overlay) overlay.style.opacity = '1';
+      img.style.transform = 'scale(1.1)';
     });
     card.addEventListener('mouseleave', () => {
-        if (overlay) overlay.style.opacity = '0';
-        img.style.transform = 'scale(1)';
+      if (overlay) overlay.style.opacity = '0';
+      img.style.transform = 'scale(1)';
     });
-});
+  });
 
-// Script untuk hover efek pada card berita
-document.querySelectorAll('.card').forEach(card => {
+  // Script untuk hover efek pada card berita
+  document.querySelectorAll('.card').forEach(card => {
     const img = card.querySelector('img');
     card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-8px)';
-        card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-        img.style.transform = 'scale(1.1)';
+      card.style.transform = 'translateY(-8px)';
+      card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+      img.style.transform = 'scale(1.1)';
     });
     card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0)';
-        card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.05)';
-        img.style.transform = 'scale(1)';
+      card.style.transform = 'translateY(0)';
+      card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.05)';
+      img.style.transform = 'scale(1)';
     });
-});
+  });
 </script>
 {{-- @endsection --}}

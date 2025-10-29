@@ -8,14 +8,14 @@
 
       <!-- KIRI: GAMBAR (4 kolom) -->
       <div class="col-lg-4 col-md-5 col-12" style="position:relative; padding-right:0; margin-bottom: 25px;">
-        <img src="{{asset('FE/beranda/Rec.png')}}" 
-             alt="finance" 
-             style="width:100%; border-radius:8px; background:#ddd; display:block;">
-          {{-- <div style="position:absolute; bottom:-20px; left:20px; background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:15px 25px; display:flex; align-items:center;">
+        <img src="{{asset('FE/beranda/Rec.png')}}"
+          alt="finance"
+          style="width:100%; border-radius:8px; background:#ddd; display:block;">
+        {{-- <div style="position:absolute; bottom:-20px; left:20px; background:white; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:15px 25px; display:flex; align-items:center;">
             <span style="font-size:36px; font-weight:700; color:#000; margin-right:10px;">85</span>
             <span style="color:#555; font-weight:500;">Project<br>completed</span>
           </div> --}}
-        
+
       </div>
 
       <!-- KANAN: TEKS (8 kolom) -->
@@ -32,7 +32,7 @@
 </section>
 
 
- <section style="padding:60px 0; background-color:#fff;">
+<section style="padding:60px 0; background-color:#fff;">
   <div class="container" style="max-width:1100px; margin:auto;">
     <div class="row" style="display:flex; flex-wrap:wrap; align-items:flex-start;">
 
@@ -52,21 +52,21 @@
       <!-- Kolom Tengah (col-lg-4) -->
       <div class="col-lg-4 col-md-6" style="padding:15px;">
         <div style="display:flex; align-items:flex-start; gap:12px; ">
-         <div>
-          <img src="{{ asset('FE/beranda/file.png') }}" style="width:110px; height:auto;">
-        </div>
+          <div>
+            <img src="{{ asset('FE/beranda/file.png') }}" style="width:110px; height:auto;">
+          </div>
 
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Talent Assessment & Competency </h5>
             <p style="color:#666; font-size:14px; margin-top:6px; text-align: justify;">
-             Petakan potensi & kompetensi talenta secara akurat untuk pengembangan tepat sasaran: AI-Driven Talent Analytics, 360° Competency Mapping, Technical Skill Certification, & Future-Readiness Assessment.
+              Petakan potensi & kompetensi talenta secara akurat untuk pengembangan tepat sasaran: AI-Driven Talent Analytics, 360° Competency Mapping, Technical Skill Certification, & Future-Readiness Assessment.
             </p>
           </div>
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/V.png') }}" style="width:90px; height:auto;">
+          <div>
+            <img src="{{ asset('FE/beranda/V.png') }}" style="width:90px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Leadership Acceleration Program</h5>
@@ -76,9 +76,9 @@
           </div>
         </div>
 
-         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/chart-column-big.png') }}" style="width:110px; height:auto;">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div>
+            <img src="{{ asset('FE/beranda/chart-column-big.png') }}" style="width:110px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Performance Excellence Framework</h5>
@@ -93,7 +93,7 @@
       <div class="col-lg-4 col-md-6" style="padding:15px;">
         <div style="display:flex; align-items:flex-start; gap:12px; ">
           <div>
-          <img src="{{ asset('FE/beranda/Vector.png') }}" style="width:90px; height:auto;">
+            <img src="{{ asset('FE/beranda/Vector.png') }}" style="width:90px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Digital Skill Transformation</h5>
@@ -104,8 +104,8 @@
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/stream.png') }}" style="width:110px; height:auto;">
+          <div>
+            <img src="{{ asset('FE/beranda/stream.png') }}" style="width:110px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Talent Mobility & Succession Planning</h5>
@@ -114,14 +114,14 @@
             </p>
           </div>
         </div>
-         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/user.png') }}" style="width:110px; height:auto;">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div>
+            <img src="{{ asset('FE/beranda/user.png') }}" style="width:110px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Young Talent Pipeline</h5>
             <p style="color:#666; font-size:14px; margin-top:6px;">
-             Kembangkan talenta muda sebagai fondasi masa depan perbankan: Graduate Program, Campus Talent Development, Millennial Leadership, & Innovative Internship.
+              Kembangkan talenta muda sebagai fondasi masa depan perbankan: Graduate Program, Campus Talent Development, Millennial Leadership, & Innovative Internship.
             </p>
           </div>
         </div>
@@ -195,21 +195,21 @@
     </div>
 
     <!-- Testimonial -->
-  <div style="flex:1 1 450px; min-width:300px; color:#000; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; padding:40px 30px; box-sizing:border-box;">
-    <p style="color:#005CFF; font-weight:600; margin-bottom:10px; font-size:14px;">Alasan bergabung pelayanan kami</p>
-    <h3 style="font-size:25px; font-weight:700; line-height:1.4; margin-bottom:20px;">Review dari alumni dan klien kami</h3>
-    <p style="color:#444; line-height:1.6; font-size:16px; max-width:500px; margin-bottom:20px;">
-       Program ini membantu kami membangun sistem suksesi yang jelas dan efektif. Kini kami lebih siap menghadapi rotasi dan promosi jabatan strategis.
-    </p>
-    <p style="font-weight:700; margin-bottom:5px;">Reyfaldi R - HRBP Bank Semarang</p>
-    <p style="color:#f59e0b; font-size:22px; letter-spacing:2px; margin-bottom:15px;">★★★★★</p>
+    <div style="flex:1 1 450px; min-width:300px; color:#000; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; padding:40px 30px; box-sizing:border-box;">
+      <p style="color:#005CFF; font-weight:600; margin-bottom:10px; font-size:14px;">Alasan bergabung pelayanan kami</p>
+      <h3 style="font-size:25px; font-weight:700; line-height:1.4; margin-bottom:20px;">Review dari alumni dan klien kami</h3>
+      <p style="color:#444; line-height:1.6; font-size:16px; max-width:500px; margin-bottom:20px;">
+        Program ini membantu kami membangun sistem suksesi yang jelas dan efektif. Kini kami lebih siap menghadapi rotasi dan promosi jabatan strategis.
+      </p>
+      <p style="font-weight:700; margin-bottom:5px;">Reyfaldi R - HRBP Bank Semarang</p>
+      <p style="color:#f59e0b; font-size:22px; letter-spacing:2px; margin-bottom:15px;">★★★★★</p>
 
-    <!-- Navigation Arrows -->
-    <div style="display:flex; gap:10px; justify-content:flex-start;">
-      <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">←</button>
-      <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">→</button>
+      <!-- Navigation Arrows -->
+      <div style="display:flex; gap:10px; justify-content:flex-start;">
+        <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">←</button>
+        <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">→</button>
+      </div>
     </div>
-  </div>
 
 
   </div>
@@ -221,11 +221,10 @@
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
 
 <script>
-function toggleAccordion(element) {
-  var content = element.querySelector('.accordion-content');
-  var isVisible = content.style.display === 'block';
-  document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
-  content.style.display = isVisible ? 'none' : 'block';
-}
+  function toggleAccordion(element) {
+    var content = element.querySelector('.accordion-content');
+    var isVisible = content.style.display === 'block';
+    document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
+    content.style.display = isVisible ? 'none' : 'block';
+  }
 </script>
-

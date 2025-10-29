@@ -35,9 +35,12 @@ class ClassesModel extends Model
 		'is_sebelumnya',
 		'video',
 		'custom_jadwal',
+		'kategori',
+		'jam_acara',
+		'lokasi',
 	];
 
-	
+
 	protected $appends = [
 		'instructor_list',
 		'pricing',

@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
+    <title>Invoice</title>
+=======
     <title>TITLE</title>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
     <style>
         body {
             font-size: 12px;
@@ -515,7 +519,12 @@
                             <td>1</td>
                             <th class="text-left"
                                 style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
+<<<<<<< HEAD
+                                {{$class->title}}
+                            </th>
+=======
                                 {{$class->title}}</th>
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
                             <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
                             {{-- <td class="unit">
@@ -598,12 +607,21 @@
                 <div class="notices">
                     <div>Informasi:</div>
                     <div class="notice">
+<<<<<<< HEAD
+                        Bank : BNI || No.Rekening : 1956061505 || Atas Nama
+                        : CV Anugrah Karya Indonesia
+                    </div>
+                    <div class="notice">
+                        Apabila telah melakukan pembayaran harap melakukan
+                        Konfirmasi pada Whatsapp +62895333017060 atau pada
+=======
                         Bank : BCA || No.Rekening : 8035559091 || Atas Nama
                         : PT. Bankir Academy Indonesia
                     </div>
                     <div class="notice">
                         Apabila telah melakukan pembayaran harap melakukan
                         Konfirmasi pada Whatsapp +6289531229494 atau pada
+>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
                         nomor (024) 76435498
                     </div>
                 </div>

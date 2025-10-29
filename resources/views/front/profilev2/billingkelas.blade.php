@@ -120,6 +120,8 @@
     </div>
 </div>
 
+
+
 <!-- Modal Bukti-->
 <div class="modal fade" id="bayarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -186,30 +188,20 @@
                     <label for="">Jumlah Peserta</label>
                     <input class="form-control" type="number" id="jml_peserta" name="jml_peserta">
                 </div>
-                {{-- <div class="col-lg-12 bottommargin">
-                    <label>Upload Bukti Pembayaran:</label><br>
-                    <input id="input-3" name="input2[]" type="file" class="file" data-show-upload="false"
-                        data-show-caption="true" data-show-preview="true" accept="image/*">
-                    @error('input2')
-                    <span class="text-danger" role="alert">
-                        <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div> --}}
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" onclick="simpanbukti()">Save Changes</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" onclick="simpanbukti()">Save Changes</button>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <!-- Modal Invoice-->
 <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="" method="GET" enctype="multipart/form-data" id="formInvoice" target="_blank">
+            <form action="" method="GET" enctype="multipart/form-data" id="formInvoice">
                 @csrf
                 <div class="modal-header">
                     <h3 style="margin: 0px">Invoice</h3>
@@ -217,10 +209,29 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body text-center">
+                <div class="modal-body">
                     <input type="text" id="payment_invoice" name="payment_invoice" hidden>
                     <input type="text" id="sertifikat_invoice" name="sertifikat_invoice" hidden>
-                    <p style="margin: 0px; font-size: 21px">Apakah anda
+                    <input type="text" id="jmlp" name="jml_peserta" hidden>
+                    <div class="row mb-1">
+                        <div class="col-lg-4">
+                            <label for="form-control">Kode promo</label>
+                            <input class="form-control" type="text" id="kode_promo" name="kode_promo">
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="form-control">Jumlah peserta</label>
+                            <input class="form-control" min="1" type="number" id="jml_pesertas" name="jml_peserta" onchange="qtyjumlahpeserta()">
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="form-control">Sertifikat <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Biaya cetak dan pengiriman per jumlah peserta akan ditambahkan pada invoice anda ">!</span></label>
+                            <select name="sertifikat" class="form-control">
+                                <option value="1">Ya</option>
+                                <option value="0">Tidak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="detailpeserta"></div>
+                    <!-- <p style="margin: 0px; font-size: 21px">Apakah anda
                         ingin mencetak dengan sertifikat?</p>
                     <span class="badge bg-danger text-white">
                         <div class="spinner-grow spinner-grow-sm">
@@ -228,19 +239,52 @@
                         <small style="font-size: 12px">Biaya cetak dan
                             pengiriman Rp. 100.000/kelas ditambahkan ke
                             invoice anda. </small>
-                    </span>
-                    <div class="d-flex justify-content-center mt-4">
+                    </span> -->
+                    <!-- <div class="d-flex justify-content-center mt-4">
                         <span class="btn btn-warning" target="_blank" title="Invoice"
                             onclick="cetakInvoice()">Tidak</span>
                         <span class="btn btn-primary ml-2" target="_blank" title="Invoice"
                             onclick="cetakInvoiceSertifikat()">Ya</span>
-                    </div>
+                    </div> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Simpan dan cetak invoice</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
+    function simpaninvoicenew() {
+        $('#invoiceModal').modal('hide');
+        $('#detailpeserta').html('');
+    }
+
+    function qtyjumlahpeserta() {
+        // alert('asdsad')
+        $('#detailpeserta').html('');
+        let jmlpsrt = $('#jml_pesertas').val();
+        let detail = '';
+        if (jmlpsrt > 0) {
+            for (let i = 0; i < jmlpsrt; i++) {
+                detail += '    <div class="row">'
+                detail += '        <div class="col-lg-4">'
+                detail += '            <label for="form-control">Nama lengkap</label>'
+                detail += '            <input type="text" class="form-control" name="nama[]">'
+                detail += '        </div>'
+                detail += '        <div class="col-lg-4">'
+                detail += '            <label for="form-control">Email aktif</label>'
+                detail += '            <input type="email" class="form-control" name="email[]">'
+                detail += '        </div>'
+                detail += '        <div class="col-lg-4">'
+                detail += '            <label for="form-control">Nomor Handphone</label>'
+                detail += '            <input type="number" class="form-control" name="nomor_handphone[]">'
+                detail += '        </div>'
+                detail += '    </div>'
+            }
+        }
+        $('#detailpeserta').html(detail);
+    }
     let class_image = 0;
 
     function loadbillingkelas(type) {
@@ -369,12 +413,12 @@
                         // h+='            <p class="m-0">'+new Date(v.created_at).toLocaleDateString('id-ID')+'</p>';
                         // h+='        </div>';
                         h += '        <div class="col-lg-12 text-right">';
-                        if (v.status_pembayaran == 'Menunggu Pembayaran' || v.status_pembayaran == 'Menunggu Konfirmasi') {
-                            h += '            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Peserta</div>';
-                        }
+                        // if (v.status_pembayaran == 'Menunggu Pembayaran' || v.status_pembayaran == 'Menunggu Konfirmasi') {
+                        //     h += '            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Peserta</div>';
+                        // }
 
                         if (v.sudah_cetak == 1) {
-                            h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: auto; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" onclick="langsungcetak(' + v.id + ',' + v.biaya_sertifikat + ')">Invoice</div>';
+                            h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: auto; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" onclick="langsungcetak(' + v.id + ',' + v.biaya_sertifikat + v.jumlah + ')">Invoice</div>';
                         } else {
                             h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: auto; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice(' + v.id + ')">Invoice</div>';
                         }
@@ -509,9 +553,11 @@
         });
     }
 
-    function langsungcetak(id, sertifikat) {
+    function langsungcetak(id, sertifikat, jml_peserta) {
+
         $('#payment_invoice').val(id);
         $('#sertifikat_invoice').val(sertifikat);
+        // $('#jmlp').val(jml_peserta);
         $('#formInvoice').attr('action', '/classes/getinvoice/id');
         $('#formInvoice').submit();
     }
@@ -524,14 +570,28 @@
         $('#sertifikat_invoice').val(0);
         $('#formInvoice').attr('action', '/classes/getinvoice/id');
         $('#formInvoice').submit();
-        $('#invoiceModal').modal('hide')
+        $('#invoiceModal').modal('hide');
+        $('#detailpeserta').html('');
     }
 
     function cetakInvoiceSertifikat() {
-        $('#sertifikat_invoice').val(1);
-        $('#formInvoice').attr('action', '/classes/getinvoice/id');
-        $('#formInvoice').submit();
-        $('#invoiceModal').modal('hide')
-    }
+        let jumlahpeserta = $('#jml_pesertas').val();
+        if (jumlahpeserta < 1) {
+            Swal.fire({
+                title: "Pemberitahuan",
+                text: "Jumlah peserta anda belum di isi",
+                icon: "info"
+            });
+            return false;
+        } else {
+            // target="_blank"
+            $('#sertifikat_invoice').val(1);
+            $('#formInvoice').attr('action', '/classes/getinvoice/id');
+            $('#formInvoice').attr('target', '_blank');
+            $('#formInvoice').submit();
+            $('#invoiceModal').modal('hide');
+            $('#detailpeserta').html('');
+        }
 
+    }
 </script>

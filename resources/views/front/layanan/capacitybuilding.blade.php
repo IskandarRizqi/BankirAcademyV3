@@ -8,9 +8,9 @@
 
       <!-- KIRI: GAMBAR (4 kolom) -->
       <div class="col-lg-4 col-md-5 col-12" style="position:relative; padding-right:0; flex:1 1 300px; min-width:280px; margin-bottom:25px;">
-        <img src="{{asset('FE/beranda/Rec.png')}}" 
-             alt="finance" 
-             style="width:100%; border-radius:8px; background:#ddd; display:block;">
+        <img src="{{asset('FE/beranda/Rec.png')}}"
+          alt="finance"
+          style="width:100%; border-radius:8px; background:#ddd; display:block;">
       </div>
 
       <!-- KANAN: TEKS (8 kolom) -->
@@ -29,7 +29,7 @@
 </section>
 
 
- <section style="padding:60px 0; background-color:#fff;">
+<section style="padding:60px 0; background-color:#fff;">
   <div class="container" style="max-width:1100px; margin:auto;">
     <div class="row" style="display:flex; flex-wrap:wrap; align-items:flex-start;">
 
@@ -49,21 +49,21 @@
       <!-- Kolom Tengah (col-lg-4) -->
       <div class="col-lg-4 col-md-6" style="padding:15px;">
         <div style="display:flex; align-items:flex-start; gap:12px;">
-         <div>
-          <img src="{{ asset('FE/beranda/rocket.png') }}" style="width:150px; height:auto;">
-        </div>
+          <div>
+            <img src="{{ asset('FE/beranda/rocket.png') }}" style="width:150px; height:auto;">
+          </div>
 
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;"> Kompetensi Masa Depan</h5>
             <p style="color:#666; font-size:14px; margin-top:6px;">
-             Siapkan tenaga kerja tangguh untuk transformasi keuangan digital & berkelanjutan: Digital Banking Mastery, Data Literacy Program, Cyber Security Awareness, & Green Banking Competency.
+              Siapkan tenaga kerja tangguh untuk transformasi keuangan digital & berkelanjutan: Digital Banking Mastery, Data Literacy Program, Cyber Security Awareness, & Green Banking Competency.
             </p>
           </div>
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/user.png') }}" style="width:150px; height:auto;">
+          <div>
+            <img src="{{ asset('FE/beranda/user.png') }}" style="width:150px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Leadership Pipeline Development</h5>
@@ -74,13 +74,13 @@
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/V.png') }}" style="width:25px; height:auto; margin-right: 35px;">
+          <div>
+            <img src="{{ asset('FE/beranda/V.png') }}" style="width:25px; height:auto; margin-right: 35px;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Impact Measurement & Sustainable Growth</h5>
             <p style="color:#666; font-size:14px; margin-top:6px;">
-               Memastikan setiap program Capacity Building memberikan dampak terukur dan berkelanjutan.
+              Memastikan setiap program Capacity Building memberikan dampak terukur dan berkelanjutan.
             </p>
           </div>
         </div>
@@ -90,33 +90,33 @@
       <div class="col-lg-4 col-md-6" style="padding:15px;">
         <div style="display:flex; align-items:flex-start; gap:12px; ">
           <div>
-          <img src="{{ asset('FE/beranda/fast.png') }}" style="width:150px; height:auto;">
+            <img src="{{ asset('FE/beranda/fast.png') }}" style="width:150px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Adaptive Learning Infrastructure</h5>
             <p style="color:#666; font-size:14px; margin-top:6px;">
-             Bangun sistem pembelajaran yang lincah, adaptif, & responsif terhadap perubahan industri: Personalized Learning Platform, Microlearning Ecosystem, Mobile Learning, & Continuous Evaluation.
+              Bangun sistem pembelajaran yang lincah, adaptif, & responsif terhadap perubahan industri: Personalized Learning Platform, Microlearning Ecosystem, Mobile Learning, & Continuous Evaluation.
             </p>
           </div>
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:12px;">
-           <div>
-          <img src="{{ asset('FE/beranda/stream.png') }}" style="width:150px; height:auto;">
+          <div>
+            <img src="{{ asset('FE/beranda/stream.png') }}" style="width:150px; height:auto;">
           </div>
           <div>
             <h5 style="font-size:16px; font-weight:700; margin:0;">Collaborative Knowledge Ecosystem</h5>
             <p style="color:#666; font-size:14px; margin-top:6px;">
-             Bangun budaya kolaborasi & berbagi pengetahuan untuk inovasi berkelanjutan: Professional Forum, Knowledge Platform, Innovation Labs, & Industry-Academia Partnership.
+              Bangun budaya kolaborasi & berbagi pengetahuan untuk inovasi berkelanjutan: Professional Forum, Knowledge Platform, Innovation Labs, & Industry-Academia Partnership.
             </p>
           </div>
         </div>
       </div>
 
-     
-      </div>
 
     </div>
+
+  </div>
   </div>
 </section>
 
@@ -184,21 +184,21 @@
     </div>
 
     <!-- Testimonial -->
-  <div style="flex:1 1 450px; min-width:300px; color:#000; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; padding:40px 30px; box-sizing:border-box;">
-    <p style="color:#005CFF; font-weight:600; margin-bottom:10px; font-size:14px;">Alasan bergabung pelayanan kami</p>
-    <h3 style="font-size:25px; font-weight:700; line-height:1.4; margin-bottom:20px;">Review dari alumni dan klien kami</h3>
-    <p style="color:#444; line-height:1.6; font-size:16px; max-width:500px; margin-bottom:20px;">
-       Program leadership dan mentorship-nya benar-benar membuka wawasan. Banyak insight baru yang bisa langsung diterapkan di pekerjaan.
-    </p>
-    <p style="font-weight:700; margin-bottom:5px;">Hartono S - Manager Bank BCP</p>
-    <p style="color:#f59e0b; font-size:22px; letter-spacing:2px; margin-bottom:15px;">★★★★★</p>
+    <div style="flex:1 1 450px; min-width:300px; color:#000; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; padding:40px 30px; box-sizing:border-box;">
+      <p style="color:#005CFF; font-weight:600; margin-bottom:10px; font-size:14px;">Alasan bergabung pelayanan kami</p>
+      <h3 style="font-size:25px; font-weight:700; line-height:1.4; margin-bottom:20px;">Review dari alumni dan klien kami</h3>
+      <p style="color:#444; line-height:1.6; font-size:16px; max-width:500px; margin-bottom:20px;">
+        Program leadership dan mentorship-nya benar-benar membuka wawasan. Banyak insight baru yang bisa langsung diterapkan di pekerjaan.
+      </p>
+      <p style="font-weight:700; margin-bottom:5px;">Hartono S - Manager Bank BCP</p>
+      <p style="color:#f59e0b; font-size:22px; letter-spacing:2px; margin-bottom:15px;">★★★★★</p>
 
-    <!-- Navigation Arrows -->
-    <div style="display:flex; gap:10px; justify-content:flex-start;">
-      <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">←</button>
-      <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">→</button>
+      <!-- Navigation Arrows -->
+      <div style="display:flex; gap:10px; justify-content:flex-start;">
+        <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">←</button>
+        <button style="border:none; background:#125ef7; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:18px; color:white;">→</button>
+      </div>
     </div>
-  </div>
 
 
   </div>
@@ -211,11 +211,10 @@
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))
 
 <script>
-function toggleAccordion(element) {
-  var content = element.querySelector('.accordion-content');
-  var isVisible = content.style.display === 'block';
-  document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
-  content.style.display = isVisible ? 'none' : 'block';
-}
+  function toggleAccordion(element) {
+    var content = element.querySelector('.accordion-content');
+    var isVisible = content.style.display === 'block';
+    document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
+    content.style.display = isVisible ? 'none' : 'block';
+  }
 </script>
-
