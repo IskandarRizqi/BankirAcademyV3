@@ -128,77 +128,76 @@
 									</select>
 								</div>
 							</div>
-							<<<<<<< HEAD=======>>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
-								<div class="col-lg-6">
-									<div class="row">
-										<div class="col-lg-6 col-md-6">
-											<div class="form-group">
-												<label for="filClassesImage">Image</label>
-												<small class="inputerrormessage text-danger" input-target="filClassesImage"
-													style="display: none;"></small>
-												<input type="file" name="filClassesImage" id="filClassesImage"
-													class="form-control" accept="image/*" maxfilesize="1048576" required>
-												<img src="#" alt="Image Preview" id="prvClassesImage" class="previewImage"
-													style="max-width: 100%;max-height:97px;">
-											</div>
+							<div class="col-lg-6">
+								<div class="row">
+									<div class="col-lg-6 col-md-6">
+										<div class="form-group">
+											<label for="filClassesImage">Image</label>
+											<small class="inputerrormessage text-danger" input-target="filClassesImage"
+												style="display: none;"></small>
+											<input type="file" name="filClassesImage" id="filClassesImage"
+												class="form-control" accept="image/*" maxfilesize="1048576" required>
+											<img src="#" alt="Image Preview" id="prvClassesImage" class="previewImage"
+												style="max-width: 100%;max-height:97px;">
 										</div>
-										<div class="col-lg-6 col-md-6">
-											<div class="form-group">
-												<label for="filClassesImageMobile">Image ( detail/mobile)</label>
-												<small class="inputerrormessage text-danger"
-													input-target="filClassesImageMobile" style="display: none;"></small>
-												<input type="file" name="filClassesImageMobile" id="filClassesImageMobile"
-													class="form-control" accept="image/*" maxfilesize="1048576" required>
-												<img src="#" alt="Image Preview" id="prvClassesImageMobile"
-													class="previewImage" style="max-width: 100%;max-height:97px;">
-											</div>
+									</div>
+									<div class="col-lg-6 col-md-6">
+										<div class="form-group">
+											<label for="filClassesImageMobile">Image ( detail/mobile)</label>
+											<small class="inputerrormessage text-danger"
+												input-target="filClassesImageMobile" style="display: none;"></small>
+											<input type="file" name="filClassesImageMobile" id="filClassesImageMobile"
+												class="form-control" accept="image/*" maxfilesize="1048576" required>
+											<img src="#" alt="Image Preview" id="prvClassesImageMobile"
+												class="previewImage" style="max-width: 100%;max-height:97px;">
 										</div>
 									</div>
 								</div>
-								<div class="col-lg-6 d-flex">
-									<div class="form-group">
-										<label for="numClassesLimit">Participant Limit</label>
-										<small class="inputerrormessage text-danger" input-target="numClassesLimit"
-											style="display: none;"></small>
-										<input type="number" min="1" max="999" value="13" name="numClassesLimit"
-											id="numClassesLimit" class="form-control" required>
-									</div>
-									<div class="form-group ml-4">
-										<label for="numClassesPoin">Poin</label>
-										<input type="number" min="1" name="numClassesPoin" id="numClassesPoin"
-											class="form-control" required>
-									</div>
+							</div>
+							<div class="col-lg-6 d-flex">
+								<div class="form-group">
+									<label for="numClassesLimit">Participant Limit</label>
+									<small class="inputerrormessage text-danger" input-target="numClassesLimit"
+										style="display: none;"></small>
+									<input type="number" min="1" max="999" value="13" name="numClassesLimit"
+										id="numClassesLimit" class="form-control" required>
 								</div>
-								<div class="col-lg-3">
-									<div class="form-group">
-										<label for="slcClassesTags">Type</label>
-										<select name="type" class="form-control" required>
-											<option value="0">Online</option>
-											<option value="1">Offline</option>
-										</select>
-									</div>
+								<div class="form-group ml-4">
+									<label for="numClassesPoin">Poin</label>
+									<input type="number" min="1" name="numClassesPoin" id="numClassesPoin"
+										class="form-control" required>
 								</div>
-								<div class="col-lg-3">
-									<div class="form-group">
-										<label for="slcClassesTags">Jam</label>
-										<input type="time" name="jam_acara" required class="form-control">
-									</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="slcClassesTags">Type</label>
+									<select name="type" class="form-control" required>
+										<option value="0">Online</option>
+										<option value="1">Offline</option>
+									</select>
 								</div>
-								<div class="col-lg-6">
-									<div class="form-group">
-										<label for="slcClassesTags">Lokasi</label>
-										<textarea name="lokasi" class="form-control" rows="1" cols="1" placeholder="Input lokasi class apabila offline"></textarea>
-									</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="slcClassesTags">Jam</label>
+									<input type="time" name="jam_acara" required class="form-control">
 								</div>
-								<div class="col-lg-12">
-									<div class="form-group">
-										<label for="txaClassesContent">Description</label>
-										<small class="inputerrormessage text-danger" input-target="txaClassesContent"
-											style="display: none;"></small>
-										<textarea name="txaClassesContent" id="txaClassesContent" class="form-control"
-											required></textarea>
-									</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="slcClassesTags">Lokasi</label>
+									<textarea name="lokasi" class="form-control" rows="1" cols="1" placeholder="Input lokasi class apabila offline"></textarea>
 								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label for="txaClassesContent">Description</label>
+									<small class="inputerrormessage text-danger" input-target="txaClassesContent"
+										style="display: none;"></small>
+									<textarea name="txaClassesContent" id="txaClassesContent" class="form-control"
+										required></textarea>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-4">

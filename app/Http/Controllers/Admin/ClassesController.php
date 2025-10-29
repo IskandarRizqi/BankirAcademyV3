@@ -841,11 +841,7 @@ class ClassesController extends Controller
 		$data['tags'] = $request->checkbox;
 		$data['tipe'] = $request->tipe;
 		$data['jeniss'] = $request->jeniss;
-<<<<<<< HEAD
 		$data['sebelumnya'] = $request->sebelumnya ?? '';
-=======
-		$data['sebelumnya'] = $request->sebelumnya ?? ''; 
->>>>>>> 6a64ba7d511d7658144f76f58b9770456dae4af7
 		// return $request->all();
 		return view('front.kelas.listclass', $data);
 	}
