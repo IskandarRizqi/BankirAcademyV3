@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <button class="btn btn-success mt-4 br-20" style="font-size: 12px; margin-bottom: 20px;">{{$class->category}}</button>
-                    <h1 class="text-white" style="font-size: 16px;">{{$title}}</h1>
+                    <h1 class="text-white" style="font-size: 23px;">{{$title}}</h1>
                     {{-- <div class="bintang text-white"><b>4.5</b> <svg width="18" height="16" viewBox="0 0 18 16"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -90,9 +90,9 @@
 
                 <div class="col-md-4 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 15px;">Narasumber</label>
+                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Narasumber</label>
                         @if(count($class->instructor_list) > 0)
-                        <p class="m-0"><b style="font-size: 13px;">{{$class->instructor_list[0]->name}}</b></p>
+                        <p class="m-0"><b style="font-size: 17px;">{{$class->instructor_list[0]->name}}</b></p>
                         @else
                         <span class="badge badge-danger">Instructor belum tersedia</span>
                         @endif
@@ -102,18 +102,18 @@
 
                 <div class="col-md-4 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 15px;">Kategori</label>
+                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Kategori</label>
                         @if($class->tags)
-                        <p class="m-0"><b style="font-size: 13px;">{{implode(', ', json_decode($class->tags))}}</b></p>
+                        <p class="m-0"><b style="font-size: 17px;">{{implode(', ', json_decode($class->tags))}}</b></p>
                         @endif
                     </div>
                 </div>
 
                 <div class="col-md-4 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0 text-white;" style="color: white; font-size: 15px;">Sub Kategori</label>
+                        <label class="m-0 text-white;" style="color: white; font-size: 12px; font-weight: normal;">Sub Kategori</label>
                         @if($class->sub_category)
-                        <p class="m-0 text-white"><b style="font-size: 13px;">{{implode(', ', json_decode($class->sub_category))}}</b></p>
+                        <p class="m-0 text-white"><b style="font-size: 17px;">{{implode(', ', json_decode($class->sub_category))}}</b></p>
                         @else
                         <span class="badge badge-danger">Sub Kategori belum tersedia</span>
                         @endif
@@ -125,23 +125,32 @@
             <div class="row text-white text-capitalize" style="margin-top: 20px;">
                 <div class="col-md-4 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 15px;">Tanggal Kelas</label>
-                        <p class="m-0"><b style=" font-size: 13px;">{{\Carbon\Carbon::parse($class->date_start)->format('d-F-Y')}}</b></p>
+                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Tanggal Kelas</label>
+                        <p class="m-0"><b style=" font-size: 17px;">{{\Carbon\Carbon::parse($class->date_start)->format('d-F-Y')}}</b></p>
                     </div>
                 </div>
 
                 <div class="col-md-4 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 15px;">Jam </label>
-                        <p class="m-0" style="font-size: 13px;"><b> {{ \Carbon\Carbon::parse($class->jam_acara)->format('H:i') }} WIB</b></p>
+                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Jam </label>
+                        @if ($class->jam_acara)
+                            <p class="m-0" style="font-size: 17px;">
+                                <b>{{ \Carbon\Carbon::parse($class->jam_acara)->format('H:i') }} WIB</b>
+                            </p>
+                        @else
+                            <p class="m-0" style="font-size: 13px;">
+                                <b>Jam belum ada</b>
+                            </p>
+                        @endif
+
                     </div>
                 </div>
 
                 @if($class->kategori == 0)
                 <div class="col-md-4 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 15px;">ONLINE</label>
-                        <p class="m-0" style="font-size: 13px;">
+                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">ONLINE</label>
+                        <p class="m-0" style="font-size: 17px;">
                             <i class="fa fa-video" aria-hidden="true"></i> ZOOM MEET
                         </p>
 
@@ -155,11 +164,11 @@
             <div class="row text-white text-capitalize" style="margin-top: 20px;">
                 <div class="col-md-12 col-12 mb-2">
                     <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 16px;">OFFLINE</label>
-                        <p class="m-0" style="font-size: 13px;">
+                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">OFFLINE</label>
+                        <p class="m-0" style="font-size: 17px;">
                             @if($class->lokasi != null)
-                            <a href="https://www.google.com/maps/place/{{$class->lokasi}}" target="_blank" style="color: inherit; text-decoration: none;font-size: 13px;">
-                                <i class="fa fa-map-marker-alt" aria-hidden="true"></i> {{$class->lokasi}}
+                            <a href="https://www.google.com/maps/place/{{$class->lokasi}}" target="_blank" style="color: inherit; text-decoration: none;font-size: 17px;">
+                                <i class="fa fa-map-marker-alt" aria-hidden="true" style="font-size: 17px;"></i> {{$class->lokasi}}
                             </a>
                             @else
                             <span class="badge badge-danger">Lokasi belum di tentukan</span>

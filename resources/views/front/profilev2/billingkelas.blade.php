@@ -351,7 +351,7 @@
                         if (v.file && v.status != 0) {
                             tglbayar = new Date(v.updated_at).toLocaleDateString('id-ID')
                         }
-
+                        let file = encodeURIComponent(v.file);
                         h += '<div class="card br-10 mb-4" style="background-color: #f7f7f7">';
                         h += '<div class="card-body">';
                         h += '<div class="d-flex justify-content-between">';
@@ -378,11 +378,19 @@
                         h += '        <p class="text-uppercase"><b>' + tglbayar + '</b></p>';
                         h += '    </div>';
 
-                        // Kolom 5–8 (baris kedua)
+
                         h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">Gambar</small>';
-                        h += '         <br><br> <a href="' + v.gmbr_desk + '" target="_blank" style="color: #007bff; text-decoration: underline; font-size:17px;  ">Preview</a>'
+                        h += '        <small class="text-secondary">Gambar</small><br><br>';
+
+                        if (v.file && v.file !== '') {
+                            h += '        <a href="#" onclick="window.open(\'/getBerkasbukti?rf=' + v.file + '\', \'_blank\'); return false;" ';
+                            h += '           style="color:#007bff; text-decoration:underline; font-size:17px;">Preview</a>';
+                        } else {
+                            h += '        <span style="color:red; font-size:14px;">Belum ada upload bukti</span>';
+                        }
+
                         h += '    </div>';
+
 
                         h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
                         h += '        <small class="text-secondary">Status</small>';
@@ -397,12 +405,7 @@
                         // h+='        <input type="text" class="form-control jumlah_peserta'+n+'" onchange="tambahPeserta('+v.id+','+v.participant_limit+','+ v.class_id+','+n+','+' {{ $reff ? $reff->code : '' }}'+')" '+r+'>';
                         // h+='    </div>';
                         h += '    <div class="text-right">';
-                        if (v.file) {
-                            h += '        <a class="class_image' + n + '" href="/getBerkas?rf=' + v.file + '" target="_blank"';
-                            // h+='            ><img class="class_imagenya'+n+'" src="/getBerkas?rf='+v.file+'"';
-                            h += '            width="75%">';
-                            h += '        </a>';
-                        }
+
                         // h+='        <small class="text-secondary">Kode Promo</small>';
                         // h+='        <input type="text" class="form-control kode_promo'+n+'" onchange="kodePromo(`'+v.title+'`,'+n+','+v.id+')" '+r+'>';
                         h += '    </div>';

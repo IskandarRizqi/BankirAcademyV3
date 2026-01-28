@@ -162,6 +162,12 @@ Route::middleware('auth')->group(function () {
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');
+
+Route::get('getBerkasbukti', function (Request $r) {
+    $path = Storage::path($r->rf);
+    return response()->file($path);
+})->middleware('auth');
+
 Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar']);
 Route::post('/bayarv2', [App\Http\Controllers\Front\OrderController::class, 'bayarv2']);
 Route::post('/multi-bayar', [App\Http\Controllers\Front\OrderController::class, 'multibayar']);

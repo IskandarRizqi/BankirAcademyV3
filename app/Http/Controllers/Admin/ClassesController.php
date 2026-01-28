@@ -744,9 +744,9 @@ class ClassesController extends Controller
 		$data['class'] = ClassesModel::select()
 			->where(function ($sql) use ($request, $data) {
 				if ($request->sebelumnya) {
-					return $sql->where('date_start', '<', Carbon::now()->format('Y-m-d'));
+					return $sql->where('date_start', '<', Carbon::now()->format('d-m-Y'));
 				} else {
-					return $sql->where('date_start', '>=', Carbon::now()->format('Y-m-d'));
+					return $sql->where('date_start', '>=', Carbon::now()->format('d-m-Y'));
 				}
 				if ($request->jenis) {
 					foreach ($data['jeniss'] as $key => $va) {

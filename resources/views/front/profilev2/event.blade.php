@@ -117,7 +117,12 @@
                         // BAGIAN ATAS (TANGGAL & JUDUL)
                         html += '    <div style="padding:15px; flex-grow:1;">';
                         html += '      <div style="text-align:center; margin-top:8px;">';
-                        html += '        <p style="margin:4px 0 0 0; font-size:12px; color:#777;">' + dt.date_end + '</p>';
+                                                html += '        <p style="margin:4px 0 0 0; font-size:12px; color:#777;">' 
+                              + (function(d){ 
+                                    const t=new Date(d); 
+                                    return String(t.getDate()).padStart(2,'0')+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+t.getFullYear(); 
+                                })(dt.date_end) 
+                              + '</p>';
                         html += '        <h4 class="text-capitalize m-0" style="font-size:15px; font-weight:600; color:#000; font-family:Arial, sans-serif ; ">' + dt.title + '</h4>';
                         html += '      </div>';
                         html += '    </div>';

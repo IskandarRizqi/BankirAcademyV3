@@ -303,6 +303,7 @@ class ProfileController extends Controller
 
     public function getkelasanda($type)
     {
+     
         $start = Carbon::now()->subYears(30)->format('Y-m-d');
         $end = Carbon::now()->addDay()->format('Y-m-d');
         $status = [1, 0];
@@ -330,6 +331,12 @@ class ProfileController extends Controller
             'classes.participant_limit',
             'class_participant.review',
             'class_participant.id as participant_id',
+            'classes.date_start',  
+            'classes.date_end',   
+            'classes.jam_acara',  
+            'classes.kategori',
+            'classes.lokasi',  
+                
         )
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
@@ -342,10 +349,21 @@ class ProfileController extends Controller
             ->orderBy('class_payment.status', 'desc')
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
-        foreach ($data['getkelasanda'] as $key => $v) {
+            
+
+
+       foreach ($data['getkelasanda'] as $key => $v) {
             $v->events = ClassContentModel::where('class_id', $v->class_id)->get();
-            // $v->events = $events ? json_encode($events) : null;
+
+            // ambil data class untuk akses instructor_list
+            $class = ClassesModel::where('id', $v->class_id)->first();
+            if ($class && count($class->instructor_list) > 0) {
+                $v->narasumber = $class->instructor_list[0]->name;
+            } else {
+                $v->narasumber = null;
+            }
         }
+
         return response()->json([
             'status' => 1,
             'msg' => 'Data Success',

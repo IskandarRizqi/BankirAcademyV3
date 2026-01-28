@@ -13,7 +13,8 @@
         <div class="container clearfix">
             {{-- <h3 class="text-capitalize">{{ $judul }}</h3> --}}
             <div class="entry-image" style="margin-bottom:100px;">
-                <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: 200px; border-radius: 10px;">
+                {{-- <img src="{{asset($banner)}}" alt="{{$judul}}" style="max-height: 200px; border-radius: 10px;"> --}}
+                <img src="FE/beranda/sinergi.png" style="max-height: 250px; border-radius: 10px;">
             </div>
             {{-- <form action="/list-class" method="POST">
                 <div class="row mr-1 ml-1">
@@ -248,7 +249,13 @@
                         // BAGIAN ATAS (TANGGAL & JUDUL)
                         html += '    <div style="padding:15px; flex-grow:1;">';
                         html += '      <div style="text-align:center; margin-top:8px;">';
-                        html += '        <p style="margin:4px 0 0 0; font-size:12px; color:#777;">' + dt.date_end + '</p>';
+                        html += '        <p style="margin:4px 0 0 0; font-size:12px; color:#777;">' 
+                              + (function(d){ 
+                                    const t=new Date(d); 
+                                    return String(t.getDate()).padStart(2,'0')+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+t.getFullYear(); 
+                                })(dt.date_end) 
+                              + '</p>';
+
                         html += '        <h4 class="text-capitalize m-0" style="font-size:15px; font-weight:600; font-family:Arial, sans-serif ; color:#000;">' + dt.title + '</h4>';
                         html += '      </div>';
                         html += '    </div>';

@@ -319,12 +319,19 @@ class HomeController extends Controller
         //     ->orderBy('date_end', 'asc')
         //     ->get();
         // untuk event
-        $data['kelas'] = ClassesModel::select()
-        ->where('date_end', '>=', $now->format('Y-m-d'))
-        ->where('status', 1)
-        ->orderBy('date_end', 'desc') 
-        ->take(4)                     
-        ->get();                      
+
+   
+        $currentMonth = $now->month;
+        $currentYear  = $now->year;
+
+        $data['kelas'] = ClassesModel::query()
+            ->whereYear('date_start', $currentYear)
+            ->whereMonth('date_start', $currentMonth)
+            ->where('date_end', '>=', $now->format('Y-m-d')) 
+            ->where('status', 1)
+            ->orderBy('date_end', 'asc')
+            ->take(4)
+            ->get();                  
 
         foreach ($data['kelas'] as $key => $value) {
             if ($value->is_terpopuler) {

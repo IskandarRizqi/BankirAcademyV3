@@ -202,6 +202,30 @@
       margin: 0 auto !important;
     }
   }
+   @media (max-width: 768px) {
+    .event-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .event-card {
+      width: 100% !important;
+      max-width: 350px;
+    }
+
+    .event-card img {
+      height: 300px !important;
+      object-fit: cover !important;
+    }
+
+    .event-button {
+      width: 110% !important;
+      padding: 10px 0 !important;
+    }
+  }
+  
 </style>
 
 <!-- Banner Section -->
@@ -210,33 +234,33 @@
 
     <!-- Slide 1 -->
     <div class="banner-slide active d-flex flex-column justify-content-center align-items-center text-center text-white"
-      style="position:absolute;width:100%;height:100%;background:url('FE/beranda/44.jpg') center/cover no-repeat;
+      style="position:absolute;width:100%;height:100%;background:url('FE/baner/1.png') center/cover no-repeat;
                    opacity:1;transform:translateY(0);transition:all 1.2s ease-in-out;">
       <div class="banner-content">
         <h1 class="fw-bold" style="color: white">Professional Consulting</h1>
-        <p style="color: white">Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
+        <p style="color: white; font-size: 20px;" >Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
         <a href="#layanan" class="btn btn-primary mt-2">Mari Bekerja Sama</a>
       </div>
     </div>
 
     <!-- Slide 2 -->
     <div class="banner-slide d-flex flex-column justify-content-center align-items-center text-center text-white"
-      style="position:absolute;width:100%;height:100%;background:url('FE/baner/3.png') center/cover no-repeat;
+      style="position:absolute;width:100%;height:100%;background:url('FE/baner/2.png') center/cover no-repeat;
                    opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
       <div class="banner-content">
         <h1 class="fw-bold" style="color: white">Upgrade Skill Tanpa Batas</h1>
-        <p style="color: white">Pelatihan & Sertifikasi Terbaik untuk Bankir Hebat.</p>
+        <p style="color: white; font-size: 20px;" >Pelatihan & Sertifikasi Terbaik untuk Bankir Hebat.</p>
         <a href="#program" class="btn btn-primary mt-2">Pelajari Lebih Lanjut</a>
       </div>
     </div>
 
     <!-- Slide 3 -->
     <div class="banner-slide d-flex flex-column justify-content-center align-items-center text-center text-white"
-      style="position:absolute;width:100%;height:100%;background:url('FE/baner/22.jpg') center/cover no-repeat;
+      style="position:absolute;width:100%;height:100%;background:url('FE/baner/3.png') center/cover no-repeat;
                    opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
       <div class="banner-content">
         <h1 class="fw-bold" style="color: white">Bergabunglah Bersama Kami</h1>
-        <p style="color: white">Raih karier gemilang di dunia finansial.</p>
+        <p style="color: white;  font-size: 20px;">Raih karier gemilang di dunia finansial.</p>
         <a href="#kontak" class="btn btn-primary mt-2">Hubungi Kami</a>
       </div>
     </div>
@@ -244,136 +268,55 @@
   </div>
 </section>
 
-{{-- <section style="padding:60px 0; background:var(--bg-light); text-align:center;">
-  <h2>Event</h2>
 
-  <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
-
-    <!-- Card -->
-    <div class="card" style="width:250px; height:320px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white;">
-      <!-- Gambar atas -->
-      <div style="height:60%; overflow:hidden;">
-        <img src="FE/images/images-demo-consulting-03.jpg" alt="Audit assurance"
-             style="width:100%; height:100%; object-fit:cover;">
-      </div>
-
-      <!-- Konten bawah -->
-      <div style="padding:15px; text-align:center;">
-        <p style="font-size:12px; color:#777; margin-bottom:4px;">2025-10-26</p>
-        <h4 style="font-size:12px; margin:0; font-weight:600;">FINANCIAL ADVISORY</h4>
-        <p style="font-size:1px; color:#007bff; margin:0 0 8px;">JOHN DOE</p>
-        <h5 style="color:#007bff; font-weight:700; margin-bottom:12px; font-size: 14px;;">Rp. 125,000</h5>
-        <button style="background:#007bff; color:white; border:none; padding:3px 20px; border-radius:6px; cursor:pointer; font-weight:500;">
-          Daftar
-        </button>
-      </div>
-    </div>
-
-    <!-- Ulangi card lain sesuai kebutuhan -->
-    <div class="card" style="width:250px; height:320px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white;">
-      <div style="height:60%; overflow:hidden;">
-        <img src="FE/images/images-demo-consulting-04.jpg" alt="Financial advisory"
-             style="width:100%; height:100%; object-fit:cover;">
-      </div>
-      <div style="padding:15px; text-align:center;">
-        <p style="font-size:12px; color:#777; margin-bottom:4px;">2025-10-26</p>
-        <h4 style="font-size:12px; margin:0; font-weight:600;">FINANCIAL ADVISORY</h4>
-        <p style="font-size:1px; color:#007bff; margin:0 0 8px;">JOHN DOE</p>
-        <h5 style="color:#007bff; font-weight:700; margin-bottom:12px; font-size: 14px;;">Rp. 125,000</h5>
-        <button style="background:#007bff; color:white; border:none; padding:3px 20px; border-radius:6px; cursor:pointer; font-weight:500;">
-          Daftar
-        </button>
-      </div>
-    </div>
-
-     <div class="card" style="width:250px; height:320px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white;">
-      <!-- Gambar atas -->
-      <div style="height:60%; overflow:hidden;">
-        <img src="FE/images/images-demo-consulting-03.jpg" alt="Audit assurance"
-             style="width:100%; height:100%; object-fit:cover;">
-      </div>
-
-      <!-- Konten bawah -->
-      <div style="padding:15px; text-align:center;">
-        <p style="font-size:12px; color:#777; margin-bottom:4px;">2025-10-26</p>
-        <h4 style="font-size:12px; margin:0; font-weight:600;">FINANCIAL ADVISORY</h4>
-        <p style="font-size:1px; color:#007bff; margin:0 0 8px;">JOHN DOE</p>
-        <h5 style="color:#007bff; font-weight:700; margin-bottom:12px; font-size: 14px;;">Rp. 125,000</h5>
-        <button style="background:#007bff; color:white; border:none; padding:3px 20px; border-radius:6px; cursor:pointer; font-weight:500;">
-          Daftar
-        </button>
-      </div>
-    </div>
-
-    <!-- Ulangi card lain sesuai kebutuhan -->
-    <div class="card" style="width:250px; height:320px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white;">
-      <div style="height:60%; overflow:hidden;">
-        <img src="FE/images/images-demo-consulting-04.jpg" alt="Financial advisory"
-             style="width:100%; height:100%; object-fit:cover;">
-      </div>
-      <div style="padding:15px; text-align:center;">
-        <p style="font-size:12px; color:#777; margin-bottom:4px;">2025-10-26</p>
-        <h4 style="font-size:12px; margin:0; font-weight:600;">FINANCIAL ADVISORY</h4>
-        <p style="font-size:1px; color:#007bff; margin:0 0 8px;">JOHN DOE</p>
-        <h5 style="color:#007bff; font-weight:700; margin-bottom:12px; font-size: 14px;;">Rp. 125,000</h5>
-        <button style="background:#007bff; color:white; border:none; padding:3px 20px; border-radius:6px; cursor:pointer; font-weight:500;">
-          Daftar
-        </button>
-      </div>
-    </div>
-  </div>
-</section> --}}
 
 <section style="padding:60px 0; background:var(--bg-light); text-align:center;">
   <h4 style="font-size:25px; color:#005CFF;">Event</h4>
+  <br>
+  <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
 
-  <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
+  @foreach($kelas as $class)
+  <div class="card event-card"
+    style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column;">
 
-    @foreach($kelas as $class)
-    <div class="card"
-      style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column;">
-
-      <!-- Gambar -->
-      <div style="width:100%; height:300px; oject-fit:fill flex-shrink:0; margin:0; padding:0;">
-        <img
-          src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
-          alt="{{ $class->title }}"
-          style="width:100%; height:100%; object-fit:fill; display:block; margin:0; padding:0; border:none;">
-      </div>
-
-      <!-- Konten -->
-      <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:15px; text-align:center;">
-        <div>
-          <p style="font-size:12px; color:#777; margin-bottom:4px;">
-            {{ \Carbon\Carbon::parse($class->date_start)->format('Y-m-d') }}
-          </p>
-          <h4 style="font-size:12px; margin:0; font-weight:600; font-family:Arial, sans-serif ;">
-            {{ strtoupper($class->title) }}
-          </h4>
-
-
-          @php
-          $instructor = $class->instructor_list->first()->name ?? 'Instructor';
-          @endphp
-
-          <p style="font-size:12px; color:#007bff; margin:4px 0 8px; font-family:Arial, sans-serif ;">
-            {{ strtoupper($instructor) }}
-          </p>
-        </div>
-
-        <!-- Tombol (tetap di bawah) -->
-        <button
-          onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'"
-          style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;font-family:Arial, sans-serif ;">
-          Daftar
-        </button>
-      </div>
+    <div style="width:100%; height:300px; flex-shrink:0;">
+      <img
+        src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
+        alt="{{ $class->title }}"
+        style="width:100%; height:100%; object-fit:fill; display:block; border:none;">
     </div>
-    @endforeach
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:15px; text-align:center;">
+      <div>
+        <p style="font-size:12px; color:#777; margin-bottom:4px;">
+          {{ \Carbon\Carbon::parse($class->date_start)->format('d-m-Y') }}
+        </p>
+        <h4 style="font-size:12px; margin:0; font-weight:600; font-family:Arial, sans-serif;">
+          {{ strtoupper($class->title) }}
+        </h4>
+
+        @php
+        $instructor = $class->instructor_list->first()->name ?? 'Instructor';
+        @endphp
+
+        <p style="font-size:12px; color:#007bff; margin:4px 0 8px; font-family:Arial, sans-serif;">
+          {{ strtoupper($instructor) }}
+        </p>
+      </div>
+
+      <button class="event-button"
+        onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'"
+        style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;">
+        Daftar
+      </button>
+    </div>
   </div>
+  @endforeach
+</div>
+
   <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
     <a href="/list-class?jenis=bankir"
-      style="background:#007bff; color:white; text-decoration:none; padding:10px 20px; border-radius:25px; cursor:pointer; display:inline-block; margin-right:140px;">
+      style="background:#007bff; color:white; text-decoration:none; padding:5px 20px; border-radius:25px; cursor:pointer; display:inline-block; margin-right:140px;">
       Semua Event
     </a>
   </div>
@@ -391,7 +334,7 @@
       <!-- Item 1 -->
       <div class="col-lg-4 col-md-6 col-12 mb-4">
         <div style="padding:20px;">
-          <img src="FE/images/images-demo-consulting-icon-01.png" alt="Innovative Ideas" style="width:60px; height:60px; margin-bottom:20px;">
+          <img src="FE/beranda/gambar1.png" alt="Innovative Ideas" style="width:80px; height:90px; margin-bottom:20px;">
           <h5 style="font-size: 20px;">Personal & Adaptif <br> Berbasis AI</h5>
           <p>Pelatihan dan Program berbasis AI dan Analitik Data disertai rekomendasi konten berdasarkan level pengguna</p>
         </div>
@@ -400,7 +343,7 @@
       <!-- Item 2 -->
       <div class="col-lg-4 col-md-6 col-12 mb-4">
         <div style="padding:20px;">
-          <img src="FE/images/images-demo-consulting-icon-02.png" alt="Expertise Strategy" style="width:60px; height:60px; margin-bottom:20px;">
+          <img src="FE/beranda/gambar 2.png" alt="Expertise Strategy" style="width:80px; height:90px; margin-bottom:20px;">
           <h5 style="font-size: 20px;">Imersif & Praktis <br> Berbasis Simulasi</h5>
           <p>Rasakan simulasi nyata lingkungan kerja perbankan untuk mengasah keterampilan & kesiapan profesional.</p>
         </div>
@@ -409,7 +352,7 @@
       <!-- Item 3 -->
       <div class="col-lg-4 col-md-6 col-12 mb-4">
         <div style="padding:20px;">
-          <img src="FE/images/images-demo-consulting-icon-03.png" alt="Financial Planning" style="width:60px; height:60px; margin-bottom:20px;">
+          <img src="FE/beranda/gambar 3.png" alt="Financial Planning" style="width:80px; height:90px; margin-bottom:20px;">
           <h5 style="font-size: 20px;">Jejaring & Pembelajaran <br> Kolaboratif</h5>
           <p>Belajar dengan ahli praktisi & kesempatan kerja di perusahaan bank terkemuka untuk mengembangkan kariermu sejak dini. </p>
         </div>
@@ -657,7 +600,7 @@
               style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
-            <h5 class="fw-semibold mb-0">Riris Eriska</h5>
+            <h5 class="fw-semibold mb-0">Riris Erika</h5>
             <p class="text-muted small mb-0">Consultant Professional</p>
           </div>
         </div>
@@ -838,7 +781,7 @@
   </div>
 </section>
 
-<section style="background:linear-gradient(180deg, #3b82f6 0%, #1e1b4b 100%); color:white; padding:40px 60px;">
+{{-- <section style="background:linear-gradient(180deg, #3b82f6 0%, #1e1b4b 100%); color:white; padding:40px 60px;">
   <div style="max-width:1100px; margin:auto; display:flex; align-items:center; justify-content:space-between;">
 
     <!-- Kiri -->
@@ -864,7 +807,17 @@
     </div>
 
   </div>
+</section> --}}
+
+{{-- <section>
+  <img src="FE/beranda/relasi.png" alt="" style="max-height: 200px; max-width: auto;">
+</section> --}}
+<section style="background:#f8fafc; padding:20px 0; ">
+  <div style="position:relative; width:100%; height:100%; object-fit: cover;">
+    <img src="FE/beranda/rls.png" style="padding: 10px;">
+  </div>
 </section>
+
 
 
 
