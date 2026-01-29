@@ -49,7 +49,8 @@
             </div>
             <div class="row">
                 <div class="col-lg-8">
-                    <button class="btn btn-success mt-4 br-20" style="font-size: 12px; margin-bottom: 20px;">{{$class->category}}</button>
+                    <button class="btn btn-success mt-4 br-20"
+                        style="font-size: 12px; margin-bottom: 20px;">{{$class->category}}</button>
                     <h1 class="text-white" style="font-size: 23px;">{{$title}}</h1>
                     {{-- <div class="bintang text-white"><b>4.5</b> <svg width="18" height="16" viewBox="0 0 18 16"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,137 +64,150 @@
                             <label for="" class="m-0 text-white text-capitalize">Narasumber</label>
                             @if(count($class->instructor_list) > 0)
                             <p class="m-0 text-white text-capitalize"><b>{{$class->instructor_list[0]->name}}</b></p>
-                    @else
-                    <span class="badge badge-danger">Instructor belum tersedia</span>
-                    @endif
-                </div>
-                <div class="form-group mr-auto">
-                    <label for="" class="m-0 text-white text-capitalize">Kategori</label>
-                    @if($class->tags)
-                    <p class="m-0 text-white text-capitalize"><b>{{implode(', ',json_decode($class->tags))}}</b>
-                    </p>
-                    @endif
-                </div>
-                <div class="form-group mr-auto">
-                    <label for="" class="m-0 text-white text-capitalize">Tanggal Kelas</label>
-                    <p class="m-0 text-white text-capitalize">
-                        <b>{{\Carbon\Carbon::parse($class->date_start)->format('d-F-Y')}}</b>
-                    </p>
-                </div>
-            </div> --}}
-            {{-- <span class="text-white">
+                            @else
+                            <span class="badge badge-danger">Instructor belum tersedia</span>
+                            @endif
+                        </div>
+                        <div class="form-group mr-auto">
+                            <label for="" class="m-0 text-white text-capitalize">Kategori</label>
+                            @if($class->tags)
+                            <p class="m-0 text-white text-capitalize"><b>{{implode(', ',json_decode($class->tags))}}</b>
+                            </p>
+                            @endif
+                        </div>
+                        <div class="form-group mr-auto">
+                            <label for="" class="m-0 text-white text-capitalize">Tanggal Kelas</label>
+                            <p class="m-0 text-white text-capitalize">
+                                <b>{{\Carbon\Carbon::parse($class->date_start)->format('d-F-Y')}}</b>
+                            </p>
+                        </div>
+                    </div> --}}
+                    {{-- <span class="text-white">
                         @if($class->sub_category)
                         Sub Kategori : <b>{{implode(', ',json_decode($class->sub_category))}}</b>
-            @endif
-            </span> --}}
-            <div class="row text-white text-capitalize">
-
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Narasumber</label>
-                        @if(count($class->instructor_list) > 0)
-                        <p class="m-0"><b style="font-size: 17px;">{{$class->instructor_list[0]->name}}</b></p>
-                        @else
-                        <span class="badge badge-danger">Instructor belum tersedia</span>
                         @endif
+                    </span> --}}
+                    <div class="row text-white text-capitalize">
+
+                        <div class="col-md-4 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0"
+                                    style="color: white; font-size: 12px; font-weight: normal;">Narasumber</label>
+                                @if(count($class->instructor_list) > 0)
+                                <p class="m-0"><b style="font-size: 17px;">{{$class->instructor_list[0]->name}}</b></p>
+                                @else
+                                <span class="badge badge-danger">Instructor belum tersedia</span>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0"
+                                    style="color: white; font-size: 12px; font-weight: normal;">Kategori</label>
+                                @if($class->tags)
+                                <p class="m-0"><b style="font-size: 17px;">{{implode(', ',
+                                        json_decode($class->tags))}}</b></p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0 text-white;"
+                                    style="color: white; font-size: 12px; font-weight: normal;">Sub Kategori</label>
+                                @if($class->sub_category)
+                                <p class="m-0 text-white"><b style="font-size: 17px;">{{implode(', ',
+                                        json_decode($class->sub_category))}}</b></p>
+                                @else
+                                <span class="badge badge-danger">Sub Kategori belum tersedia</span>
+                                @endif
+                            </div>
+
+                        </div>
                     </div>
+
+                    <div class="row text-white text-capitalize" style="margin-top: 20px;">
+                        <div class="col-md-4 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Tanggal
+                                    Kelas</label>
+                                <p class="m-0"><b
+                                        style=" font-size: 17px;">{{\Carbon\Carbon::parse($class->date_start)->format('d-F-Y')}}</b>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Jam
+                                </label>
+                                @if ($class->jam_acara)
+                                <p class="m-0" style="font-size: 17px;">
+                                    <b>{{ \Carbon\Carbon::parse($class->jam_acara)->format('H:i') }} WIB</b>
+                                </p>
+                                @else
+                                <p class="m-0" style="font-size: 13px;">
+                                    <b>Jam belum ada</b>
+                                </p>
+                                @endif
+
+                            </div>
+                        </div>
+
+                        @if($class->kategori == 0)
+                        <div class="col-md-4 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0"
+                                    style="color: white; font-size: 12px; font-weight: normal;">ONLINE</label>
+                                <p class="m-0" style="font-size: 17px;">
+                                    <i class="fa fa-video" aria-hidden="true"></i> ZOOM MEET
+                                </p>
+
+                            </div>
+                        </div>
+                        @endif
+
+                    </div>
+                    {{-- <br> --}}
+                    @if($class->kategori == 1)
+                    <div class="row text-white text-capitalize" style="margin-top: 20px;">
+                        <div class="col-md-12 col-12 mb-2">
+                            <div class="form-group m-0">
+                                <label class="m-0"
+                                    style="color: white; font-size: 12px; font-weight: normal;">OFFLINE</label>
+                                <p class="m-0" style="font-size: 17px;">
+                                    @if($class->lokasi != null)
+                                    <a href="https://www.google.com/maps/place/{{$class->lokasi}}" target="_blank"
+                                        style="color: inherit; text-decoration: none;font-size: 17px;">
+                                        <i class="fa fa-map-marker-alt" aria-hidden="true" style="font-size: 17px;"></i>
+                                        {{$class->lokasi}}
+                                    </a>
+                                    @else
+                                    <span class="badge badge-danger">Lokasi belum di tentukan</span>
+                                    @endif
+
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
-
-
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Kategori</label>
-                        @if($class->tags)
-                        <p class="m-0"><b style="font-size: 17px;">{{implode(', ', json_decode($class->tags))}}</b></p>
-                        @endif
+                <div class="col-lg-4">
+                    <div class="card mt-4"
+                        style="border-top-left-radius: 10px; border-top-right-radius:10px; border-color: transparent;">
+                        <div class="card-body p-2">
+                            <iframe width="100%" height="90%"
+                                src="https://www.youtube.com/embed/Dt1PGv-toHU?si=G_8_3vfrY9mrBYaP">
+                            </iframe>
+                            <h5 class="m-2">{{$title}}</h5>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0 text-white;" style="color: white; font-size: 12px; font-weight: normal;">Sub Kategori</label>
-                        @if($class->sub_category)
-                        <p class="m-0 text-white"><b style="font-size: 17px;">{{implode(', ', json_decode($class->sub_category))}}</b></p>
-                        @else
-                        <span class="badge badge-danger">Sub Kategori belum tersedia</span>
-                        @endif
-                    </div>
-
                 </div>
             </div>
-
-            <div class="row text-white text-capitalize" style="margin-top: 20px;">
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Tanggal Kelas</label>
-                        <p class="m-0"><b style=" font-size: 17px;">{{\Carbon\Carbon::parse($class->date_start)->format('d-F-Y')}}</b></p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">Jam </label>
-                        @if ($class->jam_acara)
-                            <p class="m-0" style="font-size: 17px;">
-                                <b>{{ \Carbon\Carbon::parse($class->jam_acara)->format('H:i') }} WIB</b>
-                            </p>
-                        @else
-                            <p class="m-0" style="font-size: 13px;">
-                                <b>Jam belum ada</b>
-                            </p>
-                        @endif
-
-                    </div>
-                </div>
-
-                @if($class->kategori == 0)
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">ONLINE</label>
-                        <p class="m-0" style="font-size: 17px;">
-                            <i class="fa fa-video" aria-hidden="true"></i> ZOOM MEET
-                        </p>
-
-                    </div>
-                </div>
-                @endif
-
-            </div>
-            {{-- <br> --}}
-            @if($class->kategori == 1)
-            <div class="row text-white text-capitalize" style="margin-top: 20px;">
-                <div class="col-md-12 col-12 mb-2">
-                    <div class="form-group m-0">
-                        <label class="m-0" style="color: white; font-size: 12px; font-weight: normal;">OFFLINE</label>
-                        <p class="m-0" style="font-size: 17px;">
-                            @if($class->lokasi != null)
-                            <a href="https://www.google.com/maps/place/{{$class->lokasi}}" target="_blank" style="color: inherit; text-decoration: none;font-size: 17px;">
-                                <i class="fa fa-map-marker-alt" aria-hidden="true" style="font-size: 17px;"></i> {{$class->lokasi}}
-                            </a>
-                            @else
-                            <span class="badge badge-danger">Lokasi belum di tentukan</span>
-                            @endif
-
-                        </p>
-
-                    </div>
-                </div>
-            </div>
-            @endif
         </div>
-        <div class="col-lg-4">
-            <div class="card mt-4"
-                style="border-top-left-radius: 10px; border-top-right-radius:10px; border-color: transparent;">
-                <div class="card-body p-2">
-                    <iframe width="100%" height="90%"
-                        src="https://www.youtube.com/embed/Dt1PGv-toHU?si=G_8_3vfrY9mrBYaP">
-                    </iframe>
-                    <h5 class="m-2">{{$title}}</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
     </div>
     <div class="container">
         <div class="row">
@@ -267,10 +281,11 @@
                     <label hidden for="">Kode Referral ( optional )</label>
                     <input hidden type="text" id="kode_reff" name="kode_reff" class="form-control">
                     @auth
-                    <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="orderclass()">Daftar Kelas Ini</button>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="orderclass()">Daftar Kelas
+                        Ini</button>
                     @else
-                    <span class="button button-circle btn-block text-center" data-toggle="modal"
-                        data-target="#modelId" data-backdrop="static" data-keyboard="false">Order
+                    <span class="button button-circle btn-block text-center" data-toggle="modal" data-target="#modelId"
+                        data-backdrop="static" data-keyboard="false">Order
                         sekarang</span>
                     @endauth
 
@@ -306,7 +321,8 @@
                     </div>
             </div>
         </div>
-        {{-- <hr class="mt-5 mb-5">
+        {{--
+        <hr class="mt-5 mb-5">
         <h3>Kelas Terpopuler</h3>
 
         <div id="sld3" class="mt-4">
@@ -315,64 +331,64 @@
                 <div class="card mr-2" style="border-color: transparent;">
                     <div class="card-body br-10" style="padding: 1px; border-color: transparent;">
                         <img src="{{asset($val->image)}}" alt="" width="100%" class="br-10">
-    </div>
-    </div>
-    <div class="d-flex align-items-center ml-2">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M0.605225 5.68681C0.605225 4.48076 0.605225 3.87837 0.979957 3.50364C1.35469 3.12891 1.95707 3.12891 3.16312 3.12891H10.8368C12.0429 3.12891 12.6453 3.12891 13.02 3.50364C13.3947 3.87837 13.3947 4.48076 13.3947 5.68681C13.3947 5.988 13.3947 6.13892 13.3014 6.23292C13.2074 6.32628 13.0558 6.32628 12.7552 6.32628H1.2447C0.943507 6.32628 0.792591 6.32628 0.698588 6.23292C0.605225 6.13892 0.605225 5.98736 0.605225 5.68681ZM0.605225 11.4421C0.605225 12.6481 0.605225 13.2505 0.979957 13.6252C1.35469 14 1.95707 14 3.16312 14H10.8368C12.0429 14 12.6453 14 13.02 13.6252C13.3947 13.2505 13.3947 12.6481 13.3947 11.4421V8.24471C13.3947 7.94351 13.3947 7.7926 13.3014 7.69859C13.2074 7.60523 13.0558 7.60523 12.7552 7.60523H1.2447C0.943507 7.60523 0.792591 7.60523 0.698588 7.69859C0.605225 7.7926 0.605225 7.94415 0.605225 8.24471V11.4421Z"
-                fill="#005CFF" />
-            <path d="M3.80261 1.84998V3.7684M10.1974 1.84998V3.7684" stroke="#005CFF" stroke-width="2"
-                stroke-linecap="round" />
-        </svg>
-        <p for="" class="text-capitalize text-blue m-0 ml-1">
-            {{\Carbon\Carbon::parse($val->date_end)->format('d-m-Y')}}
-        </p>
-    </div>
-    <div class="title text-uppercase ml-1">
-        <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
-            <h6 class="mb-2">
-                {{strlen($val->title)>=90?substr($val->title,0,87).' ...':$val->title}}
-            </h6>
-        </a>
-    </div>
-    <div class="author text-uppercase ml-1">
-        @if(count($val->instructor_list) > 0)
-        <a href="/profile-instructor/{{$val->instructor_list[0]->id}}/{{$val->instructor_list[0]->name}}"
-            class="mb-2">
-            {{$val->instructor_list[0]->name}}
-        </a>
-        @else
-        <span class="badge badge-danger">Instructor belum tersedia</span>
-        @endif
-    </div>
-    hrs disble
-    <div class="star text-uppercase ml-1 ">
-        <div class="d-flex align-items-center">
-            <h4 class="m-0 mr-2">4.5</h4>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-star"
-                viewBox="0 0 16 16">
-                <path
-                    d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" />
-            </svg>
-        </div>
-    </div>
-    <div class="price text-uppercase ml-1">
-        <h3 class="mb-2">
-            @if($val->pricing)
-            @if($val->pricing->promo)
-            Rp. {{number_format($val->pricing->price - $val->pricing->promo_price)}}
-            @else
-            Rp. {{number_format($val->pricing->price)}}
-            @endif
-            @else
-            -
-            @endif
-        </h3>
-    </div>
-    </div>
-    @endforeach
-    </div> --}}
+                    </div>
+                </div>
+                <div class="d-flex align-items-center ml-2">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M0.605225 5.68681C0.605225 4.48076 0.605225 3.87837 0.979957 3.50364C1.35469 3.12891 1.95707 3.12891 3.16312 3.12891H10.8368C12.0429 3.12891 12.6453 3.12891 13.02 3.50364C13.3947 3.87837 13.3947 4.48076 13.3947 5.68681C13.3947 5.988 13.3947 6.13892 13.3014 6.23292C13.2074 6.32628 13.0558 6.32628 12.7552 6.32628H1.2447C0.943507 6.32628 0.792591 6.32628 0.698588 6.23292C0.605225 6.13892 0.605225 5.98736 0.605225 5.68681ZM0.605225 11.4421C0.605225 12.6481 0.605225 13.2505 0.979957 13.6252C1.35469 14 1.95707 14 3.16312 14H10.8368C12.0429 14 12.6453 14 13.02 13.6252C13.3947 13.2505 13.3947 12.6481 13.3947 11.4421V8.24471C13.3947 7.94351 13.3947 7.7926 13.3014 7.69859C13.2074 7.60523 13.0558 7.60523 12.7552 7.60523H1.2447C0.943507 7.60523 0.792591 7.60523 0.698588 7.69859C0.605225 7.7926 0.605225 7.94415 0.605225 8.24471V11.4421Z"
+                            fill="#005CFF" />
+                        <path d="M3.80261 1.84998V3.7684M10.1974 1.84998V3.7684" stroke="#005CFF" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                    <p for="" class="text-capitalize text-blue m-0 ml-1">
+                        {{\Carbon\Carbon::parse($val->date_end)->format('d-m-Y')}}
+                    </p>
+                </div>
+                <div class="title text-uppercase ml-1">
+                    <a href="/class/{{$val->unique_id}}/{{str_replace('/','-',$val->title)}}">
+                        <h6 class="mb-2">
+                            {{strlen($val->title)>=90?substr($val->title,0,87).' ...':$val->title}}
+                        </h6>
+                    </a>
+                </div>
+                <div class="author text-uppercase ml-1">
+                    @if(count($val->instructor_list) > 0)
+                    <a href="/profile-instructor/{{$val->instructor_list[0]->id}}/{{$val->instructor_list[0]->name}}"
+                        class="mb-2">
+                        {{$val->instructor_list[0]->name}}
+                    </a>
+                    @else
+                    <span class="badge badge-danger">Instructor belum tersedia</span>
+                    @endif
+                </div>
+                hrs disble
+                <div class="star text-uppercase ml-1 ">
+                    <div class="d-flex align-items-center">
+                        <h4 class="m-0 mr-2">4.5</h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-star"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="price text-uppercase ml-1">
+                    <h3 class="mb-2">
+                        @if($val->pricing)
+                        @if($val->pricing->promo)
+                        Rp. {{number_format($val->pricing->price - $val->pricing->promo_price)}}
+                        @else
+                        Rp. {{number_format($val->pricing->price)}}
+                        @endif
+                        @else
+                        -
+                        @endif
+                    </h3>
+                </div>
+            </div>
+            @endforeach
+        </div> --}}
     </div>
 </section>
 <script>
@@ -428,49 +444,59 @@
         });
 
         jQuery.ajax({
-            url: "/order",
+            url: "/order/send",
             method: 'post',
+            // Jangan lupa CSRF Token untuk Laravel
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             data: {
                 class_id: classId,
             },
             success: function(result) {
-                // console.log(result.rc);
-                if (result.rc == '00') {
-                    Swal.fire({
-                        title: "Pemberitahuan",
-                        text: result.msg,
-                        icon: "success"
-                    });
-                    localStorage.setItem("menu", "li-tabs-33");
-                    clearmenu();
-                    $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active');
-                    $('#li-tabs-33').removeAttr('aria-selected', true);
-                    $('#li-tabs-33').removeAttr('aria-expanded', true);
-                    // activemenu();
-                    setTimeout(() => {
-                        window.location.href = '/profile';
-                    }, 5000);
-                }
-                if (result.rc == '07') {
-                    Swal.fire({
-                        title: "Pemberitahuan",
-                        text: result.msg,
-                        icon: "info"
-                    });
-                }
-                if (result.rc == '03' || result.rc == '04') {
-                    Swal.fire({
-                        title: "Pemberitahuan",
-                        text: result.msg,
-                        icon: "info"
-                    });
-                    setTimeout(() => {
-                        window.location.href = '/profile';
-                    }, 2000);
-                }
-            },
+                // if (result.rc == '00') {
+                //     Swal.fire({
+                //         title: "Pemberitahuan",
+                //         text: result.msg,
+                //         icon: "success",
+                //         showConfirmButton: false, // Opsional: agar langsung redirect
+                //         timer: 2000
+                //     });
 
-        })
+                //     // Logika Tab/Menu Anda
+                //     localStorage.setItem("menu", "li-tabs-33");
+                //     clearmenu();
+                //     $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active').removeAttr('aria-selected aria-expanded');
+
+                //     // REDIRECT KE DOKU
+                //     // Gunakan setTimeout agar user sempat melihat pesan sukses SweetAlert
+                //     setTimeout(() => {
+                //         if (result.payment_url) {
+                //             window.location.href = result.url;
+                //         } else {
+                //             window.location.href = '/profile';
+                //         }
+                //     }, 2000);
+                // }
+                
+                // // Handler untuk rc lain (07, 03, 04) tetap sama
+                // if (result.rc == '07' || result.rc == '03' || result.rc == '04') {
+                //     Swal.fire({
+                //         title: "Pemberitahuan",
+                //         text: result.msg,
+                //         icon: "info"
+                //     });
+                //     if (result.rc != '07') {
+                //         setTimeout(() => { window.location.href = '/profile'; }, 2000);
+                //     }
+                // }
+                 window.location.href = result.url;
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+                Swal.fire("Error", "Terjadi kesalahan sistem.", "error");
+            }
+        });
     }
 
     function clearmenu() {

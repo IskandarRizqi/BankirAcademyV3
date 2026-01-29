@@ -279,13 +279,13 @@ class ProfileController extends Controller
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
         foreach ($data['billingkelasall'] as $key => $value) {
-            if (!$value->file && $value->status == 0) {
+            if ($value->file && $value->status == 0) {
                 $status = 'Menunggu Pembayaran';
             }
-            if ($value->file && $value->status == 0) {
-                $status = 'Menunggu Konfirmasi';
-            }
-            if ($value->file && $value->status == 1) {
+            // if ($value->file && $value->status == 0) {
+            //     $status = 'Menunggu Konfirmasi';
+            // }
+            if ($value->status == 1) {
                 $status = 'Lunas';
             }
             if ($value->expired < Carbon::now() && $value->status == 0) {
@@ -303,7 +303,7 @@ class ProfileController extends Controller
 
     public function getkelasanda($type)
     {
-     
+
         $start = Carbon::now()->subYears(30)->format('Y-m-d');
         $end = Carbon::now()->addDay()->format('Y-m-d');
         $status = [1, 0];
@@ -325,22 +325,24 @@ class ProfileController extends Controller
             'class_payment.*',
             'classes.title',
             'classes.video',
+            'classes.status',
             'classes.jenis',
             'classes.tipe',
             'classes.image',
             'classes.participant_limit',
             'class_participant.review',
             'class_participant.id as participant_id',
-            'classes.date_start',  
-            'classes.date_end',   
-            'classes.jam_acara',  
+            'classes.date_start',
+            'classes.date_end',
+            'classes.jam_acara',
             'classes.kategori',
-            'classes.lokasi',  
-                
+            'classes.lokasi',
+
         )
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
             ->where('class_payment.user_id', Auth::user()->id)
+            ->where('class_payment.status', 1)
             ->whereBetween('class_payment.created_at', [$start, $end])
             ->whereIn('class_payment.status', $status)
             // ->whereDate('class_payment.created_at', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
@@ -349,10 +351,10 @@ class ProfileController extends Controller
             ->orderBy('class_payment.status', 'desc')
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
-            
 
 
-       foreach ($data['getkelasanda'] as $key => $v) {
+
+        foreach ($data['getkelasanda'] as $key => $v) {
             $v->events = ClassContentModel::where('class_id', $v->class_id)->get();
 
             // ambil data class untuk akses instructor_list

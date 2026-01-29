@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\BannerslideController;
 use App\Http\Controllers\Backend\CorporateController;
 use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
@@ -172,6 +173,7 @@ Route::post('/bayar', [App\Http\Controllers\Front\OrderController::class, 'bayar
 Route::post('/bayarv2', [App\Http\Controllers\Front\OrderController::class, 'bayarv2']);
 Route::post('/multi-bayar', [App\Http\Controllers\Front\OrderController::class, 'multibayar']);
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
+Route::post('/order/send', [CheckoutController::class, 'store']);
 Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 // Route::get('/index-custom', [App\Http\Controllers\Front\HomeController::class, 'index']);

@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\KelasController;
 use App\Http\Controllers\API\LokerController;
 use App\Http\Controllers\Backend\PembayaranController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Middleware\AksesByIpAddress;
 use Illuminate\Http\Request;
@@ -35,3 +36,4 @@ Route::middleware([AksesByIpAddress::class])->group(function () {
 Route::get('/apiberanda', [HomeController::class, 'apiberanda']);
 Route::get('/tripay/create', [PembayaranController::class, 'tripaycreate']);
 Route::get('/tripay/ppob', [PembayaranController::class, 'tripayppob']);
+Route::post('/doku/notification', [CheckoutController::class, 'handleNotification']);

@@ -4,12 +4,12 @@
             <a class="list-group-item list-group-item-action text-capitalize br-10 active" id="list-semua-list"
                 data-toggle="list" href="#list-semua" role="tab" aria-controls="semua"
                 onclick="loadbillingkelas('semua-billing')">semua</a>
-            <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-pembayaran-list"
+            {{-- <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-pembayaran-list"
                 data-toggle="list" href="#list-pembayaran" role="tab" aria-controls="pembayaran"
-                onclick="loadbillingkelas('pembayaran-billing')">menunggu pembayaran</a>
+                onclick="loadbillingkelas('pembayaran-billing')">menunggu pembayaran</a> --}}
             <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-konfirmasi-list"
                 data-toggle="list" href="#list-konfirmasi" role="tab" aria-controls="konfirmasi"
-                onclick="loadbillingkelas('konfirmasi-billing')">menunggu konfirmasi</a>
+                onclick="loadbillingkelas('konfirmasi-billing')">menunggu pembayaran</a>
             <a class="list-group-item list-group-item-action text-capitalize br-10" id="list-lunas-list"
                 data-toggle="list" href="#list-lunas" role="tab" aria-controls="lunas"
                 onclick="loadbillingkelas('lunas-billing')">lunas</a>
@@ -220,10 +220,13 @@
                         </div>
                         <div class="col-lg-4">
                             <label for="form-control">Jumlah peserta</label>
-                            <input class="form-control" min="1" type="number" id="jml_pesertas" name="jml_peserta" onchange="qtyjumlahpeserta()">
+                            <input class="form-control" min="1" type="number" id="jml_pesertas" name="jml_peserta"
+                                onchange="qtyjumlahpeserta()">
                         </div>
                         <div class="col-lg-4">
-                            <label for="form-control">Sertifikat <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Biaya cetak dan pengiriman per jumlah peserta akan ditambahkan pada invoice anda ">!</span></label>
+                            <label for="form-control">Sertifikat <span class="badge badge-danger"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Biaya cetak dan pengiriman per jumlah peserta akan ditambahkan pada invoice anda ">!</span></label>
                             <select name="sertifikat" class="form-control">
                                 <option value="1">Ya</option>
                                 <option value="0">Tidak</option>
@@ -248,7 +251,8 @@
                     </div> -->
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Simpan dan cetak invoice</button>
+                    <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Simpan dan cetak
+                        invoice</button>
                 </div>
             </form>
         </div>
@@ -341,13 +345,13 @@
                             s = v.status == 1 ? 'Lunas' : 'Batal';
                         }
 
-                        if (!v.file && v.status == 0) {
+                        if (v.file && v.status == 0) {
                             s = 'menunggu pembayaran'
                         }
-                        if (v.file && v.status == 0) {
-                            s = 'menunggu konfirmasi'
-                            tglbayar = new Date(v.updated_at).toLocaleDateString('id-ID')
-                        }
+                        // if (v.file && v.status == 0) {
+                        //     s = 'menunggu konfirmasi'
+                        //     tglbayar = new Date(v.updated_at).toLocaleDateString('id-ID')
+                        // }
                         if (v.file && v.status != 0) {
                             tglbayar = new Date(v.updated_at).toLocaleDateString('id-ID')
                         }
@@ -379,17 +383,17 @@
                         h += '    </div>';
 
 
-                        h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">Gambar</small><br><br>';
+                        // h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
+                        // h += '        <small class="text-secondary">Gambar</small><br><br>';
 
-                        if (v.file && v.file !== '') {
-                            h += '        <a href="#" onclick="window.open(\'/getBerkasbukti?rf=' + v.file + '\', \'_blank\'); return false;" ';
-                            h += '           style="color:#007bff; text-decoration:underline; font-size:17px;">Preview</a>';
-                        } else {
-                            h += '        <span style="color:red; font-size:14px;">Belum ada upload bukti</span>';
-                        }
+                        // if (v.file && v.file !== '') {
+                        //     h += '        <a href="#" onclick="window.open(\'/getBerkasbukti?rf=' + v.file + '\', \'_blank\'); return false;" ';
+                        //     h += '           style="color:#007bff; text-decoration:underline; font-size:17px;">Preview</a>';
+                        // } else {
+                        //     h += '        <span style="color:red; font-size:14px;">Belum ada upload bukti</span>';
+                        // }
 
-                        h += '    </div>';
+                        // h += '    </div>';
 
 
                         h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
@@ -433,7 +437,8 @@
                         } else if (v.status_pembayaran == 'Dibatalkan') {
                             h += '            <div class="btn btn-danger text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
                         } else if (v.status_pembayaran == 'Menunggu Pembayaran') {
-                            h += '            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Upload Bukti</button>';
+                            // h += '            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Upload Bukti</button>';
+                            h += '            <a href='+ v.file +' class="btn btn-primary text-capitalize" style="cursor: auto">Bayar Sekarang</a>';
                         } else {
                             h += '            <div class="btn btn-success text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
                         }
