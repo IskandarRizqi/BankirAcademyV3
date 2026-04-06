@@ -266,22 +266,20 @@
                 @if($class->custom_jadwal>0)
                 <button class="button button-circle btn-block text-center" disabled>Kelas Belum Tersedia</button>
                 @else
-                {{-- Bila Date End Lebih Kecil Dari Sekarang --}}
                 @if(!$class->date_end)
                 <button class="button button-circle btn-block text-center" disabled>Kelas Belum Tersedia</button>
                 @elseif(\Carbon\Carbon::parse($class->date_end) < \Carbon\Carbon::now()) <button
                     class="button button-circle btn-block text-center btn-danger" disabled>Kelas Sudah
-                    Penuh</button>
+                        Tidak Aktif</button>
                     @else
                     @if(!$class->is_open)
                     <button class="button button-circle btn-block text-center btn-danger" disabled>Kelas Sudah
-                        Penuh</button>
+                        Tidak Aktif</button>
                     @else
-                    <input type="text" id="class_id" name="class_id" value="{{ $class->id }}" hidden>
                     <label hidden for="">Kode Referral ( optional )</label>
                     <input hidden type="text" id="kode_reff" name="kode_reff" class="form-control">
                     @auth
-                    <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="orderclass()">Daftar Kelas
+                    <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice(' + v.id + ')">Daftar Kelas
                         Ini</button>
                     @else
                     <span class="button button-circle btn-block text-center" data-toggle="modal" data-target="#modelId"
@@ -390,6 +388,53 @@
             @endforeach
         </div> --}}
     </div>
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="" method="POST" enctype="multipart/form-data" id="formInvoice">
+                @csrf
+                <div class="modal-header">
+                    <h3 style="margin: 0px">Invoice</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="payment_invoice" name="payment_invoice" hidden>
+                    <input type="text" id="sertifikat_invoice" name="sertifikat_invoice" hidden>
+                    <input type="text" id="jmlp" name="jml_peserta" hidden>
+                    <input type="text" id="class_id" name="class_id" value="{{ $class->id }}" hidden>
+                    <div class="row mb-1">
+                        {{-- <div class="col-lg-4">
+                            <label for="form-control">Kode promo</label>
+                            <input class="form-control" type="text" id="kode_promo" name="kode_promo">
+                        </div> --}}
+
+                        <div class="col-lg-6">
+                            <label for="form-control">Jumlah peserta</label>
+                            <input class="form-control" min="1" type="number" id="jml_pesertas" name="jml_peserta"
+                                onchange="qtyjumlahpeserta()">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="form-control">Sertifikat <span class="badge badge-danger"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Biaya cetak dan pengiriman per jumlah peserta akan ditambahkan pada invoice anda ">!</span></label>
+                            <select name="sertifikat" class="form-control">
+                                <option value="1">Ya</option>
+                                <option value="0">Tidak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="detailpeserta"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Simpan dan cetak
+                        invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </section>
 <script>
     $(document).ready(function() {
@@ -427,77 +472,110 @@
                         dots: false
                     }
                 }
-                // You can unslick at a given breakpoint now by adding:
-                // settings: "unslick"
-                // instead of a settings object
             ]
         });
     })
-
-    function orderclass() {
-        let classId = $('#class_id').val()
-        // console.log(classId);
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        jQuery.ajax({
-            url: "/order/send",
-            method: 'post',
-            // Jangan lupa CSRF Token untuk Laravel
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                class_id: classId,
-            },
-            success: function(result) {
-                // if (result.rc == '00') {
-                //     Swal.fire({
-                //         title: "Pemberitahuan",
-                //         text: result.msg,
-                //         icon: "success",
-                //         showConfirmButton: false, // Opsional: agar langsung redirect
-                //         timer: 2000
-                //     });
-
-                //     // Logika Tab/Menu Anda
-                //     localStorage.setItem("menu", "li-tabs-33");
-                //     clearmenu();
-                //     $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active').removeAttr('aria-selected aria-expanded');
-
-                //     // REDIRECT KE DOKU
-                //     // Gunakan setTimeout agar user sempat melihat pesan sukses SweetAlert
-                //     setTimeout(() => {
-                //         if (result.payment_url) {
-                //             window.location.href = result.url;
-                //         } else {
-                //             window.location.href = '/profile';
-                //         }
-                //     }, 2000);
-                // }
-                
-                // // Handler untuk rc lain (07, 03, 04) tetap sama
-                // if (result.rc == '07' || result.rc == '03' || result.rc == '04') {
-                //     Swal.fire({
-                //         title: "Pemberitahuan",
-                //         text: result.msg,
-                //         icon: "info"
-                //     });
-                //     if (result.rc != '07') {
-                //         setTimeout(() => { window.location.href = '/profile'; }, 2000);
-                //     }
-                // }
-                 window.location.href = result.url;
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-                Swal.fire("Error", "Terjadi kesalahan sistem.", "error");
-            }
-        });
+function modalinvoice(id) {
+        $('#payment_invoice').val(id);
     }
+     function qtyjumlahpeserta() {
+        // alert('asdsad')
+        $('#detailpeserta').html('');
+        let jmlpsrt = $('#jml_pesertas').val();
+        let detail = '';
+        if (jmlpsrt > 0) {
+            for (let i = 0; i < jmlpsrt; i++) {
+                detail += '    <div class="row">'
+                detail += '        <div class="col-lg-4">'
+                detail += '            <label for="form-control">Nama lengkap</label>'
+                detail += '            <input type="text" class="form-control" name="nama[]">'
+                detail += '        </div>'
+                detail += '        <div class="col-lg-4">'
+                detail += '            <label for="form-control">Email aktif</label>'
+                detail += '            <input type="email" class="form-control" name="email[]">'
+                detail += '        </div>'
+                detail += '        <div class="col-lg-4">'
+                detail += '            <label for="form-control">Nomor Handphone</label>'
+                detail += '            <input type="number" class="form-control" name="nomor_handphone[]">'
+                detail += '        </div>'
+                detail += '    </div>'
+            }
+        }
+        $('#detailpeserta').html(detail);
+    }
+    let classId = $('#class_id').val()
+     function cetakInvoiceSertifikat() {
+        let jumlahpeserta = $('#jml_pesertas').val();
+        if (jumlahpeserta < 1) {
+            Swal.fire({
+                title: "Pemberitahuan",
+                text: "Jumlah peserta anda belum di isi",
+                icon: "info"
+            });
+            return false;
+        } else {
+            // target="_blank"
+            $('#sertifikat_invoice').val(1);
+            $('#formInvoice').attr('action', '/order/send');
+            $('#formInvoice').attr('target', '_blank');
+            $('#formInvoice').submit();
+            $('#invoiceModal').modal('hide');
+            $('#detailpeserta').html('');
+        }
+    }
+    // function orderclass() {
+    //     // console.log(classId);
+    //     $.ajaxSetup({
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         }
+    //     });
+
+    //     jQuery.ajax({
+    //         url: "/order/send",
+    //         method: 'post',
+    //         data: {
+    //             class_id: classId,
+    //         },
+    //         success: function(result) {
+    //             // console.log(result.rc);
+    //             if (result.rc == '00') {
+    //                 Swal.fire({
+    //                     title: "Pemberitahuan",
+    //                     text: result.msg,
+    //                     icon: "success"
+    //                 });
+    //                 localStorage.setItem("menu", "li-tabs-33");
+    //                 clearmenu();
+    //                 $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active');
+    //                 $('#li-tabs-33').removeAttr('aria-selected', true);
+    //                 $('#li-tabs-33').removeAttr('aria-expanded', true);
+    //                 // activemenu();
+    //                 setTimeout(() => {
+    //                     window.location.href = '/profile';
+    //                 }, 5000);
+    //             }
+    //             if (result.rc == '07') {
+    //                 Swal.fire({
+    //                     title: "Pemberitahuan",
+    //                     text: result.msg,
+    //                     icon: "info"
+    //                 });
+    //             }
+    //             if (result.rc == '03' || result.rc == '04') {
+    //                 Swal.fire({
+    //                     title: "Pemberitahuan",
+    //                     text: result.msg,
+    //                     icon: "info"
+    //                 });
+    //                 setTimeout(() => {
+    //                     window.location.href = '/profile';
+    //                 }, 2000);
+    //             }
+    //         },
+
+    //     })
+    // }
 
     function clearmenu() {
         $('#li-tabs-32').removeClass('ui-state-active ui-tabs-active');
@@ -549,5 +627,4 @@
         $('#tabs-39').css('display', 'none');
     }
 </script>
-{{-- @endsection --}}
 @include(env('CUSTOM_FOOTER', 'front.layout.footer'))

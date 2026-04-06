@@ -234,21 +234,6 @@
                         </div>
                     </div>
                     <div id="detailpeserta"></div>
-                    <!-- <p style="margin: 0px; font-size: 21px">Apakah anda
-                        ingin mencetak dengan sertifikat?</p>
-                    <span class="badge bg-danger text-white">
-                        <div class="spinner-grow spinner-grow-sm">
-                        </div>
-                        <small style="font-size: 12px">Biaya cetak dan
-                            pengiriman Rp. 100.000/kelas ditambahkan ke
-                            invoice anda. </small>
-                    </span> -->
-                    <!-- <div class="d-flex justify-content-center mt-4">
-                        <span class="btn btn-warning" target="_blank" title="Invoice"
-                            onclick="cetakInvoice()">Tidak</span>
-                        <span class="btn btn-primary ml-2" target="_blank" title="Invoice"
-                            onclick="cetakInvoiceSertifikat()">Ya</span>
-                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Simpan dan cetak

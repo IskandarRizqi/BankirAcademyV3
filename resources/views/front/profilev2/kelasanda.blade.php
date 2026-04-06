@@ -332,7 +332,8 @@
                 success: function(response) {
                     let h = '';
                     if (response.status == 1) {
-                        const dataevent = response.data.getkelasanda;
+                        dataevent = response.data.getkelasanda;
+                        console.log("event", dataevent)
 
                         dataevent.forEach(v => {
                             // Format tanggal dan jam
@@ -413,7 +414,7 @@
                             if (t == 0) {
                                 h += '          <div class="btn btn-success">' + s + '</div>';
                             } else {
-                                h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:auto" onclick="setevent(`' + v.title + '`,' + v.id + ')">' + s + '</div>';
+                                h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:auto" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
                             }
                             h += '        </div>';
 
@@ -440,7 +441,7 @@
         }
 
     function setevent(title, id_event) {
-        console.log(dataevent);
+        console.log("id",id_event);
         $('#eventtitle').html(title);
         let d = '';
         dataevent.forEach(e => {
@@ -450,11 +451,11 @@
                     e.events.forEach(eev => {
                         d += '<tr>';
                         d += '    <td>' + no + '</td>';
-                        d += '    <td>' + eev.title + '</td>';
-                        if (eev.type == 3) {
-                            d += '    <td><a href="' + eev.url + '" target="_blank">Link</a></td>';
+                        d += '    <td>' + eev.description + '</td>';
+                        if (eev.type == 0) {
+                            d += '    <td><a href="' + eev.link + '" target="_blank">Link</a></td>';
                         } else {
-                            d += '    <td><a href="/getBerkas?rf=' + eev.url + '" target="_blank">Download</a></td>';
+                            d += '    <td><a href="/getBerkas?rf=' + eev.link + '" target="_blank">Download</a></td>';
                         }
                         d += '</tr>';
                         no++;

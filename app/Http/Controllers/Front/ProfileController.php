@@ -355,7 +355,7 @@ class ProfileController extends Controller
 
 
         foreach ($data['getkelasanda'] as $key => $v) {
-            $v->events = ClassContentModel::where('class_id', $v->class_id)->get();
+            $v->events = ClassEventModel::where('class_id', $v->class_id)->get();
 
             // ambil data class untuk akses instructor_list
             $class = ClassesModel::where('id', $v->class_id)->first();

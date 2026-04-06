@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BiayaSertifikatModel;
 use App\Models\ClassPaymentModel;
 use App\Models\ClassPricingModel;
 use App\Models\CorporateRegistration;
 use App\Models\DepositUsed;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\SertifikatPesertaModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -21,8 +23,6 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::user()->id;
-
-        // Logika pembuatan nomor invoice & unik (Tetap sama)
         $number = ClassPaymentModel::select('unique_code')->where('expired', '<', now())->pluck('unique_code')->toArray();
         do {
             $randomNumber = rand(0, 999);
@@ -36,44 +36,63 @@ class CheckoutController extends Controller
         $price = 0;
         $price_final = 0;
         $cp = ClassPricingModel::where('class_id', $request->class_id)->first();
+        	$jmlpeserta = 1;
+		if ($request->jml_peserta != null || $request->jml_peserta < 1) {
+			$jmlpeserta = $request->jml_peserta;
+		}
+        
+        
         if ($cp) {
             $price = $cp->price;
             $price_final = $price + $randomNumber;
             if ($cp->promo == 1) {
                 $price = $cp->price - $cp->promo_price;
-                $price_final = $price + $randomNumber;
+                $price_final = $price * $jmlpeserta + $randomNumber;
             }
         }
-
+        $data['payment']['sertifikat'] = 0;
+            if ($request->sertifikat_invoice > 0) {
+                        $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
+                        if ($s) {
+                            $data['payment']['sertifikat'] = $s->nominal;
+                            if ($s->type > 0) {
+                                $data['payment']['sertifikat'] = ($price_final * ($s->nominal / 100));
+                            }
+                        }
+		}
         $order = ClassPaymentModel::create([
             'status' => 0,
             'user_id' => $auth,
             'class_id' => $request->class_id,
             'unique_code' => $randomNumber,
             'price' => $price,
-            'price_final' => $price_final,
+            'price_final' => $price_final + $data['payment']['sertifikat'],
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
         ]);
+        SertifikatPesertaModel::create([
+				'user_id' => Auth::user()->id,
+				'class_id' => $request->class_id,
+				'payment_class_id' => $request->payment_invoice,
+				'nama' => json_encode($request->nama),
+				'email' => json_encode($request->email),
+				'nohp' => json_encode($request->nomor_handphone)
+			]);
 
         $order->refresh();
-
-        // --- MULAI KONFIGURASI DOKU SNAP ---
         $clientId = env('DOKU_CLIENT_ID');
         $secretKey = env('DOKU_SECRET_KEY');
-        $timestamp = now()->toIso8601ZuluString(); // Contoh: 2023-01-01T10:00:00Z
+        $timestamp = now()->toIso8601ZuluString(); 
         $requestId = (string) Str::uuid();
-
-        // Struktur Body DOKU SNAP
         $body = [
             "order" => [
-                "amount" => $price_final,
+                "amount" => $price_final + $data['payment']['sertifikat'],
                 "invoice_number" => $no_invoice,
                 "callback_url" => url('/profile'),
                 "line_items" => [
                     [
                         "name" => "Pembayaran Kelas " . $request->class_id,
-                        "price" => $price_final,
+                        "price" => $price_final + $data['payment']['sertifikat'],
                         "quantity" => 1
                     ]
                 ]
@@ -83,15 +102,11 @@ class CheckoutController extends Controller
                 "email" => Auth::user()->email,
             ],
             "payment" => [
-                "payment_due_date" => 60 // menit
+                "payment_due_date" => 60 
             ]
         ];
-
-        // Pembuatan Signature SNAP (Standar ASPI)
         $jsonBody = json_encode($body);
         $digest = base64_encode(hash('sha256', $jsonBody, true));
-
-        // Perhatikan Request-Target untuk SNAP biasanya diawali /checkout/v1/payment atau sesuai dokumentasi SNAP DOKU terbaru
         $rawSignature = "Client-Id:" . $clientId . "\n" .
             "Request-Id:" . $requestId . "\n" .
             "Request-Timestamp:" . $timestamp . "\n" .
@@ -100,7 +115,6 @@ class CheckoutController extends Controller
 
         $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
-        // Eksekusi API SNAP
         $response = Http::withHeaders([
             'Client-Id' => $clientId,
             'Request-Id' => $requestId,
@@ -111,13 +125,11 @@ class CheckoutController extends Controller
 
         if ($response->successful()) {
             $resData = $response->json();
-
-            // DOKU SNAP biasanya mengembalikan URL di path ini:
             $paymentUrl = $resData['response']['payment']['url'] ?? null;
 
             if ($paymentUrl) {
                 $order->update(['file' => $paymentUrl]);
-                return response()->json(['url' => $paymentUrl, 'rc' => '00']);
+              return redirect()->away($paymentUrl);
             }
         }
 
@@ -183,10 +195,8 @@ class CheckoutController extends Controller
     // }
     public function handleNotification(Request $request)
     {
-        // 1. Ambil data dari DOKU
         $invoiceNumber = $request->input('invoice_number');
 
-        // Log yang aman (menggunakan array sebagai argumen kedua)
         Log::info('NOTIFIKASI MASUK DI DOMAIN B', ['invoice' => $invoiceNumber]);
 
         if (!$invoiceNumber) {

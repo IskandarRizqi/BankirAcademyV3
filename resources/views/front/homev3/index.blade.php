@@ -315,7 +315,7 @@
 </div>
 
   <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
-    <a href="/list-class?jenis=bankir"
+    <a href="/list-class"
       style="background:#007bff; color:white; text-decoration:none; padding:5px 20px; border-radius:25px; cursor:pointer; display:inline-block; margin-right:140px;">
       Semua Event
     </a>

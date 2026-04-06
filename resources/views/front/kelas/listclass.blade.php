@@ -137,13 +137,13 @@
     </form> --}}
     <div class="row gutter-40 col-mb-80">
         <div class="postcontent col-lg-12">
-            {{-- @if ($class['data']) --}}
+            @if ($class['data'])
             <div class="single-event">
                 <div class="row" id="listkelas">
                 </div>
                 <hr>
             </div>
-            {{-- @endif --}}
+            @endif
         </div>
     </div>
     </div>
@@ -172,7 +172,6 @@
                 y_axis = ele.scrollTop || b.scrollTop || 0;
                 no_scroll = y_axis;
             }
-            console.log('no_scroll : ' + no_scroll);
             if (no_scroll >= 1200 && isLogin != 1) {
                 $('#modelId').modal('show');
                 $('#hidemodallogin').attr('hidden', true);
@@ -233,77 +232,75 @@
             },
             success: function(response) {
                 let html = '';
-                if (response.data.length > 0) {
-                    response.data.forEach(dt => {
-                        html += '<div class="col-lg-3 col-sm-6 d-flex">'; // d-flex biar semua card sejajar tinggi
-                        html += '  <div class="card shadow mb-5 bg-white w-100" style="border-radius:12px; overflow:hidden; border:none; min-height:640px; display:flex; flex-direction:column; justify-content:space-between; transition:transform 0.3s ease, box-shadow 0.3s ease;">';
+                console.log("res", response)
+               if (response.data.length > 0) {
+    response.data.forEach(dt => {
+        html += '<div class="col-lg-3 col-sm-6 d-flex mb-4">'; 
+        html += '  <div class="card shadow bg-white w-100" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease;">';
 
-                        // GAMBAR UTAMA (tinggi proporsional dan tidak terpotong)
-                        html += `
-                              <div style="width:100%; overflow:hidden;">
-                                <img src="${dt.image}" style="width:100%; height:300px; object-fit:fill; display:block; transition:transform 0.4s ease;">
-                              </div>
-                            `;
+        // GAMBAR UTAMA
+        html += `
+              <div style="width:100%; height:200px; overflow:hidden;">
+                <img src="${dt.image}" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease;">
+              </div>
+            `;
 
+        // AREA KONTEN (ATAS) - Menggunakan flex-grow agar mendorong footer ke bawah
+        html += '    <div style="padding:15px; flex-grow:1; display:flex; flex-direction:column;">';
+        
+        // TANGGAL
+        html += '      <div style="text-align:center;">';
+        html += '        <p style="margin:0 0 4px 0; font-size:12px; color:#777;">' 
+                      + (function(d){ 
+                            const t=new Date(d); 
+                            return String(t.getDate()).padStart(2,'0')+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+t.getFullYear(); 
+                        })(dt.date_end) 
+                      + '</p>';
 
-                        // BAGIAN ATAS (TANGGAL & JUDUL)
-                        html += '    <div style="padding:15px; flex-grow:1;">';
-                        html += '      <div style="text-align:center; margin-top:8px;">';
-                        html += '        <p style="margin:4px 0 0 0; font-size:12px; color:#777;">' 
-                              + (function(d){ 
-                                    const t=new Date(d); 
-                                    return String(t.getDate()).padStart(2,'0')+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+t.getFullYear(); 
-                                })(dt.date_end) 
-                              + '</p>';
+        html += '        <h4 class="text-capitalize" style="font-size:15px; font-weight:600; font-family:Arial, sans-serif; color:#000; margin:0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; min-height: 42px;">' + dt.title + '</h4>';
+        html += '      </div>';
+        
+        html += '      <div style="margin-top:15px;">';
+        html += '        <a href="/profile-instructor/' + dt.instructor_list[0].id + '/' + dt.instructor_list[0].name + '" class="d-flex align-items-center" style="text-decoration:none; color:#000;">';
+        html += '          <img class="rounded-circle" style="width:45px; height:45px; object-fit:cover; border:2px solid #007BFF; flex-shrink:0;"';
+        html += (dt.instructor_list[0].picture_src) ? 'src="/Image/' + dt.instructor_list[0].picture_src.url + '"' : 'src="/FE/images/default-user.png"';
+        html += ' alt="Foto Narasumber">';
+        html += '          <div style="margin-left:10px; overflow:hidden;">';
+        html += '            <small class="d-block" style="color:#007BFF; font-weight:600; font-size:10px;">NARASUMBER</small>';
+        html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + dt.instructor_list[0].name + '</h5>';
+        html += '          </div>';
+        html += '        </a>';
+        html += '      </div>';
+        html += '    </div>'; // Tutup Bagian Atas
 
-                        html += '        <h4 class="text-capitalize m-0" style="font-size:15px; font-weight:600; font-family:Arial, sans-serif ; color:#000;">' + dt.title + '</h4>';
-                        html += '      </div>';
-                        html += '    </div>';
+        // AREA FOOTER (HARGA & TOMBOL) - Selalu di bawah
+        html += '    <div style="padding:15px; border-top:1px solid #f0f0f0; background:#fafafa;">';
+        html += '      <div class="text-center">';
+        
+        // HARGA
+        let priceHtml = '';
+        if (dt.pricing) {
+            if (dt.pricing.gratis) {
+                priceHtml = 'GRATIS';
+            } else if (dt.pricing.promo) {
+                priceHtml = 'Rp. ' + (dt.pricing.price - dt.pricing.promo_price).toLocaleString();
+            } else {
+                priceHtml = 'Rp. ' + dt.pricing.price.toLocaleString();
+            }
+        } else {
+            priceHtml = 'Rp. -';
+        }
+        
+        html += '        <h3 style="color:#007BFF; font-size:18px; font-weight:700; margin-bottom:12px;">' + priceHtml + '</h3>';
+        html += '        <a href="/class/' + dt.unique_id + '/' + dt.title.replaceAll("/", "-") + '" class="btn btn-primary btn-block" style="background-color:#007BFF; border:none; border-radius:8px; padding:10px 0; font-weight:600; font-size:14px;">Daftar Sekarang</a>';
+        html += '      </div>';
+        html += '    </div>';
 
-                        // BAGIAN BAWAH (NARASUMBER, HARGA, TOMBOL)
-                        html += '    <div style="padding:15px; margin-bottom:10px;">';
+        html += '  </div>'; // tutup card
+        html += '</div>'; // tutup col
+    });
 
-                        // NARASUMBER
-                        html += '      <a href="/profile-instructor/' + dt.instructor_list[0].id + '/' + dt.instructor_list[0].name + '" class="d-flex align-items-center justify-content-start" style="text-decoration:none; color:#000; margin-bottom:10px;">';
-                        html += '        <img class="mr-3 rounded-circle" style="width:55px; height:55px; object-fit:cover; border:3px solid #007BFF; flex-shrink:0;"';
-                        if (dt.instructor_list[0].picture_src) {
-                            html += 'src="/Image/' + dt.instructor_list[0].picture_src.url + '"';
-                        } else {
-                            html += 'src="/FE/images/default-user.png"';
-                        }
-                        html += ' alt="Foto Narasumber">';
-                        html += '        <div class="text-left" style="margin-left:10px;">';
-                        html += '          <small class="d-block mb-0" style="color:#007BFF; font-weight:600;">NARASUMBER</small>';
-                        html += '          <h5 class="text-capitalize mb-0" style="font-size:14px; font-weight:600; font-family:Arial, sans-serif ; color:#000;">' + dt.instructor_list[0].name + '</h5>';
-                        html += '          <small class="d-block mb-0" style="font-size:11px; font-family:Arial, sans-serif ; color:#666;">' + dt.instructor_list[0].title + '</small>';
-                        html += '        </div>';
-                        html += '      </a>';
-
-                        // HARGA / GRATIS
-                        html += '      <div class="text-center mt-2 w-100">';
-                        if (dt.pricing) {
-                            if (dt.pricing.gratis) {
-                                html += '        <h3 style="color:#007BFF; font-size:20px; margin-bottom:10px;">GRATIS</h3>';
-                            } else if (dt.pricing.promo) {
-                                html += '        <h3 style="color:#007BFF; font-size:20px; margin-bottom:10px;">Rp. ' + (dt.pricing.price - dt.pricing.promo_price).toLocaleString() + '</h3>';
-                            } else {
-                                html += '        <h3 style="color:#007BFF; font-size:20px; margin-bottom:10px;">Rp. ' + dt.pricing.price.toLocaleString() + '</h3>';
-                            }
-                        } else {
-                            html += '        <h3 style="color:#007BFF; font-size:20px; margin-bottom:10px;">Rp. -</h3>';
-                        }
-
-                        // TOMBOL DAFTAR
-                        html += '        <a href="/class/' + dt.unique_id + '/' + dt.title.replaceAll("/", "-") + '" class="btn btn-primary btn-block"';
-                        html += '           style="background-color:#007BFF; border:none; border-radius:10px; padding:8px 0; font-weight:600; font-size:14px; transition:background-color 0.3s ease;">Daftar</a>';
-                        html += '      </div>';
-
-                        html += '    </div>'; // tutup bagian bawah
-                        html += '  </div>'; // tutup card
-                        html += '</div>'; // tutup col
-                    });
-
-                    $('#listkelas').append(html);
+    $('#listkelas').append(html);
 
                     // Efek hover
                     $('#listkelas .card').hover(

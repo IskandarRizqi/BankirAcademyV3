@@ -678,10 +678,7 @@ class HomeController extends Controller
             ->limit(12)
             ->get();
         $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->get();
-        // return $data;
-        // return view('front.kelas.detail', $data);
         return view('front.kelasv2.detail', $data);
-        //  return view('front.kelas.detailv3', $data);
     }
 
     public function inputinstructor(Request $request)
@@ -705,8 +702,8 @@ class HomeController extends Controller
         }
 
         if ($request->foto) {
-            $name = $request->file('foto')->getClientOriginalName(); // Name File
-            $size = $request->file('foto')->getSize(); // Size File
+            $name = $request->file('foto')->getClientOriginalName(); 
+            $size = $request->file('foto')->getSize(); 
 
             if ($size >= 1048576) {
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');

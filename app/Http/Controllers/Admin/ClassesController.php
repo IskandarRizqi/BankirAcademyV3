@@ -694,6 +694,7 @@ class ClassesController extends Controller
 	}
 	public function listClass(Request $request)
 	{
+		// return $request;
 		$limit = 99;
 		// $auth = Auth::user();
 		// if ($auth) {
@@ -741,31 +742,35 @@ class ClassesController extends Controller
 		foreach ($class as $key => $value) {
 			array_push($class_id, $value->id);
 		}
-		$data['class'] = ClassesModel::select()
-			->where(function ($sql) use ($request, $data) {
-				if ($request->sebelumnya) {
-					return $sql->where('date_start', '<', Carbon::now()->format('d-m-Y'));
-				} else {
-					return $sql->where('date_start', '>=', Carbon::now()->format('d-m-Y'));
-				}
-				if ($request->jenis) {
-					foreach ($data['jeniss'] as $key => $va) {
-						$sql->where('jenis', 'like', '%' . strtoupper($va) . '%');
-					}
-				}
-				if ($request->type) {
-					foreach ($data['tipe'] as $key => $v) {
-						$sql->where('tipe', 'like', '%' . strtoupper($v) . '%');
-					}
-				}
-				if ($request->titlekelas) {
-					$sql->where('title', 'like', '%' . $request->titlekelas . '%');
-				}
-			})
-			->where('status', 1)
+		$data['class'] = ClassesModel::where('status', 1)
 			->orderBy('date_end', 'asc')
 			->paginate(9)
 			->toArray();
+		// $data['class'] = ClassesModel::select()
+		// 	->where(function ($sql) use ($request, $data) {
+		// 		if ($request->sebelumnya) {
+		// 			return $sql->where('date_start', '<', Carbon::now()->format('d-m-Y'));
+		// 		} else {
+		// 			return $sql->where('date_start', '>=', Carbon::now()->format('d-m-Y'));
+		// 		}
+		// 		if ($request->jenis) {
+		// 			foreach ($data['jeniss'] as $key => $va) {
+		// 				$sql->where('jenis', 'like', '%' . strtoupper($va) . '%');
+		// 			}
+		// 		}
+		// 		if ($request->type) {
+		// 			foreach ($data['tipe'] as $key => $v) {
+		// 				$sql->where('tipe', 'like', '%' . strtoupper($v) . '%');
+		// 			}
+		// 		}
+		// 		if ($request->titlekelas) {
+		// 			$sql->where('title', 'like', '%' . $request->titlekelas . '%');
+		// 		}
+		// 	})
+		// 	->where('status', 1)
+		// 	->orderBy('date_end', 'asc')
+		// 	->paginate(9)
+		// 	->toArray();
 		if ($request->ajax()) {
 			return $data['class'];
 		}
