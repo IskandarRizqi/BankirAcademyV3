@@ -276,41 +276,58 @@
   <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
 
   @foreach($kelas as $class)
-  <div class="card event-card"
-    style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column;">
+<div class="card event-card"
+    style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column; height: 100%;">
 
     <div style="width:100%; height:300px; flex-shrink:0;">
-      <img
-        src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
-        alt="{{ $class->title }}"
-        style="width:100%; height:100%; object-fit:fill; display:block; border:none;">
+        <img
+            src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
+            alt="{{ $class->title }}"
+            style="width:100%; height:100%; object-fit:cover; display:block; border:none;">
     </div>
 
     <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:15px; text-align:center;">
-      <div>
-        <p style="font-size:12px; color:#777; margin-bottom:4px;">
-          {{ \Carbon\Carbon::parse($class->date_start)->format('d-m-Y') }}
-        </p>
-        <h4 style="font-size:12px; margin:0; font-weight:600; font-family:Arial, sans-serif;">
-          {{ strtoupper($class->title) }}
-        </h4>
+        <div>
+             @php
+                $instructor = $class->instructor_list->first()->name ?? 'Instructor';
+                // Cek apakah ada kata 'upcoming' di judul (case-insensitive)
+                $isUpcoming = str_contains(strtolower($class->title), 'upcoming');
+            @endphp
 
-        @php
-        $instructor = $class->instructor_list->first()->name ?? 'Instructor';
-        @endphp
+           @if(!$isUpcoming)
+            <p style="font-size:12px; color:#777; margin-bottom:4px;">
+                {{ \Carbon\Carbon::parse($class->date_start)->format('d-m-Y') }}
+            </p>
+            @endif
 
-        <p style="font-size:12px; color:#007bff; margin:4px 0 8px; font-family:Arial, sans-serif;">
-          {{ strtoupper($instructor) }}
-        </p>
-      </div>
+            <h4 style="font-size:14px; margin:0; font-weight:600; font-family:Arial, sans-serif; 
+                       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+                       overflow: hidden; text-overflow: ellipsis; min-height: 36px; line-height: 1.3;">
+                {{ strtoupper($class->title) }}
+            </h4>
 
-      <button class="event-button"
-        onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'"
-        style="background:#007bff; color:white; border:none; padding:4px 20px; border-radius:8px; cursor:pointer; font-weight:500; margin-top:10px; align-self:center;">
-        Daftar
-      </button>
+         
+            <p style="font-size:12px; color:#007bff; margin:8px 0; font-family:Arial, sans-serif;
+                      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ strtoupper($instructor) }}
+            </p>
+        </div>
+
+        @if($isUpcoming)
+            <button class="event-button"
+                style="background:#ccc; color:#666; border:none; padding:8px 20px; border-radius:8px; cursor:not-allowed; font-weight:600; margin-top:10px; align-self:center; width: 100%;"
+                disabled>
+                UPCOMING
+            </button>
+        @else
+            <button class="event-button"
+                onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'"
+                style="background:#007bff; color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer; font-weight:600; margin-top:10px; align-self:center; width: 100%;">
+                DAFTAR
+            </button>
+        @endif
     </div>
-  </div>
+</div>
   @endforeach
 </div>
 

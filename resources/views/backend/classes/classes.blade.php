@@ -138,44 +138,33 @@
                                 <button class="btn bs-tooltip {{ $v->videos ? 'btn-info' : 'btn-dark' }}" title="Video"
                                     onclick="classVideo({{ $v }})"><i class='bx bx-video-plus'></i></button>
                             </td>
-                           <td style="overflow: visible !important; vertical-align: middle;">
-    <div class="dropdown text-center"> <button class="btn btn-warning dropdown-toggle btn-sm" type="button"
-            data-toggle="dropdown" 
-            data-boundary="window" 
-            aria-expanded="false" 
-            title="Opsi">
-            <i class="bx bx-cog"></i>
-        </button>
-        <div class="dropdown-menu shadow-lg" style="z-index: 1060 !important;">
-            <a class="dropdown-item" title="Edit"
-                href="/admin/classes/{{ $v->id }}/edit">
-                <i class="bx bx-edit-alt"></i> Edit
-            </a>
-            
-            <a class="dropdown-item text-danger" title="Delete" style="cursor:pointer"
-                onclick="deleteClasses({{ $v->id }})">
-                <i class="bx bx-trash"></i> Hapus
-            </a>
-
-            <div class="dropdown-divider"></div>
-
-            <a class="dropdown-item" title="Activated" style="cursor:pointer"
-                onclick="activedClasses({{ $v->id }},{{ $v->status }})">
-                <i class="bx bx-power-off"></i> {{ $v->status == 1 ? 'De-Activated' : 'Activated' }}
-            </a>
-
-            <a class="dropdown-item" title="Open" style="cursor:pointer"
-                onclick="openClasses({{ $v->id }},{{ $v->is_open }})">
-                <i class="bx bx-door-open"></i> {{ $v->is_open == 1 ? 'Closed' : 'Open' }}
-            </a>
-
-            <a class="dropdown-item" data-target="#upcomingmodal" data-toggle="modal"
-                title="Upcoming" style="cursor:pointer" onclick="setupcoming({{$v}})">
-                <i class="bx bx-calendar-event"></i> Upcoming
-            </a>
-        </div>
-    </div>
-</td>
+                           <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-warning dropdown-toggle btn-sm" type="button"
+                                        data-toggle="dropdown" aria-expanded="false" title="Opsi">
+                                        <i class="bx bx-cog"></i>
+                                    </button>
+                                    <div class="dropdown-menu" style="top: -20px !important">
+                                        <a class="dropdown-item" title="Edit"
+                                            href="/admin/classes/{{ $v->id }}/edit">Edit</a>
+                                        <a class="dropdown-item" title="Delete"
+                                            onclick="deleteClasses({{ $v->id }})">Hapus</a>
+                                        <form action="#" method="post" id="formdelclasses">@csrf
+                                            @method('DELETE')
+                                        </form>
+                                        <a class="dropdown-item" title="Activated"
+                                            onclick="activedClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ?
+                                            'De-Activated' : 'Activated' }}</a>
+                                        <a class="dropdown-item" title="Open"
+                                            onclick="openClasses({{ $v->id }},{{ $v->is_open }})">{{ $v->is_open == 1 ?
+                                            'Closed' : 'Open' }}</a>
+                                        <a class="dropdown-item" data-target="#upcomingmodal" data-toggle="modal"
+                                            title="Upcoming" onclick="setupcoming({{$v}})">Upcoming</a>
+                                        <form action="#" method="get" id="formacclasses">@csrf
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

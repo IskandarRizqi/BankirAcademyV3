@@ -255,7 +255,7 @@
                             <button class="btn btn-lg btn-block btn-secondary" disabled>Kelas Sudah Penuh</button>
                             @else
                             @if(!$class->is_open)
-                            <button class="btn btn-lg btn-block btn-secondary" disabled>Kelas Sudah Penuh</button>
+                            <button class="btn btn-lg btnp-block btn-secondary" disabled>Kelas Sudah Penuh</button>
                             @else
                             <form id="orderForm" action="{{ '/order' }}" method="POST">
                                 @csrf

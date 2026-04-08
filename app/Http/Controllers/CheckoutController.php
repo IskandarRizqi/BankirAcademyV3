@@ -44,10 +44,10 @@ class CheckoutController extends Controller
         
         if ($cp) {
             $price = $cp->price;
-            $price_final = $price * $jmlpeserta + $randomNumber;
+            $price_final = $price * $jmlpeserta;
             if ($cp->promo == 1) {
                 $price = $cp->price - $cp->promo_price;
-                $price_final = $price * $jmlpeserta + $randomNumber;
+                $price_final = $price * $jmlpeserta;
             }
         }
         $data['payment']['sertifikat'] = 0;
@@ -60,6 +60,28 @@ class CheckoutController extends Controller
                             }
                         }
 		}
+        if ($price_final == 0) {
+             $order = ClassPaymentModel::create([
+            'status' => 1,
+            'user_id' => $auth,
+            'class_id' => $request->class_id,
+            'unique_code' => $randomNumber,
+            'price' => $price,
+            'biaya_sertifikat' => $data['payment']['sertifikat'],
+            'price_final' => $price_final + $data['payment']['sertifikat'],
+            'expired' => date('Y-m-d') . ' 23:59:59',
+            'no_invoice' => $no_invoice,
+        ]);
+         SertifikatPesertaModel::create([
+				'user_id' => Auth::user()->id,
+				'class_id' => $request->class_id,
+				'payment_class_id' => $request->payment_invoice,
+				'nama' => json_encode($request->nama),
+				'email' => json_encode($request->email),
+				'nohp' => json_encode($request->nomor_handphone)
+			]);
+            return redirect('profile');
+        } else {
         $order = ClassPaymentModel::create([
             'status' => 0,
             'user_id' => $auth,
@@ -139,6 +161,7 @@ class CheckoutController extends Controller
             'msg' => 'Gagal menghubungi server pembayaran',
             'error' => $response->body()
         ], 500);
+        }
     }
     // public function uploadProof(Request $request)
     // {

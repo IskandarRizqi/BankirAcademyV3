@@ -162,7 +162,7 @@
                                 <label class="m-0"
                                     style="color: white; font-size: 12px; font-weight: normal;">ONLINE</label>
                                 <p class="m-0" style="font-size: 17px;">
-                                    <i class="fa fa-video" aria-hidden="true"></i> ZOOM MEET
+                                    <i class="fa fa-video" aria-hidden="true"></i> GOOGLE MEET
                                 </p>
 
                             </div>
@@ -220,7 +220,7 @@
                     </div>
                 </div>
                 <div class="mt-4"></div>
-                <div class="card">
+                <!-- <div class="card">
                     <div class="card-body">
                         <h3 class="text-primary mb-2">Point Pelatihan</h3>
                         <div class="row">
@@ -237,7 +237,7 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="col-lg-4">
                 @if($class->pricing)
