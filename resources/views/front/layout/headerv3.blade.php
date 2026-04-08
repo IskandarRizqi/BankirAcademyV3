@@ -185,7 +185,7 @@ body.modal-open {
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-block" id="login" onclick="funclogin()">Login</button>
-                    <a href="#" class="float-right small mt-2">Forgot Password?</a>
+                    <!-- <a href="#" class="float-right small mt-2">Forgot Password?</a> -->
                 </div>
                 <hr>
                 <a href="{{ url('/auth/google') }}" class="btn btn-danger btn-block">Login/Register with Google</a>

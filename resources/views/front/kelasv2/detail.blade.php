@@ -279,8 +279,12 @@
                     <label hidden for="">Kode Referral ( optional )</label>
                     <input hidden type="text" id="kode_reff" name="kode_reff" class="form-control">
                     @auth
+                    @if(!$kelas)
                     <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice(' + v.id + ')">Daftar Kelas
                         Ini</button>
+                    @else
+                     <button class="btn btn-primary btn-lg btn-block">Terdaftar</button>
+                    @endif
                     @else
                     <span class="button button-circle btn-block text-center" data-toggle="modal" data-target="#modelId"
                         data-backdrop="static" data-keyboard="false">Order
@@ -428,8 +432,7 @@
                     <div id="detailpeserta"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Simpan dan cetak
-                        invoice</button>
+                    <button type="submit" class="btn btn-primary" onclick="cetakInvoiceSertifikat()">Lanjut ke pembayaran</button>
                 </div>
             </form>
         </div>

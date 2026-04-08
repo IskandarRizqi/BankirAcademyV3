@@ -30,7 +30,7 @@ class CheckoutController extends Controller
 
         $numbers = ClassPaymentModel::select('no_invoice')->pluck('no_invoice')->toArray();
         do {
-            $no_invoice = uniqid();
+            $no_invoice = "BANKIR-" . uniqid();
         } while (in_array($no_invoice, $numbers));
 
         $price = 0;
@@ -44,7 +44,7 @@ class CheckoutController extends Controller
         
         if ($cp) {
             $price = $cp->price;
-            $price_final = $price + $randomNumber;
+            $price_final = $price * $jmlpeserta + $randomNumber;
             if ($cp->promo == 1) {
                 $price = $cp->price - $cp->promo_price;
                 $price_final = $price * $jmlpeserta + $randomNumber;
@@ -66,6 +66,7 @@ class CheckoutController extends Controller
             'class_id' => $request->class_id,
             'unique_code' => $randomNumber,
             'price' => $price,
+            'biaya_sertifikat' => $data['payment']['sertifikat'],
             'price_final' => $price_final + $data['payment']['sertifikat'],
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
@@ -91,7 +92,7 @@ class CheckoutController extends Controller
                 "callback_url" => url('/profile'),
                 "line_items" => [
                     [
-                        "name" => "Pembayaran Kelas " . $request->class_id,
+                        "name" => "Pembayaran Kelas ",
                         "price" => $price_final + $data['payment']['sertifikat'],
                         "quantity" => 1
                     ]

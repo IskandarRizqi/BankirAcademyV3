@@ -10,6 +10,7 @@ use App\Models\ClassEventModel;
 use App\Models\ClassLamanModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPartnerModel;
+use App\Models\ClassPaymentModel;
 use App\Models\CorporateModel;
 use App\Models\DashboardModel;
 use App\Models\InstructorModel;
@@ -671,7 +672,9 @@ class HomeController extends Controller
         $data['time_end'] = $end;
         $data['lokasi'] = $lokasi;
         $data['title'] = $title;
-
+        if (Auth::user()) {
+        $data['kelas'] = ClassPaymentModel::where('class_id', $data['class']['id'])->where('user_id', Auth::user()->id)->where('status', 1)->first();
+        }
         $data['kelas_populer'] = ClassesModel::select()
             ->where('date_end', '>=', Carbon::now()
                 ->format('Y-m-d'))
