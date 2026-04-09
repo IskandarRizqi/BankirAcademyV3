@@ -26,14 +26,10 @@ class ClassesController extends Controller
 	public function index(Request $r)
 	{
 		$data = [];
-
-		//Param
 		$data['param'] = [];
 		$data['param']['date_start'] = ($r->param_date_start) ? $r->param_date_start : Carbon::now()->format('Y-m-d');
 		$data['param']['date_end'] = ($r->param_date_end) ? $r->param_date_end : Carbon::now()->addmonth()->format('Y-m-d');
 		$data['param']['category'] = ($r->param_category) ? $r->param_category : null;
-
-		//Classes
 		$data['classes'] = ClassesModel::select('classes.*', 'biaya_sertifikat.type as tipebs', 'biaya_sertifikat.nominal')
 			->where(function ($q) use ($data) {
 				// $q->where('date_start', '>=', $data['param']['date_start'])->orWhereNull('date_start');

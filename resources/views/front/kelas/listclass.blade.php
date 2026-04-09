@@ -255,12 +255,14 @@
             
             // TANGGAL
             html += '      <div style="text-align:center;">';
+               if (!isUpcoming) {
             html += '        <p style="margin:0 0 4px 0; font-size:12px; color:#777;">' 
                                 + (function(d){ 
                                     const t=new Date(d); 
                                     return String(t.getDate()).padStart(2,'0')+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+t.getFullYear(); 
                                 })(dt.date_end) 
                                 + '</p>';
+}
 
             html += '        <h4 class="text-uppercase" style="font-size:15px; font-weight:600; font-family:Arial, sans-serif; color:#000; margin:0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; min-height: 42px;">' + dt.title + '</h4>';
             html += '      </div>';

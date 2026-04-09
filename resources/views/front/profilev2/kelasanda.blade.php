@@ -291,6 +291,33 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="eventmateri" tabindex="-1" aria-labelledby="exampleMateriLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="eventtitle">Material Files</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="1%">No</th>
+                                    <th>Keterangan</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodymateri">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     let dataevent = [];
@@ -336,7 +363,6 @@
                         console.log("event", dataevent)
 
                         dataevent.forEach(v => {
-                            // Format tanggal dan jam
                             let tglOrder = new Date(v.created_at).toLocaleDateString('id-ID');
                             let tglBayar = v.tgl_bayar ? new Date(v.tgl_bayar).toLocaleDateString('id-ID') : '-';
                             let tglSeminar = v.date_start ? new Date(v.date_start).toLocaleDateString('id-ID') : '-';
@@ -349,14 +375,12 @@
                                     jam = v.jam_acara;
                                 }
                             }
-
-                            // Tentukan lokasi dan kategori
                             let onlineOfflineLabel = '-';
                             let onlineOfflineContent = '-';
 
                             if (v.kategori == 0) {
                                 onlineOfflineLabel = 'ONLINE';
-                                onlineOfflineContent = '<i class="fa fa-video" aria-hidden="true"></i> <span style="font-size:17px;">Zoom Meet</span>';
+                                onlineOfflineContent = '<i class="fa fa-video" aria-hidden="true"></i> <span style="font-size:17px;">Google Meet</span>';
                             } else if (v.kategori == 1) {
                                 onlineOfflineLabel = 'OFFLINE';
                                 if (v.lokasi) {
@@ -415,6 +439,7 @@
                                 h += '          <div class="btn btn-success">' + s + '</div>';
                             } else {
                                 h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:auto" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
+                                h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:auto" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
                             }
                             h += '        </div>';
 
@@ -464,5 +489,26 @@
             }
         });
         $('#bodyevent').html(d);
+    }
+    function setmateri(title, id_event) {
+        // console.log("id",id_event);
+        // $('#eventtitle').html(title);
+        let d = '';
+        dataevent.forEach(e => {
+            if (e.id == id_event) {
+                if (e.files) {
+                    let no = 1;
+                    e.files.forEach(eev => {
+                        d += '<tr>';
+                        d += '    <td>' + no + '</td>';
+                        d += '    <td>' + eev.title + '</td>';
+                            d += '    <td><a href="/getBerkas?rf=' + eev.url + '" target="_blank">Download</a></td>';
+                        d += '</tr>';
+                        no++;
+                    });
+                }
+            }
+        });
+        $('#bodymateri').html(d);
     }
 </script>
