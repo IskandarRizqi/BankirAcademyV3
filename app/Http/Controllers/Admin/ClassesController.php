@@ -484,24 +484,42 @@ class ClassesController extends Controller
 		return Redirect::back()->with('success', 'Certificate Updated');
 	}
 
-	public function previewcertificate(Request $r, $id)
-	{
-		$data['class'] = ClassesModel::where('id', $id)->first();
-		if (!$data['class']) {
-			return Redirect::back()->with('error', 'Kelas Tidak Ditemukan');
-		}
-		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
-		if (!$data['certs']) {
-			return Redirect::back()->with('error', 'Sertifikat Tidak Ditemukan');
-		}
-		$data['name'] = 'John Doe';
-		$data['contents'] = str_replace("[[date_expired]]", $data['certs']->certificate_expired, str_replace("[[date_active]]", $data['certs']->certificate_created, str_replace("[[class]]", $data['class']->title, str_replace("[[name]]", $data['name'], $data['certs']->content))));
+	public function previewcertificate(Request $r, $id, $nama, $instansi)
+{
+    $data['class'] = ClassesModel::where('id', $id)->first();
+    if (!$data['class']) {
+        return Redirect::back()->with('error', 'Kelas Tidak Ditemukan');
+    }
 
-		// return view('backend/certificate/certificate',$data);
+    $data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
+    if (!$data['certs']) {
+        return Redirect::back()->with('error', 'Sertifikat Tidak Ditemukan');
+    }
 
-		$pdf = PDF::loadView('backend/certificate/certificate', $data);
-		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
-	}
+    // --- LOGIKA KODE DINAMIS ---
+    // Mengambil tanggal hari ini format: dmy (Contoh: 150426)
+    $datePart = date('dmy'); 
+    
+    // Misal kita ambil 3 angka unik dari ID atau urutan (Contoh: ID 1 jadi 001)
+    // str_pad berguna agar angka 1 menjadi 001, angka 12 menjadi 012
+   $uniquePart = strtoupper(substr(uniqid(), -3)); 
+    
+    $data['certificate_code'] = "BAI-" . $datePart . "-" . $uniquePart;
+    // ---------------------------
+
+    $data['name'] = $nama;
+    $data['instansi'] = $instansi;
+    
+    // Mengganti placeholder di konten
+    $data['contents'] = str_replace(
+        ["[[date_expired]]", "[[date_active]]", "[[class]]", "[[name]]"],
+        [$data['certs']->certificate_expired, $data['certs']->certificate_created, $data['class']->title, $data['name']],
+        $data['certs']->content
+    );
+
+    $pdf = PDF::loadView('backend/certificate/certificate', $data);
+    return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
+}
 
 	public function getCertificate(Request $r, $id)
 	{

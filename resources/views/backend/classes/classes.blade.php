@@ -97,12 +97,12 @@
                             </td>
                             <td class="text-center">
                                 <span class="badge badge-danger" data-toggle="modal" data-target="#listPesertaModal"
-                                    onclick="openPeserta({{ $v->peserta_list['all'] }})">
+                                    onclick="openPeserta({{ $v->peserta_list['all'] }},  {{$v->id}})">
                                     {{ count($v->peserta_list['all']) }}
                                 </span>
                                 |
                                 <span class="badge badge-success" data-toggle="modal" data-target="#listPesertaModal"
-                                    onclick="openPeserta({{ $v->peserta_list['lunas'] }})">
+                                    onclick="openPeserta({{ $v->peserta_list['lunas'] }}, {{$v->id}})">
                                     {{ count($v->peserta_list['lunas']) }}
                                 </span>
                             </td>
@@ -170,39 +170,39 @@
                     </tbody>
                 </table>
                 <!-- Modal -->
-                <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="listPesertaModalLabel">List Peserta</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="table-responsive">
-                                    <table id="tblListPeserta" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Status</th>
-                                                <th>Nama</th>
-                                                <th>No HP</th>
-                                                <th>Instansi</th>
-                                                <th>Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="listPeserta">
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
+           <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="listPesertaModalLabel">List Peserta Sertifikat</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="tblListPeserta" class="table table-bordered table-striped">
+                       <thead>
+    <tr>
+        <th>Status</th>
+        <th>Nama Akun</th>
+        <th>Nama Sertifikat</th> <th>No HP</th>
+        <th>Instansi</th>
+        <th>Price</th>
+        <th>Sertifikat</th>
+    </tr>
+</thead>
+                        <tbody id="listPeserta">
+                            </tbody>
+                    </table>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
                 <!-- Modal Sertifikat-->
                 <div class="modal fade" id="modalSertifikat" tabindex="-1" aria-labelledby="modalSertifikatLabel"
                     aria-hidden="true">
@@ -384,30 +384,50 @@
         $('#nominal').change();
     }
 
-    function openPeserta(data) {
-        let = html = '';
-        $('#listPeserta').html(html);
-        if (data.length > 0) {
-            data.forEach(el => {
-                let status = 'Belum Lunas';
-                if (el.status) {
-                    status = 'Lunas';
+function openPeserta(data, id_class) {
+    let html = '';
+    $('#listPeserta').html(''); // Kosongkan tabel
+
+    if (data.length > 0) {
+        data.forEach(el => {
+            let status = el.status ? 'Lunas' : 'Belum Lunas';
+            let price = Number(el.price_final).toLocaleString('id-ID', {
+                style: 'currency',
+                currency: 'IDR'
+            });
+
+            // Parse data nama sertifikat
+            let daftarNama = [];
+            try {
+                if (el.nama_sertifikat && el.nama_sertifikat.startsWith('[')) {
+                    daftarNama = JSON.parse(el.nama_sertifikat);
+                } else if (el.nama_sertifikat) {
+                    daftarNama = [el.nama_sertifikat]; // Jika bukan array, jadikan array tunggal
+                } else {
+                    daftarNama = [el.user_name]; // Fallback ke nama akun jika data sertifikat kosong
                 }
-                let price = Number(el.price_final).toLocaleString('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR'
-                });
+            } catch (e) {
+                daftarNama = [el.nama_sertifikat];
+            }
+
+            // Loop setiap nama agar menjadi baris terpisah
+            daftarNama.forEach(namaIndividu => {
                 html += '<tr>';
                 html += '<td>' + status + '</td>';
-                html += '<td>' + el.name + '</td>';
-                html += '<td>' + el.phone_region + el.phone + '</td>';
-                html += '<td>' + el.instansi + '</td>';
+                html += '<td>' + el.user_name + '</td>'; // Nama akun (tetap sama)
+                html += '<td>' + namaIndividu + '</td>'; // Nama di sertifikat (terpisah)
+                html += '<td>' + (el.phone_region || '') + (el.phone || '') + '</td>';
+                html += '<td>' + (el.instansi || '-') + '</td>';
                 html += '<td>' + price + '</td>';
+                html += '<td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/'+ id_class +'/'+ namaIndividu + '/' + el.user_name +'" target="_blank">Show Certificate</a></td>';
                 html += '</tr>';
-            })
-            $('#listPeserta').html(html);
-        }
+            });
+        });
+        $('#listPeserta').html(html);
+    } else {
+        $('#listPeserta').html('<tr><td colspan="6" class="text-center">Data tidak ditemukan</td></tr>');
     }
+}
 
     function setupcoming(data) {
         console.log(data);

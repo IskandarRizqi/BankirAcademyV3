@@ -72,10 +72,11 @@ class CheckoutController extends Controller
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
         ]);
+        $order->refresh();
          SertifikatPesertaModel::create([
 				'user_id' => Auth::user()->id,
 				'class_id' => $request->class_id,
-				'payment_class_id' => $request->payment_invoice,
+				'payment_class_id' => $order->id,
 				'nama' => json_encode($request->nama),
 				'email' => json_encode($request->email),
 				'nohp' => json_encode($request->nomor_handphone)
@@ -93,10 +94,11 @@ class CheckoutController extends Controller
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
         ]);
+        $order->refresh();
         SertifikatPesertaModel::create([
 				'user_id' => Auth::user()->id,
 				'class_id' => $request->class_id,
-				'payment_class_id' => $request->payment_invoice,
+				'payment_class_id' => $order->id,
 				'nama' => json_encode($request->nama),
 				'email' => json_encode($request->email),
 				'nohp' => json_encode($request->nomor_handphone)
