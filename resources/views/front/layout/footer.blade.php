@@ -411,7 +411,7 @@
                     });
                 }
                 // let foo = '<a href="/pages/page/7" class="text-capitalize" style="color: black">Frequently Asked Questions (FAQ)</a><br>';
-                $('.laman_footer').append(foo);
+                // $('.laman_footer').append(foo);
                 if (result.laman_head.length > 0) {
                     result.laman_head.forEach(el => {
                         // let foo = '<a href="/u-laman/'+el.slug+'" class="text-capitalize">'+el.title+'</a><br>';

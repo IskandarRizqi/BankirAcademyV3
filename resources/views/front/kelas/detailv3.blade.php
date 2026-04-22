@@ -247,7 +247,7 @@
                        
                         <div class="registration-section mb-4">
                             @if($class->custom_jadwal>0)
-                            <button class="btn btn-lg btn-block btn-secondary" disabled>Kelas Belum Tersedia</button>
+                            <button class="btn btn-lg btn-block btn-secondary" disabled>Kelas sudah penuh</button>
                             @else
                             @if(!$class->date_end)
                             <button class="btn btn-lg btn-block btn-secondary" disabled>Kelas Belum Tersedia</button>

@@ -22,4 +22,8 @@ class SertifikatPesertaModel extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function profile()
+    {
+        return $this->belongsTo(UserProfileModel::class, 'user_id', 'user_id');
+    }
 }

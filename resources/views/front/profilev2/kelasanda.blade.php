@@ -318,9 +318,37 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="eventsertif" tabindex="-1" aria-labelledby="exampleMateriLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="eventtitle">List Sertifikat</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="1%">No</th>
+                                    <th>Nama</th>
+                                    <th>File</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodysertif">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     let dataevent = [];
+    let datasertif = [];
 
     function getkelasanda(status) {
         let s = 'Materi';
@@ -328,13 +356,18 @@
         let p = 0;
         if (status == 'dalam-progres-billing') {
             t = 0;
-            s = 'Dalam Proses';
+            s = 'Materi';
             p = 75;
         }
         if (status == 'konfirmasi-ka-billing') {
             t = 1;
             s = 'Menunggu Konfirmasi';
             p = 25;
+        }
+        if (status == 'semua-ka-billing') {
+            t = 3;
+            s = 'Materi';
+            p = 100;
         }
         if (status == 'selesai-ka-billing') {
             t = 2;
@@ -346,6 +379,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+       
         // loader transparant
         Swal.fire({
             background: '#0069d900',
@@ -360,8 +394,7 @@
                     let h = '';
                     if (response.status == 1) {
                         dataevent = response.data.getkelasanda;
-                        console.log("event", dataevent)
-
+                        datasertif = response.data.sertifikat;
                         dataevent.forEach(v => {
                             let tglOrder = new Date(v.created_at).toLocaleDateString('id-ID');
                             let tglBayar = v.tgl_bayar ? new Date(v.tgl_bayar).toLocaleDateString('id-ID') : '-';
@@ -416,7 +449,12 @@
                                 h += '              <p><strong>Narasumber</strong><br><span class="badge badge-danger">Instructor belum tersedia</span></p>';
                             }
                             h += '          </div>';
+ let hariIni = new Date();
+    hariIni.setHours(0, 0, 0, 0); // Reset jam ke 00:00 agar perbandingan tanggal akurat
+    let tglMulai = v.date_start ? new Date(v.date_start) : null;
+    tglMulai.setHours(0, 0, 0, 0);
 
+    let isBelumMulai = tglMulai && hariIni < tglMulai;
 
 
                             h += '          <div class="col-md-4 mb-2">';
@@ -434,14 +472,28 @@
                             h += '        </div>'; 
 
 
-                            h += '        <div style="display:flex; justify-content:flex-end;">';
-                            if (t == 0) {
-                                h += '          <div class="btn btn-success">' + s + '</div>';
-                            } else {
-                                h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:auto" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
-                                h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:auto" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
-                            }
-                            h += '        </div>';
+                           h += '        <div style="display:flex; justify-content:flex-end;">';
+    if (t == 0 || t == 3) {
+        if (isBelumMulai) {
+            // Jika belum mulai, tampilkan alert saat diklik
+            let msg = 'iziToast.info({title: \'Info\', message: \'Kelas belum dimulai, akses belum tersedia\', position: \'topRight\'});';
+            
+            h += '          <div class="btn btn-success" style="cursor:pointer" onclick="' + msg + '">' + s + '</div>';
+            h += '          <div class="btn btn-primary ml-2" style="cursor:pointer" onclick="' + msg + '">Files </div>';
+        }  else {
+            // Jika sudah mulai, jalankan fungsi asli
+            h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:pointer" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
+            h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:pointer" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
+        }
+    } else if (t == 2) {
+            
+            h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:pointer" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
+            h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:pointer" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
+            h += '          <div class="btn btn-info ml-2" style="cursor:pointer" data-toggle="modal" data-target="#eventsertif" onclick="setsertifikat(' + v.id +')" onclick="">Sertifikat</div>';
+        } else {
+         h += '          <div class="btn btn-success">' + s + '</div>';
+    }
+    h += '        </div>';
 
                             h += '      </div>'; 
                             h += '    </div>'; 
@@ -466,7 +518,6 @@
         }
 
     function setevent(title, id_event) {
-        console.log("id",id_event);
         $('#eventtitle').html(title);
         let d = '';
         dataevent.forEach(e => {
@@ -510,5 +561,33 @@
             }
         });
         $('#bodymateri').html(d);
+    }
+    function setsertifikat(id_event) {
+        let listSertifikat = datasertif.filter((sertif) => sertif.payment_class_id == id_event);
+        let d = '';
+        listSertifikat.forEach(el => {
+            let daftarNama = [];
+            try {
+                if (el.nama && el.nama.startsWith('[')) {
+                    daftarNama = JSON.parse(el.nama);
+                } else if (el.nama) {
+                    daftarNama = [el.nama]; // Jika bukan array, jadikan array tunggal
+                } else {
+                    daftarNama = [el.user_name]; // Fallback ke nama akun jika data sertifikat kosong
+                }
+            } catch (e) {
+                daftarNama = [el.nama];
+            }
+             let no = 1;
+                   daftarNama.forEach(nama => {
+                        d += '<tr>';
+                        d += '    <td>' + no + '</td>';
+                        d += '    <td>' + nama + '</td>';
+                        d += '<td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/'+ el.class_id +'/'+ nama + '/' + el.profile.name +'" target="_blank">Download Sertifikat</a></td>';
+                        d += '</tr>';
+                        no++;
+                    });
+        });
+        $('#bodysertif').html(d);
     }
 </script>

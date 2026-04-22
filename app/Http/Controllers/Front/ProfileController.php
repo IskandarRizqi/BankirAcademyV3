@@ -31,6 +31,7 @@ use App\Models\LokerModel;
 use App\Models\MembershipModel;
 use App\Models\PrepotesModel;
 use App\Models\RefferralWithdrawModel;
+use App\Models\SertifikatPesertaModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Support\Facades\Process;
@@ -96,6 +97,7 @@ class ProfileController extends Controller
         foreach ($data['payment'] as $key => $value) {
             array_push($id_class, $value->class_id);
         }
+        
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',
             'class_participant.review',
@@ -302,26 +304,11 @@ class ProfileController extends Controller
     }
 
     public function getkelasanda($type)
-    {
-
-        $start = Carbon::now()->subYears(30)->format('Y-m-d');
-        $end = Carbon::now()->addDay()->format('Y-m-d');
-        $status = [1, 0];
-        // Dalam Proses
-        if ($type == 0) {
-            $start = Carbon::now()->subDays(10)->format('Y-m-d');
-            $status = [1];
-        }
-        // Menunggu Konfirmasi
-        if ($type == 1) {
-            $status = [0];
-        }
-        // Selesai
-        if ($type == 2) {
-            $start = Carbon::now()->subYears(10)->format('Y-m-d');
-            $status = [1];
-        }
-        $data['getkelasanda'] = ClassPaymentModel::select(
+{
+    // Mengambil tanggal hari ini dalam format Y-m-d
+    $now = Carbon::now()->format('Y-m-d');
+     $auth = Auth::user()->id;
+    $query = ClassPaymentModel::select(
             'class_payment.*',
             'classes.title',
             'classes.video',
@@ -336,43 +323,41 @@ class ProfileController extends Controller
             'classes.date_end',
             'classes.jam_acara',
             'classes.kategori',
-            'classes.lokasi',
-
+            'classes.lokasi'
         )
-            ->join('classes', 'classes.id', 'class_payment.class_id')
-            ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
-            ->where('class_payment.user_id', Auth::user()->id)
-            ->where('class_payment.status', 1)
-            ->whereBetween('class_payment.created_at', [$start, $end])
-            ->whereIn('class_payment.status', $status)
-            // ->whereDate('class_payment.created_at', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
-            // ->whereDate('class_payment.created_at', '<=', Carbon::now()->format('Y-m-d'))
-            // ->whereIn('class_payment.status', $data['param']['status'])
-            ->orderBy('class_payment.status', 'desc')
-            ->orderBy('class_payment.updated_at', 'desc')
-            ->get();
+        ->join('classes', 'classes.id', 'class_payment.class_id')
+        ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
+        ->where('class_payment.user_id', Auth::user()->id)
+        ->where('class_payment.status', 1);
+    if ($type == 0) {
+        $query->where('classes.date_start', '<=', $now)
+              ->where('classes.date_end', '>=', $now);
+    } elseif ($type == 2) {
+        $query->where('classes.date_end', '<', $now);
+    } 
+    $data['sertifikat'] = SertifikatPesertaModel::with(['profile'])->where('user_id', $auth)->get();
+    $data['getkelasanda'] = $query->orderBy('class_payment.status', 'desc')
+        ->orderBy('class_payment.updated_at', 'desc')
+        ->get();
 
+    foreach ($data['getkelasanda'] as $key => $v) {
+        $v->events = ClassEventModel::where('class_id', $v->class_id)->get();
+        $v->files = ClassContentModel::where('class_id', $v->class_id)->get();
 
-
-        foreach ($data['getkelasanda'] as $key => $v) {
-            $v->events = ClassEventModel::where('class_id', $v->class_id)->get();
-            $v->files = ClassContentModel::where('class_id', $v->class_id)->get();
-
-            // ambil data class untuk akses instructor_list
-            $class = ClassesModel::where('id', $v->class_id)->first();
-            if ($class && count($class->instructor_list) > 0) {
-                $v->narasumber = $class->instructor_list[0]->name;
-            } else {
-                $v->narasumber = null;
-            }
+        $class = ClassesModel::where('id', $v->class_id)->first();
+        if ($class && count($class->instructor_list) > 0) {
+            $v->narasumber = $class->instructor_list[0]->name;
+        } else {
+            $v->narasumber = null;
         }
-
-        return response()->json([
-            'status' => 1,
-            'msg' => 'Data Success',
-            'data' => $data
-        ], 200);
     }
+
+    return response()->json([
+        'status' => 1,
+        'msg' => 'Data Success',
+        'data' => $data
+    ], 200);
+}
 
     /**
      * Show the form for creating a new resource.

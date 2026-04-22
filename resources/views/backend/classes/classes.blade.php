@@ -417,7 +417,7 @@ function openPeserta(data, id_class) {
                 html += '<td>' + el.user_name + '</td>'; // Nama akun (tetap sama)
                 html += '<td>' + namaIndividu + '</td>'; // Nama di sertifikat (terpisah)
                 html += '<td>' + (el.phone_region || '') + (el.phone || '') + '</td>';
-                html += '<td>' + (el.instansi || '-') + '</td>';
+                html += '<td>' + (el.instansi || el.user_name) + '</td>';
                 html += '<td>' + price + '</td>';
                 html += '<td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/'+ id_class +'/'+ namaIndividu + '/' + el.user_name +'" target="_blank">Show Certificate</a></td>';
                 html += '</tr>';
@@ -430,7 +430,6 @@ function openPeserta(data, id_class) {
 }
 
     function setupcoming(data) {
-        console.log(data);
         $('#upcoming_id').val(data.id);
         $('#upcoming' + data.custom_jadwal).attr('checked', true);
     }

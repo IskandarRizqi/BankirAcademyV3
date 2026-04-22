@@ -129,13 +129,13 @@
         html += '      </div>';
         
         html += '      <div style="margin-top:15px;">';
-        html += '        <a href="/profile-instructor/' + dt.instructor_list[0].id + '/' + dt.instructor_list[0].name + '" class="d-flex align-items-center" style="text-decoration:none; color:#000;">';
+        html += '        <a href="/profile-instructor/' + dt.instructor_list[0]?.id + '/' + dt.instructor_list[0]?.name + '" class="d-flex align-items-center" style="text-decoration:none; color:#000;">';
         html += '          <img class="rounded-circle" style="width:45px; height:45px; object-fit:cover; border:2px solid #007BFF; flex-shrink:0;"';
-        html += (dt.instructor_list[0].picture_src) ? 'src="/Image/' + dt.instructor_list[0].picture_src.url + '"' : 'src="/FE/images/default-user.png"';
+        html += (dt.instructor_list[0]?.picture_src) ? 'src="/Image/' + dt.instructor_list[0]?.picture_src.url + '"' : 'src="/FE/images/default-user.png"';
         html += ' alt="Foto Narasumber">';
         html += '          <div style="margin-left:10px; overflow:hidden;">';
         html += '            <small class="d-block" style="color:#007BFF; font-weight:600; font-size:10px;">NARASUMBER</small>';
-        html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + dt.instructor_list[0].name + '</h5>';
+        html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + dt.instructor_list[0]?.name + '</h5>';
         html += '          </div>';
         html += '        </a>';
         html += '      </div>';
