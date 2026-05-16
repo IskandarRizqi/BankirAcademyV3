@@ -276,10 +276,10 @@
   <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
 
   @foreach($kelas as $class)
-<div class="card event-card"
-    style="width:250px; border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column; height: 100%;">
+<div class="card event-card col-lg-3 col-sm-6"
+    style="border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column; height: 100%;">
 
-    <div style="width:100%; height:300px; flex-shrink:0;">
+    <div style="width:100%; height:200px; flex-shrink:0;">
         <img
             src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
             alt="{{ $class->title }}"

@@ -199,9 +199,15 @@
                     <div class="card mt-4"
                         style="border-top-left-radius: 10px; border-top-right-radius:10px; border-color: transparent;">
                         <div class="card-body p-2">
-                            <iframe width="100%" height="90%"
+                            <!-- <iframe width="100%" height="90%"
                                 src="https://www.youtube.com/embed/Dt1PGv-toHU?si=G_8_3vfrY9mrBYaP">
-                            </iframe>
+                            </iframe> -->
+                            <div style="width:100%; height:200px; flex-shrink:0;">
+        <img
+            src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
+            alt="{{ $class->title }}"
+            style="width:100%; height:100%; object-fit:cover; display:block; border:none;">
+    </div>
                             <h5 class="m-2">{{$title}}</h5>
                         </div>
                     </div>
