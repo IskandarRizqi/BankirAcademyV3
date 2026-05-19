@@ -757,7 +757,7 @@ class ClassesController extends Controller
 			array_push($class_id, $value->id);
 		}
 		$data['class'] = ClassesModel::where('status', 1)
-			->orderBy('date_end', 'asc')
+			->orderBy('date_end', 'desc')
 			->paginate(9)
 			->toArray();
 		// $data['class'] = ClassesModel::select()

@@ -203,11 +203,11 @@
                                 src="https://www.youtube.com/embed/Dt1PGv-toHU?si=G_8_3vfrY9mrBYaP">
                             </iframe> -->
                             <div style="width:100%; height:200px; flex-shrink:0;">
-        <img
-            src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
-            alt="{{ $class->title }}"
-            style="width:100%; height:100%; object-fit:cover; display:block; border:none;">
-    </div>
+                                <img
+                                    src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
+                                    alt="{{ $class->title }}"
+                                    style="width:100%; height:100%; object-fit:cover; display:block; border:none;">
+                            </div>
                             <h5 class="m-2">{{$title}}</h5>
                         </div>
                     </div>
@@ -246,89 +246,121 @@
                 </div> -->
             </div>
             <div class="col-lg-4">
-                @if($class->pricing)
-                <div class="d-flex">
-                    @if($class->pricing->promo)
-                    <h3 class="ml-3">
-                        <b>Rp.
-                            {{number_format($class->pricing->price-$class->pricing->promo_price)}}</b>
-                    </h3>
-                    <span class="ml-2" style="text-decoration: line-through; color:grey">Rp
-                        {{number_format($class->pricing->price)}}</span>
-                    <span class="ml-2" style="color:grey">{{($class->pricing->promo_price/$class->pricing->price)*100}}
-                        %</span>
-                    @else
-                    <h3 class="ml-3">
-                        <b>Rp.
-                            {{number_format($class->pricing->price)}}</b>
-                    </h3>
-                    @endif
-                </div>
-                @else
-                <h3 class="ml-3">
-                    <b>Rp 0</b>
-                </h3>
-                @endif
-                @if($class->custom_jadwal>0)
-                <button class="button button-circle btn-block btn-danger text-center" disabled>Kelas sudah penuh</button>
-                @else
-                @if(!$class->date_end)
-                <button class="button button-circle btn-block text-center" disabled>Kelas Belum Tersedia</button>
-                @elseif(\Carbon\Carbon::parse($class->date_end) < \Carbon\Carbon::now()) <button
-                    class="button button-circle btn-block text-center btn-danger" disabled>Kelas Sudah
-                        Tidak Aktif</button>
-                    @else
-                    @if(!$class->is_open)
-                    <button class="button button-circle btn-block text-center btn-danger" disabled>Kelas Sudah
-                        Tidak Aktif</button>
-                    @else
-                    <label hidden for="">Kode Referral ( optional )</label>
-                    <input hidden type="text" id="kode_reff" name="kode_reff" class="form-control">
-                    @auth
-                    @if(!$kelas)
-                    <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice(' + v.id + ')">Daftar Kelas
-                        Ini</button>
-                    @else
-                     <button class="btn btn-primary btn-lg btn-block">Terdaftar</button>
-                    @endif
-                    @else
-                    <span class="button button-circle btn-block text-center" data-toggle="modal" data-target="#modelId"
-                        data-backdrop="static" data-keyboard="false">Order
-                        sekarang</span>
-                    @endauth
-
-                    @endif
-                    @endif
-                    @endif
-                    <div class="tambahan">
-                        <p class="mt-4 mb-2"><b>Bonus Tambahan :</b></p>
-                        <p class="m-0"><svg width="12" height="11" viewBox="0 0 12 11" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z"
-                                    fill="#065FFF" />
-                            </svg>
-                            Sertifikat
-                        </p>
-                        <p class="m-0"><svg width="12" height="11" viewBox="0 0 12 11" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z"
-                                    fill="#065FFF" />
-                            </svg>
-                            Online Free konsultasi
-                        </p>
-                        <p class="m-0"><svg width="12" height="11" viewBox="0 0 12 11" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z"
-                                    fill="#065FFF" />
-                            </svg>
-                            Materi Pelatihan & Form pendukung
-                        </p>
+    <!-- Membungkus komponen ke dalam Card agar lebih rapi dan kokoh -->
+    <div class="card h-100 border-0 shadow-sm p-4">
+        
+        <!-- BAGIAN HARGA -->
+        <div class="d-flex align-items-center mb-2">
+            @if($class->pricing)
+                @if($class->pricing->promo)
+                    <div>
+                        <h3 class="font-weight-bold text-primary m-0">
+                            Rp {{ number_format($class->pricing->price - $class->pricing->promo_price) }}
+                        </h3>
+                        <div class="d-flex align-items-center mt-1">
+                            <span class="text-muted small text-decoration-through mr-2">
+                                Rp {{ number_format($class->pricing->price) }}
+                            </span>
+                            <span class="badge badge-danger">
+                                {{ round(($class->pricing->promo_price / $class->pricing->price) * 100) }}% OFF
+                            </span>
+                        </div>
                     </div>
+                @elseif ($class->pricing->gratis)
+                    <!-- UI KETIKA GRATIS (DITONJOLKAN) -->
+                    <div class="w-100 py-2 px-3 bg-success-light rounded d-flex align-items-center justify-content-between" style="background-color: #e8f5e9; border: 1px dashed #2e7d32;">
+                        <span class="text-success font-weight-bold" style="font-size: 1.1rem;">Biaya Pendaftaran:</span>
+                        <h2 class="m-0 font-weight-black text-success animate-pulse" style="letter-spacing: 1px; font-weight: 800;">
+                            GRATIS
+                        </h2>
+                    </div>
+                @else
+                    <h3 class="font-weight-bold m-0">
+                        Rp {{ number_format($class->pricing->price) }}
+                    </h3>
+                @endif
+            @else
+                <!-- UI KETIKA Rp 0 (DIANGGAP GRATIS JUGA) -->
+                <div class="w-100 py-2 px-3 bg-success-light rounded d-flex align-items-center justify-content-between" style="background-color: #e8f5e9; border: 1px dashed #2e7d32;">
+                    <span class="text-success font-weight-bold" style="font-size: 1.1rem;">Biaya Pendaftaran:</span>
+                    <h2 class="m-0 font-weight-black text-success" style="letter-spacing: 1px; font-weight: 800;">
+                        GRATIS
+                    </h2>
+                </div>
+            @endif
+        </div>
+
+        <!-- BAGIAN TOMBOL AKSI / STATUS KELAS -->
+        <div class="action-buttons mb-4">
+            @if($class->custom_jadwal > 0)
+                <button class="btn btn-danger btn-block py-2 font-weight-bold rounded-pill" disabled>Kelas sudah penuh</button>
+            @else
+                @if(!$class->date_end)
+                    <button class="btn btn-secondary btn-block py-2 font-weight-bold rounded-pill" disabled>Kelas Belum Tersedia</button>
+                @elseif(\Carbon\Carbon::parse($class->date_end) < \Carbon\Carbon::now())
+                    <button class="btn btn-danger btn-block py-2 font-weight-bold rounded-pill" disabled>Kelas Sudah Tidak Aktif</button>
+                @else
+                    @if(!$class->is_open)
+                        <button class="btn btn-danger btn-block py-2 font-weight-bold rounded-pill" disabled>Kelas Sudah Tidak Aktif</button>
+                    @else
+                        <input hidden type="text" id="kode_reff" name="kode_reff" class="form-control">
+                        
+                        @auth
+                            @if(!$kelas)
+                                <button class="btn btn-primary btn-lg btn-block font-weight-bold py-3 shadow" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice(' + v.id + ')">
+                                    Daftar Kelas Ini
+                                </button>
+                            @else
+                                <button class="btn btn-success btn-lg btn-block font-weight-bold py-3" disabled>
+                                    <i class="fas fa-check-circle mr-2"></i>Terdaftar
+                                </button>
+                            @endif
+                        @else
+                            <button class="btn btn-primary btn-lg btn-block font-weight-bold py-3 shadow" data-toggle="modal" data-target="#modelId" data-backdrop="static" data-keyboard="false">
+                                Order Sekarang
+                            </button>
+                        @endauth
+                    @endif
+                @endif
+            @endif
+        </div>
+
+        <!-- BAGIAN BONUS TAMBAHAN -->
+        <div class="tambahan pt-3 border-top">
+            <p class="mb-3 text-dark font-weight-bold">Bonus Tambahan :</p>
+            
+            <div class="d-flex flex-column" style="gap: 10px;">
+                <div class="d-flex align-items-center">
+                    <span class="mr-2">
+                        <svg width="14" height="14" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z" fill="#2e7d32" />
+                        </svg>
+                    </span>
+                    <span class="text-secondary small font-weight-medium">Sertifikat</span>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <span class="mr-2">
+                        <svg width="14" height="14" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z" fill="#2e7d32" />
+                        </svg>
+                    </span>
+                    <span class="text-secondary small font-weight-medium">Online Free Konsultasi</span>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <span class="mr-2">
+                        <svg width="14" height="14" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.14545 11L3.10909 9.32381L1.14545 8.90476L1.33636 6.96667L0 5.5L1.33636 4.03333L1.14545 2.09524L3.10909 1.67619L4.14545 0L6 0.759524L7.85455 0L8.89091 1.67619L10.8545 2.09524L10.6636 4.03333L12 5.5L10.6636 6.96667L10.8545 8.90476L8.89091 9.32381L7.85455 11L6 10.2405L4.14545 11ZM5.42727 7.35952L8.50909 4.4L7.74545 3.64048L5.42727 5.86667L4.25455 4.76667L3.49091 5.5L5.42727 7.35952Z" fill="#2e7d32" />
+                        </svg>
+                    </span>
+                    <span class="text-secondary small font-weight-medium">Materi Pelatihan & Form Pendukung</span>
+                </div>
             </div>
         </div>
+
+    </div>
+</div>        </div>
         {{--
         <hr class="mt-5 mb-5">
         <h3>Kelas Terpopuler</h3>
@@ -426,7 +458,7 @@
                                 onchange="qtyjumlahpeserta()">
                         </div>
                         <div class="col-lg-6">
-                            <label for="form-control">Sertifikat <span class="badge badge-danger"
+                            <label for="form-control">Sertifikat <span class="badge badge-info">Rp. {{$sertif->nominal}}</span> <span class="badge badge-danger"
                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Biaya cetak dan pengiriman per jumlah peserta akan ditambahkan pada invoice anda ">!</span></label>
                             <select name="sertifikat" class="form-control">

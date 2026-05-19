@@ -275,60 +275,126 @@
   <br>
   <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
 
-  @foreach($kelas as $class)
-<div class="card event-card col-lg-3 col-sm-6"
-    style="border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1); background:white; display:flex; flex-direction:column; height: 100%;">
+ @foreach($kelas as $class)
+    @php
+        // 1. LOGIKA BADGE, HARGA, & TOMBOL
+        $priceHtml = 'Rp -';
+        $badgeHtml = '';
+        $btnText = 'Daftar Sekarang';
+        $btnColor = '#007BFF'; // Biru default
+        $isUpcoming = str_contains(strtolower($class->title), 'upcoming');
 
-    <div style="width:100%; height:200px; flex-shrink:0;">
-        <img
-            src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
-            alt="{{ $class->title }}"
-            style="width:100%; height:100%; object-fit:cover; display:block; border:none;">
-    </div>
+        if ($class->pricing) {
+            if ($class->pricing->gratis) {
+                $priceHtml = 'GRATIS';
+                $badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#28a745; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(40,167,69,0.4); text-transform:uppercase; z-index:2;">🎉 Free Class</span>';
+                $btnText = 'Daftar Gratis';
+                $btnColor = '#28a745'; // Hijau untuk kelas gratis
+            } elseif ($class->pricing->promo) {
+                $realPrice = $class->pricing->price - $class->pricing->promo_price;
+                $priceHtml = 'Rp ' . number_format($realPrice, 0, ',', '.');
+                
+                // Menghitung persentase potongan harga
+                $potongHarga = $class->pricing->price > 0 ? round(($class->pricing->promo_price / $class->pricing->price) * 100) : 0;
+                $badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#dc3545; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(220,53,69,0.4); z-index:2;">PROMO ' . $potongHarga . '% OFF</span>';
+            } else {
+                $priceHtml = 'Rp ' . number_format($class->pricing->price, 0, ',', '.');
+            }
+        }
 
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:15px; text-align:center;">
-        <div>
-             @php
-                $instructor = $class->instructor_list->first()->name ?? 'Instructor';
-                // Cek apakah ada kata 'upcoming' di judul (case-insensitive)
-                $isUpcoming = str_contains(strtolower($class->title), 'upcoming');
-            @endphp
+        // Jika statusnya OVERWRITE UNTUK UPCOMING CLASS
+        if ($isUpcoming) {
+            $badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase; z-index:2;">⏳ Upcoming</span>';
+            $btnText = 'Belum Tersedia';
+            $btnColor = '#6c757d';
+        }
 
-           @if(!$isUpcoming)
-            <p style="font-size:12px; color:#777; margin-bottom:4px;">
-                {{ \Carbon\Carbon::parse($class->date_start)->format('d-m-Y') }}
-            </p>
-            @endif
+        // 2. DATA INSTRUKTUR / NARASUMBER
+        $instructor = $class->instructor_list->first();
+        $instructorName = $instructor->name ?? 'Instructor';
+        $instructorId = $instructor->id ?? '#';
+        
+        $avatarUrl = asset('FE/images/default-user.png');
+        if ($instructor && isset($instructor->picture_src->url)) {
+            $avatarUrl = asset('Image/' . $instructor->picture_src->url);
+        }
+    @endphp
 
-            <h4 style="font-size:14px; margin:0; font-weight:600; font-family:Arial, sans-serif; 
-                       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
-                       overflow: hidden; text-overflow: ellipsis; min-height: 36px; line-height: 1.3;">
-                {{ strtoupper($class->title) }}
-            </h4>
+    <!-- 2. GENERATE COMPONENT -->
+    <div class="col-lg-3 col-sm-6 d-flex mb-4">
+        <div class="card shadow bg-white w-100 custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease;">
+            
+            <!-- BADGE STATUS (GRATIS / PROMO / UPCOMING) -->
+            {!! $badgeHtml !!}
 
-         
-            <p style="font-size:12px; color:#007bff; margin:8px 0; font-family:Arial, sans-serif;
-                      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                {{ strtoupper($instructor) }}
-            </p>
-        </div>
+            <!-- GAMBAR UTAMA WITH WRAPPER HOVER EFFECT -->
+            <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">
+                <img src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
+                     style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;"
+                     alt="{{ $class->title }}">
+            </div>
 
-        @if($isUpcoming)
-            <button class="event-button"
-                style="background:#ccc; color:#666; border:none; padding:8px 20px; border-radius:8px; cursor:not-allowed; font-weight:600; margin-top:10px; align-self:center; width: 100%;"
-                disabled>
-                UPCOMING
-            </button>
-        @else
-            <button class="event-button"
-                onclick="window.location.href='{{ url('class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}'"
-                style="background:#007bff; color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer; font-weight:600; margin-top:10px; align-self:center; width: 100%;">
-                DAFTAR
-            </button>
-        @endif
-    </div>
-</div>
-  @endforeach
+            <!-- AREA KONTEN (ATAS) -->
+            <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                    <!-- TANGGAL & IKON KALENDER -->
+                    <div style="display:flex; align-items:center; margin-bottom:8px;">
+                        <i class="far fa-calendar-alt" style="font-size:12px; color:#6c757d; margin-right:6px;"></i>
+                        <span style="font-size:12px; color:#6c757d; font-weight:500;">
+                            {{ $class->date_end ? \Carbon\Carbon::parse($class->date_end)->translatedFormat('d M Y') : '-' }}
+                        </span>
+                    </div>
+
+                    <!-- JUDUL KELAS (RATA KIRI & MAX 2 BARIS) -->
+                    <h4 class="text-capitalize" style="font-size:15px; font-weight:700; font-family:'Poppins', sans-serif; color:#212529; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:42px;">
+                        {{ $class->title }}
+                    </h4>
+                </div>
+
+                <!-- DETAIL NARASUMBER -->
+                <div style="margin-top:20px; padding-top:12px; border-top:1px dashed #e9ecef;">
+                    <a href="{{ url('/profile-instructor/' . $instructorId . '/' . urlencode($instructorName)) }}" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">
+                        <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;"
+                             src="{{ $avatarUrl }}" alt="Foto Narasumber">
+                        
+                        <div style="margin-left:12px; overflow:hidden;">
+                            <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.5px; text-transform:uppercase;">Narasumber</small>
+                            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">
+                                {{ $instructorName }}
+                            </h5>
+                        </div>
+                    </a>
+                </div>
+            </div> <!-- Tutup Area Konten Atas -->
+
+            <!-- AREA FOOTER (HARGA & TOMBOL) -->
+            <div style="padding:0 20px 20px 20px; background:#fff;">
+                <div>
+                    <!-- TAMPILAN HARGA (Jika GRATIS diberi warna hijau mencolok) -->
+                    @if($class->pricing && $class->pricing->gratis)
+                        <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
+                    @else
+                        <h3 style="color:#005CFF; font-size:18px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
+                    @endif
+
+                    <!-- TOMBOL DAFTAR -->
+                    @if($isUpcoming)
+                        <button class="btn btn-block py-25" style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; width: 100%; cursor: not-allowed;" disabled>
+                            {{ $btnText }}
+                        </button>
+                    @else
+                        <a href="{{ url('/class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}" 
+                           class="btn btn-block py-25" 
+                           style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; box-shadow:0 4px 12px {{ $class->pricing && $class->pricing->gratis ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)' }}; transition:all 0.2s; display: block; text-align: center; text-decoration: none;">
+                            {{ $btnText }}
+                        </a>
+                    @endif
+                </div>
+            </div>
+
+        </div> <!-- tutup card -->
+    </div> <!-- tutup col -->
+@endforeach
 </div>
 
   <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
