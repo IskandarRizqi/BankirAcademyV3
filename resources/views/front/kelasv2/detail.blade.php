@@ -458,7 +458,7 @@
                                 onchange="qtyjumlahpeserta()">
                         </div>
                         <div class="col-lg-6">
-                            <label for="form-control">Sertifikat <span class="badge badge-info">Rp. {{$sertif->nominal}}</span> <span class="badge badge-danger"
+                            <label for="form-control">Sertifikat <span class="badge badge-info">Rp. {{$sertif?->nominal}}</span> <span class="badge badge-danger"
                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Biaya cetak dan pengiriman per jumlah peserta akan ditambahkan pada invoice anda ">!</span></label>
                             <select name="sertifikat" class="form-control">
