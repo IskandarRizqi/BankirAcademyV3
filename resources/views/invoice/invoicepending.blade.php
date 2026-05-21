@@ -521,20 +521,16 @@
 
                                 {{$class->title}}
                             </th>
+                            @if ($class->pricing->gratis != 1)
                             <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
-                            @if($diskon_existing>0)
-                            <td class="unit">
-                                {{-- {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                    \NumberFormatter::CURRENCY),$diskon_existing,"IDR"),0,-3) }} --}}
-                                {{$diskon_existing}} %
-                            </td>
-                            @else
+                        @else
+                         <td class="unit">0</td>
+                                @endif
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                     \NumberFormatter::CURRENCY),0,"IDR"),0,-3) }}
                             </td>
-                            @endif
 
 
                             <td class="unit">
@@ -559,7 +555,7 @@
                             </td>
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),$payment->sertifikat,"IDR"),0,-3)}}
+                                \NumberFormatter::CURRENCY),$payment->biaya_sertifikat,"IDR"),0,-3)}}
                             </td>
                             <td class="unit">
                                 {{$payment->jumlah}}

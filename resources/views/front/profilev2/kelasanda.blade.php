@@ -351,171 +351,174 @@
     let datasertif = [];
 
     function getkelasanda(status) {
-        let s = 'Materi';
-        let t = 3;
-        let p = 0;
-        if (status == 'dalam-progres-billing') {
-            t = 0;
-            s = 'Materi';
-            p = 75;
-        }
-        if (status == 'konfirmasi-ka-billing') {
-            t = 1;
-            s = 'Menunggu Konfirmasi';
-            p = 25;
-        }
-        if (status == 'semua-ka-billing') {
-            t = 3;
-            s = 'Materi';
-            p = 100;
-        }
-        if (status == 'selesai-ka-billing') {
-            t = 2;
-            s = 'Materi';
-            p = 100;
-        }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-       
-        // loader transparant
-        Swal.fire({
-            background: '#0069d900',
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        })
-            $.ajax({
-                url: '/getkelasanda/' + t,
-                method: 'GET',
-                success: function(response) {
-                    let h = '';
-                    if (response.status == 1) {
-                        dataevent = response.data.getkelasanda;
-                        datasertif = response.data.sertifikat;
-                        dataevent.forEach(v => {
-                            let tglOrder = new Date(v.created_at).toLocaleDateString('id-ID');
-                            let tglBayar = v.tgl_bayar ? new Date(v.tgl_bayar).toLocaleDateString('id-ID') : '-';
-                            let tglSeminar = v.date_start ? new Date(v.date_start).toLocaleDateString('id-ID') : '-';
-                            let jam = '-';
-                            if (v.jam_acara) {
-                                try {
-                                    const d = new Date('1970-01-01T' + v.jam_acara);
-                                    jam = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
-                                } catch (e) {
-                                    jam = v.jam_acara;
-                                }
-                            }
-                            let onlineOfflineLabel = '-';
-                            let onlineOfflineContent = '-';
-
-                            if (v.kategori == 0) {
-                                onlineOfflineLabel = 'ONLINE';
-                                onlineOfflineContent = '<i class="fa fa-video" aria-hidden="true"></i> <span style="font-size:17px;">Google Meet</span>';
-                            } else if (v.kategori == 1) {
-                                onlineOfflineLabel = 'OFFLINE';
-                                if (v.lokasi) {
-                                    onlineOfflineContent = `<a href="https://www.google.com/maps/place/${v.lokasi}" target="_blank" style="color: inherit; text-decoration: none; font-size: 17px;">
-                                        <i class="fa fa-map-marker-alt" aria-hidden="true"></i> ${v.lokasi}
-                                    </a>`;
-                                } else {
-                                    onlineOfflineContent = '<span class="badge badge-danger">Lokasi belum di tentukan</span>';
-                                }
-                            }
-
-                            h += '<div class="card br-10 mb-4" style="background-color:#f7f7f7;">';
-                            h += '  <div class="card-body">';
-                            h += '    <div class="row align-items-start">';
-
-                            // Gambar kiri
-                            h += '      <div class="col-lg-4 text-center">';
-                            h += '        <img src="' + v.image + '" alt="" width="150px" height="200px" class="br-10">';
-                            h += '      </div>';
-
-                            // Konten kanan
-                            h += '      <div class="col-lg-8 d-flex flex-column justify-content-between" style="position:relative;">';
-                            h += '        <div style="display:flex; flex-wrap:wrap;">';
-
-                            h += '          <div class="col-md-4 mb-2">';
-                            h += '              <p><strong>Event</strong><br><span style="font-size:16px;">' + v.title + '</span></p>';
-                            h += '          </div>';
-
-                            h += '          <div class="col-md-4 mb-2">';
-                            if (v.narasumber) {
-                                h += '              <p><strong>Narasumber</strong><br><span style="font-size:16px;">' + v.narasumber + '</span></p>';
-                            } else {
-                                h += '              <p><strong>Narasumber</strong><br><span class="badge badge-danger">Instructor belum tersedia</span></p>';
-                            }
-                            h += '          </div>';
- let hariIni = new Date();
-    hariIni.setHours(0, 0, 0, 0); // Reset jam ke 00:00 agar perbandingan tanggal akurat
-    let tglMulai = v.date_start ? new Date(v.date_start) : null;
-    tglMulai.setHours(0, 0, 0, 0);
-
-    let isBelumMulai = tglMulai && hariIni < tglMulai;
-
-
-                            h += '          <div class="col-md-4 mb-2">';
-                            h += '              <p><strong>Tanggal</strong><br><span style="font-size:16px;">' + tglSeminar + '</span></p>';
-                            h += '          </div>';
-
-                            h += '          <div class="col-md-4 mb-2">';
-                            h += '              <p><strong>Jam</strong><br><span style="font-size:16px;">' + jam + '</span></p>';
-                            h += '          </div>';
-
-                            h += '          <div class="col-md-4 mb-2">';
-                            h += '              <p><strong>' + onlineOfflineLabel + '</strong><br><span style="font-size:16px;">' + onlineOfflineContent + '</span></p>';
-                            h += '          </div>';
-
-                            h += '        </div>'; 
-
-
-                           h += '        <div style="display:flex; justify-content:flex-end;">';
-    if (t == 0 || t == 3) {
-        if (isBelumMulai) {
-            // Jika belum mulai, tampilkan alert saat diklik
-            let msg = 'iziToast.info({title: \'Info\', message: \'Kelas belum dimulai, akses belum tersedia\', position: \'topRight\'});';
-            
-            h += '          <div class="btn btn-success" style="cursor:pointer" onclick="' + msg + '">' + s + '</div>';
-            h += '          <div class="btn btn-primary ml-2" style="cursor:pointer" onclick="' + msg + '">Files </div>';
-        }  else {
-            // Jika sudah mulai, jalankan fungsi asli
-            h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:pointer" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
-            h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:pointer" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
-        }
-    } else if (t == 2) {
-            
-            h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:pointer" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
-            h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:pointer" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
-            h += '          <div class="btn btn-info ml-2" style="cursor:pointer" data-toggle="modal" data-target="#eventsertif" onclick="setsertifikat(' + v.id +')" onclick="">Sertifikat</div>';
-        } else {
-         h += '          <div class="btn btn-success">' + s + '</div>';
+    let s = 'Materi';
+    let t = 3;
+    let p = 0;
+    if (status == 'dalam-progres-billing') {
+        t = 0;
+        s = 'Materi';
+        p = 75;
     }
-    h += '        </div>';
-
-                            h += '      </div>'; 
-                            h += '    </div>'; 
-                            h += '  </div>'; 
-                            h += '</div>'; 
-                        });
-
-                        $('#' + status).html(h);
-                    }
-                    Swal.close();
-                },
-                error: function(response) {
-                    console.log(response);
-                    iziToast.warning({
-                        title: 'Gagal',
-                        message: 'Harap reload atau kontak admin',
-                        position: 'topRight',
-                    });
-                    Swal.close()
-                }
-            });
+    if (status == 'konfirmasi-ka-billing') {
+        t = 1;
+        s = 'Menunggu Konfirmasi';
+        p = 25;
+    }
+    if (status == 'semua-ka-billing') {
+        t = 3;
+        s = 'Materi';
+        p = 100;
+    }
+    if (status == 'selesai-ka-billing') {
+        t = 2;
+        s = 'Materi';
+        p = 100;
+    }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+    });
+    
+    // loader transparant
+    Swal.fire({
+        background: '#0069d900',
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    $.ajax({
+        url: '/getkelasanda/' + t,
+        method: 'GET',
+        success: function(response) {
+            let h = '';
+            if (response.status == 1) {
+                dataevent = response.data.getkelasanda;
+                datasertif = response.data.sertifikat;
+                console.log("res", datasertif)
+                dataevent.forEach(v => {
+                    let tglOrder = new Date(v.created_at).toLocaleDateString('id-ID');
+                    let tglBayar = v.tgl_bayar ? new Date(v.tgl_bayar).toLocaleDateString('id-ID') : '-';
+                    let tglSeminar = v.date_start ? new Date(v.date_start).toLocaleDateString('id-ID') : '-';
+                    let jam = '-';
+                    if (v.jam_acara) {
+                        try {
+                            const d = new Date('1970-01-01T' + v.jam_acara);
+                            jam = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        } catch (e) {
+                            jam = v.jam_acara;
+                        }
+                    }
+                    let onlineOfflineLabel = '-';
+                    let onlineOfflineContent = '-';
+
+                    if (v.kategori == 0) {
+                        onlineOfflineLabel = 'ONLINE';
+                        onlineOfflineContent = '<i class="fa fa-video" aria-hidden="true"></i> <span style="font-size:17px;">Google Meet</span>';
+                    } else if (v.kategori == 1) {
+                        onlineOfflineLabel = 'OFFLINE';
+                        if (v.lokasi) {
+                            onlineOfflineContent = `<a href="https://www.google.com/maps/place/${v.lokasi}" target="_blank" style="color: inherit; text-decoration: none; font-size: 17px;">
+                                <i class="fa fa-map-marker-alt" aria-hidden="true"></i> ${v.lokasi}
+                            </a>`;
+                        } else {
+                            onlineOfflineContent = '<span class="badge badge-danger">Lokasi belum di tentukan</span>';
+                        }
+                    }
+
+                    h += '<div class="card br-10 mb-4" style="background-color:#f7f7f7;">';
+                    h += '  <div class="card-body">';
+                    h += '    <div class="row align-items-start">';
+
+                    // Gambar kiri
+                    h += '      <div class="col-lg-4 text-center">';
+                    h += '        <img src="' + v.image + '" alt="" width="150px" height="200px" class="br-10">';
+                    h += '      </div>';
+
+                    // Konten kanan
+                    h += '      <div class="col-lg-8 d-flex flex-column justify-content-between" style="position:relative;">';
+                    h += '        <div style="display:flex; flex-wrap:wrap;">';
+
+                    h += '          <div class="col-md-4 mb-2">';
+                    h += '              <p><strong>Event</strong><br><span style="font-size:16px;">' + v.title + '</span></p>';
+                    h += '          </div>';
+
+                    h += '          <div class="col-md-4 mb-2">';
+                    if (v.narasumber) {
+                        h += '              <p><strong>Narasumber</strong><br><span style="font-size:16px;">' + v.narasumber + '</span></p>';
+                    } else {
+                        h += '              <p><strong>Narasumber</strong><br><span class="badge badge-danger">Instructor belum tersedia</span></p>';
+                    }
+                    h += '          </div>';
+
+                    let hariIni = new Date();
+                    hariIni.setHours(0, 0, 0, 0); // Reset jam ke 00:00 agar perbandingan tanggal akurat
+                    
+                    let tglMulai = v.date_start ? new Date(v.date_start) : null;
+                    if (tglMulai) {
+                        tglMulai.setHours(0, 0, 0, 0);
+                    }
+
+                    let isBelumMulai = tglMulai && hariIni < tglMulai;
+
+                    h += '          <div class="col-md-4 mb-2">';
+                    h += '              <p><strong>Tanggal</strong><br><span style="font-size:16px;">' + tglSeminar + '</span></p>';
+                    h += '          </div>';
+
+                    h += '          <div class="col-md-4 mb-2">';
+                    h += '              <p><strong>Jam</strong><br><span style="font-size:16px;">' + jam + '</span></p>';
+                    h += '          </div>';
+
+                    h += '          <div class="col-md-4 mb-2">';
+                    h += '              <p><strong>' + onlineOfflineLabel + '</strong><br><span style="font-size:16px;">' + onlineOfflineContent + '</span></p>';
+                    h += '          </div>';
+
+                    h += '        </div>'; 
+
+                    h += '        <div style="display:flex; justify-content:flex-end;">';
+                    if (t == 0 || t == 3) {
+                        if (isBelumMulai) {
+                            // Pesan detail dengan menyisipkan variabel tglSeminar
+                            let msg = 'iziToast.info({title: \'Info\', message: \'Kelas belum dimulai, akses baru tersedia pada tanggal ' + tglSeminar + '\', position: \'topRight\'});';
+                            
+                            h += '          <div class="btn btn-success" style="cursor:pointer" onclick="' + msg + '">' + s + '</div>';
+                            h += '          <div class="btn btn-primary ml-2" style="cursor:pointer" onclick="' + msg + '">Files </div>';
+                        } else {
+                            // Jika sudah mulai, jalankan fungsi asli
+                            h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:pointer" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
+                            h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:pointer" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
+                        }
+                    } else if (t == 2) {
+                        h += '          <div class="btn btn-success" data-toggle="modal" data-target="#eventmodal" style="cursor:pointer" onclick="setevent(`' + v.title + '`,' + v.id +')">' + s + '</div>';
+                        h += '          <div class="btn btn-primary ml-2" data-toggle="modal" data-target="#eventmateri" style="cursor:pointer" onclick="setmateri(`' + v.title + '`,' + v.id +')">Files </div>';
+                        h += '          <div class="btn btn-info ml-2" style="cursor:pointer" data-toggle="modal" data-target="#eventsertif" onclick="setsertifikat(' + v.id +')">Sertifikat</div>';
+                    } else {
+                        h += '          <div class="btn btn-success">' + s + '</div>';
+                    }
+                    h += '        </div>';
+
+                    h += '      </div>'; 
+                    h += '    </div>'; 
+                    h += '  </div>'; 
+                    h += '</div>'; 
+                });
+
+                $('#' + status).html(h);
+            }
+            Swal.close();
+        },
+        error: function(response) {
+            console.log(response);
+            iziToast.warning({
+                title: 'Gagal',
+                message: 'Harap reload atau kontak admin',
+                position: 'topRight',
+            });
+            Swal.close();
+        }
+    });
+}
 
     function setevent(title, id_event) {
         $('#eventtitle').html(title);
@@ -562,32 +565,68 @@
         });
         $('#bodymateri').html(d);
     }
-    function setsertifikat(id_event) {
-        let listSertifikat = datasertif.filter((sertif) => sertif.payment_class_id == id_event);
-        let d = '';
-        listSertifikat.forEach(el => {
-            let daftarNama = [];
-            try {
-                if (el.nama && el.nama.startsWith('[')) {
-                    daftarNama = JSON.parse(el.nama);
-                } else if (el.nama) {
-                    daftarNama = [el.nama]; // Jika bukan array, jadikan array tunggal
-                } else {
-                    daftarNama = [el.user_name]; // Fallback ke nama akun jika data sertifikat kosong
-                }
-            } catch (e) {
-                daftarNama = [el.nama];
+   function setsertifikat(id_event) {
+    let listSertifikat = datasertif.filter((sertif) => sertif.payment_class_id == id_event);
+    console.log("data", datasertif);
+    let d = '';
+    
+    listSertifikat.forEach(el => {
+        let daftarNama = [];
+        let daftarEmail = [];
+        let daftarNohp = [];
+
+        try {
+            // 1. Bersihkan double encoding untuk NAMA
+            let namaClean = el.nama;
+            if (typeof namaClean === 'string') {
+                // Jika diawali kutip ekstra akibat double encode, parse tahap pertama
+                if (namaClean.startsWith('"')) namaClean = JSON.parse(namaClean);
+                // Parse tahap kedua untuk mengubah string JSON menjadi Array asli JavaScript
+                daftarNama = typeof namaClean === 'string' ? JSON.parse(namaClean) : namaClean;
+            } else {
+                daftarNama = namaClean;
             }
-             let no = 1;
-                   daftarNama.forEach(nama => {
-                        d += '<tr>';
-                        d += '    <td>' + no + '</td>';
-                        d += '    <td>' + nama + '</td>';
-                        d += '<td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/'+ el.class_id +'/'+ nama + '/' + el.profile.name +'" target="_blank">Download Sertifikat</a></td>';
-                        d += '</tr>';
-                        no++;
-                    });
-        });
-        $('#bodysertif').html(d);
-    }
+
+            // 2. Bersihkan double encoding untuk EMAIL (jika nanti dibutuhkan di tabel)
+            let emailClean = el.email;
+            if (typeof emailClean === 'string') {
+                if (emailClean.startsWith('"')) emailClean = JSON.parse(emailClean);
+                daftarEmail = typeof emailClean === 'string' ? JSON.parse(emailClean) : emailClean;
+            } else {
+                daftarEmail = emailClean;
+            }
+
+        } catch (e) {
+            console.error("Gagal parse JSON, fallback ke data mentah", e);
+            daftarNama = [el.nama];
+        }
+
+        // Pastikan hasil parse benar-benar menghasilkan Array sebelum di-loop
+        if (Array.isArray(daftarNama) && daftarNama.length > 0) {
+            let no = 1;
+            daftarNama.forEach((nama, index) => {
+                // Ambil email pasangannya berdasarkan index jika diperlukan
+                let emailPeserta = (daftarEmail && daftarEmail[index]) ? daftarEmail[index] : '-';
+
+                d += '<tr>';
+                d += '    <td>' + no + '</td>';
+                d += '    <td>' + nama + '</td>';
+                // d += '    <td>' + emailPeserta + '</td>'; // Tambahkan kolom ini di HTML jika mau menampilkan email
+                d += '    <td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/'+ el.class_id +'/'+ encodeURIComponent(nama) + '/' + encodeURIComponent(el.profile.name) +'" target="_blank">Download Sertifikat</a></td>';
+                d += '</tr>';
+                no++;
+            });
+        } else {
+            // Tampilan jika data nama ternyata kosong atau bukan array
+            let namaTunggal = el.nama || el.user_name || 'Tanpa Nama';
+            d += '<tr>';
+            d += '    <td>1</td>';
+            d += '    <td>' + namaTunggal + '</td>';
+            d += '    <td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/'+ el.class_id +'/'+ encodeURIComponent(namaTunggal) + '/' + encodeURIComponent(el.profile.name) +'" target="_blank">Download Sertifikat</a></td>';
+            d += '</tr>';
+        }
+    });
+
+    $('#bodysertif').html(d);
+}
 </script>

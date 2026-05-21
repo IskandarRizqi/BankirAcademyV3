@@ -275,7 +275,7 @@
   <br>
   <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
 
- @foreach($kelas as $class)
+@foreach($kelas as $class)
     @php
         // 1. LOGIKA BADGE, HARGA, & TOMBOL
         $priceHtml = 'Rp -';
@@ -309,7 +309,18 @@
             $btnColor = '#6c757d';
         }
 
-        // 2. DATA INSTRUKTUR / NARASUMBER
+        // 2. LOGIKA FIX ARRAY SUB KATEGORI (Dibuat jadi Badge Pojok Kanan Atas)
+        $subCategoryHtml = '';
+        if (!empty($class->jenis)) {
+            // Coba decode jika datanya berformat JSON string array, jika gagal gunakan string langsung
+            $decodedSubArr = json_decode($class->jenis, true);
+            $subCategoryText = is_array($decodedSubArr) ? implode(', ', $decodedSubArr) : $class->jenis;
+            
+            // Render HTML Badge Kanan Atas
+            $subCategoryHtml = '<span style="position:absolute; top:12px; right:12px; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); z-index:2; max-width: 120px; white-space: nowrap; ; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
+        }
+
+        // 3. DATA INSTRUKTUR / NARASUMBER
         $instructor = $class->instructor_list->first();
         $instructorName = $instructor->name ?? 'Instructor';
         $instructorId = $instructor->id ?? '#';
@@ -320,17 +331,20 @@
         }
     @endphp
 
-    <!-- 2. GENERATE COMPONENT -->
+    <!-- GENERATE COMPONENT -->
     <div class="col-lg-3 col-sm-6 d-flex mb-4">
-        <div class="card shadow bg-white w-100 custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease;">
+        <div class="card shadow bg-white w-100 custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">
             
-            <!-- BADGE STATUS (GRATIS / PROMO / UPCOMING) -->
+            <!-- BADGE STATUS KIRI ATAS (GRATIS / PROMO / UPCOMING) -->
             {!! $badgeHtml !!}
 
+            <!-- BADGE SUB KATEGORI KANAN ATAS -->
+            {!! $subCategoryHtml !!}
+            
             <!-- GAMBAR UTAMA WITH WRAPPER HOVER EFFECT -->
             <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">
                 <img src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
-                     style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;"
+                     style="width:100%; height:100%; object-fit:fill; display:block; transition: transform 0.5s ease;"
                      alt="{{ $class->title }}">
             </div>
 
@@ -357,7 +371,7 @@
                         <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;"
                              src="{{ $avatarUrl }}" alt="Foto Narasumber">
                         
-                        <div style="margin-left:12px; overflow:hidden;">
+                        <div style="margin-left:12px; text-align:left; overflow:hidden;">
                             <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.5px; text-transform:uppercase;">Narasumber</small>
                             <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">
                                 {{ $instructorName }}
@@ -370,7 +384,7 @@
             <!-- AREA FOOTER (HARGA & TOMBOL) -->
             <div style="padding:0 20px 20px 20px; background:#fff;">
                 <div>
-                    <!-- TAMPILAN HARGA (Jika GRATIS diberi warna hijau mencolok) -->
+                    <!-- TAMPILAN HARGA -->
                     @if($class->pricing && $class->pricing->gratis)
                         <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
                     @else

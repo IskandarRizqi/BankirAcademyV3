@@ -281,12 +281,12 @@ class ProfileController extends Controller
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
         foreach ($data['billingkelasall'] as $key => $value) {
-            if ($value->file && $value->status == 0) {
+            if (!$value->file && $value->status == 0) {
                 $status = 'Menunggu Pembayaran';
             }
-            // if ($value->file && $value->status == 0) {
-            //     $status = 'Menunggu Konfirmasi';
-            // }
+            if ($value->file && $value->status == 0) {
+                $status = 'Menunggu Konfirmasi';
+            }
             if ($value->status == 1) {
                 $status = 'Lunas';
             }
@@ -351,7 +351,7 @@ class ProfileController extends Controller
             $v->narasumber = null;
         }
     }
-
+// return $data['sertifikat'];
     return response()->json([
         'status' => 1,
         'msg' => 'Data Success',

@@ -235,12 +235,15 @@
     console.log("res", response)
     
     if (response.data.length > 0) {
-       response.data.forEach(dt => {
+      response.data.forEach(dt => {
     // 1. LOGIKA BADGE & HARGA (Ditaruh di atas untuk efisiensi)
     let priceHtml = '';
     let badgeHtml = '';
     let btnText = 'Daftar Sekarang';
     let btnColor = '#007BFF'; // Biru default
+    
+    // Cek apakah judul mengandung kata 'upcoming'
+    const isUpcoming = dt.title ? dt.title.toLowerCase().includes('upcoming') : false;
 
     if (dt.pricing) {
         if (dt.pricing.gratis) {
@@ -259,6 +262,44 @@
         priceHtml = 'Rp -';
     }
 
+    // Overwrite badge jika statusnya Upcoming Class
+    if (isUpcoming) {
+        badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase; z-index:2;">⏳ Upcoming</span>';
+        btnText = 'Belum Tersedia';
+        btnColor = '#6c757d';
+    }
+
+    // 2. LOGIKA FIX DATA SUB KATEGORI (Badge Pojok Kanan Atas)
+    let subCategoryHtml = '';
+    if (dt.jenis) {
+        let subCategoryText = dt.jenis;
+        
+        // Cek jika datanya berupa string JSON array (misal: '["Bisnis", "Marketing"]')
+        if (typeof dt.jenis === 'string' && dt.jenis.trim().startsWith('[')) {
+            try {
+                let parsed = JSON.parse(dt.jenis);
+                if (Array.isArray(parsed)) {
+                    subCategoryText = parsed.join(', ');
+                }
+            } catch (e) {
+                // Jika gagal parse, biarkan menggunakan string aslinya
+            }
+        } else if (Array.isArray(dt.jenis)) {
+            // Jika datanya langsung berbentuk array objek/string di JS
+            subCategoryText = dt.jenis.join(', ');
+        }
+
+        // Fungsi pembantu sederhana untuk mengamankan karakter HTML (seperti e() di Laravel)
+        let escapedText = String(subCategoryText)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+        subCategoryHtml = `<span style="position:absolute; top:12px; right:12px; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); z-index:2; max-width: 120px; white-space: nowrap; text-overflow: ellipsis;" title="${escapedText}">🏷️ ${escapedText}</span>`;
+    }
+
     // FORMAT TANGGAL YANG LEBIH CANTIK (Contoh: 19 Mei 2026)
     const namaBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
     let tanggalCantik = (function(d){ 
@@ -267,18 +308,21 @@
         return String(t.getDate()).padStart(2,'0') + ' ' + namaBulan[t.getMonth()] + ' ' + t.getFullYear(); 
     })(dt.date_end);
 
-    // 2. GENERATE HTML STRING
+    // 3. GENERATE HTML STRING
     html += '<div class="col-lg-3 col-sm-6 d-flex mb-4">'; 
-    // CSS class 'card-hover-effect' ditambahkan (style ditaruh di bawah)
-    html += ' <div class="card shadow bg-white w-100" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease;">';
+    html += ' <div class="card shadow bg-white w-100" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">';
 
-    // BADGE STATUS (GRATIS / PROMO)
+    // BADGE STATUS KIRI ATAS (GRATIS / PROMO / UPCOMING)
     html += badgeHtml;
 
+    // BADGE SUB KATEGORI KANAN ATAS
+    html += subCategoryHtml;
+
     // GAMBAR UTAMA WITH WRAPPER HOVER EFFECT
+    let imgUrl = dt.image ? dt.image : '/FE/images/images-demo-consulting-03.jpg';
     html += `
           <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">
-            <img src="${dt.image}" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;">
+            <img src="${imgUrl}" style="width:100%; height:100%; object-fit:fill; display:block; transition: transform 0.5s ease;" alt="${dt.title || ''}">
           </div>
         `;
 
@@ -297,33 +341,41 @@
     html += '      </div>';
     
     // DETAIL NARASUMBER
+    let instructorId = dt.instructor_list[0]?.id || '#';
+    let instructorName = dt.instructor_list[0]?.name || 'Instructor';
     html += '      <div style="margin-top:20px; padding-top:12px; border-top:1px dashed #e9ecef;">';
-    html += '        <a href="/profile-instructor/' + dt.instructor_list[0]?.id + '/' + dt.instructor_list[0]?.name + '" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">';
+    html += '        <a href="/profile-instructor/' + instructorId + '/' + encodeURIComponent(instructorName) + '" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">';
     html += '          <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;"';
     html += (dt.instructor_list[0]?.picture_src) ? 'src="/Image/' + dt.instructor_list[0]?.picture_src.url + '"' : 'src="/FE/images/default-user.png"';
     html += ' alt="Foto Narasumber">';
     html += '          <div style="margin-left:12px; overflow:hidden;">';
     html += '            <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.5px; text-transform:uppercase;">Narasumber</small>';
-    html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">' + dt.instructor_list[0]?.name + '</h5>';
+    html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">' + instructorName + '</h5>';
     html += '          </div>';
     html += '        </a>';
     html += '      </div>';
     
-    html += '    </div>'; // Tutup Bagian Atas
+    html += '    </div>'; // Tutup Area Konten Atas
 
     // AREA FOOTER (HARGA & TOMBOL)
     html += '    <div style="padding:0 20px 20px 20px; background:#fff;">';
     html += '      <div>';
     
-    // TAMPILAN HARGA (Jika GRATIS diberi warna hijau mencolok)
+    // TAMPILAN HARGA
     if(dt.pricing && dt.pricing.gratis) {
         html += '        <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">' + priceHtml + '</h3>';
     } else {
         html += '        <h3 style="color:#005CFF; font-size:18px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">' + priceHtml + '</h3>';
     }
     
-    // TOMBOL DAFTAR
-    html += '        <a href="/class/' + dt.unique_id + '/' + dt.title.replaceAll("/", "-") + '" class="btn btn-block py-25" style="background-color:' + btnColor + '; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; box-shadow:0 4px 12px ' + (dt.pricing && dt.pricing.gratis ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)') + '; transition:all 0.2s;">' + btnText + '</a>';
+    // TOMBOL DAFTAR (Kondisional jika kelas Upcoming dibikin disable button)
+    if (isUpcoming) {
+        html += '        <button class="btn btn-block py-25" style="background-color:' + btnColor + '; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; width: 100%; cursor: not-allowed;" disabled>' + btnText + '</button>';
+    } else {
+        let shadowColor = (dt.pricing && dt.pricing.gratis ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)');
+        let cleanTitle = dt.title ? dt.title.replace(/\//g, "-") : '';
+        html += '        <a href="/class/' + dt.unique_id + '/' + cleanTitle + '" class="btn btn-block py-25" style="background-color:' + btnColor + '; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; box-shadow:0 4px 12px ' + shadowColor + '; transition:all 0.2s; display: block; text-align: center; text-decoration: none;">' + btnText + '</a>';
+    }
     html += '      </div>';
     html += '    </div>';
 

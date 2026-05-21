@@ -213,6 +213,33 @@
                                 @enderror
                             </div>
                         </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Tipe Cashback</label>
+                                <select name="type" id="type" class="form-control">
+                                    <option value="1" {{old('is_active')==1 ? 'selected' :''}}>Nominal</option>
+                                    <option value="0" {{old('is_active')==0 ? 'selected' :''}}>Presentase</option>
+                                </select>
+                                @error('type')
+                                <span class="text-danger" role="alert">
+                                    <strong>Harap Diisi</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Cashback</label>
+                                <input type="number" name="nominal" id="nominal" class="form-control"
+                                    value="{{old('nominal')}}">
+                                <small id="nominal"></small>
+                                @error('nominal')
+                                <span class="text-danger" role="alert">
+                                    <strong>Harap Diisi</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="custom-file-container" data-upload-id="myFirstImage">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
+use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
@@ -12,6 +13,7 @@ use App\Models\ClassPricingModel;
 use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
+use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -395,33 +397,103 @@ class OrderController extends Controller
         do {
             $no_invoice = uniqid();
         } while (in_array($no_invoice, $numbers));
+$price = 0;
+$price_final = 0;
+$cp = ClassPricingModel::where('class_id', $request->class_id)->first();
 
-        $price = 0;
-        $price_final = 0;
-        $cp = ClassPricingModel::where('class_id', $request->class_id)->first();
-        if ($cp) {
-            $price = $cp->price;
-            $price_final = $price + $randomNumber;
-            if ($cp->promo == 1) {
-                $price = $cp->price - $cp->promo_price;
-                $price_final = $price + $randomNumber;
-            }
+$jmlpeserta = 1;
+// Perbaikan kondisi: pastikan nominal di atas 0
+if ($request->jml_peserta != null && $request->jml_peserta > 0) {
+    $jmlpeserta = $request->jml_peserta;
+}
+
+if ($cp) {
+    $price = $cp->price;
+    $price_final = $price * $jmlpeserta;
+    if ($cp->promo == 1) {
+        $price = $cp->price - $cp->promo_price;
+        $price_final = $price * $jmlpeserta;
+    }
+}
+
+$biaya_sertifikat_per_orang = 0;
+
+// Perbaikan: Request yang datang dari Radio bertipe string "1" atau "0"
+if ($request->sertifikat_invoice == "1" || $request->sertifikat_invoice > 0) {
+    $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
+    if ($s) {
+        $biaya_sertifikat_per_orang = $s->nominal;
+        if ($s->type > 0) {
+            // Jika tipenya persentase (misal: persen dari harga promo/final per orang)
+            $biaya_sertifikat_per_orang = ($price * ($s->nominal / 100));
         }
-        // return $price_final;
-        ClassPaymentModel::create([
-            'status' => 0,
-            'user_id' => $auth,
-            'class_id' => $request->class_id,
-            'unique_code' => $randomNumber,
-            'price' => $price,
-            'price_final' => $price_final,
-            'expired' => date('Y-m-d') . ' 23:59:59',
-            'no_invoice' => $no_invoice,
-        ]);
-        return response()->json(['msg' => 'Order Berhasil', 'rc' => '00']);
+    } else {
+        $biaya_sertifikat_per_orang = 100000; // Default jika data master tidak ada
+    }
+}
 
-        // return Redirect::to('profile')->with('success', 'Order Berhasil');
-        // return Redirect::to('profile')->with('success', 'Order Berhasil');
-        // return Redirect(route('profile.index') . '#tabs-33')->with('success', 'Order Berhasil');
+// Hitung total biaya sertifikat untuk semua peserta
+$total_biaya_sertifikat = $biaya_sertifikat_per_orang * $jmlpeserta;
+
+if ($cp && $cp->gratis == 1) {
+    $price_final = 0;
+}
+
+// Kondisi 1: Jika Kelas Gratis DAN user memilih TIDAK pakai sertifikat (biaya = 0)
+if (($cp && $cp->gratis == 1) && $total_biaya_sertifikat == 0) {
+    $order = ClassPaymentModel::create([
+        'status' => 1,
+        'user_id' => $auth,
+        'class_id' => $request->class_id,
+        'unique_code' => $randomNumber,
+        'price' => $price,
+        'jumlah'=> $jmlpeserta,
+        'biaya_sertifikat' => 0,
+        'price_final' => 0,
+        'expired' => date('Y-m-d') . ' 23:59:59',
+        'no_invoice' => $no_invoice,
+    ]);
+    
+    $order->refresh();
+    
+    SertifikatPesertaModel::create([
+        'user_id' => Auth::user()->id,
+        'class_id' => $request->class_id,
+        'payment_class_id' => $order->id,
+      'nama'  => $request->input('nama', '[]'),
+    'email' => $request->input('email', '[]'),
+    'nohp'  => $request->input('nomor_handphone', '[]')
+    ]);
+    
+   return response()->json(['msg' => 'Order Berhasil', 'rc' => '00']);
+} 
+// Kondisi 2: Kelas Berbayar ATAU Kelas Gratis tapi nominal sertifikat > 0
+else {
+    $order = ClassPaymentModel::create([
+        'status' => 0,
+        'user_id' => $auth,
+        'class_id' => $request->class_id,
+        'unique_code' => $randomNumber,
+        'price' => $price,
+         'jumlah'=> $jmlpeserta,
+        'biaya_sertifikat' => $total_biaya_sertifikat,
+        'price_final' => $price_final + $total_biaya_sertifikat, // Sudah mengcover berbayar maupun gratis berkombinasi sertifikat
+        'expired' => date('Y-m-d') . ' 23:59:59',
+        'no_invoice' => $no_invoice,
+    ]);
+    
+    $order->refresh();
+    
+    SertifikatPesertaModel::create([
+        'user_id' => Auth::user()->id,
+        'class_id' => $request->class_id,
+        'payment_class_id' => $order->id,
+        'nama' => $request->nama ? json_encode($request->nama) : json_encode([]),
+        'email' => $request->email ? json_encode($request->email) : json_encode([]),
+        'nohp' => $request->nomor_handphone ? json_encode($request->nomor_handphone) : json_encode([])
+    ]);
+    
+    return response()->json(['msg' => 'Order Berhasil', 'rc' => '00']);
+}
     }
 }

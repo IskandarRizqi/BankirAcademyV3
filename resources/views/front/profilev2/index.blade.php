@@ -100,6 +100,12 @@
         </div>
     </div>
 </section>
+<!-- @if(session('success_payment'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('success_payment') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif -->
 
 
 <!-- Modal Edit Profile -->
@@ -590,6 +596,35 @@
 <textarea id="corporateUser" cols="30" rows="10" hidden>
 {{$user->corporate}}
 </textarea>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(Session::has('success_payment'))
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Jalankan SweetAlert (Swal) untuk pesan sukses
+        // Swal.fire({
+        //     title: 'Pembayaran Berhasil!',
+        //     text: "{{ Session::get('success_payment') }}",
+        //     icon: 'success',
+        //     confirmButtonColor: '#007bff',
+        //     confirmButtonText: 'Mantap'
+        // });
+        alert("{{ Session::get('success_payment') }}")
+
+        // 2. Pindahkan tab aktif ke "Kelas Anda" (#tabs-34)
+        // Karena menggunakan jQuery UI Tabs, kita cari link yang mengarah ke #tabs-34 lalu picu event click
+        setTimeout(function() {
+            var tabKelasAnda = jQuery('a[href="#tabs-34"]');
+            if (tabKelasAnda.length > 0) {
+                tabKelasAnda.trigger('click'); 
+                
+                // Opsional: Jika jQuery UI tabs di web Anda di-inisialisasi manual, 
+                // Anda juga bisa mengaktifkannya lewat index tab-nya (Tab ke-3 artinya index 2 jika dihitung dari 0)
+                // jQuery("#tab-9").tabs("option", "active", 2); 
+            }
+        }, 100); // Diberi delay 100ms agar DOM jQuery UI Tabs selesai melakukan inisialisasi awal
+    });
+</script>
+@endif
 <script>
     // localStorage.clear();
     // localStorage.setItem("menu", "li-tabs-32");
@@ -794,6 +829,7 @@
             }
         });
     })
+    
 
     function clearmenu() {
         $('#li-tabs-32').removeClass('ui-state-active ui-tabs-active');

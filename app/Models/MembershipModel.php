@@ -18,6 +18,8 @@ class MembershipModel extends Model
         'jenis_kelas',
         'cvats',
         'cvbankir',
+        'type',
+        'nominal',
         'lamaran_online',
         'lamara_offline',
         'pelatihan_gratis',

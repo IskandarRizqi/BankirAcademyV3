@@ -142,9 +142,6 @@ response.data.forEach(dt => {
 
     // BADGE STATUS (GRATIS / PROMO)
     html += badgeHtml;
-
-    // GAMBAR UTAMA WITH WRAPPER HOVER EFFECT
-    // PERBAIKAN: Menambahkan css rule langsung agar gambar otomatis membesar sedikit saat card di-hover
     html += `
           <div style="width:100%; height:190px; overflow:hidden; position:relative;" class="img-wrapper">
             <img src="${dt.image}" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);">
@@ -168,7 +165,7 @@ response.data.forEach(dt => {
     // DETAIL NARASUMBER
     html += '      <div style="margin-top:20px; padding-top:14px; border-top:1px dashed #e5e7eb;">';
     html += '        <a href="/profile-instructor/' + dt.instructor_list[0]?.id + '/' + dt.instructor_list[0]?.name + '" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">';
-    html += '          <img class="rounded-circle" style="width:42px; height:42px; object-fit:cover; border:2px solid #eff6ff; flex-shrink:0;"';
+    html += '          <img class="rounded-circle" style="width:42px; height:42px; object-fit:fill; border:2px solid #eff6ff; flex-shrink:0;"';
     html += (dt.instructor_list[0]?.picture_src) ? 'src="/Image/' + dt.instructor_list[0]?.picture_src.url + '"' : 'src="/FE/images/default-user.png"';
     html += ' alt="Foto Narasumber">';
     html += '          <div style="margin-left:12px; overflow:hidden;">';

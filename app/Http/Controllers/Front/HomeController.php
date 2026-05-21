@@ -684,7 +684,7 @@ class HomeController extends Controller
         $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->get();
         $data['sertif'] = BiayaSertifikatModel::where('class_id', $data['class']['id'])->first();
         // return $data;
-        return view('front.kelasv2.detail', $data);
+        return view('front.kelasv2.detail2', $data);
     }
 
     public function inputinstructor(Request $request)

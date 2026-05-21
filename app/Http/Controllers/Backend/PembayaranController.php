@@ -79,10 +79,10 @@ class PembayaranController extends Controller
         $status = $request->status ? 0 : 1;
         // $status = 0;
         $msg = $request->status ? 'Pembatalan Berhasil' : 'Pembayaran Berhasil';
-        $masterReferral = MasterRefferralModel::first();
-        if (!$masterReferral) {
-            return Redirect::back()->with('error', 'Master Referral Belum Ditentukan');
-        }
+        // $masterReferral = MasterRefferralModel::first();
+        // if (!$masterReferral) {
+        //     return Redirect::back()->with('error', 'Master Referral Belum Ditentukan');
+        // }
         $cs = ClassPaymentModel::where('no_invoice', $request->id)->update(['status' => $status]);
         // return $cs;
         if ($cs) {

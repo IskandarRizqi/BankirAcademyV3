@@ -757,9 +757,10 @@ class ClassesController extends Controller
 			array_push($class_id, $value->id);
 		}
 		$data['class'] = ClassesModel::where('status', 1)
-			->orderBy('date_end', 'desc')
-			->paginate(9)
-			->toArray();
+    ->where('date_start', '>=', Carbon::now()->startOfDay()) // Menampilkan kelas hari ini atau yang akan datang
+    ->orderBy('date_start', 'asc') // Biasanya lebih rapi jika diurutkan dari yang paling dekat akan mulai
+    ->paginate(9)
+    ->toArray();
 		// $data['class'] = ClassesModel::select()
 		// 	->where(function ($sql) use ($request, $data) {
 		// 		if ($request->sebelumnya) {

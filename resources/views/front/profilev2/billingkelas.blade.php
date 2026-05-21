@@ -277,6 +277,7 @@
     let class_image = 0;
 
     function loadbillingkelas(type) {
+        console.log("type", type)
         let t = 100;
         let s = false;
         let tglbayar = '';
@@ -327,7 +328,7 @@
                         // console.log(encodeURIComponent(v.title));
                         let title = encodeURIComponent(v.title);
                         if (!s) {
-                            s = v.status == 1 ? 'Lunas' : 'Batal';
+                            s = v.status == 1 ? 'Lunas' : 'Menunggu Pembayaran';
                         }
 
                         if (v.file && v.status == 0) {
@@ -409,11 +410,7 @@
                         //     h += '            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Peserta</div>';
                         // }
 
-                        if (v.sudah_cetak == 1) {
-                            h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: auto; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" onclick="langsungcetak(' + v.id + ',' + v.biaya_sertifikat + v.jumlah + ')">Invoice</div>';
-                        } else {
-                            h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: auto; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" data-toggle="modal" data-target="#invoiceModal" onclick="modalinvoice(' + v.id + ')">Invoice</div>';
-                        }
+                       h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: pointer; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" onclick="cetakInvoiceSertifikat(' + v.id + ')">Invoice</div>';
 
                         if (v.status_pembayaran == 'Expired') {
                             h += '            <div class="btn btn-danger text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
@@ -422,8 +419,8 @@
                         } else if (v.status_pembayaran == 'Dibatalkan') {
                             h += '            <div class="btn btn-danger text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
                         } else if (v.status_pembayaran == 'Menunggu Pembayaran') {
-                            // h += '            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Upload Bukti</button>';
-                            h += '            <a href='+ v.file +' class="btn btn-primary text-capitalize" style="cursor: auto">Bayar Sekarang</a>';
+                            h += '            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Upload Bukti</button>';
+                            // h += '            <a href='+ v.file +' class="btn btn-primary text-capitalize" style="cursor: auto">Bayar Sekarang</a>';
                         } else {
                             h += '            <div class="btn btn-success text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
                         }
@@ -567,24 +564,41 @@
         $('#detailpeserta').html('');
     }
 
-    function cetakInvoiceSertifikat() {
-        let jumlahpeserta = $('#jml_pesertas').val();
-        if (jumlahpeserta < 1) {
-            Swal.fire({
-                title: "Pemberitahuan",
-                text: "Jumlah peserta anda belum di isi",
-                icon: "info"
-            });
-            return false;
-        } else {
-            // target="_blank"
-            $('#sertifikat_invoice').val(1);
-            $('#formInvoice').attr('action', '/classes/getinvoice/id');
-            $('#formInvoice').attr('target', '_blank');
-            $('#formInvoice').submit();
-            $('#invoiceModal').modal('hide');
-            $('#detailpeserta').html('');
-        }
-
+    function cetakInvoiceSertifikat(paymentId) {
+    if (!paymentId) {
+        Swal.fire({
+            title: "Pemberitahuan",
+            text: "ID Pembayaran tidak ditemukan.",
+            icon: "error"
+        });
+        return false;
     }
+
+    // Pastikan Anda memiliki input dengan name/id 'payment_invoice' di dalam #formInvoice Anda
+    // Jika belum ada di HTML, fungsi ini akan mencoba mengisi element id #payment_invoice
+    if($('#payment_invoice').length) {
+        $('#payment_invoice').val(paymentId);
+    } else {
+        // Fallback jika id inputnya adalah payment_id2 seperti pada modal data Anda
+        $('#payment_id2').val(paymentId); 
+        // Ubah attribute name-nya menjadi payment_invoice agar dibaca oleh Request $r->payment_invoice di Controller
+        $('#payment_id2').attr('name', 'payment_invoice'); 
+    }
+    
+    // Set sertifikat_invoice default aktif (sesuai kebutuhan bisnis logic Anda)
+    $('#sertifikat_invoice').val(1);
+    
+    // Arahkan action URL ke ID yang dinamis sesuai data baris yang di klik
+    $('#formInvoice').attr('action', '/classes/getinvoice/' + paymentId);
+    $('#formInvoice').attr('target', '_blank');
+    
+    // Kirim data form ke controller
+    $('#formInvoice').submit();
+    
+    // Bersihkan sisa-sisa modal (jika ada)
+    if($('#invoiceModal').length) {
+        $('#invoiceModal').modal('hide');
+    }
+    $('#detailpeserta').html('');
+}
 </script>

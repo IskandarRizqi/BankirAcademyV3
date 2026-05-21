@@ -21,151 +21,142 @@ use PDF;
 class InvoiceController extends Controller
 {
 	public function getInvoice(Request $r, $id)
-	{
-		// return $r->all();
-		if ($r->jml_peserta > 0) {
-			$cpm = ClassPaymentModel::where('id', $r->payment_invoice)->update([
-				'jumlah' => $r->jml_peserta,
-			]);
-		}
-		$data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)
-			->where(function ($q) {
-				$role = Auth::user()->role;
-				if ($role == 2) {
-					$q->where('user_id', Auth::user()->id);
-				}
-			})->first();
+{
+    // return $r->all();
+    // 1. Ambil data payment berdasarkan ID Invoice yang dikirim
+    $data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)
+        ->where(function ($q) {
+            $role = Auth::user()->role;
+            if ($role == 2) {
+                $q->where('user_id', Auth::user()->id);
+            }
+        })->first();
 
-		if (!$data['payment']) {
-			return Redirect::back()->with('error', 'Payment Data Not Found');
-		}
+    if (!$data['payment']) {
+        return Redirect::back()->with('error', 'Payment Data Not Found');
+    }
 
-		$data['class'] = ClassesModel::where('id', $data['payment']->class_id)->first();
-		$data['profile'] = UserProfileModel::where('user_id', $data['payment']->user_id)->first();
+    // 2. Ambil data relasi Kelas dan Profile
+    $data['class'] = ClassesModel::where('id', $data['payment']->class_id)->first();
+    $data['profile'] = UserProfileModel::where('user_id', $data['payment']->user_id)->first();
 
-		if (!$data['class']->pricing) {
-			return Redirect::back()->with('error', "Pricing Doesn't Exist");
-		}
+    if (!$data['class'] || !$data['class']->pricing) {
+        return Redirect::back()->with('error', "Pricing Doesn't Exist");
+    }
 
-		if (!$data['profile']) {
-			return Redirect::back()->with('error', "Please Fill Your Profile Info");
-		}
-		// Deklarasi variable kode promo
-		$kode = 0;
-		if ($data['payment']['promo']) {
-			// Cek kode promo Tersedia
-			$kode = $data['payment']['promo'];
-		}
-		// Deklarasi referral
-		$data['payment']['reff'] = 0;
-		$data['payment']['reff_nominal'] = 0;
-		$n = ($data['payment']['price'] * $data['payment']['jumlah']) - $kode;
-		// $n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
-		if ($data['class']->pricing->gratis == 1) {
-			$n = 0;
-		}
-		$data['payment']['totalAkhir'] = $n;
-		// Cek referral Tersedia
-		$available = 0;
-		// $reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])->first();
-		$reff = RefferralModel::where('user_aplicator', $data['profile']['user_id'])
-			->whereNull('class_id')
-			->first();
-		$additional_discount = [];
-		if ($reff) {
-			if ($reff->available == 1) {
-				$available = 1;
-			}
-			// Bila referral status 0 maka belum terpakai
-			if ($available == 0) {
-				// Ambil Master Referral Yang Dibuat Admin
-				$mr = MasterRefferralModel::first();
-				if ($mr) {
-					$data['payment']['reff_nominal'] = $mr->nominal;
-					$data['payment']['reff'] = $n * ($mr->potongan_harga / 100);
-					$komisi = $data['payment']['reff'] * ($mr->nominal / 100);
-					$data['payment']['totalAkhir'] = $n - $data['payment']['reff'];
+    if (!$data['profile']) {
+        return Redirect::back()->with('error', "Please Fill Your Profile Info");
+    }
 
-					$additional_discount['reff_nominal'] = $mr->nominal;
-					$additional_discount['reff'] = $n * ($mr->potongan_harga / 100);
-					$additional_discount['komisi'] = $data['payment']['reff'] * ($mr->nominal / 100);
-					$additional_discount['totalAkhir'] = $n - $data['payment']['reff'];
+    // 3. Update jumlah peserta jika ada perubahan dari request
+    if ($r->jml_peserta > 0 && $r->jml_peserta != $data['payment']->jumlah) {
+        $data['payment']->update([
+            'jumlah' => $r->jml_peserta,
+        ]);
+        // Refresh data setelah update
+        $data['payment'] = $data['payment']->fresh();
+    }
 
-					RefferralModel::updateOrCreate([
-						'user_aplicator' => $data['profile']['user_id'], // Pengguna Referral
-						'class_id' => $data['payment']->class_id
-					], [
-						'user_id' => $reff->user_id, // Pemilik Referral
-						'user_aplicator' => $reff->user_aplicator,
-						'code' => $reff->code,
-						'nominal_class' => $n,
-						'nominal_admin' => $additional_discount['komisi'],
-						'total' => $additional_discount['totalAkhir'],
-						'available' => 0,
-						'class_id' => $data['payment']->class_id,
-					]);
-				}
-			}
-		}
+    // 4. Validasi Sisa Kuota Kelas (Menggunakan class_id dari payment agar aman)
+    $part = ClassPaymentModel::where('class_id', $data['payment']->class_id)
+        ->where('id', '!=', $data['payment']->id)
+        ->sum('jumlah');
 
-		// Deklarasi variable existing user
-		$data['diskon_existing'] = 0;
-		if ($data['profile']['existing_user'] == 1) {
-			// bila user existing maka dapat diskon 30%
-			$data['diskon_existing'] = 30;
-			$de = (30 / 100) * $data['payment']['price_final'];
-			$data['payment']['totalAkhir'] = $n - $de;
-		}
+    if ($data['class']->participant_limit < ($part + $data['payment']->jumlah)) {
+        $return = Redirect::back()->with('error', 'Participant Sudah Penuh');
+    }
 
-		// Deklarasi vaiable sertifikat
-		$data['payment']['sertifikat'] = 0;
-		if ($r->sertifikat_invoice > 0) {
-			$s = BiayaSertifikatModel::where('class_id', $data['payment']->class_id)->first();
-			if ($s) {
-				$data['payment']['sertifikat'] = $s->nominal;
-				if ($s->type > 0) {
-					$data['payment']['sertifikat'] = ($n * ($s->nominal / 100));
-				}
-			}
-		}
-		// return $data['payment']['sertifikat'];
-		// $classlimit = ClassesModel::where('id', $r->class_id)->first();
-		// return $classlimit;
-		$part = ClassPaymentModel::where('class_id', $r->class_id)->where('id', '!=', $r->payment_invoice)->sum('jumlah');
-		if ($data['class']->participant_limit < ($part + $r->jml_peserta)) {
-			// return response()->json(['status' => false, 'message' => 'Participant Sudah Penuh', 'data' => $classlimit['participant_limit']]);
-			return redirec('/profile')->with('erro', 'Participant Sudah Penuh');
-		}
-		$jmlpeserta = 1;
-		if ($r->jml_peserta != null || $r->jml_peserta < 1) {
-			$jmlpeserta = $data['payment']['jumlah'];
-		}
+    // 5. Inisialisasi awal nilai akhir dari 'price_final' yang disimpan di order_class
+    $totalAkhir = $data['payment']->price_final;
 
-		$data['payment']['totalAkhir'] += $data['payment']['sertifikat'] * $jmlpeserta + $data['payment']['unique_code'];
-		$reff = ClassPaymentModel::where('id', $r->payment_invoice)->update([
-			'additional_discount' => json_encode($additional_discount),
-			'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
-			'sudah_cetak' => 1,
-		]);
-		// $data['payment']->qty = ClassParticipantModel::where('class_id', $data['payment']->class_id)->sum('jumlah');
-		$data['terbilang'] = Terbilang::make($data['payment']['totalAkhir'], '', 'Rp. ');
+    // Akses property object promo
+    $kode = $data['payment']->promo ?? 0;
+    $totalAkhir = $totalAkhir - $kode;
+
+    // 6. Logika Referral Code
+    // PERBAIKAN: Gunakan tanda panah (->), jangan kurung siku (['reff']) agar tidak dianggap kolom SQL
+    $data['payment']->reff = 0;
+    $data['payment']->reff_nominal = 0;
+    $additional_discount = [];
+
+    // $reff = RefferralModel::where('user_application', $data['profile']->user_id) // Pastikan nama kolom 'user_aplicator' atau 'user_application' benar
+    //     ->whereNull('class_id')
+    //     ->first();
+
+    // if ($reff && $reff->available == 0) {
+    //     $mr = MasterRefferralModel::first();
+    //     if ($mr) {
+    //         $data['payment']->reff_nominal = $mr->nominal;
+            
+    //         // Potongan harga referral dihitung dari harga dasar sebelum sertifikat & unique code
+    //         $base_price = $data['payment']->price * $data['payment']->jumlah;
+    //         $data['payment']->reff = $base_price * ($mr->potongan_harga / 100);
+    //         $komisi = $data['payment']->reff * ($mr->nominal / 100);
+            
+    //         $totalAkhir = $totalAkhir - $data['payment']->reff;
+
+    //         $additional_discount['reff_nominal'] = $mr->nominal;
+    //         $additional_discount['reff'] = $data['payment']->reff;
+    //         $additional_discount['komisi'] = $komisi;
+    //         $additional_discount['totalAkhir'] = $totalAkhir;
+
+    //         RefferralModel::updateOrCreate([
+    //             'user_aplicator' => $data['profile']->user_id,
+    //             'class_id' => $data['payment']->class_id
+    //         ], [
+    //             'user_id' => $reff->user_id,
+    //             'user_aplicator' => $reff->user_aplicator,
+    //             'code' => $reff->code,
+    //             'nominal_class' => $base_price,
+    //             'nominal_admin' => $komisi,
+    //             'total' => $totalAkhir,
+    //             'available' => 0,
+    //             'class_id' => $data['payment']->class_id,
+    //         ]);
+    //     }
+    // }
+
+    // 7. Logika Existing User Diskon 30%
+    // $data['diskon_existing'] = 0;
+    // if ($data['profile']->existing_user == 1) {
+    //     $data['diskon_existing'] = 30;
+    //     // Diskon diambil dari harga kelas per orang
+    //     $de = (30 / 100) * $data['payment']->price;
+    //     $totalAkhir = $totalAkhir - ($de * $data['payment']->jumlah);
+    // }
+
+    // 8. Tambahkan Unique Code ke Total Akhir
+    $totalAkhir += $data['payment']->unique_code;
+    $data['payment']->totalAkhir = $totalAkhir;
+
+    // 9. Update data log diskon tambahan ke database
+    // $data['payment']->update([
+    //     'additional_discount' => json_encode($additional_discount),
+    //     'sudah_cetak' => 1,
+    // ]);
+
+    // 10. Konversi Terbilang & Generate PDF
+    $data['terbilang'] = Terbilang::make($data['payment']->totalAkhir, '', 'Rp. ');
+
+    if ($data['payment']->status == 1) {
+        $pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/invoicelunas'), $data);
+    } else {
+        // Jika statusnya belum lunas, pastikan record SertifikatPesertaModel diperbarui/dibuat jika belum ada
+        // SertifikatPesertaModel::updateOrCreate([
+        //     'user_id' => Auth::user()->id,
+        //     'class_id' => $data['class']->id,
+        //     'payment_class_id' => $data['payment']->id,
+        // ], [
+        //     'nama' => $r->nama ? json_encode($r->nama) : json_encode([]),
+        //     'email' => $r->email ? json_encode($r->email) : json_encode([]),
+        //     'nohp' => $r->nomor_handphone ? json_encode($r->nomor_handphone) : json_encode([])
+        // ]);
 		// return $data;
-		if ($data['payment']->status == 1) {
-			$pdf = PDF::loadView(env('CUSTOM_INVOICE_LUNAS', 'invoice/invoicelunas'), $data);
-		} else {
-			SertifikatPesertaModel::create([
-				'user_id' => Auth::user()->id,
-				'class_id' => $data['class']->id,
-				'payment_class_id' => $r->payment_invoice,
-				'nama' => json_encode($r->nama),
-				'email' => json_encode($r->email),
-				'nohp' => json_encode($r->nomor_handphone)
-			]);
-			// return $data;
-			$pdf = PDF::loadView(env('CUSTOM_INVOICE_PENDING', 'invoice/invoicepending'), $data);
-		}
-		return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
-	}
+        $pdf = PDF::loadView(env('CUSTOM_INVOICE_PENDING', 'invoice/invoicepending'), $data);
+    }
+
+    return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
+}
 
 	public function multiInvoice(Request $request)
 	{

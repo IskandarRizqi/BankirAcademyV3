@@ -601,27 +601,26 @@ function modalinvoice(id) {
     $('#detailpeserta').html(detail);
 }
     let classId = $('#class_id').val()
-    function cetakInvoiceSertifikat() {
-    let jumlahpeserta = $('#jml_pesertas').val();
+  function cetakInvoiceSertifikat() {
+    let classId = $('#class_id').val();
     
-    // 1. Validasi Jumlah Peserta
-    if (!jumlahpeserta || jumlahpeserta < 1) {
-        Swal.fire({
-            title: "Pemberitahuan",
-            text: "Jumlah peserta anda belum di isi",
-            icon: "info"
-        });
+    // JANGAN gunakan || 1 di sini agar nilai aslinya yang kosong ("") bisa divalidasi
+    let jumlahPeserta = $('#jml_pesertas').val(); 
+    
+    // Mengambil nilai radio yang sedang aktif (0 atau 1)
+    let sertifikatInvoice = $('input[name="sertifikat_invoice"]:checked').val();
+
+    // Validasi jika jumlah peserta kosong, nol, atau negatif
+    if (jumlahPeserta === "" || parseInt(jumlahPeserta) < 1) {
+        Swal.fire({ title: "Pemberitahuan", text: "Jumlah peserta anda belum di isi atau tidak valid", icon: "info" });
         return false;
     }
 
-    // 2. Validasi Input Dinamis (Nama, Email, HP) di dalam #detailpeserta
     let semuaInputTerisi = true;
-    
-    // Mencari semua elemen input/select di dalam #detailpeserta
-    $('#detailpeserta input, #detailpeserta select, #detailpeserta textarea').each(function() {
+    // Validasi input di dalam detail peserta (hanya jika container detailpeserta sudah terisi)
+    $('#detailpeserta input').each(function() {
         if ($(this).val().trim() === "") {
             semuaInputTerisi = false;
-            // Memberikan highlight merah soft pada input yang kosong (opsional)
             $(this).addClass('is-invalid'); 
         } else {
             $(this).removeClass('is-invalid');
@@ -629,24 +628,51 @@ function modalinvoice(id) {
     });
 
     if (!semuaInputTerisi) {
-        Swal.fire({
-            title: "Pemberitahuan",
-            text: "Mohon lengkapi semua data biodata peserta (Nama, Email, No HP) sebelum melanjutkan.",
-            icon: "warning"
-        });
-        return false; // Hentikan proses jika ada data yang kosong
+        Swal.fire({ title: "Pemberitahuan", text: "Mohon lengkapi semua data biodata peserta sebelum melanjutkan.", icon: "warning" });
+        return false;
     }
 
-    $('#sertifikat_invoice').val($('select[name="sertifikat_invoice"]').val()); // Mengambil nilai dari select sertifikat sesungguhnya
-    $('#formInvoice').attr('action', '/order/send');
-    $('#formInvoice').attr('target', '_blank');
-    
-    $('#formInvoice').submit(); 
-    
-    $('#invoiceModal').modal('hide');
-    $('#detailpeserta').html('');
-}
+    // Mengambil semua value asli ke dalam bentuk Array
+    let namaArray = $("input[name='nama[]']").map(function(){ return $(this).val().trim(); }).get();
+    let emailArray = $("input[name='email[]']").map(function(){ return $(this).val().trim(); }).get();
+    let nohpArray = $("input[name='nomor_handphone[]']").map(function(){ return $(this).val().trim(); }).get();
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    jQuery.ajax({
+        url: "/order",
+        method: 'post',
+        data: {
+            class_id: classId,
+            jml_peserta: jumlahPeserta,
+            sertifikat_invoice: sertifikatInvoice, // Nilai "0" atau "1" akan terkirim dengan benar
+            nama: JSON.stringify(namaArray),
+            email: JSON.stringify(emailArray),
+            nomor_handphone: JSON.stringify(nohpArray)
+        },
+        success: function(result) {
+            if (result.rc == '00') {
+                Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: "success" });
+                localStorage.setItem("menu", "li-tabs-33");
+                if (typeof clearmenu === "function") clearmenu(); 
+                $('#li-tabs-33').removeClass('ui-state-active ui-tabs-active').removeAttr('aria-selected').removeAttr('aria-expanded');
+                setTimeout(() => { window.location.href = '/profile'; }, 3000);
+            } else if (result.rc == '07' || result.rc == '03' || result.rc == '04') {
+                Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: (result.rc == '07' ? "info" : "warning") });
+                if (result.rc == '03' || result.rc == '04') {
+                    setTimeout(() => { window.location.href = '/profile'; }, 2000);
+                }
+            }
+        },
+        error: function(xhr) {
+            Swal.fire({ title: "Error", text: "Terjadi kesalahan pada server.", icon: "error" });
+        }
+    });
+}
     function clearmenu() {
         $('#li-tabs-32').removeClass('ui-state-active ui-tabs-active');
         $('#li-tabs-32').attr('aria-selected', true);

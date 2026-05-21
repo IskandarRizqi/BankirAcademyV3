@@ -44,7 +44,6 @@
         background-color: #eef4ff;
         border-color: #007bff;
     }
-
     .accordion-body-custom {
         padding: 15px;
         background: #ffffff;
@@ -52,26 +51,22 @@
         border: 1px solid #e0e0e0;
         margin-top: 8px;
     }
-
     .checkbox-style-1-label {
         margin-left: 5px;
         font-size: 14px;
         font-weight: normal;
         cursor: pointer;
     }
-
     .checkbox-style {
         width: 18px;
         height: 18px;
     }
-
     .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
         font-weight: bold;
         transition: all 0.3s ease;
     }
-
     .btn-primary:hover {
         background-color: #0056d2;
         border-color: #0056d2;

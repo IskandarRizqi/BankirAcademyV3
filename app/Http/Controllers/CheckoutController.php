@@ -37,7 +37,7 @@ class CheckoutController extends Controller
         $price_final = 0;
         $cp = ClassPricingModel::where('class_id', $request->class_id)->first();
         	$jmlpeserta = 1;
-		if ($request->jml_peserta != null || $request->jml_peserta < 1) {
+		if ($request->jml_peserta != null || $request->jml_peserta > 1) {
 			$jmlpeserta = $request->jml_peserta;
 		}
         
@@ -58,16 +58,22 @@ class CheckoutController extends Controller
                             if ($s->type > 0) {
                                 $data['payment']['sertifikat'] = ($price_final * ($s->nominal / 100));
                             }
+                        } else {
+                              $data['payment']['sertifikat'] = 100000;
                         }
 		}
-        if ($price_final == 0) {
+        if ($cp->gratis == 1) {
+            $price_final = 0;
+        }
+        // return $data['payment']['sertifikat'];
+        if ($cp->gratis == 1 && $data['payment']['sertifikat'] === 0) {
              $order = ClassPaymentModel::create([
             'status' => 1,
             'user_id' => $auth,
             'class_id' => $request->class_id,
             'unique_code' => $randomNumber,
             'price' => $price,
-            'biaya_sertifikat' => $data['payment']['sertifikat'],
+            'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
             'price_final' => $price_final + $data['payment']['sertifikat'],
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
@@ -81,7 +87,7 @@ class CheckoutController extends Controller
 				'email' => json_encode($request->email),
 				'nohp' => json_encode($request->nomor_handphone)
 			]);
-            return redirect('profile');
+            return redirect('profile')->with('success_payment', 'Pendaftaran kelas berhasil! Kelas Anda telah aktif.');
         } else {
         $order = ClassPaymentModel::create([
             'status' => 0,
@@ -89,8 +95,8 @@ class CheckoutController extends Controller
             'class_id' => $request->class_id,
             'unique_code' => $randomNumber,
             'price' => $price,
-            'biaya_sertifikat' => $data['payment']['sertifikat'],
-            'price_final' => $price_final + $data['payment']['sertifikat'],
+            'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
+            'price_final' => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
             'expired' => date('Y-m-d') . ' 23:59:59',
             'no_invoice' => $no_invoice,
         ]);
@@ -111,13 +117,13 @@ class CheckoutController extends Controller
         $requestId = (string) Str::uuid();
         $body = [
             "order" => [
-                "amount" => $price_final + $data['payment']['sertifikat'],
+                "amount" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
                 "invoice_number" => $no_invoice,
                 "callback_url" => url('/profile'),
                 "line_items" => [
                     [
                         "name" => "Pembayaran Kelas ",
-                        "price" => $price_final + $data['payment']['sertifikat'],
+                        "price" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
                         "quantity" => 1
                     ]
                 ]
