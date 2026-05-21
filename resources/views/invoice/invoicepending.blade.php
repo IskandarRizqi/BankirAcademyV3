@@ -598,8 +598,8 @@
                 <div class="notices">
                     <div>Informasi:</div>
                     <div class="notice">
-                        Bank : BNI || No.Rekening : 1956061505 || Atas Nama
-                        : CV Anugrah Karya Indonesia
+                        Bank : BCA || No.Rekening : 8035559091 || Atas Nama
+                        : PT. Bankir Academy Indonesia
                     </div>
                     <div class="notice">
                         Apabila telah melakukan pembayaran harap melakukan
