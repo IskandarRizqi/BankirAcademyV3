@@ -273,13 +273,21 @@
 <section style="padding:60px 0; background:var(--bg-light); text-align:center;">
   <h4 style="font-size:25px; color:#005CFF;">Event</h4>
   <br>
-  <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:25px;">
+<div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap;">
 
 @foreach($kelas as $class)
     @php
         // 1. LOGIKA BADGE, HARGA, & TOMBOL
         $priceHtml = 'Rp -';
         $badgeHtml = '';
+        $instructor = $class->instructor_list ? $class->instructor_list->first() : null;
+$instructorName = $instructor ? $instructor->name : 'Instruktur Belum Tersedia';
+$instructorId = $instructor ? $instructor->id : null; // Bernilai null jika tidak ada instruktur
+
+$avatarUrl = asset('FE/images/default-user.png');
+if ($instructor && isset($instructor->picture_src->url)) {
+    $avatarUrl = asset('Image/' . $instructor->picture_src->url);
+}
         $btnText = 'Daftar Sekarang';
         $btnColor = '#007BFF'; // Biru default
         $isUpcoming = str_contains(strtolower($class->title), 'upcoming');
@@ -287,7 +295,8 @@
         if ($class->pricing) {
             if ($class->pricing->gratis) {
                 $priceHtml = 'GRATIS';
-                $badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#28a745; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(40,167,69,0.4); text-transform:uppercase; z-index:2;">🎉 Free Class</span>';
+                // Diubah ke inline-block & relative agar mengikuti alur layout
+                $badgeHtml = '<span style="display:inline-block; background:#28a745; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(40,167,69,0.4); text-transform:uppercase;">🎉 Free Class</span>';
                 $btnText = 'Daftar Gratis';
                 $btnColor = '#28a745'; // Hijau untuk kelas gratis
             } elseif ($class->pricing->promo) {
@@ -296,7 +305,7 @@
                 
                 // Menghitung persentase potongan harga
                 $potongHarga = $class->pricing->price > 0 ? round(($class->pricing->promo_price / $class->pricing->price) * 100) : 0;
-                $badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#dc3545; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(220,53,69,0.4); z-index:2;">PROMO ' . $potongHarga . '% OFF</span>';
+                $badgeHtml = '<span style="display:inline-block; background:#dc3545; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(220,53,69,0.4);">PROMO ' . $potongHarga . '% OFF</span>';
             } else {
                 $priceHtml = 'Rp ' . number_format($class->pricing->price, 0, ',', '.');
             }
@@ -304,68 +313,56 @@
 
         // Jika statusnya OVERWRITE UNTUK UPCOMING CLASS
         if ($isUpcoming) {
-            $badgeHtml = '<span style="position:absolute; top:12px; left:12px; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase; z-index:2;">⏳ Upcoming</span>';
+            $badgeHtml = '<span style="display:inline-block; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase;">⏳ Upcoming</span>';
             $btnText = 'Belum Tersedia';
             $btnColor = '#6c757d';
         }
 
-        // 2. LOGIKA FIX ARRAY SUB KATEGORI (Dibuat jadi Badge Pojok Kanan Atas)
+        // 2. LOGIKA FIX ARRAY SUB KATEGORI
         $subCategoryHtml = '';
         if (!empty($class->jenis)) {
-            // Coba decode jika datanya berformat JSON string array, jika gagal gunakan string langsung
             $decodedSubArr = json_decode($class->jenis, true);
             $subCategoryText = is_array($decodedSubArr) ? implode(', ', $decodedSubArr) : $class->jenis;
-            
-            // Render HTML Badge Kanan Atas
-            $subCategoryHtml = '<span style="position:absolute; top:12px; right:12px; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); z-index:2; max-width: 120px; white-space: nowrap; ; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
-        }
-
-        // 3. DATA INSTRUKTUR / NARASUMBER
-        $instructor = $class->instructor_list->first();
-        $instructorName = $instructor->name ?? 'Instructor';
-        $instructorId = $instructor->id ?? '#';
-        
-        $avatarUrl = asset('FE/images/default-user.png');
-        if ($instructor && isset($instructor->picture_src->url)) {
-            $avatarUrl = asset('Image/' . $instructor->picture_src->url);
+            if ($subCategoryText == 'BANKIR') {
+            // Diubah ke inline-block, max-width disesuaikan biar fleksibel
+            $subCategoryHtml = '<span style="display:inline-block; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
+ } else {
+            $subCategoryHtml = '<span style="display:inline-block; background:rgba(188, 31, 68, 0.9); color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(158, 31, 35, 0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
+}
         }
     @endphp
 
-    <!-- GENERATE COMPONENT -->
     <div class="col-lg-3 col-sm-6 d-flex mb-4">
-        <div class="card shadow bg-white w-100 custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">
+        <div class="card shadow bg-white w-100 border custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">
             
-            <!-- BADGE STATUS KIRI ATAS (GRATIS / PROMO / UPCOMING) -->
-            {!! $badgeHtml !!}
-
-            <!-- BADGE SUB KATEGORI KANAN ATAS -->
-            {!! $subCategoryHtml !!}
+            <div style="background: #f8f9fa; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #edf2f7; min-height: 48px;">
+                <div style="flex-shrink: 0;">
+                    {!! $badgeHtml !!}
+                </div>
+                <div style="flex-shrink: 0; margin-left: 8px;">
+                    {!! $subCategoryHtml !!}
+                </div>
+            </div>
             
-            <!-- GAMBAR UTAMA WITH WRAPPER HOVER EFFECT -->
             <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">
                 <img src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
-                     style="width:100%; height:100%; object-fit:fill; display:block; transition: transform 0.5s ease;"
+                     style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;"
                      alt="{{ $class->title }}">
             </div>
 
-            <!-- AREA KONTEN (ATAS) -->
             <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
                 <div>
-                    <!-- TANGGAL & IKON KALENDER -->
                     <div style="display:flex; align-items:center; margin-bottom:8px;">
-                        <i class="far fa-calendar-alt" style="font-size:12px; color:#6c757d; margin-right:6px;"></i>
                         <span style="font-size:12px; color:#6c757d; font-weight:500;">
                             {{ $class->date_end ? \Carbon\Carbon::parse($class->date_end)->translatedFormat('d M Y') : '-' }}
                         </span>
                     </div>
 
-                    <!-- JUDUL KELAS (RATA KIRI & MAX 2 BARIS) -->
-                    <h4 class="text-capitalize" style="font-size:15px; font-weight:700; font-family:'Poppins', sans-serif; color:#212529; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:42px;">
+                    <h4 class="text-capitalize" style="font-size:15px; text-align:left; font-weight:700; font-family:'Poppins', sans-serif; color:#212529; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:42px;">
                         {{ $class->title }}
                     </h4>
                 </div>
 
-                <!-- DETAIL NARASUMBER -->
                 <div style="margin-top:20px; padding-top:12px; border-top:1px dashed #e9ecef;">
                     <a href="{{ url('/profile-instructor/' . $instructorId . '/' . urlencode($instructorName)) }}" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">
                         <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;"
@@ -379,19 +376,14 @@
                         </div>
                     </a>
                 </div>
-            </div> <!-- Tutup Area Konten Atas -->
-
-            <!-- AREA FOOTER (HARGA & TOMBOL) -->
-            <div style="padding:0 20px 20px 20px; background:#fff;">
+            </div> <div style="padding:0 20px 20px 20px; background:#fff;">
                 <div>
-                    <!-- TAMPILAN HARGA -->
                     @if($class->pricing && $class->pricing->gratis)
                         <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
                     @else
                         <h3 style="color:#005CFF; font-size:18px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
                     @endif
 
-                    <!-- TOMBOL DAFTAR -->
                     @if($isUpcoming)
                         <button class="btn btn-block py-25" style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; width: 100%; cursor: not-allowed;" disabled>
                             {{ $btnText }}
@@ -406,9 +398,7 @@
                 </div>
             </div>
 
-        </div> <!-- tutup card -->
-    </div> <!-- tutup col -->
-@endforeach
+        </div> </div> @endforeach
 </div>
 
   <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">

@@ -332,7 +332,7 @@ class HomeController extends Controller
             ->where('date_end', '>=', $now->format('Y-m-d')) 
             ->where('status', 1)
             ->orderBy('date_end', 'asc')
-            ->take(4)
+            ->take(8)
             ->get();                  
 
         foreach ($data['kelas'] as $key => $value) {

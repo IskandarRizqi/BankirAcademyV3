@@ -766,7 +766,7 @@ class ProfileController extends Controller
         $inp = [
             'status_membership' => $request->status_membership,
             'id_member' => $request->id_member,
-            'masa_aktif_membership' => $request->masa_aktif_membership ? $request->masa_aktif_membership : Carbon::now()->addYears(5),
+            'masa_aktif_membership' => $request->masa_aktif_membership ? $request->masa_aktif_membership : Carbon::now()->addYears(1),
         ];
         if ($request->image_bukti_pembayaran) {
             $name = $request->file('image_bukti_pembayaran')->getClientOriginalName(); // Name File

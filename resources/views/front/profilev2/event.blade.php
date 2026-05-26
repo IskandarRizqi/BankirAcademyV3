@@ -102,101 +102,155 @@
             success: function(response) {
                 console.log('response', response.data)
                 let html = '';
-                if (response.data.length > 0) {
-response.data.forEach(dt => {
-    // 1. LOGIKA BADGE & HARGA (Ditaruh di atas untuk efisiensi)
-    let priceHtml = '';
-    let badgeHtml = '';
-    let btnText = 'Daftar Sekarang';
-    let btnColor = '#007BFF'; // Biru default
+               if (response.data.length > 0) {
+    let html = ''; // Pastikan variabel html terdefinisi sebelum perulangan
 
-    if (dt.pricing) {
-        if (dt.pricing.gratis) {
-            priceHtml = 'GRATIS';
-            badgeHtml = '<span style="position:absolute; top:14px; left:14px; background:linear-gradient(135deg, #28a745, #218838); color:white; padding:6px 14px; font-size:11px; font-weight:700; border-radius:30px; box-shadow:0 4px 10px rgba(40,167,69,0.3); text-transform:uppercase; z-index:2; letter-spacing: 0.5px;">🎉 Free Class</span>';
-            btnText = 'Daftar Gratis';
-            btnColor = '#28a745'; // Hijau untuk kelas gratis
-        } else if (dt.pricing.promo) {
-            priceHtml = 'Rp ' + (dt.pricing.price - dt.pricing.promo_price).toLocaleString('id-ID');
-            let potongHarga = Math.round((dt.pricing.promo_price / dt.pricing.price) * 100);
-            badgeHtml = `<span style="position:absolute; top:14px; left:14px; background:linear-gradient(135deg, #dc3545, #bd2130); color:white; padding:6px 14px; font-size:11px; font-weight:700; border-radius:30px; box-shadow:0 4px 10px rgba(220,53,69,0.3); z-index:2; letter-spacing: 0.5px;">PROMO ${potongHarga}% OFF</span>`;
-        } else {
-            priceHtml = 'Rp ' + dt.pricing.price.toLocaleString('id-ID');
+    response.data.forEach(dt => {
+        // 1. LOGIKA BADGE, HARGA, & TOMBOL
+        let priceHtml = 'Rp -';
+        let badgeHtml = '';
+        let btnText = 'Daftar Sekarang';
+        let btnColor = '#007BFF'; // Biru default
+        
+        // Cek apakah judul mengandung kata 'upcoming'
+        const isUpcoming = dt.title ? dt.title.toLowerCase().includes('upcoming') : false;
+
+        // Ambil data instruktur/narasumber pertama dengan aman
+        const instructor = dt.instructor_list && dt.instructor_list.length > 0 ? dt.instructor_list[0] : null;
+        const instructorName = instructor ? instructor.name : 'Instruktur Belum Tersedia';
+        const instructorId = instructor ? instructor.id : null;
+
+        let avatarUrl = '/FE/images/default-user.png';
+        if (instructor && instructor.picture_src && instructor.picture_src.url) {
+            avatarUrl = '/Image/' + instructor.picture_src.url;
         }
-    } else {
-        priceHtml = 'Rp -';
-    }
 
-    // FORMAT TANGGAL YANG LEBIH CANTIK (Contoh: 19 Mei 2026)
-    const namaBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-    let tanggalCantik = (function(d){ 
-        if(!d) return '-';
-        const t = new Date(d); 
-        return String(t.getDate()).padStart(2,'0') + ' ' + namaBulan[t.getMonth()] + ' ' + t.getFullYear(); 
-    })(dt.date_end);
+        if (dt.pricing) {
+            if (dt.pricing.gratis) {
+                priceHtml = 'GRATIS';
+                badgeHtml = '<span style="display:inline-block; background:#28a745; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(40,167,69,0.4); text-transform:uppercase;">🎉 Free Class</span>';
+                btnText = 'Daftar Gratis';
+                btnColor = '#28a745'; // Hijau untuk kelas gratis
+            } else if (dt.pricing.promo) {
+                let realPrice = dt.pricing.price - dt.pricing.promo_price;
+                priceHtml = 'Rp ' + realPrice.toLocaleString('id-ID');
+                
+                // Menghitung persentase potongan harga
+                let potongHarga = dt.pricing.price > 0 ? Math.round((dt.pricing.promo_price / dt.pricing.price) * 100) : 0;
+                badgeHtml = '<span style="display:inline-block; background:#dc3545; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(220,53,69,0.4);">PROMO ' + potongHarga + '% OFF</span>';
+            } else {
+                priceHtml = 'Rp ' + dt.pricing.price.toLocaleString('id-ID');
+            }
+        }
 
-    // 2. GENERATE HTML STRING
-    html += '<div class="col-lg-3 col-sm-6 d-flex mb-4">'; 
-    // PERBAIKAN: Menggunakan shadow yang lebih smooth, border subtle, dan transform transisi yang lebih responsif
-    html += '  <div class="card shadow bg-white w-100" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease;">';
+        // Jika statusnya OVERWRITE UNTUK UPCOMING CLASS
+        if (isUpcoming) {
+            badgeHtml = '<span style="display:inline-block; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase;">⏳ Upcoming</span>';
+            btnText = 'Belum Tersedia';
+            btnColor = '#6c757d';
+        }
 
-    // BADGE STATUS (GRATIS / PROMO)
-    html += badgeHtml;
-    html += `
-          <div style="width:100%; height:190px; overflow:hidden; position:relative;" class="img-wrapper">
-            <img src="${dt.image}" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);">
-          </div>
-        `;
+        // 2. LOGIKA FIX DATA SUB KATEGORI (Badge Pojok Kanan Atas)
+        let subCategoryHtml = '';
+        if (dt.jenis) {
+            let subCategoryText = dt.jenis;
+            
+            if (typeof dt.jenis === 'string' && dt.jenis.trim().startsWith('[')) {
+                try {
+                    let parsed = JSON.parse(dt.jenis);
+                    if (Array.isArray(parsed)) {
+                        subCategoryText = parsed.join(', ');
+                    }
+                } catch (e) {
+                    // Biarkan string asli jika gagal parse
+                }
+            } else if (Array.isArray(dt.jenis)) {
+                subCategoryText = dt.jenis.join(', ');
+            }
 
-    // AREA KONTEN (ATAS)
-    html += '    <div style="padding:24px 24px 16px 24px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">';
-    
-    html += '      <div>';
-    // TANGGAL & IKON KALENDER
-    html += '        <div style="display:flex; align-items:center; margin-bottom:10px;">';
-    html += '          <i class="far fa-calendar-alt" style="font-size:12px; color:#3b82f6; margin-right:6px;"></i>'; // Ikon diubah ke biru agar pop-out
-    html += '          <span style="font-size:12px; color:#6b7280; font-weight:600; letter-spacing:0.3px;">' + tanggalCantik + '</span>';
-    html += '        </div>';
+            // Helper escape karakter HTML
+            let escapedText = String(subCategoryText)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
 
-    // JUDUL KELAS (RATA KIRI & MAX 2 BARIS)
-    html += '        <h4 class="text-capitalize" style="font-size:16px; font-weight:700; font-family:\'Poppins\', sans-serif; color:#1f2937; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.5; min-height:48px;">' + dt.title + '</h4>';
-    html += '      </div>';
-    
-    // DETAIL NARASUMBER
-    html += '      <div style="margin-top:20px; padding-top:14px; border-top:1px dashed #e5e7eb;">';
-    html += '        <a href="/profile-instructor/' + dt.instructor_list[0]?.id + '/' + dt.instructor_list[0]?.name + '" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">';
-    html += '          <img class="rounded-circle" style="width:42px; height:42px; object-fit:fill; border:2px solid #eff6ff; flex-shrink:0;"';
-    html += (dt.instructor_list[0]?.picture_src) ? 'src="/Image/' + dt.instructor_list[0]?.picture_src.url + '"' : 'src="/FE/images/default-user.png"';
-    html += ' alt="Foto Narasumber">';
-    html += '          <div style="margin-left:12px; overflow:hidden;">';
-    html += '            <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.8px; text-transform:uppercase;">Narasumber</small>';
-    html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#374151;">' + dt.instructor_list[0]?.name + '</h5>';
-    html += '          </div>';
-    html += '        </a>';
-    html += '      </div>';
-    
-    html += '    </div>'; // Tutup Bagian Atas
+            subCategoryHtml = '<span style="display:inline-block; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + escapedText + '">🏷️ ' + escapedText + '</span>';
+        }
 
-    // AREA FOOTER (HARGA & TOMBOL)
-    html += '    <div style="padding:0 24px 24px 24px; background:#fff;">';
-    html += '      <div>';
-    
-    // TAMPILAN HARGA (Jika GRATIS diberi warna hijau mencolok)
-    if(dt.pricing && dt.pricing.gratis) {
-        html += '        <h3 style="color:#28a745; font-size:22px; font-weight:800; margin-bottom:14px; letter-spacing:-0.5px;">' + priceHtml + '</h3>';
-    } else {
-        html += '        <h3 style="color:#005CFF; font-size:20px; font-weight:800; margin-bottom:14px; letter-spacing:-0.5px;">' + priceHtml + '</h3>';
-    }
-    
-    // TOMBOL DAFTAR
-    html += '        <a href="/class/' + dt.unique_id + '/' + dt.title.replaceAll("/", "-") + '" class="btn btn-block py-25" style="background-color:' + btnColor + '; color:white; border:none; border-radius:12px; font-weight:700; font-size:14px; box-shadow:0 4px 14px ' + (dt.pricing && dt.pricing.gratis ? 'rgba(40,167,69,0.25)' : 'rgba(0,123,255,0.25)') + '; transition:all 0.2s; display: block; text-align: center; text-decoration: none;">' + btnText + '</a>';
-    html += '      </div>';
-    html += '    </div>';
+        // FORMAT TANGGAL YANG CANTIK
+        const namaBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        let tanggalCantik = (function(d){ 
+            if(!d) return '-';
+            const t = new Date(d); 
+            return String(t.getDate()).padStart(2,'0') + ' ' + namaBulan[t.getMonth()] + ' ' + t.getFullYear(); 
+        })(dt.date_end);
 
-    html += '  </div>'; // tutup card
-    html += '</div>'; // tutup col
-});
+        // 3. GENERATE HTML STRING
+        html += '<div class="col-lg-3 col-sm-6 d-flex mb-4">'; 
+        html += '  <div class="card shadow border bg-white w-100 custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">';
 
+        // HEADER BADGE CONTAINER (Menyelaraskan struktur Card Pertama)
+        html += '    <div style="background: #f8f9fa; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #edf2f7; min-height: 48px;">';
+        html += '      <div style="flex-shrink: 0;">' + badgeHtml + '</div>';
+        html += '      <div style="flex-shrink: 0; margin-left: 8px;">' + subCategoryHtml + '</div>';
+        html += '    </div>';
+
+        // GAMBAR UTAMA WITH WRAPPER HOVER EFFECT
+        let imgUrl = dt.image ? dt.image : '/FE/images/images-demo-consulting-03.jpg';
+        html += '    <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">';
+        html += '      <img src="' + imgUrl + '" style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;" alt="' + (dt.title || '') + '">';
+        html += '    </div>';
+
+        // AREA KONTEN (ATAS)
+        html += '    <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">';
+        html += '      <div>';
+        html += '        <div style="display:flex; align-items:center; margin-bottom:8px;">';
+        html += '          <span style="font-size:12px; color:#6c757d; font-weight:500;">' + tanggalCantik + '</span>';
+        html += '        </div>';
+        html += '        <h4 class="text-capitalize" style="font-size:15px; text-align:left; font-weight:700; font-family:\'Poppins\', sans-serif; color:#212529; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:42px;">' + (dt.title || '') + '</h4>';
+        html += '      </div>';
+        
+        // DETAIL NARASUMBER
+        let profileUrl = '/profile-instructor/' + (instructorId || '#') + '/' + encodeURIComponent(instructorName);
+        html += '      <div style="margin-top:20px; padding-top:12px; border-top:1px dashed #e9ecef;">';
+        html += '        <a href="' + profileUrl + '" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">';
+        html += '          <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;" src="' + avatarUrl + '" alt="Foto Narasumber">';
+        html += '          <div style="margin-left:12px; text-align:left; overflow:hidden;">';
+        html += '            <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.5px; text-transform:uppercase;">Narasumber</small>';
+        html += '            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">' + instructorName + '</h5>';
+        html += '          </div>';
+        html += '        </a>';
+        html += '      </div>';
+        html += '    </div>'; // Tutup Area Konten Atas
+
+        // AREA FOOTER (HARGA & TOMBOL)
+        html += '    <div style="padding:0 20px 20px 20px; background:#fff;">';
+        html += '      <div>';
+        
+        // TAMPILAN HARGA
+        if (dt.pricing && dt.pricing.gratis) {
+            html += '        <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">' + priceHtml + '</h3>';
+        } else {
+            html += '        <h3 style="color:#005CFF; font-size:18px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">' + priceHtml + '</h3>';
+        }
+        
+        // TOMBOL DAFTAR (Kondisional Pendataan Upcoming)
+        if (isUpcoming) {
+            html += '        <button class="btn btn-block py-25" style="background-color:' + btnColor + '; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; width: 100%; cursor: not-allowed;" disabled>' + btnText + '</button>';
+        } else {
+            let shadowColor = (dt.pricing && dt.pricing.gratis ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)');
+            let cleanTitle = dt.title ? dt.title.replace(/\//g, "-") : '';
+            let classUrl = '/class/' + dt.unique_id + '/' + encodeURIComponent(cleanTitle);
+            html += '        <a href="' + classUrl + '" class="btn btn-block py-25" style="background-color:' + btnColor + '; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; box-shadow:0 4px 12px ' + shadowColor + '; transition:all 0.2s; display: block; text-align: center; text-decoration: none;">' + btnText + '</a>';
+        }
+        html += '      </div>';
+        html += '    </div>';
+
+        html += '  </div>'; // Tutup card
+        html += '</div>'; // Tutup col
+    });
 
     $('#listkelas').append(html);
 
