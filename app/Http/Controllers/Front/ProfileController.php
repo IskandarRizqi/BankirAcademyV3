@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use App\Helper\GlobalHelper;
 use App\Models\ClassContentModel;
 use App\Models\ClassParticipantModel;
+use App\Models\Dompet;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
@@ -177,7 +178,8 @@ class ProfileController extends Controller
             ->where('referral.user_aplicator', $auth_id)
             ->first();
         $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
-        $data['saldo'] = $data['cashback']['amount'];
+        $dompet = Dompet::where('user_id', $data['user']['id'])->first();
+        $data['saldo'] = $dompet->saldo;
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
@@ -241,6 +243,9 @@ class ProfileController extends Controller
                 ->get();
         }
         $data['ismember'] = GlobalHelper::getaksesmembership();
+        $data['historyMutasi'] = \App\Models\MutasiDompet::where('user_id', auth()->id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
         // $data['ismember'] = false;
         // return $data;
         return view('front.profilev2.index', $data);

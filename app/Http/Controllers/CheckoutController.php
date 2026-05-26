@@ -10,6 +10,7 @@ use App\Models\DepositUsed;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\SertifikatPesertaModel;
+use App\Models\UserProfileModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -236,7 +237,7 @@ class CheckoutController extends Controller
         }
 
         $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->first();
-
+        $profile = UserProfileModel::where('user_id', $order->user_id)->first();
         if ($order) {
             $order->update([
                 'status' => 1,
