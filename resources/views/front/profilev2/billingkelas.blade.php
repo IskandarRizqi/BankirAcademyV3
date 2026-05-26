@@ -276,187 +276,124 @@
     }
     let class_image = 0;
 
-    function loadbillingkelas(type) {
-        console.log("type", type)
-        let t = 100;
-        let s = false;
-        let tglbayar = '';
-        if (type == 'pembayaran-billing') {
-            t = 3;
-            s = 'menunggu pembayaran';
+function loadbillingkelas(type) {
+    console.log("type", type);
+    let t = 100;
+    let s = false;
+    let tglbayar = '';
+    
+    if (type == 'pembayaran-billing') { t = 3; s = 'menunggu pembayaran'; }
+    if (type == 'konfirmasi-billing') { t = 2; s = 'menunggu konfirmasi'; }
+    if (type == 'lunas-billing') { t = 1; s = 'lunas'; }
+    if (type == 'batal-billing') { t = 0; s = 'batal'; }
+    
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-        if (type == 'konfirmasi-billing') {
-            t = 2;
-            s = 'menunggu konfirmasi';
-        }
-        if (type == 'lunas-billing') {
-            t = 1;
-            s = 'lunas';
-        }
-        if (type == 'batal-billing') {
-            t = 0;
-            s = 'batal';
-        }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        // loader transparant
-        Swal.fire({
-            background: '#0069d900',
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        })
-        $.ajax({
-            url: '/getbillingkelas/' + t,
-            method: 'GET',
-            success: function(response) {
-                let h = '';
-                if (response.status == 1) {
-                    let n = 0;
-                    response.data.billingkelasall.forEach(v => {
-                        n++;
-                        let r = 'readonly';
-                        if (v.status_pembayaran == 'Menunggu Konfirmasi') {
-                            r = '';
-                        }
-                        if (v.status_pembayaran == 'Menunggu Pembayaran') {
-                            r = '';
-                        }
-                        // console.log(encodeURIComponent(v.title));
-                        let title = encodeURIComponent(v.title);
-                        if (!s) {
-                            s = v.status == 1 ? 'Lunas' : 'Menunggu Pembayaran';
-                        }
+    });
+    
+    // Loader transparan Swal
+    Swal.fire({
+        background: '#0069d900',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+    
+    $.ajax({
+        url: '/getbillingkelas/' + t,
+        method: 'GET',
+        success: function(response) {
+            let h = '';
+            if (response.status == 1 && response.data.billingkelasall.length > 0) {
+                response.data.billingkelasall.forEach(v => {
+                    
+                    // Format Tanggal Indonesia
+                    let tglOrder = new Date(v.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+                    tglbayar = v.file && v.status != 0 ? new Date(v.updated_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                    
+                    // Penentuan warna badge status dinamis
+                    let badgeClass = 'bg-secondary';
+                    if (v.status_pembayaran == 'Menunggu Pembayaran') { badgeClass = 'bg-warning text-dark'; }
+                    else if (v.status_pembayaran == 'Menunggu Konfirmasi') { badgeClass = 'bg-info text-white'; }
+                    else if (v.status_pembayaran == 'Lunas' || v.status_pembayaran == 'Berhasil') { badgeClass = 'text-white bg-success'; }
+                    else if (v.status_pembayaran == 'Dibatalkan' || v.status_pembayaran == 'Expired') { badgeClass = 'bg-danger'; }
 
-                        if (v.file && v.status == 0) {
-                            s = 'menunggu pembayaran'
-                        }
-                        // if (v.file && v.status == 0) {
-                        //     s = 'menunggu konfirmasi'
-                        //     tglbayar = new Date(v.updated_at).toLocaleDateString('id-ID')
-                        // }
-                        if (v.file && v.status != 0) {
-                            tglbayar = new Date(v.updated_at).toLocaleDateString('id-ID')
-                        }
-                        let file = encodeURIComponent(v.file);
-                        h += '<div class="card br-10 mb-4" style="background-color: #f7f7f7">';
-                        h += '<div class="card-body">';
-                        h += '<div class="d-flex justify-content-between">';
-                        h += '<div class="d-flex flex-wrap" style="width:100%;">';
+                    // LOGIKA BARU: Cek invoice khusus Payment Gateway (mengandung kata BANKIR)
+                    let targetUrl = '/laman-pembayaran/' + v.id;
+                    let targetTarget = ''; // Default buka di tab yang sama
+                    
+                    if (v.no_invoice && v.no_invoice.toUpperCase().includes('BANKIR')) {
+                        // Jika ada link file/payment gateway, arahkan ke file. Jika kosong, fallback ke detail biasa.
+                        targetUrl = v.file ? v.file : '#'; 
+                        targetTarget = v.file ? 'target="_blank"' : ''; // Buka di tab baru untuk link eksternal/payment gateway
+                    }
 
-                        // Kolom 1–4 (baris pertama)
-                        h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">No. Invoice</small>';
-                        h += '        <p class="text-uppercase"><b>' + v.no_invoice + '</b></p>';
-                        h += '    </div>';
-
-                        h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">Event</small>';
-                        h += '        <p class="text-uppercase"><b>' + v.title + '</b></p>';
-                        h += '    </div>';
-
-                        h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">Tgl.Order</small>';
-                        h += '        <p class="text-uppercase"><b>' + new Date(v.created_at).toLocaleDateString('id-ID') + '</b></p>';
-                        h += '    </div>';
-
-                        h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">Tgl.Pembayaran</small>';
-                        h += '        <p class="text-uppercase"><b>' + tglbayar + '</b></p>';
-                        h += '    </div>';
-
-
-                        // h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        // h += '        <small class="text-secondary">Gambar</small><br><br>';
-
-                        // if (v.file && v.file !== '') {
-                        //     h += '        <a href="#" onclick="window.open(\'/getBerkasbukti?rf=' + v.file + '\', \'_blank\'); return false;" ';
-                        //     h += '           style="color:#007bff; text-decoration:underline; font-size:17px;">Preview</a>';
-                        // } else {
-                        //     h += '        <span style="color:red; font-size:14px;">Belum ada upload bukti</span>';
-                        // }
-
-                        // h += '    </div>';
-
-
-                        h += '    <div style="flex:0 0 25%; max-width:25%; padding:5px;">';
-                        h += '        <small class="text-secondary">Status</small>';
-                        h += '        <p class="text-uppercase"><b>' + s + '</b></p>';
-                        h += '    </div>';
-
-                        h += '</div>';
-
-
-                        // h+='    <div class="text-right">';
-                        // h+='        <small class="text-secondary">Jumlah Peserta</small>';
-                        // h+='        <input type="text" class="form-control jumlah_peserta'+n+'" onchange="tambahPeserta('+v.id+','+v.participant_limit+','+ v.class_id+','+n+','+' {{ $reff ? $reff->code : '' }}'+')" '+r+'>';
-                        // h+='    </div>';
-                        h += '    <div class="text-right">';
-
-                        // h+='        <small class="text-secondary">Kode Promo</small>';
-                        // h+='        <input type="text" class="form-control kode_promo'+n+'" onchange="kodePromo(`'+v.title+'`,'+n+','+v.id+')" '+r+'>';
-                        h += '    </div>';
-                        h += '    </div>';
-                        h += '    <div class="row">';
-                        // h+='        <div class="col-lg-6">';
-                        // h+='            <h5 class="m-0">'+v.title+'</h5>';
-                        // h+='            <p class="m-0">'+new Date(v.created_at).toLocaleDateString('id-ID')+'</p>';
-                        // h+='        </div>';
-                        h += '        <div class="col-lg-12 text-right">';
-                        // if (v.status_pembayaran == 'Menunggu Pembayaran' || v.status_pembayaran == 'Menunggu Konfirmasi') {
-                        //     h += '            <div class="btn btn-info text-capitalize mr-2" style="cursor: auto" data-toggle="modal" data-target="#jumlahpesertaModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Peserta</div>';
-                        // }
-
-                       h += '<div class="btn btn-warning text-capitalize mr-2" style="cursor: pointer; border-radius: 6px !important; padding: 6px 16px !important; font-weight: 500;" onclick="cetakInvoiceSertifikat(' + v.id + ')">Invoice</div>';
-
-                        if (v.status_pembayaran == 'Expired') {
-                            h += '            <div class="btn btn-danger text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
-                        } else if (v.status_pembayaran == 'Menunggu Konfirmasi') {
-                            h += '            <div class="btn btn-info text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">' + v.status_pembayaran + '</div>';
-                        } else if (v.status_pembayaran == 'Dibatalkan') {
-                            h += '            <div class="btn btn-danger text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
-                        } else if (v.status_pembayaran == 'Menunggu Pembayaran') {
-                            h += '            <button class="btn btn-primary text-capitalize" style="cursor: auto" data-toggle="modal" data-target="#bayarModal" onclick="bukti(' + v.participant_limit + ',`' + encodeURIComponent(v.title) + '`,' + v.class_id + ',' + v.id + ',' + `' {{ $reff ? $reff->code : '' }}'` + ',`' + v.kode_promo + '`,' + v.jumlah + ',`' + v.file + '`,' + n + ')">Upload Bukti</button>';
-                            // h += '            <a href='+ v.file +' class="btn btn-primary text-capitalize" style="cursor: auto">Bayar Sekarang</a>';
-                        } else {
-                            h += '            <div class="btn btn-success text-capitalize" style="cursor: auto">' + v.status_pembayaran + '</div>';
-                        }
-                        h += '        </div>';
-                        h += '    </div>';
-                        h += '</div>';
-                        h += '</div>';
-                    });
-                    $(function() {
-                        $('#btnimg').on('click', function() {
-                            let img = $(this).attr('attimg')
-                            Swal.fire({
-                                imageUrl: img,
-                                imageHeight: 250,
-                                imageAlt: "A tall image"
-                            });
-                        });
-                    });
-                    $('#' + type).html(h);
-
-                }
-                Swal.close()
-            },
-            error: function(response) {
-                console.log(response);
-                iziToast.warning({
-                    title: 'Gagal',
-                    message: 'Harap reload atau kontak admin',
-                    position: 'topRight',
+                    // Template Card List UI 
+                    h += '<div class="card border-0 shadow-sm rounded-4 mb-3" style="background: #ffffff; border-left: 5px solid #0d6efd !important;">';
+                    h += '  <div class="card-body p-4">';
+                    h += '      <div class="row g-3 align-items-center">';
+                    
+                    // Kolom 1: No Invoice & Nama Event/Kelas
+                    h += '          <div class="col-lg-4 col-md-6 col-12">';
+                    h += '              <span class="text-muted d-block small fw-semibold text-uppercase tracking-wider">No. Invoice</span>';
+                    h += '              <span class="text-primary fw-bold d-block mb-1">' + v.no_invoice + '</span>';
+                    h += '              <h6 class="fw-bold text-dark mb-0">' + v.title + '</h6>';
+                    h += '          </div>';
+                    
+                    // Kolom 2: Informasi Tanggal
+                    h += '          <div class="col-lg-3 col-md-6 col-12">';
+                    h += '              <div class="mb-1">';
+                    h += '                  <span class="text-muted small">Tgl. Order: </span>';
+                    h += '                  <span class="fw-semibold text-secondary small">' + tglOrder + '</span>';
+                    h += '              </div>';
+                    h += '              <div>';
+                    h += '                  <span class="text-muted small">Tgl. Bayar: </span>';
+                    h += '                  <span class="fw-semibold text-secondary small">' + tglbayar + '</span>';
+                    h += '              </div>';
+                    h += '          </div>';
+                    
+                    // Kantong Flexbox Status & Button (Anti-Tabrakan)
+                    h += '          <div class="col-lg-5 col-md-12 col-12 mt-3 mt-lg-0">';
+                    h += '              <div class="d-flex flex-row flex-md-row justify-content-between align-items-center flex-wrap gap-2 justify-content-lg-end">';
+                    
+                    // Status Badge
+                    h += '                  <div class="me-lg-3">';
+                    h += '                      <span class="badge ' + badgeClass + ' rounded-pill px-3 py-2 fw-semibold text-capitalize text-wrap" style="max-width: 180px;">' + v.status_pembayaran + '</span>';
+                    h += '                  </div>';
+                    
+                    // Button Lihat Detail / Bayar (Dinonaktifkan jika URL '#' atau diarahkan ke targetUrl baru)
+                    h += '                  <div class="w-100 w-sm-auto text-end">';
+                    h += '                      <a href="' + targetUrl + '" ' + targetTarget + ' class="btn btn-sm btn-outline-primary rounded-3 px-4 py-2 fw-bold d-inline-flex align-items-center justify-content-center ' + (targetUrl === '#' ? 'disabled' : '') + '">';
+                    h += '                          Lihat Detail <i class="fa-solid fa-arrow-right ms-2"></i>';
+                    h += '                      </a>';
+                    h += '                  </div>';
+                    
+                    h += '              </div>'; // End Flex
+                    h += '          </div>'; // End Kolom Gabungan
+                    
+                    h += '      </div>'; // End Row
+                    h += '  </div>'; // End Card Body
+                    h += '</div>'; // End Card
                 });
-                Swal.close()
+                
+                $('#' + type).html(h);
+            } else {
+                $('#' + type).html('<div class="text-center text-muted my-5 py-5"><i class="fa-solid fa-folder-open fa-2x mb-2 d-block text-black-50"></i>Belum ada data transaksi.</div>');
             }
-        });
-    }
-
-
+            Swal.close();
+        },
+        error: function(response) {
+            console.log(response);
+            iziToast.warning({
+                title: 'Gagal',
+                message: 'Harap reload halaman atau hubungi admin',
+                position: 'topRight',
+            });
+            Swal.close();
+        }
+    });
+}
 
     function bukti(limit, title, class_id, payment, ref, kodepromo, jml_peserta, file, index) {
         $('#class_id').val(class_id);

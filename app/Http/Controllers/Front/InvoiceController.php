@@ -24,7 +24,7 @@ class InvoiceController extends Controller
 {
     // return $r->all();
     // 1. Ambil data payment berdasarkan ID Invoice yang dikirim
-    $data['payment'] = ClassPaymentModel::where('id', $r->payment_invoice)
+    $data['payment'] = ClassPaymentModel::where('id', $id)
         ->where(function ($q) {
             $role = Auth::user()->role;
             if ($role == 2) {

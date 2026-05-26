@@ -480,7 +480,9 @@
                                         <input type="radio" name="sertifikat_invoice_radio" value="1" checked class="card-radio-input d-none">
                                         <div class="card-radio-box text-center p-2 border rounded bg-white">
                                             <span class="font-weight-bold d-block text-success" style="font-size: 0.95rem;">Ya</span>
-                                            <span class="badge badge-info mt-1">+ Rp. {{ $sertif?->nominal ?? 100000 }} / peserta</span>
+                                      <span class="badge badge-info mt-1">
+    + Rp. {{ number_format($sertif?->nominal ?? 100000, 0, ',', '.') }} / peserta
+</span>
                                         </div>
                                     </label>
                                     <label class="flex-fill m-0 position-relative" style="cursor: pointer;">
@@ -668,6 +670,33 @@ function cetakInvoiceSertifikat() {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
 
+        // jQuery.ajax({
+        //     url: "/order",
+        //     method: 'post',
+        //     data: {
+        //         class_id: classId,
+        //         jml_peserta: jumlahPeserta,
+        //         sertifikat_invoice: sertifikatInvoice,
+        //         payment_invoice: metodePembayaran,
+        //         nama: JSON.stringify(namaArray),
+        //         email: JSON.stringify(emailArray),
+        //         nomor_handphone: JSON.stringify(nohpArray)
+        //     },
+        //     success: function(result) {
+        //         if (result.rc == '00') {
+        //             Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: "success" });
+        //             localStorage.setItem("menu", "li-tabs-33");
+        //             $('#invoiceModal').modal('hide');
+        //             $('#detailpeserta').html('');
+        //             setTimeout(() => { window.location.href = '/profile'; }, 3000);
+        //         } else {
+        //             Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: "warning" });
+        //         }
+        //     },
+        //     error: function(xhr) {
+        //         Swal.fire({ title: "Error", text: "Terjadi kesalahan pada server.", icon: "error" });
+        //     }
+        // });
         jQuery.ajax({
             url: "/order",
             method: 'post',
@@ -680,17 +709,28 @@ function cetakInvoiceSertifikat() {
                 email: JSON.stringify(emailArray),
                 nomor_handphone: JSON.stringify(nohpArray)
             },
-            success: function(result) {
-                if (result.rc == '00') {
-                    Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: "success" });
-                    localStorage.setItem("menu", "li-tabs-33");
-                    $('#invoiceModal').modal('hide');
-                    $('#detailpeserta').html('');
-                    setTimeout(() => { window.location.href = '/profile'; }, 3000);
-                } else {
-                    Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: "warning" });
-                }
-            },
+           success: function(result) {
+    if (result.rc == '00') {
+        Swal.fire({ 
+            title: "Pemberitahuan", 
+            text: "Mengalihkan ke halaman pembayaran...", 
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        $('#invoiceModal').modal('hide');
+        $('#detailpeserta').html('');
+
+        // Alihkan secara dinamis menggunakan ID order yang didapat dari backend
+        setTimeout(() => { 
+            window.location.href = '/laman-pembayaran/' + result.order_id; 
+        }, 1500);
+
+    } else {
+        Swal.fire({ title: "Pemberitahuan", text: result.msg, icon: "warning" });
+    }
+},
             error: function(xhr) {
                 Swal.fire({ title: "Error", text: "Terjadi kesalahan pada server.", icon: "error" });
             }

@@ -352,6 +352,7 @@ class OrderController extends Controller
     }
     public function order_class(Request $request)
     {
+        //  return view('front.kelas.pembayaran');
         // return $request->all();
         // $next = GlobalHelper::getaksesmembership();
         // if (!$next) {
@@ -465,7 +466,7 @@ if (($cp && $cp->gratis == 1) && $total_biaya_sertifikat == 0) {
     'nohp'  => $request->input('nomor_handphone', '[]')
     ]);
     
-   return response()->json(['msg' => 'Order Berhasil', 'rc' => '00']);
+   return response()->json(['msg' => 'Order Berhasil', 'rc' => '00', 'order_id' => $order->id]);
 } 
 // Kondisi 2: Kelas Berbayar ATAU Kelas Gratis tapi nominal sertifikat > 0
 else {
@@ -493,7 +494,18 @@ else {
         'nohp' => $request->nomor_handphone ? json_encode($request->nomor_handphone) : json_encode([])
     ]);
     
-    return response()->json(['msg' => 'Order Berhasil', 'rc' => '00']);
+    return response()->json(['msg' => 'Order Berhasil', 'rc' => '00', 'order_id' => $order->id]);
 }
     }
+    public function laman_pembayaran($id)
+{
+    // Ambil data pembayaran berdasarkan ID beserta relasi kelasnya
+    $order = \App\Models\ClassPaymentModel::findOrFail($id);
+    
+    // Ambil data kelas terkait
+    $kelas = \App\Models\ClassesModel::find($order->class_id);
+
+    // Kirim data ke view blade
+    return view('front.kelas.pembayaran', compact('order', 'kelas'));
+}
 }

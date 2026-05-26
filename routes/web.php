@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\LokerController;
+use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
@@ -162,7 +163,7 @@ Route::middleware('auth')->group(function () {
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');
-
+Route::get('/laman-pembayaran/{id}', [OrderController::class, 'laman_pembayaran'])->name('pembayaran.tampil');
 Route::get('getBerkasbukti', function (Request $r) {
     $path = Storage::path($r->rf);
     return response()->file($path);
