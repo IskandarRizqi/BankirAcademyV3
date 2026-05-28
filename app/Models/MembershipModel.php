@@ -18,6 +18,7 @@ class MembershipModel extends Model
         'jenis_kelas',
         'cvats',
         'cvbankir',
+        'sop_file',
         'type',
         'nominal',
         'lamaran_online',

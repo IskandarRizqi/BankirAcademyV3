@@ -24,6 +24,7 @@
                         <th>Harga</th>
                         <th>Limit</th>
                         <th>Gambar</th>
+                        <th>SOP File</th> 
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -34,8 +35,16 @@
                         <td>{{$value->nama}}</td>
                         <td>Rp. {{number_format($value->harga)}}</td>
                         <td>{{$value->limit}}</td>
-                        <td><img src="{{asset($value->gambar)}}" alt="" height="200px">
-                        </td>
+                        <td><img src="{{asset($value->gambar)}}" alt="" height="200px"></td>
+                       <td>
+    @if($value->sop_file)
+        <button type="button" onclick="openPdfBase64('{{ $value->sop_file }}')" class="btn btn-secondary btn-sm">
+            <i class="flaticon-file"></i> Lihat PDF
+        </button>
+    @else
+        <span class="badge badge-danger">Tidak ada file</span>
+    @endif
+</td>
                         <td>
                             <span class="btn btn-warning btn-sm" onclick="edit({{$value}})">Edit</span>
                             <span class="btn btn-danger btn-sm" onclick="hapus({{$value->id}})">Delete</span>
@@ -44,19 +53,10 @@
                     @endforeach
                 </tbody>
             </table>
-            {{-- @foreach($data as $key => $v)
-            <div class="col-md-6">
-                <div class="caption" style="font-size: 12px; width: 170px">{!!$v->keterangan!!}</div>
-                <img src="{{asset($v->gambar)}}" alt="" onclick="edit({{$v}})" style="cursor: pointer">
-                <div class="">
-                </div>
-                <button onclick="hapus({{$v->id}})" class="btn btn-danger btn-sm">Hapus</button>
-            </div>
-            @endforeach --}}
         </div>
     </div>
 </div>
-<!-- Modal -->
+
 <div class="modal fade" id="partnerModal" tabindex="-1" aria-labelledby="partnerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -77,9 +77,7 @@
                                     <option value="6" {{old('urutan')==6 ? 'selected' :''}}>6</option>
                                 </select>
                                 @error('urutan')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
@@ -91,34 +89,26 @@
                                     <option value="0" {{old('is_active')==0 ? 'selected' :''}}>Tidak Aktif</option>
                                 </select>
                                 @error('is_active')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Video Kursus</label>
-                                <input type="number" name="video_kursus" id="video_kursus" class="form-control"
-                                    value="{{old('video_kursus')}}">
+                                <input type="number" name="video_kursus" id="video_kursus" class="form-control" value="{{old('video_kursus')}}">
                                 @error('video_kursus')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Harga</label>
-                                <input type="number" name="harga" id="harga" class="form-control"
-                                    value="{{old('harga')}}">
+                                <input type="number" name="harga" id="harga" class="form-control" value="{{old('harga')}}">
                                 <small id="smallharga"></small>
                                 @error('harga')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
@@ -128,22 +118,17 @@
                                 <input type="text" name="nama" id="nama" class="form-control" value="{{old('nama')}}">
                                 <small id="smallnama"></small>
                                 @error('nama')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Limit Loker</label>
-                                <input type="number" name="limit" id="limit" class="form-control"
-                                    value="{{old('limit')}}">
+                                <input type="number" name="limit" id="limit" class="form-control" value="{{old('limit')}}">
                                 <small id="smalllimit"></small>
                                 @error('limit')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
@@ -152,68 +137,48 @@
                                 <label for="">Digital CV</label>
                                 <div class="row">
                                     <div class="n-chk col-lg-6">
-                                        <label
-                                            class="new-control new-checkbox new-checkbox-rounded new-checkbox-text checkbox-primary">
-                                            <input type="checkbox" class="new-control-input" name="cvats" value="1"
-                                                id="cvats">
-                                            <span class="new-control-indicator"></span><span class="new-chk-content">ATS
-                                                Friendly</span>
+                                        <label class="new-control new-checkbox new-checkbox-rounded new-checkbox-text checkbox-primary">
+                                            <input type="checkbox" class="new-control-input" name="cvats" value="1" id="cvats">
+                                            <span class="new-control-indicator"></span><span class="new-chk-content">ATS Friendly</span>
                                         </label>
                                     </div>
                                     <div class="n-chk col-lg-6">
-                                        <label
-                                            class="new-control new-checkbox new-checkbox-rounded new-checkbox-text checkbox-primary">
-                                            <input type="checkbox" class="new-control-input" name="cvbankir" value="1"
-                                                id="cvbankir">
-                                            <span class="new-control-indicator"></span><span
-                                                class="new-chk-content">Bankir Friendly</span>
+                                        <label class="new-control new-checkbox new-checkbox-rounded new-checkbox-text checkbox-primary">
+                                            <input type="checkbox" class="new-control-input" name="cvbankir" value="1" id="cvbankir">
+                                            <span class="new-control-indicator"></span><span class="new-chk-content">Bankir Friendly</span>
                                         </label>
                                     </div>
                                 </div>
-                                @error('limit')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
-                                @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Lamaran Online ( Atas Nama Bankir )</label>
-                                <input type="number" name="lamaran_online" id="lamaran_online" class="form-control"
-                                    value="{{old('lamaran_online')}}">
+                                <input type="number" name="lamaran_online" id="lamaran_online" class="form-control" value="{{old('lamaran_online')}}">
                                 @error('lamaran_online')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Lamaran Offline ( Atas Nama Bankir )</label>
-                                <input type="number" name="lamaran_offline" id="lamaran_offline" class="form-control"
-                                    value="{{old('lamaran_offline')}}">
+                                <input type="number" name="lamaran_offline" id="lamaran_offline" class="form-control" value="{{old('lamaran_offline')}}">
                                 @error('lamaran_offline')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Pelatihan Gratis</label>
-                                <input type="number" name="pelatihan_gratis" id="pelatihan_gratis" class="form-control"
-                                    value="{{old('pelatihan_gratis')}}">
+                                <input type="number" name="pelatihan_gratis" id="pelatihan_gratis" class="form-control" value="{{old('pelatihan_gratis')}}">
                                 @error('pelatihan_gratis')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
-                         <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Tipe Cashback</label>
                                 <select name="type" id="type" class="form-control">
@@ -221,54 +186,55 @@
                                     <option value="0" {{old('is_active')==0 ? 'selected' :''}}>Presentase</option>
                                 </select>
                                 @error('type')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
-                         <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Cashback</label>
-                                <input type="number" name="nominal" id="nominal" class="form-control"
-                                    value="{{old('nominal')}}">
-                                <small id="nominal"></small>
+                                <input type="number" name="nominal" id="nominal" class="form-control" value="{{old('nominal')}}">
                                 @error('nominal')
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="sop_file">Upload SOP File (PDF)</label>
+                                <input type="file" name="sop_file" id="sop_file" class="form-control" accept=".pdf">
+                                <small id="sop_file_help" class="form-text text-muted"></small>
+                                @error('sop_file')
                                 <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
+                                    <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="custom-file-container" data-upload-id="myFirstImage">
-                                    <label>Upload (Single File) <a href="javascript:void(0)"
-                                            class="custom-file-container__image-clear" title="Clear Image">x</a></label>
+                                    <label>Upload (Single File) <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
                                     <label class="custom-file-container__custom-file">
-                                        <input type="file" class="custom-file-container__custom-file__custom-file-input"
-                                            accept="image/*" name="picture">
+                                        <input type="file" class="custom-file-container__custom-file__custom-file-input" accept="image/*" name="picture">
                                         <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
                                         <span class="custom-file-container__custom-file__custom-file-control"></span>
                                     </label>
                                     <div id="img_preview" class="custom-file-container__image-preview"></div>
                                 </div>
                                 @error('picture')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="">Keterangan</label>
-                                <textarea type="text" class="form-control" id="keterangan"
-                                    name="keterangan">{{ old('keterangan') }}</textarea>
+                                <textarea type="text" class="form-control" id="keterangan" name="keterangan">{{ old('keterangan') }}</textarea>
                                 @error('keterangan')
-                                <span class="text-danger" role="alert">
-                                    <strong>Harap Diisi</strong>
-                                </span>
+                                <span class="text-danger" role="alert"><strong>Harap Diisi</strong></span>
                                 @enderror
                             </div>
                         </div>
@@ -287,17 +253,19 @@
     </div>
 </div>
 @endsection
+
 @section('custom-js')
 <script>
     var firstUpload = new FileUploadWithPreview('myFirstImage')
     var newClassCKEditor = CKEDITOR.replace("keterangan");
     createDataTable('#zero-config')
+
     function hapus(id) {
         $('#idmember').val(id)
         swal({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
-            type: 'warning',
+            text_type: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Delete',
             padding: '2em'
@@ -307,9 +275,37 @@
             }
         });
     }
+    function openPdfBase64(base64String) {
+    try {
+        // Memisahkan header data URI (jika ada) dari data base64 murni
+        var parts = base64String.split(';base64,');
+        var contentType = parts[0].replace('data:', '');
+        var base64 = parts[1];
+
+        // Decode base64
+        var binaryString = atob(base64);
+        var binaryLen = binaryString.length;
+        var bytes = new Uint8Array(binaryLen);
+
+        for (var i = 0; i < binaryLen; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        // Membuat objek Blob khusus PDF
+        var blob = new Blob([bytes], { type: contentType });
+        
+        // Membuat URL temporer dari Blob
+        var blobUrl = URL.createObjectURL(blob);
+
+        // Membuka URL Blob di tab baru
+        window.open(blobUrl, '_blank');
+    } catch (error) {
+        console.error("Gagal membuka PDF:", error);
+        alert("Gagal membuka file PDF. Pastikan format data base64 valid.");
+    }
+}
     function edit(data) {
         openmodal('#partnerModal')
-        // let data = JSON.parse($(this).attr('data-data'))
         $('#id').val(null)
         $('#nama').val(null)
         $('#harga').val(null)
@@ -319,8 +315,14 @@
         $('#lamaran_online').val(null)
         $('#lamaran_offline').val(null)
         $('#pelatihan_gratis').val(null)
+        
+        // Reset info file input
+        $('#sop_file').val(null)
+        $('#sop_file_help').text('')
+
         newClassCKEditor.setData(null)
         document.getElementById('img_preview').style.backgroundImage="url('/')";
+        
         if (data) {
             $('#id').val(data['id'])
             $('#nama').val(data['nama'])
@@ -338,12 +340,17 @@
             $('#lamaran_online').val(data['lamaran_online'])
             $('#lamaran_offline').val(data['lamara_offline'])
             $('#pelatihan_gratis').val(data['pelatihan_gratis'])
+            
+            // Perubahan JS: Memberi info jika item sudah memiliki data base64 tersimpan
+            if(data['sop_file']) {
+                $('#sop_file_help').text('File PDF sudah terunggah di database (Kosongkan jika tidak ingin mengubah)');
+            }
+
             setTimeout(() => {
                 newClassCKEditor.setData(data['keterangan'])
             }, 1000);
             document.getElementById('img_preview').style.backgroundImage="url('/"+data['gambar']+"')";
         }
     }
-
 </script>
 @endsection

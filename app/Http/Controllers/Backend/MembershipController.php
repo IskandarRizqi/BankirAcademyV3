@@ -54,65 +54,86 @@ class MembershipController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $valid = Validator::make($request->all(), [
-            'harga' => 'required',
-            'nama' => 'required',
-            'limit' => 'required',
-            'keterangan' => 'required',
-            'type'=> 'required',
-            'nominal'=> 'required',
-            'lamaran_online' => 'required',
-            'lamaran_offline' => 'required',
-            'pelatihan_gratis' => 'required',
-        ]);
-        //response error validation
-        if ($valid->fails()) {
-            return Redirect::back()->withErrors($valid)->withInput($request->all());
-        }
-        $cvats = 0;
-        $cvbankir = 0;
-        if ($request->cvats == 1) {
-            $cvats = 1;
-        }
-        if ($request->cvbankir == 1) {
-            $cvbankir = 1;
-        }
-        $inp = [
-            'harga' => $request->harga,
-            'limit' => $request->limit,
-            'nama' => $request->nama,
-            'type' => $request->type,
-            'nominal' => $request->nominal,
-            'cvats' => $cvats,
-            'cvbankir' => $cvbankir,
-            'lamaran_online' => $request->lamaran_online,
-            'lamara_offline' => $request->lamaran_offline,
-            'pelatihan_gratis' => $request->pelatihan_gratis,
-            'keterangan' => $request->keterangan,
-            'is_active' => $request->is_active,
-            'urutan' => $request->urutan,
-            'video_kursus' => $request->video_kursus,
-        ];
-        if ($request->picture) {
-            $name = $request->file('picture')->getClientOriginalName(); // Name File
-            $size = $request->file('picture')->getSize(); // Size File
+{
+    $valid = Validator::make($request->all(), [
+        'harga' => 'required',
+        'nama' => 'required',
+        'limit' => 'required',
+        'keterangan' => 'required',
+        'type'=> 'required',
+        'nominal'=> 'required',
+        'lamaran_online' => 'required',
+        'lamaran_offline' => 'required',
+        'pelatihan_gratis' => 'required',
+        'sop_file' => 'nullable|file|mimes:pdf|max:2048', // Batasan opsional maks 2MB
+    ]);
 
-            if ($size >= 1048576) {
-                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
-            }
-
-            $filename = time() . '-' . $name;
-            $file = $request->file('picture');
-            $file->move(public_path('Image/Members'), $filename);
-            $inp['gambar'] = 'Image/Members/' . $filename;
-        }
-        $i = MembershipModel::updateOrCreate(['id' => $request->id], $inp);
-        if ($i) {
-            return Redirect::back()->with('success', 'Sudah Tersimpan');
-        }
-        return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB')->withInput($request->all());
+    // response error validation
+    if ($valid->fails()) {
+        return Redirect::back()->withErrors($valid)->withInput($request->all());
     }
+
+    $cvats = 0;
+    $cvbankir = 0;
+    if ($request->cvats == 1) {
+        $cvats = 1;
+    }
+    if ($request->cvbankir == 1) {
+        $cvbankir = 1;
+    }
+
+    $inp = [
+        'harga' => $request->harga,
+        'limit' => $request->limit,
+        'nama' => $request->nama,
+        'type' => $request->type,
+        'nominal' => $request->nominal,
+        'cvats' => $cvats,
+        'cvbankir' => $cvbankir,
+        'lamaran_online' => $request->lamaran_online,
+        'lamara_offline' => $request->lamaran_offline,
+        'pelatihan_gratis' => $request->pelatihan_gratis,
+        'keterangan' => $request->keterangan,
+        'is_active' => $request->is_active,
+        'urutan' => $request->urutan,
+        'video_kursus' => $request->video_kursus,
+    ];
+
+    // Handle Picture Upload (Tetap menggunakan File System)
+    if ($request->picture) {
+        $name = $request->file('picture')->getClientOriginalName();
+        $size = $request->file('picture')->getSize();
+
+        if ($size >= 1048576) {
+            return Redirect::back()->with('error', 'Ukuran File Gambar Melebihi 1 MB');
+        }
+
+        $filename = time() . '-' . $name;
+        $file = $request->file('picture');
+        $file->move(public_path('Image/Members'), $filename);
+        $inp['gambar'] = 'Image/Members/' . $filename;
+    }
+
+    // --- FITUR BARU: Konversi File SOP Ke Base64 ---
+    if ($request->hasFile('sop_file')) {
+        $fileSop = $request->file('sop_file');
+        
+        // Membaca file dan encode ke Base64
+        $fileData = file_get_contents($fileSop->getRealPath());
+        $base64Data = base64_encode($fileData);
+        
+        // Membuat format Data URI Scheme agar bisa langsung dibuka di browser
+        $inp['sop_file'] = 'data:application/pdf;base64,' . $base64Data;
+    }
+
+    $i = MembershipModel::updateOrCreate(['id' => $request->id], $inp);
+    
+    if ($i) {
+        return Redirect::back()->with('success', 'Sudah Tersimpan');
+    }
+
+    return Redirect::back()->with('error', 'Gagal menyimpan data')->withInput($request->all());
+}
 
     /**
      * Display the specified resource.

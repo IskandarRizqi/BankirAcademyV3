@@ -179,7 +179,7 @@ class ProfileController extends Controller
             ->first();
         $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
         $dompet = Dompet::where('user_id', $data['user']['id'])->first();
-        $data['saldo'] = $dompet->saldo;
+        $data['saldo'] = $dompet->saldo ?? 0;
         $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
         $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
         $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
