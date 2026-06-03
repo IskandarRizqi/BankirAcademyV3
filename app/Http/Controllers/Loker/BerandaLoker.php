@@ -23,13 +23,63 @@ class BerandaLoker extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index(Request $request)
+    // {
+    //     $auth = Auth::user();
+    //     if (!$auth) {
+    //         return Redirect::back()->with('akses', 'auth');
+    //     }
+    //     $x['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
+    //     if ($request->ajax()) {
+    //         $data = [];
+    //         $data['data'] = LokerModel::select(
+    //             'loker.*',
+    //             'users.name',
+    //             'users.corporate',
+    //             'users.google_id',
+    //             'user_profile.picture',
+    //             'user_profile.description'
+    //         )
+    //             ->join('users', 'users.id', 'loker.user_id')
+    //             ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
+    //             ->leftJoin('perusahaan_models', 'perusahaan_models.id', 'loker.perusahaan_id')
+    //             ->where(function ($query) use ($request) {
+    //                 // if ($request->provinsi != 'Pilih') {
+    //                 //     $query->where('loker.provinsi', $request->provinsi);
+    //                 // }
+    //                 if ($request->provinsi != 'Pilih') {
+    //                     $query->where('perusahaan_models.provinsi', $request->provinsi);
+    //                 }
+    //             })
+    //             ->where(function ($query) use ($request) {
+    //                 // if ($request->kabupaten != 'Pilih') {
+    //                 //     return $query->where('loker.kabupaten', $request->kabupaten);
+    //                 // }
+    //                 if ($request->kabupaten != 'Pilih Provinsi Terlebih Dahulu') {
+    //                     $query->where('perusahaan_models.kabupaten', $request->kabupaten);
+    //                 }
+    //             })
+    //             ->whereDate('tanggal_awal', '<=', Carbon::now())
+    //             ->whereDate('tanggal_akhir', '>=', Carbon::now())
+    //             ->orderBy('tanggal_awal', 'desc')
+    //             ->where('loker.status', 1)
+    //             ->paginate(6);
+    //         // foreach ($data['data'] as $key => $vv) {
+    //         //     $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
+    //         // }
+    //         // return $data;
+    //     }
+    //     return view('front.loker.loker', $x);
+    // }
     public function index(Request $request)
     {
         $auth = Auth::user();
         if (!$auth) {
             return Redirect::back()->with('akses', 'auth');
         }
+
         $x['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
+
         if ($request->ajax()) {
             $data = [];
             $data['data'] = LokerModel::select(
@@ -44,19 +94,18 @@ class BerandaLoker extends Controller
                 ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
                 ->leftJoin('perusahaan_models', 'perusahaan_models.id', 'loker.perusahaan_id')
                 ->where(function ($query) use ($request) {
-                    // if ($request->provinsi != 'Pilih') {
-                    //     $query->where('loker.provinsi', $request->provinsi);
-                    // }
-                    if ($request->provinsi != 'Pilih') {
+                    if ($request->provinsi && $request->provinsi != 'Pilih') {
                         $query->where('perusahaan_models.provinsi', $request->provinsi);
                     }
                 })
                 ->where(function ($query) use ($request) {
-                    // if ($request->kabupaten != 'Pilih') {
-                    //     return $query->where('loker.kabupaten', $request->kabupaten);
-                    // }
-                    if ($request->kabupaten != 'Pilih Provinsi Terlebih Dahulu') {
+                    if ($request->kabupaten && $request->kabupaten != 'Pilih' && $request->kabupaten != 'Pilih Provinsi Terlebih Dahulu') {
                         $query->where('perusahaan_models.kabupaten', $request->kabupaten);
+                    }
+                })
+                ->where(function ($query) use ($request) {
+                    if ($request->cari_lowongan) {
+                        $query->where('loker.title', 'like', '%' . $request->cari_lowongan . '%');
                     }
                 })
                 ->whereDate('tanggal_awal', '<=', Carbon::now())
@@ -64,11 +113,10 @@ class BerandaLoker extends Controller
                 ->orderBy('tanggal_awal', 'desc')
                 ->where('loker.status', 1)
                 ->paginate(6);
-            // foreach ($data['data'] as $key => $vv) {
-            //     $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
-            // }
-            // return $data;
+
+            return response()->json($data); 
         }
+
         return view('front.loker.loker', $x);
     }
     public function index_admin(Request $request)

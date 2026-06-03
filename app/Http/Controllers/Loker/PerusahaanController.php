@@ -43,6 +43,7 @@ class PerusahaanController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->kelurahan);
         $valid = Validator::make($request->all(), [
             'loker_alamat' => 'required',
             'loker_email' => 'required',
