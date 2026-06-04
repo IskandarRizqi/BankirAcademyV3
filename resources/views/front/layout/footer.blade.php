@@ -7,7 +7,7 @@
             <div class="row col-mb-50">
                 <div class="col-lg-4">
                     <div class="widget clearfix">
-                        <p class="mb-2"><b>{{ env('APP_NAME', 'Bankir Akademi') }}</b> merupakan platform digital
+                        <p class="mb-2"><b>Bankir Academy</b> merupakan platform digital
                             learning yang dapat
                             digunakan
                             sebagai media
@@ -27,7 +27,8 @@
                                 </svg>
                                 <span class="ml-2">
                                     PT. Bankir Academy Indonesia <br>
-                                    Jl. Jendral Sudirman 354, Semarang Barat<br> Kota Semarang<br>
+                                    Jl. Bukit Limau VIII, Bringin, Kec. Ngaliyan,<br> Kota Semarang<br>
+                                    <!--Jl. Jendral Sudirman 354, Semarang Barat<br> Kota Semarang<br>-->
                                 </span>
                             </div>
                             <div class="d-flex mt-4 align-items-center">
@@ -71,27 +72,27 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="widget clearfix">
-                        <h4 class="mb-2" style="color: #000000">Layanan</h4>
+                        <h4 class="mb-2" style="color: #000000">Tautan</h4>
                         <div class="form-result layanan_footer mb-4" style="color: black">
-                            {{-- <a href="#">Syarat & Ketentuan</a><br>
-                            <a href="#">Kebijakan Privasi</a><br>
-                            <a href="#">Tentang Kami</a><br>
-                            <a href="#">Kontak Kami</a><br>
-                            <a href="#">Press Kit</a><br>
-                            <a href="#">Bantuan</a><br>
-                            <a href="#">Karier</a><br> --}}
+                            <a href="/pages/Banking-Solution" style="color: #000000; font-size: 17px;">Layanan</a><br>
+                            <a href="/promo" style="color: #000000; font-size: 17px;">Promo</a><br>
+                            <a href="/pages/blog" style="color: #000000; font-size: 17px;">Literasi</a><br>
+                            <a href="#" style="color: #000000; font-size: 17px;">Kurikulum</a><br>
+                            <a href="/loker" style="color: #000000; font-size: 17px;">Loker bankir</a><br>
+                            <!--<a href="#" style="color: #000000">Bantuan</a><br>-->
+                            <!--<a href="#" style="color: #000000">Karier</a><br>-->
                         </div>
-                        <h4 class="mb-2" style="color: black">Bantuan & Panduan</h4>
-                        <div class="form-result laman_footer" style="color: black">
-                            {{-- <a href="#">Layanan</a><br>
-                            <a href="#">Syarat & Ketentuan</a><br>
-                            <a href="#">Kebijakan Privasi</a><br>
-                            <a href="#">Tentang Kami</a><br>
-                            <a href="#">Kontak Kami</a><br>
-                            <a href="#">Press Kit</a><br>
-                            <a href="#">Bantuan</a><br>
-                            <a href="#">Karier</a><br> --}}
-                        </div>
+                        <!--<h4 class="mb-2" style="color: black">Bantuan & Panduan</h4>-->
+                        <!--<div class="form-result laman_footer" style="color: black">-->
+                        <!--    <a href="#">Layanan</a><br>-->
+                        <!--    <a href="#">Syarat & Ketentuan</a><br>-->
+                        <!--    <a href="#">Kebijakan Privasi</a><br>-->
+                        <!--    <a href="#">Tentang Kami</a><br>-->
+                        <!--    <a href="#">Kontak Kami</a><br>-->
+                        <!--    <a href="#">Press Kit</a><br>-->
+                        <!--    <a href="#">Bantuan</a><br>-->
+                        <!--    <a href="#">Karier</a><br>-->
+                        <!--</div>-->
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -214,7 +215,7 @@
         $('.component-datepicker.past-enabled').datepicker({
             autoclose: true,
         });
-        
+
     }); //ready
 </script>
 
@@ -235,21 +236,24 @@
             $('#modelmember').modal('show')
         }
     })
+
     function triggerresize() {
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
         }, 500);
     }
+
     function getImgData(fil, prv) {
-		const files = fil.files[0];
-		if (files) {
-			const fileReader = new FileReader();
-			fileReader.readAsDataURL(files);
-			fileReader.addEventListener("load", function() {
-				$(prv).attr('src', this.result);
-			});
-		}
-	}
+        const files = fil.files[0];
+        if (files) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(files);
+            fileReader.addEventListener("load", function() {
+                $(prv).attr('src', this.result);
+            });
+        }
+    }
+
     function popc() {
         Swal.fire({
             // icon: 'info',
@@ -257,7 +261,7 @@
             // text: "<img src='coming_soon_loker-28' style='width:150px;'>",
             // html: true,
             // content:true,
-            imageUrl:'<?= asset("coming_soon_loker-28.jpg") ?>',
+            imageUrl: '<?= asset("coming_soon_loker-28.jpg") ?>',
             // showConfirmButton:false,
             footer: '<a href="https://bankiracademy.com/">By akarindo.id</a>'
         })
@@ -292,7 +296,7 @@
             data: data,
             success: function(result) {
                 $('#login').attr('disabled', true)
-                
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Login Berhasil',
@@ -420,7 +424,7 @@
                 }
                 if (result.layanan.length > 0) {
                     result.layanan.forEach(el => {
-                        let foo = '<a href="/pages/blog/'+el.id+'/'+createslug(el.title)+'" class="text-capitalize" style="color: black">' + el.title +
+                        let foo = '<a href="/pages/blog/' + el.id + '/' + createslug(el.title) + '" class="text-capitalize" style="color: black">' + el.title +
                             '</a><br>';
                         $('.layanan_footer').append(foo);
                     });
@@ -439,12 +443,13 @@
             }
         })
     }
+
     function createslug(string) {
         return string.toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
     }
 </script>
 

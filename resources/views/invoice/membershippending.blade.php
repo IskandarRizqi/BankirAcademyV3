@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TITLE</title>
+    <title>INVOICE MEMBERSHIP</title>
     <style>
         body {
             font-size: 12px;
@@ -468,7 +468,7 @@
                             <br>
                             (024) 76435498
                             <br>
-                            info.ehrindo@gmail.com
+                            info@bankiracademy.com
                         </div>
                     </div>
                 </div>
@@ -499,22 +499,20 @@
                 <table>
                     <thead>
                         <tr>
-                            <th width='5%' class="text-left">NO.</th>
+                            <th width='1%' class="text-left">NO.</th>
                             <th class="text-left">Produk</th>
-                            <th width='5%' style="text-align: right;">HARGA</th>
-                            <th width='5%' style="text-align: right;">QTY</th>
-                            <th style="text-align: right;">TOTAL</th>
+                            <th width='5%' class="text-left">HARGA</th>
+                            <th class="text-left">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th width='5%' class="text-left">No.</th>
-                            <th width='5%' class="text-left">{{$data->nama}}</th>
-                            <th width='5%' class="text-left">{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),$data->harga,"IDR"),0,-3)}}</th>
                             <th width='5%' class="text-left">1</th>
+                            <th width='5%' class="text-left">Membership</th>
                             <th width='5%' class="text-left">{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),$data->harga,"IDR"),0,-3)
+                                \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)}}</th>
+                            <th width='5%' class="text-left">{{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)
                                 }}</th>
                         </tr>
                     </tbody>
@@ -534,17 +532,17 @@
                             <td colspan="5"></td>
                             <td colspan="2">GRAND TOTAL</td>
                             <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),$payment->totalAkhir,"IDR"),0,-3)
+                                \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)
                                 }}
-                            </td>
+                        </td>
                         </tr> --}}
                     </tfoot>
                 </table>
                 <div style="text-align: right">
                     <h2>Grand Total : {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                        \NumberFormatter::CURRENCY),$data->harga,"IDR"),0,-3)
+                        \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)
                         }}</h2>
-                    <p style="text-transform: capitalize;">{{$terbilang}}</p>
+                    {{-- <p style="text-transform: capitalize;">{{$terbilang}}</p>--}}
                 </div>
                 <div class="notices">
                     <div>Informasi:</div>
