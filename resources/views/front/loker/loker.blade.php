@@ -2,7 +2,68 @@
 @include('front.layout.topbar')
 @include(env('CUSTOM_HEADER', 'front.layout.headerv3'))
 <style>
-    .scroll-no-ui {
+    /* start card */
+    #dataloker {
+        margin-top: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    #dataloker .col-lg-3 {
+        display: flex;
+        flex-direction: column;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    #dataloker .col-lg-3 > a {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        text-decoration: none;
+    }
+
+    #dataloker .card-loker {
+        display: flex;
+        flex-direction: column;
+        flex: 1;                 
+        background: linear-gradient(135deg, #0d47a1 0%, #1976d2 50%, #42a5f5 100%);
+        color: #ffffff;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(13, 71, 161, 0.4);
+        transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+        min-height: unset; /
+    }
+
+    #dataloker .card-loker:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(13, 71, 161, 0.6);
+    }
+
+    
+    #dataloker .card-loker .card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    #dataloker .card-loker .card-body .row.mt-2 {
+        margin-top: auto !important;
+    }
+
+    #dataloker .card-loker small.text-secondary { color: #bbdefb !important; }
+    #dataloker .card-loker h3 { color: #ffffff; }
+    #dataloker .card-loker span,
+    #dataloker .card-loker small { color: #e3f2fd; }
+    #dataloker .card-loker svg path { stroke: #ffffff; fill: #ffffff; }
+    #dataloker .card-loker hr { border-color: rgba(255,255,255,0.3); }
+    #dataloker .ribbon {
+        background-color: #ff9800;
+        background-image: linear-gradient(to bottom, #ffb74d 45%, #ff9800 100%);
+    }
+    /* end */
+    /* .scroll-no-ui {
         height: 100%;
         width: 100%;
         border: 1px solid green;
@@ -21,13 +82,13 @@
         opacity: 1;
         width: 1356px !important;
         transform: translate3d(0px, 0px, 0px);
-    }
+    } */
 
     .card {
         border: none;
         transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
         overflow: hidden;
-        border-radius: 20px;
+        border-radius: 15px;
         min-height: 425px;
         box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
     }
@@ -39,7 +100,7 @@
 
         .testimonial {
             height: 200px !important;
-            border-radius: 20px !important;
+            border-radius: 15px !important;
             background-size: 120%;
             background-position: center;
             background-repeat: no-repeat
@@ -58,14 +119,14 @@
 
         .testimonial {
             height: 214px !important;
-            border-radius: 20px !important;
+            border-radius: 15px !important;
             background-size: 120%;
             background-position: center;
             background-repeat: no-repeat
         }
     }
 
-    .card.card-has-bg {
+    /* .card.card-has-bg {
         transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
         background-size: 120%;
         background-repeat: no-repeat;
@@ -118,7 +179,7 @@
     }
 
     .card:hover {
-        /* cursor: pointer; */
+
         transition: all 500ms cubic-bezier(0.28, 1.02, 1, 0.14);
     }
 
@@ -152,7 +213,7 @@
         -webkit-transition: all .3s ease;
         -o-transition: all .3s ease;
         transition: all .3s ease;
-    }
+    } */
 
     .ribbon-wrapper {
         width: 85px;
@@ -211,9 +272,9 @@
         right: 0
     }
 
-    /*  */
+
     .select2-container--bootstrap-5 .select2-selection--single {
-        border-radius: 20px;
+        border-radius: 15px;
     }
 </style>
 
@@ -258,7 +319,7 @@
                         <div class="form-group">
                             <label for="">Cari Lowongan</label>
                             <input type="text" name="cari_lowongan" id="cari_lowongan" class="form-control"
-                                style="border-radius: 20px;" {{old('cari_lowongan')?old('cari_lowongan'):''}} required>
+                                style="border-radius: 15px;" {{old('cari_lowongan')?old('cari_lowongan'):''}} required>
                             @error('cari_lowongan')
                             <small class="text-danger">Harus Diisi</small>
                             @enderror
@@ -268,7 +329,7 @@
                         <div class="form-group">
                             <label for="">Provinsi</label>
                             <select name="provinsi" id="provinsi" class="form-control" onchange="getkabupaten()"
-                                required style="border-radius: 20px">
+                                required style="border-radius: 15px">
                                 <option>Pilih</option>
                                 @foreach($provinsi as $key => $v)
                                 <option value="{{$v->id}}" {{old('provinsi')==$v->id?'selected':''}}>{{$v->name}}
@@ -332,7 +393,7 @@
         $('#provinsi').select2({
             placeholder: 'Input or Select',
             theme: 'bootstrap-5',
-            style:'border-radius:20px'
+            style:'border-radius:15px'
         });
         $('#kabupaten').select2({
             placeholder: 'Input or Select',
@@ -577,7 +638,8 @@
             let t = e.title.length>23?e.title.substr(0,21):e.title;
             html += '<div class="col-lg-3 mb-4">';
             html += '    <a class="" href="/loker/'+e.id+'/detail">';
-            html += '        <div class="card" style="max-height: 500px">';
+                //   html += '        <div class="card" style="max-height: 500px">';
+            html += '        <div class="card card-loker">';
                 if (rentang <=4) {
                     html +='<div class="ribbon-wrapper">';
                     html +='    <div class="ribbon">New</div>';
@@ -586,11 +648,11 @@
             html += '            <div class="card-body">';
             html += '                <small class="text-secondary">Dibutuhkan</small>';
             html += '                <h3 class="text-uppercase" title="'+e.title+'" style="margin: 0px">'+t+'</h3>';
-            if (js) {
-                html += '                <img class="" src="/image/loker/'+js.url+'" width="100%" style="border-radius: 13px; max-height: 170px" />';
-            }else{
-                html += '                <img class="" src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px; max-height: 170px" />';
-            }
+            // if (js) {
+            //     html += '                <img class="" src="/image/loker/'+js.url+'" width="100%" style="border-radius: 13px; max-height: 170px" />';
+            // }else{
+            //     html += '                <img class="" src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px; max-height: 170px" />';
+            // }
             // if (e.image) {
             //     html += '                <img src="/image/loker/'+JSON.parse(e.image).url+'" width="100%" style="border-radius: 13px" />';
             // }else{
