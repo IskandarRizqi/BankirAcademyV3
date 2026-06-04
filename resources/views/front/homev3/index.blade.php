@@ -202,7 +202,8 @@
       margin: 0 auto !important;
     }
   }
-   @media (max-width: 768px) {
+
+  @media (max-width: 768px) {
     .event-container {
       display: flex;
       flex-wrap: wrap;
@@ -225,7 +226,6 @@
       padding: 10px 0 !important;
     }
   }
-  
 </style>
 
 <!-- Banner Section -->
@@ -238,7 +238,7 @@
                    opacity:1;transform:translateY(0);transition:all 1.2s ease-in-out;">
       <div class="banner-content">
         <h1 class="fw-bold" style="color: white">Professional Consulting</h1>
-        <p style="color: white; font-size: 20px;" >Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
+        <p style="color: white; font-size: 20px;">Bersama kami wujudkan potensi terbaik Anda di dunia perbankan.</p>
         <a href="#layanan" class="btn btn-primary mt-2">Mari Bekerja Sama</a>
       </div>
     </div>
@@ -249,7 +249,7 @@
                    opacity:0;transform:translateY(100%);transition:all 1.2s ease-in-out;">
       <div class="banner-content">
         <h1 class="fw-bold" style="color: white">Upgrade Skill Tanpa Batas</h1>
-        <p style="color: white; font-size: 20px;" >Pelatihan & Sertifikasi Terbaik untuk Bankir Hebat.</p>
+        <p style="color: white; font-size: 20px;">Pelatihan & Sertifikasi Terbaik untuk Bankir Hebat.</p>
         <a href="#program" class="btn btn-primary mt-2">Pelajari Lebih Lanjut</a>
       </div>
     </div>
@@ -273,133 +273,135 @@
 <section style="padding:60px 0; background:var(--bg-light); text-align:center;">
   <h4 style="font-size:25px; color:#005CFF;">Event</h4>
   <br>
-<div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap;">
+  <div class="event-container" style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap;">
 
-@foreach($kelas as $class)
+    @foreach($kelas as $class)
     @php
-        // 1. LOGIKA BADGE, HARGA, & TOMBOL
-        $priceHtml = 'Rp -';
-        $badgeHtml = '';
-        $instructor = $class->instructor_list ? $class->instructor_list->first() : null;
-$instructorName = $instructor ? $instructor->name : 'Instruktur Belum Tersedia';
-$instructorId = $instructor ? $instructor->id : null; // Bernilai null jika tidak ada instruktur
+    // 1. LOGIKA BADGE, HARGA, & TOMBOL
+    $priceHtml = 'Rp -';
+    $badgeHtml = '';
+    $instructor = $class->instructor_list ? $class->instructor_list->first() : null;
+    $instructorName = $instructor ? $instructor->name : 'Instruktur Belum Tersedia';
+    $instructorId = $instructor ? $instructor->id : null; // Bernilai null jika tidak ada instruktur
 
-$avatarUrl = asset('FE/images/default-user.png');
-if ($instructor && isset($instructor->picture_src->url)) {
+    $avatarUrl = asset('FE/images/default-user.png');
+    if ($instructor && isset($instructor->picture_src->url)) {
     $avatarUrl = asset('Image/' . $instructor->picture_src->url);
-}
-        $btnText = 'Daftar Sekarang';
-        $btnColor = '#007BFF'; // Biru default
-        $isUpcoming = str_contains(strtolower($class->title), 'upcoming');
+    }
+    $btnText = 'Daftar Sekarang';
+    $btnColor = '#007BFF'; // Biru default
+    $isUpcoming = str_contains(strtolower($class->title), 'upcoming');
 
-        if ($class->pricing) {
-            if ($class->pricing->gratis) {
-                $priceHtml = 'GRATIS';
-                // Diubah ke inline-block & relative agar mengikuti alur layout
-                $badgeHtml = '<span style="display:inline-block; background:#28a745; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(40,167,69,0.4); text-transform:uppercase;">🎉 Free Class</span>';
-                $btnText = 'Daftar Gratis';
-                $btnColor = '#28a745'; // Hijau untuk kelas gratis
-            } elseif ($class->pricing->promo) {
-                $realPrice = $class->pricing->price - $class->pricing->promo_price;
-                $priceHtml = 'Rp ' . number_format($realPrice, 0, ',', '.');
-                
-                // Menghitung persentase potongan harga
-                $potongHarga = $class->pricing->price > 0 ? round(($class->pricing->promo_price / $class->pricing->price) * 100) : 0;
-                $badgeHtml = '<span style="display:inline-block; background:#dc3545; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(220,53,69,0.4);">PROMO ' . $potongHarga . '% OFF</span>';
-            } else {
-                $priceHtml = 'Rp ' . number_format($class->pricing->price, 0, ',', '.');
-            }
-        }
+    if ($class->pricing) {
+    if ($class->pricing->gratis) {
+    $priceHtml = 'GRATIS';
+    // Diubah ke inline-block & relative agar mengikuti alur layout
+    $badgeHtml = '<span style="display:inline-block; background:#28a745; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(40,167,69,0.4); text-transform:uppercase;">🎉 Free Class</span>';
+    $btnText = 'Daftar Gratis';
+    $btnColor = '#28a745'; // Hijau untuk kelas gratis
+    } elseif ($class->pricing->promo) {
+    $realPrice = $class->pricing->price - $class->pricing->promo_price;
+    $priceHtml = 'Rp ' . number_format($realPrice, 0, ',', '.');
 
-        // Jika statusnya OVERWRITE UNTUK UPCOMING CLASS
-        if ($isUpcoming) {
-            $badgeHtml = '<span style="display:inline-block; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase;">⏳ Upcoming</span>';
-            $btnText = 'Belum Tersedia';
-            $btnColor = '#6c757d';
-        }
+    // Menghitung persentase potongan harga
+    $potongHarga = $class->pricing->price > 0 ? round(($class->pricing->promo_price / $class->pricing->price) * 100) : 0;
+    $badgeHtml = '<span style="display:inline-block; background:#dc3545; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(220,53,69,0.4);">PROMO ' . $potongHarga . '% OFF</span>';
+    } else {
+    $priceHtml = 'Rp ' . number_format($class->pricing->price, 0, ',', '.');
+    }
+    }
 
-        // 2. LOGIKA FIX ARRAY SUB KATEGORI
-        $subCategoryHtml = '';
-        if (!empty($class->jenis)) {
-            $decodedSubArr = json_decode($class->jenis, true);
-            $subCategoryText = is_array($decodedSubArr) ? implode(', ', $decodedSubArr) : $class->jenis;
-            if ($subCategoryText == 'BANKIR') {
-            // Diubah ke inline-block, max-width disesuaikan biar fleksibel
-            $subCategoryHtml = '<span style="display:inline-block; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
- } else {
-            $subCategoryHtml = '<span style="display:inline-block; background:rgba(188, 31, 68, 0.9); color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(158, 31, 35, 0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
-}
-        }
+    // Jika statusnya OVERWRITE UNTUK UPCOMING CLASS
+    if ($isUpcoming) {
+    $badgeHtml = '<span style="display:inline-block; background:#6c757d; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(108,117,125,0.4); text-transform:uppercase;">⏳ Upcoming</span>';
+    $btnText = 'Belum Tersedia';
+    $btnColor = '#6c757d';
+    }
+
+    // 2. LOGIKA FIX ARRAY SUB KATEGORI
+    $subCategoryHtml = '';
+    if (!empty($class->jenis)) {
+    $decodedSubArr = json_decode($class->jenis, true);
+    $subCategoryText = is_array($decodedSubArr) ? implode(', ', $decodedSubArr) : $class->jenis;
+    if ($subCategoryText == 'BANKIR') {
+    // Diubah ke inline-block, max-width disesuaikan biar fleksibel
+    $subCategoryHtml = '<span style="display:inline-block; background:#17a2b8; color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(23,162,184,0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
+    } else {
+    $subCategoryHtml = '<span style="display:inline-block; background:rgba(188, 31, 68, 0.9); color:white; padding:4px 10px; font-size:11px; font-weight:700; border-radius:20px; box-shadow:0 4px 16px rgba(158, 31, 35, 0.4); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' . e($subCategoryText) . '">🏷️ ' . e($subCategoryText) . '</span>';
+    }
+    }
     @endphp
 
     <div class="col-lg-3 col-sm-6 d-flex mb-4">
-        <div class="card shadow bg-white w-100 border custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">
-            
-            <div style="background: #f8f9fa; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #edf2f7; min-height: 48px;">
-                <div style="flex-shrink: 0;">
-                    {!! $badgeHtml !!}
-                </div>
-                <div style="flex-shrink: 0; margin-left: 8px;">
-                    {!! $subCategoryHtml !!}
-                </div>
-            </div>
-            
-            <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">
-                <img src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}" 
-                     style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;"
-                     alt="{{ $class->title }}">
-            </div>
+      <div class="card shadow bg-white w-100 border custom-card-hover" style="border-radius:12px; overflow:hidden; border:none; display:flex; flex-direction:column; transition:transform 0.3s ease, box-shadow 0.3s ease; position:relative;">
 
-            <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
-                <div>
-                    <div style="display:flex; align-items:center; margin-bottom:8px;">
-                        <span style="font-size:12px; color:#6c757d; font-weight:500;">
-                            {{ $class->date_end ? \Carbon\Carbon::parse($class->date_end)->translatedFormat('d M Y') : '-' }}
-                        </span>
-                    </div>
+        <div style="background: #f8f9fa; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #edf2f7; min-height: 48px;">
+          <div style="flex-shrink: 0;">
+            {!! $badgeHtml !!}
+          </div>
+          <div style="flex-shrink: 0; margin-left: 8px;">
+            {!! $subCategoryHtml !!}
+          </div>
+        </div>
 
-                    <h4 class="text-capitalize" style="font-size:15px; text-align:left; font-weight:700; font-family:'Poppins', sans-serif; color:#212529; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:42px;">
-                        {{ $class->title }}
-                    </h4>
-                </div>
+        <div style="width:100%; height:180px; overflow:hidden; position:relative;" class="img-wrapper">
+          <img src="{{ $class->image ? asset($class->image) : asset('FE/images/images-demo-consulting-03.jpg') }}"
+            style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;"
+            alt="{{ $class->title }}">
+        </div>
 
-                <div style="margin-top:20px; padding-top:12px; border-top:1px dashed #e9ecef;">
-                    <a href="{{ url('/profile-instructor/' . $instructorId . '/' . urlencode($instructorName)) }}" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">
-                        <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;"
-                             src="{{ $avatarUrl }}" alt="Foto Narasumber">
-                        
-                        <div style="margin-left:12px; text-align:left; overflow:hidden;">
-                            <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.5px; text-transform:uppercase;">Narasumber</small>
-                            <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">
-                                {{ $instructorName }}
-                            </h5>
-                        </div>
-                    </a>
-                </div>
-            </div> <div style="padding:0 20px 20px 20px; background:#fff;">
-                <div>
-                    @if($class->pricing && $class->pricing->gratis)
-                        <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
-                    @else
-                        <h3 style="color:#005CFF; font-size:18px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
-                    @endif
-
-                    @if($isUpcoming)
-                        <button class="btn btn-block py-25" style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; width: 100%; cursor: not-allowed;" disabled>
-                            {{ $btnText }}
-                        </button>
-                    @else
-                        <a href="{{ url('/class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}" 
-                           class="btn btn-block py-25" 
-                           style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; box-shadow:0 4px 12px {{ $class->pricing && $class->pricing->gratis ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)' }}; transition:all 0.2s; display: block; text-align: center; text-decoration: none;">
-                            {{ $btnText }}
-                        </a>
-                    @endif
-                </div>
+        <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; align-items:center; margin-bottom:8px;">
+              <span style="font-size:12px; color:#6c757d; font-weight:500;">
+                {{ $class->date_end ? \Carbon\Carbon::parse($class->date_end)->translatedFormat('d M Y') : '-' }}
+              </span>
             </div>
 
-        </div> </div> @endforeach
-</div>
+            <h4 class="text-capitalize" style="font-size:15px; text-align:left; font-weight:700; font-family:'Poppins', sans-serif; color:#212529; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:42px;">
+              {{ $class->title }}
+            </h4>
+          </div>
+
+          <div style="margin-top:20px; padding-top:12px; border-top:1px dashed #e9ecef;">
+            <a href="{{ url('/profile-instructor/' . $instructorId . '/' . urlencode($instructorName)) }}" class="d-flex align-items-center" style="text-decoration:none; color:#212529;">
+              <img class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:2px solid #e0ebff; flex-shrink:0;"
+                src="{{ $avatarUrl }}" alt="Foto Narasumber">
+
+              <div style="margin-left:12px; text-align:left; overflow:hidden;">
+                <small class="d-block" style="color:#007BFF; font-weight:700; font-size:9px; letter-spacing:0.5px; text-transform:uppercase;">Narasumber</small>
+                <h5 class="text-capitalize mb-0" style="font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#495057;">
+                  {{ $instructorName }}
+                </h5>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div style="padding:0 20px 20px 20px; background:#fff;">
+          <div>
+            @if($class->pricing && $class->pricing->gratis)
+            <h3 style="color:#28a745; font-size:20px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
+            @else
+            <h3 style="color:#005CFF; font-size:18px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px;">{{ $priceHtml }}</h3>
+            @endif
+
+            @if($isUpcoming)
+            <button class="btn btn-block py-25" style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; width: 100%; cursor: not-allowed;" disabled>
+              {{ $btnText }}
+            </button>
+            @else
+            <a href="{{ url('/class/' . $class->unique_id . '/' . str_replace('/', '-', $class->title)) }}"
+              class="btn btn-block py-25"
+              style="background-color:{{ $btnColor }}; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; box-shadow:0 4px 12px {{ $class->pricing && $class->pricing->gratis ? 'rgba(40,167,69,0.2)' : 'rgba(0,123,255,0.2)' }}; transition:all 0.2s; display: block; text-align: center; text-decoration: none;">
+              {{ $btnText }}
+            </a>
+            @endif
+          </div>
+        </div>
+
+      </div>
+    </div> @endforeach
+  </div>
 
   <div style="width:100%; display:flex; justify-content:flex-end; margin-top:20px;">
     <a href="/list-class"
@@ -654,7 +656,7 @@ if ($instructor && isset($instructor->picture_src->url)) {
           </div>
           <div class="mt-3">
             <h5 class="fw-semibold mb-0">Wahyu Muji Kristianto</h5>
-            <p class="text-muted small mb-0">Consultant Professional</p>
+            <p class="text-muted small mb-0">Senior banking & trainer</p>
           </div>
         </div>
       </div>
@@ -683,12 +685,12 @@ if ($instructor && isset($instructor->picture_src->url)) {
             </div>
           </div>
           <div style="width:100%; height:320px; overflow:hidden; border-radius:8px;">
-            <img src="FE/beranda/riris.png" class="img-fluid rounded"
+            <img src="FE/beranda/andreas2.jpeg" class="img-fluid rounded"
               style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
-            <h5 class="fw-semibold mb-0">Riris Erika</h5>
-            <p class="text-muted small mb-0">Consultant Professional</p>
+            <h5 class="fw-semibold mb-0">Andreas Avelino</h5>
+            <p class="text-muted small mb-0">Senior HR</p>
           </div>
         </div>
       </div>
@@ -717,12 +719,12 @@ if ($instructor && isset($instructor->picture_src->url)) {
             </div>
           </div>
           <div style="width:100%; height:320px; overflow:hidden; border-radius:8px;">
-            <img src="FE/beranda/barudin.png" class="img-fluid rounded"
+            <img src="FE/beranda/himawan.jpeg" class="img-fluid rounded"
               style="width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease;">
           </div>
           <div class="mt-3">
-            <h5 class="fw-semibold mb-0">Baharudin</h5>
-            <p class="text-muted small mb-0">Consultant Professional</p>
+            <h5 class="fw-semibold mb-0">Himawan</h5>
+            <p class="text-muted small mb-0">Senior Banking</p>
           </div>
         </div>
       </div>
@@ -753,13 +755,13 @@ if ($instructor && isset($instructor->picture_src->url)) {
           </div>
 
           <div style="width:100%;height:320px;overflow:hidden;border-radius:8px;">
-            <img src="FE/beranda/haris.png" class="img-fluid rounded"
+            <img src="FE/beranda/ekadesy.jpeg" class="img-fluid rounded"
               style="width:100%;height:100%;object-fit:cover;transition:transform .6s ease;">
           </div>
 
           <div class="mt-3">
-            <h5 class="fw-semibold mb-0">Harizar Widianto</h5>
-            <p class="text-muted small mb-0">Consultant Professional</p>
+            <h5 class="fw-semibold mb-0">Eka Desy Paryanti</h5>
+            <p class="text-muted small mb-0">Senior Auditor</p>
           </div>
         </div>
       </div>

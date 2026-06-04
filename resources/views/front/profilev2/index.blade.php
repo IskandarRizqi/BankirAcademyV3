@@ -48,29 +48,36 @@
     .progress-bar {
         background-color: #00D789;
     }
-      @media (max-width:768px) {
-    #content .row.clearfix {
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      text-align: center !important;
+
+    @media (max-width:768px) {
+        #content .row.clearfix {
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }
+
+        #content .col-md-3,
+        #content .col-md-9 {
+            margin-left: 10px !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }
+
+        #content .col-md-9 {
+            margin-top: 15px !important;
+            /* jarak antara gambar & nama */
+        }
+
+        #content #imagebunder {
+            width: 100px !important;
+            /* diperkecil */
+            height: 100px !important;
+            /* diperkecil */
+        }
     }
-    #content .col-md-3,
-    #content .col-md-9 {
-      margin-left: 10px !important;
-      width: 100% !important;
-      display: flex !important;
-      justify-content: center !important;
-      text-align: center !important;
-    }
-    #content .col-md-9 {
-      margin-top: 15px !important; /* jarak antara gambar & nama */
-    }
-    #content #imagebunder {
-      width: 100px !important;  /* diperkecil */
-      height: 100px !important; /* diperkecil */
-    }
-  }
 </style>
 <section id="content" style="background-color:#005CFF; height:220px; display:flex; align-items:center;">
     <div class="content-wrap w-100" style="display:flex; align-items:center;">
@@ -147,11 +154,11 @@
                     style="color:#007bff; display:inline-flex; gap: 6px; align-items:center;">
                     <!-- <img src="https://img.icons8.com/?size=100&id=25167&format=png&color=000000"
                         style="max-height:17px; margin-right:5px; vertical-align:middle;"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
-  <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
-  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z"/>
-</svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
+                        <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                        <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z" />
+                    </svg>
                     Event
                 </a>
             </li>
@@ -165,10 +172,10 @@
                     style="color:#007bff; margin-left:5px; gap:6px; display:inline-flex; align-items:center;">
                     <!-- <img src="https://img.icons8.com/?size=100&id=jeWB7CBGFP4p&format=png&color=000000"
                         style="max-height:20px; margin-right:5px; vertical-align:middle;"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-cash-stack" viewBox="0 0 16 16">
-  <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-  <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z"/>
-</svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-cash-stack" viewBox="0 0 16 16">
+                        <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                        <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z" />
+                    </svg>
                     Billing Kelas
                 </a>
             </li>
@@ -182,10 +189,10 @@
                     style="color:#007bff; margin-left:5px; gap:6px; display:inline-flex; align-items:center;">
                     <!-- <img src="https://img.icons8.com/?size=100&id=3651&format=png&color=000000"
                         style="max-height:20px; margin-right:5px; vertical-align:middle;"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-video3" viewBox="0 0 16 16">
-  <path d="M14 9.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0m-6 5.7c0 .8.8.8.8.8h6.4s.8 0 .8-.8-.8-3.2-4-3.2-4 2.4-4 3.2"/>
-  <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h5.243c.122-.326.295-.668.526-1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v7.81c.353.23.656.496.91.783Q16 12.312 16 12V4a2 2 0 0 0-2-2z"/>
-</svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-video3" viewBox="0 0 16 16">
+                        <path d="M14 9.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0m-6 5.7c0 .8.8.8.8.8h6.4s.8 0 .8-.8-.8-3.2-4-3.2-4 2.4-4 3.2" />
+                        <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h5.243c.122-.326.295-.668.526-1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v7.81c.353.23.656.496.91.783Q16 12.312 16 12V4a2 2 0 0 0-2-2z" />
+                    </svg>
                     Kelas Anda
                 </a>
             </li>
@@ -199,9 +206,9 @@
                     style="color:#007bff; margin-left:5px;gap: 6px; display:inline-flex; align-items:center;">
                     <!-- <img src="https://img.icons8.com/?size=100&id=5dSgwauapeOo&format=png&color=000000"
                         style="max-height:20px; margin-right:5px; vertical-align:middle;"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-wallet2" viewBox="0 0 16 16">
-  <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z"/>
-</svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-wallet2" viewBox="0 0 16 16">
+                        <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
+                    </svg>
                     Dompet
                 </a>
             </li>
@@ -214,10 +221,10 @@
                     style="color:#007bff; margin-left:5px; display:inline-flex; gap: 6px; align-items:center;">
                     <!-- <img src="https://img.icons8.com/?size=100&id=47269&format=png&color=000000"
                         style="max-height:20px; margin-right:5px; vertical-align:middle;"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-badge" viewBox="0 0 16 16">
-  <path d="M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-  <path d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492z"/>
-</svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-badge" viewBox="0 0 16 16">
+                        <path d="M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                        <path d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492z" />
+                    </svg>
                     Membership
                 </a>
             </li>
@@ -256,9 +263,9 @@
                     style="color:#007bff; margin-left:5px; display:inline-flex; gap:6px; align-items:center;">
                     <!-- <img src="https://img.icons8.com/?size=100&id=364&format=png&color=000000"
                         style="max-height:20px; margin-right:5px; vertical-align:middle;"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1z"/>
-</svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-sliders" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1z" />
+                    </svg>
                     Setting
                 </a>
             </li>
@@ -293,7 +300,7 @@
             </div>
             <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-36"
                 aria-labelledby="ui-id-20" role="tabpanel" aria-hidden="true" style="display: none;">
-                @include('front.profilev2.membership')
+                @include('front.profilev2.newmembership')
             </div>
             <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-37"
                 aria-labelledby="ui-id-21" role="tabpanel" aria-hidden="true" style="display: none;">
@@ -638,8 +645,8 @@
         setTimeout(function() {
             var tabKelasAnda = jQuery('a[href="#tabs-34"]');
             if (tabKelasAnda.length > 0) {
-                tabKelasAnda.trigger('click'); 
-                
+                tabKelasAnda.trigger('click');
+
                 // Opsional: Jika jQuery UI tabs di web Anda di-inisialisasi manual, 
                 // Anda juga bisa mengaktifkannya lewat index tab-nya (Tab ke-3 artinya index 2 jika dihitung dari 0)
                 // jQuery("#tab-9").tabs("option", "active", 2); 
@@ -852,7 +859,7 @@
             }
         });
     })
-    
+
 
     function clearmenu() {
         $('#li-tabs-32').removeClass('ui-state-active ui-tabs-active');

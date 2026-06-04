@@ -45,7 +45,8 @@
     =========================== */
     .nav-item.dropdown:hover .dropdown-menu {
         display: block;
-        margin-top: 0; /* Hilangkan jarak antara tombol dan menu */
+        margin-top: 0;
+        /* Hilangkan jarak antara tombol dan menu */
     }
 
     /* Efek animasi halus saat muncul */
@@ -65,18 +66,19 @@
         display: block;
     }
 
-.modal {
-    z-index: 20000 !important;
-}
+    .modal {
+        z-index: 20000 !important;
+    }
 
-.modal-backdrop {
-    z-index: 19999 !important;
-}
+    .modal-backdrop {
+        z-index: 19999 !important;
+    }
 
-body.modal-open {
-    overflow: hidden !important;
-    padding-right: 0 !important;
-}
+    body.modal-open {
+        overflow: hidden !important;
+        padding-right: 0 !important;
+    }
+
     .swal2-container {
         z-index: 30000 !important;
     }
@@ -119,43 +121,43 @@ body.modal-open {
                         <a class="dropdown-item" href="/pages/Banking-Solution">Banking Solution</a>
                         <a class="dropdown-item" href="/pages/Capacity-Building">Capacity Building</a>
                         <a class="dropdown-item" href="/pages/Talent-Solution">Banking Talent Solution</a>
-                        <a class="dropdown-item" href="/list-class?jenis=bankir">Event</a>
+                        <!-- <a class="dropdown-item" href="/list-class?jenis=bankir">Event</a> -->
                     </div>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" href="/promo">Promo</a></li>
-                <li class="nav-item"><a class="nav-link" href="/pages/blog">Literasi</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Kurikulum</a></li>
+                <li class="nav-item"><a href="/list-class?jenis=bankir" class="nav-link">Event</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Bakti pendidikan</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Bakti UMKM</a></li>
                 <li class="nav-item"><a class="nav-link" href="/loker">Loker Bankir</a></li>
             </ul>
 
             <!-- Tombol kanan -->
             <div class="d-flex">
                 @if (!Auth::check())
-                    <button class="btn btn-primary mr-2" data-toggle="modal" data-target="#modelId">Login</button>
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#modelId">Sign Up</button>
+                <button class="btn btn-primary mr-2" data-toggle="modal" data-target="#modelId">Login</button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modelId">Sign Up</button>
                 @endif
 
                 @if (Auth::check() && Auth::user()->role == 2)
-                    <a href="{{ url('/profile') }}" 
-                    class="btn mr-2" 
+                <a href="{{ url('/profile') }}"
+                    class="btn mr-2"
                     style="background-color:#17a2b8 !important; color:#fff !important; border:none !important; padding:8px 18px !important; border-radius:6px !important; text-decoration:none !important; font-weight:500 !important;">
                     Profile
-                    </a>
+                </a>
 
-                    <a href="{{ route('logout') }}" 
-                    class="btn" 
+                <a href="{{ route('logout') }}"
+                    class="btn"
                     style="background-color:#ffc107 !important; color:#fff !important; border:none !important; padding:8px 18px !important; border-radius:6px !important; text-decoration:none !important; font-weight:500 !important;"
                     onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     Logout
-                    </a>
+                </a>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                 @endif
 
 
                 @if (Auth::check() && Auth::user()->role !== 2)
-                    <a href="{{ url('/home') }}" class="btn btn-primary">Admin Area</a>
+                <a href="{{ url('/home') }}" class="btn btn-primary">Admin Area</a>
                 @endif
             </div>
 
