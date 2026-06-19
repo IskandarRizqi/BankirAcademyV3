@@ -7,6 +7,9 @@ use App\Http\Controllers\Backend\BannerslideController;
 use App\Http\Controllers\Backend\CorporateController;
 use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
+use App\Http\Controllers\Beasiswa\KategoriController;
+use App\Http\Controllers\Beasiswa\MateriController;
+use App\Http\Controllers\Beasiswa\SubMateriController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\OrderController;
@@ -257,3 +260,8 @@ Route::get('/admin/loker/getkelurahan/{id}', [App\Http\Controllers\Loker\Beranda
 Route::get('/template', function () {
     return view('front.cvtemplate.cv');
 });
+
+// Kategori matero beasiswa
+Route::resource('kategori-materi', KategoriController::class);
+Route::resource('materi', MateriController::class);
+Route::resource('sub-materi', SubMateriController::class);
