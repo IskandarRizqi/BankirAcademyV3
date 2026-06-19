@@ -55,6 +55,10 @@ class HomeController extends Controller
                 ->where('instructor_review.instructor_id', $i->id)
                 ->get();
             return view('backend.instructor.dashboard', $data);
+            // return view('compact-menu.index');
+        }
+        if ($auth->role == 4) {
+            return view('compact.index');
         }
         $data['fee'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'users.name')
             ->join('classes', 'classes.id', 'class_payment.class_id')
