@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Backend\BannerslideController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProfileController;
+use App\Http\Controllers\MembershipController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +35,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     });
     Route::resource('/admin/prepotes', App\Http\Controllers\Backend\PrepotestController::class);
     Route::resource('/admin/classes', App\Http\Controllers\Admin\ClassesController::class);
+    Route::resource('users', UserController::class);
     Route::post('/admin/classes/setadditional', [App\Http\Controllers\Admin\ClassesController::class, 'setadditional']);
     Route::post('/admin/classes/setpricing', [App\Http\Controllers\Admin\ClassesController::class, 'setpricing']);
     Route::post('/admin/classes/setcontent', [App\Http\Controllers\Admin\ClassesController::class, 'setcontent']);
@@ -108,6 +111,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     // Member
     Route::resource('/admin/member', App\Http\Controllers\Backend\MembershipController::class);
     Route::post("/admin/member/delete", [App\Http\Controllers\Backend\MembershipController::class, "deletes"]);
+    Route::resource('memberships', MembershipController::class)->except(['create', 'show', 'edit']);
 
     // Referral
     Route::resource('/admin/withdraw', App\Http\Controllers\Backend\WithdrawController::class);
