@@ -116,7 +116,7 @@
                             </p>
                         </td>
                         <td>
-                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> Rp {{
                                 number_format($x->harga_final)
                                 }}
                             </p>
@@ -267,9 +267,11 @@
                             <input type="text" name="harga" id="harga" class="form-control" hidden>
                         </div>
                         <div class="form-group col-lg-3 mb-3">
-                            <label for="" style="font-weight: 600;">Diskon <small>harga final :</small></label>
+                            <label for="" style="font-weight: 600;">Diskon <small id="harga_final">harga final
+                                    :</small></label>
                             <div class="input-group">
-                                <input type="text" name="diskon" id="diskon" class="form-control" required>
+                                <input type="text" name="diskon" id="diskon" class="form-control"
+                                    oninput="hitunghargafinal()" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text" id="basic-addon6">%</span>
                                 </div>
@@ -392,6 +394,20 @@
     }
 
     function formatnumber(params) {
+        // 
+    }
+
+    function hitunghargafinal() {
+        $('#harga_final').html('Harga Final : ')
+        let harga = $('#harga').val();
+        let diskon = $('#diskon').val();
+        let hf = 0;
+
+        if (harga > 0 && diskon > 0) {
+            hf = harga - (harga * (diskon/100));
+        }
+
+        $('#harga_final').html('Harga Final : '+ Intl.NumberFormat('en-US').format(hf));
     }
 </script>
 @endsection

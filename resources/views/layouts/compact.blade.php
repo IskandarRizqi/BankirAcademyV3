@@ -464,13 +464,13 @@
             <div class="layout-px-spacing">
 
                 <div class="page-header">
-                    <nav class="breadcrumb-one" aria-label="breadcrumb">
+                    {{-- <nav class="breadcrumb-one" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><a
                                     href="javascript:void(0);">Analytics</a></li>
                         </ol>
-                    </nav>
+                    </nav> --}}
                 </div>
 
                 @yield('content')
