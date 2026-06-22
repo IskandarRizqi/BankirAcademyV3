@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'google_id',
+        'parent_id',
+        'bank_id',
+        'sekolah_id',
+        'membership_id',
+        'masa_aktif_member',
         'role',
         'password',
         'corporate',
@@ -51,6 +56,20 @@ class User extends Authenticatable
             return UserProfileModel::with('membership')->where('user_id', $this->attributes['id'])->first();
         }
     }
+    public function bank()
+{
+    return $this->belongsTo(User::class, 'bank_id');
+}
+
+public function sekolah()
+{
+    return $this->belongsTo(User::class, 'sekolah_id');
+}
+
+public function membership()
+{
+    return $this->belongsTo(Membership::class, 'membership_id');
+}
     public function getRekeningAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {

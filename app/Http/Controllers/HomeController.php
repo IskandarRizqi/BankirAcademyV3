@@ -57,7 +57,7 @@ class HomeController extends Controller
             return view('backend.instructor.dashboard', $data);
             // return view('compact-menu.index');
         }
-        if ($auth->role == 4) {
+        if ($auth->role == 4 || $auth->role == 5 || $auth->role == 6) {
             return view('compact.index');
         }
         $data['fee'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'users.name')

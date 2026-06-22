@@ -107,6 +107,8 @@
                     </div>
 
                 </div>
+
+            {{-- Modal Create / Update --}}
             <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content" style="background: #fff; border-radius: 8px;">
@@ -120,53 +122,87 @@
                             @csrf
                             <div id="method-container"></div>
 
-                            <div class="modal-body">
-                                <div class="form-group mb-3">
-                                    <label for="name" style="font-weight: 600;">Nama Lengkap</label>
-                                    <input type="text" id="name" name="name" class="form-control" required placeholder="Masukkan nama">
-                                </div>
+                           <div class="modal-body">
+    <div class="form-group mb-3">
+        <label for="name" style="font-weight: 600;">Nama Lengkap</label>
+        <input type="text" id="name" name="name" class="form-control" required placeholder="Masukkan nama">
+    </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="email" style="font-weight: 600;">Alamat Email</label>
-                                    <input type="email" id="email" name="email" class="form-control" required placeholder="name@example.com">
-                                </div>
+    <div class="form-group mb-3">
+        <label for="email" style="font-weight: 600;">Alamat Email</label>
+        <input type="email" id="email" name="email" class="form-control" required placeholder="name@example.com">
+    </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="role" style="font-weight: 600;">Role / Hak Akses</label>
-                                    <select id="role" name="role" class="form-control" required>
-                                        <option value="" disabled selected>-- Pilih Role --</option>
-                                        
-                                        @php
-                                            $authRole = (int) auth()->user()->role;
-                                            $authEmail = auth()->user()->email;
-                                        @endphp
+    <div class="form-group mb-3">
+        <label for="role" style="font-weight: 600;">Role / Hak Akses</label>
+        <select id="role" name="role" class="form-control" required onchange="handleRoleChange()">
+    <option value="" disabled selected>-- Pilih Role --</option>
+    
+    @php
+        $authRole = (int) auth()->user()->role;
+        $authEmail = auth()->user()->email;
+    @endphp
 
-                                        @for ($i = 0; $i <= 6; $i++)
-                                            {{-- Kondisi Spesifik: User Role 3 dengan Email Spesifik dapat mendaftarkan sesama Role 3 --}}
-                                            @if ($authRole === 4 && $authEmail === 'cb@bankir.academy' && $i === 3)
-                                                <option value="4">Bank</option>
-                                            @endif
+    @for ($i = 0; $i <= 6; $i++)
+        @if ($authEmail === 'cb@bankir.academy')
+            @if ($i == 4 || $i == 5 || $i == 6)
+                <option value="{{ $i }}">
+                    @if($i == 4) Bank
+                    @elseif($i == 5) Sekolah
+                    @elseif($i == 6) Siswa
+                    @endif
+                </option>
+            @endif
+        @else
+            @if ($i > $authRole)
+                <option value="{{ $i }}">
+                    @if($i == 4) Bank
+                    @elseif($i == 5) Sekolah
+                    @elseif($i == 6) Siswa
+                    @endif
+                </option>
+            @endif
+        @endif
+    @endfor
+</select>
+    </div>
 
-                                            {{-- Aturan Umum: Hanya menampilkan role yang bernilai angka lebih besar dari role pengakses --}}
-                                            @if ($i > $authRole)
-                                                <option value="{{ $i }}">
-                                                    
-                                                    @if($i == 4) Bank
-                                                    @elseif($i == 5) Sekolah
-                                                    @elseif($i == 6) Siswa
-                                                    @endif
-                                                </option>
-                                            @endif
-                                        @endfor
-                                    </select>
-                                </div>
+    <div class="form-group mb-3 d-none" id="membership-group">
+        <label for="membership_id" style="font-weight: 600;">Membership (Opsional)</label>
+        <select id="membership_id" name="membership_id" class="form-control">
+            <option value="">-- Tanpa Membership --</option>
+            @foreach($memberships as $membership)
+                <option value="{{ $membership->id }}">{{ $membership->nama }} (Rp {{ number_format($membership->harga_final, 0, ',', '.') }})</option>
+            @endforeach
+        </select>
+    </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="password" style="font-weight: 600;">Password</label>
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Minimal 8 karakter">
-                                    <small id="password-help" class="form-text text-muted d-none">Kosongkan jika tidak ingin mengubah password.</small>
-                                </div>
-                            </div>
+    <div class="form-group mb-3 d-none" id="bank-group">
+        <label for="bank_id" style="font-weight: 600;">Pilih Bank <span class="text-danger">*</span></label>
+        <select id="bank_id" name="bank_id" class="form-control" onchange="filterSekolahByBank()">
+            <option value="" selected disabled>-- Pilih Bank --</option>
+            @foreach($listBank as $bank)
+                <option value="{{ $bank->id }}">{{ $bank->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="form-group mb-3 d-none" id="sekolah-group">
+        <label for="sekolah_id" style="font-weight: 600;">Pilih Sekolah <span class="text-danger">*</span></label>
+        <select id="sekolah_id" name="sekolah_id" class="form-control">
+            <option value="" selected disabled>-- Pilih Sekolah --</option>
+            @foreach($listSekolah as $sekolah)
+                <option value="{{ $sekolah->id }}" data-bank="{{ $sekolah->bank_id }}">{{ $sekolah->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="password" style="font-weight: 600;">Password</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Minimal 8 karakter">
+        <small id="password-help" class="form-text text-muted d-none">Kosongkan jika tidak ingin mengubah password.</small>
+    </div>
+</div>
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Batal</button>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -176,54 +212,141 @@
                 </div>
             </div>
 
-            <div class="footer-wrapper">
-                <div class="footer-section f-section-1">
-                    <p class="">Copyright © 2026 <a target="_blank" href="https://designreset.com">DesignReset</a>, All rights reserved.</p>
-                </div>
-                <div class="footer-section f-section-2">
-                    <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
-                </div>
-            </div>
 
-        <script>
-            // Fungsi ketika tombol 'Tambah Pengguna' diklik
-            function resetForm() {
-                document.getElementById('userModalLabel').innerText = 'Tambah Pengguna';
-                document.getElementById('userForm').action = "{{ route('users.store') }}";
-                document.getElementById('method-container').innerHTML = ''; // Hapus @method('PUT')
-                
-                document.getElementById('name').value = '';
-                document.getElementById('email').value = '';
-                document.getElementById('role').value = ''; // Mengubah default value menjadi kosong agar kembali ke '-- Pilih Role --'
-                document.getElementById('password').value = '';
-                document.getElementById('password').required = true;
-                document.getElementById('password-help').classList.add('d-none');
+<script>
+    // Ambil info data login pelaksana dari php ke javascript variable
+    const AUTH_ROLE = parseInt("{{ $authRole }}");
+    const AUTH_EMAIL = "{{ $authEmail }}";
+
+    // Fungsi memunculkan form spesifik berdasarkan role yang dipilih dan hak login saat ini
+    function handleRoleChange() {
+        let role = document.getElementById('role').value;
+        
+        let membershipGroup = document.getElementById('membership-group');
+        let bankGroup = document.getElementById('bank-group');
+        let sekolahGroup = document.getElementById('sekolah-group');
+
+        // Reset display & required attribute
+        membershipGroup.classList.add('d-none');
+        bankGroup.classList.add('d-none');
+        sekolahGroup.classList.add('d-none');
+        
+        document.getElementById('bank_id').required = false;
+        document.getElementById('sekolah_id').required = false;
+
+        // LOGIKA BARU BERDASARKAN FILTER LOGIN:
+        if (role == "4") { 
+            // Jika memilih membuat Bank
+            membershipGroup.classList.remove('d-none');
+        } 
+        else if (role == "5") { 
+            // Jika memilih membuat Sekolah
+            if (AUTH_EMAIL === 'cb@bankir.academy') {
+                // Hanya root utama yang wajib memilih Bank pembina
+                bankGroup.classList.remove('d-none');
+                document.getElementById('bank_id').required = true;
             }
-
-            // Fungsi ketika tombol 'Edit' diklik
-            function editUser(user) {
-                document.getElementById('userModalLabel').innerText = 'Edit Pengguna';
-                
-                // Ubah Action Form menjadi route update Laravel
-                let url = "{{ route('users.update', ':id') }}";
-                url = url.replace(':id', user.id);
-                document.getElementById('userForm').action = url;
-
-                // Tambahkan input spoofing method PUT untuk Laravel
-                document.getElementById('method-container').innerHTML = `@method('PUT')`;
-
-                // Isi data pengguna ke dalam Form input
-                document.getElementById('name').value = user.name;
-                document.getElementById('email').value = user.email;
-                document.getElementById('role').value = user.role;
-                
-                // Set password menjadi tidak wajib diisi saat edit
-                document.getElementById('password').value = '';
-                document.getElementById('password').required = false;
-                document.getElementById('password-help').classList.remove('d-none');
-
-                // Tampilkan Modal secara terprogram
-                $('#userModal').modal('show');
+            // Jika yang login adalah Bank biasa, Bank group disembunyikan (Otomatis mengikat di backend)
+        } 
+        else if (role == "6") { 
+            // Jika memilih membuat Siswa
+            if (AUTH_EMAIL === 'cb@bankir.academy') {
+                // Root wajib pilih bank dan pilih sekolah
+                bankGroup.classList.remove('d-none');
+                sekolahGroup.classList.remove('d-none');
+                document.getElementById('bank_id').required = true;
+                document.getElementById('sekolah_id').required = true;
+            } else if (AUTH_ROLE === 4) {
+                // Jika Bank yang login: tidak perlu pilih Bank, tapi WAJIB pilih Sekolah
+                sekolahGroup.classList.remove('d-none');
+                document.getElementById('sekolah_id').required = true;
             }
-        </script>
+            // Jika Sekolah yang login: tidak perlu pilih Bank maupun Sekolah (Otomatis mengikat di backend)
+        }
+    }
+
+    // Fungsi menyaring daftar sekolah berdasarkan Bank yang dipilih (untuk pendaftaran Siswa oleh root)
+    function filterSekolahByBank() {
+        let selectedBankId = document.getElementById('bank_id').value;
+        let sekolahSelect = document.getElementById('sekolah_id');
+        let options = sekolahSelect.options;
+
+        // Reset pilihan sekolah ke default awal
+        sekolahSelect.value = "";
+
+        for (let i = 0; i < options.length; i++) {
+            let option = options[i];
+            let bankRelation = option.getAttribute('data-bank');
+
+            if (option.value === "") continue; 
+
+            if (bankRelation == selectedBankId) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        }
+    }
+
+    // Fungsi ketika tombol 'Tambah Pengguna' diklik
+    function resetForm() {
+        document.getElementById('userModalLabel').innerText = 'Tambah Pengguna';
+        document.getElementById('userForm').action = "{{ route('users.store') }}";
+        document.getElementById('method-container').innerHTML = ''; 
+        
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('role').value = ''; 
+        document.getElementById('membership_id').value = ''; 
+        document.getElementById('bank_id').value = ''; 
+        document.getElementById('sekolah_id').value = ''; 
+        
+        document.getElementById('password').value = '';
+        document.getElementById('password').required = true;
+        document.getElementById('password-help').classList.add('d-none');
+
+        handleRoleChange();
+    }
+
+    // Fungsi ketika tombol 'Edit' diklik
+    function editUser(user) {
+        document.getElementById('userModalLabel').innerText = 'Edit Pengguna';
+        
+        let url = "{{ route('users.update', ':id') }}";
+        url = url.replace(':id', user.id);
+        document.getElementById('userForm').action = url;
+
+        document.getElementById('method-container').innerHTML = `@method('PUT')`;
+
+        document.getElementById('name').value = user.name;
+        document.getElementById('email').value = user.email;
+        document.getElementById('role').value = user.role;
+        
+        // Panggil handler agar form input relasi disesuaikan tipenya terlebih dahulu
+        handleRoleChange();
+
+        // Masukkan data relasi jika tersedia saat edit data dilakukan
+        if(user.role == 4) {
+            document.getElementById('membership_id').value = user.membership_id ?? '';
+        } else if(user.role == 5) {
+            if(document.getElementById('bank_id')) {
+                document.getElementById('bank_id').value = user.bank_id ?? '';
+            }
+        } else if(user.role == 6) {
+            if(document.getElementById('bank_id')) {
+                document.getElementById('bank_id').value = user.bank_id ?? '';
+                filterSekolahByBank();
+            }
+            if(document.getElementById('sekolah_id')) {
+                document.getElementById('sekolah_id').value = user.sekolah_id ?? '';
+            }
+        }
+        
+        document.getElementById('password').value = '';
+        document.getElementById('password').required = false;
+        document.getElementById('password-help').classList.remove('d-none');
+
+        $('#userModal').modal('show');
+    }
+</script>
 @endsection
