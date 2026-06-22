@@ -56,7 +56,7 @@
                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="dropdown-item action-delete text-danger"
+                                        <button type="submit" class="dropdown-item action-delete text-danger pl-3"
                                             style="border: none; background: none; width: 100%;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -120,6 +120,9 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+        createtable('invoice-list')
+    });
     // Fungsi ketika tombol 'Tambah Pengguna' diklik
             function resetForm() {
                 document.getElementById('id').value = '';
