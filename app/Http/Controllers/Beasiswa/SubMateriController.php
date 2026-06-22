@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Beasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\MateriModel;
+use App\Models\SubMateriModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class SubMateriController extends Controller
 {
@@ -14,7 +18,12 @@ class SubMateriController extends Controller
      */
     public function index()
     {
-        $x['data'] = [];
+        $x['materi'] = MateriModel::get();
+        $x['data'] = SubMateriModel::select()
+            ->with('materi')
+            ->orderBy('urutan')
+            ->get();
+        // return $x['data'];
         return view('compact.sub_materi', $x);
     }
 
@@ -36,7 +45,48 @@ class SubMateriController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $valid = Validator::make($request->all(), [
+            'nama' => 'required',
+            'link' => 'required',
+            'keterangan' => 'required',
+            'id_materi' => 'required',
+            'urutan' => 'required',
+            'tipe_link' => 'required',
+            'tipe_beasiswa' => 'required',
+            'masa_aktif' => 'required',
+            'harga' => 'required',
+            'diskon' => 'required',
+        ]);
+
+        if ($valid->fails()) {
+            return redirect()->back()->with('info', 'data tidak sesuai, harap cek kembali')->withInput($request->all());
+        }
+
+        $i = [
+            'nama' => $request->nama,
+            'link' => $request->link,
+            'keterangan' => $request->keterangan,
+            'id_materi' => $request->id_materi,
+            'urutan' => $request->urutan,
+            'tipe_link' => $request->tipe_link,
+            'tipe_beasiswa' => $request->tipe_beasiswa,
+            'masa_aktif' => $request->masa_aktif,
+            'harga' => $request->harga,
+            'diskon' => $request->diskon,
+            'harga_final' => $request->harga,
+        ];
+
+        if ($request->harga > 0 && $request->diskon > 0) {
+            $i['harga_final'] = $request->harga - ($request->harga * ($request->diskon / 100));
+        }
+
+        $m = SubMateriModel::updateOrCreate(['id' => $request->id], $i);
+
+        if (!$m) {
+            Log::critical('gagal simpan materi', [$m]);
+            return redirect()->back()->with('info', 'data tidak tersimpan')->withInput($request->all());
+        }
+        return redirect()->back()->with('info', 'data tersimpan');
     }
 
     /**

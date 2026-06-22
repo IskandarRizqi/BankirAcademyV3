@@ -17,6 +17,9 @@
                     <tr>
                         <th class="checkbox-column"> No. </th>
                         <th>Nama Kategori</th>
+                        <th>Urutan</th>
+                        <th>Nama Materi</th>
+                        <th>Keterangan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -25,7 +28,20 @@
                     <tr>
                         <td class="checkbox-column"> {{ $key+1 }} </td>
                         <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->kategori->nama
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->urutan }}
+                            </p>
+                        </td>
+                        <td>
                             <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->nama }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->keterangan }}
                             </p>
                         </td>
                         <td>
@@ -56,7 +72,7 @@
                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="dropdown-item action-delete text-danger"
+                                        <button type="submit" class="dropdown-item action-delete text-danger pl-3"
                                             style="border: none; background: none; width: 100%;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -98,7 +114,7 @@
                     </svg>
                 </button>
             </div>
-            <form id="userForm" action="/kategori-materi" method="POST">
+            <form id="userForm" action="/materi" method="POST">
                 @csrf
                 <input type="text" name="id" id="id" hidden>
                 <div id="method-container"></div>
@@ -106,8 +122,24 @@
                 <div class="modal-body">
                     <div class="form-group mb-3">
                         <label for="name" style="font-weight: 600;">Nama Kategori</label>
-                        <input type="text" id="nama" name="nama" class="form-control" required
-                            placeholder="Masukkan nama">
+                        <select name="id_kategori" id="id_kategori" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Role --</option>
+                            @foreach($kategori as $key => $v)
+                            <option value="{{$v->id}}">{{$v->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="urutan" style="font-weight: 600;">Urutan</label>
+                        <input type="number" min="0" name="urutan" id="urutan" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="nama" style="font-weight: 600;">Nama Materi</label>
+                        <input type="text" min="0" name="nama" id="nama" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="nama" style="font-weight: 600;">Keterangan</label>
+                        <textarea name="keterangan" id="keterangan" cols="30" rows="2" class="form-control"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -120,23 +152,35 @@
 </div>
 
 <script>
-    // Fungsi ketika tombol 'Tambah Pengguna' diklik
-            function resetForm() {
-                document.getElementById('id').value = '';
-                document.getElementById('nama').value = '';
-            }
-            
-            // Fungsi ketika tombol 'Edit' diklik
-            function editUser(user) {
-                resetForm();
-                
-                if (user) {
-                    document.getElementById('id').value = user.id;
-                    document.getElementById('nama').value = user.nama;
-                }
+    $(document).ready(function () {
+        createtable('invoice-list')
 
-                // Tampilkan Modal secara terprogram
-                $('#userModal').modal('show');
-            }
+        $('#mySelect2').select2({
+            dropdownParent: $('#userModal')
+        });
+    })
+    // Fungsi ketika tombol 'Tambah Pengguna' diklik
+    function resetForm() {
+        document.getElementById('id').value = '';
+        document.getElementById('urutan').value = 0;
+        document.getElementById('nama').value = '';
+        document.getElementById('keterangan').value = '';
+        document.getElementById('id_kategori').value = '';
+    }
+
+    // Fungsi ketika tombol 'Edit' diklik
+    function editUser(user) {
+        resetForm();
+
+        if (user) {
+            document.getElementById('id').value = user.id;
+            document.getElementById('urutan').value = user.urutan;
+            document.getElementById('nama').value = user.nama;
+            document.getElementById('keterangan').value = user.keterangan;
+            document.getElementById('id_kategori').value = user.id_kategori;
+        }
+        // Tampilkan Modal secara terprogram
+        $('#userModal').modal('show');
+    }
 </script>
 @endsection

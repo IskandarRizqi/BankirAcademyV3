@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Beasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\KategoriModel;
+use App\Models\MateriModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -101,12 +102,16 @@ class KategoriController extends Controller
     public function destroy($id)
     {
         if ($id) {
+            $m = MateriModel::where('id_kategori', $id)->first();
+            if ($m) {
+                return redirect()->back()->withInput()->with('info', 'data kategori masih digunakan oleh materi: ' . $m->nama);
+            }
             $i = KategoriModel::where('id', $id)->delete();
             if (!$i) {
-                Log::critical('tidak bisa simpan kategori', [$i]);
-                return redirect()->back()->withInput()->with('error', 'data tidak terhapus');
+                Log::critical('tidak bisa hapus kategori', [$i]);
+                return redirect()->back()->withInput()->with('info', 'data tidak terhapus');
             }
-            return redirect()->back()->withInput()->with('error', 'data terhapus');
+            return redirect()->back()->withInput()->with('success', 'data terhapus');
         }
     }
 }

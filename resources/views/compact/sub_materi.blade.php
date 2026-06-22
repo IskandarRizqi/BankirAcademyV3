@@ -16,7 +16,17 @@
                 <thead>
                     <tr>
                         <th class="checkbox-column"> No. </th>
-                        <th>Nama Kategori</th>
+                        <th>Nama Materi</th>
+                        <th class="text-capitalize">nama sub materi</th>
+                        <th class="text-capitalize">urutan</th>
+                        <th class="text-capitalize">link</th>
+                        <th class="text-capitalize">tipe_link</th>
+                        <th class="text-capitalize">tipe_beasiswa</th>
+                        <th class="text-capitalize">masa_aktif</th>
+                        <th class="text-capitalize">harga</th>
+                        <th class="text-capitalize">diskon</th>
+                        <th class="text-capitalize">harga final</th>
+                        <th class="text-capitalize">keterangan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -25,7 +35,95 @@
                     <tr>
                         <td class="checkbox-column"> {{ $key+1 }} </td>
                         <td>
-                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->nama }}
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->materi->nama
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->nama
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->urutan
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            @if($x->tipe_link == 1)
+                            <a href="{{$x->link}}" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#e7515a"
+                                    viewBox="0 0 24 24">
+                                    <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
+                                    <path
+                                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M5 19V5h14v14z">
+                                    </path>
+                                    <path
+                                        d="M8.5 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 1 0 0-3m2.5.5h6v2h-6zM7 7h10v2H7zm0 8h10v2H7z">
+                                    </path>
+                                </svg>
+                            </a>
+                            @else
+                            <a href="{{$x->link}}" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#4361ee"
+                                    viewBox="0 0 24 24">
+                                    <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
+                                    <path
+                                        d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9.54 9 6.87 5h2.6l2.67 4zm5 0-2.67-4h2.6l2.67 4zM4 5h.46l2.67 4H4zm0 14v-8h16V9h-.46l-2.67-4H20v14z">
+                                    </path>
+                                    <path d="m10 18 5-3-5-3z"></path>
+                                </svg>
+                            </a>
+                            @endif
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;">
+                                @if($x->tipe_link == 1)
+                            <div class="badge badge-pills badge-danger">PDF</div>
+                            @else
+                            <div class="badge badge-pills badge-primary">Video</div>
+                            @endif
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;">
+                                @if($x->tipe_beasisa == 0)
+                            <div class="badge badge-pills badge-primary">Semua</div>
+                            @endif
+                            @if($x->tipe_beasisa == 1)
+                            <div class="badge badge-pills badge-primary">Beasiswa</div>
+                            @endif
+                            @if($x->tipe_beasisa == 2)
+                            <div class="badge badge-pills badge-primary">Non Beasiswa</div>
+                            @endif
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{
+                                \Carbon\Carbon::parse($x->masa_aktif)->format('d-m-Y')
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;">Rp {{
+                                number_format($x->harga)
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->diskon
+                                }} %
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{
+                                number_format($x->harga_final)
+                                }}
+                            </p>
+                        </td>
+                        <td>
+                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->keterangan
+                                }}
                             </p>
                         </td>
                         <td>
@@ -56,7 +154,7 @@
                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="dropdown-item action-delete text-danger"
+                                        <button type="submit" class="dropdown-item action-delete text-danger pl-3"
                                             style="border: none; background: none; width: 100%;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -85,7 +183,7 @@
 
 </div>
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content" style="background: #fff; border-radius: 8px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="userModalLabel" style="font-weight: bold;">Tambah Pengguna</h5>
@@ -98,16 +196,94 @@
                     </svg>
                 </button>
             </div>
-            <form id="userForm" action="/kategori-materi" method="POST">
+            <form id="userForm" action="/sub-materi" method="POST">
                 @csrf
                 <input type="text" name="id" id="id" hidden>
                 <div id="method-container"></div>
 
                 <div class="modal-body">
-                    <div class="form-group mb-3">
-                        <label for="name" style="font-weight: 600;">Nama Kategori</label>
-                        <input type="text" id="nama" name="nama" class="form-control" required
-                            placeholder="Masukkan nama">
+                    <div class="row">
+                        <div class="form-group col-lg-12 mb-3">
+                            <label for="name" style="font-weight: 600;">Nama Materi</label>
+                            <select name="id_materi" id="id_materi" class="form-control" required>
+                                <option value="" disabled selected>-- Pilih Role --</option>
+                                @foreach($materi as $key => $v)
+                                <option value="{{$v->id}}">{{$v->nama}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6 mb-3">
+                            <label for="urutan" style="font-weight: 600;">Urutan</label>
+                            <input type="number" min="0" name="urutan" id="urutan" class="form-control" required>
+                        </div>
+                        <div class="form-group col-lg-6 mb-3">
+                            <label for="nama" style="font-weight: 600;">Nama Sub Materi</label>
+                            <input type="text" min="0" name="nama" id="nama" class="form-control" required>
+                        </div>
+                        <div class="form-group col-lg-6 mb-3">
+                            <label for="nama" style="font-weight: 600;">Link Materi</label>
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="tipe_link" id="tipe_link0"
+                                        value="0" checked>
+                                    <span class="new-control-indicator"></span>Video
+                                </label>
+                                <label class="new-control new-radio radio-classic-warning">
+                                    <input type="radio" class="new-control-input" name="tipe_link" id="tipe_link1"
+                                        value="1">
+                                    <span class="new-control-indicator"></span>PDF
+                                </label>
+                            </div>
+                            <input type="text" name="link" id="link" class="form-control" required>
+                        </div>
+                        <div class="form-group col-lg-6 mb-3">
+                            <label for="" style="font-weight: 600;">Tipe Sub Materi</label>
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="tipe_beasiswa"
+                                        id="tipe_beasiswa0" value="0" checked>
+                                    <span class="new-control-indicator"></span>Semua
+                                </label>
+                                <label class="new-control new-radio radio-classic-warning">
+                                    <input type="radio" class="new-control-input" name="tipe_beasiswa"
+                                        id="tipe_beasiswa1" value="1">
+                                    <span class="new-control-indicator"></span>Beasiswa
+                                </label>
+                                <label class="new-control new-radio radio-classic-warning">
+                                    <input type="radio" class="new-control-input" name="tipe_beasiswa"
+                                        id="tipe_beasiswa2" value="2">
+                                    <span class="new-control-indicator"></span>Non Beasiswa
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 mb-3">
+                            <label for="" style="font-weight: 600;">Harga</label>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon6">Rp</span>
+                                </div>
+                                <input type="text" name="harga" id="harga_format" class="form-control" required>
+                            </div>
+                            <input type="text" name="harga" id="harga" class="form-control" hidden>
+                        </div>
+                        <div class="form-group col-lg-3 mb-3">
+                            <label for="" style="font-weight: 600;">Diskon <small>harga final :</small></label>
+                            <div class="input-group">
+                                <input type="text" name="diskon" id="diskon" class="form-control" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon6">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 mb-3">
+                            <label for="" style="font-weight: 600;">Masa Aktif</label>
+                            <input type="date" name="masa_aktif" id="masa_aktif" class="form-control" required>
+                        </div>
+                        <div class="form-group col-lg-12 mb-3">
+                            <label for="nama" style="font-weight: 600;">Keterangan</label>
+                            <textarea name="keterangan" id="keterangan" cols="30" rows="2"
+                                class="form-control"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -120,23 +296,102 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        createtable('invoice-list')
+        
+        const harga_format = new Cleave('#harga_format', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                // prefix: 'Rp ',
+                noImmediatePrefix: true,
+                numeralDecimalMark: ',',
+                delimiter: '.',
+                onValueChanged: function(e) {
+                    // Setiap kali nilai berubah, update hidden input
+                    document.getElementById('harga').value = e.target.rawValue;
+                }
+            });
+
+        $('#mySelect2').select2({
+            dropdownParent: $('#userModal')
+        });
+    })
     // Fungsi ketika tombol 'Tambah Pengguna' diklik
-            function resetForm() {
-                document.getElementById('id').value = '';
-                document.getElementById('nama').value = '';
+    function resetForm() {
+        document.getElementById('id').value = '';
+        $('#id_materi').val();
+        $('#urutan').val();
+        $('#nama').val();
+        $('#tipe_link0').val();
+        $('#tipe_link1').val();
+        $('#link').val();
+        $('#tipe_beasiswa0').val();
+        $('#tipe_beasiswa1').val();
+        $('#tipe_beasiswa2').val();
+        $('#harga').val();
+        $('#diskon').val();
+        $('#masa_aktif').val();
+        $('#keterangan').val();
+
+        $('#tipe_link0').attr('checked', true);
+        $('#tipe_link1').attr('checked', false);
+
+        $('#tipe_beasiswa0').attr('checked', true);
+        $('#tipe_beasiswa1').attr('checked', false);
+        $('#tipe_beasiswa2').attr('checked', false);
+    }
+
+    // Fungsi ketika tombol 'Edit' diklik
+    function editUser(user) {
+        resetForm();
+
+        if (user) {
+            document.getElementById('id').value = user.id;
+            $('#id_materi').val(user.id_materi);
+            $('#urutan').val(user.urutan);
+            $('#nama').val(user.nama);
+            if (user.tipe_link == 0) {
+                $('#tipe_link0').attr('checked', true);
+            }
+            if (user.tipe_link == 1) {
+                $('#tipe_link1').attr('checked', true);
             }
             
-            // Fungsi ketika tombol 'Edit' diklik
-            function editUser(user) {
-                resetForm();
-                
-                if (user) {
-                    document.getElementById('id').value = user.id;
-                    document.getElementById('nama').value = user.nama;
-                }
-
-                // Tampilkan Modal secara terprogram
-                $('#userModal').modal('show');
+            $('#link').val(user.link);
+            
+            if (user.tipe_beasiswa == 0) {
+                $('#tipe_beasiswa0').attr('checked', true);
             }
+            if (user.tipe_beasiswa == 1) {
+                $('#tipe_beasiswa1').attr('checked', true);
+            }
+            if (user.tipe_beasiswa == 2) {
+                $('#tipe_beasiswa2').attr('checked', true);
+            }
+            // harga_format.setRawValue(user.harga);
+            $('#harga').val(user.harga);
+            $('#diskon').val(user.diskon);
+            $('#masa_aktif').val(dayjs(user.masa_aktif).format('YYYY-MM-DD'));
+            $('#keterangan').val(user.keterangan);
+            const hf = new Cleave('#harga_format', {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'thousand',
+                    // prefix: 'Rp ',
+                    noImmediatePrefix: true,
+                    numeralDecimalMark: ',',
+                    delimiter: '.',
+                    onValueChanged: function(e) {
+                        // Setiap kali nilai berubah, update hidden input
+                        document.getElementById('harga').value = e.target.rawValue;
+                    }
+                });
+                hf.setRawValue(user.harga)
+        }
+        // Tampilkan Modal secara terprogram
+        $('#userModal').modal('show');
+    }
+
+    function formatnumber(params) {
+    }
 </script>
 @endsection
