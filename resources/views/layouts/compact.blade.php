@@ -24,6 +24,10 @@
 
     <link rel="stylesheet" type="text/css" href="plugins/table/datatable/datatables.css">
     <script src="plugins/table/datatable/datatables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="plugins/select2/select2.min.css">
+    <script src="plugins/select2/select2.min.js"></script>
+    <script src="plugins/select2/custom-select2.js"></script>
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>
