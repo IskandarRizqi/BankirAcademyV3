@@ -65,7 +65,10 @@ public function sekolah()
 {
     return $this->belongsTo(User::class, 'sekolah_id');
 }
-
+public function profile()
+{
+    return $this->hasOne(SiswaProfile::class, 'user_id');
+}
 public function membership()
 {
     return $this->belongsTo(Membership::class, 'membership_id');

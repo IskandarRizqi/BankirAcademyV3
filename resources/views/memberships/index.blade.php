@@ -31,7 +31,7 @@
                             </div>
                             <hr>
 
-                            <table id="invoice-list" class="table table-hover" style="width:100%">
+                            <table id="membership-list" class="table table-hover" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th class="checkbox-column"> No. </th>
@@ -173,6 +173,9 @@
             </div>
 
         <script>
+             $(document).ready(function() {
+        createtable('membership-list')
+    });
             function resetForm() {
                 document.getElementById('membershipModalLabel').innerText = 'Tambah Membership';
                 document.getElementById('membershipForm').action = "{{ route('memberships.store') }}";

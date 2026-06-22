@@ -23,15 +23,26 @@
                         @endif
 
                         <div class="widget-content widget-content-area br-6">
-                            <div class="d-flex justify-content-between align-items-center px-4 pt-3">
-                                <h5 style="font-weight: bold;">Daftar Pengguna</h5>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal" onclick="resetForm()">
-                                    Tambah Pengguna
-                                </button>
-                            </div>
+                        <div class="d-flex justify-content-between align-items-center px-4 pt-3">
+    <h5 style="font-weight: bold;">Daftar Pengguna</h5>
+    <div class="d-flex gap-2">
+        {{-- Mengizinkan Root, Bank (4), dan Sekolah (5) untuk melihat tombol import --}}
+        @if(auth()->user()->email === 'cb@bankir.academy' || in_array(auth()->user()->role, [4, 5]))
+            <a href="{{ route('users.download-template') }}" class="btn btn-info mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download mr-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Template Excel
+            </a>
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#importModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-plus mr-1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg> Import Siswa
+            </button>
+        @endif
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal" onclick="resetForm()">
+            Tambah Pengguna
+        </button>
+    </div>
+</div>
                             <hr>
 
-                            <table id="invoice-list" class="table table-hover" style="width:100%">
+                            <table id="user-list" class="table table-hover" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th class="checkbox-column"> No. </th>
@@ -211,12 +222,82 @@
                     </div>
                 </div>
             </div>
+{{-- Modal Import Excel Dinamis --}}
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="background: #fff; border-radius: 8px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel" style="font-weight: bold;">Import Data Siswa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <p class="mb-1"><strong>Informasi Sistem:</strong></p>
+                        <ul class="pl-3 mb-0" style="font-size: 13px;">
+                            <li>Gunakan file template yang telah disediakan.</li>
+                            <li>Email siswa otomatis: <code>[NISN]@gmail.com</code></li>
+                            <li>Password siswa otomatis: <code>[NISN]Bankir!</code></li>
+                        </ul>
+                    </div>
+
+                    @php
+                        $authRole = (int) auth()->user()->role;
+                        $authEmail = auth()->user()->email;
+                    @endphp
+
+                    {{-- Jika yang login ROOT utama, tampilkan opsi pilih Bank --}}
+                    @if ($authEmail === 'cb@bankir.academy')
+                        <div class="form-group mb-3">
+                            <label for="import_bank_id" style="font-weight: 600;">Pilih Bank Tujuan <span class="text-danger">*</span></label>
+                            <select id="import_bank_id" name="import_bank_id" class="form-control" required onchange="filterSekolahImport()">
+                                <option value="" selected disabled>-- Pilih Bank --</option>
+                                @foreach($listBank as $bank)
+                                    <option value="{{ $bank->id }}">{{ $bank->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
+                    {{-- Jika yang login ROOT atau BANK, wajib memilih Sekolah --}}
+                    @if ($authEmail === 'cb@bankir.academy' || $authRole === 4)
+                        <div class="form-group mb-3">
+                            <label for="import_sekolah_id" style="font-weight: 600;">Pilih Sekolah Tujuan <span class="text-danger">*</span></label>
+                            <select id="import_sekolah_id" name="import_sekolah_id" class="form-control" required>
+                                <option value="" selected disabled>-- Pilih Sekolah --</option>
+                                @foreach($listSekolah as $sekolah)
+                                    <option value="{{ $sekolah->id }}" data-bank="{{ $sekolah->bank_id }}">{{ $sekolah->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
+                    <div class="form-group mb-3">
+                        <label for="file_excel" style="font-weight: 600;">Pilih File Excel (.xlsx / .xls)</label>
+                        <input type="file" id="file_excel" name="file_excel" class="form-control" required accept=".xlsx, .xls">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Proses Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 <script>
     // Ambil info data login pelaksana dari php ke javascript variable
     const AUTH_ROLE = parseInt("{{ $authRole }}");
     const AUTH_EMAIL = "{{ $authEmail }}";
+
+    $(document).ready(function() {
+        createtable('user-list')
+    });
 
     // Fungsi memunculkan form spesifik berdasarkan role yang dipilih dan hak login saat ini
     function handleRoleChange() {
@@ -307,6 +388,28 @@
 
         handleRoleChange();
     }
+    // Fungsi menyaring daftar sekolah di dalam Modal Import khusus untuk Root login
+function filterSekolahImport() {
+    let selectedBankId = document.getElementById('import_bank_id').value;
+    let sekolahSelect = document.getElementById('import_sekolah_id');
+    let options = sekolahSelect.options;
+
+    // Reset pilihan sekolah ke default
+    sekolahSelect.value = "";
+
+    for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        let bankRelation = option.getAttribute('data-bank');
+
+        if (option.value === "") continue; 
+
+        if (bankRelation == selectedBankId) {
+            option.style.display = "block";
+        } else {
+            option.style.display = "none";
+        }
+    }
+}
 
     // Fungsi ketika tombol 'Edit' diklik
     function editUser(user) {

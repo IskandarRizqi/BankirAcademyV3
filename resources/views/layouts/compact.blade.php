@@ -388,7 +388,7 @@
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </li>
-
+ @if(auth()->check() && auth()->user()->role !== 6)
                     <li class="menu">
                         <a href="#" onclick="window.location.href='{{ route('users.index') }}';"
                             data-active="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" class="menu-toggle">
@@ -413,6 +413,7 @@
                             </div>
                         </a>
                     </li>
+                    @endif
 
                     @if(auth()->check() && auth()->user()->email === 'cb@bankir.academy')
                     <li class="menu">

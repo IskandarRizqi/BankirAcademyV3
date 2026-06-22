@@ -1,11 +1,14 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SiswaTemplateExport;
 use App\Http\Controllers\Controller;
+use App\Imports\SiswaImport;
 use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -82,7 +85,6 @@ class UserController extends Controller
             $rules['bank_id'] = 'required_if:role,5,6|nullable|exists:users,id';
             $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
         } else if ($authRole === 4) {
-            // Jika Bank biasa login, dia wajib memilih sekolah jika ingin membuat siswa (role 6)
             $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
         }
 
@@ -100,14 +102,38 @@ class UserController extends Controller
             $bankId = in_array($request->role, [5, 6]) ? $request->bank_id : null;
             $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
         } else if ($authRole === 4) {
-            // Jika Bank biasa login, otomatis set bank_id ke dirinya sendiri
             $bankId = in_array($request->role, [5, 6]) ? $authUser->id : null;
             $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
         } else if ($authRole === 5) {
-            // Jika Sekolah login, otomatis set bank_id dan sekolah_id dari instansi sekolah tersebut
             $bankId = $authUser->bank_id;
             $sekolahId = $authUser->id;
         }
+
+        // ==================== KODE PROTEKSI LIMIT SISWA (BARU) ====================
+        if ((int)$request->role === 6) { 
+            // 1. Cari tahu Bank pemilik dari Siswa ini
+            $targetBank = User::find($bankId);
+
+            if ($targetBank && $targetBank->membership_id) {
+                // 2. Ambil data membership dari Bank tersebut beserta limit_siswa-nya
+                $membership = $targetBank->membership;
+                
+                if ($membership && !is_null($membership->limit_siswa)) {
+                    // 3. Hitung jumlah siswa yang SUDAH terdaftar di SEKOLAH TERPILIH saat ini
+                    $currentSiswaCount = User::where('role', 6)
+                                            ->where('sekolah_id', $sekolahId)
+                                            ->count();
+
+                    // 4. Jika jumlahnya sudah sama atau melebihi limit, batalkan proses
+                    if ($currentSiswaCount >= $membership->limit_siswa) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->withErrors(['role' => 'Batas maksimal pendaftaran siswa untuk sekolah ini (' . $membership->limit_siswa . ' siswa) telah tercapai sesuai paket membership Bank.']);
+                    }
+                }
+            }
+        }
+        // =========================================================================
 
         User::create([
             'name' => $request->name,
@@ -121,6 +147,47 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
+    public function downloadTemplate()
+{
+    return Excel::download(new SiswaTemplateExport, 'template_import_siswa.xlsx');
+}
+
+public function import(Request $request)
+{
+    $authUser = auth()->user();
+    $authRole = (int) $authUser->role;
+    $authEmail = $authUser->email;
+
+    // Rules dasar untuk file
+    $rules = [
+        'file_excel' => 'required|mimes:xlsx,xls,csv|max:10240',
+    ];
+
+    // Rules conditional untuk form import jika yang login Root atau Bank
+    if ($authEmail === 'cb@bankir.academy') {
+        $rules['import_bank_id'] = 'required|exists:users,id';
+        $rules['import_sekolah_id'] = 'required|exists:users,id';
+    } else if ($authRole === 4) {
+        $rules['import_sekolah_id'] = 'required|exists:users,id';
+    }
+
+    $request->validate($rules, [
+        'import_bank_id.required' => 'Wajib memilih Bank tujuan import.',
+        'import_sekolah_id.required' => 'Wajib memilih Sekolah tujuan import.',
+    ]);
+
+    try {
+        // Oper data bank & sekolah pilihan ke dalam class import
+        Excel::import(
+            new SiswaImport($request->import_bank_id, $request->import_sekolah_id), 
+            $request->file('file_excel')
+        );
+        
+        return redirect()->back()->with('success', 'Data siswa berhasil diimport.');
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
+}
 
     public function edit(User $user)
     {
@@ -184,6 +251,26 @@ class UserController extends Controller
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
+        }
+        if ((int)$request->role === 6) {
+            $targetBank = User::find($bankId);
+            if ($targetBank && $targetBank->membership_id) {
+                $membership = $targetBank->membership;
+                if ($membership && !is_null($membership->limit_siswa)) {
+                    
+                    // Hitung jumlah siswa di sekolah tersebut, abaikan ID siswa yang sedang di-edit saat ini
+                    $currentSiswaCount = User::where('role', 6)
+                                            ->where('sekolah_id', $sekolahId)
+                                            ->where('id', '!=', $user->id) 
+                                            ->count();
+
+                    if ($currentSiswaCount >= $membership->limit_siswa) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->withErrors(['role' => 'Gagal memperbarui. Kuota siswa untuk sekolah ini telah penuh (' . $membership->limit_siswa . ' siswa).']);
+                    }
+                }
+            }
         }
 
         $user->update($data);
