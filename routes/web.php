@@ -15,6 +15,7 @@ use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\PrePostTestController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -267,3 +268,4 @@ Route::get('/template', function () {
 Route::resource('kategori-materi', KategoriController::class);
 Route::resource('materi', MateriController::class);
 Route::resource('sub-materi', SubMateriController::class);
+Route::resource('ppt', PrePostTestController::class);

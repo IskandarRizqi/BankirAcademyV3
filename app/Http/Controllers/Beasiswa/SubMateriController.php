@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Beasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\KategoriModel;
 use App\Models\MateriModel;
 use App\Models\SubMateriModel;
 use Illuminate\Http\Request;
@@ -97,7 +98,16 @@ class SubMateriController extends Controller
      */
     public function show($id)
     {
-        //
+        $x['kategori'] = KategoriModel::select()
+            ->with([
+                'materi.subMateri' => function ($q) {
+                    // $q->where('tipe_beasiswa', 0)->orWhere('tipe_beasiswa', 1);
+                    // $q->where('tipe_beasiswa', 0)->orWhere('tipe_beasiswa', 2);
+                }
+            ])
+            ->get();
+
+        return $x;
     }
 
     /**
