@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <title>CORK Admin Template - Analytics Dashboard</title>
-    
+
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}" />
     <link href="{{ asset('assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
     <script src="{{ asset('assets/js/loader.js') }}"></script>
@@ -15,7 +15,8 @@
     <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/css/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" class="dashboard-analytics" />
+    <link href="{{ asset('assets/css/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css"
+        class="dashboard-analytics" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
 
     <script src="{{ asset('assets/js/libs/jquery-3.1.1.min.js') }}"></script>
@@ -38,9 +39,9 @@
             white-space: nowrap;
         }
     </style>
-    
+
     <!-- @stack('styles') -->
-    </head>
+</head>
 
 <body class="dashboard-analytics">
 
@@ -285,8 +286,10 @@
                             <div class="media mx-auto">
                                 <img src="assets/img/90x90.jpg" class="img-fluid mr-2" alt="avatar">
                                 <div class="media-body">
-                                    <h5>Alan Green</h5>
-                                    <p>Project Leader</p>
+                                    @if(Auth::check())
+                                    <h5>{{auth()->user()->name}}</h5>
+                                    <p>{{auth()->user()->role_name}}</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -365,7 +368,7 @@
                 </ul>
                 <ul class="menu-categories">
                     <li class="menu active">
-                        <a href="#dashboard" data-active="true" class="menu-toggle">
+                        <a href="/home" data-active="false" class="menu-toggle">
                             <div class="base-menu">
                                 <div class="base-icons">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -373,6 +376,25 @@
                                         stroke-linejoin="round" class="feather feather-home">
                                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    </svg>
+                                </div>
+                                <span>Dashboard</span>
+                            </div>
+                        </a>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-chevron-left">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </li>
+                    <li class="menu">
+                        <a href="#dashboard" data-active="false" class="menu-toggle">
+                            <div class="base-menu">
+                                <div class="base-icons">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-zap">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                                     </svg>
                                 </div>
                                 <span>Pre Post Test</span>
@@ -410,7 +432,7 @@
                         </a>
                     </li>
                     @endif
- @if(auth()->check() && auth()->user()->role == 6)
+                    @if(auth()->check() && auth()->user()->role == 6)
                     <li class="menu">
                         <a href="#" onclick="window.location.href='/pelatihan';"
                             data-active="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" class="menu-toggle">
@@ -578,8 +600,8 @@
             });
         }
     </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

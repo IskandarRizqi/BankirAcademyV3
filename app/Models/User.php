@@ -49,7 +49,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    protected $appends = ['profile', 'rekening', 'corporates'];
+    protected $appends = ['profile', 'rekening', 'corporates', 'role_name'];
+    public function getRoleNameAttribute()
+    {
+        $role = [
+            'Root',
+            '',
+            'Peserta',
+            'Instructor',
+            'Bank',
+            'Sekolah',
+            'Siswa',
+        ];
+
+        if ($this->attributes['email'] == 'cb@bankir.academy') {
+            return 'Root';
+        }
+        return $role[$this->attributes['role']];
+    }
     public function getProfileAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
@@ -57,22 +74,22 @@ class User extends Authenticatable
         }
     }
     public function bank()
-{
-    return $this->belongsTo(User::class, 'bank_id');
-}
+    {
+        return $this->belongsTo(User::class, 'bank_id');
+    }
 
-public function sekolah()
-{
-    return $this->belongsTo(User::class, 'sekolah_id');
-}
-public function siswa()
-{
-    return $this->hasOne(SiswaProfile::class, 'user_id');
-}
-public function membership()
-{
-    return $this->belongsTo(Membership::class, 'membership_id');
-}
+    public function sekolah()
+    {
+        return $this->belongsTo(User::class, 'sekolah_id');
+    }
+    public function siswa()
+    {
+        return $this->hasOne(SiswaProfile::class, 'user_id');
+    }
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class, 'membership_id');
+    }
     public function getRekeningAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
