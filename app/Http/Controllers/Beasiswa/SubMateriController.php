@@ -46,10 +46,11 @@ class SubMateriController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
         $valid = Validator::make($request->all(), [
             'nama' => 'required',
             'link' => 'required',
-            'keterangan' => 'required',
+            'keterangan' => 'nullable',
             'id_materi' => 'required',
             'urutan' => 'required',
             'tipe_link' => 'required',

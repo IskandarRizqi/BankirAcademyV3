@@ -7,6 +7,7 @@ use App\Imports\SiswaImport;
 use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -158,12 +159,10 @@ public function import(Request $request)
     $authRole = (int) $authUser->role;
     $authEmail = $authUser->email;
 
-    // Rules dasar untuk file
     $rules = [
         'file_excel' => 'required|mimes:xlsx,xls,csv|max:10240',
     ];
 
-    // Rules conditional untuk form import jika yang login Root atau Bank
     if ($authEmail === 'cb@bankir.academy') {
         $rules['import_bank_id'] = 'required|exists:users,id';
         $rules['import_sekolah_id'] = 'required|exists:users,id';
@@ -176,16 +175,38 @@ public function import(Request $request)
         'import_sekolah_id.required' => 'Wajib memilih Sekolah tujuan import.',
     ]);
 
+    // 1. Mulai Transaksi Database
+    DB::beginTransaction();
+
     try {
-        // Oper data bank & sekolah pilihan ke dalam class import
-        Excel::import(
-            new SiswaImport($request->import_bank_id, $request->import_sekolah_id), 
-            $request->file('file_excel')
-        );
+        $siswaImport = new SiswaImport($request->import_bank_id, $request->import_sekolah_id);
         
-        return redirect()->back()->with('success', 'Data siswa berhasil diimport.');
+        // Proses pembacaan file excel
+        Excel::import($siswaImport, $request->file('file_excel'));
+        
+        $totalSuccess = 0;
+        $allErrors = [];
+
+        foreach ($siswaImport->sheetInstances as $sheet) {
+            $totalSuccess += $sheet->successCount;
+            if (!empty($sheet->errors)) {
+                $allErrors = array_merge($allErrors, $sheet->errors);
+            }
+        }
+
+        // 2. JIKA ADA ERROR (Kouta Penuh / NISN Duplikat), BATALKAN SEMUA DATA
+        if (count($allErrors) > 0) {
+            DB::rollBack(); // Menghapus kembali semua data yang sempat ter-insert selama proses import ini
+            return redirect()->back()->withErrors($allErrors);
+        }
+
+        // 3. JIKA SUKSES TOTAL TANPA ERROR, SIMPAN PERMANEN
+        DB::commit(); 
+        return redirect()->back()->with('success', "Semua data siswa ({$totalSuccess} siswa) berhasil diimport.");
+
     } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        DB::rollBack(); // Batalkan jika ada crash program
+        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan sistem: ' . $e->getMessage()]);
     }
 }
 
@@ -195,92 +216,126 @@ public function import(Request $request)
     }
 
     // Perbarui data pengguna
-    public function update(Request $request, User $user)
-    {
-        if ($user->email === 'cb@bankir.academy' && auth()->user()->email !== 'cb@bankir.academy') {
-            abort(403, 'Aksi ini tidak diizinkan.');
-        }
+   public function update(Request $request, User $user)
+{
+    if ($user->email === 'cb@bankir.academy' && auth()->user()->email !== 'cb@bankir.academy') {
+        abort(403, 'Aksi ini tidak diizinkan.');
+    }
 
-        $authUser = auth()->user();
-        $authRole = (int) $authUser->role;
-        $authEmail = $authUser->email;
+    $authUser = auth()->user();
+    $authRole = (int) $authUser->role;
+    $authEmail = $authUser->email;
 
-        $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|not_in:cb@bankir.academy|unique:users,email,' . $user->id,
-            'role' => 'required|integer',
-            'password' => 'nullable|string|min:8',
-            'membership_id' => 'nullable|exists:memberships,id',
-        ];
+    $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|not_in:cb@bankir.academy|unique:users,email,' . $user->id,
+        'role' => 'required|integer',
+        'password' => 'nullable|string|min:8',
+        'membership_id' => 'nullable|exists:memberships,id',
+        
+        // Aturan validasi tambahan opsional untuk SiswaProfile
+        'no_telp' => 'nullable|string|max:20',
+        'jenis_kelamin' => 'nullable|in:L,P',
+        'nisn' => 'nullable|string|max:20',
+        'kelas' => 'nullable|string|max:50',
+        'beasiswa' => 'nullable|boolean',
+    ];
 
-        if ($authEmail === 'cb@bankir.academy') {
-            $rules['bank_id'] = 'required_if:role,5,6|nullable|exists:users,id';
-            $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
-        } else if ($authRole === 4) {
-            $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
-        }
+    if ($authEmail === 'cb@bankir.academy') {
+        $rules['bank_id'] = 'required_if:role,5,6|nullable|exists:users,id';
+        $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
+    } else if ($authRole === 4) {
+        $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
+    }
 
-        $request->validate($rules, [
-            'email.not_in' => 'Email ini dilindungi sistem dan tidak dapat digunakan.',
-            'bank_id.required_if' => 'Akun Sekolah dan Siswa wajib memilih Bank terlebih dahulu.',
-            'sekolah_id.required_if' => 'Akun Siswa wajib memilih Sekolah terlebih dahulu.',
-        ]);
+    $request->validate($rules, [
+        'email.not_in' => 'Email ini dilindungi sistem dan tidak dapat digunakan.',
+        'bank_id.required_if' => 'Akun Sekolah dan Siswa wajib memilih Bank terlebih dahulu.',
+        'sekolah_id.required_if' => 'Akun Siswa wajib memilih Sekolah terlebih dahulu.',
+    ]);
 
-        $bankId = null;
-        $sekolahId = null;
+    $bankId = null;
+    $sekolahId = null;
 
-        if ($authEmail === 'cb@bankir.academy') {
-            $bankId = in_array($request->role, [5, 6]) ? $request->bank_id : null;
-            $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
-        } else if ($authRole === 4) {
-            $bankId = in_array($request->role, [5, 6]) ? $authUser->id : null;
-            $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
-        } else if ($authRole === 5) {
-            $bankId = $authUser->bank_id;
-            $sekolahId = $authUser->id;
-        }
+    if ($authEmail === 'cb@bankir.academy') {
+        $bankId = in_array($request->role, [5, 6]) ? $request->bank_id : null;
+        $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
+    } else if ($authRole === 4) {
+        $bankId = in_array($request->role, [5, 6]) ? $authUser->id : null;
+        $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
+    } else if ($authRole === 5) {
+        $bankId = $authUser->bank_id;
+        $sekolahId = $authUser->id;
+    }
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-            'membership_id' => $request->role == 4 ? $request->membership_id : null,
-            'bank_id' => $bankId,
-            'sekolah_id' => $sekolahId,
-        ];
+    $data = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'role' => $request->role,
+        'membership_id' => $request->role == 4 ? $request->membership_id : null,
+        'bank_id' => $bankId,
+        'sekolah_id' => $sekolahId,
+    ];
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-        if ((int)$request->role === 6) {
-            $targetBank = User::find($bankId);
-            if ($targetBank && $targetBank->membership_id) {
-                $membership = $targetBank->membership;
-                if ($membership && !is_null($membership->limit_siswa)) {
-                    
-                    // Hitung jumlah siswa di sekolah tersebut, abaikan ID siswa yang sedang di-edit saat ini
-                    $currentSiswaCount = User::where('role', 6)
-                                            ->where('sekolah_id', $sekolahId)
-                                            ->where('id', '!=', $user->id) 
-                                            ->count();
+    if ($request->filled('password')) {
+        $data['password'] = Hash::make($request->password);
+    }
+    
+    if ((int)$request->role === 6) {
+        $targetBank = User::find($bankId);
+        if ($targetBank && $targetBank->membership_id) {
+            $membership = $targetBank->membership;
+            if ($membership && !is_null($membership->limit_siswa)) {
+                
+                // Hitung jumlah siswa di sekolah tersebut, abaikan ID siswa yang sedang di-edit saat ini
+                $currentSiswaCount = User::where('role', 6)
+                                        ->where('sekolah_id', $sekolahId)
+                                        ->where('id', '!=', $user->id) 
+                                        ->count();
 
-                    if ($currentSiswaCount >= $membership->limit_siswa) {
-                        return redirect()->back()
-                            ->withInput()
-                            ->withErrors(['role' => 'Gagal memperbarui. Kuota siswa untuk sekolah ini telah penuh (' . $membership->limit_siswa . ' siswa).']);
-                    }
+                if ($currentSiswaCount >= $membership->limit_siswa) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['role' => 'Gagal memperbarui. Kuota siswa untuk sekolah ini telah penuh (' . $membership->limit_siswa . ' siswa).']);
                 }
             }
         }
-
-        $user->update($data);
-
-        return redirect()->route('users.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
+
+    // Eksekusi Update Akun User Utama
+    $user->update($data);
+
+    // --- LOGIKA UTAMA EDIT PROFILE SISWA ---
+    if ((int)$request->role === 6) {
+        // Menggunakan updateOrCreate agar jika record profil belum ada di database, otomatis dibuat baru
+        \App\Models\SiswaProfile::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'no_telp'       => $request->no_telp,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'nisn'          => $request->nisn,
+                'kelas'         => $request->kelas,
+                'beasiswa'      => $request->has('beasiswa') ? $request->beasiswa : 0, // Fallback ke status non-beasiswa jika kosong
+            ]
+        );
+    } else {
+        // Opsional: Hapus record profile jika role pengguna dipindahkan dari Siswa (6) ke role lain
+        \App\Models\SiswaProfile::where('user_id', $user->id)->delete();
+    }
+
+    return redirect()->route('users.index')->with('success', 'Pengguna berhasil diperbarui.');
+}
 
     public function destroy(User $user)
-    {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus.');
+{
+    // Cek apakah user memiliki profile siswa, jika ada hapus terlebih dahulu
+    if ($user->siswa) {
+        $user->siswa()->delete();
     }
+
+    // Hapus data user utama
+    $user->delete();
+
+    return redirect()->route('users.index')->with('success', 'Pengguna dan data profil berhasil dihapus.');
+}
 }

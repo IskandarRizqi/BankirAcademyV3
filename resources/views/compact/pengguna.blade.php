@@ -83,22 +83,28 @@
                                         </td>
                                         <td>
                                             <div class="dropdown">
+                                                
                                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $user->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
                                                 </a>
+                                    
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink{{ $user->id }}">
+                                                    <a class="dropdown-item action-view" href="javascript:void(0);" 
+       onclick="viewUser({{ json_encode($user->load(['siswa', 'membership', 'bank', 'sekolah'])) }})">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user mr-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Lihat Profile
+    </a>
                                                     <a class="dropdown-item action-edit" href="javascript:void(0);" 
-                                                       onclick="editUser({{ json_encode($user) }})">
+                                                      onclick="editUser({{ json_encode($user->load('siswa')) }})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit
                                                     </a>
                                                     
-                                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="dropdown-item action-delete text-danger" style="border: none; background: none; width: 100%;">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete
-                                                        </button>
-                                                    </form>
+                                                   <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="form-delete">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="dropdown-item action-delete text-danger btn-delete-user" data-name="{{ $user->name }}" style="border: none; background: none; width: 100%;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete
+    </button>
+</form>
                                                 </div>
                                             </div>
                                         </td>
@@ -118,6 +124,67 @@
                     </div>
 
                 </div>
+                <div class="modal fade" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewUserModalLabel">Detail Profil Pengguna</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <img id="view-avatar" src="" alt="avatar" class="rounded-circle img-fluid" style="width: 100px; height: 100px;">
+                    <h4 class="mt-2 mb-0" id="view-name">-</h4>
+                    <span class="badge" id="view-role-badge">-</span>
+                </div>
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="35%">Email</th>
+                        <td id="view-email">-</td>
+                    </tr>
+                    <tr>
+                        <th>Membership</th>
+                        <td id="view-membership">-</td>
+                    </tr>
+                    <tr class="siswa-field">
+                        <th>NISN</th>
+                        <td id="view-nisn">-</td>
+                    </tr>
+                    <tr class="siswa-field">
+                        <th>Kelas</th>
+                        <td id="view-kelas">-</td>
+                    </tr>
+                    <tr class="siswa-field">
+                        <th>Jenis Kelamin</th>
+                        <td id="view-jk">-</td>
+                    </tr>
+                    <tr class="siswa-field">
+                        <th>No. Telepon</th>
+                        <td id="view-telp">-</td>
+                    </tr>
+                    <tr class="siswa-field">
+                        <th>Status Beasiswa</th>
+                        <td id="view-beasiswa">-</td>
+                    </tr>
+                    <tr id="row-sekolah">
+                        <th>Asal Sekolah</th>
+                        <td id="view-sekolah-induk">-</td>
+                    </tr>
+                    <tr id="row-bank">
+                        <th>Bank Pengampu</th>
+                        <td id="view-bank-induk">-</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 
             {{-- Modal Create / Update --}}
             <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
@@ -207,7 +274,40 @@
             @endforeach
         </select>
     </div>
+{{-- FIELD TAMBAHAN KHUSUS PROFILE SISWA --}}
+<div id="siswa-profile-group" class="d-none">
+    <div class="form-group mb-3">
+        <label for="nisn" style="font-weight: 600;">NISN</label>
+        <input type="text" id="nisn" name="nisn" class="form-control" placeholder="Masukkan NISN">
+    </div>
 
+    <div class="form-group mb-3">
+        <label for="kelas" style="font-weight: 600;">Kelas</label>
+        <input type="text" id="kelas" name="kelas" class="form-control" placeholder="Contoh: XII RPL 1">
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="jenis_kelamin" style="font-weight: 600;">Jenis Kelamin</label>
+        <select id="jenis_kelamin" name="jenis_kelamin" class="form-control">
+            <option value="" selected disabled>-- Pilih Jenis Kelamin --</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="no_telp" style="font-weight: 600;">No. Telepon / WhatsApp</label>
+        <input type="text" id="no_telp" name="no_telp" class="form-control" placeholder="08xxxxxxxxxx">
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="beasiswa" style="font-weight: 600;">Status Beasiswa</label>
+        <select id="beasiswa" name="beasiswa" class="form-control">
+            <option value="0">Tidak (Siswa Reguler)</option>
+            <option value="1">Ya (Penerima Beasiswa)</option>
+        </select>
+    </div>
+</div>
     <div class="form-group mb-3">
         <label for="password" style="font-weight: 600;">Password</label>
         <input type="password" id="password" name="password" class="form-control" placeholder="Minimal 8 karakter">
@@ -297,54 +397,150 @@
 
     $(document).ready(function() {
         createtable('user-list')
+        const deleteButtons = document.querySelectorAll('.btn-delete-user');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            const form = this.closest('.form-delete');
+            const userName = this.getAttribute('data-name');
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: `Anda akan menghapus pengguna "${userName}". Tindakan ini juga akan menghapus seluruh data profil siswa yang terkait secara permanen!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e7515a', // Warna merah bootstrap / menyesuaikan tema
+                cancelButtonColor: '#9097a7',
+                confirmButtonText: 'Ya, Hapus Permanen!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Jalankan submit form jika user klik Ya
+                }
+            });
+        });
+    });
+
+    // Opsional: Tampilkan SweetAlert sukses jika proses berhasil (mengambil dari session flash Laravel)
+    @if(session('success'))
+        Swal.fire({
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
     });
 
     // Fungsi memunculkan form spesifik berdasarkan role yang dipilih dan hak login saat ini
+    function viewUser(user) {
+    // 1. Isi Data Dasar
+    document.getElementById('view-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`;
+    document.getElementById('view-name').innerText = user.name;
+    document.getElementById('view-email').innerText = user.email;
+    document.getElementById('view-membership').innerText = user.membership ? user.membership.nama : 'Tidak Ada';
+
+    // 2. Set Badge & Atur Tampilan Berdasarkan Role
+    const roleBadge = document.getElementById('view-role-badge');
+    const siswaFields = document.querySelectorAll('.siswa-field');
+    const rowSekolah = document.getElementById('row-sekolah');
+    const rowBank = document.getElementById('row-bank');
+
+    // Reset default display
+    roleBadge.className = 'badge ';
+    siswaFields.forEach(f => f.style.display = 'none');
+    rowSekolah.style.display = 'none';
+    rowBank.style.display = 'none';
+
+    if (user.role == 4) {
+        roleBadge.innerText = 'Bank';
+        roleBadge.classList.add('badge-success');
+    } else if (user.role == 5) {
+        roleBadge.innerText = 'Sekolah';
+        roleBadge.classList.add('badge-warning');
+        // Tampilkan Bank yang mengampu sekolah ini (jika ada)
+        if (user.bank) {
+            rowBank.style.display = '';
+            document.getElementById('view-bank-induk').innerText = user.bank.name;
+        }
+    } else if (user.role == 6) {
+        roleBadge.innerText = 'Siswa';
+        roleBadge.classList.add('badge-secondary');
+        
+        // Tampilkan field khusus siswa
+        siswaFields.forEach(f => f.style.display = '');
+        
+        // Isi data profil siswa
+        if (user.siswa) {
+            document.getElementById('view-nisn').innerText = user.siswa.nisn || '-';
+            document.getElementById('view-kelas').innerText = user.siswa.kelas || '-';
+            document.getElementById('view-jk').innerText = user.siswa.jenis_kelamin === 'L' ? 'Laki-laki' : (user.siswa.jenis_kelamin === 'P' ? 'Perempuan' : '-');
+            document.getElementById('view-telp').innerText = user.siswa.no_telp || '-';
+            document.getElementById('view-beasiswa').innerText = user.siswa.beasiswa ? 'Ya (Penerima Beasiswa)' : 'Tidak';
+        } else {
+            document.getElementById('view-nisn').innerText = 'Profil belum dilengkapi';
+            // ... reset sisanya ke strip jika profile null
+        }
+
+        // Tampilkan Sekolah & Bank asal siswa tersebut
+        if (user.sekolah) {
+            rowSekolah.style.display = '';
+            document.getElementById('view-sekolah-induk').innerText = user.sekolah.name;
+        }
+        if (user.bank) {
+            rowBank.style.display = '';
+            document.getElementById('view-bank-induk').innerText = user.bank.name;
+        }
+    } else {
+        roleBadge.innerText = 'Role ' + user.role;
+        roleBadge.classList.add('badge-light');
+    }
+
+    // 3. Tampilkan Modal
+    $('#viewUserModal').modal('show');
+}
     function handleRoleChange() {
-        let role = document.getElementById('role').value;
-        
-        let membershipGroup = document.getElementById('membership-group');
-        let bankGroup = document.getElementById('bank-group');
-        let sekolahGroup = document.getElementById('sekolah-group');
+    let role = document.getElementById('role').value;
+    
+    let membershipGroup = document.getElementById('membership-group');
+    let bankGroup = document.getElementById('bank-group');
+    let sekolahGroup = document.getElementById('sekolah-group');
+    let siswaProfileGroup = document.getElementById('siswa-profile-group'); // Tambah baris ini
 
-        // Reset display & required attribute
-        membershipGroup.classList.add('d-none');
-        bankGroup.classList.add('d-none');
-        sekolahGroup.classList.add('d-none');
-        
-        document.getElementById('bank_id').required = false;
-        document.getElementById('sekolah_id').required = false;
+    // Reset display & required attribute
+    membershipGroup.classList.add('d-none');
+    bankGroup.classList.add('d-none');
+    sekolahGroup.classList.add('d-none');
+    siswaProfileGroup.classList.add('d-none'); // Tambah baris ini
+    
+    document.getElementById('bank_id').required = false;
+    document.getElementById('sekolah_id').required = false;
 
-        // LOGIKA BARU BERDASARKAN FILTER LOGIN:
-        if (role == "4") { 
-            // Jika memilih membuat Bank
-            membershipGroup.classList.remove('d-none');
-        } 
-        else if (role == "5") { 
-            // Jika memilih membuat Sekolah
-            if (AUTH_EMAIL === 'cb@bankir.academy') {
-                // Hanya root utama yang wajib memilih Bank pembina
-                bankGroup.classList.remove('d-none');
-                document.getElementById('bank_id').required = true;
-            }
-            // Jika yang login adalah Bank biasa, Bank group disembunyikan (Otomatis mengikat di backend)
-        } 
-        else if (role == "6") { 
-            // Jika memilih membuat Siswa
-            if (AUTH_EMAIL === 'cb@bankir.academy') {
-                // Root wajib pilih bank dan pilih sekolah
-                bankGroup.classList.remove('d-none');
-                sekolahGroup.classList.remove('d-none');
-                document.getElementById('bank_id').required = true;
-                document.getElementById('sekolah_id').required = true;
-            } else if (AUTH_ROLE === 4) {
-                // Jika Bank yang login: tidak perlu pilih Bank, tapi WAJIB pilih Sekolah
-                sekolahGroup.classList.remove('d-none');
-                document.getElementById('sekolah_id').required = true;
-            }
-            // Jika Sekolah yang login: tidak perlu pilih Bank maupun Sekolah (Otomatis mengikat di backend)
+    if (role == "4") { 
+        membershipGroup.classList.remove('d-none');
+    } 
+    else if (role == "5") { 
+        if (AUTH_EMAIL === 'cb@bankir.academy') {
+            bankGroup.classList.remove('d-none');
+            document.getElementById('bank_id').required = true;
+        }
+    } 
+    else if (role == "6") { 
+        siswaProfileGroup.classList.remove('d-none'); // Tampilkan form profile siswa jika memilih role siswa
+        
+        if (AUTH_EMAIL === 'cb@bankir.academy') {
+            bankGroup.classList.remove('d-none');
+            sekolahGroup.classList.remove('d-none');
+            document.getElementById('bank_id').required = true;
+            document.getElementById('sekolah_id').required = true;
+        } else if (AUTH_ROLE === 4) {
+            sekolahGroup.classList.remove('d-none');
+            document.getElementById('sekolah_id').required = true;
         }
     }
+}
 
     // Fungsi menyaring daftar sekolah berdasarkan Bank yang dipilih (untuk pendaftaran Siswa oleh root)
     function filterSekolahByBank() {
@@ -371,23 +567,17 @@
 
     // Fungsi ketika tombol 'Tambah Pengguna' diklik
     function resetForm() {
-        document.getElementById('userModalLabel').innerText = 'Tambah Pengguna';
-        document.getElementById('userForm').action = "{{ route('users.store') }}";
-        document.getElementById('method-container').innerHTML = ''; 
-        
-        document.getElementById('name').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('role').value = ''; 
-        document.getElementById('membership_id').value = ''; 
-        document.getElementById('bank_id').value = ''; 
-        document.getElementById('sekolah_id').value = ''; 
-        
-        document.getElementById('password').value = '';
-        document.getElementById('password').required = true;
-        document.getElementById('password-help').classList.add('d-none');
-
-        handleRoleChange();
-    }
+    // Reset Form ke mode Tambah (Create)
+    document.getElementById('userModalLabel').innerText = "Tambah Pengguna";
+    document.getElementById('userForm').action = "{{ route('users.store') }}";
+    document.getElementById('method-container').innerHTML = "";
+    document.getElementById('userForm').reset();
+    
+    document.getElementById('password-help').classList.add('d-none');
+    document.getElementById('password').required = true;
+    
+    handleRoleChange();
+}
     // Fungsi menyaring daftar sekolah di dalam Modal Import khusus untuk Root login
 function filterSekolahImport() {
     let selectedBankId = document.getElementById('import_bank_id').value;
@@ -412,44 +602,48 @@ function filterSekolahImport() {
 }
 
     // Fungsi ketika tombol 'Edit' diklik
-    function editUser(user) {
-        document.getElementById('userModalLabel').innerText = 'Edit Pengguna';
-        
-        let url = "{{ route('users.update', ':id') }}";
-        url = url.replace(':id', user.id);
-        document.getElementById('userForm').action = url;
+   function editUser(user) {
+    resetForm();
 
-        document.getElementById('method-container').innerHTML = `@method('PUT')`;
+    // Ubah form menjadi mode EDIT
+    document.getElementById('userModalLabel').innerText = "Edit Pengguna";
+    document.getElementById('userForm').action = `/users/${user.id}`; // Sesuaikan pola URL Route Update Anda
+    document.getElementById('method-container').innerHTML = `@csrf @method('PUT')`;
 
-        document.getElementById('name').value = user.name;
-        document.getElementById('email').value = user.email;
-        document.getElementById('role').value = user.role;
-        
-        // Panggil handler agar form input relasi disesuaikan tipenya terlebih dahulu
-        handleRoleChange();
+    // Isi data dasar user
+    document.getElementById('name').value = user.name;
+    document.getElementById('email').value = user.email;
+    document.getElementById('role').value = user.role;
+    
+    document.getElementById('password-help').classList.remove('d-none');
+    document.getElementById('password').required = false;
 
-        // Masukkan data relasi jika tersedia saat edit data dilakukan
-        if(user.role == 4) {
-            document.getElementById('membership_id').value = user.membership_id ?? '';
-        } else if(user.role == 5) {
-            if(document.getElementById('bank_id')) {
-                document.getElementById('bank_id').value = user.bank_id ?? '';
-            }
-        } else if(user.role == 6) {
-            if(document.getElementById('bank_id')) {
-                document.getElementById('bank_id').value = user.bank_id ?? '';
-                filterSekolahByBank();
-            }
-            if(document.getElementById('sekolah_id')) {
-                document.getElementById('sekolah_id').value = user.sekolah_id ?? '';
-            }
-        }
-        
-        document.getElementById('password').value = '';
-        document.getElementById('password').required = false;
-        document.getElementById('password-help').classList.remove('d-none');
+    // Trigger perolehan hak akses grup form (Bank/Sekolah/Profile Siswa)
+    handleRoleChange();
 
-        $('#userModal').modal('show');
+    // Set value membership / instansi pengampu
+    if (user.role == 4 && user.membership_id) {
+        document.getElementById('membership_id').value = user.membership_id;
     }
+    if (document.getElementById('bank_id') && user.bank_id) {
+        document.getElementById('bank_id').value = user.bank_id;
+        if(typeof filterSekolahByBank === "function") filterSekolahByBank();
+    }
+    if (document.getElementById('sekolah_id') && user.sekolah_id) {
+        document.getElementById('sekolah_id').value = user.sekolah_id;
+    }
+
+    // --- PENGISIAN PROFILE SISWA ---
+    if (user.role == 6 && user.siswa) {
+        document.getElementById('nisn').value = user.siswa.nisn || '';
+        document.getElementById('kelas').value = user.siswa.kelas || '';
+        document.getElementById('jenis_kelamin').value = user.siswa.jenis_kelamin || '';
+        document.getElementById('no_telp').value = user.siswa.no_telp || '';
+        document.getElementById('beasiswa').value = user.siswa.beasiswa ? "1" : "0";
+    }
+
+    // Tampilkan modal
+    $('#userModal').modal('show');
+}
 </script>
 @endsection

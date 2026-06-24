@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PromoController;
 use App\Http\Controllers\Beasiswa\KategoriController;
 use App\Http\Controllers\Beasiswa\MateriController;
+use App\Http\Controllers\Beasiswa\SiswaMateriController;
 use App\Http\Controllers\Beasiswa\SubMateriController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\LokerController;
@@ -269,3 +270,9 @@ Route::resource('kategori-materi', KategoriController::class);
 Route::resource('materi', MateriController::class);
 Route::resource('sub-materi', SubMateriController::class);
 Route::resource('ppt', PrePostTestController::class);
+
+Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
+    
+    // URL: domainanda.com/siswa/materi/{id} (Untuk halaman detail saat mengklik 'Mulai Belajar')
+    Route::post('/learning/pilih', [SiswaMateriController::class, 'pilihMateri'])->name('materi.pilih');
+

@@ -87,15 +87,15 @@
                         </td>
                         <td>
                             <p class="align-self-center mb-0 user-name" style="font-weight: 600;">
-                                @if($x->tipe_beasisa == 0)
-                            <div class="badge badge-pills badge-primary">Semua</div>
-                            @endif
-                            @if($x->tipe_beasisa == 1)
-                            <div class="badge badge-pills badge-primary">Beasiswa</div>
-                            @endif
-                            @if($x->tipe_beasisa == 2)
-                            <div class="badge badge-pills badge-primary">Non Beasiswa</div>
-                            @endif
+                                @if($x->tipe_beasiswa == 0)
+    <div class="badge badge-pills badge-primary">Semua</div>
+@endif
+@if($x->tipe_beasiswa == 1)
+    <div class="badge badge-pills badge-primary">Beasiswa</div>
+@endif
+@if($x->tipe_beasiswa == 2)
+    <div class="badge badge-pills badge-primary">Non Beasiswa</div>
+@endif
                             </p>
                         </td>
                         <td>
@@ -202,6 +202,28 @@
                 <div id="method-container"></div>
 
                 <div class="modal-body">
+                    @if(session('info'))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ session('info') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong class="d-block mb-1">Gagal Menyimpan Data:</strong>
+            <ul class="pl-3 mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
                     <div class="row">
                         <div class="form-group col-lg-12 mb-3">
                             <label for="name" style="font-weight: 600;">Nama Materi</label>
@@ -256,27 +278,24 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group col-lg-3 mb-3">
-                            <label for="" style="font-weight: 600;">Harga</label>
-                            <div class="input-group">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon6">Rp</span>
-                                </div>
-                                <input type="text" name="harga" id="harga_format" class="form-control" required>
-                            </div>
-                            <input type="text" name="harga" id="harga" class="form-control" hidden>
-                        </div>
-                        <div class="form-group col-lg-3 mb-3">
-                            <label for="" style="font-weight: 600;">Diskon <small id="harga_final">harga final
-                                    :</small></label>
-                            <div class="input-group">
-                                <input type="text" name="diskon" id="diskon" class="form-control"
-                                    oninput="hitunghargafinal()" required>
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon6">%</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group col-lg-3 mb-3">
+    <label for="harga_format" style="font-weight: 600;">Harga</label>
+    <div class="input-group">
+        <div class="input-group-append">
+            <span class="input-group-text">Rp</span>
+        </div>
+        <input type="text" name="harga" id="harga_format" class="form-control" required>
+    </div>
+</div>
+<div class="form-group col-lg-3 mb-3">
+    <label for="diskon" style="font-weight: 600;">Diskon <small id="harga_final">harga final :</small></label>
+    <div class="input-group">
+        <input type="number" min="0" max="100" name="diskon" id="diskon" class="form-control" required>
+        <div class="input-group-append">
+            <span class="input-group-text">%</span>
+        </div>
+    </div>
+</div>
                         <div class="form-group col-lg-6 mb-3">
                             <label for="" style="font-weight: 600;">Masa Aktif</label>
                             <input type="date" name="masa_aktif" id="masa_aktif" class="form-control" required>
@@ -299,115 +318,114 @@
 
 <script>
     $(document).ready(function () {
-        createtable('invoice-list')
+        if (typeof createtable === 'function') {
+            createtable('invoice-list');
+        }
         
-        const harga_format = new Cleave('#harga_format', {
-                numeral: true,
-                numeralThousandsGroupStyle: 'thousand',
-                // prefix: 'Rp ',
-                noImmediatePrefix: true,
-                numeralDecimalMark: ',',
-                delimiter: '.',
-                onValueChanged: function(e) {
-                    // Setiap kali nilai berubah, update hidden input
-                    document.getElementById('harga').value = e.target.rawValue;
-                }
-            });
-
-        $('#mySelect2').select2({
+        $('#id_materi').select2({
             dropdownParent: $('#userModal')
         });
-    })
-    // Fungsi ketika tombol 'Tambah Pengguna' diklik
-    function resetForm() {
-        document.getElementById('id').value = '';
-        $('#id_materi').val();
-        $('#urutan').val();
-        $('#nama').val();
-        $('#tipe_link0').val();
-        $('#tipe_link1').val();
-        $('#link').val();
-        $('#tipe_beasiswa0').val();
-        $('#tipe_beasiswa1').val();
-        $('#tipe_beasiswa2').val();
-        $('#harga').val();
-        $('#diskon').val();
-        $('#masa_aktif').val();
-        $('#keterangan').val();
 
-        $('#tipe_link0').attr('checked', true);
-        $('#tipe_link1').attr('checked', false);
+        // 1. FORMAT TYPING: Ubah input ke format ribuan saat diketik
+        $('#harga_format').on('input', function() {
+            let value = $(this).val().replace(/[^0-9]/g, '');
+            $(this).val(formatRupiah(value));
+            hitunghargafinal();
+        });
 
-        $('#tipe_beasiswa0').attr('checked', true);
-        $('#tipe_beasiswa1').attr('checked', false);
-        $('#tipe_beasiswa2').attr('checked', false);
+        // 2. DISKON TYPING: Hitung ulang harga final
+        $('#diskon').on('input', function() {
+            hitunghargafinal();
+        });
+
+        // 3. SANITASI SEBELUM SUBMIT (Kunci agar tidak NULL/Error di Laravel)
+        $('#userForm').on('submit', function() {
+            // Ambil input harga_format
+            let hargaInput = $('#harga_format');
+            // Hapus semua titik sebelum terkirim ke backend (misal: 150.000 menjadi 150000)
+            let angkaMurni = hargaInput.val().replace(/[^0-9]/g, '');
+            hargaInput.val(angkaMurni); 
+        });
+    });
+
+    // Fungsi format ribuan standar
+    function formatRupiah(angka) {
+        if (!angka) return '';
+        let numberString = angka.toString().replace(/[^0-9]/g, ''),
+            sisa = numberString.length % 3,
+            rupiah = numberString.substr(0, sisa),
+            ribuan = numberString.substr(sisa).match(/\d{3}/g);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+        return rupiah;
     }
 
-    // Fungsi ketika tombol 'Edit' diklik
+    function resetForm() {
+        document.getElementById('id').value = '';
+        $('#id_materi').val('').trigger('change'); 
+        $('#urutan').val('');
+        $('#nama').val('');
+        $('#link').val('');
+        
+        $('#harga_format').val('');
+        $('#diskon').val('');
+        $('#masa_aktif').val('');
+        $('#keterangan').val('');
+        $('#harga_final').text('harga final :');
+
+        $('#tipe_link0').prop('checked', true);
+        $('#tipe_beasiswa0').prop('checked', true);
+    }
+
     function editUser(user) {
         resetForm();
 
         if (user) {
             document.getElementById('id').value = user.id;
-            $('#id_materi').val(user.id_materi);
+            $('#id_materi').val(user.id_materi).trigger('change');
             $('#urutan').val(user.urutan);
             $('#nama').val(user.nama);
-            if (user.tipe_link == 0) {
-                $('#tipe_link0').attr('checked', true);
-            }
-            if (user.tipe_link == 1) {
-                $('#tipe_link1').attr('checked', true);
-            }
+            
+            if (user.tipe_link == 0) $('#tipe_link0').prop('checked', true);
+            if (user.tipe_link == 1) $('#tipe_link1').prop('checked', true);
             
             $('#link').val(user.link);
             
-            if (user.tipe_beasiswa == 0) {
-                $('#tipe_beasiswa0').attr('checked', true);
+            if (user.tipe_beasiswa == 0) $('#tipe_beasiswa0').prop('checked', true);
+            if (user.tipe_beasiswa == 1) $('#tipe_beasiswa1').prop('checked', true);
+            if (user.tipe_beasiswa == 2) $('#tipe_beasiswa2').prop('checked', true);
+            
+            // Masukkan harga asli dari database dan langsung format ke ribuan
+            if (user.harga) {
+                $('#harga_format').val(formatRupiah(user.harga));
             }
-            if (user.tipe_beasiswa == 1) {
-                $('#tipe_beasiswa1').attr('checked', true);
-            }
-            if (user.tipe_beasiswa == 2) {
-                $('#tipe_beasiswa2').attr('checked', true);
-            }
-            // harga_format.setRawValue(user.harga);
-            $('#harga').val(user.harga);
+            
             $('#diskon').val(user.diskon);
-            $('#masa_aktif').val(dayjs(user.masa_aktif).format('YYYY-MM-DD'));
+            
+            if (user.masa_aktif) {
+                $('#masa_aktif').val(dayjs(user.masa_aktif).format('YYYY-MM-DD'));
+            }
             $('#keterangan').val(user.keterangan);
-            const hf = new Cleave('#harga_format', {
-                    numeral: true,
-                    numeralThousandsGroupStyle: 'thousand',
-                    // prefix: 'Rp ',
-                    noImmediatePrefix: true,
-                    numeralDecimalMark: ',',
-                    delimiter: '.',
-                    onValueChanged: function(e) {
-                        // Setiap kali nilai berubah, update hidden input
-                        document.getElementById('harga').value = e.target.rawValue;
-                    }
-                });
-                hf.setRawValue(user.harga)
+            
+            hitunghargafinal();
         }
-        // Tampilkan Modal secara terprogram
         $('#userModal').modal('show');
     }
 
-    function formatnumber(params) {
-        // 
-    }
-
     function hitunghargafinal() {
-        $('#harga_final').html('Harga Final : ')
-        let harga = $('#harga').val();
-        let diskon = $('#diskon').val();
-        let hf = 0;
-
-        if (harga > 0 && diskon > 0) {
-            hf = harga - (harga * (diskon/100));
-        }
-
-        $('#harga_final').html('Harga Final : '+ Intl.NumberFormat('en-US').format(hf));
+        // Ambil nilai dari harga_format lalu buang titiknya untuk kalkulasi matematika
+        let hargaTeks = $('#harga_format').val() || '';
+        let harga = parseInt(hargaTeks.replace(/[^0-9]/g, '')) || 0; 
+        let diskon = parseFloat($('#diskon').val()) || 0;
+        
+        let potongan = (diskon / 100) * harga;
+        let hargaFinal = harga - potongan;
+        
+        // Tampilkan hasil kalkulasi secara realtime
+        $('#harga_final').text('harga final : Rp ' + formatRupiah(Math.round(hargaFinal)));
     }
 </script>
 @endsection
