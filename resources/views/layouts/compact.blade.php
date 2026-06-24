@@ -68,7 +68,7 @@
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg></a>
             <ul class="navbar-item flex-row navbar-dropdown search-ul">
-                <li class="nav-item align-self-center search-animated">
+                <li hidden class="nav-item align-self-center search-animated">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="feather feather-search toggle-search">
@@ -82,7 +82,7 @@
                         </div>
                     </form>
                 </li>
-                <li class="nav-item dropdown language-dropdown more-dropdown">
+                <li hidden class="nav-item dropdown language-dropdown more-dropdown">
                     <div class="dropdown  custom-dropdown-icon">
                         <a class="dropdown-toggle btn" href="#" role="button" id="customDropdown" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false"><img src="assets/img/ca.png" class="flag-width"
@@ -104,8 +104,7 @@
                         </div>
                     </div>
                 </li>
-
-                <li class="nav-item dropdown notification-dropdown">
+                <li hidden class="nav-item dropdown notification-dropdown">
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -206,8 +205,7 @@
                         </div>
                     </div>
                 </li>
-
-                <li class="nav-item dropdown message-dropdown">
+                <li hidden class="nav-item dropdown message-dropdown">
                     <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="messageDropdown"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -304,7 +302,7 @@
                                 </svg> <span> Profile</span>
                             </a>
                         </div>
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" hidden>
                             <a href="apps_mailbox.html">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -316,7 +314,7 @@
                                 </svg> <span> Inbox</span>
                             </a>
                         </div>
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" hidden>
                             <a href="auth_lockscreen.html">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -379,7 +377,7 @@
                                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                     </svg>
                                 </div>
-                                <span>Dashboard</span>
+                                <span>Pre Post Test</span>
                             </div>
                         </a>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -388,7 +386,7 @@
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </li>
- @if(auth()->check() && auth()->user()->role !== 6)
+                    @if(auth()->check() && auth()->user()->role !== 6)
                     <li class="menu">
                         <a href="#" onclick="window.location.href='{{ route('users.index') }}';"
                             data-active="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" class="menu-toggle">
@@ -447,10 +445,16 @@
                 <div class="submenu" id="dashboard">
                     <ul class="submenu-list" data-parent-element="#dashboard">
                         <li>
-                            <a href="index.html"> Analytics </a>
+                            <a href="/kategori-materi"> Bidang </a>
                         </li>
                         <li>
-                            <a href="index2.html"> Sales </a>
+                            <a href="/materi"> Kompetensi </a>
+                        </li>
+                        <li>
+                            <a href="/sub-materi"> Materi </a>
+                        </li>
+                        <li>
+                            <a href="/ppt"> PPT </a>
                         </li>
                     </ul>
                 </div>

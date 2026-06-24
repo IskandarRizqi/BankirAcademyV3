@@ -186,7 +186,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content" style="background: #fff; border-radius: 8px;">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel" style="font-weight: bold;">Tambah Pengguna</h5>
+                <h5 class="modal-title" id="userModalLabel" style="font-weight: bold;">Tambah Sub Materi</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -206,7 +206,7 @@
                         <div class="form-group col-lg-12 mb-3">
                             <label for="name" style="font-weight: 600;">Nama Materi</label>
                             <select name="id_materi" id="id_materi" class="form-control" required>
-                                <option value="" disabled selected>-- Pilih Role --</option>
+                                <option value="" disabled selected>-- Pilih --</option>
                                 @foreach($materi as $key => $v)
                                 <option value="{{$v->id}}">{{$v->nama}}</option>
                                 @endforeach
