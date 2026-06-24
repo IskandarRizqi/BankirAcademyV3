@@ -211,14 +211,14 @@
                     >
             </div>
 
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label>Tipe Pertanyaan <span class="text-danger">*</span></label>
                 <select
                     class="form-control tipe-soal tipe_pertanyaan"
                     name="soal[INDEX][tipe_pertanyaan]"
                     id="soal[INDEX][tipe_pertanyaan]"
                     >
-                    <option value="1">Pilihan Ganda</option>
+                    <option value="1" selected>Pilihan Ganda</option>
                     <option value="2">Essay</option>
                 </select>
             </div>
