@@ -16,6 +16,7 @@ class PreposttestModel extends Model
         'id_submateri',
         'soal',
         'judul',
+        'tipe_prepost'
     ];
 
     protected $casts = [

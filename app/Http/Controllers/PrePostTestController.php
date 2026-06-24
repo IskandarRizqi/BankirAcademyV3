@@ -47,6 +47,8 @@ class PrePostTestController extends Controller
     {
         $valid = Validator::make($request->all(), [
             'judul' => 'required',
+            'id_materi' => 'required',
+            'tipe_prepost' => 'required',
             'soal' => 'required|array|min:1',
 
             'soal.*.pertanyaan' => 'required',
@@ -66,6 +68,7 @@ class PrePostTestController extends Controller
 
         $i = [
             'judul' => $request->judul,
+            'tipe_prepost' => $request->tipe_prepost,
             'id_materi' => $request->id_materi,
             'id_submateri' => $request->id_submateri,
             'soal' => json_encode($request->soal),

@@ -20,6 +20,7 @@
                         <th>Sub Materi</th>
                         <th>Judul</th>
                         <th>Jumlah Soal</th>
+                        <th>Pre Post Test</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -46,6 +47,13 @@
                                 count(json_decode($x->soal)) }}
                                 Soal
                             </p>
+                        </td>
+                        <td>
+                            @if($x->tipe_prepost == 0)
+                            <span class="badge badge-info">Pre</span>
+                            @else
+                            <span class="badge badge-primary">Post</span>
+                            @endif
                         </td>
                         <td>
                             <div class="dropdown">
@@ -135,9 +143,9 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Materi</label>
+                                <label>Kompetensi <span class="text-danger">*</span></label>
                                 <select name="id_materi" id="id_materi" class="form-control">
-                                    <option value="">Pilih Materi</option>
+                                    <option value="">Pilih Kompetensi</option>
                                     @foreach($materi as $key => $v)
                                     <option value="{{$v->id}}">{{$v->nama}}</option>
                                     @endforeach
@@ -145,7 +153,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" hidden>
                             <div class="form-group">
                                 <label>Sub Materi</label>
                                 <select name="id_submateri" id="id_submateri" class="form-control">
@@ -154,6 +162,28 @@
                                     <option value="{{$v->id}}">{{$v->nama}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Pre / Post Test <span class="text-danger">*</span></label>
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <input type="radio" name="tipe_prepost" id="tipe_prepost0" class="form-control"
+                                            value="0">
+                                    </div>
+                                    <div class="col-md-4 pl-0">
+                                        <label for="">Pre</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="radio" name="tipe_prepost" id="tipe_prepost1" class="form-control"
+                                            value="1">
+                                    </div>
+                                    <div class="col-md-4 pl-0">
+                                        <label for="">Post</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -461,11 +491,18 @@
         
         $('#id').val = null;
         $('#soalContainer').html(null);
+        $('#tipe_prepost0').removeAttr('checked')
+        $('#tipe_prepost1').removeAttr('checked')
         if (user) {
             $('#id').val(user.id);
             $('#id_materi').val(user.id_materi);
             $('#id_submateri').val(user.id_submateri);
             $('#judul').val(user.judul);
+            if (user.tipe_prepost == 0) {
+                $('#tipe_prepost0').attr('checked', true)
+            }else{
+                $('#tipe_prepost1').attr('checked', true)
+            }
 
             JSON.parse(user.soal).forEach((soal,i) => {
                 tambahSoal();
