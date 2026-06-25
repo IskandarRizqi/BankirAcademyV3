@@ -28,4 +28,8 @@ class MateriModel extends Model
     {
         return $this->hasMany(SubMateriModel::class, 'id_materi', 'id');
     }
+    public function preposttest(): \Illuminate\Database\Eloquent\Relations\HasMany
+{
+    return $this->hasMany(PreposttestModel::class, 'id_materi', 'id');
+}
 }

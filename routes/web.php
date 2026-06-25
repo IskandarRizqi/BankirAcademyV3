@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Backend\BannerslideController;
 use App\Http\Controllers\Backend\CorporateController;
 use App\Http\Controllers\Backend\FeeController;
+use App\Http\Controllers\Backend\PrepotestController;
 use App\Http\Controllers\Backend\PromoController;
 use App\Http\Controllers\Beasiswa\KategoriController;
 use App\Http\Controllers\Beasiswa\MateriController;
@@ -272,7 +273,7 @@ Route::resource('sub-materi', SubMateriController::class);
 Route::resource('ppt', PrePostTestController::class);
 
 Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
-    
-    // URL: domainanda.com/siswa/materi/{id} (Untuk halaman detail saat mengklik 'Mulai Belajar')
-    Route::post('/learning/pilih', [SiswaMateriController::class, 'pilihMateri'])->name('materi.pilih');
+Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
+Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
+// Route::post('/pelatihan/belajar/{materi_id}/test/{id_test}', [SiswaMateriController::class, 'simpanTest'])->name('siswa.materi.simpan_test');
 

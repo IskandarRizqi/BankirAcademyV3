@@ -1,105 +1,82 @@
-@extends('layouts.compact') 
+@extends('layouts.compact')
+
 @section('content')
 <style>
-    .dashboard-wrapper { background-color: #f8fafc; min-height: 100vh; }
-    .course-header {
-        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-        color: white; border-radius: 16px; padding: 40px; margin-bottom: 35px;
+    .lms-banner {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        border-radius: 16px; color: white; padding: 50px 30px; margin-bottom: 40px;
     }
-    .kategori-section {
-        background: #ffffff; border-radius: 12px; padding: 24px;
-        margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    .category-badge {
+        background: #eff6ff; color: #2563eb; font-weight: 700;
+        padding: 6px 16px; border-radius: 20px; display: inline-block;
     }
-    .kategori-title {
-        font-size: 1.4rem; font-weight: 800; color: #1e293b;
-        margin-bottom: 20px; padding-left: 10px; border-left: 5px solid #4e73df;
+    .course-card {
+        border: none; border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
     }
-    .materi-accent-card {
-        border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; overflow: hidden;
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
     }
-    .materi-header-btn {
-        width: 100%; text-align: left; background: #f8fafc; padding: 16px;
-        font-weight: 700; color: #1e3a8a; border: none; display: flex;
-        justify-content: space-between; align-items: center; transition: background 0.2s;
-    }
-    .materi-header-btn:hover { background: #f1f5f9; text-decoration: none; }
-    .video-item {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 12px 20px; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;
-    }
-    .video-item:hover { background: #fafafa; }
-    .video-item:last-child { border-bottom: none; }
 </style>
 
-<div class="dashboard-wrapper py-4">
-    <div class="container">
-        
-        <div class="course-header text-center text-md-left">
-            <h1 class="display-5 text-white font-weight-bold mb-2">Katalog Materi Pelatihan 📚</h1>
-            <p class="lead mb-0 text-white" style="opacity: 0.95;">Silakan jelajahi bidang kategori dan materi video pembelajaran di bawah ini.</p>
-        </div>
+<div class="container py-5">
+    <div class="lms-banner text-center text-md-left mb-5 shadow-sm">
+        <h1 class="display-5 font-weight-bold text-white mb-2">Mau belajar apa hari ini? 🚀</h1>
+        <p class="lead mb-0 text-white" style="opacity: 0.9;">Akses materi pelatihan beasiswa terstruktur standar industri.</p>
+    </div>
 
-        @forelse($kategori as $kat)
-            <div class="kategori-section">
-                <h2 class="kategori-title"><i class="fas fa-tags text-primary mr-2"></i>{{ $kat->nama }}</h2>
-                
-                <div class="accordion" id="accordionKategori{{ $kat->id }}">
-                    @forelse($kat->materi as $indexMat => $mat)
-                        <div class="materi-accent-card">
-                            
-                            <button class="materi-header-btn collapsed" type="button" data-toggle="collapse" data-target="#collapseMateri{{ $mat->id }}" aria-expanded="false">
-                                <div>
-                                    <i class="fas fa-book mr-2 text-secondary"></i> {{ $mat->nama }}
-                                    <span class="badge badge-light border ml-2 font-weight-normal text-muted">
-                                        {{ count($mat->subMateri) }} Video
+    @forelse($kategori as $kat)
+        <div class="mb-5">
+            <div class="d-flex align-items-center mb-4">
+                <span class="category-badge mr-3"><i class="fas fa-th-large mr-2"></i>{{ $kat->nama }}</span>
+                <div class="flex-grow-1 border-top" style="border-color: #e2e8f0 !important;"></div>
+            </div>
+
+            <div class="row">
+                @forelse($kat->materi as $mat)
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 course-card">
+                            <div class="card-body d-flex flex-column">
+                                <span class="text-muted small mb-2"><i class="fas fa-book-open mr-1"></i> Modul Pelatihan</span>
+                                <h4 class="card-title font-weight-bold text-dark mb-2">{{ $mat->nama }}</h4>
+                                <p class="card-text text-muted small flex-grow-1">
+                                    {{ Str::limit($mat->keterangan ?? 'Tidak ada keterangan materi.', 100) }}
+                                </p>
+                                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary small font-weight-bold">
+                                        <i class="fas fa-video mr-1"></i> {{ count($mat->subMateri) }} Materi Pelajaran
                                     </span>
-                                </div>
-                                <i class="fas fa-chevron-down text-muted small"></i>
-                            </button>
-
-                            <div id="collapseMateri{{ $mat->id }}" class="collapse" data-parent="#accordionKategori{{ $kat->id }}">
-                                <div class="card-body p-0 bg-white">
-                                    <p class="text-muted small px-4 pt-3 mb-2"><em>{{ $mat->keterangan ?? 'Tidak ada keterangan materi.' }}</em></p>
-                                    
-                                    @forelse($mat->subMateri as $indexSub => $sub)
-                                        <div class="video-item">
-                                            <div>
-                                                <span class="badge badge-primary mr-2">Eps. {{ $indexSub + 1 }}</span>
-                                                <strong class="text-dark">{{ $sub->nama }}</strong>
-                                                @if($sub->keterangan)
-                                                    <span class="text-muted d-block small pl-5">{{ $sub->keterangan }}</span>
-                                                @endif
-                                            </div>
-                                            <div>
-                                                <a href="{{ $sub->link }}" target="_blank" class="btn btn-sm btn-outline-success px-3" style="border-radius: 20px;">
-                                                    <i class="fas fa-play mr-1"></i> Tonton
-                                                </a>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <div class="p-4 text-center text-muted small">
-                                            <i class="fas fa-video-slash mr-1"></i> Belum ada video/sub materi untuk materi ini.
-                                        </div>
-                                    @endforelse
-
+                                 @if(count($mat->subMateri) > 0)
+    @if(isset($modulTerkunci) && $modulTerkunci->class_id != $mat->id)
+        <button class="btn btn-secondary btn-sm px-4 disabled" style="border-radius: 8px;" disabled>
+            <i class="fas fa-lock mr-1"></i> Terkunci
+        </button>
+    @else
+        <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}" class="btn btn-primary btn-sm px-4" style="border-radius: 8px;">
+            Mulai Belajar
+        </a>
+    @endif
+@else
+    <button class="btn btn-light btn-sm px-4 disabled" disabled>Kosong</button>
+@endif
                                 </div>
                             </div>
-
                         </div>
-                    @empty
-                        <p class="text-muted pl-2 small"><em>Belum ada materi di dalam kategori ini.</em></p>
-                    @endforelse
-                </div>
-
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-muted small italic pl-2">Belum ada kelas/materi di kategori ini.</p>
+                    </div>
+                @endforelse
             </div>
-        @empty
-            <div class="text-center py-5 bg-white rounded-lg border">
-                <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
-                <h5 class="text-secondary">Belum ada data kategori tersedia.</h5>
-            </div>
-        @endif
-
-    </div>
+        </div>
+    @empty
+        <div class="text-center py-5 bg-white rounded-lg border shadow-sm">
+            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+            <h5 class="text-secondary">Belum ada katalog materi yang tersedia saat ini.</h5>
+        </div>
+    @endif
 </div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
