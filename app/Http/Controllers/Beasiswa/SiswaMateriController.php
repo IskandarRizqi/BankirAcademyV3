@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KategoriModel;
 use App\Models\MateriModel;
+use App\Models\PreposttestModel;
 use App\Models\SubMateriModel;
 use App\Models\PrepotesUserModel; // Model progress/test user
 use Illuminate\Support\Facades\Auth;
@@ -145,22 +146,28 @@ public function savejawaban(Request $request, $materi_id, $quiz_id)
         return redirect()->back()->with('error', 'Data ujian tidak ditemukan.');
     }
 
-    // 2. Cek riwayat pengerjaan user sebelumnya
-    $pr = PrepotesUserModel::where('class_id', $materi_id)->where('user_id', $userId)->first();
-    
-    if ($pr) {
-        if ($quiz->tipe_prepost == 0) {
-            // JIKA PRE-TEST: Cek apakah nilai_awal sudah pernah diisi (tidak boleh diisi ulang sama sekali!)
-            if (!is_null($pr->nilai_awal)) {
-                return redirect()->route('siswa.materi.belajar', [$materi_id])
-                    ->with('error', 'Anda sudah mengikuti Pre-test sebelumnya. Pre-test hanya dapat diikuti 1 kali.');
-            }
-        } else {
-            // JIKA POST-TEST: Cek apakah sudah lulus (nilai_akhir >= 70)
-            if (!is_null($pr->nilai_akhir) && $pr->nilai_akhir >= 70) {
-                return redirect()->route('siswa.materi.belajar', [$materi_id])
-                    ->with('error', 'Anda sudah lulus Post-test ini dengan nilai ' . $pr->nilai_akhir . '. Tidak dapat mengisi kembali.');
-            }
+    // 2. Cek riwayat pengerjaan user secara SPESIFIK & ketat (Ingat: Sekarang data selalu buat baru)
+    if ($quiz->tipe_prepost == 0) {
+        // Cek apakah user PERNAH mengisi Pre-test di materi ini
+        $pr = PrepotesUserModel::where('class_id', $materi_id)
+            ->where('user_id', $userId)
+            ->where('nilai_awal', '>', 0) // atau mengecek entri dengan nilai_awal yang sudah terisi
+            ->first();
+            
+        if ($pr) {
+            return redirect()->route('siswa.materi.belajar', [$materi_id])
+                ->with('error', 'Anda sudah mengikuti Pre-test sebelumnya. Pre-test hanya dapat diikuti 1 kali.');
+        }
+    } else {
+        // Cek apakah user sudah mengisi Post-test DAN nilainya lulus (>= 70)
+        $pr = PrepotesUserModel::where('class_id', $materi_id)
+            ->where('user_id', $userId)
+            ->where('nilai_akhir', '>=', 70)
+            ->first();
+
+        if ($pr) {
+            return redirect()->route('siswa.materi.belajar', [$materi_id])
+                ->with('error', 'Anda sudah lulus Post-test ini dengan nilai ' . $pr->nilai_akhir . '. Tidak dapat mengisi kembali.');
         }
     }
 
@@ -170,24 +177,18 @@ public function savejawaban(Request $request, $materi_id, $quiz_id)
         $daftarSoal = json_decode($daftarSoal, true);
     }
 
-    // Validasi akhir: jika gagal jadi array, hentikan proses agar tidak error
     if (!is_array($daftarSoal)) {
         return redirect()->back()->with('error', 'Gagal memproses format soal di database.');
     }
 
     $jawabanBenarCount = 0;
     $totalSoal = count($daftarSoal);
-
-    // Ambil input jawaban dari request user
     $jawabanUserArray = $request->input('jawaban', []);
 
     if ($totalSoal > 0 && !empty($jawabanUserArray)) {
-        // Paksa array menjadi sekuensial murni (0, 1, 2...) untuk menjamin ketepatan index
-        $jawabanUserTerurut = array_values($jawabanUserArray); 
-
         foreach ($daftarSoal as $index => $soal) {
-            $kunciBenar = $soal['jawaban'] ?? null;
-            $jawabanUser = $jawabanUserTerurut[$index] ?? null;
+            $kunciBenar = $soal['jawaban'] ?? $soal['Jawaban'] ?? null;
+            $jawabanUser = $jawabanUserArray[$index] ?? null;
 
             if (!is_null($jawabanUser) && !is_null($kunciBenar)) {
                 if (strtoupper(trim($jawabanUser)) === strtoupper(trim($kunciBenar))) {
@@ -195,51 +196,128 @@ public function savejawaban(Request $request, $materi_id, $quiz_id)
                 }
             }
         }
-        // Hitung nilai final skala 100
         $nilai_final = ($jawabanBenarCount / $totalSoal) * 100;
     } else {
         $nilai_final = 0;
     }
 
-    // 4. Siapkan data update atau create
-    // Simpan jawaban baru. Jika post-test, Anda bisa menggabungkan history atau menimpanya sesuai kebutuhan bisnis Anda.
+    // Ambil total percobaan pengerjaan sebelumnya di kelas ini untuk hitung total jml_jawaban global
+    $totalPercobaanSebelumnya = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $userId)
+        ->count();
+
     $data = [
-        'jawaban' => json_encode(array_values($jawabanUserArray)), 
-        'jml_jawaban' => $pr ? ($pr->jml_jawaban + 1) : 1,
+        'class_id' => $materi_id,
+        'user_id' => $userId,
+        'jawaban' => json_encode($jawabanUserArray), 
+        'jml_jawaban' => $totalPercobaanSebelumnya + 1,
     ];
 
-    // Tentukan kolom nilai & alur redirect berdasarkan tipe test
+    // 4. ALUR SIMPAN: Selalu create() entri baru, tidak ada update()
     if ($quiz->tipe_prepost == 0) {
         $data['nilai_awal'] = $nilai_final;
-        
-        // Simpan/Update (Akan mengisi field nilai_awal tanpa merusak kolom nilai_akhir)
-        PrepotesUserModel::updateOrCreate([
-            'class_id' => $materi_id,
-            'user_id' => $userId,
-        ], $data);
+        $data['nilai_akhir'] = 0; 
 
-        // Pre-test TIDAK ADA REMEDIAL, berapapun nilainya langsung arahkan ke materi pelajaran pertama
-        return redirect()->route('siswa.materi.belajar', [$materi_id])
+        // Buat entri baru khusus Pre-test
+        $newPreTest = PrepotesUserModel::create($data);
+
+        // Alihkan ke report khusus Pre-test agar bisa melihat detail jawabannya langsung
+        return redirect()->route('siswa.materi.report', [$materi_id, $newPreTest->id])
             ->with('success', 'Pre-test selesai! Nilai Anda: ' . $nilai_final . '. Silakan lanjutkan ke materi pelajaran.');
             
     } else {
         $data['nilai_akhir'] = $nilai_final;
+        $data['nilai_awal'] = 0; 
 
-        // Simpan/Update (Akan mengisi field nilai_akhir tanpa merusak kolom nilai_awal)
-        PrepotesUserModel::updateOrCreate([
-            'class_id' => $materi_id,
-            'user_id' => $userId,
-        ], $data);
+        // Buat entri baru khusus Post-test
+        $newPostTest = PrepotesUserModel::create($data);
 
-        // Post-test ADA REMEDIAL jika di bawah 70
         if ($nilai_final < 70) {
-            return redirect()->route('siswa.materi.belajar', [$materi_id])
-                ->with('warning', 'Nilai Post-test Anda: ' . $nilai_final . '. Anda belum mencapai batas kelulusan (70). Silakan coba remedi.');
+            // Jika gagal post test, arahkan ke report pengerjaan gagal ini agar bisa mengevaluasi salahnya di mana
+            return redirect()->route('siswa.materi.report', [$materi_id, $newPostTest->id])
+                ->with('warning', 'Nilai Post-test Anda: ' . $nilai_final . '. Anda belum mencapai batas kelulusan (70). Silakan pelajari kembali materi dan coba remedi.');
         }
 
-        return redirect()->route('siswa.materi.belajar', [$materi_id])
+        // KELULUSAN POST-TEST
+        return redirect()->route('siswa.materi.report', [$materi_id, $newPostTest->id])
             ->with('success', 'Selamat! Anda lulus Post-test dengan nilai: ' . $nilai_final);
     }
+}
+
+public function report($materi_id, $id)
+{
+    $userId = Auth::id();
+    
+    $materiAktif = MateriModel::with('kategori')->findOrFail($materi_id);
+    
+    $progressAktif = PrepotesUserModel::where('id', $id)
+        ->where('user_id', $userId)
+        ->where('class_id', $materi_id)
+        ->firstOrFail();
+
+    $tipeQuiz = ($progressAktif->nilai_awal > 0 && $progressAktif->nilai_akhir == 0) ? 0 : 1;
+
+    $preTestRecord = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $userId)
+        ->where('nilai_awal', '>', 0)
+        ->first();
+
+    $postTestRecord = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $userId)
+        ->where('nilai_akhir', '>', 0)
+        ->orderBy('id', 'desc')
+        ->first();
+
+    // PERBAIKAN: Gunakan Model Eloquent agar casting array berjalan otomatis
+    $quizData = PreposttestModel::where('id_materi', $materi_id)
+        ->where('tipe_prepost', $tipeQuiz)
+        ->first();
+
+    if (!$quizData) {
+        abort(404, 'Data Kuis Referensi Tidak Ditemukan.');
+    }
+
+    // Karena sudah dicasting di model, langsung ambil atau decode jika masih string
+    $daftarSoal = is_array($quizData->soal) ? $quizData->soal : json_decode($quizData->soal, true);
+    
+    // Pastikan jawaban user berupa array
+    $jawabanUser = is_array($progressAktif->jawaban) ? $progressAktif->jawaban : json_decode($progressAktif->jawaban, true);
+
+    // Mengantisipasi jika json_decode di atas menghasilkan string JSON lagi (double encoded)
+    if (is_string($daftarSoal)) { $daftarSoal = json_decode($daftarSoal, true); }
+    if (is_string($jawabanUser)) { $jawabanUser = json_decode($jawabanUser, true); }
+
+    return view('compact.report-kelulusan', compact(
+        'progressAktif', 
+        'materiAktif', 
+        'daftarSoal', 
+        'jawabanUser', 
+        'tipeQuiz',
+        'preTestRecord',
+        'postTestRecord'
+    ));
+}
+
+// -------------------------------------------------------------
+// METHOD BARU: Report berdasarkan Class ID saja
+// -------------------------------------------------------------
+public function reportByClass($materi_id)
+{
+    $userId = Auth::id();
+
+    // Cari progress terbaru (bisa pre atau post test) berdasarkan class_id
+    $progressAktif = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $userId)
+        ->orderBy('id', 'desc') // Ambil yang paling baru dikerjakan
+        ->first();
+
+    if (!$progressAktif) {
+        return redirect()->route('siswa.materi.belajar', $materi_id)
+            ->with('warning', 'Anda belum memiliki riwayat ujian untuk materi ini.');
+    }
+
+    // Alihkan ke fungsi report utama dengan membawa ID progress yang ditemukan
+    return $this->report($materi_id, $progressAktif->id);
 }
     private function parseYoutubeCode($url)
     {

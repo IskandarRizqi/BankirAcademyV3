@@ -275,5 +275,10 @@ Route::resource('ppt', PrePostTestController::class);
 Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
 Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
 Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
+// Route lama dengan ID Progress
+Route::get('/siswa/materi/{materi_id}/report/{id}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
+
+// Route BARU: Hanya berdasarkan Class ID / Materi ID
+Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
 // Route::post('/pelatihan/belajar/{materi_id}/test/{id_test}', [SiswaMateriController::class, 'simpanTest'])->name('siswa.materi.simpan_test');
 

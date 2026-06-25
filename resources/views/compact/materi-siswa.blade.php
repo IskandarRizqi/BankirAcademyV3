@@ -18,6 +18,23 @@
         transform: translateY(-5px);
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
     }
+    /* Mengantisipasi jarak tombol jika menggunakan Bootstrap 4 yang belum ada fitur gap */
+    .button-group-responsive > a, .button-group-responsive > button {
+        margin-left: 4px;
+    }
+    @media (max-width: 575.98px) {
+        .button-group-responsive {
+            flex-direction: column;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .button-group-responsive > a, .button-group-responsive > button {
+            margin-left: 0;
+            margin-top: 4px;
+            width: 100%;
+            text-align: center;
+        }
+    }
 </style>
 
 <div class="container py-5">
@@ -43,23 +60,32 @@
                                 <p class="card-text text-muted small flex-grow-1">
                                     {{ Str::limit($mat->keterangan ?? 'Tidak ada keterangan materi.', 100) }}
                                 </p>
-                                <div class="border-top pt-3 d-flex justify-content-between align-items-center">
-                                    <span class="text-secondary small font-weight-bold">
-                                        <i class="fas fa-video mr-1"></i> {{ count($mat->subMateri) }} Materi Pelajaran
+                                <div class="border-top pt-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                                    <span class="text-secondary small font-weight-bold mb-2 mb-sm-0">
+                                        <i class="fas fa-video mr-1"></i> {{ count($mat->subMateri) }} Materi
                                     </span>
-                                 @if(count($mat->subMateri) > 0)
+                                    
+                                    @if(count($mat->subMateri) > 0)
+                                       <div class="d-flex button-group-responsive">
     @if(isset($modulTerkunci) && $modulTerkunci->class_id != $mat->id)
-        <button class="btn btn-secondary btn-sm px-4 disabled" style="border-radius: 8px;" disabled>
+        <button class="btn btn-secondary btn-sm px-3 disabled" style="border-radius: 8px;" disabled>
             <i class="fas fa-lock mr-1"></i> Terkunci
         </button>
     @else
-        <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}" class="btn btn-primary btn-sm px-4" style="border-radius: 8px;">
-            Mulai Belajar
+        <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}" class="btn btn-primary btn-sm px-3" style="border-radius: 8px;">
+            <i class="fas fa-play mr-1"></i> Belajar
         </a>
+
+        @if(isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id)
+            <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3" style="border-radius: 8px;">
+                <i class="fas fa-file-alt mr-1"></i> Raport
+            </a>
+        @endif
     @endif
-@else
-    <button class="btn btn-light btn-sm px-4 disabled" disabled>Kosong</button>
-@endif
+</div>
+                                    @else
+                                        <button class="btn btn-light btn-sm px-4 disabled" disabled>Kosong</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
