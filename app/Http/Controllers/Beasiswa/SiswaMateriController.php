@@ -33,6 +33,10 @@ class SiswaMateriController extends Controller
     {
         $userId = Auth::id();
 
+        // Ambil profil siswa dan status beasiswanya (1 = Beasiswa, 0 = Non-Beasiswa)
+        $siswaProfile = auth()->user()->siswa; 
+        $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
+
         // RULE 1: Setiap siswa hanya boleh mengakses 1 modul pelatihan
         $cekModulLain = PrepotesUserModel::where('user_id', $userId)
             ->where('class_id', '!=', $materi_id)
@@ -44,7 +48,7 @@ class SiswaMateriController extends Controller
                 ->with('error', 'Anda hanya diperbolehkan mengikuti 1 modul pelatihan!');
         }
 
-        // Ambil data materi
+        // Ambil data materi beserta relasinya
         $materiAktif = MateriModel::with(['subMateri' => function($query) {
             $query->orderBy('urutan', 'asc');
         }, 'kategori', 'preposttest'])->findOrFail($materi_id);
@@ -62,11 +66,19 @@ class SiswaMateriController extends Controller
         $embedUrl = null;
         $quizAktif = null;
 
-        // RULE 2: Wajib Pre-test jika ada
-        $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
-        if ($preTest && !$sudahPreTest) {
-            // Paksa content type jadi 'pre' jika belum pretest
-            $contentType = 'pre';
+        // RULE 2: Wajib Pre-test jika ada DAN siswa adalah penerima Beasiswa (status == 1)
+        // Jika siswa Non-Beasiswa (status == 0), abaikan aturan wajib pre-test ini
+        if ($statusBeasiswaSiswa == 1) {
+            $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
+            if ($preTest && !$sudahPreTest) {
+                $contentType = 'pre';
+            }
+        }
+
+        // TAMBAHAN ATURAN BARU: Siswa Non-Beasiswa dilarang keras masuk ke halaman Pre/Post-Test
+        if (($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 0) {
+            return redirect()->route('siswa.materi.belajar', [$materi_id])
+                ->with('error', 'Siswa non-beasiswa tidak diperkenankan mengakses Pre-Test maupun Post-Test.');
         }
 
         if ($contentType === 'pre' && $preTest) {
@@ -75,7 +87,6 @@ class SiswaMateriController extends Controller
                 $quizAktif->soal = json_decode($quizAktif->soal, true);
             }
         } elseif ($contentType === 'post' && $postTest) {
-            // RULE 3 Tambahan: Tidak bisa post test sebelum semua materi beres (opsional tapi ideal)
             $quizAktif = $postTest;
             if (is_string($quizAktif->soal)) {
                 $quizAktif->soal = json_decode($quizAktif->soal, true);
@@ -89,30 +100,44 @@ class SiswaMateriController extends Controller
             if ($sub_materi_id) {
                 $subMateriAktif = SubMateriModel::findOrFail($sub_materi_id);
             } else {
-                $subMateriAktif = $listSubMateri->first();
+                // Cari materi pertama yang valid sesuai dengan tipe beasiswa siswa tersebut
+                $subMateriAktif = $listSubMateri->filter(function($item) use ($statusBeasiswaSiswa) {
+                    if ($statusBeasiswaSiswa == 0 && $item->tipe_beasiswa == 1) return false;
+                    if ($statusBeasiswaSiswa == 1 && $item->tipe_beasiswa == 2) return false;
+                    return true;
+                })->first();
             }
 
-            // RULE 3: Materi berurutan tidak bisa loncat bab
-            // Kita cek materi-materi yang urutannya lebih kecil dari materi aktif saat ini
             if ($subMateriAktif) {
+                // VALIDASI BACKEND: Blokir jika siswa mencoba bypass URL ke materi yang bukan tipenya
+                if (($subMateriAktif->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || 
+                    ($subMateriAktif->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1)) {
+                    
+                    return redirect()->route('siswa.materi.belajar', [$materi_id])
+                        ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
+                }
+
+                // RULE 3: Materi berurutan tidak boleh loncat bab
                 $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
-                
-                // Asumsi: Kita simpan progress sub_materi yang sudah dibaca ke dalam session/array database.
-                // Sebagai alternatif paling mudah tanpa buat tabel baru, kita validasi via Session dulu untuk progress bacanya.
                 $openedLessons = session()->get("materi_progress_{$materi_id}", []);
                 
-                // Selalu buka materi pertama
+                // Pengecekan urutan bab sebelumnya
                 if ($listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
                     foreach ($materiSebelumnya as $prev) {
+                        // Lewati validasi urutan jika materi tersebut memang dari awal tipenya tidak boleh diakses siswa saat ini
+                        if (($prev->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || 
+                            ($prev->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1)) {
+                            continue; 
+                        }
+
                         if (!in_array($prev->id, $openedLessons)) {
-                            // Jika ada bab sebelumnya yang belum pernah dibuka, lempar ke materi pertama yang belum diselesaikan
                             return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
                                 ->with('info', 'Anda harus mempelajari materi ini secara berurutan.');
                         }
                     }
                 }
 
-                // Masukkan materi saat ini ke dalam history progress bahwa sudah diakses
+                // Simpan riwayat progress membaca ke Session
                 if (!in_array($subMateriAktif->id, $openedLessons)) {
                     $openedLessons[] = $subMateriAktif->id;
                     session()->put("materi_progress_{$materi_id}", $openedLessons);
@@ -132,7 +157,8 @@ class SiswaMateriController extends Controller
             'postTest', 
             'contentType', 
             'quizAktif',
-            'userProgress'
+            'userProgress',
+            'statusBeasiswaSiswa' // Kita kirim variabel ini ke view agar pengecekan di blade lebih ringan
         ));
     }
 

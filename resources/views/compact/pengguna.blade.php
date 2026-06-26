@@ -633,6 +633,7 @@ function filterSekolahImport() {
     // Set value membership / instansi pengampu
     if (user.role == 4 && user.membership_id) {
         document.getElementById('membership_id').value = user.membership_id;
+        document.getElementById('masa_aktif_member').value = user.masa_aktif_member;
     }
     if (document.getElementById('bank_id') && user.bank_id) {
         document.getElementById('bank_id').value = user.bank_id;

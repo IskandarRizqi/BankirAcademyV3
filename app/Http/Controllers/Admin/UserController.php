@@ -234,6 +234,7 @@ class UserController extends Controller
             'role' => 'required|integer',
             'password' => 'nullable|string|min:8',
             'membership_id' => 'nullable|exists:memberships,id',
+            'masa_aktif_member' => 'required_if:role,4|nullable|date',
 
             // Aturan validasi tambahan opsional untuk SiswaProfile
             'no_telp' => 'nullable|string|max:20',
@@ -275,6 +276,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $request->role,
             'membership_id' => $request->role == 4 ? $request->membership_id : null,
+            'masa_aktif_member' => $request->role == 4 ? $request->masa_aktif_member : null,
             'bank_id' => $bankId,
             'sekolah_id' => $sekolahId,
         ];

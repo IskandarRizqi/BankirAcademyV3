@@ -26,7 +26,6 @@
     .playlist-item:hover { background: #f1f5f9; color: #1e3a8a; text-decoration: none; }
     .playlist-item.active { background: #eff6ff; color: #1e40af; font-weight: 600; border-left-color: #2563eb; }
     
-    /* Exam UI Styling */
     .soal-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 20px; background: #f8fafc; }
     .opsi-label { display: block; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
     .opsi-label:hover { background: #f1f5f9; border-color: #94a3b8; }
@@ -41,44 +40,20 @@
             <div class="mb-4">
                 <a href="{{ route('siswa.materi.index') }}" class="btn btn-sm btn-white border px-3 py-2 bg-white" style="border-radius:8px; color:#64748b;"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Katalog</a>
             </div>
-            {{-- Area Menampilkan Pesan Feedback / Flash Session --}}
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 10px;">
-        <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
 
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 10px;">
-        <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
+            @foreach (['success', 'error', 'warning', 'info'] as $msg)
+                @if(session($msg))
+                    <div class="alert alert-{{ $msg === 'error' ? 'danger' : $msg }} alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 10px;">
+                        <i class="fas @if($msg == 'success') fa-check-circle @elseif($msg == 'error') fa-exclamation-circle @elseif($msg == 'warning') fa-exclamation-triangle @else fa-info-circle @endif mr-2"></i> 
+                        {{ session($msg) }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+            @endforeach
 
-@if(session('warning'))
-    <div class="alert alert-warning alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 10px;">
-        <i class="fas fa-exclamation-triangle mr-2"></i> {{ session('warning') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
-
-@if(session('info'))
-    <div class="alert alert-info alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 10px;">
-        <i class="fas fa-info-circle mr-2"></i> {{ session('info') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
-
-            @if($contentType === 'pre' || $contentType === 'post')
+            @if(($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 1)
                 <div class="card shadow-sm border-0 p-4" style="border-radius: 12px; background: #ffffff;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="badge badge-pill {{ $contentType === 'pre' ? 'badge-warning' : 'badge-danger' }} px-3 py-2">
@@ -91,49 +66,47 @@
                     <p class="text-muted mb-4">Silakan jawab pertanyaan di bawah ini dengan memilih salah satu opsi jawaban yang paling tepat.</p>
                     <hr>
 
-                 <form action="{{ route('siswa.materi.simpan_test', [$materiAktif->id, $quizAktif->id]) }}" method="POST">
-    @csrf
-    
-    {{-- Tambahkan input classid tersembunyi agar terbaca di controller lama Anda jika dibutuhkan --}}
-    <input type="hidden" name="classid" value="{{ $materiAktif->id }}">
-    
-    @php
-        $daftarSoal = is_string($quizAktif->soal) ? json_decode($quizAktif->soal, true) : $quizAktif->soal;
-    @endphp
+                    <form action="{{ route('siswa.materi.simpan_test', [$materiAktif->id, $quizAktif->id]) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="classid" value="{{ $materiAktif->id }}">
+                        
+                        @php
+                            $daftarSoal = is_string($quizAktif->soal) ? json_decode($quizAktif->soal, true) : $quizAktif->soal;
+                        @endphp
 
-    @if(is_array($daftarSoal) && count($daftarSoal) > 0)
-        @foreach($daftarSoal as $indexSoal => $item)
-            <div class="soal-card">
-                <h6 class="font-weight-bold text-dark mb-3">
-                    <span class="badge badge-secondary mr-2">{{ $indexSoal + 1 }}</span> 
-                    {{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}
-                </h6>
-                
-                <div class="mt-2">
-                    @if(isset($item['opsi']) && is_array($item['opsi']))
-                        @foreach($item['opsi'] as $keyOpsi => $valOpsi)
-                            <label class="opsi-label">
-                                <input type="radio" name="jawaban[{{ $indexSoal }}]" value="{{ $keyOpsi }}" class="opsi-radio" required>
-                                <span class="opsi-text"><strong>{{ $keyOpsi }}.</strong> {{ $valOpsi }}</span>
-                            </label>
-                        @endforeach
-                    @endif
-                </div>
-            </div>
-        @endforeach
-        
-        <div class="text-right mt-4">
-            <button type="submit" class="btn btn-primary px-5 py-2 font-weight-bold shadow-sm" style="border-radius: 8px;">
-                <i class="fas fa-paper-plane mr-2"></i> Submit Jawaban Anda
-            </button>
-        </div>
-    @else
-        <div class="text-center py-4 text-muted">
-            <i class="fas fa-exclamation-triangle fa-2x mb-2 text-warning"></i>
-            <p class="mb-0"><em>Format soal kuis tidak valid atau kolom 'soal' di database masih kosong.</em></p>
-        </div>
-    @endif
-</form>
+                        @if(is_array($daftarSoal) && count($daftarSoal) > 0)
+                            @foreach($daftarSoal as $indexSoal => $item)
+                                <div class="soal-card">
+                                    <h6 class="font-weight-bold text-dark mb-3">
+                                        <span class="badge badge-secondary mr-2">{{ $indexSoal + 1 }}</span> 
+                                        {{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}
+                                    </h6>
+                                    
+                                    <div class="mt-2">
+                                        @if(isset($item['opsi']) && is_array($item['opsi']))
+                                            @foreach($item['opsi'] as $keyOpsi => $valOpsi)
+                                                <label class="opsi-label">
+                                                    <input type="radio" name="jawaban[{{ $indexSoal }}]" value="{{ $keyOpsi }}" class="opsi-radio" required>
+                                                    <span class="opsi-text"><strong>{{ $keyOpsi }}.</strong> {{ $valOpsi }}</span>
+                                                </label>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                            
+                            <div class="text-right mt-4">
+                                <button type="submit" class="btn btn-primary px-5 py-2 font-weight-bold shadow-sm" style="border-radius: 8px;">
+                                    <i class="fas fa-paper-plane mr-2"></i> Submit Jawaban Anda
+                                </button>
+                            </div>
+                        @else
+                            <div class="text-center py-4 text-muted">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-2 text-warning"></i>
+                                <p class="mb-0"><em>Format soal kuis tidak valid atau data kosong.</em></p>
+                            </div>
+                        @endif
+                    </form>
                 </div>
 
             @else
@@ -162,6 +135,11 @@
                         <hr>
                         <p class="text-secondary" style="line-height: 1.8;">{{ $subMateriAktif->keterangan ?? 'Tidak ada deskripsi tambahan.' }}</p>
                     </div>
+                @else
+                    <div class="text-center py-5 bg-white shadow-sm border-0 rounded" style="border-radius:12px;">
+                        <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                        <p class="text-secondary mb-0">Belum ada materi pelajaran yang tersedia atau cocok untuk akun Anda.</p>
+                    </div>
                 @endif
             @endif
         </div>
@@ -175,7 +153,7 @@
             <div class="sidebar-content">
                 <div class="kurikulum-title">Kurikulum Kelas</div>
                 
-                @if($preTest)
+                @if($preTest && $statusBeasiswaSiswa == 1)
                     <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=pre" class="playlist-item {{ $contentType === 'pre' ? 'active' : '' }}">
                         <div class="mr-3">
                             <i class="fas fa-file-signature fa-lg text-warning"></i>
@@ -193,47 +171,85 @@
                 
                 @foreach($materiAktif->subMateri as $index => $sub)
                     @php
-    $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
-    $isLocked = false;
+                        $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
+                        $isLocked = false;
+                        $isWrongType = false;
 
-    // Jika belum pretest (jika ada pretest), kunci semua materi
-    if ($preTest && (!$userProgress || is_null($userProgress->nilai_awal))) {
-        $isLocked = true;
-    }
-    
-    // Logika pengunci urutan: jika materi ini bukan materi pertama dan materi sebelumnya belum dibuka
-    if ($index > 0) {
-        $prevMateriId = $materiAktif->subMateri[$index - 1]->id;
-        if (!in_array($prevMateriId, $openedLessons)) {
-            $isLocked = true;
-        }
-    }
-@endphp
+                        // Pengecekan Hak Akses Beasiswa
+                        if (($sub->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || 
+                            ($sub->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1)) {
+                            $isWrongType = true;
+                            $isLocked = true;
+                        }
 
-@if($isLocked)
-    <div class="playlist-item text-muted" style="cursor: not-allowed; opacity: 0.6;">
-        <div class="mr-3">
-            <i class="fas fa-lock fa-lg text-secondary"></i>
-        </div>
-        <div class="w-100">
-            <span class="d-block small text-muted mb-1">Materi {{ $index + 1 }}</span>
-            <div class="text-truncate" style="font-size: 0.9rem;">{{ $sub->nama }}</div>
-        </div>
-    </div>
-@else
-    <a href="{{ route('siswa.materi.belajar', [$materiAktif->id, $sub->id]) }}" class="playlist-item {{ $contentType === 'materi' && $subMateriAktif && $subMateriAktif->id == $sub->id ? 'active' : '' }}">
-        <div class="mr-3">
-            <i class="fas {{ $sub->tipe_link == 0 ? 'fa-play-circle text-danger' : 'fa-file-alt text-success' }} fa-lg opacity-75"></i>
-        </div>
-        <div class="w-100">
-            <span class="d-block small text-muted mb-1">Materi {{ $index + 1 }}</span>
-            <div class="text-truncate" style="font-size: 0.9rem;">{{ $sub->nama }}</div>
-        </div>
-    </a>
-@endif
+                        // Kunci materi jika wajib pretest tapi belum dikerjakan (Hanya berlaku untuk penerima beasiswa)
+                        if ($statusBeasiswaSiswa == 1 && $preTest && (!$userProgress || is_null($userProgress->nilai_awal))) {
+                            $isLocked = true;
+                        }
+                        
+                        // Logika Kunci Urutan Bab Berurutan (Mencegah Loncat Bab)
+                        if ($index > 0 && !$isWrongType) {
+                            $prevMateriValid = null;
+                            for ($i = $index - 1; $i >= 0; $i--) {
+                                $prevCheck = $materiAktif->subMateri[$i];
+                                $isPrevWrongType = (($prevCheck->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || ($prevCheck->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1));
+                                if (!$isPrevWrongType) {
+                                    $prevMateriValid = $prevCheck;
+                                    break;
+                                }
+                            }
+
+                            if ($prevMateriValid && !in_array($prevMateriValid->id, $openedLessons)) {
+                                $isLocked = true;
+                            }
+                        }
+                    @endphp
+
+                    @if($isLocked)
+                        <div class="playlist-item text-muted" style="cursor: not-allowed; opacity: 0.5; background: #f8fafc;">
+                            <div class="mr-3">
+                                @if($isWrongType)
+                                    <i class="fas fa-ban fa-lg text-danger"></i>
+                                @else
+                                    <i class="fas fa-lock fa-lg text-secondary"></i>
+                                @endif
+                            </div>
+                            <div class="w-100">
+                                <span class="d-block small text-muted mb-1">
+                                    Materi {{ $index + 1 }} 
+                                    @if($sub->tipe_beasiswa == 1)
+                                        <span class="badge badge-warning text-dark font-weight-normal">Khusus Beasiswa</span>
+                                    @elseif($sub->tipe_beasiswa == 2)
+                                        <span class="badge badge-secondary text-white font-weight-normal">Non-Beasiswa</span>
+                                    @endif
+                                </span>
+                                <div class="text-truncate" style="font-size: 0.9rem; text-decoration: line-through;">{{ $sub->nama }}</div>
+                                @if($isWrongType)
+                                    <small class="text-danger d-block" style="font-size: 11px;">Tidak tersedia di program Anda</small>
+                                @endif
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('siswa.materi.belajar', [$materiAktif->id, $sub->id]) }}" class="playlist-item {{ $contentType === 'materi' && $subMateriAktif && $subMateriAktif->id == $sub->id ? 'active' : '' }}">
+                            <div class="mr-3">
+                                <i class="fas {{ $sub->tipe_link == 0 ? 'fa-play-circle text-danger' : 'fa-file-alt text-success' }} fa-lg opacity-75"></i>
+                            </div>
+                            <div class="w-100">
+                                <span class="d-block small text-muted mb-1">
+                                    Materi {{ $index + 1 }}
+                                    @if($sub->tipe_beasiswa == 1)
+                                        <span class="badge badge-warning text-dark font-weight-normal">Beasiswa</span>
+                                    @elseif($sub->tipe_beasiswa == 2)
+                                        <span class="badge badge-light border text-muted font-weight-normal">Umum</span>
+                                    @endif
+                                </span>
+                                <div class="text-truncate" style="font-size: 0.9rem;">{{ $sub->nama }}</div>
+                            </div>
+                        </a>
+                    @endif
                 @endforeach
 
-                @if($postTest)
+                @if($postTest && $statusBeasiswaSiswa == 1)
                     <div class="bg-light px-4 py-2 text-muted font-weight-bold" style="font-size: 0.75rem;">
                         TAHAP EVALUASI AKHIR
                     </div>
