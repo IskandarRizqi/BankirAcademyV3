@@ -356,158 +356,119 @@
         <div class="search-overlay"></div>
 
         <!--  BEGIN SIDEBAR  -->
-        <div class="sidebar-wrapper sidebar-theme">
+      @php
+    // 1. Ambil data user saat ini
+    $user = auth()->user();
+    $role = $user ? $user->role : null;
+    $email = $user ? $user->email : null;
+    $isRoot = ($role == 4 && $email === 'cb@bankir.academy');
 
-            <nav id="compactSidebar">
-                <ul class="navbar-nav theme-brand flex-row">
-                    <li class="nav-item theme-logo">
-                        <a href="index.html">
-                            <img src="assets/img/90x90.jpg" class="navbar-logo" alt="logo">
-                        </a>
-                    </li>
-                </ul>
-                <ul class="menu-categories">
-                    <li class="menu active">
-                        <a href="/home" data-active="false" class="menu-toggle">
+    // 2. Definisikan semua menu dan aturan aksesnya
+    $menus = [
+        [
+            'label' => 'Dashboard',
+            'icon' => 'home',
+            'url' => '/home',
+            'active' => request()->is('home'),
+            'can_see' => true, // Semua user bisa melihat
+            'has_submenu' => false
+        ],
+        [
+            'label' => 'Pre Post Test',
+            'icon' => 'zap',
+            'url' => '#dashboard',
+            'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*'),
+            'can_see' => $isRoot,
+            'has_submenu' => true
+        ],
+        [
+            'label' => 'Pengguna',
+            'icon' => 'cpu',
+            'url' => route('users.index'),
+            'active' => request()->routeIs('users.*'),
+            'can_see' => in_array($role, [4, 5]),
+            'has_submenu' => false
+        ],
+        [
+            'label' => 'Pelatihan',
+            'icon' => 'cpu',
+            'url' => '/pelatihan',
+            'active' => request()->routeIs('siswa.materi.*'),
+            'can_see' => ($role == 6),
+            'has_submenu' => false
+        ],
+        [
+            'label' => 'Membership',
+            'icon' => 'zap',
+            'url' => route('memberships.index'),
+            'active' => request()->routeIs('memberships.*'),
+            'can_see' => $isRoot,
+            'has_submenu' => false
+        ],
+    ];
+@endphp
+
+<div class="sidebar-wrapper sidebar-theme">
+
+    <nav id="compactSidebar">
+        <ul class="navbar-nav theme-brand flex-row">
+            <li class="nav-item theme-logo">
+                <a href="index.html">
+                    <img src="assets/img/90x90.jpg" class="navbar-logo" alt="logo">
+                </a>
+            </li>
+        </ul>
+        <ul class="menu-categories">
+            
+            {{-- Loop Menu Utama --}}
+            @foreach($menus as $menu)
+                @if($menu['can_see'])
+                    <li class="menu {{ $menu['active'] ? 'active' : '' }}">
+                        <a href="{{ $menu['url'] }}" 
+                           data-active="{{ $menu['active'] ? 'true' : 'false' }}" 
+                           class="menu-toggle"
+                           @if(!$menu['has_submenu']) onclick="window.location.href='{{ $menu['url'] }}';" @endif>
                             <div class="base-menu">
                                 <div class="base-icons">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-home">
-                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                                    </svg>
+                                    {{-- Menggunakan Icon Dinamis --}}
+                                    @if($menu['icon'] === 'home')
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                    @elseif($menu['icon'] === 'zap')
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-cpu"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+                                    @endif
                                 </div>
-                                <span>Dashboard</span>
+                                <span>{{ $menu['label'] }}</span>
                             </div>
                         </a>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-chevron-left">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
+                        @if($menu['has_submenu'])
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        @endif
                     </li>
-                    <li class="menu">
-                        <a href="#dashboard" data-active="false" class="menu-toggle">
-                            <div class="base-menu">
-                                <div class="base-icons">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-zap">
-                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                                    </svg>
-                                </div>
-                                <span>Pre Post Test</span>
-                            </div>
-                        </a>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-chevron-left">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </li>
-                    @if(auth()->check() && auth()->user()->role !== 6)
-                    <li class="menu">
-                        <a href="#" onclick="window.location.href='{{ route('users.index') }}';"
-                            data-active="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" class="menu-toggle">
-                            <div class="base-menu">
-                                <div class="base-icons">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-cpu">
-                                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-                                        <rect x="9" y="9" width="6" height="6"></rect>
-                                        <line x1="9" y1="1" x2="9" y2="4"></line>
-                                        <line x1="15" y1="1" x2="15" y2="4"></line>
-                                        <line x1="9" y1="20" x2="9" y2="23"></line>
-                                        <line x1="15" y1="20" x2="15" y2="23"></line>
-                                        <line x1="20" y1="9" x2="23" y2="9"></line>
-                                        <line x1="20" y1="14" x2="23" y2="14"></line>
-                                        <line x1="1" y1="9" x2="4" y2="9"></line>
-                                        <line x1="1" y1="14" x2="4" y2="14"></line>
-                                    </svg>
-                                </div>
-                                <span>Pengguna</span>
-                            </div>
-                        </a>
-                    </li>
-                    @endif
-                    @if(auth()->check() && auth()->user()->role == 6)
-                    <li class="menu">
-                        <a href="#" onclick="window.location.href='/pelatihan';"
-                            data-active="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" class="menu-toggle">
-                            <div class="base-menu">
-                                <div class="base-icons">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-cpu">
-                                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-                                        <rect x="9" y="9" width="6" height="6"></rect>
-                                        <line x1="9" y1="1" x2="9" y2="4"></line>
-                                        <line x1="15" y1="1" x2="15" y2="4"></line>
-                                        <line x1="9" y1="20" x2="9" y2="23"></line>
-                                        <line x1="15" y1="20" x2="15" y2="23"></line>
-                                        <line x1="20" y1="9" x2="23" y2="9"></line>
-                                        <line x1="20" y1="14" x2="23" y2="14"></line>
-                                        <line x1="1" y1="9" x2="4" y2="9"></line>
-                                        <line x1="1" y1="14" x2="4" y2="14"></line>
-                                    </svg>
-                                </div>
-                                <span>Pelatihan</span>
-                            </div>
-                        </a>
-                    </li>
-                    @endif
+                @endif
+            @endforeach
 
-                    @if(auth()->check() && auth()->user()->email === 'cb@bankir.academy')
-                    <li class="menu">
-                        <a href="#" onclick="window.location.href='{{ route('memberships.index') }}';"
-                            data-active="{{ request()->routeIs('memberships.*') ? 'true' : 'false' }}"
-                            class="menu-toggle">
-                            <div class="base-menu">
-                                <div class="base-icons">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-zap">
-                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                                    </svg>
-                                </div>
-                                <span>Membership</span>
-                            </div>
-                        </a>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-chevron-left">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </li>
-                    @endif
+        </ul>
+    </nav>
 
-                </ul>
-            </nav>
-
-            <div id="compact_submenuSidebar" class="submenu-sidebar">
-
-                <div class="submenu" id="dashboard">
-                    <ul class="submenu-list" data-parent-element="#dashboard">
-                        <li>
-                            <a href="/kategori-materi"> Bidang </a>
-                        </li>
-                        <li>
-                            <a href="/materi"> Kompetensi </a>
-                        </li>
-                        <li>
-                            <a href="/sub-materi"> Materi </a>
-                        </li>
-                        <li>
-                            <a href="/ppt"> PPT </a>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
+    <div id="compact_submenuSidebar" class="submenu-sidebar">
+        
+        {{-- Submenu Pre Post Test (Hanya muncul jika user adalah Root) --}}
+        @if($isRoot)
+        <div class="submenu" id="dashboard">
+            <ul class="submenu-list" data-parent-element="#dashboard">
+                <li class="{{ request()->is('kategori-materi*') ? 'active' : '' }}"><a href="/kategori-materi"> Bidang </a></li>
+                <li class="{{ request()->is('materi*') ? 'active' : '' }}"><a href="/materi"> Kompetensi </a></li>
+                <li class="{{ request()->is('sub-materi*') ? 'active' : '' }}"><a href="/sub-materi"> Materi </a></li>
+                <li class="{{ request()->is('ppt*') ? 'active' : '' }}"><a href="/ppt"> PPT </a></li>
+            </ul>
         </div>
+        @endif
+
+    </div>
+
+</div>
         <!--  END SIDEBAR  -->
 
         <!--  BEGIN CONTENT AREA  -->
