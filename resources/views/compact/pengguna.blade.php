@@ -254,6 +254,10 @@
             @endforeach
         </select>
     </div>
+    <div class="form-group mb-3 d-none" id="masa-aktif-group">
+    <label for="masa_aktif_member" style="font-weight: 600;">Masa Aktif Member <span class="text-danger">*</span></label>
+    <input type="date" id="masa_aktif_member" name="masa_aktif_member" class="form-control">
+</div>
 
     <div class="form-group mb-3 d-none" id="bank-group">
         <label for="bank_id" style="font-weight: 600;">Pilih Bank <span class="text-danger">*</span></label>
@@ -507,19 +511,24 @@
     let membershipGroup = document.getElementById('membership-group');
     let bankGroup = document.getElementById('bank-group');
     let sekolahGroup = document.getElementById('sekolah-group');
+    let masaAktifGroup = document.getElementById('masa-aktif-group');
     let siswaProfileGroup = document.getElementById('siswa-profile-group'); // Tambah baris ini
 
     // Reset display & required attribute
     membershipGroup.classList.add('d-none');
     bankGroup.classList.add('d-none');
     sekolahGroup.classList.add('d-none');
+    masaAktifGroup.classList.add('d-none');
     siswaProfileGroup.classList.add('d-none'); // Tambah baris ini
     
     document.getElementById('bank_id').required = false;
     document.getElementById('sekolah_id').required = false;
+    document.getElementById('masa_aktif_member').required = false;
 
     if (role == "4") { 
         membershipGroup.classList.remove('d-none');
+        masaAktifGroup.classList.remove('d-none'); 
+        document.getElementById('masa_aktif_member').required = true;
     } 
     else if (role == "5") { 
         if (AUTH_EMAIL === 'cb@bankir.academy') {

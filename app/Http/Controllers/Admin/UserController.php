@@ -80,6 +80,7 @@ class UserController extends Controller
             'role' => 'required|integer',
             'password' => 'required|string|min:8',
             'membership_id' => 'nullable|exists:memberships,id',
+            'masa_aktif_member' => 'required_if:role,4|nullable|date',
         ];
 
         // Rules conditional untuk Bank/Sekolah pendonor relasi
@@ -143,6 +144,7 @@ class UserController extends Controller
             'role' => $request->role,
             'password' => Hash::make($request->password),
             'membership_id' => $request->role == 4 ? $request->membership_id : null,
+            'masa_aktif_member' => $request->role == 4 ? $request->masa_aktif_member : null,
             'bank_id' => $bankId,
             'sekolah_id' => $sekolahId,
         ]);
