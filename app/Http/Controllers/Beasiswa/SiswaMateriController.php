@@ -20,7 +20,10 @@ class SiswaMateriController extends Controller
         $userId = Auth::id();
         
         // Cari tahu apakah user ini sudah pernah mengambil/mengunci 1 modul tertentu
-        $modulTerkunci = PrepotesUserModel::where('user_id', $userId)->first();
+        $modulTerkunci = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        // ->where('class_id', '!=', $materi_id)
+        ->first();
 
         $kategori = KategoriModel::with(['materi' => function($query) {
             $query->orderBy('urutan', 'asc');
@@ -29,29 +32,45 @@ class SiswaMateriController extends Controller
         return view('compact.materi-siswa', compact('kategori', 'modulTerkunci'));
     }
 
-    public function belajar(Request $request, $materi_id, $sub_materi_id = null)
-    {
-        $userId = Auth::id();
+   public function belajar(Request $request, $materi_id, $sub_materi_id = null)
+{
+    $userId = Auth::id();
 
-        // Ambil profil siswa dan status beasiswanya (1 = Beasiswa, 0 = Non-Beasiswa)
-        $siswaProfile = auth()->user()->siswa; 
-        $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
+    // Ambil profil siswa dan status beasiswanya
+    $siswaProfile = auth()->user()->siswa; 
+    $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
-        // RULE 1: Setiap siswa hanya boleh mengakses 1 modul pelatihan
-        $cekModulLain = PrepotesUserModel::where('user_id', $userId)
-            ->where('class_id', '!=', $materi_id)
-            ->exists();
+    // 1. CEK ATAU DAFTARKAN MODUL AKTIF (RULE 1: Satu siswa, satu modul)
+    // Cek apakah user sudah terikat di modul lain
+    $modulLain = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        ->where('class_id', '!=', $materi_id)
+        ->first();
 
-        if ($cekModulLain) {
-            $modulAktif = PrepotesUserModel::where('user_id', $userId)->first();
-            return redirect()->route('siswa.materi.belajar', [$modulAktif->class_id])
-                ->with('error', 'Anda hanya diperbolehkan mengikuti 1 modul pelatihan!');
-        }
+    if ($modulLain) {
+        return redirect()->route('siswa.materi.belajar', [$modulLain->class_id])
+            ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan yang sudah dipilih sebelumnya.');
+    }
 
-        // Ambil data materi beserta relasinya
-        $materiAktif = MateriModel::with(['subMateri' => function($query) {
-            $query->orderBy('urutan', 'asc');
-        }, 'kategori', 'preposttest'])->findOrFail($materi_id);
+    // Jika belum terikat di modul manapun, kunci pilihan siswa ke modul ini secara permanen
+    $sudahTerkunci = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        ->where('class_id', $materi_id)
+        ->exists();
+
+    if (!$sudahTerkunci) {
+        DB::table('siswa_modul_aktif')->insert([
+            'user_id'    => $userId,
+            'class_id'   => $materi_id,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    }
+
+    // --- SISA LOGIKA CODE ANDA DIBAWAH TETAP SAMA ---
+    $materiAktif = MateriModel::with(['subMateri' => function($query) {
+        $query->orderBy('urutan', 'asc');
+    }, 'kategori', 'preposttest'])->findOrFail($materi_id);
 
         $preTest = $materiAktif->preposttest->where('tipe_prepost', 0)->first();
         $postTest = $materiAktif->preposttest->where('tipe_prepost', 1)->first();
@@ -308,10 +327,11 @@ public function report($materi_id, $id)
     
     // Pastikan jawaban user berupa array
     $jawabanUser = is_array($progressAktif->jawaban) ? $progressAktif->jawaban : json_decode($progressAktif->jawaban, true);
-
-    // Mengantisipasi jika json_decode di atas menghasilkan string JSON lagi (double encoded)
-    if (is_string($daftarSoal)) { $daftarSoal = json_decode($daftarSoal, true); }
+if (is_string($daftarSoal)) { $daftarSoal = json_decode($daftarSoal, true); }
     if (is_string($jawabanUser)) { $jawabanUser = json_decode($jawabanUser, true); }
+
+    // Tambahkan variabel pengecekan kelulusan (KKM 70)
+    $isLulus = ($progressAktif->nilai_akhir >= 70);
 
     return view('compact.report-kelulusan', compact(
         'progressAktif', 
@@ -320,7 +340,8 @@ public function report($materi_id, $id)
         'jawabanUser', 
         'tipeQuiz',
         'preTestRecord',
-        'postTestRecord'
+        'postTestRecord',
+        'isLulus' // Ambil data ini di view
     ));
 }
 

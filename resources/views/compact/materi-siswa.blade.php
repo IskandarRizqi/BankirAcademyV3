@@ -66,24 +66,28 @@
                                     </span>
                                     
                                     @if(count($mat->subMateri) > 0)
-                                       <div class="d-flex button-group-responsive">
-    @if(isset($modulTerkunci) && $modulTerkunci->class_id != $mat->id)
-        <button class="btn btn-secondary btn-sm px-3 disabled" style="border-radius: 8px;" disabled>
-            <i class="fas fa-lock mr-1"></i> Terkunci
-        </button>
-    @else
-        <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}" class="btn btn-primary btn-sm px-3" style="border-radius: 8px;">
-            <i class="fas fa-play mr-1"></i> Belajar
-        </a>
+    <div class="d-flex button-group-responsive">
+       @if(isset($modulTerkunci) && $modulTerkunci->class_id != $mat->id)
+    <button class="btn btn-secondary btn-sm px-3 disabled" style="border-radius: 8px;" disabled>
+        <i class="fas fa-lock mr-1"></i> Terkunci
+    </button>
+@else
+    <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}" 
+       class="btn btn-primary btn-sm px-3 btn-pilih-modul" 
+       style="border-radius: 8px;"
+       data-nama="{{ $mat->nama }}"
+       data-sudah-aktif="{{ (isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id) ? 'true' : 'false' }}">
+        <i class="fas fa-play mr-1"></i> Belajar
+    </a>
 
-        @if(isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id)
-            <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3" style="border-radius: 8px;">
-                <i class="fas fa-file-alt mr-1"></i> Raport
-            </a>
-        @endif
+    @if(isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id)
+        <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3" style="border-radius: 8px;">
+            <i class="fas fa-file-alt mr-1"></i> Raport
+        </a>
     @endif
-</div>
-                                    @else
+@endif
+    </div>
+@else
                                         <button class="btn btn-light btn-sm px-4 disabled" disabled>Kosong</button>
                                     @endif
                                 </div>
@@ -105,5 +109,40 @@
     @endif
 </div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+<script>
+    document.querySelectorAll('.btn-pilih-modul').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const urlTarget = this.getAttribute('href');
+        const namaModul = this.getAttribute('data-nama');
+        const sudahAktif = this.getAttribute('data-sudah-aktif') === 'true';
+
+        // JIKA MODUL SUDAH DIAKTIFKAN SEBELUMNYA, LANGSUNG MASUK TANPA SWEETALERT
+        if (sudahAktif) {
+            return; // Biarkan browser melakukan redirect alami ke urlTarget
+        }
+
+        // JIKA MODUL BARU / BELUM PERNAH DIPILIH, TAMPILKAN KONFIRMASI
+        e.preventDefault(); // Tahan redirect url asli
+        
+        Swal.fire({
+            title: 'Konfirmasi Pilihan Modul',
+            html: `Apakah Anda yakin ingin memilih modul <br><strong>"${namaModul}"</strong>?<br><br><span class="text-danger" style="font-size: 13px;">*PENTING: Anda hanya diperbolehkan memilih 1 modul pelatihan. Pilihan ini tidak dapat diubah kembali!</span>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Saya Yakin!',
+            cancelButtonText: 'Batal',
+            borderRadius: '12px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika klik ya, langsung arahkan ke route belajar
+                window.location.href = urlTarget;
+            }
+        });
+    });
+});
+</script>
 @endsection

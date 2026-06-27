@@ -67,8 +67,8 @@
         @else
             <div class="failed-card mb-4">
                 <div class="mb-3"><i class="fas fa-times-circle fa-4x text-white"></i></div>
-                <h1 class="font-weight-bold">Belum Mencapai Batas Kelulusan</h1>
-                <p class="lead mb-2">Hasil evaluasi akhir Anda untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                <h1 class="font-weight-bold text-white">Belum Mencapai Batas Kelulusan</h1>
+                <p class="lead mb-2 text-white">Hasil evaluasi akhir Anda untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
                 <div class="score-badge">{{ round($progressAktif->nilai_akhir) }}</div>
                 <div>
                     <span class="badge badge-pill badge-warning px-3 py-2">Status: TIDAK LULUS (KKM 70)</span>
@@ -119,83 +119,90 @@
         </div>
     </div>
 
-    <div class="review-card">
-        <h4 class="font-weight-bold text-dark mb-1">
-            <i class="fas fa-poll-h mr-2 text-primary"></i> 
-            Analisis Jawaban - {{ $tipeQuiz == 0 ? 'Pre-Test' : 'Post-Test' }}
-        </h4>
-        <p class="text-muted small mb-3">Berikut adalah lembar koreksi lembar jawaban kuis yang baru saja Anda kirimkan.</p>
-        <hr>
+    @if($tipeQuiz == 0 || ($tipeQuiz == 1 && $isLulus))
+        <div class="review-card">
+            <h4 class="font-weight-bold text-dark mb-1">
+                <i class="fas fa-poll-h mr-2 text-primary"></i> 
+                Analisis Jawaban - {{ $tipeQuiz == 0 ? 'Pre-Test' : 'Post-Test' }}
+            </h4>
+            <p class="text-muted small mb-3">Berikut adalah lembar koreksi lembar jawaban kuis yang baru saja Anda kirimkan.</p>
+            <hr>
 
-        @if(is_array($daftarSoal) && count($daftarSoal) > 0)
-            @foreach($daftarSoal as $index => $item)
-                @php
-                    // Ambil kunci jawaban yang benar
-                    $kunci = strtoupper(trim($item['jawaban'] ?? $item['Jawaban'] ?? ''));
-                    
-                    // Ambil jawaban siswa berdasarkan index iterasi soal saat ini
-                    $jawabanSiswa = isset($jawabanUser[$index]) ? strtoupper(trim($jawabanUser[$index])) : '';
-                    
-                    // Cek apakah jawaban siswa benar
-                    $isBenar = ($kunci === $jawabanSiswa);
-                @endphp
+            @if(is_array($daftarSoal) && count($daftarSoal) > 0)
+                @foreach($daftarSoal as $index => $item)
+                    @php
+                        $kunci = strtoupper(trim($item['jawaban'] ?? $item['Jawaban'] ?? ''));
+                        $jawabanSiswa = isset($jawabanUser[$index]) ? strtoupper(trim($jawabanUser[$index])) : '';
+                        $isBenar = ($kunci === $jawabanSiswa);
+                    @endphp
 
-                <div class="soal-box">
-                    <div>
-                        @if($isBenar)
-                            <span class="status-badge bg-success text-white"><i class="fas fa-check-circle mr-1"></i> Benar</span>
-                        @else
-                            <span class="status-badge bg-danger text-white"><i class="fas fa-times-circle mr-1"></i> Salah</span>
-                        @endif
-                        
-                        <h6 class="font-weight-bold text-dark mb-3 pr-5" style="line-height: 1.5;">
-                            <span class="badge badge-secondary mr-2">{{ $index + 1 }}</span>
-                            {{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}
-                        </h6>
+                    <div class="soal-box">
+                        <div>
+                            @if($isBenar)
+                                <span class="status-badge bg-success text-white"><i class="fas fa-check-circle mr-1"></i> Benar</span>
+                            @else
+                                <span class="status-badge bg-danger text-white"><i class="fas fa-times-circle mr-1"></i> Salah</span>
+                            @endif
+                            
+                            <h6 class="font-weight-bold text-dark mb-3 pr-5" style="line-height: 1.5;">
+                                <span class="badge badge-secondary mr-2">{{ $index + 1 }}</span>
+                                {{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}
+                            </h6>
+                        </div>
+
+                        <div class="mt-2 pl-4">
+                            @if(isset($item['opsi']) && is_array($item['opsi']))
+                                @foreach($item['opsi'] as $keyOpsi => $valOpsi)
+                                    @php
+                                        $keyOpsiUpper = strtoupper(trim($keyOpsi));
+                                        $styleText = 'text-dark';
+                                        $bgItem = 'background: transparent;';
+                                        $icon = '<i class="far fa-circle mr-2 text-muted"></i>';
+                                        
+                                        if ($keyOpsiUpper === $kunci) {
+                                            $styleText = 'text-success font-weight-bold';
+                                            $bgItem = 'background: #f0fdf4; border-radius: 6px;';
+                                            $icon = '<i class="fas fa-check-circle mr-2 text-success"></i>';
+                                        }
+                                        
+                                        if ($keyOpsiUpper === $jawabanSiswa && !$isBenar) {
+                                            $styleText = 'text-danger font-weight-bold';
+                                            $bgItem = 'background: #fef2f2; border-radius: 6px;';
+                                            $icon = '<i class="fas fa-times-circle mr-2 text-danger"></i>';
+                                        }
+                                    @endphp
+                                    <div class="p-2 mb-1 border-bottom {{ $styleText }}" style="font-size:0.9rem; {{ $bgItem }}">
+                                        {!! $icon !!} <strong>{{ $keyOpsiUpper }}.</strong> {{ $valOpsi }}
+                                        
+                                        @if($keyOpsiUpper === $jawabanSiswa)
+                                            <span class="badge badge-light border text-muted ml-2 small font-weight-normal">(Jawaban Anda)</span>
+                                        @endif
+                                    </div>
+                                
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
-
-                    <div class="mt-2 pl-4">
-                        @if(isset($item['opsi']) && is_array($item['opsi']))
-                            @foreach($item['opsi'] as $keyOpsi => $valOpsi)
-                                @php
-                                    $keyOpsiUpper = strtoupper(trim($keyOpsi));
-                                    $styleText = 'text-dark';
-                                    $bgItem = 'background: transparent;';
-                                    $icon = '<i class="far fa-circle mr-2 text-muted"></i>';
-                                    
-                                    // Jika Opsi ini adalah Kunci Jawaban yang Benar
-                                    if ($keyOpsiUpper === $kunci) {
-                                        $styleText = 'text-success font-weight-bold';
-                                        $bgItem = 'background: #f0fdf4; border-radius: 6px;';
-                                        $icon = '<i class="fas fa-check-circle mr-2 text-success"></i>';
-                                    }
-                                    
-                                    // Jika Opsi ini dipilih Siswa tapi Ternyata Salah
-                                    if ($keyOpsiUpper === $jawabanSiswa && !$isBenar) {
-                                        $styleText = 'text-danger font-weight-bold';
-                                        $bgItem = 'background: #fef2f2; border-radius: 6px;';
-                                        $icon = '<i class="fas fa-times-circle mr-2 text-danger"></i>';
-                                    }
-                                @endphp
-                                <div class="p-2 mb-1 border-bottom {{ $styleText }}" style="font-size:0.9rem; {{ $bgItem }}">
-                                    {!! $icon !!} <strong>{{ $keyOpsiUpper }}.</strong> {{ $valOpsi }}
-                                    
-                                    @if($keyOpsiUpper === $jawabanSiswa)
-                                        <span class="badge badge-light border text-muted ml-2 small font-weight-normal">(Jawaban Anda)</span>
-                                    @endif
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
+                @endforeach
+            @else
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-exclamation-circle fa-3x mb-3 text-muted"></i>
+                    <p>Tidak ada data tinjauan soal untuk kuis ini.</p>
                 </div>
-            @endforeach
-        @else
-            <div class="text-center py-4 text-muted">
-                <i class="fas fa-exclamation-circle fa-3x mb-3 text-muted"></i>
-                <p>Tidak ada data tinjauan soal untuk kuis ini.</p>
+            @endif
+        </div>
+    @else
+        {{-- TAMPILAN JIKA BELUM LULUS POST-TEST (REMIDI) --}}
+        <div class="card mt-4 border-0 shadow-sm text-center py-5" style="border-radius: 12px; background: #fff;">
+            <div class="card-body">
+                <i class="fas fa-lock fa-3x text-muted mb-3"></i>
+                <h5 class="font-weight-bold text-dark">Analisis Jawaban Dikunci</h5>
+                <p class="text-muted container" style="max-width: 500px;">
+                    Maaf, detail lembar jawaban belum dapat ditampilkan karena nilai Anda masih di bawah batas kelulusan (**KKM 70**). Silakan pelajari kembali materi dan ikuti ujian remedi.
+                </p>
             </div>
-        @endif
-    </div>
+        </div>
+    @endif
 
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
