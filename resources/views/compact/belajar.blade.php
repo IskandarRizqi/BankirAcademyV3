@@ -270,33 +270,5 @@
 </div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    document.querySelectorAll('.btn-pilih-modul').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // Tahan redirect url asli
-            
-            const urlTarget = this.getAttribute('href');
-            const namaModul = this.getAttribute('data-nama');
-
-            Swal.fire({
-                title: 'Konfirmasi Pilihan Modul',
-                html: `Apakah Anda yakin ingin memilih modul <br><strong>"${namaModul}"</strong>?<br><br><span class="text-danger" style="font-size: 13px;">*PENTING: Anda hanya diperbolehkan memilih 1 modul pelatihan. Pilihan ini tidak dapat diubah kembali!</span>`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#2563eb',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Ya, Saya Yakin!',
-                cancelButtonText: 'Batal',
-                borderRadius: '12px'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Jika klik ya, langsung arahkan ke route belajar
-                    window.location.href = urlTarget;
-                }
-            });
-        });
-    });
-</script>
 @endsection

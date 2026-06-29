@@ -111,28 +111,29 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
             }
 
             $nisn = trim($row['nisn']);
-            $email = $nisn . '@gmail.com';
+            // Email ini TETAP digunakan untuk username login di tabel users
+            $loginEmail = $nisn . '@gmail.com'; 
 
-            // 3. Cek Duplikat NISN
-            $existingUser = User::where('email', $email)->first();
+            // 3. Cek Duplikat NISN via loginEmail
+            $existingUser = User::where('email', $loginEmail)->first();
             if ($existingUser) {
-                // Kumpulkan error NISN. Karena ada error ini, di Controller nanti otomatis memicu Rollback massal.
                 $this->errors[] = "Sheet {$sheetName} (Baris {$rowNumber}): NISN {$nisn} sudah terdaftar. Proses import dibatalkan seluruhnya.";
                 continue; 
             }
 
-            // Insert data sementara (akan disimpan permanen hanya jika lolos hingga akhir file)
             $passwordSiswa = $nisn . 'Bankir!';
             
+            // Simpan ke tabel users (untuk kebutuhan login)
             $user = User::create([
                 'name' => $row['nama'],
-                'email' => $email,
+                'email' => $loginEmail, // Tetap format nisn@gmail.com
                 'role' => 6,
                 'password' => Hash::make($passwordSiswa),
                 'bank_id' => $finalBankId,
                 'sekolah_id' => $finalSekolahId,
             ]);
 
+            // Simpan ke tabel siswa_profiles (termasuk email asli siswa & alamat dari excel)
             SiswaProfile::create([
                 'user_id' => $user->id,
                 'no_telp' => $row['no_telepon'] ?? null,
@@ -140,6 +141,8 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
                 'nisn' => $nisn,
                 'kelas' => $row['kelas'] ?? null,
                 'beasiswa' => $this->isBeasiswa,
+                'alamat' => $row['alamat'] ?? null, // <-- Tambahan kolom alamat
+                'email' => $row['email'] ?? null,   // <-- Tambahan kolom email asli siswa
             ]);
 
             $this->successCount++;

@@ -32,23 +32,28 @@ class SiswaSheetTemplate implements FromArray, WithTitle, WithHeadings
         // Berikan 1 contoh baris data kosong/dummy di dalam template
         return [
             [
-                'nama' => 'Contoh Nama Siswa',
-                'nisn' => '3535632',
-                'kelas' => 'XII-RPL',
+                'nama'          => 'Contoh Nama Siswa',
+                'nisn'          => '3535632',
+                'kelas'         => 'XII-RPL',
                 'jenis_kelamin' => 'L/P',
-                'no_telepon' => '081234567890'
+                'no_telepon'    => '081234567890',
+                'alamat'        => 'Jl. Contoh Alamat No. 123', // <-- Tambahan contoh alamat
+                'email'         => 'siswa@email.com'           // <-- Tambahan contoh email asli siswa
             ]
         ];
     }
 
     public function headings(): array
     {
+        // Pastikan urutannya sama persis dengan yang ada di method array() di atas
         return [
             'Nama',
             'NISN',
             'Kelas',
             'Jenis Kelamin',
-            'No Telepon'
+            'No Telepon',
+            'Alamat', // <-- Tambahan heading Alamat
+            'Email'   // <-- Tambahan heading Email
         ];
     }
 

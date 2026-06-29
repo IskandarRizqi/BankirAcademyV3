@@ -18,6 +18,8 @@ class SiswaProfile extends Model
         'nisn',
         'kelas',
         'beasiswa',
+        'alamat',
+        'email'
     ];
 
     public function user()

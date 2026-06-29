@@ -86,18 +86,16 @@
                             </p>
                         </td>
                         <td>
-                            <p class="align-self-center mb-0 user-name" style="font-weight: 600;">
-                                @if($x->tipe_beasiswa == 0)
-    <div class="badge badge-pills badge-primary">Semua</div>
-@endif
-@if($x->tipe_beasiswa == 1)
-    <div class="badge badge-pills badge-primary">Beasiswa</div>
-@endif
-@if($x->tipe_beasiswa == 2)
-    <div class="badge badge-pills badge-primary">Non Beasiswa</div>
-@endif
-                            </p>
-                        </td>
+    <p class="align-self-center mb-0 user-name" style="font-weight: 600;">
+        @if($x->tipe_beasiswa == 0)
+            <div class="badge badge-pills badge-info">Semua</div>
+        @elseif($x->tipe_beasiswa == 1)
+            <div class="badge badge-pills badge-success">Beasiswa</div>
+        @elseif($x->tipe_beasiswa == 2)
+            <div class="badge badge-pills badge-warning text-white">Non Beasiswa</div>
+        @endif
+    </p>
+</td>
                         <td>
                             <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{
                                 \Carbon\Carbon::parse($x->masa_aktif)->format('d-m-Y')
