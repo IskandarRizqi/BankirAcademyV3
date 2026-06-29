@@ -183,6 +183,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:4,5,6'])->group(function () {
         Route::get('/siswa/materi/{materi_id}/report/{id}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
         Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
+        Route::get('/manajemen/report/user/{user_id}/materi/{materi_id}', [SiswaMateriController::class, 'reportOlehManajemen'])->name('manajemen.siswa.report');
+        Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
     });
 });
 Route::get('getBerkas', function (Request $r) {

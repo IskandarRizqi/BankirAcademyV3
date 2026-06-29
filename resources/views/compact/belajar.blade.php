@@ -150,120 +150,83 @@
                 <h5 class="font-weight-bold text-dark mb-0">{{ $materiAktif->nama }}</h5>
             </div>
             
-            <div class="sidebar-content">
-                <div class="kurikulum-title">Kurikulum Kelas</div>
-                
-                @if($preTest && $statusBeasiswaSiswa == 1)
-                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=pre" class="playlist-item {{ $contentType === 'pre' ? 'active' : '' }}">
-                        <div class="mr-3">
-                            <i class="fas fa-file-signature fa-lg text-warning"></i>
-                        </div>
-                        <div class="w-100">
-                            <span class="d-block small text-muted font-weight-bold mb-1">TAHAP AWAL</span>
-                            <div class="text-truncate font-weight-bold" style="font-size: 0.9rem;">📝 Pre-Test: {{ $preTest->judul }}</div>
-                        </div>
-                    </a>
-                @endif
-
-                <div class="bg-light px-4 py-2 text-muted font-weight-bold" style="font-size: 0.75rem;">
-                    MATERI PELAJARAN ({{ count($materiAktif->subMateri) }} BAB)
-                </div>
-                
-                @foreach($materiAktif->subMateri as $index => $sub)
-                    @php
-                        $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
-                        $isLocked = false;
-                        $isWrongType = false;
-
-                        // Pengecekan Hak Akses Beasiswa
-                        if (($sub->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || 
-                            ($sub->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1)) {
-                            $isWrongType = true;
-                            $isLocked = true;
-                        }
-
-                        // Kunci materi jika wajib pretest tapi belum dikerjakan (Hanya berlaku untuk penerima beasiswa)
-                        if ($statusBeasiswaSiswa == 1 && $preTest && (!$userProgress || is_null($userProgress->nilai_awal))) {
-                            $isLocked = true;
-                        }
-                        
-                        // Logika Kunci Urutan Bab Berurutan (Mencegah Loncat Bab)
-                        if ($index > 0 && !$isWrongType) {
-                            $prevMateriValid = null;
-                            for ($i = $index - 1; $i >= 0; $i--) {
-                                $prevCheck = $materiAktif->subMateri[$i];
-                                $isPrevWrongType = (($prevCheck->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || ($prevCheck->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1));
-                                if (!$isPrevWrongType) {
-                                    $prevMateriValid = $prevCheck;
-                                    break;
-                                }
-                            }
-
-                            if ($prevMateriValid && !in_array($prevMateriValid->id, $openedLessons)) {
-                                $isLocked = true;
-                            }
-                        }
-                    @endphp
-
-                    @if($isLocked)
-                        <div class="playlist-item text-muted" style="cursor: not-allowed; opacity: 0.5; background: #f8fafc;">
-                            <div class="mr-3">
-                                @if($isWrongType)
-                                    <i class="fas fa-ban fa-lg text-danger"></i>
-                                @else
-                                    <i class="fas fa-lock fa-lg text-secondary"></i>
-                                @endif
-                            </div>
-                            <div class="w-100">
-                                <span class="d-block small text-muted mb-1">
-                                    Materi {{ $index + 1 }} 
-                                    @if($sub->tipe_beasiswa == 1)
-                                        <span class="badge badge-warning text-dark font-weight-normal">Khusus Beasiswa</span>
-                                    @elseif($sub->tipe_beasiswa == 2)
-                                        <span class="badge badge-secondary text-white font-weight-normal">Non-Beasiswa</span>
-                                    @endif
-                                </span>
-                                <div class="text-truncate" style="font-size: 0.9rem; text-decoration: line-through;">{{ $sub->nama }}</div>
-                                @if($isWrongType)
-                                    <small class="text-danger d-block" style="font-size: 11px;">Tidak tersedia di program Anda</small>
-                                @endif
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ route('siswa.materi.belajar', [$materiAktif->id, $sub->id]) }}" class="playlist-item {{ $contentType === 'materi' && $subMateriAktif && $subMateriAktif->id == $sub->id ? 'active' : '' }}">
-                            <div class="mr-3">
-                                <i class="fas {{ $sub->tipe_link == 0 ? 'fa-play-circle text-danger' : 'fa-file-alt text-success' }} fa-lg opacity-75"></i>
-                            </div>
-                            <div class="w-100">
-                                <span class="d-block small text-muted mb-1">
-                                    Materi {{ $index + 1 }}
-                                    @if($sub->tipe_beasiswa == 1)
-                                        <span class="badge badge-warning text-dark font-weight-normal">Beasiswa</span>
-                                    @elseif($sub->tipe_beasiswa == 2)
-                                        <span class="badge badge-light border text-muted font-weight-normal">Umum</span>
-                                    @endif
-                                </span>
-                                <div class="text-truncate" style="font-size: 0.9rem;">{{ $sub->nama }}</div>
-                            </div>
-                        </a>
-                    @endif
-                @endforeach
-
-                @if($postTest && $statusBeasiswaSiswa == 1)
-                    <div class="bg-light px-4 py-2 text-muted font-weight-bold" style="font-size: 0.75rem;">
-                        TAHAP EVALUASI AKHIR
-                    </div>
-                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="playlist-item {{ $contentType === 'post' ? 'active' : '' }}">
-                        <div class="mr-3">
-                            <i class="fas fa-trophy fa-lg text-danger"></i>
-                        </div>
-                        <div class="w-100">
-                            <span class="d-block small text-muted font-weight-bold mb-1">KELULUSAN</span>
-                            <div class="text-truncate font-weight-bold" style="font-size: 0.9rem;">🏆 Post-Test: {{ $postTest->judul }}</div>
-                        </div>
-                    </a>
-                @endif
+           <div class="sidebar-content">
+    <div class="kurikulum-title">Kurikulum Kelas</div>
+    
+    @if($preTest && $statusBeasiswaSiswa == 1)
+        <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=pre" class="playlist-item {{ $contentType === 'pre' ? 'active' : '' }}">
+            <div class="mr-3">
+                <i class="fas fa-file-signature fa-lg text-warning"></i>
             </div>
+            <div class="w-100">
+                <span class="d-block small text-muted font-weight-bold mb-1">TAHAP AWAL</span>
+                <div class="text-truncate font-weight-bold" style="font-size: 0.9rem;">📝 Pre-Test: {{ $preTest->judul }}</div>
+            </div>
+        </a>
+    @endif
+
+    <div class="bg-light px-4 py-2 text-muted font-weight-bold" style="font-size: 0.75rem;">
+        MATERI PELAJARAN ({{ count($materiAktif->subMateri) }} BAB)
+    </div>
+    
+    @foreach($materiAktif->subMateri as $index => $sub)
+        @php
+            $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
+            $isLocked = false;
+
+            // Kunci materi jika wajib pretest tapi belum dikerjakan (Hanya berlaku untuk penerima beasiswa)
+            if ($statusBeasiswaSiswa == 1 && $preTest && (!$userProgress || is_null($userProgress->nilai_awal))) {
+                $isLocked = true;
+            }
+            
+            // Logika Kunci Urutan Bab Berurutan (Mencegah Loncat Bab)
+            // Karena subMateri sudah bersih, index - 1 pasti adalah bab sebelumnya yang valid bagi siswa ini
+            if ($index > 0) {
+                $prevMateriValid = $materiAktif->subMateri[$index - 1];
+                if ($prevMateriValid && !in_array($prevMateriValid->id, $openedLessons)) {
+                    $isLocked = true;
+                }
+            }
+        @endphp
+
+        @if($isLocked)
+            <div class="playlist-item text-muted" style="cursor: not-allowed; opacity: 0.5; background: #f8fafc;">
+                <div class="mr-3">
+                    <i class="fas fa-lock fa-lg text-secondary"></i>
+                </div>
+                <div class="w-100">
+                    <span class="d-block small text-muted mb-1">Materi {{ $index + 1 }}</span>
+                    <div class="text-truncate" style="font-size: 0.9rem;">{{ $sub->nama }}</div>
+                </div>
+            </div>
+        @else
+            <a href="{{ route('siswa.materi.belajar', [$materiAktif->id, $sub->id]) }}" class="playlist-item {{ $contentType === 'materi' && $subMateriAktif && $subMateriAktif->id == $sub->id ? 'active' : '' }}">
+                <div class="mr-3">
+                    <i class="fas {{ $sub->tipe_link == 0 ? 'fa-play-circle text-danger' : 'fa-file-alt text-success' }} fa-lg opacity-75"></i>
+                </div>
+                <div class="w-100">
+                    <span class="d-block small text-muted mb-1">Materi {{ $index + 1 }}</span>
+                    <div class="text-truncate" style="font-size: 0.9rem;">{{ $sub->nama }}</div>
+                </div>
+            </a>
+        @endif
+    @endforeach
+
+    @if($postTest && $statusBeasiswaSiswa == 1)
+        <div class="bg-light px-4 py-2 text-muted font-weight-bold" style="font-size: 0.75rem;">
+            TAHAP EVALUASI AKHIR
+        </div>
+        <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="playlist-item {{ $contentType === 'post' ? 'active' : '' }}">
+            <div class="mr-3">
+                <i class="fas fa-trophy fa-lg text-danger"></i>
+            </div>
+            <div class="w-100">
+                <span class="d-block small text-muted font-weight-bold mb-1">KELULUSAN</span>
+                <div class="text-truncate font-weight-bold" style="font-size: 0.9rem;">🏆 Post-Test: {{ $postTest->judul }}</div>
+            </div>
+        </a>
+    @endif
+</div>
         </div>
 
     </div>

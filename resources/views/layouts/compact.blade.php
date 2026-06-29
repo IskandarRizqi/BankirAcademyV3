@@ -156,7 +156,7 @@
         <div class="search-overlay"></div>
 
         <!--  BEGIN SIDEBAR  -->
-      @php
+     @php
     // 1. Ambil data user saat ini
     $user = auth()->user();
     $role = $user ? $user->role : null;
@@ -170,7 +170,7 @@
             'icon' => 'home',
             'url' => '/home',
             'active' => request()->is('home'),
-            'can_see' => true, // Semua user bisa melihat
+            'can_see' => true, 
             'has_submenu' => false
         ],
         [
@@ -193,8 +193,17 @@
             'label' => 'Pelatihan',
             'icon' => 'cpu',
             'url' => '/pelatihan',
-            'active' => request()->routeIs('siswa.materi.*'),
+            'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
             'can_see' => ($role == 6),
+            'has_submenu' => false
+        ],
+        // BARU: Menu Report untuk Bank (5), Sekolah (4 non-root), dan Root (4 dengan email khusus)
+        [
+            'label' => 'Rekap Modul',
+            'icon' => 'bar-chart-2',
+            'url' => '/manajemen/laporan-siswa', // Sesuaikan dengan halaman rekap tabel siswa_modul_aktif Anda
+            'active' => request()->is('*manajemen/report*') || request()->is('*laporan-siswa*'),
+            'can_see' => in_array($role, [4, 5]), // Root (4), Sekolah (4), Bank (5) bisa melihat
             'has_submenu' => false
         ],
         [

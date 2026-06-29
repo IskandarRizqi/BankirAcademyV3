@@ -9,6 +9,7 @@ use App\Models\MateriModel;
 use App\Models\PreposttestModel;
 use App\Models\SubMateriModel;
 use App\Models\PrepotesUserModel; // Model progress/test user
+use App\Models\SiswaModulAktif;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -16,23 +17,33 @@ use Illuminate\Support\Facades\Redirect;
 class SiswaMateriController extends Controller
 {
     public function index()
-    {
-        $userId = Auth::id();
-        
-        // Cari tahu apakah user ini sudah pernah mengambil/mengunci 1 modul tertentu
-        $modulTerkunci = DB::table('siswa_modul_aktif')
+{
+    $userId = Auth::id();
+    $siswaProfile = Auth::user()->siswa; 
+    $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; // default 0 jika tidak ditemukan
+    $allowedTipeSubMateri = ($statusBeasiswa == 1) ? [0, 1] : [0, 2];
+    $modulTerkunci = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
-        // ->where('class_id', '!=', $materi_id)
         ->first();
+    $kategori = KategoriModel::with(['materi' => function($query) use ($allowedTipeSubMateri) {
+        $query->orderBy('urutan', 'asc');
+    }, 'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
+        $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+              ->orderBy('urutan', 'asc');
+    }])->get();
+    $kategori->each(function($kat) {
+        $kat->setRelation('materi', $kat->materi->filter(function($mat) {
+            return $mat->subMateri->count() > 0;
+        }));
+    });
+    $kategori = $kategori->filter(function($kat) {
+        return $kat->materi->count() > 0;
+    });
 
-        $kategori = KategoriModel::with(['materi' => function($query) {
-            $query->orderBy('urutan', 'asc');
-        }, 'materi.subMateri'])->get();
+    return view('compact.materi-siswa', compact('kategori', 'modulTerkunci'));
+}
 
-        return view('compact.materi-siswa', compact('kategori', 'modulTerkunci'));
-    }
-
-   public function belajar(Request $request, $materi_id, $sub_materi_id = null)
+  public function belajar(Request $request, $materi_id, $sub_materi_id = null)
 {
     $userId = Auth::id();
 
@@ -40,8 +51,10 @@ class SiswaMateriController extends Controller
     $siswaProfile = auth()->user()->siswa; 
     $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
+    // Tentukan sub-materi apa saja yang boleh dilewati berdasarkan tipe siswa
+    $allowedTipeSubMateri = ($statusBeasiswaSiswa == 1) ? [0, 1] : [0, 2];
+
     // 1. CEK ATAU DAFTARKAN MODUL AKTIF (RULE 1: Satu siswa, satu modul)
-    // Cek apakah user sudah terikat di modul lain
     $modulLain = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->where('class_id', '!=', $materi_id)
@@ -52,7 +65,6 @@ class SiswaMateriController extends Controller
             ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan yang sudah dipilih sebelumnya.');
     }
 
-    // Jika belum terikat di modul manapun, kunci pilihan siswa ke modul ini secara permanen
     $sudahTerkunci = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->where('class_id', $materi_id)
@@ -67,119 +79,105 @@ class SiswaMateriController extends Controller
         ]);
     }
 
-    // --- SISA LOGIKA CODE ANDA DIBAWAH TETAP SAMA ---
-    $materiAktif = MateriModel::with(['subMateri' => function($query) {
-        $query->orderBy('urutan', 'asc');
+    // 2. AMBIL DATA MATERI (Hanya me-load subMateri yang sesuai hak akses siswa)
+    $materiAktif = MateriModel::with(['subMateri' => function($query) use ($allowedTipeSubMateri) {
+        $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+              ->orderBy('urutan', 'asc');
     }, 'kategori', 'preposttest'])->findOrFail($materi_id);
 
-        $preTest = $materiAktif->preposttest->where('tipe_prepost', 0)->first();
-        $postTest = $materiAktif->preposttest->where('tipe_prepost', 1)->first();
+    $preTest = $materiAktif->preposttest->where('tipe_prepost', 0)->first();
+    $postTest = $materiAktif->preposttest->where('tipe_prepost', 1)->first();
 
-        // Cek status test user di database
-        $userProgress = PrepotesUserModel::where('class_id', $materi_id)
-            ->where('user_id', $userId)
-            ->first();
+    // Cek status test user di database
+    $userProgress = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $userId)
+        ->first();
 
-        $contentType = $request->query('type', 'materi');
-        $subMateriAktif = null;
-        $embedUrl = null;
-        $quizAktif = null;
+    $contentType = $request->query('type', 'materi');
+    $subMateriAktif = null;
+    $embedUrl = null;
+    $quizAktif = null;
 
-        // RULE 2: Wajib Pre-test jika ada DAN siswa adalah penerima Beasiswa (status == 1)
-        // Jika siswa Non-Beasiswa (status == 0), abaikan aturan wajib pre-test ini
-        if ($statusBeasiswaSiswa == 1) {
-            $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
-            if ($preTest && !$sudahPreTest) {
-                $contentType = 'pre';
-            }
+    // RULE 2: Wajib Pre-test jika ada DAN siswa adalah penerima Beasiswa
+    if ($statusBeasiswaSiswa == 1) {
+        $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
+        if ($preTest && !$sudahPreTest) {
+            $contentType = 'pre';
         }
+    }
 
-        // TAMBAHAN ATURAN BARU: Siswa Non-Beasiswa dilarang keras masuk ke halaman Pre/Post-Test
-        if (($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 0) {
-            return redirect()->route('siswa.materi.belajar', [$materi_id])
-                ->with('error', 'Siswa non-beasiswa tidak diperkenankan mengakses Pre-Test maupun Post-Test.');
+    // Blokir akses jika siswa Non-Beasiswa mencoba masuk ke halaman Test
+    if (($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 0) {
+        return redirect()->route('siswa.materi.belajar', [$materi_id])
+            ->with('error', 'Siswa non-beasiswa tidak diperkenankan mengakses Pre-Test maupun Post-Test.');
+    }
+
+    if ($contentType === 'pre' && $preTest) {
+        $quizAktif = $preTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
         }
-
-        if ($contentType === 'pre' && $preTest) {
-            $quizAktif = $preTest;
-            if (is_string($quizAktif->soal)) {
-                $quizAktif->soal = json_decode($quizAktif->soal, true);
-            }
-        } elseif ($contentType === 'post' && $postTest) {
-            $quizAktif = $postTest;
-            if (is_string($quizAktif->soal)) {
-                $quizAktif->soal = json_decode($quizAktif->soal, true);
-            }
+    } elseif ($contentType === 'post' && $postTest) {
+        $quizAktif = $postTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
+        }
+    } {
+        $contentType = 'materi';
+        
+        $listSubMateri = $materiAktif->subMateri; // Sudah otomatis terfilter dari Eager Loading di atas
+        
+        if ($sub_materi_id) {
+            $subMateriAktif = SubMateriModel::whereIn('tipe_beasiswa', $allowedTipeSubMateri)->findOrFail($sub_materi_id);
         } else {
-            $contentType = 'materi';
-            
-            // Ambil daftar ID sub materi untuk validasi urutan
-            $listSubMateri = $materiAktif->subMateri;
-            
-            if ($sub_materi_id) {
-                $subMateriAktif = SubMateriModel::findOrFail($sub_materi_id);
-            } else {
-                // Cari materi pertama yang valid sesuai dengan tipe beasiswa siswa tersebut
-                $subMateriAktif = $listSubMateri->filter(function($item) use ($statusBeasiswaSiswa) {
-                    if ($statusBeasiswaSiswa == 0 && $item->tipe_beasiswa == 1) return false;
-                    if ($statusBeasiswaSiswa == 1 && $item->tipe_beasiswa == 2) return false;
-                    return true;
-                })->first();
+            // Langsung ambil materi pertama yang tersedia dari list yang sudah bersih
+            $subMateriAktif = $listSubMateri->first();
+        }
+
+        if ($subMateriAktif) {
+            // VALIDASI BACKEND: Double check bypass URL
+            if (!in_array($subMateriAktif->tipe_beasiswa, $allowedTipeSubMateri)) {
+                return redirect()->route('siswa.materi.belajar', [$materi_id])
+                    ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
             }
 
-            if ($subMateriAktif) {
-                // VALIDASI BACKEND: Blokir jika siswa mencoba bypass URL ke materi yang bukan tipenya
-                if (($subMateriAktif->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || 
-                    ($subMateriAktif->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1)) {
-                    
-                    return redirect()->route('siswa.materi.belajar', [$materi_id])
-                        ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
-                }
-
-                // RULE 3: Materi berurutan tidak boleh loncat bab
-                $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
-                $openedLessons = session()->get("materi_progress_{$materi_id}", []);
-                
-                // Pengecekan urutan bab sebelumnya
-                if ($listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
-                    foreach ($materiSebelumnya as $prev) {
-                        // Lewati validasi urutan jika materi tersebut memang dari awal tipenya tidak boleh diakses siswa saat ini
-                        if (($prev->tipe_beasiswa == 1 && $statusBeasiswaSiswa == 0) || 
-                            ($prev->tipe_beasiswa == 2 && $statusBeasiswaSiswa == 1)) {
-                            continue; 
-                        }
-
-                        if (!in_array($prev->id, $openedLessons)) {
-                            return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
-                                ->with('info', 'Anda harus mempelajari materi ini secara berurutan.');
-                        }
+            // RULE 3: Materi berurutan tidak boleh loncat bab
+            $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
+            $openedLessons = session()->get("materi_progress_{$materi_id}", []);
+            
+            if ($listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
+                foreach ($materiSebelumnya as $prev) {
+                    if (!in_array($prev->id, $openedLessons)) {
+                        return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
+                            ->with('info', 'Anda harus mempelajari materi ini secara berurutan.');
                     }
                 }
-
-                // Simpan riwayat progress membaca ke Session
-                if (!in_array($subMateriAktif->id, $openedLessons)) {
-                    $openedLessons[] = $subMateriAktif->id;
-                    session()->put("materi_progress_{$materi_id}", $openedLessons);
-                }
             }
 
-            if ($subMateriAktif && $subMateriAktif->tipe_link == 0) {
-                $embedUrl = $this->parseYoutubeCode($subMateriAktif->link);
+            // Simpan riwayat progress membaca ke Session
+            if (!in_array($subMateriAktif->id, $openedLessons)) {
+                $openedLessons[] = $subMateriAktif->id;
+                session()->put("materi_progress_{$materi_id}", $openedLessons);
             }
         }
 
-        return view('compact.belajar', compact(
-            'materiAktif', 
-            'subMateriAktif', 
-            'embedUrl', 
-            'preTest', 
-            'postTest', 
-            'contentType', 
-            'quizAktif',
-            'userProgress',
-            'statusBeasiswaSiswa' // Kita kirim variabel ini ke view agar pengecekan di blade lebih ringan
-        ));
+        if ($subMateriAktif && $subMateriAktif->tipe_link == 0) {
+            $embedUrl = $this->parseYoutubeCode($subMateriAktif->link);
+        }
     }
+
+    return view('compact.belajar', compact(
+        'materiAktif', 
+        'subMateriAktif', 
+        'embedUrl', 
+        'preTest', 
+        'postTest', 
+        'contentType', 
+        'quizAktif',
+        'userProgress',
+        'statusBeasiswaSiswa'
+    ));
+}
 
 public function savejawaban(Request $request, $materi_id, $quiz_id)
 {
@@ -289,9 +287,19 @@ public function savejawaban(Request $request, $materi_id, $quiz_id)
     }
 }
 
-public function report($materi_id, $id)
+// Modifikasi tipis pada fungsi utama agar user_id dinamis (default: user login saat ini)
+public function report($materi_id, $id, $userId = null)
 {
-    $userId = Auth::id();
+    // Cek siapa yang sedang login saat ini
+    $authCurrentUser = auth()->user();
+    
+    // Jika diakses dari panel manajemen, $userId pasti dilewatan dari parameter
+    if (!$userId) {
+        $userId = $authCurrentUser->id;
+    }
+    
+    // Flag untuk menentukan apakah pengakses adalah Manajemen (Root/Bank dengan role 0 atau 4)
+    $isManajemen = in_array($authCurrentUser->role, [0, 4]);
     
     $materiAktif = MateriModel::with('kategori')->findOrFail($materi_id);
     
@@ -313,7 +321,6 @@ public function report($materi_id, $id)
         ->orderBy('id', 'desc')
         ->first();
 
-    // PERBAIKAN: Gunakan Model Eloquent agar casting array berjalan otomatis
     $quizData = PreposttestModel::where('id_materi', $materi_id)
         ->where('tipe_prepost', $tipeQuiz)
         ->first();
@@ -322,15 +329,12 @@ public function report($materi_id, $id)
         abort(404, 'Data Kuis Referensi Tidak Ditemukan.');
     }
 
-    // Karena sudah dicasting di model, langsung ambil atau decode jika masih string
     $daftarSoal = is_array($quizData->soal) ? $quizData->soal : json_decode($quizData->soal, true);
-    
-    // Pastikan jawaban user berupa array
     $jawabanUser = is_array($progressAktif->jawaban) ? $progressAktif->jawaban : json_decode($progressAktif->jawaban, true);
-if (is_string($daftarSoal)) { $daftarSoal = json_decode($daftarSoal, true); }
+    
+    if (is_string($daftarSoal)) { $daftarSoal = json_decode($daftarSoal, true); }
     if (is_string($jawabanUser)) { $jawabanUser = json_decode($jawabanUser, true); }
 
-    // Tambahkan variabel pengecekan kelulusan (KKM 70)
     $isLulus = ($progressAktif->nilai_akhir >= 70);
 
     return view('compact.report-kelulusan', compact(
@@ -341,21 +345,18 @@ if (is_string($daftarSoal)) { $daftarSoal = json_decode($daftarSoal, true); }
         'tipeQuiz',
         'preTestRecord',
         'postTestRecord',
-        'isLulus' // Ambil data ini di view
+        'isLulus',
+        'isManajemen' // Dikirim ke view
     ));
 }
 
-// -------------------------------------------------------------
-// METHOD BARU: Report berdasarkan Class ID saja
-// -------------------------------------------------------------
 public function reportByClass($materi_id)
 {
     $userId = Auth::id();
 
-    // Cari progress terbaru (bisa pre atau post test) berdasarkan class_id
     $progressAktif = PrepotesUserModel::where('class_id', $materi_id)
         ->where('user_id', $userId)
-        ->orderBy('id', 'desc') // Ambil yang paling baru dikerjakan
+        ->orderBy('id', 'desc')
         ->first();
 
     if (!$progressAktif) {
@@ -363,8 +364,59 @@ public function reportByClass($materi_id)
             ->with('warning', 'Anda belum memiliki riwayat ujian untuk materi ini.');
     }
 
-    // Alihkan ke fungsi report utama dengan membawa ID progress yang ditemukan
-    return $this->report($materi_id, $progressAktif->id);
+    return $this->report($materi_id, $progressAktif->id, $userId);
+}
+
+// -----------------------------------------------------------------
+// METHOD BARU: Untuk Mengakses Laporan dari Menu Bank, Root, Sekolah
+// -----------------------------------------------------------------
+public function reportOlehManajemen($user_id, $materi_id)
+{
+    // Cari data riwayat tes terbaru dari siswa tersebut di kelas terkait
+    $progressAktif = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $user_id)
+        ->orderBy('id', 'desc')
+        ->first();
+
+    if (!$progressAktif) {
+        return redirect()->back()->with('warning', 'Siswa tersebut belum memiliki riwayat ujian pada modul ini.');
+    }
+
+    // Panggil method report utama dengan menyertakan ID siswa target
+    return $this->report($materi_id, $progressAktif->id, $user_id);
+}
+
+public function indexLaporanManajemen()
+{
+    $authCurrentUser = auth()->user(); // Mengambil user manajemen yang login
+    $role = $authCurrentUser->role;    // Role: 0 = Root, 4 = Bank (Berdasarkan model Anda)
+    $email = $authCurrentUser->email;
+    $query = SiswaModulAktif::with(['user.siswa', 'user.bank', 'user.sekolah', 'materi']);
+    if ($role == 4 && $email != 'cb@bankir.academy') {
+        // Karena bank_id berada di tabel 'users', kita filter lewat relasi 'user'
+        $query->whereHas('user', function($q) use ($authCurrentUser) {
+            $q->where('bank_id', $authCurrentUser->id); // Menggunakan id dari bank yang sedang login
+        });
+    }
+
+    $siswaModul = $query->get();
+    $stats = [
+        'total_siswa_aktif'   => $siswaModul->unique('user_id')->count(),
+        'total_modul_diikuti' => $siswaModul->unique('class_id')->count(),
+        'total_beasiswa'      => $siswaModul->filter(fn($item) => optional($item->user->siswa)->beasiswa == 1)->unique('user_id')->count(),
+        'total_non_beasiswa'  => $siswaModul->filter(fn($item) => optional($item->user->siswa)->beasiswa == 0)->unique('user_id')->count(),
+    ];
+    if ($email == 'cb@bankir.academy' || $role == 0) {
+        $siswaModulGrouped = $siswaModul->groupBy(function($item) {
+            return optional($item->user->bank)->name ?? 'Tanpa Afiliasi Bank';
+        });
+    } else {
+        $siswaModulGrouped = $siswaModul->groupBy(function($item) {
+            return optional($item->user->sekolah)->name ?? 'Sekolah Tidak Terdata'; 
+        });
+    }
+
+    return view('compact.laporan-siswa', compact('siswaModulGrouped', 'stats', 'role'));
 }
     private function parseYoutubeCode($url)
     {

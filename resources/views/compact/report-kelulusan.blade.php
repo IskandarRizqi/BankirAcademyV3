@@ -36,59 +36,99 @@
     @if($tipeQuiz == 0)
         <div class="pretest-card mb-4">
             <div class="mb-3"><i class="fas fa-file-signature fa-4x text-white"></i></div>
-            <h1 class="font-weight-bold text-white">Hasil Pre-Test Berhasil Disimpan</h1>
-            <p class="lead mb-2 text-white">Terima kasih telah menyelesaikan evaluasi awal untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+            
+            @if($isManajemen)
+                <h1 class="font-weight-bold text-white">Laporan Hasil Pre-Test Siswa</h1>
+                <p class="lead mb-2 text-white">Rekapitulasi nilai evaluasi awal siswa pada modul <strong>{{ $materiAktif->nama }}</strong></p>
+            @else
+                <h1 class="font-weight-bold text-white">Hasil Pre-Test Berhasil Disimpan</h1>
+                <p class="lead mb-2 text-white">Terima kasih telah menyelesaikan evaluasi awal untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+            @endif
+
             <div class="score-badge">{{ round($progressAktif->nilai_awal) }}</div>
+            
             <div>
-                <span class="badge badge-pill badge-light text-warning font-weight-bold px-3 py-2">Tahap Terbuka: Silakan Masuk Ke Materi</span>
+                <span class="badge badge-pill badge-light text-warning font-weight-bold px-3 py-2">Jenis Evaluasi: Pre-Test</span>
             </div>
+
             <div class="mt-4">
-                <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}" class="btn btn-white text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    <i class="fas fa-book-open mr-2 text-warning"></i> Mulai Belajar Materi
-                </a>
+                @if($isManajemen)
+                    <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-white text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                        <i class="fas fa-arrow-left mr-2 text-primary"></i> Kembali ke Panel Laporan
+                    </a>
+                @else
+                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}" class="btn btn-white text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                        <i class="fas fa-book-open mr-2 text-warning"></i> Mulai Belajar Materi
+                    </a>
+                @endif
             </div>
         </div>
     @else
         @if($progressAktif->nilai_akhir >= 70)
             <div class="success-card mb-4">
                 <div class="mb-3"><i class="fas fa-trophy fa-4x text-warning"></i></div>
-                <h1 class="font-weight-bold text-white">Selamat! Anda Lulus</h1>
-                <p class="lead mb-2 text-white">Anda telah menyelesaikan Post-Test untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                
+                @if($isManajemen)
+                    <h1 class="font-weight-bold text-white">Laporan Hasil Post-Test (Lulus)</h1>
+                    <p class="lead mb-2 text-white">Siswa dinyatakan lulus pada modul <strong>{{ $materiAktif->nama }}</strong></p>
+                @else
+                    <h1 class="font-weight-bold text-white">Selamat! Anda Lulus</h1>
+                    <p class="lead mb-2 text-white">Anda telah menyelesaikan Post-Test untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                @endif
+
                 <div class="score-badge">{{ round($progressAktif->nilai_akhir) }}</div>
                 <div>
                     <span class="badge badge-pill badge-success px-3 py-2">Status: LULUS (KKM 70)</span>
                 </div>
                 <div class="mt-4">
-                    <a href="{{ route('siswa.materi.index') }}" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 8px;">
-                        <i class="fas fa-th mr-2"></i> Kembali ke Katalog Materi
-                    </a>
+                    @if($isManajemen)
+                        <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 8px;">
+                            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Panel Laporan
+                        </a>
+                    @else
+                        <a href="{{ route('siswa.materi.index') }}" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 8px;">
+                            <i class="fas fa-th mr-2"></i> Kembali ke Katalog Materi
+                        </a>
+                    @endif
                 </div>
             </div>
         @else
             <div class="failed-card mb-4">
                 <div class="mb-3"><i class="fas fa-times-circle fa-4x text-white"></i></div>
-                <h1 class="font-weight-bold text-white">Belum Mencapai Batas Kelulusan</h1>
-                <p class="lead mb-2 text-white">Hasil evaluasi akhir Anda untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                
+                @if($isManajemen)
+                    <h1 class="font-weight-bold text-white">Laporan Hasil Post-Test (Belum Lulus)</h1>
+                    <p class="lead mb-2 text-white">Hasil evaluasi akhir siswa pada modul <strong>{{ $materiAktif->nama }}</strong></p>
+                @else
+                    <h1 class="font-weight-bold text-white">Belum Mencapai Batas Kelulusan</h1>
+                    <p class="lead mb-2 text-white">Hasil evaluasi akhir Anda untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                @endif
+
                 <div class="score-badge">{{ round($progressAktif->nilai_akhir) }}</div>
                 <div>
                     <span class="badge badge-pill badge-warning px-3 py-2">Status: TIDAK LULUS (KKM 70)</span>
                 </div>
                 <div class="mt-4">
-                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="btn btn-light text-danger font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
-                        <i class="fas fa-sync mr-2"></i> Coba Remedi Ujian Kembali
-                    </a>
+                    @if($isManajemen)
+                        <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-light text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                            <i class="fas fa-arrow-left mr-2 text-primary"></i> Kembali ke Panel Laporan
+                        </a>
+                    @else
+                        <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="btn btn-light text-danger font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                            <i class="fas fa-sync mr-2"></i> Coba Remedi Ujian Kembali
+                        </a>
+                    @endif
                 </div>
             </div>
         @endif
     @endif
 
-    {{-- DASHBOARD RINGKASAN PERBANDINGAN NILAI (PRE-TEST VS POST-TEST) --}}
+    {{-- DASHBOARD RINGKASAN PERBANDINGAN NILAI --}}
     <div class="summary-box">
         <h5 class="font-weight-bold text-dark mb-3">
             <i class="fas fa-chart-bar mr-2 text-info"></i> Ringkasan Evaluasi Modul
         </h5>
         <div class="row">
-            {{-- Kolom Pre Test --}}
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="score-card-mini">
                     <span class="text-uppercase small text-muted font-weight-bold d-block mb-1">Nilai Pre-Test</span>
@@ -101,7 +141,6 @@
                     @endif
                 </div>
             </div>
-            {{-- Kolom Post Test --}}
             <div class="col-md-6">
                 <div class="score-card-mini">
                     <span class="text-uppercase small text-muted font-weight-bold d-block mb-1">Nilai Post-Test (Terakhir)</span>
@@ -119,13 +158,15 @@
         </div>
     </div>
 
-    @if($tipeQuiz == 0 || ($tipeQuiz == 1 && $isLulus))
+    {{-- KOREKSI LEMBAR JAWABAN --}}
+    {{-- Khusus Manajemen, mereka BISA MELIHAT lembar jawaban walaupun siswa tersebut belum lulus --}}
+    @if($tipeQuiz == 0 || ($tipeQuiz == 1 && $isLulus) || $isManajemen)
         <div class="review-card">
             <h4 class="font-weight-bold text-dark mb-1">
                 <i class="fas fa-poll-h mr-2 text-primary"></i> 
                 Analisis Jawaban - {{ $tipeQuiz == 0 ? 'Pre-Test' : 'Post-Test' }}
             </h4>
-            <p class="text-muted small mb-3">Berikut adalah lembar koreksi lembar jawaban kuis yang baru saja Anda kirimkan.</p>
+            <p class="text-muted small mb-3">Berikut adalah lembar koreksi lembar jawaban kuis.</p>
             <hr>
 
             @if(is_array($daftarSoal) && count($daftarSoal) > 0)
@@ -175,10 +216,9 @@
                                         {!! $icon !!} <strong>{{ $keyOpsiUpper }}.</strong> {{ $valOpsi }}
                                         
                                         @if($keyOpsiUpper === $jawabanSiswa)
-                                            <span class="badge badge-light border text-muted ml-2 small font-weight-normal">(Jawaban Anda)</span>
+                                            <span class="badge badge-light border text-muted ml-2 small font-weight-normal">(Jawaban Siswa)</span>
                                         @endif
                                     </div>
-                                
                                 @endforeach
                             @endif
                         </div>
@@ -192,7 +232,7 @@
             @endif
         </div>
     @else
-        {{-- TAMPILAN JIKA BELUM LULUS POST-TEST (REMIDI) --}}
+        {{-- TAMPILAN JIKA SISWA BELUM LULUS POST-TEST --}}
         <div class="card mt-4 border-0 shadow-sm text-center py-5" style="border-radius: 12px; background: #fff;">
             <div class="card-body">
                 <i class="fas fa-lock fa-3x text-muted mb-3"></i>
