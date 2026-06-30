@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class SiswaModulAktif extends Model
 {
+      use LogsActivity;
     // 1. Deklarasikan nama tabel secara eksplisit karena tidak menggunakan akhiran 's' jamak (plural)
     protected $table = 'siswa_modul_aktif';
 
@@ -32,5 +35,11 @@ class SiswaModulAktif extends Model
     {
         // Menghubungkan ke MateriModel menggunakan foreign key 'class_id'
         return $this->belongsTo(MateriModel::class, 'class_id', 'id');
+    }
+     public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama']) // Catat jika kolom ini berubah
+            ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }

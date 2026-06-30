@@ -55,7 +55,7 @@
                                 <tbody>
                                     @forelse($users as $key => $user)
                                     <tr>
-                                        <td class="checkbox-column"> {{ $users->firstItem() + $key }} </td>
+                                        <td class="checkbox-column"> {{ $key+1}} </td>
                                         <td>
                                             <div class="d-flex">
                                                 <div class="usr-img-frame mr-2 rounded-circle">
@@ -119,10 +119,6 @@
                                     @endforelse
                                 </tbody>
                             </table>
-                            
-                            <div class="p-3">
-                                {{ $users->links() }}
-                            </div>
                         </div>
                     </div>
 

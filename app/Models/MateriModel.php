@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class MateriModel extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
     protected $table = 'materi';
     protected $fillable = [
         'id_kategori',
@@ -32,4 +34,13 @@ class MateriModel extends Model
 {
     return $this->hasMany(PreposttestModel::class, 'id_materi', 'id');
 }
+ public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['id_kategori',
+        'urutan',
+        'nama',
+        'keterangan']) // Catat jika kolom ini berubah
+            ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
+    }
 }

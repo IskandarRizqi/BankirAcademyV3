@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
@@ -167,6 +168,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('materi', MateriController::class);
         Route::resource('sub-materi', SubMateriController::class);
         Route::resource('ppt', PrePostTestController::class);
+        Route::get('/activity', [ActivityLogController::class, 'index'])->name('activity.index');
         Route::resource('memberships', MembershipController::class)->except(['create', 'show', 'edit']);
     });
     Route::middleware(['role:4,5'])->group(function () {

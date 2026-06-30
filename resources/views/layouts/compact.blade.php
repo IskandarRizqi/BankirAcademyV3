@@ -214,6 +214,14 @@
             'can_see' => $isRoot,
             'has_submenu' => false
         ],
+        [
+            'label' => 'Log Activity',
+            'icon' => 'zap',
+            'url' => route('activity.index'),
+            'active' => request()->routeIs('activity.*'),
+            'can_see' => $isRoot,
+            'has_submenu' => false
+        ],
     ];
 @endphp
 

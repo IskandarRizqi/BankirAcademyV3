@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -101,5 +103,14 @@ class User extends Authenticatable
         if (array_key_exists('corporate', $this->attributes)) {
             return json_decode($this->attributes['corporate']);
         }
+    }
+     public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([ 'name', 'email', 'bank_id', 'sekolah_id', 
+        'membership_id',
+        'masa_aktif_member',
+        'role',]) // Catat jika kolom ini berubah
+            ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }

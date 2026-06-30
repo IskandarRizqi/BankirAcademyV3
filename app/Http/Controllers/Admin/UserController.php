@@ -41,7 +41,7 @@ class UserController extends Controller
             }
         }
 
-        $users = $query->paginate(10);
+        $users = $query->get();
         $memberships = Membership::orderBy('nama', 'asc')->get();
 
         // Proteksi Dropdown: Pastikan akun root tidak ikut terambil di list pendaftaran Bank

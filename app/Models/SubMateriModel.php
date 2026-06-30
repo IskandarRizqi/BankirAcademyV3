@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class SubMateriModel extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     protected $table = 'sub_materi';
     protected $fillable = [
@@ -29,5 +31,21 @@ class SubMateriModel extends Model
     public function materi(): HasOne
     {
         return $this->hasOne(MateriModel::class, 'id', 'id_materi');
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama',
+        'link',
+        'keterangan',
+        'id_materi',
+        'urutan',
+        'tipe_link',
+        'tipe_beasiswa',
+        'masa_aktif',
+        'harga',
+        'diskon',
+        'harga_final',]) // Catat jika kolom ini berubah
+            ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }
