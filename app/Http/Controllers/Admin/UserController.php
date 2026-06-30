@@ -6,6 +6,7 @@ use App\Exports\SiswaTemplateExport;
 use App\Http\Controllers\Controller;
 use App\Imports\SiswaImport;
 use App\Models\Membership;
+use App\Models\SiswaProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -342,4 +343,74 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Pengguna dan data profil berhasil dihapus.');
     }
+    public function beasiswaApprovalList()
+{
+    $authUser = auth()->user();
+    $authRole = (int) $authUser->role;
+    $authEmail = $authUser->email;
+
+    // Hanya Root (email tertentu) dan Bank (role 4) yang boleh mengakses menu ini
+    if ($authEmail !== 'cb@bankir.academy' && $authRole !== 4) {
+        abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+    }
+
+    // Query profil siswa yang status beasiswanya Pending (2)
+    $query = SiswaProfile::with(['user.sekolah', 'user.bank'])->where('beasiswa', 2);
+
+    // Jika yang login adalah Bank, filter hanya sekolah di bawah naungannya
+    if ($authRole === 4) {
+        $query->whereHas('user', function ($q) use ($authUser) {
+            $q->where('bank_id', $authUser->id);
+        });
+    }
+
+    $pendingSiswa = $query->latest()->get();
+
+    return view('compact.beasiswa_approval', compact('pendingSiswa'));
+}
+
+public function beasiswaApprovalProcess($id, $action)
+{
+    $authUser = auth()->user();
+    $authRole = (int) $authUser->role;
+    $authEmail = $authUser->email;
+
+    if ($authEmail !== 'cb@bankir.academy' && $authRole !== 4) {
+        abort(403);
+    }
+
+    $profile = SiswaProfile::findOrFail($id);
+    $userSiswa = $profile->user;
+
+    if ($action === 'approve') {
+        // Cek Kuota Beasiswa Bank terlebih dahulu sebelum approve
+        $targetBank = User::find($userSiswa->bank_id);
+        if ($targetBank && $targetBank->membership_id) {
+            $membership = $targetBank->membership;
+            if ($membership && !is_null($membership->limit_beasiswa)) {
+                
+                // Hitung kuota beasiswa aktif saat ini di sekolah terkait
+                $currentBeasiswaCount = SiswaProfile::where('beasiswa', 1)
+                    ->whereHas('user', function($q) use ($userSiswa) {
+                        $q->where('sekolah_id', $userSiswa->sekolah_id);
+                    })->count();
+
+                if ($currentBeasiswaCount >= (int)$membership->limit_beasiswa) {
+                    return redirect()->back()->with('error', "Gagal Approve! Kuota beasiswa untuk sekolah {$userSiswa->sekolah->name} sudah penuh ({$membership->limit_beasiswa} siswa).");
+                }
+            }
+        }
+
+        // Ubah status menjadi 1 (Aktif Beasiswa)
+        $profile->update(['beasiswa' => 1]);
+        return redirect()->back()->with('success', "Beasiswa untuk siswa {$userSiswa->name} berhasil disetujui.");
+
+    } elseif ($action === 'reject') {
+        // Ubah status menjadi 0 (Kembali ke Non-Beasiswa / Ditolak)
+        $profile->update(['beasiswa' => 0]);
+        return redirect()->back()->with('success', "Pengajuan beasiswa untuk siswa {$userSiswa->name} telah ditolak.");
+    }
+
+    return redirect()->back()->with('error', 'Aksi tidak valid.');
+}
 }

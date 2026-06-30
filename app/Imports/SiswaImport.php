@@ -37,7 +37,7 @@ class SiswaImport implements WithMultipleSheets
 
 class SiswaSheetImport implements ToCollection, WithHeadingRow
 {
-    private $isBeasiswa;
+    private $isBeasiswa; // Menandakan apakah ini sheet Beasiswa
     private $bankId;
     private $sekolahId;
     
@@ -60,6 +60,7 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
         $finalBankId = null;
         $finalSekolahId = null;
 
+        // 1. Tentukan Bank ID dan Sekolah ID berdasarkan siapa yang login
         if ($authEmail === 'cb@bankir.academy') {
             $finalBankId = $this->bankId;
             $finalSekolahId = $this->sekolahId;
@@ -69,6 +70,17 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
         } else if ($authRole === 5) {
             $finalBankId = $authUser->bank_id;
             $finalSekolahId = $authUser->id;
+        }
+
+        // 2. Tentukan nilai kolom beasiswa (0 = Tidak, 1 = Aktif, 2 = Pending)
+        $beasiswaStatus = 0; // Default untuk sheet Non Beasiswa
+
+        if ($this->isBeasiswa) {
+            if ($authEmail === 'cb@bankir.academy' || $authRole === 4) {
+                $beasiswaStatus = 1; // Langsung Aktif jika Root atau Bank yang import
+            } else if ($authRole === 5) {
+                $beasiswaStatus = 2; // Set Pending jika Sekolah yang import
+            }
         }
 
         $targetBank = User::find($finalBankId);
@@ -84,7 +96,9 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
         }
 
         $currentSiswaCount = User::where('role', 6)->where('sekolah_id', $finalSekolahId)->count();
-        $currentBeasiswaCount = SiswaProfile::where('beasiswa', true)
+        
+        // Menghitung kuota beasiswa aktif (status 1)
+        $currentBeasiswaCount = SiswaProfile::where('beasiswa', 1)
             ->whereHas('user', function($query) use ($finalSekolahId) {
                 $query->where('sekolah_id', $finalSekolahId);
             })->count();
@@ -98,23 +112,22 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // 1. Cek Kuota Siswa Umum
+            // Cek Kuota Siswa Umum
             if (!is_null($limitSiswa) && $currentSiswaCount >= $limitSiswa) {
                 $this->errors[] = "Gagal import file! Kuota maksimal siswa untuk sekolah ini ({$limitSiswa} siswa) sudah penuh. Tidak ada data yang disimpan.";
                 break; 
             }
 
-            // 2. Cek Kuota Siswa Beasiswa
-            if ($this->isBeasiswa && !is_null($limitBeasiswa) && $currentBeasiswaCount >= $limitBeasiswa) {
+            // Cek Kuota Siswa Beasiswa (Hanya divalidasi jika status beasiswanya langsung aktif / 1)
+            if ($beasiswaStatus === 1 && !is_null($limitBeasiswa) && $currentBeasiswaCount >= $limitBeasiswa) {
                 $this->errors[] = "Gagal import file! Kuota beasiswa untuk sekolah ini ({$limitBeasiswa} siswa) sudah penuh. Tidak ada data yang disimpan.";
                 break; 
             }
 
             $nisn = trim($row['nisn']);
-            // Email ini TETAP digunakan untuk username login di tabel users
             $loginEmail = $nisn . '@gmail.com'; 
 
-            // 3. Cek Duplikat NISN via loginEmail
+            // Cek Duplikat NISN
             $existingUser = User::where('email', $loginEmail)->first();
             if ($existingUser) {
                 $this->errors[] = "Sheet {$sheetName} (Baris {$rowNumber}): NISN {$nisn} sudah terdaftar. Proses import dibatalkan seluruhnya.";
@@ -123,31 +136,31 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
 
             $passwordSiswa = $nisn . 'Bankir!';
             
-            // Simpan ke tabel users (untuk kebutuhan login)
+            // Simpan user baru
             $user = User::create([
                 'name' => $row['nama'],
-                'email' => $loginEmail, // Tetap format nisn@gmail.com
+                'email' => $loginEmail,
                 'role' => 6,
                 'password' => Hash::make($passwordSiswa),
                 'bank_id' => $finalBankId,
                 'sekolah_id' => $finalSekolahId,
             ]);
 
-            // Simpan ke tabel siswa_profiles (termasuk email asli siswa & alamat dari excel)
+            // Simpan profile dengan status 'beasiswa' dinamis (0, 1, atau 2)
             SiswaProfile::create([
                 'user_id' => $user->id,
                 'no_telp' => $row['no_telepon'] ?? null,
                 'jenis_kelamin' => $row['jenis_kelamin'] ?? null,
                 'nisn' => $nisn,
                 'kelas' => $row['kelas'] ?? null,
-                'beasiswa' => $this->isBeasiswa,
-                'alamat' => $row['alamat'] ?? null, // <-- Tambahan kolom alamat
-                'email' => $row['email'] ?? null,   // <-- Tambahan kolom email asli siswa
+                'beasiswa' => $beasiswaStatus, // <--- Menggunakan variable status baru
+                'alamat' => $row['alamat'] ?? null, 
+                'email' => $row['email'] ?? null,   
             ]);
 
             $this->successCount++;
             $currentSiswaCount++;
-            if ($this->isBeasiswa) {
+            if ($beasiswaStatus === 1) {
                 $currentBeasiswaCount++;
             }
         }

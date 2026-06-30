@@ -174,6 +174,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:4,5'])->group(function () {
         Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download-template');
         Route::post('users/import', [UserController::class, 'import'])->name('users.import');
+        Route::get('users/beasiswa-approval', [UserController::class, 'beasiswaApprovalList'])->name('beasiswa.approval.list');
+    Route::post('users/beasiswa-approval/{id}/{action}', [UserController::class, 'beasiswaApprovalProcess'])->name('users.beasiswa.approval.process');
         Route::resource('users', UserController::class);
     });
     Route::middleware(['role:6'])->group(function () {
