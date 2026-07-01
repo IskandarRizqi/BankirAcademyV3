@@ -1,8 +1,5 @@
 @extends('layouts.compact')
-
 @section('content')
-
-
 <div class="row" id="cancel-row">
     <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
 
@@ -11,7 +8,17 @@
             <p class="lead mb-0 text-white" style="opacity: 0.9;">Akses materi pelatihan beasiswa terstruktur standar industri.</p>
         </div>
 
+        {{-- ALERT JIKA MASA AKTIF HABIS --}}
+        @if(!$isMemberAktif)
+            <div class="alert alert-danger p-4 text-center mb-5" style="border-radius: 12px; border: none; background-color: #FEE2E2; color: #991B1B;">
+                <i class="fas fa-exclamation-circle fa-3x mb-3 text-danger"></i>
+                <h4 class="font-weight-bold mb-2">Masa Aktif Akun Anda Telah Habis!</h4>
+                <p class="mb-0">Akses pembelajaran dihentikan. Silakan hubungi pihak sekolah atau administrator untuk memperpanjang masa aktif akun Anda.</p>
+            </div>
+        @endif
+
         @forelse($kategori as $kat)
+            {{-- Perulangan kategori seperti biasa --}}
             <div class="mb-5">
                 <div class="d-flex align-items-center mb-4">
                     <span class="category-badge mr-3"><i class="fas fa-th-large mr-2"></i>{{ $kat->nama }}</span>
@@ -48,11 +55,11 @@
                                                         <i class="fas fa-play mr-1"></i> Belajar
                                                     </a>
 
-                                                    @if(isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id)
-                                                        <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3" style="border-radius: 8px;">
-                                                            <i class="fas fa-file-alt mr-1"></i> Raport
-                                                        </a>
-                                                    @endif
+                                                   @if(isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id && $hasPrepostData)
+    <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3" style="border-radius: 8px;">
+        <i class="fas fa-file-alt mr-1"></i> Raport
+    </a>
+@endif
                                                 @endif
                                             </div>
                                         @else
@@ -62,7 +69,7 @@
                                 </div>
                             </div>
                         </div>
-                    @empty
+                  @empty
                         <div class="col-12">
                             <p class="text-muted small font-italic pl-2">Belum ada kelas/materi di kategori ini.</p>
                         </div>
@@ -70,10 +77,13 @@
                 </div>
             </div>
         @empty
-            <div class="text-center py-5 bg-white empty-state-card">
-                <i class="fas fa-folder-open fa-3x mb-3" style="color: #A3A8B8;"></i>
-                <h5 style="color: #6B7280;">Belum ada katalog materi yang tersedia saat ini.</h5>
-            </div>
+            {{-- Jika $kategori kosong (termasuk saat masa aktif habis), state ini yang akan merespons --}}
+            @if($isMemberAktif)
+                <div class="text-center py-5 bg-white empty-state-card">
+                    <i class="fas fa-folder-open fa-3x mb-3" style="color: #A3A8B8;"></i>
+                    <h5 style="color: #6B7280;">Belum ada katalog materi yang tersedia saat ini.</h5>
+                </div>
+            @endif
         @endforelse
 
     </div>

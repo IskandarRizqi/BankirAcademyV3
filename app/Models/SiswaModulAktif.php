@@ -39,7 +39,7 @@ class SiswaModulAktif extends Model
      public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['nama']) // Catat jika kolom ini berubah
+            ->logOnly(['user_id', 'class_id']) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }

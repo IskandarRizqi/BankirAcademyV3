@@ -95,9 +95,10 @@
                                     <iframe src="{{ $embedUrl }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             @else
-                                <div class="pdf-wrapper" style="height: 600px;">
-                                    <iframe src="{{ $subMateriAktif->link }}#toolbar=0" width="100%" height="100%" style="border: none;"></iframe>
-                                </div>
+                               <div class="pdf-wrapper" style="height: 600px;">
+    <!-- UBAH $subMateriAktif->link MENJADI $embedUrl -->
+    <iframe src="{{ $embedUrl }}" width="100%" height="100%" style="border: none;"></iframe>
+</div>
                             @endif
                         </div>
 
@@ -189,19 +190,41 @@
                         @endif
                     @endforeach
 
-                    @if($postTest && $statusBeasiswaSiswa == 1)
+                   @if($postTest && $statusBeasiswaSiswa == 1)
                         <div class="bg-light px-4 py-2 text-muted font-weight-bold" style="font-size: 0.75rem; border-top: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7;">
                             TAHAP EVALUASI AKHIR
                         </div>
-                        <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="playlist-item d-flex align-items-center p-3 text-decoration-none {{ $contentType === 'post' ? 'active bg-light font-weight-bold' : '' }}">
-                            <div class="mr-3">
-                                <i class="fas fa-trophy fa-lg text-danger"></i>
+
+                        @php
+                            // Ambil total materi & progress session untuk menentukan status gembok Post-Test
+                            $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
+                            $isPostTestLocked = count($openedLessons) < count($materiAktif->subMateri);
+                        @endphp
+
+                        @if($isPostTestLocked)
+                            <!-- Tampilan Kuis Terkunci -->
+                            <div class="playlist-item d-flex align-items-center p-3 text-muted" style="cursor: not-allowed; opacity: 0.6; background: #f8fafc; border-bottom: 1px solid #edf2f7;">
+                                <div class="mr-3">
+                                    <i class="fas fa-lock fa-lg text-secondary"></i>
+                                </div>
+                                <div class="w-100">
+                                    <span class="d-block small text-muted font-weight-bold mb-1">KELULUSAN</span>
+                                    <div class="text-truncate" style="font-size: 0.9rem;">🏆 Post-Test: {{ $postTest->judul }}</div>
+                                    <small class="text-danger d-block mt-1"><i class="fas fa-info-circle mr-1"></i>Selesaikan semua materi untuk membuka</small>
+                                </div>
                             </div>
-                            <div class="w-100">
-                                <span class="d-block small text-muted font-weight-bold mb-1">KELULUSAN</span>
-                                <div class="text-truncate text-dark" style="font-size: 0.9rem;">🏆 Post-Test: {{ $postTest->judul }}</div>
-                            </div>
-                        </a>
+                        @else
+                            <!-- Tampilan Kuis Terbuka -->
+                            <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="playlist-item d-flex align-items-center p-3 text-decoration-none {{ $contentType === 'post' ? 'active bg-light font-weight-bold' : '' }}">
+                                <div class="mr-3">
+                                    <i class="fas fa-trophy fa-lg text-danger"></i>
+                                </div>
+                                <div class="w-100">
+                                    <span class="d-block small text-muted font-weight-bold mb-1">KELULUSAN</span>
+                                    <div class="text-truncate text-dark" style="font-size: 0.9rem;">🏆 Post-Test: {{ $postTest->judul }}</div>
+                                </div>
+                            </a>
+                        @endif
                     @endif
                 </div>
             </div>

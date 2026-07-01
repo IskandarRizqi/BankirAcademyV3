@@ -16,31 +16,57 @@ use Illuminate\Support\Facades\Redirect;
 
 class SiswaMateriController extends Controller
 {
-    public function index()
+public function index()
 {
     $userId = Auth::id();
-    $siswaProfile = Auth::user()->siswa; 
-    $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; // default 0 jika tidak ditemukan
+    $user = Auth::user();
+    
+    // 1. Ambil masa aktif dari User Bank terkait (menggunakan eager loading relasi 'bank')
+    $bankProfile = $user->bank;
+    
+    // Cek jika bank ditemukan, pakai masa_aktif_member milik bank. 
+    // Jika tidak ada bank, kita default-kan false agar aman.
+    $isMemberAktif = false;
+    if ($bankProfile && $bankProfile->masa_aktif_member) {
+        $isMemberAktif = \Carbon\Carbon::parse($bankProfile->masa_aktif_member)->isFuture();
+    }
+
+    $siswaProfile = $user->siswa; 
+    $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; 
     $allowedTipeSubMateri = ($statusBeasiswa == 1) ? [0, 1] : [0, 2];
+    
     $modulTerkunci = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->first();
-    $kategori = KategoriModel::with(['materi' => function($query) use ($allowedTipeSubMateri) {
-        $query->orderBy('urutan', 'asc');
-    }, 'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
-        $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
-              ->orderBy('urutan', 'asc');
-    }])->get();
-    $kategori->each(function($kat) {
-        $kat->setRelation('materi', $kat->materi->filter(function($mat) {
-            return $mat->subMateri->count() > 0;
-        }));
-    });
-    $kategori = $kategori->filter(function($kat) {
-        return $kat->materi->count() > 0;
-    });
 
-    return view('compact.materi-siswa', compact('kategori', 'modulTerkunci'));
+    // 2. Jika masa aktif Bank HABIS, kosongkan data kategori materi
+    if (!$isMemberAktif) {
+        $kategori = collect(); // Mengembalikan collection kosong
+        $hasPrepostData = false;
+    } else {
+        // Jika Bank masih aktif, jalankan query materi seperti biasa
+        $kategori = KategoriModel::with(['materi' => function($query) {
+            $query->orderBy('urutan', 'asc');
+        }, 'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
+            $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+                  ->orderBy('urutan', 'asc');
+        }])->get();
+
+        $kategori->each(function($kat) {
+            $kat->setRelation('materi', $kat->materi->filter(function($mat) {
+                return $mat->subMateri->count() > 0;
+            }));
+        });
+
+        $kategori = $kategori->filter(function($kat) {
+            return $kat->materi->count() > 0;
+        });
+
+        $hasPrepostData = PrepotesUserModel::where('user_id', $userId)->exists();
+    }
+
+    // Variabel $isMemberAktif tetap dikirim ke view Blade yang kemarin tanpa perlu mengubah kodenya lagi
+    return view('compact.materi-siswa', compact('kategori', 'modulTerkunci', 'hasPrepostData', 'isMemberAktif'));
 }
 
   public function belajar(Request $request, $materi_id, $sub_materi_id = null)
@@ -99,6 +125,9 @@ class SiswaMateriController extends Controller
         $subMateriAktif = null;
         $embedUrl = null;
         $quizAktif = null;
+        $openedLessons = session()->get("materi_progress_{$materi_id}", []);
+        $totalSubMateri = $materiAktif->subMateri->count();
+        $semuaMateriSelesai = count($openedLessons) >= $totalSubMateri;
 
         // RULE 2: Wajib Pre-test jika ada DAN siswa adalah penerima Beasiswa
         if ($statusBeasiswaSiswa == 1) {
@@ -107,6 +136,10 @@ class SiswaMateriController extends Controller
                 $contentType = 'pre';
             }
         }
+        if ($contentType === 'post' && !$semuaMateriSelesai) {
+                return redirect()->route('siswa.materi.belajar', [$materi_id])
+                    ->with('warning', 'Anda harus menyelesaikan seluruh materi pelajaran terlebih dahulu sebelum mengikuti Post-Test.');
+            }
 
         // Blokir akses jika siswa Non-Beasiswa mencoba masuk ke halaman Test melalui URL
         if (($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 0) {
@@ -165,9 +198,12 @@ class SiswaMateriController extends Controller
                 }
             }
 
-            if ($subMateriAktif && $subMateriAktif->tipe_link == 0) {
-                $embedUrl = $this->parseYoutubeCode($subMateriAktif->link);
-            }
+           if ($subMateriAktif && $subMateriAktif->tipe_link == 0) {
+    $embedUrl = $this->parseYoutubeCode($subMateriAktif->link);
+} else if ($subMateriAktif && $subMateriAktif->tipe_link == 1) { // Asumsi 1 adalah tipe PDF
+    // Daftarkan fungsi parsing Google Drive di bawah
+    $embedUrl = $this->parseGoogleDriveLink($subMateriAktif->link);
+}
         }
 
         return view('compact.belajar', compact(
@@ -182,6 +218,24 @@ class SiswaMateriController extends Controller
             'statusBeasiswaSiswa'
         ));
     }
+    private function parseGoogleDriveLink($url)
+{
+    // Jika bukan link google drive, kembalikan url aslinya
+    if (strpos($url, 'drive.google.com') === false) {
+        return $url;
+    }
+
+    // Pola untuk mengambil ID file Google Drive
+    preg_match('/\/d\/([a-zA-Z0-9-_]+)/', $url, $matches);
+    
+    if (isset($matches[1])) {
+        $fileId = $matches[1];
+        // Format link khusus untuk Google Docs Viewer (paling aman dari error "butuh akses")
+        return "https://docs.google.com/viewer?url=" . urlencode("https://drive.google.com/uc?id=" . $fileId . "&export=download") . "&embedded=true";
+    }
+
+    return $url;
+}
 
 public function savejawaban(Request $request, $materi_id, $quiz_id)
 {
