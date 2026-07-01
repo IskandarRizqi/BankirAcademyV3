@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Beasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\KategoriModel;
 use App\Models\MateriModel;
+use App\Models\SubMateriItemModel;
 use App\Models\SubMateriModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,47 +18,35 @@ class SubMateriController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+   public function index()
     {
         $x['materi'] = MateriModel::get();
-        $x['data'] = SubMateriModel::select()
-            ->with('materi')
+        // Mengambil data sub_materi beserta items-nya
+        $x['data'] = SubMateriModel::with(['materi', 'items'])
             ->orderBy('urutan')
             ->get();
-        // return $x['data'];
+
         return view('compact.sub_materi', $x);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        // return $request->all();
         $valid = Validator::make($request->all(), [
             'nama' => 'required',
-            'link' => 'required',
             'keterangan' => 'nullable',
             'id_materi' => 'required',
             'urutan' => 'required',
-            'tipe_link' => 'required',
             'tipe_beasiswa' => 'required',
             'masa_aktif' => 'required',
             'harga' => 'required',
             'diskon' => 'required',
+            // Validasi untuk multi-item
+            'judul_item' => 'required|array|min:1',
+            'judul_item.*' => 'required|string',
+            'link_item' => 'required|array|min:1',
+            'link_item.*' => 'required|string',
+            'tipe_link_item' => 'required|array|min:1',
+            'tipe_link_item.*' => 'required|in:0,1',
         ]);
 
         if ($valid->fails()) {
@@ -66,11 +55,9 @@ class SubMateriController extends Controller
 
         $i = [
             'nama' => $request->nama,
-            'link' => $request->link,
             'keterangan' => $request->keterangan,
             'id_materi' => $request->id_materi,
             'urutan' => $request->urutan,
-            'tipe_link' => $request->tipe_link,
             'tipe_beasiswa' => $request->tipe_beasiswa,
             'masa_aktif' => $request->masa_aktif,
             'harga' => $request->harga,
@@ -82,15 +69,30 @@ class SubMateriController extends Controller
             $i['harga_final'] = $request->harga - ($request->harga * ($request->diskon / 100));
         }
 
+        // Simpan / Update SubMateri
         $m = SubMateriModel::updateOrCreate(['id' => $request->id], $i);
 
         if (!$m) {
             Log::critical('gagal simpan materi', [$m]);
             return redirect()->back()->with('info', 'data tidak tersimpan')->withInput($request->all());
         }
+
+        // ---- PROSES MULTI-ITEM VIDEO / PDF ----
+        // Hapus item lama terlebih dahulu jika ini aksi Edit/Update
+        SubMateriItemModel::where('id_sub_materi', $m->id)->delete();
+
+        // Masukkan item baru
+        foreach ($request->judul_item as $key => $judul) {
+            SubMateriItemModel::create([
+                'id_sub_materi' => $m->id,
+                'judul_item'    => $judul,
+                'link_item'     => $request->link_item[$key],
+                'tipe_link_item'=> $request->tipe_link_item[$key],
+            ]);
+        }
+
         return redirect()->back()->with('info', 'data tersimpan');
     }
-
     /**
      * Display the specified resource.
      *

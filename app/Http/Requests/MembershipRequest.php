@@ -22,6 +22,8 @@ class MembershipRequest extends FormRequest
             'limit_siswa'    => 'required|integer|min:0',
             'limit_beasiswa' => 'required|integer|min:0',
             'masa_hingga'    => 'required|date',
+            'limit_video'=> 'required|integer',
+            'saldo_siswa'=> 'required|numeric',
             'gambar'         => $isUpdate ? 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048' : 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }

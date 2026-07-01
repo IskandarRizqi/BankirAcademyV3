@@ -49,6 +49,7 @@ class MateriController extends Controller
             'id_kategori' => 'required',
             'urutan' => 'required',
             'nama' => 'required',
+            'harga' => 'required|numeric|min:0',
         ]);
 
         if ($valid->fails()) {
@@ -60,6 +61,7 @@ class MateriController extends Controller
             'urutan' => $request->urutan,
             'nama' => $request->nama,
             'keterangan' => $request->keterangan,
+            'harga' => $request->harga,
         ]);
 
         if (!$m) {

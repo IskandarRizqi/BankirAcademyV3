@@ -40,6 +40,7 @@
                                         <th>Harga (Final)</th>
                                         <th>Diskon</th>
                                         <th>Limit Siswa / Beasiswa</th>
+                                        <th>Saldo Siswa & Limit Video</th>
                                         <th>Masa Berlaku</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -70,15 +71,19 @@
                                             <span class="badge badge-warning">Beasiswa: {{ $ms->limit_beasiswa }}</span>
                                         </td>
                                         <td>
+                                            <span class="badge badge-success">Saldo: Rp {{ number_format($ms->saldo_siswa, 0, ',', '.') }}</span>
+                                            <span class="badge badge-dark">Video: {{ $ms->limit_video }}</span>
+                                        </td>
+                                        <td>
                                             {{ \Carbon\Carbon::parse($ms->masa_hingga)->translatedFormat('d F Y') }}
                                         </td>
                                         <td>
                                             <div class="dropdown">
                                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $ms->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
-  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
-</svg>
+                                                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+                                                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+                                                 </svg>
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink{{ $ms->id }}">
                                                     <a class="dropdown-item action-edit" href="javascript:void(0);" 
@@ -99,7 +104,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">Tidak ada data membership.</td>
+                                        <td colspan="9" class="text-center">Tidak ada data membership.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -155,6 +160,18 @@
                                     </div>
                                 </div>
 
+                                {{-- ROW BARU: Saldo Siswa & Limit Video --}}
+                                <div class="row">
+                                    <div class="col-md-6 form-group mb-3">
+                                        <label for="saldo_siswa" style="font-weight: 600;">Saldo Siswa (Rp)</label>
+                                        <input type="number" step="any" id="saldo_siswa" name="saldo_siswa" class="form-control" required placeholder="0">
+                                    </div>
+                                    <div class="col-md-6 form-group mb-3">
+                                        <label for="limit_video" style="font-weight: 600;">Limit Video</label>
+                                        <input type="number" id="limit_video" name="limit_video" class="form-control" required placeholder="0">
+                                    </div>
+                                </div>
+
                                 <div class="form-group mb-3">
                                     <label for="masa_hingga" style="font-weight: 600;">Masa Berlaku Hingga</label>
                                     <input type="date" id="masa_hingga" name="masa_hingga" class="form-control" required>
@@ -176,9 +193,10 @@
             </div>
 
         <script>
-             $(document).ready(function() {
-        createtable('membership-list')
-    });
+            $(document).ready(function() {
+                createtable('membership-list')
+            });
+
             function resetForm() {
                 document.getElementById('membershipModalLabel').innerText = 'Tambah Membership';
                 document.getElementById('membershipForm').action = "{{ route('memberships.store') }}";
@@ -189,6 +207,8 @@
                 document.getElementById('diskon').value = '0';
                 document.getElementById('limit_siswa').value = '';
                 document.getElementById('limit_beasiswa').value = '';
+                document.getElementById('saldo_siswa').value = '';
+                document.getElementById('limit_video').value = '';
                 document.getElementById('masa_hingga').value = '';
                 document.getElementById('gambar').required = true;
                 document.getElementById('gambar-help').classList.add('d-none');
@@ -209,6 +229,8 @@
                 document.getElementById('diskon').value = membership.diskon;
                 document.getElementById('limit_siswa').value = membership.limit_siswa;
                 document.getElementById('limit_beasiswa').value = membership.limit_beasiswa;
+                document.getElementById('saldo_siswa').value = membership.saldo_siswa;
+                document.getElementById('limit_video').value = membership.limit_video;
                 document.getElementById('masa_hingga').value = membership.masa_hingga;
                 
                 // Gambar bersifat opsional pada proses update

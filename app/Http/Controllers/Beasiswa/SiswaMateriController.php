@@ -70,154 +70,172 @@ public function index()
 }
 
   public function belajar(Request $request, $materi_id, $sub_materi_id = null)
-    {
-        $userId = Auth::id();
+{
+    $userId = Auth::id();
 
-        // Ambil profil siswa dan status beasiswanya
-        $siswaProfile = auth()->user()->siswa; 
-        $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
+    // Ambil profil siswa dan status beasiswanya
+    $siswaProfile = auth()->user()->siswa; 
+    $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
-        // Tentukan sub-materi apa saja yang boleh dilewati berdasarkan tipe siswa
-        // 1 = Beasiswa, 0 = Non-Beasiswa
-        $allowedTipeSubMateri = ($statusBeasiswaSiswa == 1) ? [0, 1] : [0, 2];
+    // Tentukan sub-materi apa saja yang boleh dilewati berdasarkan tipe siswa
+    // 1 = Beasiswa, 0 = Non-Beasiswa
+    $allowedTipeSubMateri = ($statusBeasiswaSiswa == 1) ? [0, 1] : [0, 2];
 
-        // 1. CEK ATAU DAFTARKAN MODUL AKTIF (RULE 1: Satu siswa, satu modul)
-        $modulLain = DB::table('siswa_modul_aktif')
-            ->where('user_id', $userId)
-            ->where('class_id', '!=', $materi_id)
-            ->first();
+    // 1. CEK ATAU DAFTARKAN MODUL AKTIF
+    $modulLain = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        ->where('class_id', '!=', $materi_id)
+        ->first();
 
-        if ($modulLain) {
-            return redirect()->route('siswa.materi.belajar', [$modulLain->class_id])
-                ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan yang sudah dipilih sebelumnya.');
+    if ($modulLain) {
+        return redirect()->route('siswa.materi.belajar', [$modulLain->class_id])
+            ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan yang sudah dipilih sebelumnya.');
+    }
+
+    $sudahTerkunci = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        ->where('class_id', $materi_id)
+        ->exists();
+
+    if (!$sudahTerkunci) {
+        DB::table('siswa_modul_aktif')->insert([
+            'user_id'    => $userId,
+            'class_id'   => $materi_id,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    }
+
+    // 2. AMBIL DATA MATERI (Sertakan relasi 'items' ke SubMateriItemModel)
+    $materiAktif = MateriModel::with(['subMateri' => function($query) use ($allowedTipeSubMateri) {
+        $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+              ->with('items') // <--- LOAD MEDIA ITEMS DI SINI
+              ->orderBy('urutan', 'asc');
+    }, 'kategori', 'preposttest'])->findOrFail($materi_id);
+
+    $preTest = $materiAktif->preposttest->where('tipe_prepost', 0)->first();
+    $postTest = $materiAktif->preposttest->where('tipe_prepost', 1)->first();
+
+    // Cek status test user di database
+    $userProgress = PrepotesUserModel::where('class_id', $materi_id)
+        ->where('user_id', $userId)
+        ->first();
+
+    // Ambil type dan item_id dari query string
+    $contentType = $request->query('type', 'materi');
+    $itemIdAktif = $request->query('item_id'); // <--- KUNCI SKEMA BARU
+    
+    $subMateriAktif = null;
+    $itemAktif = null; // <--- Menyimpan item video/pdf yang sedang dibuka
+    $embedUrl = null;
+    $quizAktif = null;
+    
+    $openedLessons = session()->get("materi_progress_{$materi_id}", []);
+    $totalSubMateri = $materiAktif->subMateri->count();
+    $semuaMateriSelesai = count($openedLessons) >= $totalSubMateri;
+
+    // RULE 2: Wajib Pre-test jika ada DAN siswa adalah penerima Beasiswa
+    if ($statusBeasiswaSiswa == 1) {
+        $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
+        if ($preTest && !$sudahPreTest) {
+            $contentType = 'pre';
         }
+    }
+    
+    if ($contentType === 'post' && !$semuaMateriSelesai) {
+        return redirect()->route('siswa.materi.belajar', [$materi_id])
+            ->with('warning', 'Anda harus menyelesaikan seluruh materi pelajaran terlebih dahulu sebelum mengikuti Post-Test.');
+    }
 
-        $sudahTerkunci = DB::table('siswa_modul_aktif')
-            ->where('user_id', $userId)
-            ->where('class_id', $materi_id)
-            ->exists();
+    // Blokir akses jika siswa Non-Beasiswa mencoba masuk ke halaman Test melalui URL
+    if (($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 0) {
+        return redirect()->route('siswa.materi.belajar', [$materi_id])
+            ->with('error', 'Siswa non-beasiswa tidak diperkenankan mengakses Pre-Test maupun Post-Test.');
+    }
 
-        if (!$sudahTerkunci) {
-            DB::table('siswa_modul_aktif')->insert([
-                'user_id'    => $userId,
-                'class_id'   => $materi_id,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+    // 3. LOGIKA SELEKSI KONTEN
+    if ($contentType === 'pre' && $preTest) {
+        $quizAktif = $preTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
         }
-
-        // 2. AMBIL DATA MATERI (Hanya me-load subMateri yang sesuai hak akses siswa)
-        $materiAktif = MateriModel::with(['subMateri' => function($query) use ($allowedTipeSubMateri) {
-            $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
-                  ->orderBy('urutan', 'asc');
-        }, 'kategori', 'preposttest'])->findOrFail($materi_id);
-
-        $preTest = $materiAktif->preposttest->where('tipe_prepost', 0)->first();
-        $postTest = $materiAktif->preposttest->where('tipe_prepost', 1)->first();
-
-        // Cek status test user di database
-        $userProgress = PrepotesUserModel::where('class_id', $materi_id)
-            ->where('user_id', $userId)
-            ->first();
-
-        // Ambil type dari query string, default-nya adalah 'materi'
-        $contentType = $request->query('type', 'materi');
-        $subMateriAktif = null;
-        $embedUrl = null;
-        $quizAktif = null;
-        $openedLessons = session()->get("materi_progress_{$materi_id}", []);
-        $totalSubMateri = $materiAktif->subMateri->count();
-        $semuaMateriSelesai = count($openedLessons) >= $totalSubMateri;
-
-        // RULE 2: Wajib Pre-test jika ada DAN siswa adalah penerima Beasiswa
-        if ($statusBeasiswaSiswa == 1) {
-            $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
-            if ($preTest && !$sudahPreTest) {
-                $contentType = 'pre';
-            }
+    } elseif ($contentType === 'post' && $postTest) {
+        $quizAktif = $postTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
         }
-        if ($contentType === 'post' && !$semuaMateriSelesai) {
-                return redirect()->route('siswa.materi.belajar', [$materi_id])
-                    ->with('warning', 'Anda harus menyelesaikan seluruh materi pelajaran terlebih dahulu sebelum mengikuti Post-Test.');
-            }
-
-        // Blokir akses jika siswa Non-Beasiswa mencoba masuk ke halaman Test melalui URL
-        if (($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 0) {
-            return redirect()->route('siswa.materi.belajar', [$materi_id])
-                ->with('error', 'Siswa non-beasiswa tidak diperkenankan mengakses Pre-Test maupun Post-Test.');
-        }
-
-        // 3. LOGIKA SELEKSI KONTEN (SUDAH DIPERBAIKI)
-        if ($contentType === 'pre' && $preTest) {
-            $quizAktif = $preTest;
-            if (is_string($quizAktif->soal)) {
-                $quizAktif->soal = json_decode($quizAktif->soal, true);
-            }
-        } elseif ($contentType === 'post' && $postTest) {
-            $quizAktif = $postTest;
-            if (is_string($quizAktif->soal)) {
-                $quizAktif->soal = json_decode($quizAktif->soal, true);
-            }
+    } else {
+        $contentType = 'materi';
+        $listSubMateri = $materiAktif->subMateri; 
+        
+        if ($sub_materi_id) {
+            $subMateriAktif = SubMateriModel::whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+                ->with('items')
+                ->findOrFail($sub_materi_id);
         } else {
-            // Jika bukan pre/post test, paksa contentType kembali ke 'materi'
-            $contentType = 'materi';
-            
-            $listSubMateri = $materiAktif->subMateri; 
-            
-            if ($sub_materi_id) {
-                $subMateriAktif = SubMateriModel::whereIn('tipe_beasiswa', $allowedTipeSubMateri)->findOrFail($sub_materi_id);
-            } else {
-                // Langsung ambil materi pertama yang tersedia dari list yang sudah terfilter
-                $subMateriAktif = $listSubMateri->first();
+            $subMateriAktif = $listSubMateri->first();
+        }
+
+        if ($subMateriAktif) {
+            // VALIDASI BACKEND: Double check bypass URL
+            if (!in_array($subMateriAktif->tipe_beasiswa, $allowedTipeSubMateri)) {
+                return redirect()->route('siswa.materi.belajar', [$materi_id])
+                    ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
             }
 
-            if ($subMateriAktif) {
-                // VALIDASI BACKEND: Double check bypass URL
-                if (!in_array($subMateriAktif->tipe_beasiswa, $allowedTipeSubMateri)) {
-                    return redirect()->route('siswa.materi.belajar', [$materi_id])
-                        ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
-                }
-
-                // RULE 3: Materi berurutan tidak boleh loncat bab
-                $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
-                $openedLessons = session()->get("materi_progress_{$materi_id}", []);
-                
-                if ($listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
-                    foreach ($materiSebelumnya as $prev) {
-                        if (!in_array($prev->id, $openedLessons)) {
-                            return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
-                                ->with('info', 'Anda harus mempelajari materi ini secara berurutan.');
-                        }
+            // RULE 3: Materi berurutan tidak boleh loncat bab
+            $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
+            
+            if ($listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
+                foreach ($materiSebelumnya as $prev) {
+                    if (!in_array($prev->id, $openedLessons)) {
+                        return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
+                            ->with('info', 'Anda harus mempelajari materi ini secara berurutan.');
                     }
                 }
-
-                // Simpan riwayat progress membaca ke Session
-                if (!in_array($subMateriAktif->id, $openedLessons)) {
-                    $openedLessons[] = $subMateriAktif->id;
-                    session()->put("materi_progress_{$materi_id}", $openedLessons);
-                }
             }
 
-           if ($subMateriAktif && $subMateriAktif->tipe_link == 0) {
-    $embedUrl = $this->parseYoutubeCode($subMateriAktif->link);
-} else if ($subMateriAktif && $subMateriAktif->tipe_link == 1) { // Asumsi 1 adalah tipe PDF
-    // Daftarkan fungsi parsing Google Drive di bawah
-    $embedUrl = $this->parseGoogleDriveLink($subMateriAktif->link);
-}
-        }
+            // Simpan riwayat progress membaca ke Session jika bab ini dibuka
+            if (!in_array($subMateriAktif->id, $openedLessons)) {
+                $openedLessons[] = $subMateriAktif->id;
+                session()->put("materi_progress_{$materi_id}", $openedLessons);
+            }
 
-        return view('compact.belajar', compact(
-            'materiAktif', 
-            'subMateriAktif', 
-            'embedUrl', 
-            'preTest', 
-            'postTest', 
-            'contentType', 
-            'quizAktif',
-            'userProgress',
-            'statusBeasiswaSiswa'
-        ));
+            // ---- PILIH ITEM MEDIA BERDASARKAN SKEMA BARU ----
+            if ($subMateriAktif->items->count() > 0) {
+                if ($itemIdAktif) {
+                    // Cari item spesifik yang diminta query string
+                    $itemAktif = $subMateriAktif->items->where('id', $itemIdAktif)->first();
+                }
+                
+                // Fallback: Jika id tidak ditemukan atau tidak dikirim, ambil item pertama
+                if (!$itemAktif) {
+                    $itemAktif = $subMateriAktif->items->first();
+                }
+
+                // Parsing URL sesuai tipe link item-nya
+                if ($itemAktif->tipe_link_item == 0) {
+                    $embedUrl = $this->parseYoutubeCode($itemAktif->link_item);
+                } else if ($itemAktif->tipe_link_item == 1) {
+                    $embedUrl = $this->parseGoogleDriveLink($itemAktif->link_item);
+                }
+            }
+        }
     }
+
+    return view('compact.belajar', compact(
+        'materiAktif', 
+        'subMateriAktif', 
+        'itemAktif', // <--- Diteruskan ke View
+        'embedUrl', 
+        'preTest', 
+        'postTest', 
+        'contentType', 
+        'quizAktif',
+        'userProgress',
+        'statusBeasiswaSiswa'
+    ));
+}
     private function parseGoogleDriveLink($url)
 {
     // Jika bukan link google drive, kembalikan url aslinya

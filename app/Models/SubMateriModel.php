@@ -32,6 +32,10 @@ class SubMateriModel extends Model
     {
         return $this->hasOne(MateriModel::class, 'id', 'id_materi');
     }
+    public function items()
+    {
+        return $this->hasMany(SubMateriItemModel::class, 'id_sub_materi');
+    }
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

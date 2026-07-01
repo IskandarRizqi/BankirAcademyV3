@@ -516,6 +516,30 @@
     .soal-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 15px; background: #f8fafc; position: relative; }
     .status-badge { float: right; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 </style>
+<!-- Tambahan Style khusus untuk mempercantik UI Kuis & Playlist di Mobile -->
+<style>
+    .gap-2 { gap: 0.5rem; }
+    .border-left-primary { border-left: 4px solid #4361ee !important; }
+    .opsi-label:hover {
+        background-color: #f1f5f9 !important;
+        border-color: #cbd5e1 !important;
+    }
+    .opsi-label input[type="radio"]:checked + .opsi-text {
+        font-weight: bold;
+        color: #4361ee !important;
+    }
+    @media (max-width: 575.98px) {
+        .btn-md-inline { width: 100% !important; }
+        .pdf-wrapper { height: 350px !important; }
+    }
+</style>
+<style>
+    .border-left-primary { border-left: 4px solid #4e73df !important; }
+    .hover-bg-light:hover { background-color: #f1f5f9; color: #1e293b !important; }
+    .transition-all { transition: all 0.2s ease-in-out; }
+    .item-link-media { border: 1px solid transparent; }
+    .item-link-media:not(.bg-primary):hover { border-color: #e2e8f0; }
+</style>
 </head>
 
 <body>

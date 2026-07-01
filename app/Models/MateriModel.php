@@ -17,6 +17,7 @@ class MateriModel extends Model
     protected $fillable = [
         'id_kategori',
         'urutan',
+        'harga',
         'nama',
         'keterangan',
     ];
@@ -40,6 +41,7 @@ class MateriModel extends Model
             ->logOnly(['id_kategori',
         'urutan',
         'nama',
+        'harga',
         'keterangan']) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }

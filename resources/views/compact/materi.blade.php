@@ -19,6 +19,7 @@
                         <th>Nama Kategori</th>
                         <th>Urutan</th>
                         <th>Nama Materi</th>
+                        <th>Harga</th>
                         <th>Keterangan</th>
                         <th>Aksi</th>
                     </tr>
@@ -40,6 +41,9 @@
                             <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->nama }}
                             </p>
                         </td>
+                        <td>
+    <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> Rp {{ number_format($x->harga, 0, ',', '.') }}</p> 
+</td>
                         <td>
                             <p class="align-self-center mb-0 user-name" style="font-weight: 600;"> {{ $x->keterangan }}
                             </p>
@@ -138,6 +142,10 @@
                         <input type="text" min="0" name="nama" id="nama" class="form-control" required>
                     </div>
                     <div class="form-group mb-3">
+    <label for="harga" style="font-weight: 600;">Harga</label>
+    <input type="number" min="0" name="harga" id="harga" class="form-control" required>
+</div>
+                    <div class="form-group mb-3">
                         <label for="nama" style="font-weight: 600;">Keterangan</label>
                         <textarea name="keterangan" id="keterangan" cols="30" rows="2" class="form-control"></textarea>
                     </div>
@@ -164,6 +172,7 @@
         document.getElementById('id').value = '';
         document.getElementById('urutan').value = 0;
         document.getElementById('nama').value = '';
+        document.getElementById('harga').value = 0;
         document.getElementById('keterangan').value = '';
         document.getElementById('id_kategori').value = '';
     }
@@ -176,6 +185,7 @@
             document.getElementById('id').value = user.id;
             document.getElementById('urutan').value = user.urutan;
             document.getElementById('nama').value = user.nama;
+            document.getElementById('harga').value = user.harga;
             document.getElementById('keterangan').value = user.keterangan;
             document.getElementById('id_kategori').value = user.id_kategori;
         }

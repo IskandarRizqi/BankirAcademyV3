@@ -14,13 +14,13 @@ class Membership extends Model
 
     protected $fillable = [
         'nama', 'harga', 'diskon', 'harga_final', 
-        'limit_siswa', 'limit_beasiswa', 'masa_hingga', 'gambar'
+        'limit_siswa', 'limit_beasiswa', 'masa_hingga', 'gambar', 'saldo_siswa', 'limit_video'
     ];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logOnly([ 'nama', 'harga', 'diskon', 'harga_final', 
-        'limit_siswa', 'limit_beasiswa', 'masa_hingga', 'gambar']) // Catat jika kolom ini berubah
+        'limit_siswa', 'limit_beasiswa', 'masa_hingga', 'gambar', 'saldo_siswa', 'limit_video']) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }
