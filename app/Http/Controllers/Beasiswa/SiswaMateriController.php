@@ -21,14 +21,24 @@ public function index()
     $userId = Auth::id();
     $user = Auth::user();
     
-    // 1. Ambil masa aktif dari User Bank terkait (menggunakan eager loading relasi 'bank')
+    // 1. Ambil masa aktif dan membership dari User Bank terkait
+    // Kita gunakan eager loading 'bank.membership' agar query lebih efisien
+    $user->load('bank.membership');
     $bankProfile = $user->bank;
     
-    // Cek jika bank ditemukan, pakai masa_aktif_member milik bank. 
-    // Jika tidak ada bank, kita default-kan false agar aman.
     $isMemberAktif = false;
-    if ($bankProfile && $bankProfile->masa_aktif_member) {
-        $isMemberAktif = \Carbon\Carbon::parse($bankProfile->masa_aktif_member)->isFuture();
+    $limitVideo = 0; // Default 0 berarti tampilkan semua materi
+
+    if ($bankProfile) {
+        // Cek masa aktif member Bank
+        if ($bankProfile->masa_aktif_member) {
+            $isMemberAktif = \Carbon\Carbon::parse($bankProfile->masa_aktif_member)->isFuture();
+        }
+        
+        // Ambil limit_video dari membership si Bank jika ada
+        if ($bankProfile->membership) {
+            $limitVideo = (int) $bankProfile->membership->limit_video;
+        }
     }
 
     $siswaProfile = $user->siswa; 
@@ -41,17 +51,26 @@ public function index()
 
     // 2. Jika masa aktif Bank HABIS, kosongkan data kategori materi
     if (!$isMemberAktif) {
-        $kategori = collect(); // Mengembalikan collection kosong
+        $kategori = collect(); 
         $hasPrepostData = false;
     } else {
-        // Jika Bank masih aktif, jalankan query materi seperti biasa
-        $kategori = KategoriModel::with(['materi' => function($query) {
-            $query->orderBy('urutan', 'asc');
-        }, 'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
-            $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
-                  ->orderBy('urutan', 'asc');
-        }])->get();
+        // Jika Bank masih aktif, jalankan query materi dengan filter limit_video
+        $kategori = KategoriModel::with([
+            'materi' => function($query) use ($limitVideo) {
+                $query->orderBy('urutan', 'asc');
+                
+                // JIKA limit_video > 0, BATASI MATERI BERDASARKAN URUTAN
+                if ($limitVideo > 0) {
+                    $query->where('urutan', '<=', $limitVideo);
+                }
+            }, 
+            'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
+                $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+                      ->orderBy('urutan', 'asc');
+            }
+        ])->get();
 
+        // Filter kategori & materi kosong agar tidak membingungkan user
         $kategori->each(function($kat) {
             $kat->setRelation('materi', $kat->materi->filter(function($mat) {
                 return $mat->subMateri->count() > 0;
@@ -65,7 +84,6 @@ public function index()
         $hasPrepostData = PrepotesUserModel::where('user_id', $userId)->exists();
     }
 
-    // Variabel $isMemberAktif tetap dikirim ke view Blade yang kemarin tanpa perlu mengubah kodenya lagi
     return view('compact.materi-siswa', compact('kategori', 'modulTerkunci', 'hasPrepostData', 'isMemberAktif'));
 }
 
@@ -503,4 +521,149 @@ public function indexLaporanManajemen()
         }
         return $url;
     }
+public function umumIndex()
+{
+    $userId = Auth::id();
+    $user = Auth::user();
+    
+    // Cek masa aktif bank
+    $user->load('bank');
+    $bankProfile = $user->bank;
+    $isMemberAktif = false;
+    if ($bankProfile && $bankProfile->masa_aktif_member) {
+        $isMemberAktif = \Carbon\Carbon::parse($bankProfile->masa_aktif_member)->isFuture();
+    }
+
+    // Jika tidak aktif, kosongkan data
+    if (!$isMemberAktif) {
+        $subMateriUmum = collect();
+    } else {
+        // Cari Materi yang bernama "Umum" beserta Sub-Materinya
+        $materiUmum = MateriModel::where('nama', 'Umum')->first();
+        
+        $siswaProfile = $user->siswa; 
+        $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; 
+        
+        // Sesuaikan jika tipe_beasiswa butuh format array dinamis
+        $allowedTipeSubMateri = ($statusBeasiswa == 1) ? [0, 1] : [0, 2];
+
+        if ($materiUmum) {
+            // PERBAIKAN: Menggunakan 'id_materi' bukan 'materi_id'
+            $subMateriUmum = SubMateriModel::where('id_materi', $materiUmum->id)
+                ->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+                ->with('items')
+                ->orderBy('urutan', 'asc')
+                ->get();
+        } else {
+            $subMateriUmum = collect();
+        }
+    }
+
+    return view('compact.umum-index', compact('subMateriUmum', 'isMemberAktif'));
+}
+
+public function umumBelajar(Request $request, $sub_materi_id)
+{
+    $userId = Auth::id();
+    $siswaProfile = auth()->user(); 
+    $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
+    $allowedTipeSubMateri = ($statusBeasiswaSiswa == 1) ? [0, 1] : [0, 2];
+
+    // Ambil Bab/Sub Materi Aktif beserta item medianya
+    $subMateriAktif = SubMateriModel::whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+        ->with(['items', 'materi'])
+        ->findOrFail($sub_materi_id);
+
+    $materiAktif = $subMateriAktif->materi;
+
+    // CEK APAKAH SUDAH MENGIKUTI PELATIHAN (Cek Tabel History)
+    $sudahIkuti = false;
+    if ($siswaProfile) {
+        $sudahIkuti = DB::table('history_pelatihan')
+            ->where('user_id', $siswaProfile->id)
+            ->where('sub_materi_id', $sub_materi_id)
+            ->exists();
+    }
+
+    // Kontrol Media Item Aktif lewat query string item_id
+    $itemIdAktif = $request->query('item_id');
+    $itemAktif = null;
+    $embedUrl = null;
+
+    if ($subMateriAktif->items->count() > 0) {
+        if ($itemIdAktif) {
+            $itemAktif = $subMateriAktif->items->where('id', $itemIdAktif)->first();
+        }
+        if (!$itemAktif) {
+            $itemAktif = $subMateriAktif->items->first();
+        }
+
+        if ($itemAktif->tipe_link_item == 0) {
+            $embedUrl = $this->parseYoutubeCode($itemAktif->link_item);
+        } else if ($itemAktif->tipe_link_item == 1) {
+            $embedUrl = $this->parseGoogleDriveLink($itemAktif->link_item);
+        }
+    }
+
+    return view('compact.umum-belajar', compact(
+        'materiAktif', 
+        'subMateriAktif', 
+        'itemAktif', 
+        'embedUrl', 
+        'statusBeasiswaSiswa',
+        'sudahIkuti' // Kirim variabel status ke view
+    ));
+}
+
+// FUNGSI BARU UNTUK PROSES STORE HISTORY
+public function ikutiPelatihan(Request $request, $sub_materi_id)
+{
+    $siswaProfile = auth()->user()->id;
+    if (!$siswaProfile) {
+        return redirect()->back()->with('error', 'Profil siswa tidak ditemukan.');
+    }
+
+    // Insert data menggunakan updateOrInsert agar aman dari duplikasi
+    DB::table('history_pelatihan')->updateOrInsert(
+        [
+            'user_id' => $siswaProfile,
+            'sub_materi_id' => $sub_materi_id
+        ],
+        [
+            'created_at' => now(),
+            'updated_at' => now()
+        ]
+    );
+
+    return redirect()->route('siswa.umum.belajar', $sub_materi_id)->with('success', 'Selamat mengikuti kelas pelatihan!');
+}
+public function historyPelatihan()
+{
+    $siswaProfile = auth()->user();
+
+    if (!$siswaProfile) {
+        return redirect()->back()->with('error', 'Profil siswa tidak ditemukan.');
+    }
+
+    // Ambil data history pelatihan beserta relasi sub materi dan materinya
+    $history = DB::table('history_pelatihan')
+        ->join('sub_materi', 'history_pelatihan.sub_materi_id', '=', 'sub_materi.id')
+        // ->join('materi', 'sub_materi.materi_id', '=', 'materi.id')
+        ->where('history_pelatihan.user_id', $siswaProfile->id)
+        ->select(
+            'history_pelatihan.created_at as tanggal_mulai',
+            'sub_materi.id as sub_materi_id',
+            'sub_materi.nama as nama_sub',
+            'sub_materi.urutan',
+            // 'materi.nama as nama_materi'
+        )
+        ->orderBy('history_pelatihan.created_at', 'desc')
+        ->get();
+
+    // Hitung statistik sederhana untuk dashboard kecil di atas halaman
+    $totalMateri = $history->unique('nama_sub')->count();
+    $totalBab = $history->count();
+
+    return view('compact.history-pelatihan', compact('history', 'totalMateri', 'totalBab'));
+}
 }

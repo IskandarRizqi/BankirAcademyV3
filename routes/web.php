@@ -188,7 +188,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/siswa/materi/{materi_id}/report/{id}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
         Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
         Route::get('/manajemen/report/user/{user_id}/materi/{materi_id}', [SiswaMateriController::class, 'reportOlehManajemen'])->name('manajemen.siswa.report');
+        // Route::get('/materi-umum', [SiswaMateriController::class, 'kompetensiUmum'])->name('materi.umum');
         Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
+        Route::get('/materi-umum', [SiswaMateriController::class, 'umumIndex'])->name('siswa.umum.index');
+        Route::post('/materi-umum/ikuti/{sub_materi_id}', [SiswaMateriController::class, 'ikutiPelatihan'])->name('siswa.umum.ikuti');
+    Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
+    Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
     });
 });
 Route::get('getBerkas', function (Request $r) {

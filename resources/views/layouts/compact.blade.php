@@ -533,12 +533,77 @@
         .pdf-wrapper { height: 350px !important; }
     }
 </style>
+
 <style>
     .border-left-primary { border-left: 4px solid #4e73df !important; }
     .hover-bg-light:hover { background-color: #f1f5f9; color: #1e293b !important; }
     .transition-all { transition: all 0.2s ease-in-out; }
     .item-link-media { border: 1px solid transparent; }
     .item-link-media:not(.bg-primary):hover { border-color: #e2e8f0; }
+</style>
+<style>
+    .hover-bg-light:hover {
+        background-color: #f1f5f9;
+        color: #1e293b !important;
+    }
+    .transition-all {
+        transition: all 0.2s ease-in-out;
+    }
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+</style>
+<!-- Custom Styles Khusus untuk Halaman Ini -->
+<style>
+    .lms-banner-gradient {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.15);
+    }
+    .course-card {
+        border: 1px solid #E5E7EB;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background: #ffffff;
+    }
+    .course-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        border-color: #D1D5DB;
+    }
+    .thumbnail-placeholder {
+        height: 160px;
+        background: linear-gradient(135deg, #EEF2F6 0%, #E3E8EF 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    /* Membuat variasi warna random abstrak untuk icon thumbnail agar kreatif */
+    .course-card:nth-child(3n+1) .thumbnail-icon { color: #4F46E5; background: rgba(79, 70, 229, 0.1); }
+    .course-card:nth-child(3n+2) .thumbnail-icon { color: #0EA5E9; background: rgba(14, 165, 233, 0.1); }
+    .course-card:nth-child(3n+3) .thumbnail-icon { color: #10B981; background: rgba(16, 185, 129, 0.1); }
+
+    .thumbnail-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+    .category-badge {
+        background-color: #F3F4F6;
+        color: #374151;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 14px;
+    }
 </style>
 </head>
 
@@ -577,10 +642,34 @@
                 'has_submenu' => false,
             ],
             [
-                'label' => 'Pelatihan',
+                'label' => 'Kompetensi',
                 'icon' => 'cpu',
                 'url' => '/pelatihan',
                 'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
+                'can_see' => ($role == 6),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Pelatihan Umum',
+                'icon' => 'cpu',
+                'url' => '/materi-umum',
+                'active' => request()->routeIs('siswa.umum.index*') && !request()->is('*report*'),
+                'can_see' => ($role == 6),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'History Pelatihan',
+                'icon' => 'cpu',
+                'url' => '/materi-umum/history',
+                'active' => request()->routeIs('siswa.umum.history*'),
+                'can_see' => ($role == 6),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Sertifikat',
+                'icon' => 'cpu',
+                'url' => '/materi-umum',
+                'active' => request()->routeIs('siswa.umum.*') && !request()->is('*report*'),
                 'can_see' => ($role == 6),
                 'has_submenu' => false,
             ],

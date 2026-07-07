@@ -49,7 +49,7 @@ class SubMateriModel extends Model
         'masa_aktif',
         'harga',
         'diskon',
-        'harga_final',]) // Catat jika kolom ini berubah
-            ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
+        'harga_final',])
+            ->logOnlyDirty();
     }
 }

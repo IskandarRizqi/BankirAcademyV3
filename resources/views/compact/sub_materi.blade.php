@@ -15,8 +15,8 @@
                 <thead>
                     <tr>
                         <th class="checkbox-column"> No. </th>
+                        <th>Nama Kompetensi</th>
                         <th>Nama Materi</th>
-                        <th>Nama Sub Materi</th>
                         <th>Urutan</th>
                         <th>Media / Link File (Judul)</th>
                         <th>Tipe Beasiswa</th>
@@ -68,26 +68,29 @@
                         <td><p class="mb-0" style="font-weight: 600;">{{ $x->keterangan }}</p></td>
                         <td>
                             <div class="dropdown">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $x->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                </a>
+                                   <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $x->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+</svg>
+                                                </a>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink{{ $x->id }}">
                                     <!-- Parsing data ke editUser lengkap beserta items-nya -->
                                     <a class="dropdown-item action-edit" href="javascript:void(0);" onclick="editUser({{ json_encode($x->load('items')) }})">
                                         Edit
                                     </a>
-                                    <form action="/kategori-materi/{{$x->id}}" method="POST" onsubmit="return confirm('Apakah Anda yakin?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="dropdown-item action-delete text-danger">Delete</button>
-                                    </form>
+                                    <form action="/sub-materi/{{ $x->id }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sub materi ini beserta seluruh filenya?')">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="dropdown-item action-delete text-danger">Delete</button>
+</form>
                                 </div>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="12" class="text-center">Tidak ada data pengguna.</td>
+                        <td colspan="12" class="text-center">Tidak ada data sub materi.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -101,7 +104,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content" style="background: #fff; border-radius: 8px;">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel" style="font-weight: bold;">Form Sub Materi</h5>
+                <h5 class="modal-title" id="userModalLabel" style="font-weight: bold;">Form Materi</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -112,7 +115,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="form-group col-lg-12 mb-3">
-                            <label style="font-weight: 600;">Nama Materi</label>
+                            <label style="font-weight: 600;">Nama Kompetensi</label>
                             <select name="id_materi" id="id_materi" class="form-control" required>
                                 <option value="" disabled selected>-- Pilih --</option>
                                 @foreach($materi as $v)
@@ -125,7 +128,7 @@
                             <input type="number" min="0" name="urutan" id="urutan" class="form-control" required>
                         </div>
                         <div class="form-group col-lg-6 mb-3">
-                            <label style="font-weight: 600;">Nama Sub Materi</label>
+                            <label style="font-weight: 600;">Nama  Materi</label>
                             <input type="text" name="nama" id="nama" class="form-control" required>
                         </div>
 

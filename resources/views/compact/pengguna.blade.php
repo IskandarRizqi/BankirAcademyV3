@@ -504,25 +504,39 @@
     // 3. Tampilkan Modal
     $('#viewUserModal').modal('show');
 }
-    function handleRoleChange() {
+   function handleRoleChange() {
     let role = document.getElementById('role').value;
     
     let membershipGroup = document.getElementById('membership-group');
     let bankGroup = document.getElementById('bank-group');
     let sekolahGroup = document.getElementById('sekolah-group');
     let masaAktifGroup = document.getElementById('masa-aktif-group');
-    let siswaProfileGroup = document.getElementById('siswa-profile-group'); // Tambah baris ini
+    let siswaProfileGroup = document.getElementById('siswa-profile-group');
+    
+    let emailInput = document.getElementById('email');
+    let passwordInput = document.getElementById('password');
 
     // Reset display & required attribute
     membershipGroup.classList.add('d-none');
     bankGroup.classList.add('d-none');
     sekolahGroup.classList.add('d-none');
     masaAktifGroup.classList.add('d-none');
-    siswaProfileGroup.classList.add('d-none'); // Tambah baris ini
+    siswaProfileGroup.classList.add('d-none');
     
+    // Kembalikan ke default enabled & required
+    emailInput.disabled = false;
+    emailInput.required = true;
+    passwordInput.disabled = false;
+    
+    // Pastikan required password hanya aktif saat form Create/Tambah Pengguna
+    if (document.getElementById('userModalLabel').innerText === "Tambah Pengguna") {
+        passwordInput.required = true;
+    }
+
     document.getElementById('bank_id').required = false;
     document.getElementById('sekolah_id').required = false;
     document.getElementById('masa_aktif_member').required = false;
+    if(document.getElementById('nisn')) document.getElementById('nisn').required = false;
 
     if (role == "4") { 
         membershipGroup.classList.remove('d-none');
@@ -536,7 +550,17 @@
         }
     } 
     else if (role == "6") { 
-        siswaProfileGroup.classList.remove('d-none'); // Tampilkan form profile siswa jika memilih role siswa
+        siswaProfileGroup.classList.remove('d-none'); // Tampilkan profil siswa
+        if(document.getElementById('nisn')) document.getElementById('nisn').required = true;
+
+        // MATIKAN INPUT EMAIL DAN PASSWORD (karena digenerate otomatis)
+        emailInput.disabled = true;
+        emailInput.required = false;
+        emailInput.value = ""; // dikosongkan agar tidak membingungkan
+        
+        passwordInput.disabled = true;
+        passwordInput.required = false;
+        passwordInput.value = "";
         
         if (AUTH_EMAIL === 'cb@bankir.academy') {
             bankGroup.classList.remove('d-none');

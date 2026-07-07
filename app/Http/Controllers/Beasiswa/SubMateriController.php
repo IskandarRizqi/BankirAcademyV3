@@ -144,6 +144,19 @@ class SubMateriController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // 1. Cari data sub materi berdasarkan ID
+        $subMateri = SubMateriModel::find($id);
+
+        if (!$subMateri) {
+            return redirect()->back()->with('info', 'Data tidak ditemukan');
+        }
+
+        // 2. Hapus terlebih dahulu item-item link media yang berelasi
+        SubMateriItemModel::where('id_sub_materi', $id)->delete();
+
+        // 3. Hapus data utama sub materi
+        $subMateri->delete();
+
+        return redirect()->back()->with('info', 'Data berhasil dihapus');
     }
 }

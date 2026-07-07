@@ -40,7 +40,7 @@
                                         <th>Harga (Final)</th>
                                         <th>Diskon</th>
                                         <th>Limit Siswa / Beasiswa</th>
-                                        <th>Saldo Siswa & Limit Video</th>
+                                        <th>Saldo Siswa & Limit Materi</th>
                                         <th>Masa Berlaku</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -167,7 +167,7 @@
                                         <input type="number" step="any" id="saldo_siswa" name="saldo_siswa" class="form-control" required placeholder="0">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
-                                        <label for="limit_video" style="font-weight: 600;">Limit Video</label>
+                                        <label for="limit_video" style="font-weight: 600;">Limit Materi</label>
                                         <input type="number" id="limit_video" name="limit_video" class="form-control" required placeholder="0">
                                     </div>
                                 </div>

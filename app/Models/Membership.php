@@ -21,6 +21,6 @@ class Membership extends Model
         return LogOptions::defaults()
             ->logOnly([ 'nama', 'harga', 'diskon', 'harga_final', 
         'limit_siswa', 'limit_beasiswa', 'masa_hingga', 'gambar', 'saldo_siswa', 'limit_video']) // Catat jika kolom ini berubah
-            ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
+            ->logOnlyDirty(); 
     }
 }
