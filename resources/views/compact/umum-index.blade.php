@@ -37,7 +37,7 @@
 
                 <div class="row">
                     @forelse($subMateriUmum as $sub)
-                        <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                        <div class="col-md-3 mb-4 d-flex align-items-stretch">
                             <div class="card course-card w-100">
                                 
                                 {{-- CREATIVE THUMBNAIL PLACEHOLDER --}}

@@ -159,4 +159,5 @@ class SubMateriController extends Controller
 
         return redirect()->back()->with('info', 'Data berhasil dihapus');
     }
+
 }

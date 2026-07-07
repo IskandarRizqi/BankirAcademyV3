@@ -582,6 +582,64 @@
         position: relative;
         overflow: hidden;
     }
+     /* Custom Styling untuk membuat tampilan Card Premium */
+    .course-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .thumbnail-container {
+        position: relative;
+        height: 180px;
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        overflow: hidden;
+    }
+    /* Pola abstrak untuk background thumbnail default agar terlihat keren */
+    .thumbnail-pattern {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0.15;
+        background-image: radial-gradient(circle at 100% 150%, #fff 24%, white 25%, white 28%, #fff 29%, #fff 36%, white 36%, white 40%, transparent 40%),
+                          radial-gradient(circle at 0    150%, #fff 24%, white 25%, white 28%, #fff 29%, #fff 36%, white 36%, white 40%, transparent 40%),
+                          radial-gradient(circle at 50%  100%, #fff 10%, white 11%, white 14%, #fff 14%, #fff 20%, white 20%, white 24%, transparent 24%);
+        background-size: 40px 40px;
+    }
+    .thumbnail-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 3.5rem;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+    .price-badge {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background-color: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(4px);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+    .category-badge {
+        background-color: #EEF2FF;
+        color: #4F46E5;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
     /* Membuat variasi warna random abstrak untuk icon thumbnail agar kreatif */
     .course-card:nth-child(3n+1) .thumbnail-icon { color: #4F46E5; background: rgba(79, 70, 229, 0.1); }
     .course-card:nth-child(3n+2) .thumbnail-icon { color: #0EA5E9; background: rgba(14, 165, 233, 0.1); }
@@ -618,7 +676,7 @@
         $menus = [
             [
                 'label' => 'Dashboard',
-                'icon' => 'home',
+                'icon' => 'dashboard',
                 'url' => '/home',
                 'active' => request()->is('home'),
                 'can_see' => true,
@@ -642,8 +700,8 @@
                 'has_submenu' => false,
             ],
             [
-                'label' => 'Kompetensi',
-                'icon' => 'cpu',
+                'label' => 'Kompetensi 🌟',
+                'icon' => 'graduate',
                 'url' => '/pelatihan',
                 'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
                 'can_see' => ($role == 6),
@@ -651,7 +709,7 @@
             ],
             [
                 'label' => 'Pelatihan Umum',
-                'icon' => 'cpu',
+                'icon' => 'teacher',
                 'url' => '/materi-umum',
                 'active' => request()->routeIs('siswa.umum.index*') && !request()->is('*report*'),
                 'can_see' => ($role == 6),
@@ -659,17 +717,9 @@
             ],
             [
                 'label' => 'History Pelatihan',
-                'icon' => 'cpu',
+                'icon' => 'history',
                 'url' => '/materi-umum/history',
                 'active' => request()->routeIs('siswa.umum.history*'),
-                'can_see' => ($role == 6),
-                'has_submenu' => false,
-            ],
-            [
-                'label' => 'Sertifikat',
-                'icon' => 'cpu',
-                'url' => '/materi-umum',
-                'active' => request()->routeIs('siswa.umum.*') && !request()->is('*report*'),
                 'can_see' => ($role == 6),
                 'has_submenu' => false,
             ],
@@ -712,6 +762,11 @@
             'zap' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
             'cpu' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>',
             'bar-chart-2' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
+            'graduate'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M80 259.8L289.2 345.9C299 349.9 309.4 352 320 352C330.6 352 341 349.9 350.8 345.9L593.2 246.1C602.2 242.4 608 233.7 608 224C608 214.3 602.2 205.6 593.2 201.9L350.8 102.1C341 98.1 330.6 96 320 96C309.4 96 299 98.1 289.2 102.1L46.8 201.9C37.8 205.6 32 214.3 32 224L32 520C32 533.3 42.7 544 56 544C69.3 544 80 533.3 80 520L80 259.8zM128 331.5L128 448C128 501 214 544 320 544C426 544 512 501 512 448L512 331.4L369.1 390.3C353.5 396.7 336.9 400 320 400C303.1 400 286.5 396.7 270.9 390.3L128 331.4z"/></svg>',
+            'teacher'=> '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M192 384c53 0 96 43 96 96 0 17.7-14.3 32-32 32L32 512c-17.7 0-32-14.3-32-32 0-53 43-96 96-96l96 0zM544 32c35.3 0 64 28.7 64 64l0 288c0 33.1-25.2 60.4-57.5 63.7l-6.5 .3-211.1 0c-5.1-24.2-16.3-46.1-32.1-64l51.2 0 0-32c0-17.7 14.3-32 32-32l96 0c17.7 0 32 14.3 32 32l0 32 32 0 0-288-352 0 0 57.3c-14.8-6-31-9.3-48-9.3-5.4 0-10.8 .3-16 1l0-49c0-35.3 28.7-64 64-64l352 0zM144 352a80 80 0 1 1 0-160 80 80 0 1 1 0 160z"/></svg>',
+            'history'=> '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M288 64c106 0 192 86 192 192S394 448 288 448c-65.2 0-122.9-32.5-157.6-82.3-10.1-14.5-30.1-18-44.6-7.9s-18 30.1-7.9 44.6C124.1 468.6 201 512 288 512 429.4 512 544 397.4 544 256S429.4 0 288 0C202.3 0 126.5 42.1 80 106.7L80 80c0-17.7-14.3-32-32-32S16 62.3 16 80l0 112c0 17.7 14.3 32 32 32l24.6 0c.5 0 1 0 1.5 0l86 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-38.3 0C154.9 102.6 217 64 288 64zm24 88c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 104c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65 0-94.1z"/></svg>',
+            'dashboard' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M32 32c17.7 0 32 14.3 32 32l0 336c0 8.8 7.2 16 16 16l400 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L80 480c-44.2 0-80-35.8-80-80L0 64C0 46.3 14.3 32 32 32zM144 224c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32zm144-64l0 160c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-160c0-17.7 14.3-32 32-32s32 14.3 32 32zm80 32c17.7 0 32 14.3 32 32l0 96c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-96c0-17.7 14.3-32 32-32zM512 96l0 224c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-224c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg>'
+
         ];
     @endphp
 

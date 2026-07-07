@@ -82,13 +82,9 @@
                                 </div>
 
                                 <div class="card border border-light shadow-none hover-shadow transition-all w-100" style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
-                                    <div class="card-body p-3 p-md-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+                                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
                                         
                                         <div class="mb-3 mb-md-0">
-                                            <span class="badge bg-soft-primary text-primary px-2.5 py-1.5 font-weight-bold mb-2 small" style="background: rgba(59, 130, 246, 0.1); border-radius: 6px;">
-                                             p
-                                            </span>
-
                                             <h4 class="h5 font-weight-bold text-dark mb-1 mt-1">
                                                 Bab {{ $item->urutan }}: {{ $item->nama_sub }}
                                             </h4>

@@ -44,32 +44,54 @@ class MateriController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $valid = Validator::make($request->all(), [
-            'id_kategori' => 'required',
-            'urutan' => 'required',
-            'nama' => 'required',
-            'harga' => 'required|numeric|min:0',
-        ]);
+{
+    $valid = Validator::make($request->all(), [
+        'id_kategori' => 'required',
+        'urutan' => 'required',
+        'nama' => 'required',
+        'harga' => 'required|numeric|min:0',
+        'jumlah_peserta' => 'nullable|integer|min:0',
+        'icon' => 'nullable|string',
+        'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Maksimal 2MB
+    ]);
 
-        if ($valid->fails()) {
-            return redirect()->back()->with('info', 'data tidak sesuai, harap cek kembali')->withInput($request->all());
-        }
-
-        $m = MateriModel::updateOrCreate(['id' => $request->id], [
-            'id_kategori' => $request->id_kategori,
-            'urutan' => $request->urutan,
-            'nama' => $request->nama,
-            'keterangan' => $request->keterangan,
-            'harga' => $request->harga,
-        ]);
-
-        if (!$m) {
-            Log::critical('gagal simpan materi', [$m]);
-            return redirect()->back()->with('info', 'data tidak tersimpan')->withInput($request->all());
-        }
-        return redirect()->back()->with('info', 'data tersimpan');
+    if ($valid->fails()) {
+        return redirect()->back()->with('info', 'data tidak sesuai, harap cek kembali')->withInput($request->all());
     }
+
+    // Ambil data materi lama jika sedang melakukan Update/Edit
+    $materiLama = MateriModel::find($request->id);
+    $namaFileBanner = $materiLama ? $materiLama->banner : null;
+
+    // Proses upload banner jika ada file baru yang diunggah
+    if ($request->hasFile('banner')) {
+        // Hapus file banner lama jika ada (opsional untuk menghemat storage)
+        if ($materiLama && $materiLama->banner && file_exists(storage_path('app/public/banner/' . $materiLama->banner))) {
+            unlink(storage_path('app/public/banner/' . $materiLama->banner));
+        }
+
+        $file = $request->file('banner');
+        $namaFileBanner = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/banner', $namaFileBanner);
+    }
+
+    $m = MateriModel::updateOrCreate(['id' => $request->id], [
+        'id_kategori' => $request->id_kategori,
+        'urutan' => $request->urutan,
+        'nama' => $request->nama,
+        'keterangan' => $request->keterangan,
+        'harga' => $request->harga,
+        'icon' => $request->icon ?? 'fas fa-graduation-cap',
+        'jumlah_peserta' => $request->jumlah_peserta ?? 0,
+        'banner' => $namaFileBanner,
+    ]);
+
+    if (!$m) {
+        Log::critical('gagal simpan materi', [$m]);
+        return redirect()->back()->with('info', 'data tidak tersimpan')->withInput($request->all());
+    }
+    return redirect()->back()->with('info', 'data tersimpan');
+}
 
     /**
      * Display the specified resource.

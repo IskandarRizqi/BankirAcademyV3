@@ -114,7 +114,7 @@
                     </svg>
                 </button>
             </div>
-            <form id="userForm" action="/materi" method="POST">
+            <form id="userForm" action="/materi" enctype="multipart/form-data" method="POST">
                 @csrf
                 <input type="text" name="id" id="id" hidden>
                 <div id="method-container"></div>
@@ -142,9 +142,25 @@
     <input type="number" min="0" name="harga" id="harga" class="form-control" required>
 </div>
                     <div class="form-group mb-3">
-                        <label for="nama" style="font-weight: 600;">Keterangan</label>
-                        <textarea name="keterangan" id="keterangan" cols="30" rows="2" class="form-control"></textarea>
-                    </div>
+            <label for="icon" style="font-weight: 600;">Class Icon (FontAwesome)</label>
+            <input type="text" name="icon" id="icon" class="form-control" placeholder="Contoh: fas fa-book-open">
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="jumlah_peserta" style="font-weight: 600;">Jumlah Peserta</label>
+            <input type="number" min="0" name="jumlah_peserta" id="jumlah_peserta" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="banner" style="font-weight: 600;">Banner Kompetensi (Image)</label>
+            <input type="file" name="banner" id="banner" class="form-control-file">
+            <small class="text-muted" id="banner-info"></small>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="keterangan" style="font-weight: 600;">Keterangan</label>
+            <textarea name="keterangan" id="keterangan" cols="30" rows="2" class="form-control"></textarea>
+        </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Batal</button>
@@ -165,28 +181,39 @@
     })
     // Fungsi ketika tombol 'Tambah Pengguna' diklik
     function resetForm() {
-        document.getElementById('id').value = '';
-        document.getElementById('urutan').value = 0;
-        document.getElementById('nama').value = '';
-        document.getElementById('harga').value = 0;
-        document.getElementById('keterangan').value = '';
-        document.getElementById('id_kategori').value = '';
-    }
+    document.getElementById('id').value = '';
+    document.getElementById('urutan').value = 0;
+    document.getElementById('nama').value = '';
+    document.getElementById('harga').value = 0;
+    document.getElementById('keterangan').value = '';
+    document.getElementById('id_kategori').value = '';
+    
+    // Reset Tambahan Baru
+    document.getElementById('icon').value = 'fas fa-graduation-cap';
+    document.getElementById('jumlah_peserta').value = 0;
+    document.getElementById('banner').value = '';
+    document.getElementById('banner-info').innerText = '';
+}
 
-    // Fungsi ketika tombol 'Edit' diklik
-    function editUser(user) {
-        resetForm();
+function editUser(user) {
+    resetForm();
 
-        if (user) {
-            document.getElementById('id').value = user.id;
-            document.getElementById('urutan').value = user.urutan;
-            document.getElementById('nama').value = user.nama;
-            document.getElementById('harga').value = user.harga;
-            document.getElementById('keterangan').value = user.keterangan;
-            document.getElementById('id_kategori').value = user.id_kategori;
+    if (user) {
+        document.getElementById('id').value = user.id;
+        document.getElementById('urutan').value = user.urutan;
+        document.getElementById('nama').value = user.nama;
+        document.getElementById('harga').value = user.harga;
+        document.getElementById('keterangan').value = user.keterangan;
+        document.getElementById('id_kategori').value = user.id_kategori;
+        
+        // Isi Data Tambahan Baru
+        document.getElementById('icon').value = user.icon ?? 'fas fa-graduation-cap';
+        document.getElementById('jumlah_peserta').value = user.jumlah_peserta ?? 0;
+        if(user.banner) {
+            document.getElementById('banner-info').innerText = 'File aktif: ' + user.banner;
         }
-        // Tampilkan Modal secara terprogram
-        $('#userModal').modal('show');
     }
+    $('#userModal').modal('show');
+}
 </script>
 @endsection

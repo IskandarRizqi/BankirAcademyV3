@@ -20,6 +20,9 @@ class MateriModel extends Model
         'harga',
         'nama',
         'keterangan',
+        'banner',          
+    'icon',            
+    'jumlah_peserta',  
     ];
 
     public function kategori(): HasOne
@@ -41,6 +44,9 @@ class MateriModel extends Model
             ->logOnly(['id_kategori',
         'urutan',
         'nama',
+        'banner',          
+    'icon',            
+    'jumlah_peserta', 
         'harga',
         'keterangan']) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
