@@ -12,7 +12,7 @@ class MembershipController extends Controller
     {
         // Menggunakan paginate sejalan dengan app template links() Anda
         $memberships = Membership::latest()->paginate(10);
-        return view('memberships.index', compact('memberships'));
+        return view('compact.memberships', compact('memberships'));
     }
 
     public function store(MembershipRequest $request)

@@ -9,6 +9,7 @@ use App\Models\MateriModel;
 use App\Models\PreposttestModel;
 use App\Models\SubMateriModel;
 use App\Models\PrepotesUserModel; // Model progress/test user
+use App\Models\RiwayatTransaksi;
 use App\Models\SiswaModulAktif;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -254,7 +255,10 @@ public function ikutiKelas(Request $request, $id)
     $siswaProfile = $user->siswa; 
     $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
-    // 1. Validasi Modul Lain yang Masih Aktif
+    // 1. Ambil data materi
+    $materi = MateriModel::findOrFail($id);
+
+    // 2. Validasi Modul Lain yang Masih Aktif
     $modulLain = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->where('class_id', '!=', $id)
@@ -265,33 +269,71 @@ public function ikutiKelas(Request $request, $id)
             ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan aktif.');
     }
 
-    // 2. Cek apakah sudah terdaftar sebelumnya
+    // 3. Cek apakah sudah terdaftar sebelumnya
     $sudahTerkunci = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->where('class_id', $id)
         ->exists();
 
-    if (!$sudahTerkunci) {
-        // KONDISI A: Jika siswa NON-BEASISWA (0), arahkan ke halaman pembayaran
-        if ($statusBeasiswaSiswa == 0) {
-            // Ambil data materi untuk ditampilkan harganya di halaman pembayaran
-            // Asumsi: Nama kolom harga di tabel materi Anda adalah 'harga'
-            $materi = MateriModel::findOrFail($id); 
-            
-            return view('compact.pembayaran', compact('materi', 'user', 'siswaProfile'));
-        }
+    if ($sudahTerkunci) {
+        return redirect()->route('siswa.materi.belajar', [$id]);
+    }
 
-        // KONDISI B: Jika siswa BEASISWA (1), daftarkan langsung ke database
+    // SEMUA SISWA (Beasiswa/Reguler) diarahkan ke halaman pembayaran yang sama
+    return view('compact.pembayaran', compact('materi', 'user', 'siswaProfile', 'statusBeasiswaSiswa'));
+}
+
+/**
+ * Route/Method baru khusus untuk memproses saldo beasiswa saat tombol diklik di halaman pembayaran
+ */
+public function prosesBayarBeasiswa(Request $request, $id)
+{
+    $userId = Auth::id();
+    $siswaProfile = auth()->user()->siswa;
+    $materi = MateriModel::findOrFail($id);
+    $hargaMateri = $materi->harga ?? 0;
+
+    if (!$siswaProfile || $siswaProfile->beasiswa != 1) {
+        return redirect()->back()->with('error', 'Akses ditolak. Anda bukan siswa penerima beasiswa.');
+    }
+
+    // Validasi kecukupan saldo
+    if ($siswaProfile->saldo < $hargaMateri) {
+        return redirect()->back()->with('error', 'Transaksi gagal. Saldo beasiswa Anda tidak mencukupi.');
+    }
+
+    DB::beginTransaction();
+    try {
+        // 1. Potong Saldo
+        $siswaProfile->saldo -= $hargaMateri;
+        $siswaProfile->save();
+
+        // 2. Masukkan ke Modul Aktif
         DB::table('siswa_modul_aktif')->insert([
             'user_id'    => $userId,
             'class_id'   => $id,
             'created_at' => now(),
             'updated_at' => now()
         ]);
-    }
 
-    return redirect()->route('siswa.materi.belajar', [$id])
-        ->with('success', 'Selamat! Anda berhasil mengikuti kelas pelatihan ini.');
+        // 3. Catat Riwayat Transaksi Baru
+        RiwayatTransaksi::create([
+            'user_id'           => $userId,
+            'class_id'          => $id,
+            'nominal_transaksi' => $hargaMateri,
+            'metode_pembayaran' => 'Saldo Beasiswa',
+            'status'            => 'SUCCESS',
+            'keterangan'        => 'Pembelian materi pelatihan melalui pemotongan saldo beasiswa.'
+        ]);
+
+        DB::commit();
+        return redirect()->route('siswa.materi.belajar', [$id])
+            ->with('success', 'Selamat! Saldo berhasil dipotong dan akses kelas telah dibuka.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Terjadi kesalahan sistem saat memproses transaksi.');
+    }
 }
     private function parseGoogleDriveLink($url)
 {

@@ -128,6 +128,8 @@ class UserController extends Controller
     $emailSiswa = $request->email;
     $passwordSiswa = $request->password;
     $beasiswaStatus = (int) $request->beasiswa ?? 0;
+    $saldoAwalSiswa = 0;
+
 
     if ((int)$request->role === 6) {
         $nisn = trim($request->nisn);
@@ -155,6 +157,7 @@ class UserController extends Controller
             $membership = $targetBank->membership;
             if ($membership) {
                 // Cek kuota umum
+                 $saldoAwalSiswa = $membership->saldo_siswa ?? 0;
                 if (!is_null($membership->limit_siswa)) {
                     $currentSiswaCount = User::where('role', 6)->where('sekolah_id', $sekolahId)->count();
                     if ($currentSiswaCount >= (int)$membership->limit_siswa) {
@@ -200,6 +203,7 @@ class UserController extends Controller
                 'beasiswa' => $beasiswaStatus,
                 'alamat' => $request->alamat,
                 'email' => $request->email_pribadi, // simpan email asli jika diinput
+                'saldo' => $saldoAwalSiswa,
             ]);
         }
 
