@@ -175,7 +175,7 @@ Route::middleware('auth')->group(function () {
         Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download-template');
         Route::post('users/import', [UserController::class, 'import'])->name('users.import');
         Route::get('users/beasiswa-approval', [UserController::class, 'beasiswaApprovalList'])->name('beasiswa.approval.list');
-    Route::post('users/beasiswa-approval/{id}/{action}', [UserController::class, 'beasiswaApprovalProcess'])->name('users.beasiswa.approval.process');
+        Route::post('users/beasiswa-approval/{id}/{action}', [UserController::class, 'beasiswaApprovalProcess'])->name('users.beasiswa.approval.process');
         Route::resource('users', UserController::class);
     });
     Route::middleware(['role:6'])->group(function () {
@@ -192,9 +192,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
         Route::get('/materi-umum', [SiswaMateriController::class, 'umumIndex'])->name('siswa.umum.index');
         Route::post('/materi-umum/ikuti/{sub_materi_id}', [SiswaMateriController::class, 'ikutiPelatihan'])->name('siswa.umum.ikuti');
-    Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
-    Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
-    Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
+        Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
+        Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
+        Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
     });
 });
 Route::get('getBerkas', function (Request $r) {
@@ -290,6 +290,6 @@ Route::get('/admin/loker/getkelurahan/{id}', [App\Http\Controllers\Loker\Beranda
 Route::get('/template', function () {
     return view('front.cvtemplate.cv');
 });
-
-
-
+Route::get('/kurikulum', function () {
+    return view('front.kurikulum');
+});

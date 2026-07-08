@@ -77,7 +77,7 @@
                             <a href="/pages/Banking-Solution" style="color: #000000; font-size: 17px;">Layanan</a><br>
                             <a href="/promo" style="color: #000000; font-size: 17px;">Promo</a><br>
                             <a href="/pages/blog" style="color: #000000; font-size: 17px;">Literasi</a><br>
-                            <a href="#" style="color: #000000; font-size: 17px;">Kurikulum</a><br>
+                            <a href="/kurikulum" style="color: #000000; font-size: 17px;">Kurikulum</a><br>
                             <a href="/loker" style="color: #000000; font-size: 17px;">Loker bankir</a><br>
                             <!--<a href="#" style="color: #000000">Bantuan</a><br>-->
                             <!--<a href="#" style="color: #000000">Karier</a><br>-->
