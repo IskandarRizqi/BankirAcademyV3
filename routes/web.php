@@ -253,3 +253,6 @@ Route::get('/admin/loker/getkelurahan/{id}', [App\Http\Controllers\Loker\Beranda
 Route::get('/template', function () {
     return view('front.cvtemplate.cv');
 });
+Route::get('/kurikulum', function () {
+    return view('front.kurikulum');
+});
