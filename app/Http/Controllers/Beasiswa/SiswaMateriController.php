@@ -22,21 +22,16 @@ public function index()
     $userId = Auth::id();
     $user = Auth::user();
     
-    // 1. Ambil masa aktif dan membership dari User Bank terkait
-    // Kita gunakan eager loading 'bank.membership' agar query lebih efisien
     $user->load('bank.membership');
     $bankProfile = $user->bank;
     
     $isMemberAktif = false;
-    $limitVideo = 0; // Default 0 berarti tampilkan semua materi
+    $limitVideo = 0; 
 
     if ($bankProfile) {
-        // Cek masa aktif member Bank
         if ($bankProfile->masa_aktif_member) {
             $isMemberAktif = \Carbon\Carbon::parse($bankProfile->masa_aktif_member)->isFuture();
         }
-        
-        // Ambil limit_video dari membership si Bank jika ada
         if ($bankProfile->membership) {
             $limitVideo = (int) $bankProfile->membership->limit_video;
         }
@@ -46,32 +41,28 @@ public function index()
     $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; 
     $allowedTipeSubMateri = ($statusBeasiswa == 1) ? [0, 1] : [0, 2];
     
-    $modulTerkunci = DB::table('siswa_modul_aktif')
+    // 💡 PERUBAHAN: Ambil SEMUA id kelas yang sudah pernah dibeli/diikuti siswa ini
+    $modulDiikutiIds = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
-        ->first();
+        ->pluck('class_id')
+        ->toArray();
 
-    // 2. Jika masa aktif Bank HABIS, kosongkan data kategori materi
     if (!$isMemberAktif) {
         $kategori = collect(); 
         $hasPrepostData = false;
     } else {
-        // Jika Bank masih aktif, jalankan query materi dengan filter limit_video
-       $kategori = KategoriModel::with([
-    'materi' => function($query) use ($limitVideo) {
-        $query->orderBy('urutan', 'asc')
-              ->where('nama', '!=', 'Umum'); // 💡 TAMBAHKAN BARIS INI
-        
-        // JIKA limit_video > 0, BATASI MATERI BERDASARKAN URUTAN
-        if ($limitVideo > 0) {
-            $query->where('urutan', '<=', $limitVideo);
-        }
-    }, 
-    'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
-        $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
-              ->orderBy('urutan', 'asc');
-    }
-])->get();
-        // Filter kategori & materi kosong agar tidak membingungkan user
+        $kategori = KategoriModel::with([
+            'materi' => function($query) use ($limitVideo) {
+                $query->orderBy('urutan', 'asc')->where('nama', '!=', 'Umum');
+                if ($limitVideo > 0) {
+                    $query->where('urutan', '<=', $limitVideo);
+                }
+            }, 
+            'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
+                $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)->orderBy('urutan', 'asc');
+            }
+        ])->get();
+
         $kategori->each(function($kat) {
             $kat->setRelation('materi', $kat->materi->filter(function($mat) {
                 return $mat->subMateri->count() > 0;
@@ -85,7 +76,8 @@ public function index()
         $hasPrepostData = PrepotesUserModel::where('user_id', $userId)->exists();
     }
 
-    return view('compact.materi-siswa', compact('kategori', 'modulTerkunci', 'hasPrepostData', 'isMemberAktif'));
+    // Kirim array $modulDiikutiIds ke view
+    return view('compact.materi-siswa', compact('kategori', 'modulDiikutiIds', 'hasPrepostData', 'isMemberAktif'));
 }
 
 public function belajar(Request $request, $materi_id, $sub_materi_id = null)
@@ -97,28 +89,16 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
     $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
     // Tentukan sub-materi apa saja yang boleh dilewati berdasarkan tipe siswa
-    // 1 = Beasiswa, 0 = Non-Beasiswa
     $allowedTipeSubMateri = ($statusBeasiswaSiswa == 1) ? [0, 1] : [0, 2];
 
-    // Cek apakah siswa sudah terdaftar di modul ini
+    // Cek apakah siswa sudah terdaftar/membeli modul ini
     $sudahTerkunci = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->where('class_id', $materi_id)
         ->exists();
 
-    // Cek apakah siswa sedang mengambil modul *lain* (Hanya valid jika sudah join atau untuk validasi nanti)
-    $modulLain = DB::table('siswa_modul_aktif')
-        ->where('user_id', $userId)
-        ->where('class_id', '!=', $materi_id)
-        ->first();
-
-    // JIKA sudah join modul lain dan mencoba akses modul ini, lempar balik ke modul aktifnya
-    if (!$sudahTerkunci && $modulLain) {
-        return redirect()->route('siswa.materi.belajar', [$modulLain->class_id])
-            ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan yang sudah dipilih sebelumnya.');
-    }
-
-    // --- HAPUS LOGIKA AUTO INSERT DI SINI ---
+    // 💡 DI SINI LOGIKA PROTESI $modulLain TELAH DIHAPUS 
+    // agar siswa bebas berpindah antar-modul yang sudah mereka beli.
 
     // 2. AMBIL DATA MATERI
     $materiAktif = MateriModel::with(['subMateri' => function($query) use ($allowedTipeSubMateri) {
@@ -146,13 +126,13 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
     $totalSubMateri = $materiAktif->subMateri->count();
     $semuaMateriSelesai = count($openedLessons) >= $totalSubMateri;
 
-    // Proteksi Test: Jika belum klik 'Ikuti', tidak boleh akses Test lewat URL query string
+    // Proteksi Test
     if (!$sudahTerkunci && ($contentType === 'pre' || $contentType === 'post')) {
         return redirect()->route('siswa.materi.belajar', [$materi_id])
-            ->with('warning', 'Silakan klik ikuti kelas terlebih dahulu.');
+            ->with('warning', 'Silakan lakukan pendaftaran/pembayaran kelas terlebih dahulu.');
     }
 
-    if ($statusBeasiswaSiswa == 1 && $sudahTerkunci) { // Tambah syarat $sudahTerkunci
+    if ($statusBeasiswaSiswa == 1 && $sudahTerkunci) { 
         $sudahPreTest = $userProgress && !is_null($userProgress->nilai_awal);
         if ($preTest && !$sudahPreTest) {
             $contentType = 'pre';
@@ -198,8 +178,10 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
                     ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
             }
 
-            // RULE 3: Hanya jalankan pengecekan urutan JIKA siswa sudah klik ikuti kelas
+            // 💡 PERBAIKAN URUTAN BAB: Ambil materi yang urutannya lebih kecil dari bab aktif
             if ($sudahTerkunci && $listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
+                $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
+                
                 foreach ($materiSebelumnya as $prev) {
                     if (!in_array($prev->id, $openedLessons)) {
                         return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
@@ -208,7 +190,7 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
                 }
             }
 
-            // Simpan riwayat progress membaca HANYA jika sudah klik ikuti kelas
+            // Simpan riwayat progress membaca
             if ($sudahTerkunci && !in_array($subMateriAktif->id, $openedLessons)) {
                 $openedLessons[] = $subMateriAktif->id;
                 session()->put("materi_progress_{$materi_id}", $openedLessons);
@@ -245,9 +227,10 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
         'quizAktif',
         'userProgress',
         'statusBeasiswaSiswa',
-        'sudahTerkunci' // <--- DIKIRIM KE VIEW
+        'sudahTerkunci'
     ));
 }
+
 public function ikutiKelas(Request $request, $id)
 {
     $userId = Auth::id();
@@ -255,21 +238,11 @@ public function ikutiKelas(Request $request, $id)
     $siswaProfile = $user->siswa; 
     $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
-    // 1. Ambil data materi
     $materi = MateriModel::findOrFail($id);
 
-    // 2. Validasi Modul Lain yang Masih Aktif
-    $modulLain = DB::table('siswa_modul_aktif')
-        ->where('user_id', $userId)
-        ->where('class_id', '!=', $id)
-        ->first();
+    // 💡 HAPUS VALIDASI $modulLain DI SINI AGAR BISA BELI LEBIH DARI 1 MODUL
 
-    if ($modulLain) {
-        return redirect()->route('siswa.materi.belajar', [$modulLain->class_id])
-            ->with('error', 'Peringatan! Anda hanya diperbolehkan mengikuti 1 modul pelatihan aktif.');
-    }
-
-    // 3. Cek apakah sudah terdaftar sebelumnya
+    // Cek apakah sudah terdaftar sebelumnya di modul spesifik ini
     $sudahTerkunci = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->where('class_id', $id)
@@ -279,7 +252,6 @@ public function ikutiKelas(Request $request, $id)
         return redirect()->route('siswa.materi.belajar', [$id]);
     }
 
-    // SEMUA SISWA (Beasiswa/Reguler) diarahkan ke halaman pembayaran yang sama
     return view('compact.pembayaran', compact('materi', 'user', 'siswaProfile', 'statusBeasiswaSiswa'));
 }
 
@@ -726,25 +698,45 @@ public function historyPelatihan()
         return redirect()->back()->with('error', 'Profil siswa tidak ditemukan.');
     }
 
-    // Ambil data history pelatihan beserta relasi sub materi dan materinya
+    // 1. Ambil data history pelatihan (Aktivitas Belajar)
     $history = DB::table('history_pelatihan')
         ->join('sub_materi', 'history_pelatihan.sub_materi_id', '=', 'sub_materi.id')
-        // ->join('materi', 'sub_materi.materi_id', '=', 'materi.id')
         ->where('history_pelatihan.user_id', $siswaProfile->id)
         ->select(
             'history_pelatihan.created_at as tanggal_mulai',
             'sub_materi.id as sub_materi_id',
             'sub_materi.nama as nama_sub',
-            'sub_materi.urutan',
-            // 'materi.nama as nama_materi'
+            'sub_materi.urutan'
         )
         ->orderBy('history_pelatihan.created_at', 'desc')
         ->get();
 
-    // Hitung statistik sederhana untuk dashboard kecil di atas halaman
+    // 2. Ambil data Riwayat Transaksi (termasuk kelas/materi yang dibeli)
+    $riwayatTransaksi = RiwayatTransaksi::with('materi')
+        ->where('user_id', $siswaProfile->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // 3. Ambil data Modul/Kelas Aktif yang sedang diikuti
+    $modulAktif = SiswaModulAktif::with('materi')
+        ->where('user_id', $siswaProfile->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Hitung statistik sederhana
     $totalMateri = $history->unique('nama_sub')->count();
     $totalBab = $history->count();
 
-    return view('compact.history-pelatihan', compact('history', 'totalMateri', 'totalBab'));
+    // Ambil info saldo terakhir dari relation profile (jika ada)
+    $saldoSiswa = $siswaProfile->siswa ? $siswaProfile->siswa->saldo : 0;
+
+    return view('compact.history-pelatihan', compact(
+        'history', 
+        'totalMateri', 
+        'totalBab', 
+        'riwayatTransaksi', 
+        'modulAktif',
+        'saldoSiswa'
+    ));
 }
 }

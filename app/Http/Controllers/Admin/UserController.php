@@ -203,7 +203,7 @@ class UserController extends Controller
                 'beasiswa' => $beasiswaStatus,
                 'alamat' => $request->alamat,
                 'email' => $request->email_pribadi, // simpan email asli jika diinput
-                'saldo' => $saldoAwalSiswa,
+                'saldo' => $beasiswaStatus ? $saldoAwalSiswa : 0,
             ]);
         }
 

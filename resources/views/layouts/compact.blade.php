@@ -408,7 +408,49 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
     }
-
+.btn-modern {
+        border-radius: 10px;
+        transition: all 0.2s ease-in-out;
+    }
+    .btn-modern:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05)!important;
+    }
+    .custom-card {
+        border: none !important;
+        border-radius: 16px !important;
+    }
+    .opsi-label {
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        border: 1px solid #e2e8f0 !important;
+    }
+    .opsi-label:hover {
+        background-color: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+    }
+    .opsi-radio:checked + .opsi-text {
+        font-weight: 600;
+        color: #4f46e5 !important;
+    }
+    .sidebar-sticky-custom {
+        top: 24px;
+        z-index: 10;
+        border-radius: 16px !important;
+    }
+    .playlist-item-link {
+        transition: all 0.2s ease;
+    }
+    .playlist-item-link:hover {
+        background-color: #f8fafc;
+    }
+    .item-link-media {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    .border-left-primary-custom {
+        border-left: 4px solid #4f46e5 !important;
+    }
     .course-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 10px 24px -6px rgba(16, 24, 40, 0.12);

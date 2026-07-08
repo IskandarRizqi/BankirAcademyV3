@@ -4,9 +4,9 @@
 <div class="row" id="cancel-row">
     <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing">
 
-        <div class="lms-banner text-center text-md-left mb-2">
-            <h1 class="display-5 font-weight-bold text-white mb-2">Mau belajar apa hari ini? 🚀</h1>
-            <p class="lead mb-0 text-white" style="opacity: 0.9;">Akses materi pelatihan beasiswa terstruktur standar industri.</p>
+        <div class="lms-banner text-center text-md-left mb-4">
+            <h2 class="display-5 font-weight-bold text-white mb-2">Mau belajar apa hari ini? 🚀</h1>
+            <p class="mb-0 text-white" style="opacity: 0.9;">Akses materi pelatihan beasiswa terstruktur standar industri.</p>
         </div>
 
         {{-- ALERT JIKA MASA AKTIF HABIS --}}
@@ -77,31 +77,35 @@
                                             <i class="fas fa-video text-danger mr-1"></i> 
                                         </span>
 
-                                        @if(count($mat->subMateri) > 0)
-                                            <div class="d-flex button-group-responsive">
-                                                @if(isset($modulTerkunci) && $modulTerkunci->class_id != $mat->id)
-                                                    <button class="btn btn-secondary btn-sm px-3 disabled" style="border-radius: 8px;" disabled>
-                                                        <i class="fas fa-lock mr-1"></i> Terkunci
-                                                    </button>
-                                                @else
-                                                    <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}"
+                                       @if(count($mat->subMateri) > 0)
+    <div class="d-flex button-group-responsive">
+        @if(in_array($mat->id, $modulDiikutiIds))
+            {{-- USER SUDAH BELI KELAS INI --}}
+            <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}"
+               class="btn btn-success btn-sm px-3"
+               style="border-radius: 8px;">
+                <i class="fas fa-door-open mr-1"></i> Masuk Kelas
+            </a>
+            
+            @if($hasPrepostData)
+                <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3 ml-1" style="border-radius: 8px;">
+                    <i class="fas fa-file-alt mr-1"></i> Nilai
+                </a>
+            @endif
+        @else
+             <a href="{{ route('siswa.materi.belajar', [$mat->id, $mat->subMateri->first()->id]) }}"
                                                        class="btn btn-primary btn-sm px-3 btn-pilih-modul"
                                                        style="border-radius: 8px; background-color: #4F46E5; border-color: #4F46E5;"
                                                        data-nama="{{ $mat->nama }}"
+                                                       data-harga="Rp {{ number_format($mat->harga, 0, ',', '.') }}"
                                                        data-sudah-aktif="{{ (isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id) ? 'true' : 'false' }}">
                                                         <i class="fas fa-play mr-1"></i> Belajar
                                                     </a>
-
-                                                    @if(isset($modulTerkunci) && $modulTerkunci->class_id == $mat->id && $hasPrepostData)
-                                                        <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-3 ml-1" style="border-radius: 8px;">
-                                                            <i class="fas fa-file-alt mr-1"></i> Raport
-                                                        </a>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                        @else
-                                            <button class="btn btn-light btn-sm px-4 disabled" style="border-radius: 8px;" disabled>Kosong</button>
-                                        @endif
+        @endif
+    </div>
+@else
+    <button class="btn btn-light btn-sm px-4 disabled" style="border-radius: 8px;" disabled>Kosong</button>
+@endif
                                     </div>
                                 </div>
                             </div>
@@ -124,39 +128,4 @@
 
     </div>
 </div>
-
-{{-- Script SweetAlert2 tetap sama --}}
-<script>
-    document.querySelectorAll('.btn-pilih-modul').forEach(button => {
-        button.addEventListener('click', function (e) {
-            const urlTarget = this.getAttribute('href');
-            const namaModul = this.getAttribute('data-nama');
-            const sudahAktif = this.getAttribute('data-sudah-aktif') === 'true';
-
-            if (sudahAktif) {
-                return;
-            }
-
-            e.preventDefault();
-
-            Swal.fire({
-                title: 'Konfirmasi Pilihan Modul',
-                html: `Apakah Anda yakin ingin memilih modul <br><strong>"${namaModul}"</strong>?<br><br><span class="text-danger" style="font-size: 13px;">*PENTING: Anda hanya diperbolehkan memilih 1 modul pelatihan. Pilihan ini tidak dapat diubah kembali!</span>`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4F46E5',
-                cancelButtonColor: '#6B7280',
-                confirmButtonText: 'Ya, Saya Yakin!',
-                cancelButtonText: 'Batal',
-                customClass: {
-                    popup: 'rounded-lg'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = urlTarget;
-                }
-            });
-        });
-    });
-</script>
 @endsection
