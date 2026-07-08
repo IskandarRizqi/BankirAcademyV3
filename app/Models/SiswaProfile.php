@@ -19,6 +19,7 @@ class SiswaProfile extends Model
         'jenis_kelamin',
         'nisn',
         'kelas',
+        'saldo',
         'beasiswa',
         'alamat',
         'email'
@@ -35,6 +36,7 @@ class SiswaProfile extends Model
         'no_telp',
         'jenis_kelamin',
         'nisn',
+        'saldo',
         'kelas',
         'beasiswa',
         'alamat',
