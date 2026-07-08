@@ -216,6 +216,7 @@
     let form = $('#orderForm').val()
 
     function funclogin(e) {
+        // console.log("footer v3")
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

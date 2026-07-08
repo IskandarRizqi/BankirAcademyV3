@@ -270,6 +270,7 @@
     let form = $('#orderForm').val()
 
     function funclogin(e) {
+        // console.log("dsssss")
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -307,20 +308,22 @@
                 //     message: 'Login Berhasil',
                 //     position: 'topRight',
                 // });
+                console.log("res", result)
                 setTimeout(() => {
-                    if (result.length > 500) {
-                        window.location = '/home';
-                    } else {
-                        var class_id = $("#class_id");
-                        var _token = document.getElementsByName("_token");
-                        if ((class_id.length > 0) && (_token.length > 0)) {
-                            return window.location = '/ordernopost?_token=' + _token +
-                                '&class_id=' + class_id;
-                        } else {
-                            window.location = '/profile';
-                            // return location.reload();
-                        }
-                    }
+                    // if (result.length > 500) {
+                    //     window.location = '/home';
+                    // } else {
+                    //     var class_id = $("#class_id");
+                    //     var _token = document.getElementsByName("_token");
+                    //     if ((class_id.length > 0) && (_token.length > 0)) {
+                    //         return window.location = '/ordernopost?_token=' + _token +
+                    //             '&class_id=' + class_id;
+                    //     } else {
+                    //         window.location = '/profile';
+                    //         // return location.reload();
+                    //     }
+                    // }
+                    return location.reload();
                 }, 2000);
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors

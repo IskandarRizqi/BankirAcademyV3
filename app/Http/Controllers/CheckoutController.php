@@ -114,7 +114,7 @@ class CheckoutController extends Controller
         $order->refresh();
         $clientId = env('DOKU_CLIENT_ID');
         $secretKey = env('DOKU_SECRET_KEY');
-        $timestamp = now()->toIso8601ZuluString(); 
+        $timestamp = now()->toIso8601ZuluString();  
         $requestId = (string) Str::uuid();
         $body = [
             "order" => [
