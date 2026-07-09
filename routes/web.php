@@ -213,7 +213,7 @@ Route::post('/multi-bayar', [App\Http\Controllers\Front\OrderController::class, 
 Route::post('/order', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 Route::post('/order/send', [CheckoutController::class, 'store']);
 Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
-Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
+
 // Route::get('/index-custom', [App\Http\Controllers\Front\HomeController::class, 'index']);
 Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::class, 'inputinstructor']);
@@ -240,7 +240,6 @@ Route::post("/kode-promo", [App\Http\Controllers\Front\ProfileController::class,
 Route::get("/profile-instructor/{id}/{name}", [App\Http\Controllers\Front\ProfileController::class, "profileinstructor"]);
 Route::post("/set-master-refferal", [App\Http\Controllers\Backend\RefferalController::class, "setMasterRefferal"]);
 
-Route::get("/promo", [App\Http\Controllers\Front\HomeController::class, "showAllPromo"]);
 // Route::get("/auth/{provider}", [SocialiteController::class, "redirectToProvider"]);
 // Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider'])->name('social.redirect');
@@ -249,21 +248,6 @@ Route::resource('profile', ProfileController::class)->middleware('auth');
 Route::get("/review-instructor", [App\Http\Controllers\Front\ProfileController::class, "review_instructor"]);
 Route::get("/instructor/{provider}", [App\Http\Controllers\Front\HomeController::class, "redirectToProvider"]);
 Route::get("/instructor/{provider}/callback", [App\Http\Controllers\Front\HomeController::class, "handleProviderCallback"]);
-
-// Pages
-Route::get("/pages/page/{id}", [App\Http\Controllers\Front\PagesController::class, "showKelas"]);
-Route::get("/pages/about", [App\Http\Controllers\Front\PagesController::class, "showAbout"]);
-Route::get("/pages/contact", [App\Http\Controllers\Front\PagesController::class, "showContact"]);
-Route::get("/pages/blog", [App\Http\Controllers\Front\PagesController::class, "showListBlog"]);
-Route::get("/pages/blog/{id}/{slug}", [App\Http\Controllers\Front\PagesController::class, "showBlog"]);
-// Layanan
-Route::get("/pages/Banking-Solution", [App\Http\Controllers\Front\LayananController::class, "ShowBankingSolution"]);
-Route::get("/pages/Capacity-Building", [App\Http\Controllers\Front\LayananController::class, "ShowCapacityBuilding"]);
-Route::get("/pages/Talent-Solution", [App\Http\Controllers\Front\LayananController::class, "ShowCTalentSolution"]);
-// Class
-Route::get('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "listClass"]);
-Route::post('/list-class', [App\Http\Controllers\Admin\ClassesController::class, "findClass"]);
-
 
 // Referral
 Route::get('/join/referral/{url}', [App\Http\Controllers\Backend\RefferalController::class, "joinRef"]);
@@ -274,23 +258,3 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
-
-// Loker Apply
-Route::resource('admin/apply', App\Http\Controllers\Backend\LokerApplyController::class);
-Route::get('admin/getdatacvpelamar', [App\Http\Controllers\Backend\LokerApplyController::class, 'getdatacvpelamar']);
-Route::post('admin/approvecvpelamar', [App\Http\Controllers\Backend\LokerApplyController::class, 'approvecvpelamar']);
-
-// Loker
-Route::resource('loker', App\Http\Controllers\Loker\BerandaLoker::class);
-Route::get('/loker/{id}/detail', [App\Http\Controllers\Loker\BerandaLoker::class, "detail"]);
-Route::post('/loker/apply', [App\Http\Controllers\Loker\BerandaLoker::class, "apply"]);
-Route::get('/admin/loker/getkabupaten/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkabupaten']);
-Route::get('/admin/loker/getkecamatan/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkecamatan']);
-Route::get('/admin/loker/getkelurahan/{id}', [App\Http\Controllers\Loker\BerandaLoker::class, 'getkelurahan']);
-
-Route::get('/template', function () {
-    return view('front.cvtemplate.cv');
-});
-Route::get('/kurikulum', function () {
-    return view('front.kurikulum');
-});
