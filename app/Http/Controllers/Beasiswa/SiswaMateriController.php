@@ -11,13 +11,15 @@ use App\Models\SubMateriModel;
 use App\Models\PrepotesUserModel; // Model progress/test user
 use App\Models\RiwayatTransaksi;
 use App\Models\SiswaModulAktif;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class SiswaMateriController extends Controller
 {
-public function index()
+public function index(Request $request) // Tambahkan parameter Request
 {
     $userId = Auth::id();
     $user = Auth::user();
@@ -41,26 +43,47 @@ public function index()
     $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; 
     $allowedTipeSubMateri = ($statusBeasiswa == 1) ? [0, 1] : [0, 2];
     
-    // 💡 PERUBAHAN: Ambil SEMUA id kelas yang sudah pernah dibeli/diikuti siswa ini
     $modulDiikutiIds = DB::table('siswa_modul_aktif')
         ->where('user_id', $userId)
         ->pluck('class_id')
         ->toArray();
 
+    // 💡 AMBIL DATA UNTUK COMPONENT FILTER DRUOPDOWN
+    $listKategori = KategoriModel::select('id', 'nama')->orderBy('nama', 'asc')->get();
+
     if (!$isMemberAktif) {
         $kategori = collect(); 
         $hasPrepostData = false;
     } else {
-        $kategori = KategoriModel::with([
-            'materi' => function($query) use ($limitVideo) {
+        // 💡 AMBIL INPUT DARI FILTER & SEARCH
+        $search = $request->input('search');
+        $filterKategoriId = $request->input('kategori_id');
+
+        $kategoriQuery = KategoriModel::query();
+
+        // Jika user memilih kategori spesifik
+        if ($filterKategoriId) {
+            $kategoriQuery->where('id', $filterKategoriId);
+        }
+
+        $kategori = $kategoriQuery->with([
+            'materi' => function($query) use ($limitVideo, $search) {
                 $query->orderBy('urutan', 'asc')->where('nama', '!=', 'Umum');
+                
                 if ($limitVideo > 0) {
                     $query->where('urutan', '<=', $limitVideo);
                 }
+
+                // 💡 LOGIK PENCARIAN BERDASARKAN NAMA MATERI
+                if ($search) {
+                    $query->where('nama', 'like', '%' . $search . '%');
+                }
             }, 
-            'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
-                $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)->orderBy('urutan', 'asc');
-            }
+           'materi.subMateri' => function($query) use ($allowedTipeSubMateri) {
+    $query->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
+          ->with('items') // 🌟 Tambahkan load items di sini
+          ->orderBy('urutan', 'asc');
+}
         ])->get();
 
         $kategori->each(function($kat) {
@@ -76,8 +99,8 @@ public function index()
         $hasPrepostData = PrepotesUserModel::where('user_id', $userId)->exists();
     }
 
-    // Kirim array $modulDiikutiIds ke view
-    return view('compact.materi-siswa', compact('kategori', 'modulDiikutiIds', 'hasPrepostData', 'isMemberAktif'));
+    // Kirim $listKategori ke view agar bisa dipasang di <select>
+    return view('compact.materi-siswa', compact('kategori', 'modulDiikutiIds', 'hasPrepostData', 'isMemberAktif', 'listKategori'));
 }
 
 public function belajar(Request $request, $materi_id, $sub_materi_id = null)
@@ -440,12 +463,10 @@ public function report($materi_id, $id, $userId = null)
     // Cek siapa yang sedang login saat ini
     $authCurrentUser = auth()->user();
     
-    // Jika diakses dari panel manajemen, $userId pasti dilewatan dari parameter
     if (!$userId) {
         $userId = $authCurrentUser->id;
     }
     
-    // Flag untuk menentukan apakah pengakses adalah Manajemen (Root/Bank dengan role 0 atau 4)
     $isManajemen = in_array($authCurrentUser->role, [0, 4]);
     
     $materiAktif = MateriModel::with('kategori')->findOrFail($materi_id);
@@ -484,6 +505,9 @@ public function report($materi_id, $id, $userId = null)
 
     $isLulus = ($progressAktif->nilai_akhir >= 70);
 
+    // Ambil info user pengikut kelas untuk nama di sertifikat
+    $siswaUser = \App\Models\User::find($userId); 
+
     return view('compact.report-kelulusan', compact(
         'progressAktif', 
         'materiAktif', 
@@ -493,7 +517,8 @@ public function report($materi_id, $id, $userId = null)
         'preTestRecord',
         'postTestRecord',
         'isLulus',
-        'isManajemen' // Dikirim ke view
+        'isManajemen',
+        'siswaUser' // Dikirim ke view untuk cetak sertifikat
     ));
 }
 
@@ -512,6 +537,33 @@ public function reportByClass($materi_id)
     }
 
     return $this->report($materi_id, $progressAktif->id, $userId);
+}
+
+// FUNGSI BARU: Generate PDF Sertifikat
+public function downloadSertifikat($materi_id, $id)
+{
+    $authCurrentUser = auth()->user();
+    $progressAktif = PrepotesUserModel::where('id', $id)->where('class_id', $materi_id)->firstOrFail();
+    
+    // Keamanan: Hanya pemilik sertifikat atau manajemen yang boleh download
+    if ($progressAktif->user_id !== $authCurrentUser->id && !in_array($authCurrentUser->role, [0, 4])) {
+        abort(403, 'Akses tidak sah.');
+    }
+
+    // Cek kelulusan
+    if ($progressAktif->nilai_akhir < 70) {
+        return redirect()->back()->with('warning', 'Sertifikat belum tersedia karena Anda belum mencapai batas kelulusan.');
+    }
+
+    $materiAktif = MateriModel::findOrFail($materi_id);
+    $siswaUser = \App\Models\User::find($progressAktif->user_id);
+    $tanggalLulus = $progressAktif->updated_at ? Carbon::parse($progressAktif->updated_at)->translatedFormat('d F Y') : Carbon::now()->translatedFormat('d F Y');
+
+    // Load ke view khusus PDF (A4 - Landscape)
+    $pdf = Pdf::loadView('compact.sertifikat-pdf', compact('progressAktif', 'materiAktif', 'siswaUser', 'tanggalLulus'))
+              ->setPaper('a4', 'landscape');
+
+    return $pdf->download('Sertifikat_' . str_replace(' ', '_', $materiAktif->nama) . '_' . $siswaUser->id . '.pdf');
 }
 
 // -----------------------------------------------------------------
@@ -738,5 +790,19 @@ public function historyPelatihan()
         'modulAktif',
         'saldoSiswa'
     ));
+}
+public function listSertifikat()
+{
+    $user = Auth::user();
+
+    // Mengambil daftar post-test yang lulus ambang batas (>= 70) milik siswa aktif
+    $sertifikats = PrepotesUserModel::with('materi') // Memuat relasi materi
+        ->where('user_id', $user->id)
+        ->where('nilai_akhir', '>=', 70)
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    // Mengembalikan ke view list sertifikat dinamis
+    return view('compact.sertifikat', compact('user', 'sertifikats'));
 }
 }

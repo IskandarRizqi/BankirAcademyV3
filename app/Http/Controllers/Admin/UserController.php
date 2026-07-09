@@ -9,6 +9,7 @@ use App\Models\Membership;
 use App\Models\SiswaProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -65,6 +66,13 @@ class UserController extends Controller
     public function create()
     {
         return view('users.create');
+    }
+    public function profile()
+    {
+        // Mengambil data user yang sedang login beserta relasi siswanya jika ada
+        $user = Auth::user()->load('siswa');
+        
+        return view('compact.profile', compact('user'));
     }
 
     public function store(Request $request)
