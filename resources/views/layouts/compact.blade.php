@@ -628,7 +628,7 @@
 
     /* Media Query khusus untuk Perangkat Mobile */
     @media (max-width: 576px) {
-        .report-container { margin: 1rem auto; }
+        .report-container { margin: 0; padding: 0; }
         .title-responsive { font-size: 1.4rem !important; }
         .desc-responsive { font-size: 0.95rem !important; }
         .score-badge { font-size: 2.5rem; padding: 0.3rem 1.5rem; }
@@ -828,7 +828,7 @@
                 'label' => 'Pre Post Test',
                 'icon' => 'teacher',
                 'url' => '#dashboard',
-                'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*'),
+                'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*'),
                 'can_see' => $isRoot,
                 'has_submenu' => true,
                 'submenu_id' => 'dashboard',
@@ -959,6 +959,7 @@
                                     <a class="sub-link {{ request()->is('materi*') ? 'active' : '' }}" href="/materi">Kompetensi</a>
                                     <a class="sub-link {{ request()->is('sub-materi*') ? 'active' : '' }}" href="/sub-materi">Materi</a>
                                     <a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}" href="/ppt">PPT</a>
+                                    <a class="sub-link {{ request()->is('certificate-templates*') ? 'active' : '' }}" href="/certificate-templates">Sertifikat</a>
                                 </div>
                             </div>
                         @else

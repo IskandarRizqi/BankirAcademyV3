@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Beasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\CertificateTemplate;
 use Illuminate\Http\Request;
 use App\Models\KategoriModel;
 use App\Models\MateriModel;
@@ -508,6 +509,10 @@ public function report($materi_id, $id, $userId = null)
     // Ambil info user pengikut kelas untuk nama di sertifikat
     $siswaUser = \App\Models\User::find($userId); 
 
+    // AMBIL DATA SERTIFIKAT ASLI DARI DATABASE
+    // Sesuaikan 'SertifikatModel', 'materi_id', dan nama kolom file gambar ('file_sertifikat') dengan tabel Anda
+    $sertifikatMateri = CertificateTemplate::where('materi_id', $materi_id)->first();
+
     return view('compact.report-kelulusan', compact(
         'progressAktif', 
         'materiAktif', 
@@ -518,7 +523,8 @@ public function report($materi_id, $id, $userId = null)
         'postTestRecord',
         'isLulus',
         'isManajemen',
-        'siswaUser' // Dikirim ke view untuk cetak sertifikat
+        'siswaUser',
+        'sertifikatMateri' // Dikirim ke view
     ));
 }
 
@@ -796,11 +802,18 @@ public function listSertifikat()
     $user = Auth::user();
 
     // Mengambil daftar post-test yang lulus ambang batas (>= 70) milik siswa aktif
-    $sertifikats = PrepotesUserModel::with('materi') // Memuat relasi materi
+    $sertifikats = PrepotesUserModel::with(['materi']) // Memuat relasi materi dasar
         ->where('user_id', $user->id)
         ->where('nilai_akhir', '>=', 70)
         ->orderBy('updated_at', 'desc')
         ->get();
+
+    // Lakukan mapping untuk memeriksa CertificateTemplate dari masing-masing materi_id / class_id
+    $sertifikats->transform(function($item) {
+        // Ambil template sertifikat yang sesuai dengan materi terkait
+        $item->sertifikatMateri = \App\Models\CertificateTemplate::where('materi_id', $item->class_id)->first();
+        return $item;
+    });
 
     // Mengembalikan ke view list sertifikat dinamis
     return view('compact.sertifikat', compact('user', 'sertifikats'));

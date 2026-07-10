@@ -38,6 +38,11 @@ class MateriModel extends Model
 {
     return $this->hasMany(PreposttestModel::class, 'id_materi', 'id');
 }
+public function certificateTemplate()
+{
+    // Mengambil template certificate yang bertipe 'materi'
+    return $this->hasOne(CertificateTemplate::class, 'materi_id')->where('target_type', 'materi');
+}
  public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

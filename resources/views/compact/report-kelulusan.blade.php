@@ -59,6 +59,7 @@
                 <div class="mb-3">
                     <span class="badge badge-pill badge-success px-3 py-2 text-wrap">Status: LULUS (KKM 70)</span>
                 </div>
+                
                 <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
                     @if($isManajemen)
                         <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-warning font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px;">
@@ -69,59 +70,19 @@
                             <i class="fas fa-th mr-2"></i> Kembali ke Katalog Materi
                         </a>
                     @endif
-                    <a href="#preview-sertifikat-section" class="btn btn-light text-dark font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px;">
-                        <i class="fas fa-certificate mr-2 text-primary"></i> Lihat Sertifikat
-                    </a>
-                </div>
-            </div>
 
-            {{-- PREVIEW SERTIFIKAT KELULUSAN (HANYA MUNCUL JIKA LULUS) --}}
-            <div id="preview-sertifikat-section" class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
-                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="mb-3 mb-sm-0">
-                        <h5 class="font-weight-bold text-dark mb-0"><i class="fas fa-award text-warning mr-2"></i>Sertifikat Penghargaan Resmi</h5>
-                        <small class="text-muted">Selamat! Anda berhak mendapatkan sertifikat atas kelulusan kompetensi ini.</small>
-                    </div>
-                    <div class="w-sm-100">
-                        <a href="{{ route('siswa.materi.sertifikat.download', ['materi_id' => $materiAktif->id, 'id' => $progressAktif->id]) }}" class="btn btn-primary font-weight-bold px-4 py-2 shadow-sm w-sm-100" style="border-radius:8px;">
-                            <i class="fas fa-download mr-2"></i> Unduh Sertifikat (PDF)
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body bg-light p-2 p-sm-4 text-center d-flex justify-content-center sertifikat-scroll-wrapper">
-                    {{-- Template Desain Frame Preview Sertifikat (HTML CSS responsive) --}}
-                    <div class="sertifikat-frame-preview p-3 p-sm-5 bg-white position-relative border shadow-sm">
-                        <div class="sertifikat-border">
-                            <div class="sertifikat-content py-4">
-                                <div class="cert-logo mb-2">
-                                    <i class="fas fa-graduation-cap fa-3x text-primary"></i>
-                                </div>
-                                <h2 class="font-weight-bold text-uppercase tracking-wide text-secondary mb-1 cert-title" style="font-family:'Georgia',serif;">Sertifikat Kelulusan</h2>
-                                <p class="text-muted px-3 px-sm-5 mb-4 cert-desc">Sertifikat ini diberikan secara resmi kepada pengikut kelas sebagai bukti pemenuhan ambang batas kelulusan kompetensi.</p>
-                                
-                                <span class="text-muted d-block small">Diberikan Kepada :</span>
-                                <h3 class="font-weight-bold text-dark my-2 border-bottom d-inline-block px-4 pb-2 cert-name" style="font-family:'Georgia',serif; min-width: 260px;">
-                                    {{ $siswaUser->name ?? 'Nama Siswa' }}
-                                </h3>
-                                
-                                <p class="text-muted mt-3 mx-auto cert-text-body" style="max-width:550px; line-height:1.6;">
-                                    Telah dinyatakan <strong>LULUS & KOMPETEN</strong> pada evaluasi ujian akhir (Post-Test) untuk modul materi pembelajaran:
-                                </p>
-                                <h4 class="text-primary font-weight-bold mb-4 cert-materi">"{{ $materiAktif->nama }}"</h4>
-                                
-                                <div class="row mt-4 mt-sm-5 justify-content-center cert-meta">
-                                    <div class="col-6 text-center">
-                                        <p class="mb-0 text-muted">Nilai Kelulusan</p>
-                                        <h4 class="font-weight-bold text-success mt-1 cert-meta-val">{{ round($progressAktif->nilai_akhir) }} / 100</h4>
-                                    </div>
-                                    <div class="col-6 text-center">
-                                        <p class="mb-0 text-muted">Tanggal Kelulusan</p>
-                                        <h5 class="font-weight-bold text-dark mt-1 cert-meta-val">{{ $progressAktif->updated_at ? $progressAktif->updated_at->format('d M Y') : date('d M Y') }}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{-- TOMBOL DOWNLOAD SERTIFIKAT DI PERTAHANKAN --}}
+                    @if($sertifikatMateri)
+                        @if($sertifikatMateri->target_type == 'sub_materi')
+                            <a href="{{ route('submateri.sertifikat', $sertifikatMateri->sub_materi_id) }}" class="btn btn-light text-primary font-weight-bold px-4 py-2 w-sm-100" style="border-radius:8px;">
+                                <i class="fas fa-download mr-2"></i> Unduh Sertifikat (PDF)
+                            </a>
+                        @else
+                            <a href="{{ route('materi.sertifikat', $materiAktif->id) }}" class="btn btn-light text-primary font-weight-bold px-4 py-2 w-sm-100" style="border-radius:8px;">
+                                <i class="fas fa-download mr-2"></i> Unduh Sertifikat (PDF)
+                            </a>
+                        @endif
+                    @endif
                 </div>
             </div>
         @else
@@ -156,7 +117,7 @@
     @endif
 
     {{-- DASHBOARD RINGKASAN PERBANDINGAN NILAI --}}
-    <div class="summary-box">
+    <div class="summary-box mb-4">
         <h5 class="font-weight-bold text-dark mb-3">
             <i class="fas fa-chart-bar mr-2 text-info"></i> Ringkasan Evaluasi Modul
         </h5>
@@ -180,7 +141,7 @@
                         <h2 class="font-weight-bold mb-0 {{ $postTestRecord->nilai_akhir >= 70 ? 'text-success' : 'text-danger' }}">
                             {{ round($postTestRecord->nilai_akhir) }}
                         </h2>
-                        <span class="text-muted small">Percobaan Ke-{{ $postTestRecord->jml_jawaban }}</span>
+                        <span class="text-muted small">Percobaan Ke-{{ $postTestRecord->jml_jawaban ?? 1 }}</span>
                     @else
                         <h2 class="font-weight-bold text-muted mb-0">-</h2>
                         <span class="text-muted small">Belum Mengikuti Post-Test</span>
@@ -207,7 +168,7 @@
                         $isBenar = ($kunci === $jawabanSiswa);
                     @endphp
 
-                    <div class="soal-box">
+                    <div class="soal-box mb-3 p-3 border" style="border-radius: 8px;">
                         <div class="d-flex flex-column-reverse flex-sm-row justify-content-sm-between align-items-sm-start gap-2 mb-3">
                             <h6 class="font-weight-bold text-dark mb-0 pr-sm-5" style="line-height: 1.5;">
                                 <span class="badge badge-secondary mr-2">{{ $index + 1 }}</span>
@@ -215,9 +176,9 @@
                             </h6>
                             <div>
                                 @if($isBenar)
-                                    <span class="status-badge bg-success text-white"><i class="fas fa-check-circle mr-1"></i> Benar</span>
+                                    <span class="badge bg-success text-white px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Benar</span>
                                 @else
-                                    <span class="status-badge bg-danger text-white"><i class="fas fa-times-circle mr-1"></i> Salah</span>
+                                    <span class="badge bg-danger text-white px-2 py-1"><i class="fas fa-times-circle mr-1"></i> Salah</span>
                                 @endif
                             </div>
                         </div>
@@ -277,6 +238,4 @@
     @endif
 
 </div>
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
 @endsection

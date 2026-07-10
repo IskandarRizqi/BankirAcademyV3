@@ -81,10 +81,22 @@
                                             </p>
                                         </div>
                                         <div class="col-12 col-md-auto mt-3 mt-md-0 text-right">
-                                            {{-- Pemanggilan Route Sesuai Parameter Target --}}
-                                            <a href="{{ route('siswa.materi.sertifikat.download', ['materi_id' => $item->class_id, 'id' => $item->id]) }}" class="btn btn-primary btn-sm px-3 shadow-sm" style="border-radius: 8px; background-color: #6366f1; border-color: #6366f1;">
-                                                📥 Unduh PDF
-                                            </a>
+                                            {{-- Pemanggilan Route Sesuai Parameter Target dari Template Sertifikat --}}
+@if($item->sertifikatMateri)
+    @if($item->sertifikatMateri->target_type == 'sub_materi')
+        <a href="{{ route('submateri.sertifikat', $item->sertifikatMateri->sub_materi_id) }}" class="btn btn-primary btn-sm px-3 shadow-sm" style="border-radius: 8px; background-color: #6366f1; border-color: #6366f1;">
+            📥 Unduh Sertifikat (PDF)
+        </a>
+    @else
+        <a href="{{ route('materi.sertifikat', $item->class_id) }}" class="btn btn-primary btn-sm px-3 shadow-sm" style="border-radius: 8px; background-color: #6366f1; border-color: #6366f1;">
+            📥 Unduh Sertifikat (PDF)
+        </a>
+    @endif
+@else
+    <button class="btn btn-secondary btn-sm px-3 shadow-sm" style="border-radius: 8px;" disabled>
+        ⚠️ Template Tidak Tersedia
+    </button>
+@endif
                                         </div>
                                     </div>
                                 </div>
