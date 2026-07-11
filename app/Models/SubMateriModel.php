@@ -36,6 +36,11 @@ class SubMateriModel extends Model
     {
         return $this->hasMany(SubMateriItemModel::class, 'id_sub_materi');
     }
+    public function certificateTemplate()
+{
+    // Mengambil template certificate yang bertipe 'sub_materi'
+    return $this->hasOne(CertificateTemplate::class, 'sub_materi_id')->where('target_type', 'sub_materi');
+}
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

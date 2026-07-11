@@ -19,6 +19,11 @@ class PrepotesUserModel extends Model
         'nilai_akhir',
         'jml_jawaban',
     ];
+    public function materi()
+    {
+        // Sesuaikan 'class_id' dengan nama foreign key di tabel prepotes yang merujuk ke tabel materi
+        return $this->belongsTo(MateriModel::class, 'class_id', 'id');
+    }
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

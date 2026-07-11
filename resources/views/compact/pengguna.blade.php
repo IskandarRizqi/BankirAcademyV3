@@ -186,145 +186,200 @@
 </div>
 
             {{-- Modal Create / Update --}}
-            <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content" style="background: #fff; border-radius: 8px;">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="userModalLabel" style="font-weight: bold;">Tambah Pengguna</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                        <form id="userForm" action="{{ route('users.store') }}" method="POST">
-                            @csrf
-                            <div id="method-container"></div>
-
-                           <div class="modal-body">
-    <div class="form-group mb-3">
-        <label for="name" style="font-weight: 600;">Nama Lengkap</label>
-        <input type="text" id="name" name="name" class="form-control" required placeholder="Masukkan nama">
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="email" style="font-weight: 600;">Alamat Email</label>
-        <input type="email" id="email" name="email" class="form-control" required placeholder="name@example.com">
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="role" style="font-weight: 600;">Role / Hak Akses</label>
-        <select id="role" name="role" class="form-control" required onchange="handleRoleChange()">
-    <option value="" disabled selected>-- Pilih Role --</option>
-    
-    @php
-        $authRole = (int) auth()->user()->role;
-        $authEmail = auth()->user()->email;
-    @endphp
-
-    @for ($i = 0; $i <= 6; $i++)
-        @if ($authEmail === 'cb@bankir.academy')
-            @if ($i == 4 || $i == 5 || $i == 6)
-                <option value="{{ $i }}">
-                    @if($i == 4) Bank
-                    @elseif($i == 5) Sekolah
-                    @elseif($i == 6) Siswa
-                    @endif
-                </option>
-            @endif
-        @else
-            @if ($i > $authRole)
-                <option value="{{ $i }}">
-                    @if($i == 4) Bank
-                    @elseif($i == 5) Sekolah
-                    @elseif($i == 6) Siswa
-                    @endif
-                </option>
-            @endif
-        @endif
-    @endfor
-</select>
-    </div>
-
-    <div class="form-group mb-3 d-none" id="membership-group">
-        <label for="membership_id" style="font-weight: 600;">Membership (Opsional)</label>
-        <select id="membership_id" name="membership_id" class="form-control">
-            <option value="">-- Tanpa Membership --</option>
-            @foreach($memberships as $membership)
-                <option value="{{ $membership->id }}">{{ $membership->nama }} (Rp {{ number_format($membership->harga_final, 0, ',', '.') }})</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group mb-3 d-none" id="masa-aktif-group">
-    <label for="masa_aktif_member" style="font-weight: 600;">Masa Aktif Member <span class="text-danger">*</span></label>
-    <input type="date" id="masa_aktif_member" name="masa_aktif_member" class="form-control">
-</div>
-
-    <div class="form-group mb-3 d-none" id="bank-group">
-        <label for="bank_id" style="font-weight: 600;">Pilih Bank <span class="text-danger">*</span></label>
-        <select id="bank_id" name="bank_id" class="form-control" onchange="filterSekolahByBank()">
-            <option value="" selected disabled>-- Pilih Bank --</option>
-            @foreach($listBank as $bank)
-                <option value="{{ $bank->id }}">{{ $bank->name }}</option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="form-group mb-3 d-none" id="sekolah-group">
-        <label for="sekolah_id" style="font-weight: 600;">Pilih Sekolah <span class="text-danger">*</span></label>
-        <select id="sekolah_id" name="sekolah_id" class="form-control">
-            <option value="" selected disabled>-- Pilih Sekolah --</option>
-            @foreach($listSekolah as $sekolah)
-                <option value="{{ $sekolah->id }}" data-bank="{{ $sekolah->bank_id }}">{{ $sekolah->name }}</option>
-            @endforeach
-        </select>
-    </div>
-{{-- FIELD TAMBAHAN KHUSUS PROFILE SISWA --}}
-<div id="siswa-profile-group" class="d-none">
-    <div class="form-group mb-3">
-        <label for="nisn" style="font-weight: 600;">NISN</label>
-        <input type="text" id="nisn" name="nisn" class="form-control" placeholder="Masukkan NISN">
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="kelas" style="font-weight: 600;">Kelas</label>
-        <input type="text" id="kelas" name="kelas" class="form-control" placeholder="Contoh: XII RPL 1">
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="jenis_kelamin" style="font-weight: 600;">Jenis Kelamin</label>
-        <select id="jenis_kelamin" name="jenis_kelamin" class="form-control">
-            <option value="" selected disabled>-- Pilih Jenis Kelamin --</option>
-            <option value="L">Laki-laki</option>
-            <option value="P">Perempuan</option>
-        </select>
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="no_telp" style="font-weight: 600;">No. Telepon / WhatsApp</label>
-        <input type="text" id="no_telp" name="no_telp" class="form-control" placeholder="08xxxxxxxxxx">
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="beasiswa" style="font-weight: 600;">Status Beasiswa</label>
-        <select id="beasiswa" name="beasiswa" class="form-control">
-            <option value="0">Tidak (Siswa Reguler)</option>
-            <option value="1">Ya (Penerima Beasiswa)</option>
-        </select>
-    </div>
-</div>
-    <div class="form-group mb-3">
-        <label for="password" style="font-weight: 600;">Password</label>
-        <input type="password" id="password" name="password" class="form-control" placeholder="Minimal 8 karakter">
-        <small id="password-help" class="form-text text-muted d-none">Kosongkan jika tidak ingin mengubah password.</small>
-    </div>
-</div>
-                            <div class="modal-footer">
-                                <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+{{-- Modal Create / Update --}}
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document"> {{-- Menggunakan modal-lg agar saat grid aktif tidak terasa sesak --}}
+        <div class="modal-content" style="background: #fff; border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            
+            {{-- Header Modal --}}
+            <div class="modal-header d-flex align-items-center" style="border-bottom: 1px solid #f1f2f3; padding: 20px 24px;">
+                <h5 class="modal-title" id="userModalLabel" style="font-weight: 700; color: #3b3f5c; font-size: 1.15rem; margin: 0;">Tambah Pengguna</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 0; margin: 0; color: #888ea8; opacity: 0.8;">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
+
+            <form id="userForm" action="{{ route('users.store') }}" method="POST">
+                @csrf
+                <div id="method-container"></div>
+
+                <div class="modal-body" style="padding: 24px; max-height: calc(100vh - 200px); overflow-y: auto;">
+                     <div class="alert alert-light-info d-none mb-4 p-3 d-flex align-items-start" id="siswa-account-info" style="background-color: #f0f8ff; border: 1px dashed #b8daff; border-radius: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 mt-1"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <div style="font-size: 13px; color: #004085;">
+                            <strong style="display:block; margin-bottom: 4px;">Informasi Pembuatan Akun Siswa:</strong>
+                            <div class="row mt-2">
+                                <div class="col-sm-6">Email Login: <code id="info-email" style="font-weight: 600; background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #d6e9c6;">[nisn]@gmail.com</code></div>
+                                <div class="col-sm-6">Password Login: <code id="info-password" style="font-weight: 600; background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #d6e9c6;">[nisn]Bankir!</code></div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- SECTION 1: INFORMASI UTAMA / UTAMA AKUN --}}
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label for="name" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Nama Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" id="name" name="name" class="form-control style-input" required placeholder="Masukkan nama lengkap" style="border-radius: 6px;">
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3">
+                            <label for="role" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Role / Hak Akses <span class="text-danger">*</span></label>
+                            <select id="role" name="role" class="form-control style-input" required onchange="handleRoleChange()" style="border-radius: 6px;">
+                                <option value="" disabled selected>-- Pilih Role --</option>
+                                @php
+                                    $authRole = (int) auth()->user()->role;
+                                    $authEmail = auth()->user()->email;
+                                @endphp
+                                @for ($i = 0; $i <= 6; $i++)
+                                    @if ($authEmail === 'cb@bankir.academy')
+                                        @if ($i == 4 || $i == 5 || $i == 6)
+                                            <option value="{{ $i }}">
+                                                @if($i == 4) Bank
+                                                @elseif($i == 5) Sekolah
+                                                @elseif($i == 6) Siswa
+                                                @endif
+                                            </option>
+                                        @endif
+                                    @else
+                                        @if ($i > $authRole)
+                                            <option value="{{ $i }}">
+                                                @if($i == 4) Bank
+                                                @elseif($i == 5) Sekolah
+                                                @elseif($i == 6) Siswa
+                                                @endif
+                                            </option>
+                                        @endif
+                                    @endif
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- FIELD EMAIL & PASSWORD (UNTUK NON-SISWA) --}}
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3" id="email-group">
+                            <label for="email" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Alamat Email <span class="text-danger">*</span></label>
+                            <input type="email" id="email" name="email" class="form-control style-input" required placeholder="name@example.com" style="border-radius: 6px;">
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3" id="password-group">
+                            <label for="password" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Password <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" class="form-control style-input" placeholder="Minimal 8 karakter" style="border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center" type="button" id="togglePassword" onclick="togglePasswordVisibility()" style="border: 1px solid #ced4da; border-left: none; border-top-right-radius: 6px; border-bottom-right-radius: 6px; background: #f8f9fa; px: 12px;">
+                                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#515365" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <small id="password-help" class="form-text text-muted d-none mt-1">Kosongkan jika tidak ingin mengubah password.</small>
+                        </div>
+                    </div>
+
+                    {{-- BOX INFO OTOMATIS GENERATE (KHUSUS SISWA) --}}
+                   
+
+                    {{-- FIELD DINAMIS ROLE: BANK & SEKOLAH --}}
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3 d-none" id="membership-group">
+                            <label for="membership_id" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Membership (Opsional)</label>
+                            <select id="membership_id" name="membership_id" class="form-control style-input" style="border-radius: 6px;">
+                                <option value="">-- Tanpa Membership --</option>
+                                @foreach($memberships as $membership)
+                                    <option value="{{ $membership->id }}">{{ $membership->nama }} (Rp {{ number_format($membership->harga_final, 0, ',', '.') }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3 d-none" id="masa-aktif-group">
+                            <label for="masa_aktif_member" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Masa Aktif Member <span class="text-danger">*</span></label>
+                            <input type="date" id="masa_aktif_member" name="masa_aktif_member" class="form-control style-input" style="border-radius: 6px;">
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3 d-none" id="bank-group">
+                            <label for="bank_id" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Pilih Bank <span class="text-danger">*</span></label>
+                            <select id="bank_id" name="bank_id" class="form-control style-input" onchange="filterSekolahByBank()" style="border-radius: 6px;">
+                                <option value="" selected disabled>-- Pilih Bank --</option>
+                                @foreach($listBank as $bank)
+                                    <option value="{{ $bank->id }}">{{ $bank->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3 d-none" id="sekolah-group">
+                            <label for="sekolah_id" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Pilih Sekolah <span class="text-danger">*</span></label>
+                            <select id="sekolah_id" name="sekolah_id" class="form-control style-input" style="border-radius: 6px;">
+                                <option value="" selected disabled>-- Pilih Sekolah --</option>
+                                @foreach($listSekolah as $sekolah)
+                                    <option value="{{ $sekolah->id }}" data-bank="{{ $sekolah->bank_id }}">{{ $sekolah->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- SECTION 2: FIELD TAMBAHAN KHUSUS PROFILE SISWA --}}
+                    <div id="siswa-profile-group" class="d-none mt-3 pt-3" style="border-top: 1px dashed #e0e6ed;">
+                        <p class="mb-3" style="font-weight: 700; font-size: 14px; color: #1b55e2; text-transform: uppercase; letter-spacing: 0.5px;">Data Profil Siswa</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="email_pribadi" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Email Pribadi Siswa</label>
+                                <input type="email" id="email_pribadi" name="email_pribadi" class="form-control style-input" placeholder="siswa@example.com" style="border-radius: 6px;">
+                            </div>
+
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="nisn" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">NISN <span class="text-danger">*</span></label>
+                                <input type="text" id="nisn" name="nisn" class="form-control style-input" placeholder="Masukkan NISN" oninput="updateSiswaInfoPreview()" style="border-radius: 6px;">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="kelas" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Kelas</label>
+                                <input type="text" id="kelas" name="kelas" class="form-control style-input" placeholder="Contoh: XII RPL 1" style="border-radius: 6px;">
+                            </div>
+
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="jenis_kelamin" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Jenis Kelamin</label>
+                                <select id="jenis_kelamin" name="jenis_kelamin" class="form-control style-input" style="border-radius: 6px;">
+                                    <option value="" selected disabled>-- Pilih Jenis Kelamin --</option>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="no_telp" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">No. Telepon / WhatsApp</label>
+                                <input type="text" id="no_telp" name="no_telp" class="form-control style-input" placeholder="08xxxxxxxxxx" style="border-radius: 6px;">
+                            </div>
+
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="beasiswa" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Status Beasiswa</label>
+                                <select id="beasiswa" name="beasiswa" class="form-control style-input" style="border-radius: 6px;">
+                                    <option value="0">Tidak (Siswa Reguler)</option>
+                                    <option value="1">Ya (Penerima Beasiswa)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="alamat" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Alamat Rumah</label>
+                            <textarea id="alamat" name="alamat" class="form-control style-input" rows="2" placeholder="Masukkan alamat lengkap tempat tinggal" style="border-radius: 6px; resize: none;"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- Footer Modal --}}
+                <div class="modal-footer" style="border-top: 1px solid #f1f2f3; padding: 16px 24px;">
+                    <button type="button" class="btn btn-light" data-dismiss="modal" style="font-weight: 600; padding: 8px 20px; border-radius: 6px;">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="font-weight: 600; padding: 8px 24px; border-radius: 6px; background-color: #1b55e2; border-color: #1b55e2;">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {{-- Modal Import Excel Dinamis --}}
 <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -513,15 +568,25 @@
     let masaAktifGroup = document.getElementById('masa-aktif-group');
     let siswaProfileGroup = document.getElementById('siswa-profile-group');
     
+    // Element baru untuk kontrol visibilitas Akun & Info Siswa
+    let emailGroup = document.getElementById('email-group');
+    let passwordGroup = document.getElementById('password-group');
+    let siswaAccountInfo = document.getElementById('siswa-account-info');
+
     let emailInput = document.getElementById('email');
     let passwordInput = document.getElementById('password');
 
-    // Reset display & required attribute
+    // Reset display & required attribute (Default semua muncul)
     membershipGroup.classList.add('d-none');
     bankGroup.classList.add('d-none');
     sekolahGroup.classList.add('d-none');
     masaAktifGroup.classList.add('d-none');
     siswaProfileGroup.classList.add('d-none');
+    
+    // Tampilkan kembali group email & password, sembunyikan info akun siswa
+    emailGroup.classList.remove('d-none');
+    passwordGroup.classList.remove('d-none');
+    siswaAccountInfo.classList.add('d-none');
     
     // Kembalikan ke default enabled & required
     emailInput.disabled = false;
@@ -551,17 +616,26 @@
     } 
     else if (role == "6") { 
         siswaProfileGroup.classList.remove('d-none'); // Tampilkan profil siswa
+        siswaAccountInfo.classList.remove('d-none');  // Tampilkan kotak info generate otomatis
+        
         if(document.getElementById('nisn')) document.getElementById('nisn').required = true;
 
-        // MATIKAN INPUT EMAIL DAN PASSWORD (karena digenerate otomatis)
+        // HIDDEN INPUT EMAIL DAN PASSWORD
+        emailGroup.classList.add('d-none');
+        passwordGroup.classList.add('d-none');
+
+        // MATIKAN INPUT EMAIL DAN PASSWORD agar tidak ikut terkirim/tervalidasi browser secara mentah
         emailInput.disabled = true;
         emailInput.required = false;
-        emailInput.value = ""; // dikosongkan agar tidak membingungkan
+        emailInput.value = ""; 
         
         passwordInput.disabled = true;
         passwordInput.required = false;
         passwordInput.value = "";
         
+        // Panggil fungsi preview info akun biar langsung render format awal
+        updateSiswaInfoPreview();
+
         if (AUTH_EMAIL === 'cb@bankir.academy') {
             bankGroup.classList.remove('d-none');
             sekolahGroup.classList.remove('d-none');
@@ -574,31 +648,62 @@
     }
 }
 
-    // Fungsi menyaring daftar sekolah berdasarkan Bank yang dipilih (untuk pendaftaran Siswa oleh root)
-    function filterSekolahByBank() {
-        let selectedBankId = document.getElementById('bank_id').value;
-        let sekolahSelect = document.getElementById('sekolah_id');
-        let options = sekolahSelect.options;
+// Fungsi live-preview akun berdasarkan input NISN
+function updateSiswaInfoPreview() {
+    let nisnValue = document.getElementById('nisn').value;
+    let infoEmail = document.getElementById('info-email');
+    let infoPassword = document.getElementById('info-password');
 
-        // Reset pilihan sekolah ke default awal
-        sekolahSelect.value = "";
+    if(nisnValue.trim() !== "") {
+        infoEmail.innerText = nisnValue + "@gmail.com";
+        infoPassword.innerText = nisnValue + "Bankir!";
+    } else {
+        infoEmail.innerText = "[nisn]@gmail.com";
+        infoPassword.innerText = "[nisn]Bankir!";
+    }
+}
 
-        for (let i = 0; i < options.length; i++) {
-            let option = options[i];
-            let bankRelation = option.getAttribute('data-bank');
+// Fungsi Toggle Show/Hide Password dengan Icon Mata
+function togglePasswordVisibility() {
+    let passwordInput = document.getElementById('password');
+    let eyeIcon = document.getElementById('eye-icon');
 
-            if (option.value === "") continue; 
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        // Ganti ke icon eye-off (mata dicoret)
+        eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+    } else {
+        passwordInput.type = "password";
+        // Kembalikan ke icon eye biasa
+        eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    }
+}
 
-            if (bankRelation == selectedBankId) {
-                option.style.display = "block";
-            } else {
-                option.style.display = "none";
-            }
+// Fungsi menyaring daftar sekolah berdasarkan Bank yang dipilih (untuk pendaftaran Siswa oleh root)
+function filterSekolahByBank() {
+    let selectedBankId = document.getElementById('bank_id').value;
+    let sekolahSelect = document.getElementById('sekolah_id');
+    let options = sekolahSelect.options;
+
+    // Reset pilihan sekolah ke default awal
+    sekolahSelect.value = "";
+
+    for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        let bankRelation = option.getAttribute('data-bank');
+
+        if (option.value === "") continue; 
+
+        if (bankRelation == selectedBankId) {
+            option.style.display = "block";
+        } else {
+            option.style.display = "none";
         }
     }
+}
 
-    // Fungsi ketika tombol 'Tambah Pengguna' diklik
-    function resetForm() {
+// Fungsi ketika tombol 'Tambah Pengguna' diklik
+function resetForm() {
     // Reset Form ke mode Tambah (Create)
     document.getElementById('userModalLabel').innerText = "Tambah Pengguna";
     document.getElementById('userForm').action = "{{ route('users.store') }}";
@@ -607,6 +712,10 @@
     
     document.getElementById('password-help').classList.add('d-none');
     document.getElementById('password').required = true;
+    
+    // Pastikan type password di-reset kembali ke password tersembunyi
+    document.getElementById('password').type = "password";
+    document.getElementById('eye-icon').innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
     
     handleRoleChange();
 }

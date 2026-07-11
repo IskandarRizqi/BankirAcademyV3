@@ -9,6 +9,7 @@ use App\Models\Membership;
 use App\Models\SiswaProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -66,14 +67,21 @@ class UserController extends Controller
     {
         return view('users.create');
     }
+    public function profile()
+    {
+        // Mengambil data user yang sedang login beserta relasi siswanya jika ada
+        $user = Auth::user()->load('siswa');
+        
+        return view('compact.profile', compact('user'));
+    }
 
-    public function store(Request $request)
+  public function store(Request $request)
 {
     $authUser = auth()->user();
     $authRole = (int) $authUser->role;
     $authEmail = $authUser->email;
 
-    // 1. Validasi Dasar (Email & Password dikondisikan jika BUKAN siswa)
+    // 1. Validasi Dasar
     $rules = [
         'name' => 'required|string|max:255',
         'role' => 'required|integer',
@@ -87,9 +95,10 @@ class UserController extends Controller
         'no_telp' => 'nullable|string|max:20',
         'beasiswa' => 'nullable|integer|in:0,1,2',
         'alamat' => 'nullable|string',
+        'email_pribadi' => 'nullable|string|email|max:255', // Validasi baru untuk email data profil siswa
     ];
 
-    // Jika BUKAN siswa (Role 4 atau 5), email dan password wajib diisi manual
+    // Jika BUKAN siswa (Role 4 atau 5), email login dan password wajib diisi manual
     if ((int)$request->role !== 6) {
         $rules['email'] = 'required|string|email|max:255|unique:users|not_in:cb@bankir.academy';
         $rules['password'] = 'required|string|min:8';
@@ -124,17 +133,16 @@ class UserController extends Controller
         $sekolahId = $authUser->id;
     }
 
-    // 3. Logic Khusus Generate Data Siswa (Sama seperti Import)
+    // 3. Logic Khusus Generate Data Siswa
     $emailSiswa = $request->email;
     $passwordSiswa = $request->password;
     $beasiswaStatus = (int) $request->beasiswa ?? 0;
     $saldoAwalSiswa = 0;
 
-
     if ((int)$request->role === 6) {
         $nisn = trim($request->nisn);
-        $emailSiswa = $nisn . '@gmail.com';
-        $passwordSiswa = $nisn . 'Bankir!';
+        $emailSiswa = $nisn . '@gmail.com';         // Email untuk login ke tabel users
+        $passwordSiswa = $nisn . 'Bankir!';         // Password untuk login
 
         // Cek duplikat email/NISN manual sebelum insert
         $existingUser = User::where('email', $emailSiswa)->first();
@@ -143,11 +151,11 @@ class UserController extends Controller
         }
 
         // Tentukan status beasiswa otomatis berdasarkan yang menginput
-        if ($beasiswaStatus === 1) { // Jika di form dipilih beasiswa
+        if ($beasiswaStatus === 1) {
             if ($authEmail === 'cb@bankir.academy' || $authRole === 4) {
-                $beasiswaStatus = 1; // Langsung aktif
+                $beasiswaStatus = 1; 
             } else if ($authRole === 5) {
-                $beasiswaStatus = 2; // Pending jika sekolah yang input
+                $beasiswaStatus = 2; 
             }
         }
 
@@ -156,15 +164,13 @@ class UserController extends Controller
         if ($targetBank && $targetBank->membership_id) {
             $membership = $targetBank->membership;
             if ($membership) {
-                // Cek kuota umum
-                 $saldoAwalSiswa = $membership->saldo_siswa ?? 0;
+                $saldoAwalSiswa = $membership->saldo_siswa ?? 0;
                 if (!is_null($membership->limit_siswa)) {
                     $currentSiswaCount = User::where('role', 6)->where('sekolah_id', $sekolahId)->count();
                     if ($currentSiswaCount >= (int)$membership->limit_siswa) {
                         return redirect()->back()->withInput()->withErrors(['role' => 'Kuota maksimal siswa untuk sekolah ini (' . $membership->limit_siswa . ' siswa) sudah penuh.']);
                     }
                 }
-                // Cek kuota beasiswa (hanya jika statusnya langsung aktif / 1)
                 if ($beasiswaStatus === 1 && !is_null($membership->limit_beasiswa)) {
                     $currentBeasiswaCount = \App\Models\SiswaProfile::where('beasiswa', 1)
                         ->whereHas('user', function($query) use ($sekolahId) {
@@ -178,12 +184,12 @@ class UserController extends Controller
         }
     }
 
-    // 4. Mulai Transaksi Database agar aman
+    // 4. Mulai Transaksi Database
     DB::beginTransaction();
     try {
         $user = User::create([
             'name' => $request->name,
-            'email' => $emailSiswa,
+            'email' => $emailSiswa, // Menyimpan email generate jika role 6
             'role' => $request->role,
             'password' => Hash::make($passwordSiswa),
             'membership_id' => $request->role == 4 ? $request->membership_id : null,
@@ -201,9 +207,9 @@ class UserController extends Controller
                 'nisn' => trim($request->nisn),
                 'kelas' => $request->kelas,
                 'beasiswa' => $beasiswaStatus,
-                'alamat' => $request->alamat,
-                'email' => $request->email_pribadi, // simpan email asli jika diinput
-                'saldo' => $saldoAwalSiswa,
+                'alamat' => $request->alamat,               // Masuk ke field 'alamat' di siswa_profiles
+                'email' => $request->email_pribadi,         // Masuk ke field 'email' di siswa_profiles
+                'saldo' => $beasiswaStatus ? $saldoAwalSiswa : 0,
             ]);
         }
 

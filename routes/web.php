@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\CorporateController;
 use App\Http\Controllers\Backend\FeeController;
 use App\Http\Controllers\Backend\PrepotestController;
 use App\Http\Controllers\Backend\PromoController;
+use App\Http\Controllers\Beasiswa\CertificateController;
 use App\Http\Controllers\Beasiswa\KategoriController;
 use App\Http\Controllers\Beasiswa\MateriController;
 use App\Http\Controllers\Beasiswa\SiswaMateriController;
@@ -168,6 +169,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('materi', MateriController::class);
         Route::resource('sub-materi', SubMateriController::class);
         Route::resource('ppt', PrePostTestController::class);
+        Route::resource('certificate-templates', CertificateController::class);
+
+// Route User untuk Download Sertifikat secara dinamis
+
         Route::get('/activity', [ActivityLogController::class, 'index'])->name('activity.index');
         Route::resource('memberships', MembershipController::class)->except(['create', 'show', 'edit']);
     });
@@ -188,11 +193,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/siswa/materi/{materi_id}/report/{id}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
         Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
         Route::get('/manajemen/report/user/{user_id}/materi/{materi_id}', [SiswaMateriController::class, 'reportOlehManajemen'])->name('manajemen.siswa.report');
+        Route::get('/siswa/materi/{materi_id}/sertifikat/{id}/download', [SiswaMateriController::class, 'downloadSertifikat'])->name('siswa.materi.sertifikat.download');
         // Route::get('/materi-umum', [SiswaMateriController::class, 'kompetensiUmum'])->name('materi.umum');
+        Route::get('/sertifikat', [SiswaMateriController::class, 'listSertifikat'])->name('sertifikat');
         Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
+        Route::get('/userprofile', [UserController::class, 'profile'])->name('profiless.index');
         Route::get('/materi-umum', [SiswaMateriController::class, 'umumIndex'])->name('siswa.umum.index');
+        Route::get('/lowongan', [MembershipController::class, 'loker'])->name('lowongan');
+        Route::get('/lowongan/{id}', [MembershipController::class, 'detil_loker'])->name('lowongan.show');
         Route::post('/materi-umum/ikuti/{sub_materi_id}', [SiswaMateriController::class, 'ikutiPelatihan'])->name('siswa.umum.ikuti');
         Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
+        Route::get('download-certificate/materi/{id}', [CertificateController::class, 'downloadMateriCertificate'])->name('materi.sertifikat');
+Route::get('download-certificate/sub-materi/{id}', [CertificateController::class, 'downloadSubMateriCertificate'])->name('umum.sertifikat');
         Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');

@@ -381,129 +381,231 @@
         /* @stack('styles') */
     </style>
     <style>
-    /* Mengikuti design token layout admin: --primary #4F46E5, --primary-soft #EEF0FE,
-       --border #E7E9F0, --radius-lg 16px, --radius-md 12px, --shadow-sm/--shadow-md */
-
     .lms-banner {
-        background: linear-gradient(135deg, #4F46E5 0%, #6C63FF 100%);
-        border-radius: 16px;
-        color: white;
-        padding: 50px 30px;
-        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.18);
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+    }
+    .custom-filter-card {
+        border-radius: 16px; 
+        border: none; 
+        box-shadow: 0 4px 18px rgba(0,0,0,0.03);
+        background: #ffffff;
+    }
+    .form-control-custom {
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-control-custom:focus {
+        border-color: #4F46E5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    .btn-custom {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        transition: all 0.2s;
+    }
+    .btn-custom:hover {
+        transform: translateY(-1px);
+    }
+    .category-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1E293B;
+        background: #F1F5F9;
+        padding: 6px 16px;
+        border-radius: 30px;
+    }
+    
+    /* 📱 RESPONSIVE HORIZONTAL SCROLL UNTUK MOBILE (SMARTPHONE) */
+    @media (max-width: 767.98px) {
+        .horizontal-scroll-mobile {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 15px;
+            padding-left: 4px;
+            margin-right: -15px; /* Trik agar scroll bisa mentok ke kanan layar */
+            -webkit-overflow-scrolling: touch;
+        }
+        .horizontal-scroll-mobile::-webkit-scrollbar {
+            height: 5px;
+        }
+        .horizontal-scroll-mobile::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 10px;
+        }
+        .card-item-responsive {
+            flex: 0 0 82%; /* Menampilkan 1 card penuh dan potongan card berikutnya sebagai petunjuk visual */
+            scroll-snap-align: start;
+            margin-right: 7px;
+        }
     }
 
-    .category-badge {
-        background: #EEF0FE;
-        color: #4F46E5;
-        font-weight: 700;
-        font-size: 13px;
-        padding: 6px 16px;
+    /* 💻 GRID UNTUK LAPTOP & DESKTOP */
+    @media (min-width: 768px) {
+        .card-item-responsive {
+            margin-bottom: 30px;
+        }
+    }
+
+    .course-card-upgrade {
+        border: 1px solid #F1F5F9;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+    .course-card-upgrade:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        border-color: #E2E8F0;
+    }
+    .badge-premium {
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(4px);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+     /* Custom style tambahan untuk aura Gen Z & Clean look */
+    .profile-banner {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
         border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .profile-avatar-wrapper {
+        position: relative;
+        margin-top: -60px;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 30px;
+        border: 5px solid #ffffff;
+        object-fit: cover;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .glass-card:hover {
+        transform: translateY(-2px);
+    }
+    .info-badge {
+        background: #F1F5F9;
+        color: #334155;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 6px 14px;
+        border-radius: 12px;
         display: inline-block;
     }
-
-    .course-card {
-        border: 1px solid #E7E9F0;
+    .wallet-card {
+        background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+        color: #fff;
+        border-radius: 20px;
+    }
+        .job-banner {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(241, 245, 249, 1);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px -5px rgba(124, 58, 237, 0.1) !important;
+    }
+    .info-badge {
+        background: #F1F5F9;
+        color: #334155;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 6px 14px;
         border-radius: 12px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+        display: inline-block;
     }
-
-    .course-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 24px -6px rgba(16, 24, 40, 0.12);
-        border-color: #C7C2FB;
+    .coming-soon-overlay {
+        position: relative;
     }
-
-    .course-card .card-title {
-        color: #1B1F2A;
-    }
-
-    .course-card .text-muted {
-        color: #6B7280 !important;
-    }
-
-    .btn-primary {
-        background-color: #4F46E5;
-        border-color: #4F46E5;
-    }
-    .btn-primary:hover, .btn-primary:focus {
-        background-color: #3D33D8;
-        border-color: #3D33D8;
-    }
-
-    .btn-info {
-        background-color: #06B6D4;
-        border-color: #06B6D4;
-    }
-    .btn-info:hover, .btn-info:focus {
-        background-color: #0891A8;
-        border-color: #0891A8;
-    }
-
-    .empty-state-card {
-        border: 1px solid #E7E9F0 !important;
-        border-radius: 16px;
-        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05) !important;
-    }
-
-    /* Mengantisipasi jarak tombol jika menggunakan Bootstrap 4 yang belum ada fitur gap */
-    .button-group-responsive > a, .button-group-responsive > button {
-        margin-left: 4px;
-    }
-    @media (max-width: 575.98px) {
-        .button-group-responsive {
-            flex-direction: column;
-            width: 100%;
-            margin-top: 8px;
-        }
-        .button-group-responsive > a, .button-group-responsive > button {
-            margin-left: 0;
-            margin-top: 4px;
-            width: 100%;
-            text-align: center;
-        }
+    .coming-soon-overlay::after {
+        content: "COMING SOON 🚀";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(4px);
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #4F46E5;
+        letter-spacing: 2px;
+        z-index: 2;
+        text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+        border: 2px dashed #7C3AED;
     }
 </style>
 <style>
     body { background-color: #f1f5f9 !important; } 
-    .classroom-container { display: flex; min-height: calc(100vh - 65px); color: #334155; }
-    .player-area { flex: 3; padding: 2rem; background: #f1f5f9; overflow-y: auto; }
-    .sidebar-area { flex: 1; min-width: 360px; max-width: 420px; background: #ffffff; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; box-shadow: -2px 0 10px rgba(0,0,0,0.02); }
     
-    @media (max-width: 991px) {
-        .classroom-container { flex-direction: column; }
-        .sidebar-area { max-width: 100%; min-width: 100%; border-left: none; border-top: 1px solid #e2e8f0; max-height: 50vh; }
+    /* Media Player Responsiveness */
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    
+    .pdf-wrapper { width: 100%; height: 550px; max-height: 75vh; overflow: hidden; }
+
+    /* Custom Utilities for Fluid Typography and Elements */
+    .small-mobile-text { font-size: 0.95rem; }
+    .dynamic-h5 { font-size: 1.15rem; }
+    .btn-block-mobile { width: auto; }
+
+    /* Playlist active class override */
+    .playlist-active { background-color: #eff6ff !important; border-left: 4px solid #2563eb !important; font-weight: bold; }
+    .playlist-item { border-left: 4px solid transparent; transition: all 0.2s ease; }
+    .playlist-item:hover { background: #f1f5f9; text-decoration: none; }
+
+    .style-media-link:hover { background-color: #f1f5f9; text-decoration: none; }
+
+    /* Sticky Sidebar configuration for large screens */
+    @media (min-width: 992px) {
+        .sticky-sidebar { position: -webkit-sticky; position: sticky; top: 24px; z-index: 10; }
+        .sidebar-content { max-height: 68vh; overflow-y: auto; }
     }
 
-    .media-holder { background: #ffffff; border-radius: 12px; padding: 10px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
-    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; }
-    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-    .pdf-wrapper { width: 100%; height: 650px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
-
-    .materi-info-card { background: #ffffff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .sidebar-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; background: #ffffff; }
-    .sidebar-content { overflow-y: auto; flex-grow: 1; }
-    .kurikulum-title { background: #f8fafc; color: #64748b; padding: 12px 20px; font-size: 0.8rem; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
-
-    .playlist-item { display: flex; align-items: center; padding: 18px 20px; color: #475569; border-bottom: 1px solid #f1f5f9; text-decoration: none; transition: all 0.2s ease; border-left: 4px solid transparent; }
-    .playlist-item:hover { background: #f1f5f9; color: #1e3a8a; text-decoration: none; }
-    .playlist-item.active { background: #eff6ff; color: #1e40af; font-weight: 600; border-left-color: #2563eb; }
-    
-    .soal-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 20px; background: #f8fafc; }
-    .opsi-label { display: block; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-    .opsi-label:hover { background: #f1f5f9; border-color: #94a3b8; }
-    .opsi-radio:checked + .opsi-text { font-weight: bold; color: #2563eb; }
-    .opsi-radio { margin-right: 10px; }
+    /* Target Device Mobile & Small Screen (< 768px) */
+    @media (max-width: 767.98px) {
+        .small-mobile-text { font-size: 0.85rem !important; }
+        .dynamic-h5 { font-size: 1rem !important; }
+        .btn-block-mobile { width: 100% !important; margin-bottom: 0.5rem; }
+        .pdf-wrapper { height: 380px !important; }
+        .opsi-label { padding: 10px 12px !important; }
+    }
 </style>
 <style>
     body { background-color: #f1f5f9 !important; }
     .report-container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
     
+    /* Utility Gap Helper (Dukungan Bootstrap lama jika belum ada .gap-*) */
+    .gap-2 { gap: 0.5rem; }
+    
     /* Card Header Styling */
-    .success-card { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; border-radius: 16px; padding: 2.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3); }
-    .failed-card { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); color: white; border-radius: 16px; padding: 2.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(220, 38, 220, 0.3); }
-    .pretest-card { background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%); color: white; border-radius: 16px; padding: 2.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3); }
+    .success-card { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; border-radius: 16px; padding: 2.5rem 1.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3); }
+    .failed-card { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); color: white; border-radius: 16px; padding: 2.5rem 1.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(220, 38, 220, 0.3); }
+    .pretest-card { background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%); color: white; border-radius: 16px; padding: 2.5rem 1.5rem; text-align: center; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3); }
     
     .score-badge { font-size: 3.5rem; font-weight: 800; background: rgba(255,255,255,0.2); display: inline-block; padding: 0.5rem 2rem; border-radius: 12px; margin: 1rem 0; }
     
@@ -513,8 +615,35 @@
     
     /* Review Questions Styling */
     .review-card { background: #ffffff; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .soal-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 15px; background: #f8fafc; position: relative; }
-    .status-badge { float: right; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+    .soal-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 15px; background: #f8fafc; }
+    .status-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; white-space: nowrap; }
+
+    /* Preview Sertifikat Standard Base */
+    .sertifikat-frame-preview { min-width: 650px; border-width: 2px !important; }
+    .cert-title { font-size: 1.8rem; }
+    .cert-desc { font-size: 0.85rem; }
+    .cert-text-body { font-size: 0.9rem; }
+    .cert-materi { font-size: 1.3rem; }
+    .cert-meta { font-size: 0.85rem; }
+
+    /* Media Query khusus untuk Perangkat Mobile */
+    @media (max-width: 576px) {
+        .report-container { margin: 0; padding: 0; }
+        .title-responsive { font-size: 1.4rem !important; }
+        .desc-responsive { font-size: 0.95rem !important; }
+        .score-badge { font-size: 2.5rem; padding: 0.3rem 1.5rem; }
+        .icon-header { font-size: 3rem !important; }
+        
+        .w-sm-100 { width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; }
+        .h5-sm { font-size: 1.15rem !important; }
+        .soal-box { padding: 15px; }
+        
+        /* Mengamankan Sertifikat agar tidak merusak layout screen utama */
+        .sertifikat-scroll-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; justify-content: flex-start !important; }
+        .sertifikat-frame-preview { min-width: 600px; }
+        .cert-title { font-size: 1.5rem; }
+        .cert-name { font-size: 1.3rem !important; min-width: 200px !important; }
+    }
 </style>
 <!-- Tambahan Style khusus untuk mempercantik UI Kuis & Playlist di Mobile -->
 <style>
@@ -611,6 +740,19 @@
                           radial-gradient(circle at 50%  100%, #fff 10%, white 11%, white 14%, #fff 14%, #fff 20%, white 20%, white 24%, transparent 24%);
         background-size: 40px 40px;
     }
+    .sertifikat-frame-preview {
+        width: 100%;
+        max-width: 750px;
+        border: 8px double #1e3a8a !important;
+        background-color: #fff;
+    }
+    .sertifikat-border {
+        border: 2px solid #b45309;
+        padding: 15px;
+    }
+    .sertifikat-content {
+        background-image: radial-gradient(circle, #fefefb 0%, #fbf9f1 100%);
+    }
     .thumbnail-icon {
         position: absolute;
         top: 50%;
@@ -663,6 +805,13 @@
         font-size: 14px;
     }
 </style>
+<style>
+    /* Tambahan style mikro agar UI terlihat jauh lebih elegan */
+    .spec-table th { background-color: #f8f9fa; color: #515365; font-weight: 700; border-top: none !important; }
+    .spec-table td { vertical-align: middle !important; }
+    .text-hover-underline:hover { text-decoration: underline !important; }
+    .custom-control-input:checked ~ .custom-control-label::before { background-color: #4361ee; border-color: #4361ee; }
+</style>
 </head>
 
 <body>
@@ -684,9 +833,9 @@
             ],
             [
                 'label' => 'Pre Post Test',
-                'icon' => 'zap',
+                'icon' => 'teacher',
                 'url' => '#dashboard',
-                'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*'),
+                'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*'),
                 'can_see' => $isRoot,
                 'has_submenu' => true,
                 'submenu_id' => 'dashboard',
@@ -700,7 +849,7 @@
                 'has_submenu' => false,
             ],
             [
-                'label' => 'Kompetensi 🌟',
+                'label' => 'Kompetensi ⚡',
                 'icon' => 'graduate',
                 'url' => '/pelatihan',
                 'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
@@ -724,6 +873,22 @@
                 'has_submenu' => false,
             ],
             [
+                'label' => 'Lowongan Kerja',
+                'icon' => 'bar-chart-2',
+                'url' => '/lowongan',
+                'active' => request()->routeIs('lowongan*'),
+                'can_see' => ($role == 6),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Sertifikat',
+                'icon' => 'sertificate',
+                'url' => '/sertifikat',
+                'active' => request()->routeIs('sertifikat*'),
+                'can_see' => ($role == 6),
+                'has_submenu' => false,
+            ],
+            [
                 'label' => 'Rekap Modul',
                 'icon' => 'bar-chart-2',
                 'url' => '/manajemen/laporan-siswa',
@@ -741,7 +906,7 @@
             ],
             [
                 'label' => 'Log Activity',
-                'icon' => 'zap',
+                'icon' => 'history',
                 'url' => route('activity.index'),
                 'active' => request()->routeIs('activity.*'),
                 'can_see' => $isRoot,
@@ -759,13 +924,14 @@
 
         $icons = [
             'home' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
-            'zap' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
-            'cpu' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>',
+            'zap' =>  '<i class="fas fa-id-card"></i>',
+            'cpu' => '<i class="fas fa-user-friends"></i>',
             'bar-chart-2' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
-            'graduate'=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M80 259.8L289.2 345.9C299 349.9 309.4 352 320 352C330.6 352 341 349.9 350.8 345.9L593.2 246.1C602.2 242.4 608 233.7 608 224C608 214.3 602.2 205.6 593.2 201.9L350.8 102.1C341 98.1 330.6 96 320 96C309.4 96 299 98.1 289.2 102.1L46.8 201.9C37.8 205.6 32 214.3 32 224L32 520C32 533.3 42.7 544 56 544C69.3 544 80 533.3 80 520L80 259.8zM128 331.5L128 448C128 501 214 544 320 544C426 544 512 501 512 448L512 331.4L369.1 390.3C353.5 396.7 336.9 400 320 400C303.1 400 286.5 396.7 270.9 390.3L128 331.4z"/></svg>',
-            'teacher'=> '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M192 384c53 0 96 43 96 96 0 17.7-14.3 32-32 32L32 512c-17.7 0-32-14.3-32-32 0-53 43-96 96-96l96 0zM544 32c35.3 0 64 28.7 64 64l0 288c0 33.1-25.2 60.4-57.5 63.7l-6.5 .3-211.1 0c-5.1-24.2-16.3-46.1-32.1-64l51.2 0 0-32c0-17.7 14.3-32 32-32l96 0c17.7 0 32 14.3 32 32l0 32 32 0 0-288-352 0 0 57.3c-14.8-6-31-9.3-48-9.3-5.4 0-10.8 .3-16 1l0-49c0-35.3 28.7-64 64-64l352 0zM144 352a80 80 0 1 1 0-160 80 80 0 1 1 0 160z"/></svg>',
-            'history'=> '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M288 64c106 0 192 86 192 192S394 448 288 448c-65.2 0-122.9-32.5-157.6-82.3-10.1-14.5-30.1-18-44.6-7.9s-18 30.1-7.9 44.6C124.1 468.6 201 512 288 512 429.4 512 544 397.4 544 256S429.4 0 288 0C202.3 0 126.5 42.1 80 106.7L80 80c0-17.7-14.3-32-32-32S16 62.3 16 80l0 112c0 17.7 14.3 32 32 32l24.6 0c.5 0 1 0 1.5 0l86 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-38.3 0C154.9 102.6 217 64 288 64zm24 88c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 104c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65 0-94.1z"/></svg>',
-            'dashboard' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M32 32c17.7 0 32 14.3 32 32l0 336c0 8.8 7.2 16 16 16l400 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L80 480c-44.2 0-80-35.8-80-80L0 64C0 46.3 14.3 32 32 32zM144 224c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32zm144-64l0 160c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-160c0-17.7 14.3-32 32-32s32 14.3 32 32zm80 32c17.7 0 32 14.3 32 32l0 96c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-96c0-17.7 14.3-32 32-32zM512 96l0 224c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-224c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg>'
+            'graduate'=>'<i class="fas fa-user-graduate"></i> <i class="fas fa-fire text-warning mr-1"></i>',
+            'teacher'=> '<i class="fas fa-book-open"></i>',
+            'history'=> '<i class="fas fa-history"></i>',
+            'dashboard' => '<i class="fas fa-chart-line"></i>',
+            'sertificate'=>'<i class="fas fa-award"></i>'
 
         ];
     @endphp
@@ -800,6 +966,7 @@
                                     <a class="sub-link {{ request()->is('materi*') ? 'active' : '' }}" href="/materi">Kompetensi</a>
                                     <a class="sub-link {{ request()->is('sub-materi*') ? 'active' : '' }}" href="/sub-materi">Materi</a>
                                     <a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}" href="/ppt">PPT</a>
+                                    <a class="sub-link {{ request()->is('certificate-templates*') ? 'active' : '' }}" href="/certificate-templates">Sertifikat</a>
                                 </div>
                             </div>
                         @else
@@ -854,7 +1021,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ url('user_profile') }}" class="menu-item">
+                        <a href="{{ url('userprofile') }}" class="menu-item">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                             <span>Profil Saya</span>
                         </a>

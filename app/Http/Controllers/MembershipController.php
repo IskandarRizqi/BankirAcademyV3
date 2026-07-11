@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Membership;
 use App\Http\Requests\MembershipRequest;
+use App\Models\LokerModel;
 use Illuminate\Support\Facades\Storage;
 
 class MembershipController extends Controller
@@ -66,5 +67,22 @@ class MembershipController extends Controller
         $membership->delete();
 
         return redirect()->back()->with('success', 'Membership berhasil dihapus!');
+    }
+    public function loker()
+    {
+        // Mengambil semua data loker yang aktif (sesuaikan status jika diperlukan)
+        $lokers = LokerModel::latest()->get();
+        
+        // Menghitung total lowongan
+        $totalLoker = $lokers->count();
+
+        return view('compact.loker', compact('lokers', 'totalLoker'));
+    }
+    public function detil_loker($id)
+    {
+        // Mencari loker berdasarkan ID, jika tidak ketemu akan memunculkan error 404
+        $loker = LokerModel::findOrFail($id);
+        
+        return view('compact.loker-detail', compact('loker'));
     }
 }

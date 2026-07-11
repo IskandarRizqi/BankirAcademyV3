@@ -1,8 +1,6 @@
 @extends('layouts.compact')
 
 @section('content')
-
-
 <div class="report-container">
 
     {{-- Alert Flash Session --}}
@@ -16,29 +14,29 @@
     {{-- Banner Status Utama Berdasarkan Skor Ujian Saat ini --}}
     @if($tipeQuiz == 0)
         <div class="pretest-card mb-4">
-            <div class="mb-3"><i class="fas fa-file-signature fa-4x text-white"></i></div>
+            <div class="mb-3"><i class="fas fa-file-signature fa-4x text-white icon-header"></i></div>
             
             @if($isManajemen)
-                <h1 class="font-weight-bold text-white">Laporan Hasil Pre-Test Siswa</h1>
-                <p class="lead mb-2 text-white">Rekapitulasi nilai evaluasi awal siswa pada modul <strong>{{ $materiAktif->nama }}</strong></p>
+                <h1 class="font-weight-bold text-white title-responsive">Laporan Hasil Pre-Test Siswa</h1>
+                <p class="lead mb-2 text-white desc-responsive">Rekapitulasi nilai evaluasi awal siswa pada modul <strong>{{ $materiAktif->nama }}</strong></p>
             @else
-                <h1 class="font-weight-bold text-white">Hasil Pre-Test Berhasil Disimpan</h1>
-                <p class="lead mb-2 text-white">Terima kasih telah menyelesaikan evaluasi awal untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                <h1 class="font-weight-bold text-white title-responsive">Hasil Pre-Test Berhasil Disimpan</h1>
+                <p class="lead mb-2 text-white desc-responsive">Terima kasih telah menyelesaikan evaluasi awal untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
             @endif
 
             <div class="score-badge">{{ round($progressAktif->nilai_awal) }}</div>
             
-            <div>
-                <span class="badge badge-pill badge-light text-warning font-weight-bold px-3 py-2">Jenis Evaluasi: Pre-Test</span>
+            <div class="mb-3">
+                <span class="badge badge-pill badge-light text-warning font-weight-bold px-3 py-2 text-wrap">Jenis Evaluasi: Pre-Test</span>
             </div>
 
-            <div class="mt-4">
+            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
                 @if($isManajemen)
-                    <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-white text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                    <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-white text-dark font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px; background:#fff;">
                         <i class="fas fa-arrow-left mr-2 text-primary"></i> Kembali ke Panel Laporan
                     </a>
                 @else
-                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}" class="btn btn-white text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}" class="btn btn-white text-dark font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px; background:#fff;">
                         <i class="fas fa-book-open mr-2 text-warning"></i> Mulai Belajar Materi
                     </a>
                 @endif
@@ -47,55 +45,69 @@
     @else
         @if($progressAktif->nilai_akhir >= 70)
             <div class="success-card mb-4">
-                <div class="mb-3"><i class="fas fa-trophy fa-4x text-warning"></i></div>
+                <div class="mb-3"><i class="fas fa-trophy fa-4x text-warning icon-header"></i></div>
                 
                 @if($isManajemen)
-                    <h1 class="font-weight-bold text-white">Laporan Hasil Post-Test (Lulus)</h1>
-                    <p class="lead mb-2 text-white">Siswa dinyatakan lulus pada modul <strong>{{ $materiAktif->nama }}</strong></p>
+                    <h1 class="font-weight-bold text-white title-responsive">Laporan Hasil Post-Test (Lulus)</h1>
+                    <p class="lead mb-2 text-white desc-responsive">Siswa dinyatakan lulus pada modul <strong>{{ $materiAktif->nama }}</strong></p>
                 @else
-                    <h1 class="font-weight-bold text-white">Selamat! Anda Lulus</h1>
-                    <p class="lead mb-2 text-white">Anda telah menyelesaikan Post-Test untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                    <h1 class="font-weight-bold text-white title-responsive">Selamat! Anda Lulus</h1>
+                    <p class="lead mb-2 text-white desc-responsive">Anda telah menyelesaikan Post-Test untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
                 @endif
 
                 <div class="score-badge">{{ round($progressAktif->nilai_akhir) }}</div>
-                <div>
-                    <span class="badge badge-pill badge-success px-3 py-2">Status: LULUS (KKM 70)</span>
+                <div class="mb-3">
+                    <span class="badge badge-pill badge-success px-3 py-2 text-wrap">Status: LULUS (KKM 70)</span>
                 </div>
-                <div class="mt-4">
+                
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
                     @if($isManajemen)
-                        <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 8px;">
+                        <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-warning font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px;">
                             <i class="fas fa-arrow-left mr-2"></i> Kembali ke Panel Laporan
                         </a>
                     @else
-                        <a href="{{ route('siswa.materi.index') }}" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 8px;">
+                        <a href="{{ route('siswa.materi.index') }}" class="btn btn-warning font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px;">
                             <i class="fas fa-th mr-2"></i> Kembali ke Katalog Materi
                         </a>
+                    @endif
+
+                    {{-- TOMBOL DOWNLOAD SERTIFIKAT DI PERTAHANKAN --}}
+                    @if($sertifikatMateri)
+                        @if($sertifikatMateri->target_type == 'sub_materi')
+                            <a href="{{ route('submateri.sertifikat', $sertifikatMateri->sub_materi_id) }}" class="btn btn-light text-primary font-weight-bold px-4 py-2 w-sm-100" style="border-radius:8px;">
+                                <i class="fas fa-download mr-2"></i> Unduh Sertifikat (PDF)
+                            </a>
+                        @else
+                            <a href="{{ route('materi.sertifikat', $materiAktif->id) }}" class="btn btn-light text-primary font-weight-bold px-4 py-2 w-sm-100" style="border-radius:8px;">
+                                <i class="fas fa-download mr-2"></i> Unduh Sertifikat (PDF)
+                            </a>
+                        @endif
                     @endif
                 </div>
             </div>
         @else
             <div class="failed-card mb-4">
-                <div class="mb-3"><i class="fas fa-times-circle fa-4x text-white"></i></div>
+                <div class="mb-3"><i class="fas fa-times-circle fa-4x text-white icon-header"></i></div>
                 
                 @if($isManajemen)
-                    <h1 class="font-weight-bold text-white">Laporan Hasil Post-Test (Belum Lulus)</h1>
-                    <p class="lead mb-2 text-white">Hasil evaluasi akhir siswa pada modul <strong>{{ $materiAktif->nama }}</strong></p>
+                    <h1 class="font-weight-bold text-white title-responsive">Laporan Hasil Post-Test (Belum Lulus)</h1>
+                    <p class="lead mb-2 text-white desc-responsive">Hasil evaluasi akhir siswa pada modul <strong>{{ $materiAktif->nama }}</strong></p>
                 @else
-                    <h1 class="font-weight-bold text-white">Belum Mencapai Batas Kelulusan</h1>
-                    <p class="lead mb-2 text-white">Hasil evaluasi akhir Anda untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
+                    <h1 class="font-weight-bold text-white title-responsive">Belum Mencapai Batas Kelulusan</h1>
+                    <p class="lead mb-2 text-white desc-responsive">Hasil evaluasi akhir Anda untuk kelas <strong>{{ $materiAktif->nama }}</strong></p>
                 @endif
 
                 <div class="score-badge">{{ round($progressAktif->nilai_akhir) }}</div>
-                <div>
-                    <span class="badge badge-pill badge-warning px-3 py-2">Status: TIDAK LULUS (KKM 70)</span>
+                <div class="mb-3">
+                    <span class="badge badge-pill badge-warning px-3 py-2 text-wrap">Status: TIDAK LULUS (KKM 70)</span>
                 </div>
-                <div class="mt-4">
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
                     @if($isManajemen)
-                        <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-light text-dark font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                        <a href="{{ route('manajemen.laporan.index') }}" class="btn btn-light text-dark font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px; background:#fff;">
                             <i class="fas fa-arrow-left mr-2 text-primary"></i> Kembali ke Panel Laporan
                         </a>
                     @else
-                        <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="btn btn-light text-danger font-weight-bold px-4 py-2" style="border-radius: 8px; background:#fff;">
+                        <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="btn btn-light text-danger font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px; background:#fff;">
                             <i class="fas fa-sync mr-2"></i> Coba Remedi Ujian Kembali
                         </a>
                     @endif
@@ -105,7 +117,7 @@
     @endif
 
     {{-- DASHBOARD RINGKASAN PERBANDINGAN NILAI --}}
-    <div class="summary-box">
+    <div class="summary-box mb-4">
         <h5 class="font-weight-bold text-dark mb-3">
             <i class="fas fa-chart-bar mr-2 text-info"></i> Ringkasan Evaluasi Modul
         </h5>
@@ -129,7 +141,7 @@
                         <h2 class="font-weight-bold mb-0 {{ $postTestRecord->nilai_akhir >= 70 ? 'text-success' : 'text-danger' }}">
                             {{ round($postTestRecord->nilai_akhir) }}
                         </h2>
-                        <span class="text-muted small">Percobaan Ke-{{ $postTestRecord->jml_jawaban }}</span>
+                        <span class="text-muted small">Percobaan Ke-{{ $postTestRecord->jml_jawaban ?? 1 }}</span>
                     @else
                         <h2 class="font-weight-bold text-muted mb-0">-</h2>
                         <span class="text-muted small">Belum Mengikuti Post-Test</span>
@@ -139,11 +151,9 @@
         </div>
     </div>
 
-    {{-- KOREKSI LEMBAR JAWABAN --}}
-    {{-- Khusus Manajemen, mereka BISA MELIHAT lembar jawaban walaupun siswa tersebut belum lulus --}}
     @if($tipeQuiz == 0 || ($tipeQuiz == 1 && $isLulus) || $isManajemen)
         <div class="review-card">
-            <h4 class="font-weight-bold text-dark mb-1">
+            <h4 class="font-weight-bold text-dark mb-1 h5-sm">
                 <i class="fas fa-poll-h mr-2 text-primary"></i> 
                 Analisis Jawaban - {{ $tipeQuiz == 0 ? 'Pre-Test' : 'Post-Test' }}
             </h4>
@@ -158,21 +168,22 @@
                         $isBenar = ($kunci === $jawabanSiswa);
                     @endphp
 
-                    <div class="soal-box">
-                        <div>
-                            @if($isBenar)
-                                <span class="status-badge bg-success text-white"><i class="fas fa-check-circle mr-1"></i> Benar</span>
-                            @else
-                                <span class="status-badge bg-danger text-white"><i class="fas fa-times-circle mr-1"></i> Salah</span>
-                            @endif
-                            
-                            <h6 class="font-weight-bold text-dark mb-3 pr-5" style="line-height: 1.5;">
+                    <div class="soal-box mb-3 p-3 border" style="border-radius: 8px;">
+                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-sm-between align-items-sm-start gap-2 mb-3">
+                            <h6 class="font-weight-bold text-dark mb-0 pr-sm-5" style="line-height: 1.5;">
                                 <span class="badge badge-secondary mr-2">{{ $index + 1 }}</span>
                                 {{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}
                             </h6>
+                            <div>
+                                @if($isBenar)
+                                    <span class="badge bg-success text-white px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Benar</span>
+                                @else
+                                    <span class="badge bg-danger text-white px-2 py-1"><i class="fas fa-times-circle mr-1"></i> Salah</span>
+                                @endif
+                            </div>
                         </div>
 
-                        <div class="mt-2 pl-4">
+                        <div class="mt-2 pl-sm-4">
                             @if(isset($item['opsi']) && is_array($item['opsi']))
                                 @foreach($item['opsi'] as $keyOpsi => $valOpsi)
                                     @php
@@ -193,12 +204,14 @@
                                             $icon = '<i class="fas fa-times-circle mr-2 text-danger"></i>';
                                         }
                                     @endphp
-                                    <div class="p-2 mb-1 border-bottom {{ $styleText }}" style="font-size:0.9rem; {{ $bgItem }}">
-                                        {!! $icon !!} <strong>{{ $keyOpsiUpper }}.</strong> {{ $valOpsi }}
-                                        
-                                        @if($keyOpsiUpper === $jawabanSiswa)
-                                            <span class="badge badge-light border text-muted ml-2 small font-weight-normal">(Jawaban Siswa)</span>
-                                        @endif
+                                    <div class="p-2 mb-1 border-bottom {{ $styleText }} d-flex align-items-start" style="font-size:0.9rem; {{ $bgItem }}">
+                                        <span class="mr-1">{!! $icon !!}</span>
+                                        <div class="text-wrap w-100">
+                                            <strong>{{ $keyOpsiUpper }}.</strong> {{ $valOpsi }}
+                                            @if($keyOpsiUpper === $jawabanSiswa)
+                                                <span class="badge badge-light border text-muted ml-1 small font-weight-normal d-inline-block mt-1 mt-sm-0">(Jawaban Siswa)</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 @endforeach
                             @endif
@@ -213,12 +226,11 @@
             @endif
         </div>
     @else
-        {{-- TAMPILAN JIKA SISWA BELUM LULUS POST-TEST --}}
         <div class="card mt-4 border-0 shadow-sm text-center py-5" style="border-radius: 12px; background: #fff;">
-            <div class="card-body">
+            <div class="card-body px-3">
                 <i class="fas fa-lock fa-3x text-muted mb-3"></i>
                 <h5 class="font-weight-bold text-dark">Analisis Jawaban Dikunci</h5>
-                <p class="text-muted container" style="max-width: 500px;">
+                <p class="text-muted container px-2" style="max-width: 500px;">
                     Maaf, detail lembar jawaban belum dapat ditampilkan karena nilai Anda masih di bawah batas kelulusan (**KKM 70**). Silakan pelajari kembali materi dan ikuti ujian remedi.
                 </p>
             </div>
@@ -226,5 +238,4 @@
     @endif
 
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 @endsection
