@@ -1,7 +1,7 @@
 @extends('layouts.compact')
 
 @section('content')
-<div class=" py-4" style="background-color: #f8fafc; min-height: 100vh;">
+<div class="py-4" style="background-color: #f8fafc; min-height: 100vh;">
     
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -9,7 +9,7 @@
                 <i class="fas fa-chart-line text-primary mr-2"></i> Monitor Pelatihan
             </h3>
             <p class="text-muted mb-0">
-                Akses manajemen data untuk Role: <span class="badge badge-primary text-uppercase px-2 py-1">{{ $role }}</span>
+                Akses manajemen data untuk Role: <span class="badge badge-primary text-uppercase px-2 py-1">{{ auth()->user()->role_name }}</span>
             </p>
         </div>
     </div>
@@ -79,11 +79,16 @@
         <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
                 <h5 class="font-weight-bold text-dark mb-0">
-                    <i class="fas {{ $role === 'root' ? 'fa-university text-info' : 'fa-school text-success' }} mr-2"></i>
-                    {{ $groupName }}
+                    @if($isRoot)
+                        <i class="fas fa-university text-info mr-2"></i> Grup Afiliasi Bank: <span class="text-info">{{ $groupName }}</span>
+                    @elseif($isBank)
+                        <i class="fas fa-school text-success mr-2"></i> Grup Instansi/Sekolah: <span class="text-success">{{ $groupName }}</span>
+                    @else
+                        <i class="fas fa-graduation-cap text-primary mr-2"></i> Data Siswa: <span class="text-primary">{{ $groupName }}</span>
+                    @endif
                 </h5>
                 <span class="badge badge-pill badge-light border text-muted px-3 py-1 font-weight-bold">
-                    {{ $items->count() }} Record Terdaftar
+                    {{ $items->count() }} Modul Aktif
                 </span>
             </div>
             
@@ -95,6 +100,9 @@
                                 <th width="5%" class="pl-4">No</th>
                                 <th>Nama Siswa</th>
                                 <th>Email</th>
+                                @if($isRoot)
+                                    <th>Asal Sekolah</th>
+                                @endif
                                 <th>Kategori Program</th>
                                 <th>Modul / Kelas yang Dipilih</th>
                                 <th width="20%" class="text-center pr-4">Aksi Laporan Test</th>
@@ -109,9 +117,17 @@
                                     <td class="pl-4 text-muted">{{ $index + 1 }}</td>
                                     <td>
                                         <div class="font-weight-bold text-dark">{{ $item->user->name ?? 'N/A' }}</div>
-                                        <!-- <small class="text-muted">ID User: #{{ $item->user_id }}</small> -->
                                     </td>
                                     <td>{{ $item->user->email ?? '-' }}</td>
+                                    
+                                    @if($isRoot)
+                                        <td>
+                                            <span class="text-secondary font-weight-bold">
+                                                <i class="fas fa-school text-muted mr-1 small"></i> {{ optional($item->user->sekolah)->name ?? '-' }}
+                                            </span>
+                                        </td>
+                                    @endif
+
                                     <td>
                                         @if($isBeasiswa)
                                             <span class="badge badge-warning text-dark font-weight-bold px-2 py-1" style="border-radius: 6px;">
@@ -157,7 +173,7 @@
         <div class="text-center py-5 bg-white shadow-sm border rounded" style="border-radius: 12px;">
             <i class="fas fa-box-open fa-3x text-muted mb-3 d-block"></i>
             <h5 class="text-secondary font-weight-bold">Belum Ada Rekapitulasi Data</h5>
-            <p class="text-muted small mb-0">Tidak ditemukan siswa aktif yang mengunci kelas saat ini.</p>
+            <p class="text-muted small mb-0">Tidak ditemukan data kelas aktif pada instansi terkait saat ini.</p>
         </div>
     @endif
 </div>

@@ -593,35 +593,66 @@ public function reportOlehManajemen($user_id, $materi_id)
 
 public function indexLaporanManajemen()
 {
-    $authCurrentUser = auth()->user(); // Mengambil user manajemen yang login
-    $role = $authCurrentUser->role;    // Role: 0 = Root, 4 = Bank (Berdasarkan model Anda)
+    $authCurrentUser = auth()->user();
+    $role = $authCurrentUser->role;
     $email = $authCurrentUser->email;
+    $userId = $authCurrentUser->id;
+
+    // Menentukan hak akses role terpilih
+    $isRoot = ($role == 4 && $email == 'cb@bankir.academy');
+    $isBank = ($role == 4 && $email != 'cb@bankir.academy');
+    $isSekolah = ($role == 5);
+
+    // Jika bukan salah satu dari 3 role di atas, batalkan akses
+    if (!$isRoot && !$isBank && !$isSekolah) {
+        abort(403, 'Anda tidak memiliki akses ke halaman rekapitulasi ini.');
+    }
+
+    // Base query dengan eager loading relasi user, profil siswa, bank, sekolah, dan materi
     $query = SiswaModulAktif::with(['user.siswa', 'user.bank', 'user.sekolah', 'materi']);
-    if ($role == 4 && $email != 'cb@bankir.academy') {
-        // Karena bank_id berada di tabel 'users', kita filter lewat relasi 'user'
-        $query->whereHas('user', function($q) use ($authCurrentUser) {
-            $q->where('bank_id', $authCurrentUser->id); // Menggunakan id dari bank yang sedang login
+
+    // Pola Filter Data Berdasarkan Role
+    if ($isBank) {
+        // Bank hanya melihat siswa yang terhubung dengan bank_id miliknya
+        $query->whereHas('user', function($q) use ($userId) {
+            $q->where('bank_id', $userId);
+        });
+    } elseif ($isSekolah) {
+        // Sekolah hanya melihat siswa yang terhubung dengan sekolah_id miliknya
+        $query->whereHas('user', function($q) use ($userId) {
+            $q->where('sekolah_id', $userId);
         });
     }
 
     $siswaModul = $query->get();
+
+    // Hitung statistik berdasarkan data yang sudah terfilter
     $stats = [
         'total_siswa_aktif'   => $siswaModul->unique('user_id')->count(),
         'total_modul_diikuti' => $siswaModul->unique('class_id')->count(),
         'total_beasiswa'      => $siswaModul->filter(fn($item) => optional($item->user->siswa)->beasiswa == 1)->unique('user_id')->count(),
         'total_non_beasiswa'  => $siswaModul->filter(fn($item) => optional($item->user->siswa)->beasiswa == 0)->unique('user_id')->count(),
     ];
-    if ($email == 'cb@bankir.academy' || $role == 0) {
+
+    // Pola Pengelompokan (Grouping) Tampilan Berdasarkan Role
+    if ($isRoot) {
+        // Root mengelompokkan berdasarkan Bank
         $siswaModulGrouped = $siswaModul->groupBy(function($item) {
             return optional($item->user->bank)->name ?? 'Tanpa Afiliasi Bank';
         });
-    } else {
+    } elseif ($isBank) {
+        // Bank mengelompokkan berdasarkan Sekolah
         $siswaModulGrouped = $siswaModul->groupBy(function($item) {
-            return optional($item->user->sekolah)->name ?? 'Sekolah Tidak Terdata'; 
+            return optional($item->user->sekolah)->name ?? 'Sekolah Tidak Terdata';
+        });
+    } else {
+        // Sekolah mengelompokkan langsung ke nama sekolahnya sendiri
+        $siswaModulGrouped = $siswaModul->groupBy(function($item) use ($authCurrentUser) {
+            return $authCurrentUser->name;
         });
     }
 
-    return view('compact.laporan-siswa', compact('siswaModulGrouped', 'stats', 'role'));
+    return view('compact.laporan-siswa', compact('siswaModulGrouped', 'stats', 'role', 'email', 'isRoot', 'isBank', 'isSekolah'));
 }
     private function parseYoutubeCode($url)
     {

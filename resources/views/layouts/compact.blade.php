@@ -805,6 +805,13 @@
         font-size: 14px;
     }
 </style>
+<style>
+    /* Tambahan style mikro agar UI terlihat jauh lebih elegan */
+    .spec-table th { background-color: #f8f9fa; color: #515365; font-weight: 700; border-top: none !important; }
+    .spec-table td { vertical-align: middle !important; }
+    .text-hover-underline:hover { text-decoration: underline !important; }
+    .custom-control-input:checked ~ .custom-control-label::before { background-color: #4361ee; border-color: #4361ee; }
+</style>
 </head>
 
 <body>
