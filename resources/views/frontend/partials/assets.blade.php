@@ -26,6 +26,7 @@
  <link rel="stylesheet" href="{{ asset('frontend/infixlmstheme/css/homepageV7/cta-v7.css') }}">
 
 
+
  @push('frontend-scripts')
  <script src="{{ asset('frontend/infixlmstheme/js/common8cc9.js') }}"></script>
  <script src="{{ asset('frontend/infixlmstheme/js/jquery.lazy.min.js') }}"></script>

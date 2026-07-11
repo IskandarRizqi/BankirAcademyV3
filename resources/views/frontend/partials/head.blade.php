@@ -49,6 +49,7 @@
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 	<title>Bankir Academy | Homepage</title>
 	<!-- <link rel="icon" href="uploads/settings/favicon8cc9.png?v=9.4.1" type="image/png" /> -->

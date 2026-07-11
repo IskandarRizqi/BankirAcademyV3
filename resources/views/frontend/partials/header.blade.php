@@ -273,14 +273,14 @@
                                     <input type="search" class="form-control" placeholder="Type here...">
                                 </div>
                             </div> -->
-										<a href="login.html"
+										<a href="authentikasi/login"
 											class="secondary-btn border-0 fw-normal d-none d-lg-inline-block">
 											Login
 										</a>
-										<a href="register.html"
+										<!-- <a href="register.html"
 											class="primary-btn border-0 fw-normal d-none d-lg-inline-block">
 											Sign Up
-										</a>
+										</a> -->
 										<button class="theme-btn thum-bar d-lg-none bg-danger" type="button"
 											data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop"
 											aria-controls="offcanvasTop">
@@ -339,7 +339,7 @@
 						</li>
 
 						<li class="mt-4 d-flex flex-wrap gap-3 align-items-center">
-							<a href="login.html" class="secondary-btn border-0">
+							<a href="authentikasi/login" class="secondary-btn border-0">
 								<svg width="17" height="20" viewBox="0 0 17 20" fill="none"
 									xmlns="http://www.w3.org/2000/svg">
 									<path
@@ -349,7 +349,7 @@
 								<span>Login</span>
 							</a>
 
-							<a href="register.html" class="primary-btn border-0">
+							<!-- <a href="register.html" class="primary-btn border-0">
 								<svg width="17" height="20" viewBox="0 0 17 20" fill="none"
 									xmlns="http://www.w3.org/2000/svg">
 									<path
@@ -357,7 +357,7 @@
 										fill="currentColor"></path>
 								</svg>
 								<span>Sign Up</span>
-							</a>
+							</a> -->
 						</li>
 					</ul>
 				</div>

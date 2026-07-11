@@ -917,4 +917,9 @@ class HomeController extends Controller
         }
         return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
     }
+
+    public function getlayoutauth()
+    {
+        return view('auth.login');
+    }
 }

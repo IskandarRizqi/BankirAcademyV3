@@ -171,7 +171,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('ppt', PrePostTestController::class);
         Route::resource('certificate-templates', CertificateController::class);
 
-// Route User untuk Download Sertifikat secara dinamis
+        // Route User untuk Download Sertifikat secara dinamis
 
         Route::get('/activity', [ActivityLogController::class, 'index'])->name('activity.index');
         Route::resource('memberships', MembershipController::class)->except(['create', 'show', 'edit']);
@@ -204,7 +204,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/materi-umum/ikuti/{sub_materi_id}', [SiswaMateriController::class, 'ikutiPelatihan'])->name('siswa.umum.ikuti');
         Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
         Route::get('download-certificate/materi/{id}', [CertificateController::class, 'downloadMateriCertificate'])->name('materi.sertifikat');
-Route::get('download-certificate/sub-materi/{id}', [CertificateController::class, 'downloadSubMateriCertificate'])->name('umum.sertifikat');
+        Route::get('download-certificate/sub-materi/{id}', [CertificateController::class, 'downloadSubMateriCertificate'])->name('umum.sertifikat');
         Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
@@ -270,3 +270,4 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
+Route::get('authentikasi/login', [App\Http\Controllers\Front\HomeController::class, 'getlayoutauth']);
