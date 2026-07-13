@@ -65,7 +65,7 @@
 									<li><a href="/pages/Banking-Solution">Layanan </a></li>
 									<li><a href="/promo">Promo </a></li>
 									<li><a href="/pages/blog">Literasi </a></li>
-									<li><a href="/kurikulum">Kurikulum </a></li>
+									<!-- <li><a href="/kurikulum">Kurikulum </a></li> -->
 									<li><a href="/loker">Loker Bankir </a></li>
 								</ul>
 							</div>

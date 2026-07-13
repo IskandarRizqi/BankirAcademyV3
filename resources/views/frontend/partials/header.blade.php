@@ -1,3 +1,8 @@
+		@php
+		$loginUrl = Auth::check()
+		? \App\Support\AuthRedirector::pathFor(Auth::user())
+		: url('/authentikasi/login');
+		@endphp
 		<div class="aoraeditor-skip aoraeditor-header">
 
 			<header class="heading" id="sticky-header">
@@ -6,7 +11,7 @@
 						<div class="col-12">
 							<div class="d-flex align-items-center justify-content-between">
 								<div class="d-flex align-items-center gap-3">
-									<a href="index.html" class="heading-logo d-block">
+									<a href="/" class="heading-logo d-block">
 										<img src="{{ asset('Bank-academy-logo-03.png')}}" class="home d-block" alt="Bankiracademy">
 									</a>
 									<div class="heading-category">
@@ -273,7 +278,7 @@
                                     <input type="search" class="form-control" placeholder="Type here...">
                                 </div>
                             </div> -->
-										<a href="authentikasi/login"
+										<a href="{{ $loginUrl }}"
 											class="secondary-btn border-0 fw-normal d-none d-lg-inline-block">
 											Login
 										</a>
@@ -297,7 +302,7 @@
 
 			<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
 				<div class="offcanvas-header d-flex justify-content-between">
-					<a href="index.html" class="heading-logo d-block">
+					<a href="/" class="heading-logo d-block">
 						<img src="{{ asset('Bank-academy-logo-03.png')}}" alt="Bankiracademy">
 					</a>
 					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
@@ -324,7 +329,7 @@
 							</ul>
 						</li>
 						<li class="heading-list   ">
-							<a class="heading-links" href="/list-class?jenis=bankir">Event</a>
+							<a class="heading-links" href="/list-class">Event</a>
 						</li>
 
 						<li class="heading-list   ">
@@ -339,7 +344,7 @@
 						</li>
 
 						<li class="mt-4 d-flex flex-wrap gap-3 align-items-center">
-							<a href="authentikasi/login" class="secondary-btn border-0">
+							<a href="{{ $loginUrl }}" class="secondary-btn border-0">
 								<svg width="17" height="20" viewBox="0 0 17 20" fill="none"
 									xmlns="http://www.w3.org/2000/svg">
 									<path
@@ -363,7 +368,7 @@
 				</div>
 			</div>
 
-			<div class="heading_icons">
+			<!-- <div class="heading_icons">
 				<ul class="d-flex align-items-center">
 					<li class="flex-grow-1 text-center"><a href="login.html">
 							<svg xmlns="http://www.w3.org/2000/svg" width="24.415" height="24" viewBox="0 0 24.415 24">
@@ -425,5 +430,5 @@
 							</svg>
 						</a></li>
 				</ul>
-			</div>
+			</div> -->
 		</div>

@@ -18,7 +18,7 @@
 												</ul>
 											</li>
 											<li class="heading-list   ">
-												<a class="heading-links" href="/list-class?jenis=bankir">Event</a>
+												<a class="heading-links" href="/list-class">Event</a>
 											</li>
 
 											<li class="heading-list   ">
