@@ -256,7 +256,6 @@ Route::post("/set-master-refferal", [App\Http\Controllers\Backend\RefferalContro
 // Route::get("/auth/{provider}/callback", [SocialiteController::class, "handleProviderCallback"]);
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProviderCallback'])->name('social.callback');
-Route::resource('profile', ProfileController::class)->middleware('auth');
 Route::get("/review-instructor", [App\Http\Controllers\Front\ProfileController::class, "review_instructor"]);
 Route::get("/instructor/{provider}", [App\Http\Controllers\Front\HomeController::class, "redirectToProvider"]);
 Route::get("/instructor/{provider}/callback", [App\Http\Controllers\Front\HomeController::class, "handleProviderCallback"]);

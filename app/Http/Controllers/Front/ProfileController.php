@@ -98,7 +98,7 @@ class ProfileController extends Controller
         foreach ($data['payment'] as $key => $value) {
             array_push($id_class, $value->class_id);
         }
-        
+
         $data['class'] = ClassPaymentModel::select(
             'class_payment.*',
             'class_participant.review',
@@ -161,94 +161,95 @@ class ProfileController extends Controller
     public function indexv2($request)
     {
         $auth_id = Auth::user()->id;
-        $data['user'] = User::where('id', $auth_id)->first();
-        $data['isperusahaan'] = GlobalHelper::isperusahaan();
-        $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
-            ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
-            ->where('user_profile.user_id', $auth_id)
-            ->first();
-        $data['billingkelasall'] = $this->getbillingkelas(100);
-        $data['getkelasanda'] = $this->getkelasanda(100);
-        $data['reff'] = RefferralPesertaModel::where('user_id', $auth_id)->first();
-        $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
-            ->join('users', 'users.id', 'referral.user_aplicator')
-            ->where('referral.user_aplicator', $auth_id)
-            ->get();
-        $data['reffdisabled'] = RefferralModel::select()
-            ->where('referral.user_aplicator', $auth_id)
-            ->first();
-        $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
-        $dompet = Dompet::where('user_id', $data['user']['id'])->first();
-        $data['saldo'] = $dompet->saldo ?? 0;
-        $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
-        $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
-        $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
-        $data['datalamaran'] = [];
-        $data['lamaran'] = [];
-        $data['loker'] = [];
-        $data['lokerskill'] = [];
-        $data['lokertype'] = [];
-        if ($data['isperusahaan']) {
-            $data['member'] = MembershipModel::orderBy('urutan', 'asc')
-                ->where('is_active', 1)
-                ->where('urutan', '>=', 4)
-                ->limit(3)
-                ->get();
-            $data['loker'] = LokerModel::where('user_id', Auth::user()->id)->get();
-            foreach ($data['loker'] as $key => $v) {
-                foreach (json_decode($v->type) as $key => $tipes) {
-                    if (!in_array($tipes, $data['lokertype'])) {
-                        array_push($data['lokertype'], $tipes);
-                    }
-                }
-                foreach (json_decode($v->skill) as $key => $skills) {
-                    if (!in_array($skills, $data['lokerskill'])) {
-                        array_push($data['lokerskill'], $skills);
-                    }
-                }
-            }
-        } else {
-            $data['member'] = MembershipModel::orderBy('urutan', 'asc')
-                ->where('is_active', 1)
-                ->where('urutan', '<', 4)
-                ->limit(3)
-                ->get();
-            $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
-            $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
-            $lokerid = []; // id loker yang pernah di apply
-            foreach ($data['lamaran'] as $key => $value) {
-                $value->tanggal_date = '';
-                if ($value->lamaran) {
-                    if ($value->lamaran->tanggal_akhir) {
-                        $d = Carbon::parse($value->lamaran->tanggal_akhir);
-                        $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
-                    }
-                }
-                if (!in_array($value->loker_id, $lokerid)) {
-                    array_push($lokerid, $value->loker_id);
-                }
-            }
-            $limitloker = 10;
-            $data['loker'] = LokerModel::select()
-                ->whereDate('tanggal_awal', '<=', Carbon::now())
-                ->whereDate('tanggal_akhir', '>=', Carbon::now())
-                ->whereNotIn('id', $lokerid)
-                ->limit($limitloker)
-                ->get();
-            $data['kelas'] = ClassesModel::select()
-                // ->where('date_end', '>=', $now->format('Y-m-d'))
-                ->where('status', 1)
-                ->orderBy('date_end', 'desc')
-                ->take(4)
-                ->get();
-        }
-        $data['ismember'] = GlobalHelper::getaksesmembership();
-        $data['historyMutasi'] = \App\Models\MutasiDompet::where('user_id', auth()->id())
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+        // $data['user'] = User::where('id', $auth_id)->first();
+        // $data['isperusahaan'] = GlobalHelper::isperusahaan();
+        // $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
+        //     ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
+        //     ->where('user_profile.user_id', $auth_id)
+        //     ->first();
+        // $data['billingkelasall'] = $this->getbillingkelas(100);
+        // $data['getkelasanda'] = $this->getkelasanda(100);
+        // $data['reff'] = RefferralPesertaModel::where('user_id', $auth_id)->first();
+        // $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
+        //     ->join('users', 'users.id', 'referral.user_aplicator')
+        //     ->where('referral.user_aplicator', $auth_id)
+        //     ->get();
+        // $data['reffdisabled'] = RefferralModel::select()
+        //     ->where('referral.user_aplicator', $auth_id)
+        //     ->first();
+        // $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
+        // $dompet = Dompet::where('user_id', $data['user']['id'])->first();
+        // $data['saldo'] = $dompet->saldo ?? 0;
+        // $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
+        // $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
+        // $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
+        // $data['datalamaran'] = [];
+        // $data['lamaran'] = [];
+        // $data['loker'] = [];
+        // $data['lokerskill'] = [];
+        // $data['lokertype'] = [];
+        // if ($data['isperusahaan']) {
+        //     $data['member'] = MembershipModel::orderBy('urutan', 'asc')
+        //         ->where('is_active', 1)
+        //         ->where('urutan', '>=', 4)
+        //         ->limit(3)
+        //         ->get();
+        //     $data['loker'] = LokerModel::where('user_id', Auth::user()->id)->get();
+        //     foreach ($data['loker'] as $key => $v) {
+        //         foreach (json_decode($v->type) as $key => $tipes) {
+        //             if (!in_array($tipes, $data['lokertype'])) {
+        //                 array_push($data['lokertype'], $tipes);
+        //             }
+        //         }
+        //         foreach (json_decode($v->skill) as $key => $skills) {
+        //             if (!in_array($skills, $data['lokerskill'])) {
+        //                 array_push($data['lokerskill'], $skills);
+        //             }
+        //         }
+        //     }
+        // } else {
+        //     $data['member'] = MembershipModel::orderBy('urutan', 'asc')
+        //         ->where('is_active', 1)
+        //         ->where('urutan', '<', 4)
+        //         ->limit(3)
+        //         ->get();
+        //     $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
+        //     $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
+        //     $lokerid = []; // id loker yang pernah di apply
+        //     foreach ($data['lamaran'] as $key => $value) {
+        //         $value->tanggal_date = '';
+        //         if ($value->lamaran) {
+        //             if ($value->lamaran->tanggal_akhir) {
+        //                 $d = Carbon::parse($value->lamaran->tanggal_akhir);
+        //                 $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
+        //             }
+        //         }
+        //         if (!in_array($value->loker_id, $lokerid)) {
+        //             array_push($lokerid, $value->loker_id);
+        //         }
+        //     }
+        //     $limitloker = 10;
+        //     $data['loker'] = LokerModel::select()
+        //         ->whereDate('tanggal_awal', '<=', Carbon::now())
+        //         ->whereDate('tanggal_akhir', '>=', Carbon::now())
+        //         ->whereNotIn('id', $lokerid)
+        //         ->limit($limitloker)
+        //         ->get();
+        //     $data['kelas'] = ClassesModel::select()
+        //         // ->where('date_end', '>=', $now->format('Y-m-d'))
+        //         ->where('status', 1)
+        //         ->orderBy('date_end', 'desc')
+        //         ->take(4)
+        //         ->get();
+        // }
+        // $data['ismember'] = GlobalHelper::getaksesmembership();
+        // $data['historyMutasi'] = \App\Models\MutasiDompet::where('user_id', auth()->id())
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
         // $data['ismember'] = false;
         // return $data;
-        return view('front.profilev2.index', $data);
+        // return view('front.profilev2.index', $data);
+        return view('membernonkeanggotaan.pages.dashboard.dashboardnonkeanggotaan');
     }
 
     public function getbillingkelas($type)
@@ -309,11 +310,11 @@ class ProfileController extends Controller
     }
 
     public function getkelasanda($type)
-{
-    // Mengambil tanggal hari ini dalam format Y-m-d
-    $now = Carbon::now()->format('Y-m-d');
-     $auth = Auth::user()->id;
-    $query = ClassPaymentModel::select(
+    {
+        // Mengambil tanggal hari ini dalam format Y-m-d
+        $now = Carbon::now()->format('Y-m-d');
+        $auth = Auth::user()->id;
+        $query = ClassPaymentModel::select(
             'class_payment.*',
             'classes.title',
             'classes.video',
@@ -330,39 +331,39 @@ class ProfileController extends Controller
             'classes.kategori',
             'classes.lokasi'
         )
-        ->join('classes', 'classes.id', 'class_payment.class_id')
-        ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
-        ->where('class_payment.user_id', Auth::user()->id)
-        ->where('class_payment.status', 1);
-    if ($type == 0) {
-        $query->where('classes.date_start', '<=', $now)
-              ->where('classes.date_end', '>=', $now);
-    } elseif ($type == 2) {
-        $query->where('classes.date_end', '<', $now);
-    } 
-    $data['sertifikat'] = SertifikatPesertaModel::with(['profile'])->where('user_id', $auth)->get();
-    $data['getkelasanda'] = $query->orderBy('class_payment.status', 'desc')
-        ->orderBy('class_payment.updated_at', 'desc')
-        ->get();
-
-    foreach ($data['getkelasanda'] as $key => $v) {
-        $v->events = ClassEventModel::where('class_id', $v->class_id)->get();
-        $v->files = ClassContentModel::where('class_id', $v->class_id)->get();
-
-        $class = ClassesModel::where('id', $v->class_id)->first();
-        if ($class && count($class->instructor_list) > 0) {
-            $v->narasumber = $class->instructor_list[0]->name;
-        } else {
-            $v->narasumber = null;
+            ->join('classes', 'classes.id', 'class_payment.class_id')
+            ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
+            ->where('class_payment.user_id', Auth::user()->id)
+            ->where('class_payment.status', 1);
+        if ($type == 0) {
+            $query->where('classes.date_start', '<=', $now)
+                ->where('classes.date_end', '>=', $now);
+        } elseif ($type == 2) {
+            $query->where('classes.date_end', '<', $now);
         }
+        $data['sertifikat'] = SertifikatPesertaModel::with(['profile'])->where('user_id', $auth)->get();
+        $data['getkelasanda'] = $query->orderBy('class_payment.status', 'desc')
+            ->orderBy('class_payment.updated_at', 'desc')
+            ->get();
+
+        foreach ($data['getkelasanda'] as $key => $v) {
+            $v->events = ClassEventModel::where('class_id', $v->class_id)->get();
+            $v->files = ClassContentModel::where('class_id', $v->class_id)->get();
+
+            $class = ClassesModel::where('id', $v->class_id)->first();
+            if ($class && count($class->instructor_list) > 0) {
+                $v->narasumber = $class->instructor_list[0]->name;
+            } else {
+                $v->narasumber = null;
+            }
+        }
+        // return $data['sertifikat'];
+        return response()->json([
+            'status' => 1,
+            'msg' => 'Data Success',
+            'data' => $data
+        ], 200);
     }
-// return $data['sertifikat'];
-    return response()->json([
-        'status' => 1,
-        'msg' => 'Data Success',
-        'data' => $data
-    ], 200);
-}
 
     /**
      * Show the form for creating a new resource.
