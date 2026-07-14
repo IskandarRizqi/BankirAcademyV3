@@ -8,25 +8,50 @@
 
 	<script>
 		// Sidebar toggle (desktop collapses content, mobile slides drawer)
-		const container = document.getElementById('container');
-		const toggleBtn = document.getElementById('sidebarToggle');
-		const overlay = document.getElementById('mobileOverlay');
+		(function() {
+			const container = document.getElementById('container');
+			const toggleBtn = document.getElementById('sidebarToggle');
+			const overlay = document.getElementById('mobileOverlay');
 
-		function isMobile() {
-			return window.innerWidth < 992;
-		}
-
-		toggleBtn.addEventListener('click', function() {
-			if (isMobile()) {
-				container.classList.toggle('sidebar-open');
-			} else {
-				container.classList.toggle('sidebar-closed');
+			if (!container || !toggleBtn || !overlay) {
+				return;
 			}
-		});
 
-		overlay.addEventListener('click', function() {
-			container.classList.remove('sidebar-open');
-		});
+			function isMobile() {
+				return window.innerWidth < 992;
+			}
+
+			function closeMobileSidebar() {
+				container.classList.remove('sidebar-open');
+			}
+
+			toggleBtn.addEventListener('click', function(event) {
+				event.preventDefault();
+
+				if (isMobile()) {
+					container.classList.toggle('sidebar-open');
+					return;
+				}
+
+				container.classList.toggle('sidebar-closed');
+			});
+
+			overlay.addEventListener('click', closeMobileSidebar);
+
+			document.querySelectorAll('.sidebar-nav a[href]:not([href="javascript:void(0);"])').forEach(function(link) {
+				link.addEventListener('click', function() {
+					if (isMobile()) {
+						closeMobileSidebar();
+					}
+				});
+			});
+
+			window.addEventListener('resize', function() {
+				if (!isMobile()) {
+					closeMobileSidebar();
+				}
+			});
+		})();
 
 		$(document).ready(function() {
 			if (typeof App !== 'undefined') {

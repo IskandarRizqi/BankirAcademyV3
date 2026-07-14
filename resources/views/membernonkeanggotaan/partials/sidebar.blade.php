@@ -57,10 +57,6 @@
 	];
 	@endphp
 
-	<div class="main-container" id="container">
-
-		<div class="mobile-overlay" id="mobileOverlay"></div>
-
 		<!-- SIDEBAR -->
 		<div class="sidebar-wrapper">
 			<div class="sidebar-brand">

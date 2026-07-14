@@ -43,6 +43,8 @@ Route::get('/admin/loker/getkecamatan/{id}', [BerandaLoker::class, 'getkecamatan
 Route::get('/admin/loker/getkelurahan/{id}', [BerandaLoker::class, 'getkelurahan']);
 
 Route::get("/promo", [HomeController::class, "showAllPromo"]);
+Route::get('/class/{unique_id}/{title}', [HomeController::class, 'detail_class']);
+
 
 Route::get('/template', function () {
 	return view('front.cvtemplate.cv');

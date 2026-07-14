@@ -227,7 +227,6 @@ Route::post('/order/send', [CheckoutController::class, 'store']);
 Route::get('/ordernopost', [App\Http\Controllers\Front\OrderController::class, 'order_class']);
 
 // Route::get('/index-custom', [App\Http\Controllers\Front\HomeController::class, 'index']);
-Route::get('/class/{unique_id}/{title}', [App\Http\Controllers\Front\HomeController::class, 'detail_class']);
 Route::post('/inputinstructor', [App\Http\Controllers\Front\HomeController::class, 'inputinstructor']);
 Route::get('/u-laman/{slug}', [App\Http\Controllers\Front\HomeController::class, 'laman']);
 Route::get('/all-laman', [App\Http\Controllers\Front\HomeController::class, 'getAllLaman']);
