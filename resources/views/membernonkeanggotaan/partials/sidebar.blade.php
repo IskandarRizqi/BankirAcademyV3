@@ -22,7 +22,7 @@
 	'has_submenu' => false,
 	],
 	[
-	'label' => 'Billing kelas',
+	'label' => 'Pembelian kelas',
 	'icon' => 'billing',
 	'url' => '/billing-kelas',
 	'active' => request()->is('billing-kelas'),
@@ -37,6 +37,14 @@
 	'can_see' => true,
 	'has_submenu' => false,
 	],
+	[
+	'label' => 'Sertifikat',
+	'icon' => 'sertifikat',
+	'url' => '/sertifikat',
+	'active' => request()->is('sertifikat-kelas'),
+	'can_see' => true,
+	'has_submenu' => false,
+	],
 	];
 
 	$icons = [
@@ -44,6 +52,7 @@
 	'event'=>'<i class="fas fa-chalkboard"></i>',
 	'billing'=>'<i class="fas fa-credit-card"></i>',
 	'kelas'=>'<i class="fas fa-address-book"></i>',
+	'sertifikat'=>'<i class="fas fa-medal"></i>',
 
 	];
 	@endphp

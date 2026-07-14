@@ -913,7 +913,7 @@ class HomeController extends Controller
         ]);
         if ($u) {
             Auth::login($u);
-            return Redirect::to('/profile')->with('success', 'Register Success!');
+            return Redirect::to('/dash-beranda')->with('success', 'Register Success!');
         }
         return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
     }

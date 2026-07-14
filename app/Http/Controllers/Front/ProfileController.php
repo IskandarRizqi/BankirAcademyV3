@@ -249,6 +249,7 @@ class ProfileController extends Controller
         // $data['ismember'] = false;
         // return $data;
         // return view('front.profilev2.index', $data);
+        // return Auth::user();
         return view('membernonkeanggotaan.pages.dashboard.dashboardnonkeanggotaan');
     }
 
