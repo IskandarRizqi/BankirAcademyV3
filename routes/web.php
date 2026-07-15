@@ -212,6 +212,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post("/payment-membership", [PaymentController::class, "paymentmembership"]);
+    Route::post("/payment-order-class", [PaymentController::class, "paymentorderclass"]);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

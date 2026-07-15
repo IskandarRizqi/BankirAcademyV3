@@ -9,6 +9,14 @@ class ClassPricingModel extends Model
 {
 	use HasFactory;
 	protected $table = 'class_pricing';
+
+	protected $casts = [
+		'price' => 'float',
+		'promo' => 'integer',
+		'promo_price' => 'float',
+		'gratis' => 'integer',
+	];
+
 	protected $fillable = [
 		'class_id',
 		'price',
@@ -20,4 +28,22 @@ class ClassPricingModel extends Model
 		'cashback_persen',
 		'cashback_nominal',
 	];
+
+	public function isFree(): bool
+	{
+		return (int) $this->gratis === 1;
+	}
+
+	public function effectivePrice(): float
+	{
+		if ($this->isFree()) {
+			return 0;
+		}
+
+		if ((int) $this->promo === 1) {
+			return max(0, (float) $this->price - (float) $this->promo_price);
+		}
+
+		return (float) $this->price;
+	}
 }

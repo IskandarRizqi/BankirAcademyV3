@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BiayaSertifikatModel;
+use App\Models\ClassesModel;
+use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\ClassPricingModel;
 use App\Models\CorporateRegistration;
@@ -23,163 +25,6 @@ use Inertia\Inertia;
 
 class CheckoutController extends Controller
 {
-    public function store(Request $request)
-    {
-        $auth = Auth::user()->id;
-        $number = ClassPaymentModel::select('unique_code')->where('expired', '<', now())->pluck('unique_code')->toArray();
-        do {
-            $randomNumber = rand(0, 999);
-        } while (in_array($randomNumber, $number));
-
-        $numbers = ClassPaymentModel::select('no_invoice')->pluck('no_invoice')->toArray();
-        do {
-            $no_invoice = "BANKIR-" . uniqid();
-        } while (in_array($no_invoice, $numbers));
-
-        $price = 0;
-        $price_final = 0;
-        $cp = ClassPricingModel::where('class_id', $request->class_id)->first();
-        $jmlpeserta = 1;
-        if ($request->jml_peserta != null || $request->jml_peserta > 1) {
-            $jmlpeserta = $request->jml_peserta;
-        }
-
-
-        if ($cp) {
-            $price = $cp->price;
-            $price_final = $price * $jmlpeserta;
-            if ($cp->promo == 1) {
-                $price = $cp->price - $cp->promo_price;
-                $price_final = $price * $jmlpeserta;
-            }
-        }
-        $data['payment']['sertifikat'] = 0;
-        if ($request->sertifikat_invoice > 0) {
-            $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
-            if ($s) {
-                $data['payment']['sertifikat'] = $s->nominal;
-                if ($s->type > 0) {
-                    $data['payment']['sertifikat'] = ($price_final * ($s->nominal / 100));
-                }
-            } else {
-                $data['payment']['sertifikat'] = 100000;
-            }
-        }
-        if ($cp->gratis == 1) {
-            $price_final = 0;
-        }
-        // return $data['payment']['sertifikat'];
-        if ($cp->gratis == 1 && $data['payment']['sertifikat'] === 0) {
-            $order = ClassPaymentModel::create([
-                'status' => 1,
-                'user_id' => $auth,
-                'class_id' => $request->class_id,
-                'unique_code' => $randomNumber,
-                'price' => $price,
-                'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
-                'price_final' => $price_final + $data['payment']['sertifikat'],
-                'expired' => date('Y-m-d') . ' 23:59:59',
-                'no_invoice' => $no_invoice,
-            ]);
-            $order->refresh();
-            SertifikatPesertaModel::create([
-                'user_id' => Auth::user()->id,
-                'class_id' => $request->class_id,
-                'payment_class_id' => $order->id,
-                'nama' => json_encode($request->nama),
-                'email' => json_encode($request->email),
-                'nohp' => json_encode($request->nomor_handphone)
-            ]);
-            return redirect('profile')->with('success_payment', 'Pendaftaran kelas berhasil! Kelas Anda telah aktif.');
-        } else {
-            $order = ClassPaymentModel::create([
-                'status' => 0,
-                'user_id' => $auth,
-                'class_id' => $request->class_id,
-                'unique_code' => $randomNumber,
-                'price' => $price,
-                'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
-                'price_final' => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
-                'expired' => date('Y-m-d') . ' 23:59:59',
-                'no_invoice' => $no_invoice,
-            ]);
-            $order->refresh();
-            SertifikatPesertaModel::create([
-                'user_id' => Auth::user()->id,
-                'class_id' => $request->class_id,
-                'payment_class_id' => $order->id,
-                'nama' => json_encode($request->nama),
-                'email' => json_encode($request->email),
-                'nohp' => json_encode($request->nomor_handphone)
-            ]);
-
-            $order->refresh();
-            $clientId = env('DOKU_CLIENT_ID');
-            $secretKey = env('DOKU_SECRET_KEY');
-            $timestamp = now()->toIso8601ZuluString();
-            $requestId = (string) Str::uuid();
-            $body = [
-                "order" => [
-                    "amount" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
-                    "invoice_number" => $no_invoice,
-                    "callback_url" => url('/profile'),
-                    "line_items" => [
-                        [
-                            "name" => "Pembayaran Kelas ",
-                            "price" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
-                            "quantity" => 1
-                        ]
-                    ]
-                ],
-                "customer" => [
-                    "name" => Auth::user()->name,
-                    "email" => Auth::user()->email,
-                ],
-                "payment" => [
-                    "payment_due_date" => 60
-                ],
-                "additional_info" => [
-                    "user_id" => $auth,
-                    "pembelian_tipe" => 2,
-                    "override_notification_url" => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
-                ]
-            ];
-            $jsonBody = json_encode($body);
-            $digest = base64_encode(hash('sha256', $jsonBody, true));
-            $rawSignature = "Client-Id:" . $clientId . "\n" .
-                "Request-Id:" . $requestId . "\n" .
-                "Request-Timestamp:" . $timestamp . "\n" .
-                "Request-Target:/checkout/v1/payment\n" .
-                "Digest:" . $digest;
-
-            $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
-
-            $response = Http::withHeaders([
-                'Client-Id' => $clientId,
-                'Request-Id' => $requestId,
-                'Request-Timestamp' => $timestamp,
-                'Signature' => "HMACSHA256=" . $signature,
-                'Content-Type' => 'application/json',
-            ])->post(env('DOKU_URL') . '/checkout/v1/payment', $body);
-
-            if ($response->successful()) {
-                $resData = $response->json();
-                $paymentUrl = $resData['response']['payment']['url'] ?? null;
-
-                if ($paymentUrl) {
-                    $order->update(['file' => $paymentUrl]);
-                    return redirect()->away($paymentUrl);
-                }
-            }
-
-            return response()->json([
-                'rc' => '05',
-                'msg' => 'Gagal menghubungi server pembayaran',
-                'error' => $response->body()
-            ], 500);
-        }
-    }
-
     public function handleDokuTransactionNotification(Request $request)
     {
         $invoiceNumber = $this->extractDokuInvoiceNumber($request);
@@ -378,7 +223,13 @@ class CheckoutController extends Controller
                 return ['status' => 422, 'message' => 'Invalid payment amount'];
             }
 
+            $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+
             if ((int) $order->status === 1) {
+                if ($dataPayment && (int) $dataPayment->status !== DataPayment::STATUS_PAID) {
+                    $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+                }
+
                 return ['status' => 200, 'message' => 'Payment already processed'];
             }
 
@@ -386,9 +237,53 @@ class CheckoutController extends Controller
                 return ['status' => 200, 'message' => 'Payment status ignored'];
             }
 
+            $class = ClassesModel::select('id', 'participant_limit')->whereKey($order->class_id)->lockForUpdate()->first();
+
+            if (!$class) {
+                return ['status' => 404, 'message' => 'Class not found'];
+            }
+
+            $participant = ClassParticipantModel::where('payment_id', $order->id)
+                ->where('user_id', $order->user_id)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$participant) {
+                $remainingQuota = ClassParticipantModel::remainingQuotaForClass($order->class_id, (int) $class->participant_limit);
+
+                if ($remainingQuota !== null && (int) $order->jumlah > $remainingQuota) {
+                    Log::warning('DOKU class payment rejected because quota is full', [
+                        'invoice' => $invoiceNumber,
+                        'class_id' => $order->class_id,
+                        'requested' => $order->jumlah,
+                        'remaining_quota' => $remainingQuota,
+                    ]);
+
+                    return ['status' => 409, 'message' => 'Class quota is full'];
+                }
+
+                ClassParticipantModel::create([
+                    'class_id' => $order->class_id,
+                    'user_id' => $order->user_id,
+                    'payment_id' => $order->id,
+                    'certificate' => (float) $order->biaya_sertifikat > 0 ? 1 : 0,
+                    'jumlah' => $order->jumlah,
+                ]);
+            } else {
+                $participant->update([
+                    'class_id' => $order->class_id,
+                    'certificate' => (float) $order->biaya_sertifikat > 0 ? 1 : (int) $participant->certificate,
+                    'jumlah' => $order->jumlah,
+                ]);
+            }
+
             $order->update([
                 'status' => 1,
             ]);
+
+            if ($dataPayment) {
+                $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+            }
 
             return ['status' => 200, 'message' => 'Class payment processed'];
         });

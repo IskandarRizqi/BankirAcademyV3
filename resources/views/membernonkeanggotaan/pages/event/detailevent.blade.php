@@ -252,12 +252,14 @@
 		justify-content: center;
 		min-height: 46px;
 		padding: 12px 18px;
+		border: 0;
 		border-radius: 999px;
 		background: #ffffff;
 		color: #312e81;
 		font-size: 13px;
 		font-weight: 950;
 		white-space: nowrap;
+		cursor: pointer;
 		box-shadow: 0 16px 28px rgba(15, 23, 42, .24);
 		transition: transform .18s ease, box-shadow .18s ease;
 	}
@@ -484,11 +486,13 @@
 		width: 100%;
 		min-height: 48px;
 		margin-top: 18px;
+		border: 0;
 		border-radius: 999px;
 		background: #ffffff;
 		color: #111827;
 		font-size: 14px;
 		font-weight: 950;
+		cursor: pointer;
 		box-shadow: 0 14px 28px rgba(0, 0, 0, .2);
 	}
 
@@ -630,13 +634,13 @@
 
 				<div class="event-price-strip">
 					<div>
-						<span class="event-price-label">Investasi kelas</span>
+						<span class="event-price-label">Harga kelas</span>
 						<span class="event-price-value">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
 						@if($promoPrice > 0 && $price > $finalPrice)
 						<span class="event-price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 						@endif
 					</div>
-					<a href="{{ url('/billing-kelas') }}" class="event-primary-cta">Daftar Kelas</a>
+					<button type="button" class="event-primary-cta" data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false">Daftar Kelas</button>
 				</div>
 			</div>
 		</div>
@@ -727,12 +731,12 @@
 
 		<aside class="event-side-stack" aria-label="Ringkasan kelas">
 			<section class="event-register-card">
-				<span class="event-register-card__label">Investasi kelas</span>
+				<span class="event-register-card__label">Harga kelas</span>
 				<span class="event-register-card__price">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
 				@if($promoPrice > 0 && $price > $finalPrice)
 				<span class="event-register-card__original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
-				<a href="{{ url('/billing-kelas') }}" class="event-register-button">Daftar / Beli Kelas</a>
+				<button type="button" class="event-register-button" data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false">Daftar / Beli Kelas</button>
 				<p class="event-register-note">Pastikan data profil Anda sudah lengkap sebelum melakukan pembelian atau pendaftaran kelas.</p>
 			</section>
 
@@ -771,4 +775,6 @@
 		</aside>
 	</div>
 </div>
+
+@include('membernonkeanggotaan.components.ui.event-registration-modal', ['class' => $class, 'modalId' => 'eventRegistrationModal'])
 @endsection

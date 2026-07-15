@@ -19,4 +19,25 @@ class ClassParticipantModel extends Model
 		'review_time',
 		'jumlah',
 	];
+
+	public static function totalRegisteredForClass(int $classId): int
+	{
+		return (int) static::where('class_id', $classId)->sum('jumlah');
+	}
+
+	public static function remainingQuotaForClass(int $classId, ?int $participantLimit): ?int
+	{
+		if (!$participantLimit || $participantLimit < 1) {
+			return null;
+		}
+
+		return max(0, $participantLimit - static::totalRegisteredForClass($classId));
+	}
+
+	public static function hasAvailableQuota(int $classId, int $requestedParticipants, ?int $participantLimit): bool
+	{
+		$remainingQuota = static::remainingQuotaForClass($classId, $participantLimit);
+
+		return $remainingQuota === null || $requestedParticipants <= $remainingQuota;
+	}
 }
