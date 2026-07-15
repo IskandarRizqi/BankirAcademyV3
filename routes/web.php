@@ -19,6 +19,7 @@ use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrePostTestController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
@@ -209,6 +210,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
     });
+
+    Route::post("/payment-membership", [PaymentController::class, "paymentmembership"]);
 });
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);

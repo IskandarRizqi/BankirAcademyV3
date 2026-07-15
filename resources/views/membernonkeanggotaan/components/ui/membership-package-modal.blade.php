@@ -239,6 +239,16 @@
 </style>
 @endonce
 
+@php
+$nominal = 3000000;
+$userid = Auth::user()->id;
+$statuspaymentmembership = 2;
+$qty = 1;
+$pembelian = 'Membership';
+$keterangan = 'Membership perusahaan';
+$pembeliantipe = 1;
+@endphp
+
 <div class="modal fade membership-package-modal" id="membershipPackageModal" tabindex="-1" role="dialog" aria-labelledby="membershipPackageModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		<div class="modal-content">
@@ -407,8 +417,17 @@
 							<li class="membership-package-card__note">Biaya Pelatihan IHT (In House Training) <del>Rp350.000,-</del> <strong>Rp200.000,-</strong></li>
 							<li class="membership-package-card__note">Biaya Video Pembelajaran (On-Demand Video Course) <del>Rp200.000,-</del> <strong>Rp150.000,-</strong></li>
 						</ul>
-
-						<a href="" class="membership-package-card__action">Berlangganan sekarang</a>
+						<form action="/payment-membership" method="post">
+							<input type="hidden" name="nominal" value="{{$nominal}}">
+							<input type="hidden" name="user_id" value="{{ $userid }}">
+							<input type="hidden" name="status_membership" value="{{$statuspaymentmembership}}">
+							<input type="hidden" name="qty" value="{{$qty}}">
+							<input type="hidden" name="pembelian" value="{{$pembelian}}">
+							<input type="hidden" name="keterangan" value="{{$keterangan}}">
+							<input type="hidden" name="pembelian_tipe" value="{{$pembeliantipe}}">
+							@csrf
+							<button type="submit" class="membership-package-card__action">Berlangganan sekarang</button>
+						</form>
 					</article>
 				</div>
 			</div>

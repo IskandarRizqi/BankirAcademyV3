@@ -6,6 +6,7 @@ use App\Models\BiayaSertifikatModel;
 use App\Models\ClassPaymentModel;
 use App\Models\ClassPricingModel;
 use App\Models\CorporateRegistration;
+use App\Models\DataPayment;
 use App\Models\DepositUsed;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -37,12 +38,12 @@ class CheckoutController extends Controller
         $price = 0;
         $price_final = 0;
         $cp = ClassPricingModel::where('class_id', $request->class_id)->first();
-        	$jmlpeserta = 1;
-		if ($request->jml_peserta != null || $request->jml_peserta > 1) {
-			$jmlpeserta = $request->jml_peserta;
-		}
-        
-        
+        $jmlpeserta = 1;
+        if ($request->jml_peserta != null || $request->jml_peserta > 1) {
+            $jmlpeserta = $request->jml_peserta;
+        }
+
+
         if ($cp) {
             $price = $cp->price;
             $price_final = $price * $jmlpeserta;
@@ -52,125 +53,138 @@ class CheckoutController extends Controller
             }
         }
         $data['payment']['sertifikat'] = 0;
-            if ($request->sertifikat_invoice > 0) {
-                        $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
-                        if ($s) {
-                            $data['payment']['sertifikat'] = $s->nominal;
-                            if ($s->type > 0) {
-                                $data['payment']['sertifikat'] = ($price_final * ($s->nominal / 100));
-                            }
-                        } else {
-                              $data['payment']['sertifikat'] = 100000;
-                        }
-		}
+        if ($request->sertifikat_invoice > 0) {
+            $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
+            if ($s) {
+                $data['payment']['sertifikat'] = $s->nominal;
+                if ($s->type > 0) {
+                    $data['payment']['sertifikat'] = ($price_final * ($s->nominal / 100));
+                }
+            } else {
+                $data['payment']['sertifikat'] = 100000;
+            }
+        }
         if ($cp->gratis == 1) {
             $price_final = 0;
         }
         // return $data['payment']['sertifikat'];
         if ($cp->gratis == 1 && $data['payment']['sertifikat'] === 0) {
-             $order = ClassPaymentModel::create([
-            'status' => 1,
-            'user_id' => $auth,
-            'class_id' => $request->class_id,
-            'unique_code' => $randomNumber,
-            'price' => $price,
-            'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
-            'price_final' => $price_final + $data['payment']['sertifikat'],
-            'expired' => date('Y-m-d') . ' 23:59:59',
-            'no_invoice' => $no_invoice,
-        ]);
-        $order->refresh();
-         SertifikatPesertaModel::create([
-				'user_id' => Auth::user()->id,
-				'class_id' => $request->class_id,
-				'payment_class_id' => $order->id,
-				'nama' => json_encode($request->nama),
-				'email' => json_encode($request->email),
-				'nohp' => json_encode($request->nomor_handphone)
-			]);
+            $order = ClassPaymentModel::create([
+                'status' => 1,
+                'user_id' => $auth,
+                'class_id' => $request->class_id,
+                'unique_code' => $randomNumber,
+                'price' => $price,
+                'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
+                'price_final' => $price_final + $data['payment']['sertifikat'],
+                'expired' => date('Y-m-d') . ' 23:59:59',
+                'no_invoice' => $no_invoice,
+            ]);
+            $order->refresh();
+            SertifikatPesertaModel::create([
+                'user_id' => Auth::user()->id,
+                'class_id' => $request->class_id,
+                'payment_class_id' => $order->id,
+                'nama' => json_encode($request->nama),
+                'email' => json_encode($request->email),
+                'nohp' => json_encode($request->nomor_handphone)
+            ]);
             return redirect('profile')->with('success_payment', 'Pendaftaran kelas berhasil! Kelas Anda telah aktif.');
         } else {
-        $order = ClassPaymentModel::create([
-            'status' => 0,
-            'user_id' => $auth,
-            'class_id' => $request->class_id,
-            'unique_code' => $randomNumber,
-            'price' => $price,
-            'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
-            'price_final' => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
-            'expired' => date('Y-m-d') . ' 23:59:59',
-            'no_invoice' => $no_invoice,
-        ]);
-        $order->refresh();
-        SertifikatPesertaModel::create([
-				'user_id' => Auth::user()->id,
-				'class_id' => $request->class_id,
-				'payment_class_id' => $order->id,
-				'nama' => json_encode($request->nama),
-				'email' => json_encode($request->email),
-				'nohp' => json_encode($request->nomor_handphone)
-			]);
+            $order = ClassPaymentModel::create([
+                'status' => 0,
+                'user_id' => $auth,
+                'class_id' => $request->class_id,
+                'unique_code' => $randomNumber,
+                'price' => $price,
+                'biaya_sertifikat' => $data['payment']['sertifikat'] * $jmlpeserta,
+                'price_final' => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
+                'expired' => date('Y-m-d') . ' 23:59:59',
+                'no_invoice' => $no_invoice,
+            ]);
+            $order->refresh();
+            SertifikatPesertaModel::create([
+                'user_id' => Auth::user()->id,
+                'class_id' => $request->class_id,
+                'payment_class_id' => $order->id,
+                'nama' => json_encode($request->nama),
+                'email' => json_encode($request->email),
+                'nohp' => json_encode($request->nomor_handphone)
+            ]);
 
-        $order->refresh();
-        $clientId = env('DOKU_CLIENT_ID');
-        $secretKey = env('DOKU_SECRET_KEY');
-        $timestamp = now()->toIso8601ZuluString();  
-        $requestId = (string) Str::uuid();
-        $body = [
-            "order" => [
-                "amount" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
-                "invoice_number" => $no_invoice,
-                "callback_url" => url('/profile'),
-                "line_items" => [
-                    [
-                        "name" => "Pembayaran Kelas ",
-                        "price" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
-                        "quantity" => 1
+            $order->refresh();
+            $clientId = env('DOKU_CLIENT_ID');
+            $secretKey = env('DOKU_SECRET_KEY');
+            $timestamp = now()->toIso8601ZuluString();
+            $requestId = (string) Str::uuid();
+            $body = [
+                "order" => [
+                    "amount" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
+                    "invoice_number" => $no_invoice,
+                    "callback_url" => url('/profile'),
+                    "line_items" => [
+                        [
+                            "name" => "Pembayaran Kelas ",
+                            "price" => $price_final + ($data['payment']['sertifikat'] * $jmlpeserta),
+                            "quantity" => 1
+                        ]
                     ]
+                ],
+                "customer" => [
+                    "name" => Auth::user()->name,
+                    "email" => Auth::user()->email,
+                ],
+                "payment" => [
+                    "payment_due_date" => 60
                 ]
-            ],
-            "customer" => [
-                "name" => Auth::user()->name,
-                "email" => Auth::user()->email,
-            ],
-            "payment" => [
-                "payment_due_date" => 60 
-            ]
-        ];
-        $jsonBody = json_encode($body);
-        $digest = base64_encode(hash('sha256', $jsonBody, true));
-        $rawSignature = "Client-Id:" . $clientId . "\n" .
-            "Request-Id:" . $requestId . "\n" .
-            "Request-Timestamp:" . $timestamp . "\n" .
-            "Request-Target:/checkout/v1/payment\n" .
-            "Digest:" . $digest;
+            ];
+            $jsonBody = json_encode($body);
+            $digest = base64_encode(hash('sha256', $jsonBody, true));
+            $rawSignature = "Client-Id:" . $clientId . "\n" .
+                "Request-Id:" . $requestId . "\n" .
+                "Request-Timestamp:" . $timestamp . "\n" .
+                "Request-Target:/checkout/v1/payment\n" .
+                "Digest:" . $digest;
 
-        $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+            $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
-        $response = Http::withHeaders([
-            'Client-Id' => $clientId,
-            'Request-Id' => $requestId,
-            'Request-Timestamp' => $timestamp,
-            'Signature' => "HMACSHA256=" . $signature,
-            'Content-Type' => 'application/json',
-        ])->post(env('DOKU_URL') . '/checkout/v1/payment', $body);
+            $response = Http::withHeaders([
+                'Client-Id' => $clientId,
+                'Request-Id' => $requestId,
+                'Request-Timestamp' => $timestamp,
+                'Signature' => "HMACSHA256=" . $signature,
+                'Content-Type' => 'application/json',
+            ])->post(env('DOKU_URL') . '/checkout/v1/payment', $body);
 
-        if ($response->successful()) {
-            $resData = $response->json();
-            $paymentUrl = $resData['response']['payment']['url'] ?? null;
+            if ($response->successful()) {
+                $resData = $response->json();
+                $paymentUrl = $resData['response']['payment']['url'] ?? null;
 
-            if ($paymentUrl) {
-                $order->update(['file' => $paymentUrl]);
-              return redirect()->away($paymentUrl);
+                if ($paymentUrl) {
+                    $order->update(['file' => $paymentUrl]);
+                    return redirect()->away($paymentUrl);
+                }
             }
-        }
 
-        return response()->json([
-            'rc' => '05',
-            'msg' => 'Gagal menghubungi server pembayaran',
-            'error' => $response->body()
-        ], 500);
+            return response()->json([
+                'rc' => '05',
+                'msg' => 'Gagal menghubungi server pembayaran',
+                'error' => $response->body()
+            ], 500);
         }
+    }
+
+    public function handleNotificationmembership(Request $request)
+    {
+        $datapayment = DataPayment::where('no_invoice', $request->invoice_number)->update([
+            'status' => 1
+        ]);
+        $datauserprofile = UserProfileModel::where('user_id', $request->user_id)->update([
+            'status_membership' => 1,
+            'masa_aktif_membership' => Carbon::now()->addYears(1),
+            'tanggal_bergabung_membership' => Carbon::now()->format('Y-m-d')
+        ]);
+        return response()->json(['message' => 'Webhook received successfully'], 200);
     }
     // public function uploadProof(Request $request)
     // {

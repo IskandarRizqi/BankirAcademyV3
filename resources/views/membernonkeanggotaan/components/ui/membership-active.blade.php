@@ -6,9 +6,9 @@ $memberName = data_get($profile, 'name') ?: data_get($user, 'name', 'Member');
 $memberType = data_get($membership, 'nama', 'Member');
 $memberId = data_get($profile, 'user_id') ?: data_get($user, 'id');
 $memberCode = $memberId ? 'BA-' . str_pad($memberId, 5, '0', STR_PAD_LEFT) : 'BA-00000';
-$avatar = $profile->picture ?: asset('GambarV2/rectangle31.png');
+$avatar = data_get($profile, 'picture') ?: asset('GambarV2/rectangle31.png');
 $activeUntil = data_get($profile, 'masa_aktif_membership');
-$joinedAt = data_get($user, 'created_at');
+$joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 @endphp
 
 @once
