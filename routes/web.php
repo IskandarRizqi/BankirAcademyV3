@@ -187,6 +187,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
         Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
+        Route::get('/cvats', function() {
+            return view('compact.cvats');
+        })->name('cvats');
         Route::post('/prepotes/savejawaban', [PrepotestController::class, 'savejawaban']);
     });
     Route::middleware(['role:4,5,6'])->group(function () {

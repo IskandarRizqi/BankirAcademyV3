@@ -158,7 +158,7 @@
                                     </a>
                                     @if($hasPrepostData)
                                         <a href="{{ route('siswa.materi.report.latest', $mat->id) }}" class="btn btn-info btn-sm px-2 ml-1 btn-custom" style="background: #0EA5E9; border: none; font-size: 12px;" title="Lihat Nilai">
-                                            <i class="fas fa-file-alt"></i>
+                                            <i class="fas fa-file-alt"></i> Nilai
                                         </a>
                                     @endif
                                 @else

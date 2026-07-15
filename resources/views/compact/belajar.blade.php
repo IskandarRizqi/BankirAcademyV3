@@ -188,7 +188,6 @@
                     
                     @foreach($materiAktif->subMateri as $index => $sub)
                         @php
-                            $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
                             $isLocked = false;
 
                             if (!$sudahTerkunci) {
@@ -197,9 +196,10 @@
                                 if ($statusBeasiswaSiswa == 1 && $preTest && (!$userProgress || is_null($userProgress->nilai_awal))) {
                                     $isLocked = true;
                                 }
+                                // Lock jika bab sebelumnya belum berstatus selesai di DB
                                 if ($index > 0) {
                                     $prevMateriValid = $materiAktif->subMateri[$index - 1];
-                                    if ($prevMateriValid && !in_array($prevMateriValid->id, $openedLessons)) {
+                                    if ($prevMateriValid && !in_array($prevMateriValid->id, $subMateriSelesaiIds)) {
                                         $isLocked = true;
                                     }
                                 }
@@ -223,7 +223,11 @@
                             <div class="p-3 {{ $isBabAktif ? 'bg-light border-left-primary' : '' }}" style="border-bottom: 1px solid #edf2f7;">
                                 <div class="d-flex align-items-center mb-2">
                                     <div class="mr-3 ml-1 flex-shrink-0">
-                                        <i class="fas {{ $sub->items->count() > 1 ? 'fa-boxes text-primary' : ($sub->items->first() && $sub->items->first()->tipe_link_item == 1 ? 'fa-file-alt text-success' : 'fa-play-circle text-danger') }}"></i>
+                                        @if(in_array($sub->id, $subMateriSelesaiIds))
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        @else
+                                            <i class="fas {{ $sub->items->count() > 1 ? 'fa-boxes text-primary' : ($sub->items->first() && $sub->items->first()->tipe_link_item == 1 ? 'fa-file-alt text-success' : 'fa-play-circle text-danger') }}"></i>
+                                        @endif
                                     </div>
                                     <div class="w-100 overflow-hidden">
                                         <span class="d-block text-muted mb-1 text-uppercase font-weight-bold" style="font-size: 0.65rem;">Materi {{ $index + 1 }}</span>
@@ -233,16 +237,47 @@
 
                                 @if($sub->items && $sub->items->count() > 0)
                                     <div class="mt-2 pl-2 ml-2" style="border-left: 2px solid #e2e8f0;">
-                                        @foreach($sub->items as $mediaItem)
+                                        @php
+                                            // Urutkan item agar sama dengan logika di controller
+                                            $sortedItems = $sub->items->sortBy('id');
+                                        @endphp
+                                        
+                                        @foreach($sortedItems as $itemIndex => $mediaItem)
                                             @php
                                                 $isMediaActive = ($itemAktif && $itemAktif->id == $mediaItem->id);
+                                                $isMediaCompleted = in_array($mediaItem->id, $itemSelesaiIds);
+                                                
+                                                // 💡 LOGIKA LOCK UNTUK ITEM: 
+                                                // Item akan dikunci jika bukan item pertama DAN item sebelumnya belum diselesaikan
+                                                $isItemLocked = false;
+                                                if ($itemIndex > 0) {
+                                                    $prevMediaItem = $sortedItems->values()->get($itemIndex - 1);
+                                                    if ($prevMediaItem && !in_array($prevMediaItem->id, $itemSelesaiIds)) {
+                                                        $isItemLocked = true;
+                                                    }
+                                                }
                                             @endphp
-                                            <a href="{{ route('siswa.materi.belajar', [$materiAktif->id, $sub->id]) }}?item_id={{ $mediaItem->id }}" 
-                                               class="d-flex align-items-center py-2 px-2 my-1 text-decoration-none small rounded style-media-link {{ $isMediaActive ? 'bg-primary text-white font-weight-bold shadow-sm' : 'text-secondary' }}"
-                                               style="font-size: 0.78rem;">
-                                                <i class="fas {{ $mediaItem->tipe_link_item == 0 ? 'fa-play-circle' : 'fa-file-pdf' }} mr-2 {{ $isMediaActive ? 'text-white' : 'text-muted' }} flex-shrink-0"></i>
-                                                <span class="text-truncate">{{ $mediaItem->judul_item }}</span>
-                                            </a>
+
+                                            @if($isItemLocked)
+                                                <div class="d-flex align-items-center py-2 px-2 my-1 text-muted small rounded" 
+                                                     style="font-size: 0.78rem; cursor: not-allowed; opacity: 0.6; background: #f8fafc;">
+                                                    <i class="fas fa-lock mr-2 text-secondary flex-shrink-0" style="font-size: 0.7rem;"></i>
+                                                    <span class="text-truncate">{{ $mediaItem->judul_item }}</span>
+                                                </div>
+                                            @else
+                                                <a href="{{ route('siswa.materi.belajar', [$materiAktif->id, $sub->id]) }}?item_id={{ $mediaItem->id }}" 
+                                                   class="d-flex align-items-center py-2 px-2 my-1 text-decoration-none small rounded style-media-link {{ $isMediaActive ? 'bg-primary text-white font-weight-bold shadow-sm' : 'text-secondary' }}"
+                                                   style="font-size: 0.78rem;">
+                                                    
+                                                    @if($isMediaCompleted && !$isMediaActive)
+                                                        <i class="fas fa-check text-success mr-2 flex-shrink-0"></i>
+                                                    @else
+                                                        <i class="fas {{ $mediaItem->tipe_link_item == 0 ? 'fa-play-circle' : 'fa-file-pdf' }} mr-2 {{ $isMediaActive ? 'text-white' : 'text-muted' }} flex-shrink-0"></i>
+                                                    @endif
+
+                                                    <span class="text-truncate">{{ $mediaItem->judul_item }}</span>
+                                                </a>
+                                            @endif
                                         @endforeach
                                     </div>
                                 @endif
@@ -252,8 +287,8 @@
 
                     @if($postTest && $statusBeasiswaSiswa == 1)
                         @php
-                            $openedLessons = session()->get("materi_progress_{$materiAktif->id}", []);
-                            $isPostTestLocked = !$sudahTerkunci || (count($openedLessons) < count($materiAktif->subMateri));
+                            // Validasi kelulusan post test: bandingkan total bab aktif dengan total bab yang complete di DB
+                            $isPostTestLocked = !$sudahTerkunci || (count(array_intersect($materiAktif->subMateri->pluck('id')->toArray(), $subMateriSelesaiIds)) < count($materiAktif->subMateri));
                         @endphp
 
                         @if($isPostTestLocked)

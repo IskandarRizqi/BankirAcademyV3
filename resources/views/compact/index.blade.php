@@ -194,7 +194,7 @@
                 <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #3b82f6 !important;">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Akumulasi Saldo Tabungan</span>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Akumulasi Kredit Siswa</span>
                             <h2 class="font-weight-extrabold text-primary mb-0" style="font-size: 1.6rem; font-weight: 800; margin-top: 5px;">Rp {{ number_format($total_tabungan_siswa, 0, ',', '.') }}</h2>
                         </div>
                         <div class="p-3 bg-soft-primary rounded-circle" style="background: rgba(59, 130, 246, 0.1);">
@@ -253,7 +253,7 @@
                 <div class="card border-0 shadow-sm text-white" style="border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Saldo Tabungan</span>
+                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1"></span>Kredit Siswa
                             <h2 class="font-weight-extrabold mb-0" style="font-size: 1.6rem; font-weight: 800; white-space: nowrap;">
                                 Rp {{ number_format($saldo_siswa, 0, ',', '.') }}
                             </h2>

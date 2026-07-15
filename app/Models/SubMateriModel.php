@@ -41,6 +41,12 @@ class SubMateriModel extends Model
     // Mengambil template certificate yang bertipe 'sub_materi'
     return $this->hasOne(CertificateTemplate::class, 'sub_materi_id')->where('target_type', 'sub_materi');
 }
+public function userProgress()
+{
+    return $this->hasOne(UserSubMateriProgress::class, 'id_sub_materi')
+                ->where('user_id', auth()->id()); // Mengambil data user yang sedang login
+}
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

@@ -108,7 +108,7 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
 {
     $userId = Auth::id();
 
-    // Ambil profil siswa dan status beasiswanya
+    // 1. Ambil profil siswa dan status beasiswanya
     $siswaProfile = auth()->user()->siswa; 
     $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
 
@@ -120,9 +120,6 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
         ->where('user_id', $userId)
         ->where('class_id', $materi_id)
         ->exists();
-
-    // 💡 DI SINI LOGIKA PROTESI $modulLain TELAH DIHAPUS 
-    // agar siswa bebas berpindah antar-modul yang sudah mereka beli.
 
     // 2. AMBIL DATA MATERI
     $materiAktif = MateriModel::with(['subMateri' => function($query) use ($allowedTipeSubMateri) {
@@ -146,9 +143,19 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
     $embedUrl = null;
     $quizAktif = null;
     
-    $openedLessons = session()->get("materi_progress_{$materi_id}", []);
+    // 💡 SKEMA BARU: Ambil ID Sub Materi & Items yang sudah sukses diselesaikan dari DB
+    $subMateriSelesaiIds = \App\Models\UserSubMateriProgress::where('user_id', $userId)
+        ->where('is_completed', true)
+        ->pluck('id_sub_materi')
+        ->toArray();
+
+    $itemSelesaiIds = \App\Models\UserSubMateriItemProgress::where('user_id', $userId)
+        ->where('is_completed', true)
+        ->pluck('id_sub_materi_item')
+        ->toArray();
+
     $totalSubMateri = $materiAktif->subMateri->count();
-    $semuaMateriSelesai = count($openedLessons) >= $totalSubMateri;
+    $semuaMateriSelesai = count(array_intersect($materiAktif->subMateri->pluck('id')->toArray(), $subMateriSelesaiIds)) >= $totalSubMateri;
 
     // Proteksi Test
     if (!$sudahTerkunci && ($contentType === 'pre' || $contentType === 'post')) {
@@ -202,38 +209,77 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
                     ->with('error', 'Anda tidak memiliki hak akses untuk mempelajari bab materi ini.');
             }
 
-            // 💡 PERBAIKAN URUTAN BAB: Ambil materi yang urutannya lebih kecil dari bab aktif
+            // 💡 PERBAIKAN URUTAN BAB: Bandingkan berdasarkan status penyelesaian di DB
             if ($sudahTerkunci && $listSubMateri->first() && $subMateriAktif->id !== $listSubMateri->first()->id) {
                 $materiSebelumnya = $listSubMateri->where('urutan', '<', $subMateriAktif->urutan);
                 
                 foreach ($materiSebelumnya as $prev) {
-                    if (!in_array($prev->id, $openedLessons)) {
+                    if (!in_array($prev->id, $subMateriSelesaiIds)) {
                         return redirect()->route('siswa.materi.belajar', [$materi_id, $prev->id])
                             ->with('info', 'Anda harus mempelajari materi ini secara berurutan.');
                     }
                 }
             }
 
-            // Simpan riwayat progress membaca
-            if ($sudahTerkunci && !in_array($subMateriAktif->id, $openedLessons)) {
-                $openedLessons[] = $subMateriAktif->id;
-                session()->put("materi_progress_{$materi_id}", $openedLessons);
-            }
-
             // ---- PILIH ITEM MEDIA ----
-            if ($subMateriAktif->items->count() > 0) {
+           if ($subMateriAktif->items->count() > 0) {
+                // Urutkan item berdasarkan urutan id atau kolom urutan jika ada (asumsi default urutan pembuatan/ID)
+                $listItems = $subMateriAktif->items->sortBy('id'); 
+
                 if ($itemIdAktif) {
-                    $itemAktif = $subMateriAktif->items->where('id', $itemIdAktif)->first();
+                    $itemAktif = $listItems->where('id', $itemIdAktif)->first();
                 }
                 if (!$itemAktif) {
-                    $itemAktif = $subMateriAktif->items->first();
+                    $itemAktif = $listItems->first();
                 }
 
                 if ($itemAktif) {
+                    // 💡 PROTEKSI ITEM INTERN: Siswa tidak boleh melompati item di dalam bab ini
+                    if ($sudahTerkunci && $itemAktif->id !== $listItems->first()->id) {
+                        // Ambil semua item sebelum item aktif saat ini
+                        $itemsSebelumnya = $listItems->where('id', '<', $itemAktif->id);
+                        
+                        foreach ($itemsSebelumnya as $prevItem) {
+                            if (!in_array($prevItem->id, $itemSelesaiIds)) {
+                                // Redirect ke item sebelumnya yang belum selesai
+                                return redirect()->route('siswa.materi.belajar', [$materi_id, $subMateriAktif->id])
+                                    ->with('item_id', $prevItem->id) // bawa item_id target lewat flash session atau query jika route mendukung
+                                    ->with('info', 'Anda harus menyelesaikan media pembelajaran ini secara berurutan.');
+                            }
+                        }
+                    }
+
+                    // Tentukan Embed URL
                     if ($itemAktif->tipe_link_item == 0) {
                         $embedUrl = $this->parseYoutubeCode($itemAktif->link_item);
                     } else if ($itemAktif->tipe_link_item == 1) {
                         $embedUrl = $this->parseGoogleDriveLink($itemAktif->link_item);
+                    }
+
+                    // 💡 SIMPAN PROGRESS ITEM & BAB KE DATABASE
+                    if ($sudahTerkunci) {
+                        \App\Models\UserSubMateriItemProgress::updateOrCreate(
+                            ['user_id' => $userId, 'id_sub_materi_item' => $itemAktif->id],
+                            ['is_completed' => true, 'completed_at' => now()]
+                        );
+                        if (!in_array($itemAktif->id, $itemSelesaiIds)) {
+                            $itemSelesaiIds[] = $itemAktif->id;
+                        }
+
+                        // Evaluasi Bab selesai
+                        $semuaItemBabIniSelesai = $subMateriAktif->items->every(function($item) use ($itemSelesaiIds) {
+                            return in_array($item->id, $itemSelesaiIds);
+                        });
+
+                        if ($semuaItemBabIniSelesai) {
+                            \App\Models\UserSubMateriProgress::updateOrCreate(
+                                ['user_id' => $userId, 'id_sub_materi' => $subMateriAktif->id],
+                                ['is_completed' => true, 'completed_at' => now()]
+                            );
+                            if (!in_array($subMateriAktif->id, $subMateriSelesaiIds)) {
+                                $subMateriSelesaiIds[] = $subMateriAktif->id;
+                            }
+                        }
                     }
                 }
             }
@@ -251,7 +297,9 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
         'quizAktif',
         'userProgress',
         'statusBeasiswaSiswa',
-        'sudahTerkunci'
+        'sudahTerkunci',
+        'subMateriSelesaiIds', // Dioper ke view
+        'itemSelesaiIds'        // Dioper ke view
     ));
 }
 

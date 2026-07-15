@@ -14,7 +14,7 @@ class UserRootSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'cb@bankir.academy'], // Unik parameter agar tidak duplikat jika dijalankan ulang
+            ['email' => 'cb@bankir.academy'], 
             [
                 'name' => 'CB Root',
                 'role' => 4,
