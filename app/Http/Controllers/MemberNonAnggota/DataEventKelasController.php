@@ -53,7 +53,9 @@ class DataEventKelasController extends Controller
 
     private function activeClassesQuery()
     {
-        return ClassesModel::query()->where('status', 1);
+        return ClassesModel::query()
+            ->where('status', 1)
+            ->whereYear('date_start', now()->year);
     }
 
     private function applySearch($query, string $search): void

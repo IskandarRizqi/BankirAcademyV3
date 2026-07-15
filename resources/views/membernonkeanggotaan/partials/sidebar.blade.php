@@ -60,7 +60,7 @@
 		<!-- SIDEBAR -->
 		<div class="sidebar-wrapper">
 			<div class="sidebar-brand">
-				<img src="{{ asset('assets/img/90x90.jpg') }}" alt="logo">
+				<img src="{{ asset('bankir-academy-icon.png') }}" alt="logo">
 				<span>Bankir Academy</span>
 			</div>
 

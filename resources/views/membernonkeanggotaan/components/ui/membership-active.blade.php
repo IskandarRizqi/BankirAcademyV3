@@ -6,7 +6,8 @@ $memberName = data_get($profile, 'name') ?: data_get($user, 'name', 'Member');
 $memberType = data_get($membership, 'nama', 'Member');
 $memberId = data_get($profile, 'user_id') ?: data_get($user, 'id');
 $memberCode = $memberId ? 'BA-' . str_pad($memberId, 5, '0', STR_PAD_LEFT) : 'BA-00000';
-$avatar = data_get($profile, 'picture') ?: asset('GambarV2/rectangle31.png');
+$avatar = \App\Helper\GlobalHelper::userProfilePictureUrl($profile);
+$avatarFallback = asset('assets/img/90x90.jpg');
 $activeUntil = data_get($profile, 'masa_aktif_membership');
 $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 @endphp
@@ -275,7 +276,7 @@ $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 		</div>
 
 		<div class="membership-active-card__body">
-			<img src="{{ $avatar }}" alt="Foto member {{ $memberName }}" class="membership-active-card__avatar" onerror="this.src='{{ asset('GambarV2/rectangle31.png') }}'">
+			<img src="{{ $avatar }}" alt="Foto member {{ $memberName }}" class="membership-active-card__avatar" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='{{ $avatarFallback }}'">
 			<div class="membership-active-card__info">
 				<h2 class="membership-active-card__name" id="membership-active-title">{{ $memberName }}</h2>
 				<div class="membership-active-card__tier-row">

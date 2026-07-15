@@ -18,6 +18,7 @@
 		1 => 'Online',
 	][(int) data_get($class, 'kategori')] ?? 'Kelas';
 	$startDate = data_get($class, 'date_start');
+	$endDate = data_get($class, 'date_end');
 	$courseTime = data_get($class, 'jam_acara');
 	$courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
 	$location = data_get($class, 'lokasi');
@@ -35,7 +36,46 @@
 		->implode(', ');
 	$plainDescription = trim(strip_tags((string) data_get($class, 'content', '')));
 	$locationLabel = $mode === 'Online' ? 'Online Meeting' : ($location ?: 'Lokasi menyusul');
-	$formattedDate = $startDate ? \Carbon\Carbon::parse($startDate)->translatedFormat('d-F-Y') : 'Fleksibel';
+	$shortMonths = [
+		1 => 'Jan',
+		2 => 'Feb',
+		3 => 'Mar',
+		4 => 'Apr',
+		5 => 'Mei',
+		6 => 'Jun',
+		7 => 'Jul',
+		8 => 'Agu',
+		9 => 'Sept',
+		10 => 'Okt',
+		11 => 'Nov',
+		12 => 'Des',
+	];
+	$formatCourseDate = function ($date, bool $withYear = true) use ($shortMonths) {
+		$date = \Carbon\Carbon::parse($date);
+
+		return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
+	};
+	$formattedDate = 'Fleksibel';
+	$courseStatus = 'Upcoming';
+	$courseStatusClass = 'upcoming';
+
+	if ($startDate && $endDate) {
+		$start = \Carbon\Carbon::parse($startDate);
+		$end = \Carbon\Carbon::parse($endDate);
+		$today = now()->startOfDay();
+		$formattedDate = $start->isSameMonth($end) && $start->isSameYear($end)
+			? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
+			: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
+
+		if ($today->betweenIncluded($start->copy()->startOfDay(), $end->copy()->endOfDay())) {
+			$courseStatus = 'Running';
+			$courseStatusClass = 'running';
+		}
+	} elseif ($startDate) {
+		$formattedDate = $formatCourseDate($startDate);
+	}
+
+	$isUpcoming = $courseStatus === 'Upcoming';
 @endphp
 
 <style>
@@ -129,6 +169,18 @@
 		backdrop-filter: blur(12px);
 	}
 
+	.event-pill--running {
+		border-color: rgba(34, 197, 94, .28);
+		background: rgba(220, 252, 231, .94);
+		color: #166534;
+	}
+
+	.event-pill--upcoming {
+		border-color: rgba(251, 146, 60, .3);
+		background: rgba(255, 247, 237, .94);
+		color: #c2410c;
+	}
+
 	.event-title-v2 {
 		max-width: 820px;
 		margin: 0;
@@ -178,6 +230,7 @@
 		font-size: 14px;
 		font-weight: 900;
 		line-height: 1.35;
+		overflow-wrap: break-word;
 	}
 
 	.event-hero-visual {
@@ -353,6 +406,7 @@
 		font-size: 15px;
 		font-weight: 900;
 		line-height: 1.45;
+		overflow-wrap: break-word;
 	}
 
 	.event-agenda-list {
@@ -595,6 +649,7 @@
 						<span class="event-pill">{{ $category }}</span>
 						<span class="event-pill">{{ $mode }}</span>
 						<span class="event-pill">{{ $level }}</span>
+						<span class="event-pill event-pill--{{ $courseStatusClass }}">{{ $courseStatus }}</span>
 						@if($jenis !== '')
 						<span class="event-pill">{{ $jenis }}</span>
 						@endif
@@ -608,7 +663,7 @@
 
 				<div class="event-hero-stats" aria-label="Ringkasan kelas">
 					<div class="event-stat-card">
-						<span class="event-stat-card__label">Tanggal</span>
+						<span class="event-stat-card__label">Pendaftaran</span>
 						<span class="event-stat-card__value">{{ $formattedDate }}</span>
 					</div>
 					<div class="event-stat-card">
@@ -640,7 +695,7 @@
 						<span class="event-price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 						@endif
 					</div>
-					<button type="button" class="event-primary-cta" data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false">Daftar Kelas</button>
+					<button type="button" class="event-primary-cta js-event-order-button" @unless($isUpcoming) data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false" @endunless data-course-status="{{ $courseStatus }}">Daftar Kelas</button>
 				</div>
 			</div>
 		</div>
@@ -668,7 +723,7 @@
 					<h2 class="event-section-title" id="event-info-title">Informasi praktis sebelum mengikuti kelas</h2>
 					<div class="event-highlight-grid">
 						<div class="event-highlight-card">
-							<span class="event-highlight-card__label">Tanggal</span>
+							<span class="event-highlight-card__label">Pendaftaran</span>
 							<span class="event-highlight-card__value">{{ $formattedDate }}</span>
 						</div>
 						<div class="event-highlight-card">
@@ -736,7 +791,7 @@
 				@if($promoPrice > 0 && $price > $finalPrice)
 				<span class="event-register-card__original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
-				<button type="button" class="event-register-button" data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false">Daftar / Beli Kelas</button>
+				<button type="button" class="event-register-button js-event-order-button" @unless($isUpcoming) data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false" @endunless data-course-status="{{ $courseStatus }}">Daftar / Beli Kelas</button>
 				<p class="event-register-note">Pastikan data profil Anda sudah lengkap sebelum melakukan pembelian atau pendaftaran kelas.</p>
 			</section>
 
@@ -777,4 +832,32 @@
 </div>
 
 @include('membernonkeanggotaan.components.ui.event-registration-modal', ['class' => $class, 'modalId' => 'eventRegistrationModal'])
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		document.querySelectorAll('.js-event-order-button').forEach(function(button) {
+			button.addEventListener('click', function(event) {
+				if (button.dataset.courseStatus !== 'Upcoming') {
+					return;
+				}
+
+				event.preventDefault();
+				event.stopPropagation();
+
+				if (window.Swal && typeof window.Swal.fire === 'function') {
+					window.Swal.fire({
+						icon: 'info',
+						title: 'Kelas masih upcoming',
+						text: 'Kelas ini belum dapat diorder karena periode pendaftaran belum berjalan.',
+						confirmButtonText: 'Mengerti'
+					});
+
+					return;
+				}
+
+				alert('Kelas ini belum dapat diorder karena masih upcoming.');
+			});
+		});
+	});
+</script>
 @endsection

@@ -14,6 +14,7 @@ $mode = [
 1 => 'Online',
 ][(int) data_get($course, 'kategori')] ?? 'Kelas';
 $startDate = data_get($course, 'date_start');
+$endDate = data_get($course, 'date_end');
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
 $pricing = data_get($course, 'pricing');
@@ -27,6 +28,44 @@ $image = $image ?: asset('assets/img/90x90.jpg');
 $detailUrl = data_get($course, 'unique_id')
 ? url('/detail-event/' . data_get($course, 'unique_id') . '/' . \Illuminate\Support\Str::slug($title))
 : 'javascript:void(0);';
+$shortMonths = [
+1 => 'Jan',
+2 => 'Feb',
+3 => 'Mar',
+4 => 'Apr',
+5 => 'Mei',
+6 => 'Jun',
+7 => 'Jul',
+8 => 'Agu',
+9 => 'Sept',
+10 => 'Okt',
+11 => 'Nov',
+12 => 'Des',
+];
+$formatCourseDate = function ($date, bool $withYear = true) use ($shortMonths) {
+	$date = \Carbon\Carbon::parse($date);
+
+	return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
+};
+$registrationDate = 'Fleksibel';
+$courseStatus = 'Upcoming';
+$courseStatusClass = 'upcoming';
+
+if ($startDate && $endDate) {
+	$start = \Carbon\Carbon::parse($startDate);
+	$end = \Carbon\Carbon::parse($endDate);
+	$today = now()->startOfDay();
+	$registrationDate = $start->isSameMonth($end) && $start->isSameYear($end)
+		? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
+		: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
+
+	if ($today->betweenIncluded($start->copy()->startOfDay(), $end->copy()->endOfDay())) {
+		$courseStatus = 'Running';
+		$courseStatusClass = 'running';
+	}
+} elseif ($startDate) {
+	$registrationDate = $formatCourseDate($startDate);
+}
 @endphp
 
 @if(empty($withoutStyle))
@@ -138,6 +177,16 @@ $detailUrl = data_get($course, 'unique_id')
 		color: #ffffff;
 	}
 
+	.member-course-card__category-badge--status-running {
+		background: #dcfce7;
+		color: #166534;
+	}
+
+	.member-course-card__category-badge--status-upcoming {
+		background: #fff7ed;
+		color: #c2410c;
+	}
+
 	.member-course-card__title {
 		margin: 0;
 		color: #111827;
@@ -196,6 +245,7 @@ $detailUrl = data_get($course, 'unique_id')
 		font-size: 12.5px;
 		font-weight: 800;
 		line-height: 1.35;
+		overflow-wrap: break-word;
 	}
 
 	.member-course-card__footer {
@@ -298,6 +348,7 @@ $detailUrl = data_get($course, 'unique_id')
 		<p class="member-course-card__category">
 			<span class="member-course-card__category-badge">{{ $category }}</span>
 			<span class="member-course-card__category-badge member-course-card__category-badge--mode">{{ $mode }}</span>
+			<span class="member-course-card__category-badge member-course-card__category-badge--status-{{ $courseStatusClass }}">{{ $courseStatus }}</span>
 		</p>
 		<h3 class="member-course-card__title">
 			<a href="{{ $detailUrl }}">{{ $title }}</a>
@@ -306,9 +357,9 @@ $detailUrl = data_get($course, 'unique_id')
 
 		<div class="member-course-card__meta" aria-label="Informasi kelas">
 			<div class="member-course-card__meta-item">
-				<span class="member-course-card__meta-label">Jadwal</span>
+				<span class="member-course-card__meta-label">Pendaftaran</span>
 				<span class="member-course-card__meta-value">
-					{{ $startDate ? \Carbon\Carbon::parse($startDate)->translatedFormat('d-F-Y') : 'Fleksibel' }}
+					{{ $registrationDate }}
 				</span>
 			</div>
 			<div class="member-course-card__meta-item">
@@ -327,7 +378,7 @@ $detailUrl = data_get($course, 'unique_id')
 
 		<div class="member-course-card__footer">
 			<div class="member-course-card__price">
-				<span class="member-course-card__price-label">Investasi</span>
+				<span class="member-course-card__price-label">Harga</span>
 				<span class="member-course-card__price-value">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
 				@if($promoPrice > 0 && $price > $finalPrice)
 				<span class="member-course-card__price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>

@@ -1,3 +1,10 @@
+		@php
+		$user = Auth::user();
+		$profile = $user ? $user->profile : null;
+		$profilePictureUrl = \App\Helper\GlobalHelper::userProfilePictureUrl($profile);
+		$profileFallbackUrl = asset('assets/img/90x90.jpg');
+		@endphp
+
 		<!-- TOPBAR -->
 		<div class="topbar">
 			<div class="topbar-left">
@@ -10,17 +17,17 @@
 				</a>
 				<div class="topbar-welcome">
 					<p class="eyebrow">Selamat datang kembali</p>
-					<h4>{{ auth()->user()->name }}</h4>
+					<h4>{{ $user->name }}</h4>
 				</div>
 			</div>
 
 			<div class="topbar-right">
 				<div class="dropdown">
 					<a href="javascript:void(0);" class="user-trigger" id="userProfileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<img src="{{ asset('assets/img/90x90.jpg') }}" alt="Foto profil {{ auth()->user()->name }}">
+						<img src="{{ $profilePictureUrl }}" alt="Foto profil {{ $user->name }}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='{{ $profileFallbackUrl }}'">
 						<span class="user-meta">
-							<div class="name">{{ auth()->user()->name }}</div>
-							<div class="role">{{ auth()->user()->role_name }}</div>
+							<div class="name">{{ $user->name }}</div>
+							<div class="role">{{ $user->role_name }}</div>
 						</span>
 						<svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<polyline points="6 9 12 15 18 9"></polyline>
@@ -29,14 +36,14 @@
 
 					<div class="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userProfileDropdown">
 						<div class="dropdown-header-block">
-							<img src="{{ asset('assets/img/90x90.jpg') }}" alt="avatar">
+							<img src="{{ $profilePictureUrl }}" alt="avatar" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='{{ $profileFallbackUrl }}'">
 							<div>
-								<h6>{{ auth()->user()->name }}</h6>
-								<span>{{ auth()->user()->role_name }}</span>
+								<h6>{{ $user->name }}</h6>
+								<span>{{ $user->role_name }}</span>
 							</div>
 						</div>
 
-						<a href="{{ url('userprofile') }}" class="menu-item">
+						<a href="#" class="menu-item">
 							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
 								<circle cx="12" cy="7" r="4"></circle>
