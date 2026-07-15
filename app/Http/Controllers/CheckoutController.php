@@ -14,6 +14,7 @@ use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -136,6 +137,11 @@ class CheckoutController extends Controller
                 ],
                 "payment" => [
                     "payment_due_date" => 60
+                ],
+                "additional_info" => [
+                    "user_id" => $auth,
+                    "pembelian_tipe" => 2,
+                    "override_notification_url" => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
                 ]
             ];
             $jsonBody = json_encode($body);
@@ -174,17 +180,356 @@ class CheckoutController extends Controller
         }
     }
 
+    public function handleDokuTransactionNotification(Request $request)
+    {
+        $invoiceNumber = $this->extractDokuInvoiceNumber($request);
+
+        if (!$invoiceNumber) {
+            return response()->json(['message' => 'Invalid webhook payload'], 400);
+        }
+
+        if (strtok($invoiceNumber, '-') !== 'BANKIR') {
+            return response()->json(['message' => 'Notification ignored'], 200);
+        }
+
+        $notification = $this->resolveDokuNotificationData($request, $invoiceNumber);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Unable to verify payment status'], 500);
+        }
+
+        if (!$notification['payment_status']) {
+            return response()->json(['message' => 'Invalid webhook payload'], 400);
+        }
+
+        $purchaseType = data_get($request->all(), 'additional_info.pembelian_tipe')
+            ?? data_get($notification['data'], 'additional_info.pembelian_tipe');
+
+        if ((int) $purchaseType === 1 || DataPayment::where('no_invoice', $invoiceNumber)->exists()) {
+            $result = $this->processMembershipPayment(
+                $invoiceNumber,
+                $notification['payment_status'],
+                $notification['amount']
+            );
+        } else {
+            $result = $this->processClassPayment(
+                $invoiceNumber,
+                $notification['payment_status'],
+                $notification['amount']
+            );
+        }
+
+        return response()->json(['message' => $result['message']], $result['status']);
+    }
+
     public function handleNotificationmembership(Request $request)
     {
-        $datapayment = DataPayment::where('no_invoice', $request->invoice_number)->update([
-            'status' => 1
+        $invoiceNumber = $this->extractDokuInvoiceNumber($request);
+
+        if (!$invoiceNumber) {
+            return response()->json(['message' => 'Invalid webhook payload'], 400);
+        }
+
+        $notification = $this->resolveDokuNotificationData($request, $invoiceNumber);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Unable to verify payment status'], 500);
+        }
+
+        if (!$notification['payment_status']) {
+            return response()->json(['message' => 'Invalid webhook payload'], 400);
+        }
+
+        $result = $this->processMembershipPayment(
+            $invoiceNumber,
+            $notification['payment_status'],
+            $notification['amount']
+        );
+
+        return response()->json(['message' => $result['message']], $result['status']);
+    }
+
+    private function resolveDokuNotificationData(Request $request, string $invoiceNumber): ?array
+    {
+        $data = $request->all();
+        $paymentStatus = $this->extractDokuPaymentStatusFromData($data);
+        $amount = $this->extractDokuAmountFromData($data);
+
+        if ($this->isValidDokuSignature($request)) {
+            return [
+                'payment_status' => $paymentStatus,
+                'amount' => $amount,
+                'data' => $data,
+            ];
+        }
+
+        Log::warning('DOKU webhook signature invalid or missing, verifying by check status', [
+            'invoice' => $invoiceNumber,
+            'has_signature_headers' => $this->hasDokuSignatureHeaders($request),
+            'request_id' => $request->header('Request-Id'),
         ]);
-        $datauserprofile = UserProfileModel::where('user_id', $request->user_id)->update([
-            'status_membership' => 1,
-            'masa_aktif_membership' => Carbon::now()->addYears(1),
-            'tanggal_bergabung_membership' => Carbon::now()->format('Y-m-d')
-        ]);
-        return response()->json(['message' => 'Webhook received successfully'], 200);
+
+        $statusResponse = $this->getDokuOrderStatus($invoiceNumber);
+
+        if (!$statusResponse) {
+            return null;
+        }
+
+        if ($this->extractDokuInvoiceNumberFromData($statusResponse) !== $invoiceNumber) {
+            Log::warning('DOKU check status invoice mismatch', [
+                'invoice' => $invoiceNumber,
+                'response_invoice' => $this->extractDokuInvoiceNumberFromData($statusResponse),
+            ]);
+
+            return null;
+        }
+
+        return [
+            'payment_status' => $this->extractDokuPaymentStatusFromData($statusResponse),
+            'amount' => $this->extractDokuAmountFromData($statusResponse),
+            'data' => $statusResponse,
+        ];
+    }
+
+    private function processMembershipPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array
+    {
+        return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
+            $payment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+
+            if (!$payment) {
+                return ['status' => 404, 'message' => 'Payment not found'];
+            }
+
+            if (strtolower((string) $payment->pembelian) !== DataPayment::PURCHASE_MEMBERSHIP) {
+                return ['status' => 422, 'message' => 'Invalid purchase type'];
+            }
+
+            if ($amount !== null && abs((float) $payment->nominal - $amount) > 0.01) {
+                Log::warning('DOKU membership amount mismatch', [
+                    'invoice' => $invoiceNumber,
+                    'expected' => $payment->nominal,
+                    'received' => $amount,
+                ]);
+
+                return ['status' => 422, 'message' => 'Invalid payment amount'];
+            }
+
+            if ((int) $payment->status === DataPayment::STATUS_PAID) {
+                return ['status' => 200, 'message' => 'Payment already processed'];
+            }
+
+            if (!$this->isSuccessfulDokuStatus($paymentStatus)) {
+                if ($this->isFailedDokuStatus($paymentStatus) && (int) $payment->status === DataPayment::STATUS_PENDING) {
+                    $payment->update([
+                        'status' => DataPayment::STATUS_CANCELED,
+                        'keterangan' => 'Pembayaran tidak berhasil: ' . $paymentStatus,
+                    ]);
+                }
+
+                return ['status' => 200, 'message' => 'Payment status ignored'];
+            }
+
+            $profile = UserProfileModel::where('user_id', $payment->user_id)->lockForUpdate()->first();
+
+            if (!$profile) {
+                return ['status' => 404, 'message' => 'User profile not found'];
+            }
+
+            try {
+                $activeUntil = $profile->masa_aktif_membership ? Carbon::parse($profile->masa_aktif_membership) : null;
+            } catch (\Throwable $exception) {
+                $activeUntil = null;
+            }
+
+            $now = Carbon::now();
+            $baseDate = $activeUntil && $activeUntil->greaterThan($now) ? $activeUntil : $now;
+            $profileData = [
+                'status_membership' => DataPayment::STATUS_PAID,
+                'masa_aktif_membership' => $baseDate->copy()->addYear()->format('Y-m-d'),
+            ];
+
+            if (!$profile->tanggal_bergabung_membership) {
+                $profileData['tanggal_bergabung_membership'] = $now->format('Y-m-d');
+            }
+
+            $profile->update($profileData);
+            $payment->update(['status' => DataPayment::STATUS_PAID]);
+
+            return ['status' => 200, 'message' => 'Membership payment processed'];
+        });
+    }
+
+    private function processClassPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array
+    {
+        return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
+            $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+
+            if (!$order) {
+                return ['status' => 404, 'message' => 'Class payment not found'];
+            }
+
+            if ($amount !== null && abs((float) $order->price_final - $amount) > 0.01) {
+                Log::warning('DOKU class payment amount mismatch', [
+                    'invoice' => $invoiceNumber,
+                    'expected' => $order->price_final,
+                    'received' => $amount,
+                ]);
+
+                return ['status' => 422, 'message' => 'Invalid payment amount'];
+            }
+
+            if ((int) $order->status === 1) {
+                return ['status' => 200, 'message' => 'Payment already processed'];
+            }
+
+            if (!$this->isSuccessfulDokuStatus($paymentStatus)) {
+                return ['status' => 200, 'message' => 'Payment status ignored'];
+            }
+
+            $order->update([
+                'status' => 1,
+            ]);
+
+            return ['status' => 200, 'message' => 'Class payment processed'];
+        });
+    }
+
+    private function hasDokuSignatureHeaders(Request $request): bool
+    {
+        return $request->headers->has('Client-Id')
+            || $request->headers->has('Request-Id')
+            || $request->headers->has('Request-Timestamp')
+            || $request->headers->has('Signature');
+    }
+
+    private function isValidDokuSignature(Request $request): bool
+    {
+        $clientId = env('DOKU_CLIENT_ID');
+        $secretKey = env('DOKU_SECRET_KEY');
+        $headerClientId = $request->header('Client-Id');
+        $requestId = $request->header('Request-Id');
+        $timestamp = $request->header('Request-Timestamp');
+        $signature = $request->header('Signature');
+
+        if (!$clientId || !$secretKey || !$headerClientId || !$requestId || !$timestamp || !$signature) {
+            return false;
+        }
+
+        if (!hash_equals((string) $clientId, (string) $headerClientId)) {
+            return false;
+        }
+
+        $requestTarget = parse_url($request->getRequestUri(), PHP_URL_PATH) ?: '/api/doku/membership/notification';
+        $digest = base64_encode(hash('sha256', $request->getContent(), true));
+        $rawSignature = 'Client-Id:' . $headerClientId . "\n" .
+            'Request-Id:' . $requestId . "\n" .
+            'Request-Timestamp:' . $timestamp . "\n" .
+            'Request-Target:' . $requestTarget . "\n" .
+            'Digest:' . $digest;
+
+        $expectedSignature = 'HMACSHA256=' . base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+
+        return hash_equals($expectedSignature, (string) $signature);
+    }
+
+    private function getDokuOrderStatus(string $invoiceNumber): ?array
+    {
+        $clientId = env('DOKU_CLIENT_ID');
+        $secretKey = env('DOKU_SECRET_KEY');
+        $dokuUrl = rtrim((string) env('DOKU_URL'), '/');
+
+        if (!$clientId || !$secretKey || !$dokuUrl) {
+            return null;
+        }
+
+        $requestId = Str::uuid()->toString();
+        $timestamp = now()->toIso8601ZuluString();
+        $requestTarget = '/orders/v1/status/' . rawurlencode($invoiceNumber);
+        $rawSignature = 'Client-Id:' . $clientId . "\n" .
+            'Request-Id:' . $requestId . "\n" .
+            'Request-Timestamp:' . $timestamp . "\n" .
+            'Request-Target:' . $requestTarget;
+        $signature = 'HMACSHA256=' . base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+
+        try {
+            $response = Http::timeout(15)->withHeaders([
+                'Client-Id' => $clientId,
+                'Request-Id' => $requestId,
+                'Request-Timestamp' => $timestamp,
+                'Signature' => $signature,
+                'Content-Type' => 'application/json',
+            ])->get($dokuUrl . $requestTarget);
+        } catch (\Throwable $exception) {
+            Log::error('Gagal check status DOKU', [
+                'invoice' => $invoiceNumber,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+
+        if (!$response->successful()) {
+            Log::warning('Check status DOKU gagal', [
+                'invoice' => $invoiceNumber,
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            return null;
+        }
+
+        $data = $response->json();
+
+        return is_array($data) ? $data : null;
+    }
+
+    private function extractDokuInvoiceNumber(Request $request): ?string
+    {
+        return $this->extractDokuInvoiceNumberFromData($request->all());
+    }
+
+    private function extractDokuInvoiceNumberFromData(array $data): ?string
+    {
+        return data_get($data, 'invoice_number')
+            ?? data_get($data, 'order.invoice_number')
+            ?? data_get($data, 'order.invoiceNumber');
+    }
+
+    private function extractDokuPaymentStatus(Request $request): ?string
+    {
+        return $this->extractDokuPaymentStatusFromData($request->all());
+    }
+
+    private function extractDokuPaymentStatusFromData(array $data): ?string
+    {
+        $status = data_get($data, 'transaction.status')
+            ?? data_get($data, 'transaction_status')
+            ?? data_get($data, 'payment.status')
+            ?? data_get($data, 'status');
+
+        return $status ? strtoupper((string) $status) : null;
+    }
+
+    private function extractDokuAmount(Request $request): ?float
+    {
+        return $this->extractDokuAmountFromData($request->all());
+    }
+
+    private function extractDokuAmountFromData(array $data): ?float
+    {
+        $amount = data_get($data, 'order.amount') ?? data_get($data, 'amount');
+
+        return is_numeric($amount) ? (float) $amount : null;
+    }
+
+    private function isSuccessfulDokuStatus(string $status): bool
+    {
+        return in_array($status, ['SUCCESS', 'PAID', 'SETTLEMENT', 'CAPTURE', 'COMPLETED'], true);
+    }
+
+    private function isFailedDokuStatus(string $status): bool
+    {
+        return in_array($status, ['FAILED', 'CANCEL', 'CANCELED', 'CANCELLED', 'EXPIRED', 'DENIED'], true);
     }
     // public function uploadProof(Request $request)
     // {
@@ -242,7 +587,7 @@ class CheckoutController extends Controller
     // }
     public function handleNotification(Request $request)
     {
-        $invoiceNumber = $request->input('invoice_number');
+        $invoiceNumber = $this->extractDokuInvoiceNumber($request);
 
         Log::info('NOTIFIKASI MASUK DI DOMAIN B', ['invoice' => $invoiceNumber]);
 
@@ -250,15 +595,22 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Invalid data'], 400);
         }
 
-        $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->first();
-        $profile = UserProfileModel::where('user_id', $order->user_id)->first();
-        if ($order) {
-            $order->update([
-                'status' => 1,
-                'is_active' => true,
-            ]);
+        $notification = $this->resolveDokuNotificationData($request, $invoiceNumber);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Unable to verify payment status'], 500);
         }
 
-        return response()->json(['message' => 'Notification Received'], 200);
+        if (!$notification['payment_status']) {
+            return response()->json(['message' => 'Invalid webhook payload'], 400);
+        }
+
+        $result = $this->processClassPayment(
+            $invoiceNumber,
+            $notification['payment_status'],
+            $notification['amount']
+        );
+
+        return response()->json(['message' => $result['message']], $result['status']);
     }
 }

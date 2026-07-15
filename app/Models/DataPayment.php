@@ -9,6 +9,13 @@ class DataPayment extends Model
 {
     use HasFactory;
 
+    public const STATUS_PAID = 1;
+    public const STATUS_PENDING = 2;
+    public const STATUS_CANCELED = 99;
+
+    public const PURCHASE_MEMBERSHIP = 'membership';
+    public const PURCHASE_CLASS = 'kelas';
+
     protected $table = 'datapayment';
 
     protected $fillable = [
