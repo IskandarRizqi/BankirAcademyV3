@@ -12,4 +12,9 @@ class SubMateriItemModel extends Model
     {
         return $this->belongsTo(SubMateriModel::class, 'id_sub_materi');
     }
+    public function userProgress()
+{
+    return $this->hasOne(UserSubMateriItemProgress::class, 'id_sub_materi_item')
+                ->where('user_id', auth()->id());
+}
 }

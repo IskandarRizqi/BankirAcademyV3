@@ -117,6 +117,20 @@
                         <input type="file" name="background_image" id="background_image" class="form-control-file">
                         <small class="text-muted" id="file-info"></small>
                     </div>
+                    <div class="form-group mb-3">
+    <label style="font-weight: 600; display: block;">Live Preview Posisi Nama</label>
+    <div style="width: 100%; max-height: 300px; overflow: auto; border: 1px dashed #ccc; padding: 5px; text-align: center; background: #f9f9f9;">
+        <canvas id="certificateCanvas" style="max-width: 100%; height: auto; display: none;"></canvas>
+        <div id="previewPlaceholder" class="text-muted py-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+              <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+              <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+            </svg>
+            <p class="mt-2 mb-0" style="font-size: 12px;">Pilih gambar atau edit data untuk melihat preview posisi nama</p>
+        </div>
+    </div>
+    <small class="text-info">*Gunakan nama contoh "NAMA MAHASISWA CONTOH" sebagai acuan visual.</small>
+</div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal">Batal</button>
@@ -128,48 +142,115 @@
 </div>
 
 <script>
-    function toggleTargetFields() {
-        var type = document.getElementById('target_type').value;
-        if(type === 'materi') {
-            document.getElementById('wrapper_materi').style.display = 'block';
-            document.getElementById('wrapper_sub_materi').style.display = 'none';
-            document.getElementById('sub_materi_id').value = '';
-        } else {
-            document.getElementById('wrapper_materi').style.display = 'none';
-            document.getElementById('wrapper_sub_materi').style.display = 'block';
-            document.getElementById('materi_id').value = '';
-        }
+   let currentBgImage = new Image();
+let isImageLoaded = false;
+
+// Daftarkan event listener untuk perubahan input agar otomatis meng-update preview
+document.getElementById('coordinate_x').addEventListener('input', drawPreview);
+document.getElementById('coordinate_y').addEventListener('input', drawPreview);
+document.getElementById('font_size').addEventListener('input', drawPreview);
+
+// Event listener saat user memilih file gambar baru
+document.getElementById('background_image').addEventListener('change', function(e) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        currentBgImage.onload = function() {
+            isImageLoaded = true;
+            document.getElementById('certificateCanvas').style.display = 'inline-block';
+            document.getElementById('previewPlaceholder').style.display = 'none';
+            drawPreview();
+        };
+        currentBgImage.src = event.target.result;
+    };
+    if(e.target.files[0]) {
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
+
+function drawPreview() {
+    if (!isImageLoaded) return;
+
+    const canvas = document.getElementById('certificateCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = 1122;
+    canvas.height = 793;
+
+    ctx.drawImage(currentBgImage, 0, 0, 1122, 793);
+
+    const x = parseInt(document.getElementById('coordinate_x').value) || 0;
+    const y = parseInt(document.getElementById('coordinate_y').value) || 0;
+    const fontSize = parseInt(document.getElementById('font_size').value) || 40;
+
+    // Styling Teks
+    ctx.font = `bold ${fontSize}px Helvetica, Arial, sans-serif`;
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'center'; 
+    
+    // KUNCI PERBAIKAN: Set baseline ke top agar sama dengan cara kerja CSS absolute top
+    ctx.textBaseline = 'top'; 
+
+    ctx.fillText('NAMA MAHASISWA CONTOH', x, y);
+}
+
+function toggleTargetFields() {
+    var type = document.getElementById('target_type').value;
+    if(type === 'materi') {
+        document.getElementById('wrapper_materi').style.display = 'block';
+        document.getElementById('wrapper_sub_materi').style.display = 'none';
+        document.getElementById('sub_materi_id').value = '';
+    } else {
+        document.getElementById('wrapper_materi').style.display = 'none';
+        document.getElementById('wrapper_sub_materi').style.display = 'block';
+        document.getElementById('materi_id').value = '';
+    }
+}
+
+function resetForm() {
+    document.getElementById('id').value = '';
+    document.getElementById('target_type').value = 'materi';
+    document.getElementById('coordinate_x').value = 600;
+    document.getElementById('coordinate_y').value = 450;
+    document.getElementById('font_size').value = 40;
+    document.getElementById('file-info').innerText = '';
+    
+    // Reset state preview gambar
+    isImageLoaded = false;
+    document.getElementById('certificateCanvas').style.display = 'none';
+    document.getElementById('previewPlaceholder').style.display = 'block';
+    
+    toggleTargetFields();
+}
+
+function editCert(data) {
+    resetForm();
+    document.getElementById('id').value = data.id;
+    document.getElementById('target_type').value = data.target_type;
+    document.getElementById('coordinate_x').value = data.coordinate_x;
+    document.getElementById('coordinate_y').value = data.coordinate_y;
+    document.getElementById('font_size').value = data.font_size;
+    
+    toggleTargetFields();
+    if(data.target_type === 'materi') {
+        document.getElementById('materi_id').value = data.materi_id;
+    } else {
+        document.getElementById('sub_materi_id').value = data.sub_materi_id;
     }
 
-    function resetForm() {
-        document.getElementById('id').value = '';
-        document.getElementById('target_type').value = 'materi';
-        document.getElementById('coordinate_x').value = 600;
-        document.getElementById('coordinate_y').value = 450;
-        document.getElementById('font_size').value = 40;
-        document.getElementById('file-info').innerText = '';
-        toggleTargetFields();
-    }
-
-    function editCert(data) {
-        resetForm();
-        document.getElementById('id').value = data.id;
-        document.getElementById('target_type').value = data.target_type;
-        document.getElementById('coordinate_x').value = data.coordinate_x;
-        document.getElementById('coordinate_y').value = data.coordinate_y;
-        document.getElementById('font_size').value = data.font_size;
+    if(data.background_image) {
+        document.getElementById('file-info').innerText = 'File aktif: ' + data.background_image;
         
-        toggleTargetFields();
-        if(data.target_type === 'materi') {
-            document.getElementById('materi_id').value = data.materi_id;
-        } else {
-            document.getElementById('sub_materi_id').value = data.sub_materi_id;
-        }
-
-        if(data.background_image) {
-            document.getElementById('file-info').innerText = 'File aktif: ' + data.background_image;
-        }
-        $('#certModal').modal('show');
+        // Load gambar lama yang sudah ter-upload di server untuk kebutuhan preview saat edit
+        currentBgImage.onload = function() {
+            isImageLoaded = true;
+            document.getElementById('certificateCanvas').style.display = 'inline-block';
+            document.getElementById('previewPlaceholder').style.display = 'none';
+            drawPreview();
+        };
+        // Sesuaikan URL path asset dengan konfigurasi symlink storage Laravel Anda
+        currentBgImage.src = '/storage/certificates/' + data.background_image;
     }
+    $('#certModal').modal('show');
+}
 </script>
 @endsection

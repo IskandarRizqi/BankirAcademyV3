@@ -4,44 +4,42 @@
     <meta charset="UTF-8">
     <title>Sertifikat Resmi</title>
     <style>
-        /* Mengatur kertas PDF tanpa margin */
         @page {
             margin: 0px;
         }
         html, body {
             margin: 0px;
             padding: 0px;
-            width: 100%;
-            height: 100%;
+            /* Mengunci dimensi tepat pada ukuran A4 Landscape di DomPDF */
+            width: 1122px;
+            height: 793px;
             font-family: 'Helvetica', 'Arial', sans-serif;
             
-            /* STRATEGI BARU: Pasang gambar langsung sebagai background halaman body */
             background-image: url('{{ $imageSrc }}');
-            background-size: 100% 100%; /* Memaksa gambar pas menutupi 1 halaman penuh */
+            background-size: 100% 100%;
             background-repeat: no-repeat;
         }
         
-        /* Kotak pembungkus teks yang memenuhi halaman body */
         .certificate-wrapper {
             position: relative;
-            width: 100%;
-            height: 100%;
+            width: 1122px;
+            height: 793px;
         }
 
-        /* Penempatan Nama Siswa secara dinamis berdasarkan koordinat DB */
-        .student-name {
-            position: absolute;
-            left: {{ $coordinateX }}px;
-            top: {{ $coordinateY }}px;
-            font-size: {{ $fontSize }}px;
-            font-weight: bold;
-            color: #000000;
-            text-align: center;
-            
-            /* Teknik Center Alignment pengganti transform translate */
-            width: 800px; 
-            margin-left: -400px; /* Setengah dari width agar as tengah teks sejajar dengan coordinateX */
-        }
+       .student-name {
+        position: absolute;
+        left: {{ ($coordinateX / 1122) * 100 }}%;
+        top: {{ ($coordinateY / 793) * 100 }}%;
+        font-size: {{ $fontSize }}px;
+        font-weight: bold;
+        color: #000000;
+        text-align: center;
+        width: 1000px;
+        margin-left: -500px; 
+        
+        /* KUNCI PERBAIKAN PDF: Hapus ruang kosong/padding bawaan teks */
+        line-height: 1; 
+    }
     </style>
 </head>
 <body>

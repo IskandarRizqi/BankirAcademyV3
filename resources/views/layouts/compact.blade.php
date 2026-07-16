@@ -812,6 +812,16 @@
     .text-hover-underline:hover { text-decoration: underline !important; }
     .custom-control-input:checked ~ .custom-control-label::before { background-color: #4361ee; border-color: #4361ee; }
 </style>
+<style>
+@media print {
+    body { background: #fff !important; color: #000 !important; }
+    .profile-banner { background: #fff !important; color: #000 !important; border: 1px solid #000; padding: 20px !important; }
+    .profile-banner h1, .profile-banner h2, .profile-banner p { color: #000 !important; }
+    .btn, .badge-pill { display: none !important; }
+    .card { border: none !important; box-shadow: none !important; }
+    h3 { border-bottom: 2px solid #000 !important; }
+}
+</style>
 </head>
 
 <body>
@@ -832,7 +842,7 @@
                 'has_submenu' => false,
             ],
             [
-                'label' => 'Pre Post Test',
+                'label' => 'Pembelajaran',
                 'icon' => 'teacher',
                 'url' => '#dashboard',
                 'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*'),
@@ -877,6 +887,14 @@
                 'icon' => 'bar-chart-2',
                 'url' => '/lowongan',
                 'active' => request()->routeIs('lowongan*'),
+                'can_see' => ($role == 6),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Buat CV ATS',
+                'icon' => 'zap',
+                'url' => '/cvats',
+                'active' => request()->routeIs('cvats'),
                 'can_see' => ($role == 6),
                 'has_submenu' => false,
             ],
