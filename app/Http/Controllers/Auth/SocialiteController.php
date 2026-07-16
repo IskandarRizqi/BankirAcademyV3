@@ -29,14 +29,14 @@ class SocialiteController extends Controller
                 $socialUser = Socialite::driver($provider)->user();
             }
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Login Google gagal. Silakan coba lagi.');
+            return redirect('/authentikasi/login')->with('error', 'Login Google gagal. Silakan coba lagi.');
         }
 
         $ins = Session::pull('ins', false);
         $user = $this->findOrCreateUser($socialUser, $provider, $ins);
         Auth::login($user, true);
 
-        return redirect('/profile');
+        return redirect('/dash-beranda');
     }
 
     protected function findOrCreateUser($socialUser, $provider, $ins)

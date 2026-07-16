@@ -300,7 +300,7 @@ class PagesController extends Controller
 	{
 		$now = Carbon::now();
 		$data['blog'] = Pages::select()->where('type', 0)->whereDate('date_start', '<=', $now->format('Y-m-d'))->whereDate('date_end', '>=', $now->format('Y-m-d'))->orderBy('created_at', 'desc')->paginate(9)->toArray();
-		return view('pages/bloglist', $data);
+		return view('frontend.pages.literasi.literasi', $data);
 	}
 
 	public function getsdank()

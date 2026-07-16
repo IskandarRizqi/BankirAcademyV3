@@ -7,22 +7,25 @@ use Illuminate\Http\Request;
 
 class LayananController extends Controller
 {
-    public function ShowBankingSolution() {
+    public function ShowBankingSolution()
+    {
 
-    $data = [];
-    return view('front.layanan.bankingsolution', $data);
+        $data = [];
+        return view('frontend.pages.layanan.bankingsolution', $data);
     }
 
 
-    public function ShowCapacityBuilding() {
+    public function ShowCapacityBuilding()
+    {
 
-    $data = [];
-    return view('front.layanan.capacitybuilding', $data);
+        $data = [];
+        return view('frontend.pages.layanan.capacitysolution', $data);
     }
 
-    public function ShowCTalentSolution() {
+    public function ShowCTalentSolution()
+    {
 
-    $data = [];
-    return view('front.layanan.talentsolution', $data);
+        $data = [];
+        return view('frontend.pages.layanan.bankingtalent', $data);
     }
 }

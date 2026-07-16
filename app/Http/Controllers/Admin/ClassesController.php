@@ -485,41 +485,41 @@ class ClassesController extends Controller
 	}
 
 	public function previewcertificate(Request $r, $id, $nama, $instansi)
-{
-    $data['class'] = ClassesModel::where('id', $id)->first();
-    if (!$data['class']) {
-        return Redirect::back()->with('error', 'Kelas Tidak Ditemukan');
-    }
+	{
+		$data['class'] = ClassesModel::where('id', $id)->first();
+		if (!$data['class']) {
+			return Redirect::back()->with('error', 'Kelas Tidak Ditemukan');
+		}
 
-    $data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
-    if (!$data['certs']) {
-        return Redirect::back()->with('error', 'Sertifikat Tidak Ditemukan');
-    }
+		$data['certs'] = ClassCertificateTemplate::where('class_id', $id)->first();
+		if (!$data['certs']) {
+			return Redirect::back()->with('error', 'Sertifikat Tidak Ditemukan');
+		}
 
-    // --- LOGIKA KODE DINAMIS ---
-    // Mengambil tanggal hari ini format: dmy (Contoh: 150426)
-    $datePart = date('dmy'); 
-    
-    // Misal kita ambil 3 angka unik dari ID atau urutan (Contoh: ID 1 jadi 001)
-    // str_pad berguna agar angka 1 menjadi 001, angka 12 menjadi 012
-   $uniquePart = strtoupper(substr(uniqid(), -3)); 
-    
-    $data['certificate_code'] = "BAI-" . $datePart . "-" . $uniquePart;
-    // ---------------------------
+		// --- LOGIKA KODE DINAMIS ---
+		// Mengambil tanggal hari ini format: dmy (Contoh: 150426)
+		$datePart = date('dmy');
 
-    $data['name'] = $nama;
-    $data['instansi'] = $instansi;
-    
-    // Mengganti placeholder di konten
-    $data['contents'] = str_replace(
-        ["[[date_expired]]", "[[date_active]]", "[[class]]", "[[name]]"],
-        [$data['certs']->certificate_expired, $data['certs']->certificate_created, $data['class']->title, $data['name']],
-        $data['certs']->content
-    );
+		// Misal kita ambil 3 angka unik dari ID atau urutan (Contoh: ID 1 jadi 001)
+		// str_pad berguna agar angka 1 menjadi 001, angka 12 menjadi 012
+		$uniquePart = strtoupper(substr(uniqid(), -3));
 
-    $pdf = PDF::loadView('backend/certificate/certificate', $data);
-    return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
-}
+		$data['certificate_code'] = "BAI-" . $datePart . "-" . $uniquePart;
+		// ---------------------------
+
+		$data['name'] = $nama;
+		$data['instansi'] = $instansi;
+
+		// Mengganti placeholder di konten
+		$data['contents'] = str_replace(
+			["[[date_expired]]", "[[date_active]]", "[[class]]", "[[name]]"],
+			[$data['certs']->certificate_expired, $data['certs']->certificate_created, $data['class']->title, $data['name']],
+			$data['certs']->content
+		);
+
+		$pdf = PDF::loadView('backend/certificate/certificate', $data);
+		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
+	}
 
 	public function getCertificate(Request $r, $id)
 	{
@@ -682,6 +682,14 @@ class ClassesController extends Controller
 				}
 			}
 		}
+		// LEVEL
+		$tipe = ClassesModel::select('level')->distinct('level')->pluck('level')->toArray();
+		$data['level'] = [];
+		foreach ($tipe as $key => $value) {
+			if ($value) {
+				array_push($data['level'], $value);
+			}
+		}
 		return $data;
 	}
 	public function bannerClass($judul)
@@ -707,89 +715,128 @@ class ClassesController extends Controller
 		return $j;
 	}
 	public function listClass(Request $request)
-{
-    $limit = 99;
-    $data['sebelumnya'] = $request->sebelumnya ?? '';
-    $data['titlekelas'] = $request->titlekelas ?? '';
-    $data['judul'] = 'Kelas';
+	{
+		$limit = 9;
+		$filters = [
+			'category' => array_values(array_filter((array) $request->input('category', []))),
+			'level' => array_values(array_filter((array) $request->input('level', []))),
+			'instructor' => array_values(array_filter((array) $request->input('instructor', []))),
+		];
+		// $data['sebelumnya'] = $request->sebelumnya ?? '';
+		// $data['titlekelas'] = $request->titlekelas ?? '';
+		// $data['judul'] = 'Kelas';
 
-    // Ambil data filter jenis & tipe (karena dari AJAX dikirim sebagai array/string)
-    $jeniss = [];
-    if ($request->jenis) {
-        $jeniss = is_string($request->jenis) ? json_decode($request->jenis, true) : $request->jenis;
-    }
-    $data['jeniss'] = $jeniss ?? [];
+		// Ambil data filter jenis & tipe (karena dari AJAX dikirim sebagai array/string)
+		// $jeniss = [];
+		// if ($request->jenis) {
+		// 	$jeniss = is_string($request->jenis) ? json_decode($request->jenis, true) : $request->jenis;
+		// }
+		// $data['jeniss'] = $jeniss ?? [];
 
-    $tipe = [];
-    if ($request->type) {
-        $tipe = is_string($request->type) ? json_decode($request->type, true) : $request->type;
-    }
-    $data['tipe'] = $tipe ?? [];
+		// $tipe = [];
+		// if ($request->type) {
+		// 	$tipe = is_string($request->type) ? json_decode($request->type, true) : $request->type;
+		// }
+		// $data['tipe'] = $tipe ?? [];
 
-    // --- PROSES QUERY DATABASE DENGAN FILTER ---
-    $query = ClassesModel::where('status', 1);
+		// // --- PROSES QUERY DATABASE DENGAN FILTER ---
+		// $query = ClassesModel::where('status', 1);
 
-    // 1. Filter Waktu (Kelas Berlangsung vs Kelas Sebelumnya)
-    if ($request->sebelumnya) {
-        $query->where('date_start', '<', Carbon::now()->startOfDay());
-    } else {
-        $query->where('date_start', '>=', Carbon::now()->startOfDay());
-    }
+		// // 1. Filter Waktu (Kelas Berlangsung vs Kelas Sebelumnya)
+		// if ($request->sebelumnya) {
+		// 	$query->where('date_start', '<', Carbon::now()->startOfDay());
+		// } else {
+		// 	$query->where('date_start', '>=', Carbon::now()->startOfDay());
+		// }
 
-    // 2. Filter Pencarian Judul Kelas (Search)
-    $query->when($request->titlekelas, function ($sql) use ($request) {
-        return $sql->where('title', 'like', '%' . $request->titlekelas . '%');
-    });
+		// // 2. Filter Pencarian Judul Kelas (Search)
+		// $query->when($request->titlekelas, function ($sql) use ($request) {
+		// 	return $sql->where('title', 'like', '%' . $request->titlekelas . '%');
+		// });
 
-    // 3. Filter Kategori Select Option
-    $query->when($request->kategori, function ($sql) use ($request) {
-        // Sesuaikan nama kolom database Anda (misal: 'category' atau 'category_id')
-        return $sql->where('category', 'like', '%' . $request->kategori . '%');
-    });
+		// // 3. Filter Kategori Select Option
+		// $query->when($request->kategori, function ($sql) use ($request) {
+		// 	// Sesuaikan nama kolom database Anda (misal: 'category' atau 'category_id')
+		// 	return $sql->where('category', 'like', '%' . $request->kategori . '%');
+		// });
 
-    // 4. Filter Instructor Select Option
-    $query->when($request->instructor, function ($sql) use ($request) {
-        return $sql->where('instructor', 'like', '%' . $request->instructor . '%');
-    });
+		// // 4. Filter Instructor Select Option
+		// $query->when($request->instructor, function ($sql) use ($request) {
+		// 	return $sql->where('instructor', 'like', '%' . $request->instructor . '%');
+		// });
 
-    // 5. Filter Checkbox Jenis (Looping LIKE atau WhereIn)
-    if (!empty($data['jeniss'])) {
-        $query->where(function ($sql) use ($data) {
-            foreach ($data['jeniss'] as $v_jenis) {
-                if ($v_jenis) {
-                    $sql->orWhere('jenis', 'like', '%' . $v_jenis . '%');
-                }
-            }
-        });
-    }
+		// // 5. Filter Checkbox Jenis (Looping LIKE atau WhereIn)
+		// if (!empty($data['jeniss'])) {
+		// 	$query->where(function ($sql) use ($data) {
+		// 		foreach ($data['jeniss'] as $v_jenis) {
+		// 			if ($v_jenis) {
+		// 				$sql->orWhere('jenis', 'like', '%' . $v_jenis . '%');
+		// 			}
+		// 		}
+		// 	});
+		// }
 
-    // 6. Filter Checkbox Tipe
-    if (!empty($data['tipe'])) {
-        $query->where(function ($sql) use ($data) {
-            foreach ($data['tipe'] as $v_tipe) {
-                if ($v_tipe) {
-                    $sql->orWhere('tipe', 'like', '%' . $v_tipe . '%');
-                }
-            }
-        });
-    }
+		// // 6. Filter Checkbox Tipe
+		// if (!empty($data['tipe'])) {
+		// 	$query->where(function ($sql) use ($data) {
+		// 		foreach ($data['tipe'] as $v_tipe) {
+		// 			if ($v_tipe) {
+		// 				$sql->orWhere('tipe', 'like', '%' . $v_tipe . '%');
+		// 			}
+		// 		}
+		// 	});
+		// }
 
-    // Eksekusi penomoran halaman (Pagination)
-    $data['class'] = $query->orderBy('date_start', 'asc')
-                           ->paginate(9)
-                           ->toArray();
+		// // Eksekusi penomoran halaman (Pagination)
+		// $data['class'] = $query->orderBy('date_start', 'asc')
+		// 	->paginate(9)
+		// 	->toArray();
 
-    // Jika request datang dari AJAX JQuery, langsung kembalikan data JSON kelas saja
-    if ($request->ajax()) {
-        return response()->json($data['class']);
-    }
+		// // Jika request datang dari AJAX JQuery, langsung kembalikan data JSON kelas saja
+		// if ($request->ajax()) {
+		// 	return response()->json($data['class']);
+		// }
 
-    // Jika diakses pertama kali lewat browser (bukan AJAX), load semua data layout pendukung
-    $data['banner'] = $this->bannerClass($data['judul']);
-    $data['pencarian'] = $this->pencarian();
+		// // Jika diakses pertama kali lewat browser (bukan AJAX), load semua data layout pendukung
+		$query = ClassesModel::where('status', 1)
+			->when(count($filters['category']) > 0, function ($sql) use ($filters) {
+				$sql->whereIn('category', $filters['category']);
+			})
+			->when(count($filters['level']) > 0, function ($sql) use ($filters) {
+				$sql->whereIn('level', $filters['level']);
+			})
+			->when(count($filters['instructor']) > 0, function ($sql) use ($filters) {
+				$sql->where(function ($query) use ($filters) {
+					foreach ($filters['instructor'] as $instructorId) {
+						$query->orWhereJsonContains('instructor', (string) $instructorId);
 
-    return view('front.kelas.listclass', $data);
-}
+						if (is_numeric($instructorId)) {
+							$query->orWhereJsonContains('instructor', (int) $instructorId);
+						}
+					}
+				});
+			});
+
+		$data['class'] = $query->orderBy('date_start', 'DESC')
+			->paginate($limit)
+			->withQueryString();
+		// $data['banner'] = $this->bannerClass($data['judul']);
+		$data['pencarian'] = $this->pencarian();
+		$data['selectedFilters'] = $filters;
+
+		if ($request->ajax()) {
+			return response()->json([
+				'html' => view('frontend.partials.class-items', $data)->render(),
+				'next_page_url' => $data['class']->nextPageUrl(),
+				'has_more_pages' => $data['class']->hasMorePages(),
+			]);
+		}
+
+		// return $data;
+
+		return view('frontend.pages.event.listevent', $data);
+		//  return view('front.kelas.listclass', $data);
+	}
 	public function findClass(Request $request)
 	{
 		$checbox = [];

@@ -14,6 +14,43 @@ use Illuminate\Support\Facades\Auth;
 
 class  GlobalHelper
 {
+    public static function userProfilePictureUrl($profile = null, string $fallback = 'assets/img/90x90.jpg'): string
+    {
+        $picture = is_string($profile) ? $profile : data_get($profile, 'picture');
+        $picture = self::normalizeProfilePicturePath($picture);
+
+        if ($picture === '') {
+            return asset($fallback);
+        }
+
+        if (filter_var($picture, FILTER_VALIDATE_URL) || str_starts_with($picture, 'data:image/')) {
+            return $picture;
+        }
+
+        $picture = ltrim($picture, '/');
+
+        return asset(str_starts_with($picture, 'Image/') ? $picture : 'Image/' . $picture);
+    }
+
+    private static function normalizeProfilePicturePath($picture): string
+    {
+        $picture = trim((string) $picture);
+
+        if ($picture === '') {
+            return '';
+        }
+
+        $decoded = json_decode($picture, true);
+
+        if (is_array($decoded)) {
+            $picture = data_get($decoded, 'url') ?: data_get($decoded, 'path') ?: '';
+        } elseif (is_string($decoded)) {
+            $picture = $decoded;
+        }
+
+        return trim((string) $picture, " \t\n\r\0\x0B\"'");
+    }
+
     public static function namabulan($n)
     {
         $bulan = [

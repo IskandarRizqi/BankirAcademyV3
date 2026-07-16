@@ -27,6 +27,7 @@ class UserProfileModel extends Model
 		'status_membership',
 		'masa_aktif_membership',
 		'id_member',
+		'tanggal_bergabung_membership'
 	];
 	public function membership(): HasOne
 	{

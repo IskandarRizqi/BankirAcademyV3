@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use App\Support\AuthRedirector;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -43,6 +43,16 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return redirect('/');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        return redirect(AuthRedirector::pathFor($user));
+    }
+
+    public function redirectTo()
+    {
+        return AuthRedirector::pathFor(Auth::user());
     }
 
     // public function redirectTo()
