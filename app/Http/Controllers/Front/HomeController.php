@@ -322,17 +322,17 @@ class HomeController extends Controller
         //     ->get();
         // untuk event
 
-   
+
         $currentMonth = $now->month;
         $currentYear  = $now->year;
 
         $data['kelas'] = ClassesModel::query()
             ->whereYear('date_start', $currentYear)
-            ->where('date_end', '>=', $now->format('Y-m-d')) 
+            ->where('date_end', '>=', $now->format('Y-m-d'))
             ->where('status', 1)
             ->orderBy('date_end', 'asc')
             ->take(4)
-            ->get();                  
+            ->get();
 
         foreach ($data['kelas'] as $key => $value) {
             if ($value->is_terpopuler) {
@@ -367,7 +367,8 @@ class HomeController extends Controller
         // return $data;
         // $data['use_new_template'] = true;
         // return view('front.homev2.homev2', $data);
-        return view('front.homev3.index', $data);
+        // return view('front.homev3.index', $data);
+        return view('frontend.pages.homepage.index');
     }
     public function index(Request $request)
     {
@@ -673,7 +674,7 @@ class HomeController extends Controller
         $data['lokasi'] = $lokasi;
         $data['title'] = $title;
         if (Auth::user()) {
-        $data['kelas'] = ClassPaymentModel::where('class_id', $data['class']['id'])->where('user_id', Auth::user()->id)->where('status', 1)->first();
+            $data['kelas'] = ClassPaymentModel::where('class_id', $data['class']['id'])->where('user_id', Auth::user()->id)->where('status', 1)->first();
         }
         $data['kelas_populer'] = ClassesModel::select()
             ->where('date_end', '>=', Carbon::now()
@@ -707,8 +708,8 @@ class HomeController extends Controller
         }
 
         if ($request->foto) {
-            $name = $request->file('foto')->getClientOriginalName(); 
-            $size = $request->file('foto')->getSize(); 
+            $name = $request->file('foto')->getClientOriginalName();
+            $size = $request->file('foto')->getSize();
 
             if ($size >= 1048576) {
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
@@ -804,7 +805,7 @@ class HomeController extends Controller
         $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
         // $data['data'] = KodePromoModel::where('tgl_mulai', '<=', $now->format('Y-m-d'))->where('tgl_selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
         // return $data;
-        return view('front.allpromo', $data);
+        return view('frontend.pages.promo.promo', $data);
     }
 
     public function registerUser(Request $request)
@@ -912,8 +913,13 @@ class HomeController extends Controller
         ]);
         if ($u) {
             Auth::login($u);
-            return Redirect::to('/profile')->with('success', 'Register Success!');
+            return Redirect::to('/dash-beranda')->with('success', 'Register Success!');
         }
         return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
+    }
+
+    public function getlayoutauth()
+    {
+        return view('auth.login');
     }
 }

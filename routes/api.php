@@ -33,4 +33,6 @@ Route::middleware([AksesByIpAddress::class])->group(function () {
 Route::get('/apiberanda', [HomeController::class, 'apiberanda']);
 Route::get('/tripay/create', [PembayaranController::class, 'tripaycreate']);
 Route::get('/tripay/ppob', [PembayaranController::class, 'tripayppob']);
+Route::post('/c4/notifikasi', [CheckoutController::class, 'handleDokuTransactionNotification']);
 Route::post('/doku/notification', [CheckoutController::class, 'handleNotification']);
+Route::post('/doku/membership/notification', [CheckoutController::class, 'handleNotificationmembership']);
