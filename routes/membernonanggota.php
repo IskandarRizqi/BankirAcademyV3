@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Front\ProfileController;
+use App\Http\Controllers\MemberNonAnggota\BillingController;
 use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
-	Route::resource('dash-beranda', ProfileController::class);
-	Route::get('/event-kelas', [DataEventKelasController::class, "dataeventkelas"]);
-	Route::get('/detail-event/{unique_id}/{title}', [DataEventKelasController::class, "detailevent"]);
+    Route::resource('dash-beranda', ProfileController::class);
+    Route::get('/event-kelas', [DataEventKelasController::class, 'dataeventkelas']);
+    Route::get('/detail-event/{unique_id}/{title}', [DataEventKelasController::class, 'detailevent']);
+    Route::get('/pembayaran', [BillingController::class, 'databilling']);
+    Route::post('/pembayaran/{payment}/expire', [BillingController::class, 'expirePayment']);
 });

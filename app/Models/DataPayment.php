@@ -10,10 +10,13 @@ class DataPayment extends Model
     use HasFactory;
 
     public const STATUS_PAID = 1;
+
     public const STATUS_PENDING = 2;
+
     public const STATUS_CANCELED = 99;
 
     public const PURCHASE_MEMBERSHIP = 'membership';
+
     public const PURCHASE_CLASS = 'kelas';
 
     protected $table = 'datapayment';
@@ -43,5 +46,15 @@ class DataPayment extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function paymentClass()
+    {
+        return $this->belongsTo(ClassesModel::class, 'class_id');
+    }
+
+    public function classPayment()
+    {
+        return $this->hasOne(ClassPaymentModel::class, 'no_invoice', 'no_invoice');
     }
 }

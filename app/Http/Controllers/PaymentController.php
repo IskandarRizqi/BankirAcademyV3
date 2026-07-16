@@ -69,7 +69,7 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $totalbayar,
                 'invoice_number' => $nomorinvoice,
-                'callback_url' => url('/dash-beranda'),
+                'callback_url' => url('/pembayaran'),
                 'line_items' => [
                     [
                         'name' => 'Membership',
@@ -371,7 +371,7 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $paymentAmount,
                 'invoice_number' => $invoiceNumber,
-                'callback_url' => url('/dash-beranda'),
+                'callback_url' => url('/pembayaran'),
                 'line_items' => [
                     [
                         'name' => 'Pembayaran Kelas',
