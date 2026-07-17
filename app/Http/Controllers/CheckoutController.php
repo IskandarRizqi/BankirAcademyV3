@@ -47,21 +47,37 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Invalid webhook payload'], 400);
         }
 
-        $purchaseType = data_get($request->all(), 'additional_info.pembelian_tipe')
+        $payment = DataPayment::where('no_invoice', $invoiceNumber)->first();
+        $payloadPurchaseType = data_get($request->all(), 'additional_info.pembelian_tipe')
             ?? data_get($notification['data'], 'additional_info.pembelian_tipe');
+        $purchaseType = (int) ($payment->tipe_pembelian ?? $payloadPurchaseType);
+        $purchaseName = strtolower((string) ($payment->pembelian ?? ''));
 
-        if ((int) $purchaseType === 1 || DataPayment::where('no_invoice', $invoiceNumber)->exists()) {
+        if ($purchaseType === DataPayment::PURCHASE_TYPE_MEMBERSHIP || $purchaseName === DataPayment::PURCHASE_MEMBERSHIP) {
             $result = $this->processMembershipPayment(
                 $invoiceNumber,
                 $notification['payment_status'],
                 $notification['amount']
             );
-        } else {
+        } elseif (
+            $purchaseType === DataPayment::PURCHASE_TYPE_CLASS
+            || $purchaseName === DataPayment::PURCHASE_CLASS
+            || ClassPaymentModel::where('no_invoice', $invoiceNumber)->exists()
+        ) {
             $result = $this->processClassPayment(
                 $invoiceNumber,
                 $notification['payment_status'],
                 $notification['amount']
             );
+        } else {
+            Log::warning('DOKU notification purchase type unknown', [
+                'invoice' => $invoiceNumber,
+                'tipe_pembelian' => $payment->tipe_pembelian ?? null,
+                'pembelian' => $payment->pembelian ?? null,
+                'payload_purchase_type' => $payloadPurchaseType,
+            ]);
+
+            return response()->json(['message' => 'Invalid purchase type'], 422);
         }
 
         return response()->json(['message' => $result['message']], $result['status']);
@@ -145,7 +161,16 @@ class CheckoutController extends Controller
                 return ['status' => 404, 'message' => 'Payment not found'];
             }
 
-            if (strtolower((string) $payment->pembelian) !== DataPayment::PURCHASE_MEMBERSHIP) {
+            if (
+                (int) $payment->tipe_pembelian !== DataPayment::PURCHASE_TYPE_MEMBERSHIP
+                && strtolower((string) $payment->pembelian) !== DataPayment::PURCHASE_MEMBERSHIP
+            ) {
+                Log::warning('DOKU invalid purchase type for membership processor', [
+                    'invoice' => $invoiceNumber,
+                    'tipe_pembelian' => $payment->tipe_pembelian,
+                    'pembelian' => $payment->pembelian,
+                ]);
+
                 return ['status' => 422, 'message' => 'Invalid purchase type'];
             }
 

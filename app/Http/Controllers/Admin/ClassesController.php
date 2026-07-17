@@ -174,6 +174,7 @@ class ClassesController extends Controller
 			'kategori' => $r->type,
 			'jam_acara' => $r->jam_acara,
 			'lokasi' => $r->lokasi,
+			'iht' => $r->boolean('iht'),
 		]);
 
 		return redirect('/admin/classes')->with('success', 'Class Saved');
@@ -243,6 +244,7 @@ class ClassesController extends Controller
 			'kategori' => $r->type,
 			'jam_acara' => $r->jam_acara,
 			'lokasi' => $r->lokasi,
+			'iht' => $r->boolean('iht'),
 		];
 
 		// Data Meta

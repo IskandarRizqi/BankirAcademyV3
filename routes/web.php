@@ -131,11 +131,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/classes/previewcertificate/{id}/{nama}/{instansi}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
     Route::post('/classes/biaya_certificate', [App\Http\Controllers\Admin\ClassesController::class, 'biayacertificate']);
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
-    Route::get('/classes/getinvoice/{id}', [App\Http\Controllers\Front\InvoiceController::class, 'getInvoice']);
     Route::post('/classes/multiinvoice', [App\Http\Controllers\Front\InvoiceController::class, 'multiInvoice']);
     Route::get('/classes/certificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getCertificate']);
     Route::post('/classes/review', [App\Http\Controllers\Admin\ClassesController::class, 'sendreview']);
-    Route::get('/classes/cetakinvoicepending/{id}', [App\Http\Controllers\Backend\MembershipController::class, 'cetakinvoicepending']);
+
     // 
     Route::post("/instructor/classes/store", [App\Http\Controllers\Backend\InstructorController::class, "classesStore"]);
     Route::get("/instructor/classes/create/{id}", [App\Http\Controllers\Backend\InstructorController::class, "classesCreate"]);
@@ -188,7 +187,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
         Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
-        Route::get('/cvats', function() {
+        Route::get('/cvats', function () {
             return view('compact.cvats');
         })->name('cvats');
         Route::post('/prepotes/savejawaban', [PrepotestController::class, 'savejawaban']);

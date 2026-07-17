@@ -32,7 +32,7 @@
 	[
 	'label' => 'Kelas anda',
 	'icon' => 'kelas',
-	'url' => '/kelas-event',
+	'url' => '#',
 	'active' => request()->is('kelas-event'),
 	'can_see' => true,
 	'has_submenu' => false,
@@ -40,8 +40,8 @@
 	[
 	'label' => 'Sertifikat',
 	'icon' => 'sertifikat',
-	'url' => '/sertifikat',
-	'active' => request()->is('sertifikat-kelas'),
+	'url' => '#',
+	'active' => request()->is('sertifikat'),
 	'can_see' => true,
 	'has_submenu' => false,
 	],

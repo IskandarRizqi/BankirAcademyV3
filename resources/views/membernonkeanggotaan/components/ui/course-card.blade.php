@@ -10,17 +10,22 @@ $title = data_get($course, 'title', 'Kelas pembelajaran');
 $level = $levels[(int) data_get($course, 'level')] ?? 'Semua Level';
 $category = data_get($course, 'category') ?: 'Kelas Bankir';
 $mode = [
-0 => 'Offline',
-1 => 'Online',
+	0 => 'Online',
+	1 => 'Offline',
 ][(int) data_get($course, 'kategori')] ?? 'Kelas';
 $startDate = data_get($course, 'date_start');
 $endDate = data_get($course, 'date_end');
+$isIht = (int) data_get($course, 'iht') === 1;
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
 $pricing = data_get($course, 'pricing');
+$isPriceComingSoon = ! $pricing || (int) data_get($pricing, 'gratis', 0) === 1;
 $price = (int) data_get($pricing, 'price', 0);
 $promoPrice = (int) data_get($pricing, 'promo_price', 0);
 $finalPrice = max(0, $price - $promoPrice);
+$priceLabel = $isPriceComingSoon
+	? 'Price Coming Soon'
+	: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis');
 $description = trim(strip_tags((string) data_get($course, 'content', '')));
 $description = $description !== '' ? \Illuminate\Support\Str::limit($description, 118) : 'Pelajari kompetensi perbankan melalui kelas terstruktur bersama Bankir Academy.';
 $image = data_get($course, 'image_mobile') ?: data_get($course, 'image');
@@ -62,9 +67,23 @@ if ($startDate && $endDate) {
 	if ($today->betweenIncluded($start->copy()->startOfDay(), $end->copy()->endOfDay())) {
 		$courseStatus = 'Running';
 		$courseStatusClass = 'running';
+	} elseif ($today->greaterThan($end->copy()->endOfDay())) {
+		$courseStatus = 'Completed';
+		$courseStatusClass = 'completed';
 	}
 } elseif ($startDate) {
 	$registrationDate = $formatCourseDate($startDate);
+
+	if (now()->startOfDay()->greaterThan(\Carbon\Carbon::parse($startDate)->endOfDay())) {
+		$courseStatus = 'Completed';
+		$courseStatusClass = 'completed';
+	}
+}
+
+if ($isIht && $courseStatusClass === 'upcoming') {
+	$courseStatus = 'IHT';
+	$courseStatusClass = 'iht';
+	$registrationDate = 'Hubungi Tim Kami';
 }
 @endphp
 
@@ -90,6 +109,18 @@ if ($startDate && $endDate) {
 		transform: translateY(-4px);
 	}
 
+	.member-course-card--completed {
+		background: #f3f4f6;
+		border-color: #d1d5db;
+		box-shadow: none;
+	}
+
+	.member-course-card--completed:hover {
+		border-color: #d1d5db;
+		box-shadow: none;
+		transform: none;
+	}
+
 	.member-course-card__media {
 		position: relative;
 		aspect-ratio: 16 / 10;
@@ -107,6 +138,15 @@ if ($startDate && $endDate) {
 
 	.member-course-card:hover .member-course-card__media img {
 		transform: scale(1.04);
+	}
+
+	.member-course-card--completed .member-course-card__media img {
+		filter: grayscale(1);
+		opacity: .62;
+	}
+
+	.member-course-card--completed:hover .member-course-card__media img {
+		transform: none;
 	}
 
 	.member-course-card__badge-row {
@@ -185,6 +225,30 @@ if ($startDate && $endDate) {
 	.member-course-card__category-badge--status-upcoming {
 		background: #fff7ed;
 		color: #c2410c;
+	}
+
+	.member-course-card__category-badge--status-completed {
+		background: #e5e7eb;
+		color: #4b5563;
+	}
+
+	.member-course-card__category-badge--status-iht {
+		background: #eef0fe;
+		color: #4f46e5;
+	}
+
+	.member-course-card--completed .member-course-card__category-badge,
+	.member-course-card--completed .member-course-card__meta-item {
+		background: #e5e7eb;
+		border-color: #d1d5db;
+		color: #4b5563;
+	}
+
+	.member-course-card--completed .member-course-card__title,
+	.member-course-card--completed .member-course-card__description,
+	.member-course-card--completed .member-course-card__meta-value,
+	.member-course-card--completed .member-course-card__price-value {
+		color: #6b7280;
 	}
 
 	.member-course-card__title {
@@ -339,7 +403,7 @@ if ($startDate && $endDate) {
 @endonce
 @endif
 
-<article class="member-course-card">
+<article class="member-course-card {{ $courseStatusClass === 'completed' ? 'member-course-card--completed' : '' }}">
 	<a href="{{ $detailUrl }}" class="member-course-card__media" aria-label="Lihat detail {{ $title }}">
 		<img src="{{ $image }}" alt="{{ $title }}" loading="lazy" onerror="this.src='{{ asset('assets/img/90x90.jpg') }}'">
 	</a>
@@ -379,8 +443,8 @@ if ($startDate && $endDate) {
 		<div class="member-course-card__footer">
 			<div class="member-course-card__price">
 				<span class="member-course-card__price-label">Harga</span>
-				<span class="member-course-card__price-value">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
-				@if($promoPrice > 0 && $price > $finalPrice)
+				<span class="member-course-card__price-value">{{ $priceLabel }}</span>
+				@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
 				<span class="member-course-card__price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
 			</div>

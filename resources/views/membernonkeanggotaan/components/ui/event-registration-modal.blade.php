@@ -3,9 +3,13 @@
     $classId = data_get($class, 'id');
     $classTitle = data_get($class, 'title', 'Kelas Bankir Academy');
     $pricing = data_get($class, 'pricing');
+    $isPriceComingSoon = ! $pricing || (int) data_get($pricing, 'gratis', 0) === 1;
     $price = (int) data_get($pricing, 'price', 0);
     $promoPrice = (int) data_get($pricing, 'promo_price', 0);
     $finalPrice = max(0, $price - $promoPrice);
+    $priceLabel = $isPriceComingSoon
+        ? 'Price Coming Soon'
+        : ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis');
     $certificateFee = (int) data_get($sertif ?? null, 'nominal', 100000);
 @endphp
 
@@ -140,7 +144,7 @@
                         </div>
                         <div class="event-registration-modal__card">
                             <span class="event-registration-modal__label">Harga</span>
-                            <span class="event-registration-modal__value">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
+                            <span class="event-registration-modal__value">{{ $priceLabel }}</span>
                         </div>
                     </div>
 
@@ -179,7 +183,7 @@
 
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold">Lanjut ke Pembayaran</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold js-event-registration-submit" data-loading-text="Memproses...">Lanjut ke Pembayaran</button>
                 </div>
             </form>
         </div>
@@ -266,6 +270,12 @@
                 form.addEventListener('submit', function (event) {
                     var certificate = form.querySelector('input[name="event_registration_certificate"]:checked');
                     var participantCount = parseInt(countInput ? countInput.value : 0, 10) || 0;
+                    var submitButton = form.querySelector('.js-event-registration-submit');
+
+                    if (form.dataset.submitted === '1') {
+                        event.preventDefault();
+                        return;
+                    }
 
                     if (participantCount < 1) {
                         event.preventDefault();
@@ -280,6 +290,13 @@
                     }
 
                     document.getElementById('eventRegistrationCertificateValue').value = certificate ? certificate.value : '0';
+                    form.dataset.submitted = '1';
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.dataset.originalText = submitButton.textContent.trim();
+                        submitButton.textContent = submitButton.dataset.loadingText || 'Memproses...';
+                    }
                 });
             }
 
@@ -292,6 +309,14 @@
                     }
 
                     document.getElementById('eventRegistrationCertificateValue').value = '1';
+                    delete form.dataset.submitted;
+                    var submitButton = form.querySelector('.js-event-registration-submit');
+
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = submitButton.dataset.originalText || 'Lanjut ke Pembayaran';
+                    }
+
                     renderParticipants();
                 });
             }

@@ -227,6 +227,10 @@
 		color: #b91c1c;
 	}
 
+	.billing-history-card__payment-info strong.is-warning {
+		color: #b45309;
+	}
+
 	.billing-history-card__order-date {
 		text-align: left;
 	}
@@ -236,6 +240,10 @@
 		align-items: center;
 		justify-content: flex-end;
 		margin-left: auto;
+	}
+
+	.billing-history-card__actions form {
+		margin: 0;
 	}
 
 	.billing-history-action {
@@ -250,6 +258,9 @@
 		font-weight: 850;
 		line-height: 1;
 		white-space: nowrap;
+		border: 0;
+		text-decoration: none;
+		cursor: pointer;
 	}
 
 	.billing-history-action--invoice {
@@ -319,6 +330,26 @@
 		color: #6b7280;
 		font-size: 13px;
 		line-height: 1.6;
+	}
+
+	.billing-flash {
+		margin: 0 0 18px;
+		padding: 12px 14px;
+		border-radius: 12px;
+		font-size: 13px;
+		font-weight: 750;
+	}
+
+	.billing-flash--success {
+		border: 1px solid #bbf7d0;
+		background: #f0fdf4;
+		color: #166534;
+	}
+
+	.billing-flash--error {
+		border: 1px solid #fecaca;
+		background: #fef2f2;
+		color: #991b1b;
 	}
 
 	.billing-history-loader {
@@ -399,6 +430,14 @@
 	}
 </style>
 @endonce
+
+@if(session('success'))
+<div class="billing-flash billing-flash--success">{{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+<div class="billing-flash billing-flash--error">{{ session('error') }}</div>
+@endif
 
 <div class="row billing-summary-grid" id="cancel-row">
 	@foreach($billingCards as $card)
@@ -528,6 +567,24 @@
 	})();
 
 	(function() {
+		document.addEventListener('submit', function(event) {
+			const form = event.target;
+
+			if (!form.matches('[data-iht-payment-form]')) {
+				return;
+			}
+
+			const submitButton = form.querySelector('[data-iht-payment-submit]');
+
+			if (submitButton) {
+				submitButton.disabled = true;
+				submitButton.dataset.originalText = submitButton.textContent.trim();
+				submitButton.textContent = 'Memproses...';
+			}
+		});
+	})();
+
+	(function() {
 		const pendingStatus = '2';
 
 		function pad(value) {
@@ -594,7 +651,7 @@
 
 		function updateCountdowns() {
 			document.querySelectorAll('.billing-history-countdown').forEach(function(element) {
-				element.classList.remove('is-success', 'is-danger');
+				element.classList.remove('is-success', 'is-danger', 'is-warning');
 
 				if (element.dataset.status !== pendingStatus) {
 					element.textContent = element.dataset.status === '1' ? 'Lunas' : 'Batal/Dibatalkan';
@@ -605,7 +662,8 @@
 				const expiresAt = new Date(element.dataset.expiresAt).getTime();
 
 				if (!expiresAt) {
-					element.textContent = '-';
+					element.textContent = element.dataset.pendingLabel || 'Menunggu';
+					element.classList.add('is-warning');
 					return;
 				}
 
