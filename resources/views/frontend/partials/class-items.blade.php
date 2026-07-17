@@ -1,13 +1,25 @@
 @foreach($class as $value)
 @php
-$levels = [
-	1 => 'Pemula',
-	2 => 'Menengah',
-	3 => 'Lanjutan',
-];
-$level = $levels[(int) $value->level] ?? '-';
 $realprice = $value->pricing->price ?? 0;
 $afterpromo = $value->pricing->promo_price ?? 0;
+$isIht = (int) data_get($value, 'iht') === 1;
+$startDate = data_get($value, 'date_start');
+$endDate = data_get($value, 'date_end');
+$courseStatus = 'Upcoming';
+
+if ($startDate && $endDate) {
+	$start = \Carbon\Carbon::parse($startDate)->startOfDay();
+	$end = \Carbon\Carbon::parse($endDate)->endOfDay();
+	$today = now()->startOfDay();
+
+	if ($today->greaterThan($end)) {
+		$courseStatus = 'Completed';
+	} elseif ($today->betweenIncluded($start, $end)) {
+		$courseStatus = 'Running';
+	}
+}
+
+$courseStatus = $isIht && $courseStatus === 'Upcoming' ? 'IHT' : $courseStatus;
 @endphp
 <div class="col-sm-6 col-xl-4">
 	<div class="course-item">
@@ -15,7 +27,7 @@ $afterpromo = $value->pricing->promo_price ?? 0;
 			<div class="course-item-img lazy">
 				<img src="{{ $value->image_mobile }}" alt="{{ $value->title }}">
 				<span class="course-tag">
-					<span>{{ $level }}</span>
+					<span>{{ $courseStatus }}</span>
 				</span>
 			</div>
 		</a>

@@ -62,9 +62,13 @@
                             </td>
                             <td>
                                 <span hidden>
-                                    {{ Carbon\Carbon::parse($v->date_start)->format('U') }}
+                                    {{ $v->date_start ? Carbon\Carbon::parse($v->date_start)->format('U') : 0 }}
                                 </span>
-                                @if($v->date_start)
+                                @if(!$v->date_start && !$v->date_end && $v->iht == 1)
+                                <div class="text-center">
+                                    <span class="badge badge-info">Kelas IHT</span>
+                                </div>
+                                @elseif($v->date_start)
                                 {{ Carbon\Carbon::parse($v->date_start)->format('d-m-Y') }}
                                 s/d
                                 {{ Carbon\Carbon::parse($v->date_end)->format('d-m-Y') }}
@@ -80,7 +84,11 @@
                                 @endif
                             </td>
                             <td>
-                                @if($v->jam_acara != null)
+                                @if(!$v->date_start && !$v->date_end && $v->iht == 1)
+                                <div class="text-center">
+                                    <span class="badge badge-info">Kelas IHT</span>
+                                </div>
+                                @elseif($v->jam_acara != null)
                                 {{$v->jam_acara}}
                                 @else
                                 <span class="badge badge-danger">Belum di setting</span>

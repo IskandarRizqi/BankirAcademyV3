@@ -1,11 +1,6 @@
 @php
 	$paymentHistories = $paymentHistories ?? collect();
 	$logoFallback = asset(ltrim(env('CUSTOM_FAVICON', '/359x404.png'), '/'));
-	$statusMap = [
-		1 => ['label' => 'Berhasil', 'class' => 'billing-history-status--success'],
-		2 => ['label' => 'Menunggu', 'class' => 'billing-history-status--warning'],
-		99 => ['label' => 'Dibatalkan', 'class' => 'billing-history-status--danger'],
-	];
 @endphp
 
 @foreach($paymentHistories as $payment)
@@ -14,11 +9,16 @@
 	$orderTitle = $isMembership ? 'Membership Bankir Academy' : data_get($payment, 'paymentClass.title', 'Kelas Bankir Academy');
 	$thumbnail = $isMembership ? $logoFallback : (data_get($payment, 'paymentClass.image_mobile') ?: data_get($payment, 'paymentClass.image') ?: $logoFallback);
 	$orderDate = optional($payment->created_at)->translatedFormat('d M Y, H:i');
-	$expiredAtDate = $payment->created_at ? $payment->created_at->copy()->addMinutes((int) $payment->expired) : null;
+	$displayStatus = $payment->billingStatus();
+	$isIhtWithoutExpiry = $payment->isIhtWithoutExpiry();
+	$isWaitingForIhtConfirmation = $payment->isWaitingForIhtConfirmation();
+	$canPayConfirmedIht = $payment->canPayConfirmedIht();
+	$expiredAtDate = $payment->paymentExpiresAt();
 	$expiredAt = optional($expiredAtDate)->toIso8601String();
-	$isPaid = (int) $payment->status === \App\Models\DataPayment::STATUS_PAID;
-	$isPending = (int) $payment->status === \App\Models\DataPayment::STATUS_PENDING;
+	$isPaid = $displayStatus === \App\Models\DataPayment::STATUS_PAID;
+	$isPending = $displayStatus === \App\Models\DataPayment::STATUS_PENDING;
 	$isExpired = $expiredAtDate ? $expiredAtDate->isPast() : true;
+	$pendingLabel = $isWaitingForIhtConfirmation ? 'Menunggu Konfirmasi' : 'Menunggu Pembayaran';
 	$classPaymentId = data_get($payment, 'classPayment.id');
 	$invoiceUrl = $isMembership ? url('/classes/cetakinvoicepending/' . $payment->id) : ($classPaymentId ? url('/classes/getinvoice/' . $classPaymentId) . '?payment_invoice=' . $classPaymentId : null);
 	$paymentUrl = $payment->link_payment;
@@ -52,7 +52,7 @@
 		<div class="billing-history-card__footer-info">
 			<div class="billing-history-card__payment-info">
 				<span>Status pembayaran</span>
-				<strong class="billing-history-countdown" data-expires-at="{{ $expiredAt }}" data-expire-url="{{ url('/pembayaran/' . $payment->id . '/expire') }}" data-payment-id="{{ $payment->id }}" data-status="{{ (int) $payment->status }}">-</strong>
+				<strong class="billing-history-countdown" data-expires-at="{{ $expiredAt }}" data-expire-url="{{ url('/pembayaran/' . $payment->id . '/expire') }}" data-payment-id="{{ $payment->id }}" data-status="{{ $displayStatus }}" data-pending-label="{{ $pendingLabel }}">-</strong>
 			</div>
 
 			<div class="billing-history-card__order-date">
@@ -67,6 +67,19 @@
 				<i class="fas fa-file-invoice" aria-hidden="true"></i>
 				Cetak Invoice
 			</a>
+			@elseif($canPayConfirmedIht && $paymentUrl)
+			<a href="{{ $paymentUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--pay" data-payment-action data-expires-at="{{ $expiredAt }}">
+				<i class="fas fa-credit-card" aria-hidden="true"></i>
+				Bayar Sekarang
+			</a>
+			@elseif($canPayConfirmedIht)
+			<form action="{{ route('membernonanggota.payment-iht', $payment) }}" method="POST" data-iht-payment-form>
+				@csrf
+				<button type="submit" class="billing-history-action billing-history-action--pay" data-iht-payment-submit>
+					<i class="fas fa-credit-card" aria-hidden="true"></i>
+					Bayar Sekarang
+				</button>
+			</form>
 			@elseif($isPending && ! $isExpired && $paymentUrl)
 			<a href="{{ $paymentUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--pay" data-payment-action data-expires-at="{{ $expiredAt }}">
 				<i class="fas fa-credit-card" aria-hidden="true"></i>

@@ -1,3 +1,16 @@
+@php
+    $membershipPayment = \App\Models\DataPayment::where('user_id', Auth::id())
+        ->where('tipe_pembelian', \App\Models\DataPayment::PURCHASE_TYPE_MEMBERSHIP)
+        ->latest('id')
+        ->first();
+
+    $invoiceNumber = $membershipPayment->no_invoice ?? '-';
+    $invoiceDate = optional($membershipPayment?->created_at)->format('d-m-Y') ?? Carbon\Carbon::now()->format('d-m-Y');
+    $grandTotal = (float) ($membershipPayment->nominal ?? 3000000);
+    $formattedGrandTotal = substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY), $grandTotal, 'IDR'), 0, -3);
+    $terbilangGrandTotal = Terbilang::make($grandTotal, '', 'Rp. ');
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +18,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INVOICE MEMBERSHIP</title>
+    <title>Invoice Membership</title>
     <style>
         body {
             font-size: 12px;
@@ -182,8 +195,6 @@
             position: relative;
             background-color: #fff;
             min-height: 680px;
-            /* padding: 1px */
-
         }
 
         .invoice header {
@@ -250,14 +261,11 @@
             border-collapse: collapse;
             border-spacing: 0;
             margin-bottom: 20px;
-
-            /* background-color: aqua; */
-            /* background-image: url(admin/assets/images/lunas-watermark-02.png); */
         }
 
         .invoice table::after {
             content: "";
-            /* background: url('lunas-watermark-03.png'); */
+            background: url('lunas-watermark-03.png');
             top: 280px;
             left: 150px;
             bottom: 0px;
@@ -266,21 +274,19 @@
             position: absolute;
             z-index: -1;
             background-repeat: no-repeat;
-            /* opacity: 0.7; */
-            /* background-position: 30px 30px; */
         }
 
         .invoice table td,
         .invoice table th {
             padding: 15px;
             background: #eee;
-            border-bottom: 1px solid #fff
+            border-bottom: 1px solid #fff;
         }
 
         .invoice table th {
             white-space: nowrap;
             font-weight: 400;
-            font-size: 10px
+            font-size: 13px
         }
 
         .invoice table td h3 {
@@ -294,7 +300,7 @@
         .invoice table .total,
         .invoice table .unit {
             text-align: right;
-            font-size: 1.2em
+            font-size: 1.35em
         }
 
         .invoice table .no {
@@ -365,9 +371,6 @@
             }
         }
 
-
-
-
         .float-left {
             float: left !important;
         }
@@ -429,15 +432,26 @@
             margin-left: -15px;
         }
 
-        /* header {
-			display: flex;
-			padding: 10px
-		} */
-
         img {
             float: left;
             margin-left: 15px;
             margin-right: 15px;
+        }
+
+        .invoice header img {
+            display: block;
+            float: none;
+            margin-bottom: 2px;
+        }
+
+        .invoice header .name {
+            margin: 0;
+            line-height: 0;
+        }
+
+        .invoice header .company-address {
+            clear: both;
+            margin-left: 15px;
         }
 
         .text-center {
@@ -462,13 +476,13 @@
                                 {{-- Bankir Academy --}}
                             </a>
                         </h2>
-                        <div>
-                            Jl. Jenderal Sudirman No.354, Gisikdrono, Kec.
-                            Semarang Barat, Kota Semarang, Jawa Tengah 50149
+                        <div class="company-address">
+                            Jl. Bukit Limau VIII, Bringin, Kec. Ngaliyan,
+                            Kota Semarang.
                             <br>
                             (024) 76435498
                             <br>
-                            info@bankiracademy.com
+                            info@bankiracademy.co.id
                         </div>
                     </div>
                 </div>
@@ -479,19 +493,21 @@
                     <div class="float-left invoice-to">
                         <div class="col-lg-6">
                             <div class="text-gray-light">INVOICE TO:</div>
-                            <h2 class="to">{{$profile->name}}</h2>
-                            <div class="email"><a href="mailto:">{{Auth::user()->email}}</a></div>
-                            <small>({{$profile->phone_region}}){{$profile->phone}}</small>
+                            <h2 class="to">{{ $profile->name ?? Auth::user()->name }}</h2>
+                            <div class="email"><a href="mailto:">{{ Auth::user()->email }}</a></div>
+                            <small>({{ $profile->phone_region ?? '-' }}){{ $profile->phone ?? '-' }}</small>
                             <br>
-                            <small>{{substr($profile->description,0,97).'...'}}</small>
+                            @if(!empty($profile->description))
+                            <small>{{ \Illuminate\Support\Str::limit($profile->description, 100) }}</small>
+                            @endif
                         </div>
                     </div>
                     <div class="float-right invoice-details">
                         <div class="col-lg-6">
                             <div class="date">Tanggal Invoice
-                                :{{Carbon\Carbon::now()->format('d-m-Y')}}</div>
-                            {{-- <h2 class="invoice-id">No. Invoice : <span
-                                    style="text-transform: uppercase;">{{$payment->no_invoice}}</span></h2> --}}
+                                :{{ $invoiceDate }}</div>
+                            <h2 class="invoice-id">No. Invoice : <span
+                                    style="text-transform: uppercase;">{{ $invoiceNumber }}</span></h2>
                         </div>
                     </div>
                 </div>
@@ -499,50 +515,30 @@
                 <table>
                     <thead>
                         <tr>
-                            <th width='1%' class="text-left">NO.</th>
-                            <th class="text-left">Produk</th>
-                            <th width='5%' class="text-left">HARGA</th>
-                            <th class="text-left">TOTAL</th>
+                            <th width='5%' class="text-left">NO.</th>
+                            <th class="text-left">PRODUK</th>
+                            <th width='5%' style="text-align: right;">HARGA</th>
+                            <th width='5%' style="text-align: right;">QTY</th>
+                            <th style="text-align: right;">TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th width='5%' class="text-left">1</th>
-                            <th width='5%' class="text-left">Membership</th>
-                            <th width='5%' class="text-left">{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)}}</th>
-                            <th width='5%' class="text-left">{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)
-                                }}</th>
+                            <td>1</td>
+                            <th class="text-left"
+                                style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
+                                Membership Bankir Academy
+                            </th>
+                            <td class="unit">{{ $formattedGrandTotal }}</td>
+                            <td class="unit">1</td>
+                            <td class="unit">{{ $formattedGrandTotal }}</td>
                         </tr>
                     </tbody>
-                    <tfoot>
-                        {{-- <tr>
-                            <td colspan="1"></td>
-                            <td colspan="2">SUBTOTAL</td>
-                            <td>SUBTOTAL</td>
-                        </tr> --}}
-
-                        {{-- <tr>
-                            <td colspan="1"></td>
-                            <td colspan="2">PAJAK PAJAK</td>
-                            <td>NOMINAL PAJAK</td>
-                        </tr> --}}
-                        {{-- <tr>
-                            <td colspan="5"></td>
-                            <td colspan="2">GRAND TOTAL</td>
-                            <td>{{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)
-                                }}
-                        </td>
-                        </tr> --}}
-                    </tfoot>
+                    <tfoot></tfoot>
                 </table>
                 <div style="text-align: right">
-                    <h2>Grand Total : {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                        \NumberFormatter::CURRENCY),3000000,"IDR"),0,-3)
-                        }}</h2>
-                    {{-- <p style="text-transform: capitalize;">{{$terbilang}}</p>--}}
+                    <h2>Grand Total : {{ $formattedGrandTotal }}</h2>
+                    <p style="text-transform: capitalize;">{{ $terbilangGrandTotal }}</p>
                 </div>
                 <div class="notices">
                     <div>Informasi:</div>
@@ -558,7 +554,6 @@
                 </div>
             </main>
         </div>
-        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
         <div></div>
     </div>
 </body>

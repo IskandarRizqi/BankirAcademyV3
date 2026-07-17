@@ -38,6 +38,7 @@ class ClassesModel extends Model
 		'kategori',
 		'jam_acara',
 		'lokasi',
+		'iht'
 	];
 
 
@@ -134,26 +135,26 @@ class ClassesModel extends Model
 	}
 
 	public function getPesertaListAttribute()
-{
-    $data = [];
-    if (array_key_exists('id', $this->attributes)) {
-        // Base query untuk menghindari pengulangan kode
-        $baseQuery = DB::table('class_payment')
-            ->select(
-                'class_payment.*', 
-                'user_profile.name as user_name', 
-                'user_profile.phone_region', 
-                'user_profile.phone', 
-                'user_profile.instansi',
-                'sertifikat_peserta.nama as nama_sertifikat' // Ambil nama dari tabel sertifikat
-            )
-            ->leftJoin('user_profile', 'user_profile.user_id', '=', 'class_payment.user_id')
-            ->leftJoin('sertifikat_peserta', 'sertifikat_peserta.payment_class_id', '=', 'class_payment.id')
-            ->where('class_payment.class_id', $this->attributes['id']);
+	{
+		$data = [];
+		if (array_key_exists('id', $this->attributes)) {
+			// Base query untuk menghindari pengulangan kode
+			$baseQuery = DB::table('class_payment')
+				->select(
+					'class_payment.*',
+					'user_profile.name as user_name',
+					'user_profile.phone_region',
+					'user_profile.phone',
+					'user_profile.instansi',
+					'sertifikat_peserta.nama as nama_sertifikat' // Ambil nama dari tabel sertifikat
+				)
+				->leftJoin('user_profile', 'user_profile.user_id', '=', 'class_payment.user_id')
+				->leftJoin('sertifikat_peserta', 'sertifikat_peserta.payment_class_id', '=', 'class_payment.id')
+				->where('class_payment.class_id', $this->attributes['id']);
 
-        $data['all'] = (clone $baseQuery)->get();
-        $data['lunas'] = (clone $baseQuery)->where('class_payment.status', 1)->get();
-    }
-    return $data;
-}
+			$data['all'] = (clone $baseQuery)->get();
+			$data['lunas'] = (clone $baseQuery)->where('class_payment.status', 1)->get();
+		}
+		return $data;
+	}
 }

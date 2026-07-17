@@ -53,19 +53,35 @@ class BillingController extends Controller
             ->where('user_id', $userId)
             ->whereNotIn('no_invoice', DataPayment::query()->where('user_id', $userId)->select('no_invoice'));
 
-        $spentAmount = (clone $dataPayments)->where('status', DataPayment::STATUS_PAID)->sum('nominal')
+        $spentAmount = (clone $dataPayments)
+            ->where('status', DataPayment::STATUS_PAID)
+            ->notWaitingForIhtConfirmation()
+            ->sum('nominal')
             + (clone $legacyPayments)->where('status', 1)->sum('price_final');
 
         return [
             'spent_amount' => $spentAmount,
             'spent_amount_formatted' => 'Rp '.number_format($spentAmount, 0, ',', '.'),
-            'paid_count' => (clone $dataPayments)->where('status', DataPayment::STATUS_PAID)->count()
+            'paid_count' => (clone $dataPayments)
+                ->where('status', DataPayment::STATUS_PAID)
+                ->notWaitingForIhtConfirmation()
+                ->count()
                 + (clone $legacyPayments)->where('status', 1)->count(),
-            'pending_count' => (clone $dataPayments)->where('status', DataPayment::STATUS_PENDING)->count()
+            'pending_count' => (clone $dataPayments)
+                ->where(function ($query) {
+                    $query->where('status', DataPayment::STATUS_PENDING)
+                        ->orWhere(function ($query) {
+                            $query->waitingForIhtConfirmation();
+                        });
+                })
+                ->count()
                 + (clone $legacyPayments)->where('status', 0)->where(function ($query) use ($now) {
                     $query->whereNull('expired')->orWhere('expired', '>=', $now);
                 })->count(),
-            'failed_count' => (clone $dataPayments)->where('status', DataPayment::STATUS_CANCELED)->count()
+            'failed_count' => (clone $dataPayments)
+                ->where('status', DataPayment::STATUS_CANCELED)
+                ->notWaitingForIhtConfirmation()
+                ->count()
                 + (clone $legacyPayments)->where('status', 0)->whereNotNull('expired')->where('expired', '<', $now)->count(),
         ];
     }
@@ -108,13 +124,20 @@ class BillingController extends Controller
             ])
             ->where('user_id', $userId)
             ->when($filters['status'] === 'berhasil', function ($query) {
-                $query->where('status', DataPayment::STATUS_PAID);
+                $query->where('status', DataPayment::STATUS_PAID)
+                    ->notWaitingForIhtConfirmation();
             })
             ->when($filters['status'] === 'menunggu', function ($query) {
-                $query->where('status', DataPayment::STATUS_PENDING);
+                $query->where(function ($query) {
+                    $query->where('status', DataPayment::STATUS_PENDING)
+                        ->orWhere(function ($query) {
+                            $query->waitingForIhtConfirmation();
+                        });
+                });
             })
             ->when($filters['status'] === 'dibatalkan', function ($query) {
-                $query->where('status', DataPayment::STATUS_CANCELED);
+                $query->where('status', DataPayment::STATUS_CANCELED)
+                    ->notWaitingForIhtConfirmation();
             })
             ->when($filters['start_date'], function ($query, $startDate) {
                 $query->whereDate('created_at', '>=', $startDate);
@@ -144,7 +167,15 @@ class BillingController extends Controller
             return false;
         }
 
-        $expiresAt = $payment->created_at?->copy()->addMinutes((int) $payment->expired);
+        if ($payment->isIhtWithoutExpiry()) {
+            return false;
+        }
+
+        if ((int) $payment->is_iht === 1 && (int) $payment->is_konfirmasi === 1 && ! $payment->link_payment) {
+            return false;
+        }
+
+        $expiresAt = $payment->paymentExpiresAt();
 
         if (! $expiresAt || $expiresAt->isFuture()) {
             return false;
