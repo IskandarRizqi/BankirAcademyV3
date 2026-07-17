@@ -31,6 +31,13 @@ class User extends Authenticatable
         'role',
         'password',
         'corporate',
+        'expires_at',
+        'email_sent_at',
+        'activated_at',
+        'password_sent_at',
+        'is_active',
+        'last_error',
+        'password_ciphertext',
     ];
 
     /**
@@ -50,6 +57,10 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'email_sent_at' => 'datetime',
+        'activated_at' => 'datetime',
+        'password_sent_at' => 'datetime',
     ];
     protected $appends = ['profile', 'rekening', 'corporates', 'role_name'];
     public function getRoleNameAttribute()
@@ -74,6 +85,7 @@ class User extends Authenticatable
         if (array_key_exists('id', $this->attributes)) {
             return UserProfileModel::with('membership')->where('user_id', $this->attributes['id'])->first();
         }
+        return null;
     }
     public function bank()
     {
@@ -104,13 +116,18 @@ class User extends Authenticatable
             return json_decode($this->attributes['corporate']);
         }
     }
-     public function getActivitylogOptions(): LogOptions
+    public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly([ 'name', 'email', 'bank_id', 'sekolah_id', 
-        'membership_id',
-        'masa_aktif_member',
-        'role',]) // Catat jika kolom ini berubah
+            ->logOnly([
+                'name',
+                'email',
+                'bank_id',
+                'sekolah_id',
+                'membership_id',
+                'masa_aktif_member',
+                'role',
+            ]) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }
