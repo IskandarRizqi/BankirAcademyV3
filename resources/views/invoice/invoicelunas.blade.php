@@ -437,6 +437,22 @@
             margin-right: 15px;
         }
 
+        .invoice header img {
+            display: block;
+            float: none;
+            margin-bottom: 2px;
+        }
+
+        .invoice header .name {
+            margin: 0;
+            line-height: 0;
+        }
+
+        .invoice header .company-address {
+            clear: both;
+            margin-left: 15px;
+        }
+
         .text-center {
             text-align: center !important;
         }
@@ -459,13 +475,13 @@
                                 {{-- AKARINDO.ID --}}
                             </a>
                         </h2>
-                        <div>
-                            Jl. Jenderal Sudirman No.354, Gisikdrono, Kec.
-                            Semarang Barat, Kota Semarang, Jawa Tengah 50149
+                        <div class="company-address">
+                            Jl. Bukit Limau VIII, Bringin, Kec. Ngaliyan,
+                            Kota Semarang.
                             <br>
                             (024) 76435498
                             <br>
-                            info.ehrindo@gmail.com
+                            info@bankiracademy.co.id
                         </div>
                     </div>
                 </div>

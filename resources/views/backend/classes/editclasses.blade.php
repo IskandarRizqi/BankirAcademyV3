@@ -1,5 +1,6 @@
 @extends('backend.template')
 @section('content')
+@include('backend.classes.partials.classes-form-style')
 <div class="col-lg-12">
 	<div class="widget">
 		<div class="widget-heading">
@@ -8,7 +9,7 @@
 					class="flaticon-cancel-12"></i> Back</a>
 		</div>
 		<div class="widget-content">
-			<form action="/admin/classes/{{$id}}" id="newClassesForm" method="POST" enctype="multipart/form-data">
+			<form action="/admin/classes/{{$id}}" id="newClassesForm" method="POST" enctype="multipart/form-data" class="classes-form">
 				@csrf
 				<input type="hidden" name="_method" value="PUT" id="hdnClassesMethod">
 				<input type="hidden" name="hdnClassesId" value="{{$id}}" id="hdnClassesId">
@@ -28,7 +29,7 @@
 								<div class="row">
 									<div class="col">
 										<div class="form-group">
-											<label for="slcClassesCategory">Level</label>
+											<label for="slcClassesLevel">Level</label>
 											<small class="inputerrormessage text-danger" input-target="slcClassesLevel"
 												style="display: none;"></small>
 											<select class="form-control" name="slcClassesLevel" id="slcClassesLevel"
@@ -85,7 +86,7 @@
 										<div class="form-group">
 											<input type="text" name="" id="oldSlcClassesType" value="{{$classes->tipe}}"
 												hidden>
-											<label for="slcClassesCategory">Type</label>
+											<label for="slcClassesType">Type</label>
 											<select class="form-control tagging" name="slcClassesType[]"
 												id="slcClassesType" multiple required>
 												<option value="BANK">BANK</option>
@@ -101,7 +102,7 @@
 										<div class="form-group">
 											<input type="text" name="" id="oldSlcClassesJenis"
 												value="{{$classes->jenis}}" hidden>
-											<label for="slcClassesCategory">Jenis</label>
+											<label for="slcClassesJenis">Jenis</label>
 											<select class="form-control tagging" name="slcClassesJenis[]"
 												id="slcClassesJenis" multiple>
 												<option value="CALON_BANKIR">CALON BANKIR</option>
@@ -191,8 +192,8 @@
 							</div>
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label for="slcClassesTags">Type</label>
-									<select name="type" class="form-control" required>
+									<label for="type">Mode Kelas</label>
+									<select name="type" id="type" class="form-control" required>
 										@if($classes->kategori == 0)
 										<option value="0" selected>Online</option>
 										<option value="1">Offline</option>
@@ -205,14 +206,25 @@
 							</div>
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label for="slcClassesTags">Jam</label>
-									<input type="time" name="jam_acara" required class="form-control" value="{{$classes->jam_acara}}">
+									<label for="jam_acara">Jam</label>
+									<input type="time" name="jam_acara" id="jam_acara" class="form-control" value="{{$classes->jam_acara}}">
 								</div>
 							</div>
-							<div class="col-lg-6">
+							<div class="col-lg-3">
+								<div class="form-group classes-iht-field">
+									<label for="chkClassesIht">IHT</label>
+									<input type="hidden" name="iht" value="0">
+									<div class="custom-control custom-switch classes-iht-switch">
+										<input type="checkbox" class="custom-control-input" name="iht" id="chkClassesIht" value="1" {{ $classes->iht ? 'checked' : '' }}>
+										<label class="custom-control-label" for="chkClassesIht">Iya / Tidak</label>
+									</div>
+									<small class="field-help">Centang untuk Iya, kosongkan untuk Tidak.</small>
+								</div>
+							</div>
+							<div class="col-lg-3">
 								<div class="form-group">
-									<label for="slcClassesTags">Lokasi</label>
-									<textarea name="lokasi" class="form-control" rows="1" cols="1" placeholder="Input lokasi class apabila offline">{{$classes->lokasi}}</textarea>
+									<label for="lokasi">Lokasi</label>
+									<textarea name="lokasi" id="lokasi" class="form-control" rows="1" cols="1" placeholder="Input lokasi class apabila offline">{{$classes->lokasi}}</textarea>
 								</div>
 							</div>
 							<div class="col-lg-12">
@@ -229,7 +241,7 @@
 					<div class="col-md-4">
 						<div class="col">
 							<div class="form-group">
-								<label for="slcClassesCategory">Sub Category</label>
+								<label for="subCategory">Sub Category</label>
 								<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
 									style="display: none;"></small>
 								<select class="form-control tagging slc2tag" name="subCategory[]" id="subCategory"

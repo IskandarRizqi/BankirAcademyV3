@@ -12,12 +12,14 @@ $filters = $filters ?? [
 'instructor' => [],
 'jenis' => [],
 'kategori' => [],
+'iht' => [],
 ];
 $filterOptions = $filterOptions ?? [
 'category' => [],
 'instructor' => [],
 'jenis' => [],
 'kategori' => [],
+'iht' => [],
 ];
 $levelOptions = [
 '1' => 'Pemula',
@@ -388,7 +390,7 @@ $levelOptions = [
 	<div class="course-list-layout">
 		<aside class="course-filter-card" aria-label="Filter kelas pembelajaran">
 			<h2 class="course-filter-card__title">Filter Kelas</h2>
-			<p class="course-filter-card__subtitle">Pilih kategori, instruktur, level, jenis, dan mode kelas.</p>
+			<p class="course-filter-card__subtitle">Pilih kategori, instruktur, level, jenis, mode, dan tipe IHT kelas.</p>
 
 			<form class="course-filter-form" method="GET" action="{{ url('/event-kelas') }}">
 				<div class="course-filter-field">
@@ -446,6 +448,16 @@ $levelOptions = [
 					</select>
 				</div>
 
+				<div class="course-filter-field">
+					<label for="course-iht">IHT</label>
+					<select id="course-iht" name="iht" class="course-filter-control">
+						<option value="">Semua kelas</option>
+						@foreach($filterOptions['iht'] as $value => $label)
+						<option value="{{ $value }}" {{ in_array((string) $value, $filters['iht'], true) ? 'selected' : '' }}>{{ $label }}</option>
+						@endforeach
+					</select>
+				</div>
+
 				<div class="course-filter-actions">
 					<button type="submit" class="course-filter-button">Terapkan</button>
 					<a href="{{ url('/event-kelas') }}" class="course-filter-reset">Reset</a>
@@ -478,7 +490,7 @@ $levelOptions = [
 			@else
 			<div class="course-empty-state">
 				<h3>Belum ada kelas yang cocok</h3>
-				<p>Ubah filter kategori, instruktur, level, jenis, atau mode untuk melihat kelas pembelajaran lain yang tersedia.</p>
+				<p>Ubah filter kategori, instruktur, level, jenis, mode, atau IHT untuk melihat kelas pembelajaran lain yang tersedia.</p>
 			</div>
 			@endif
 		</section>

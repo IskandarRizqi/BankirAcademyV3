@@ -14,19 +14,24 @@
 	$level = $levels[(int) data_get($class, 'level')] ?? 'Semua Level';
 	$category = data_get($class, 'category') ?: 'Kelas Bankir';
 	$mode = [
-		0 => 'Offline',
-		1 => 'Online',
+		0 => 'Online',
+		1 => 'Offline',
 	][(int) data_get($class, 'kategori')] ?? 'Kelas';
 	$startDate = data_get($class, 'date_start');
 	$endDate = data_get($class, 'date_end');
+	$isIht = (int) data_get($class, 'iht') === 1;
 	$courseTime = data_get($class, 'jam_acara');
 	$courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
 	$location = data_get($class, 'lokasi');
 	$participantLimit = data_get($class, 'participant_limit');
 	$pricing = data_get($class, 'pricing');
+	$isPriceComingSoon = ! $pricing || (int) data_get($pricing, 'gratis', 0) === 1;
 	$price = (int) data_get($pricing, 'price', 0);
 	$promoPrice = (int) data_get($pricing, 'promo_price', 0);
 	$finalPrice = max(0, $price - $promoPrice);
+	$priceLabel = $isPriceComingSoon
+		? 'Price Coming Soon'
+		: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis');
 	$image = data_get($class, 'image_mobile') ?: data_get($class, 'image');
 	$image = $image ?: asset('assets/img/90x90.jpg');
 	$instructors = collect(data_get($class, 'instructor_list', []));
@@ -58,24 +63,63 @@
 	$formattedDate = 'Fleksibel';
 	$courseStatus = 'Upcoming';
 	$courseStatusClass = 'upcoming';
+	$today = now()->startOfDay();
+	$registrationStart = $startDate ? \Carbon\Carbon::parse($startDate)->startOfDay() : null;
+	$registrationEnd = $endDate
+		? \Carbon\Carbon::parse($endDate)->endOfDay()
+		: ($registrationStart ? $registrationStart->copy()->endOfDay() : null);
 
 	if ($startDate && $endDate) {
-		$start = \Carbon\Carbon::parse($startDate);
-		$end = \Carbon\Carbon::parse($endDate);
-		$today = now()->startOfDay();
+		$start = $registrationStart->copy();
+		$end = $registrationEnd->copy();
 		$formattedDate = $start->isSameMonth($end) && $start->isSameYear($end)
 			? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
 			: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
-
-		if ($today->betweenIncluded($start->copy()->startOfDay(), $end->copy()->endOfDay())) {
-			$courseStatus = 'Running';
-			$courseStatusClass = 'running';
-		}
 	} elseif ($startDate) {
 		$formattedDate = $formatCourseDate($startDate);
 	}
 
-	$isUpcoming = $courseStatus === 'Upcoming';
+	if ($registrationEnd && $today->greaterThan($registrationEnd)) {
+		$courseStatus = 'Completed';
+		$courseStatusClass = 'completed';
+	} elseif ($registrationStart && $registrationEnd && $today->betweenIncluded($registrationStart, $registrationEnd)) {
+		$courseStatus = 'Running';
+		$courseStatusClass = 'running';
+	}
+
+	if ($isIht && $courseStatusClass === 'upcoming') {
+		$courseStatus = 'IHT';
+		$courseStatusClass = 'iht';
+		$formattedDate = 'Hubungi Tim Kami';
+	}
+
+	$isIhtOrderable = $isIht;
+	$canRegister = $courseStatusClass === 'running' && ! $isPriceComingSoon;
+	$registrationAlert = [
+		'upcoming' => [
+			'icon' => 'info',
+			'title' => 'Kelas masih upcoming',
+			'text' => 'Kelas ini belum dapat diorder karena periode pendaftaran belum berjalan.',
+		],
+		'completed' => [
+			'icon' => 'warning',
+			'title' => 'Pendaftaran sudah ditutup',
+			'text' => 'Pendaftaran kelas ini sudah ditutup karena periode pendaftaran telah berakhir.',
+		],
+		'iht' => [
+			'icon' => 'info',
+			'title' => 'Kelas IHT',
+			'text' => 'Silakan hubungi tim Bankir Academy untuk informasi pendaftaran kelas IHT.',
+		],
+	][$courseStatusClass] ?? null;
+
+	if ($isPriceComingSoon) {
+		$registrationAlert = [
+			'icon' => 'info',
+			'title' => 'Price Coming Soon',
+			'text' => 'Harga kelas ini belum tersedia. Silakan cek kembali nanti atau hubungi tim Bankir Academy.',
+		];
+	}
 @endphp
 
 <style>
@@ -179,6 +223,18 @@
 		border-color: rgba(251, 146, 60, .3);
 		background: rgba(255, 247, 237, .94);
 		color: #c2410c;
+	}
+
+	.event-pill--completed {
+		border-color: rgba(107, 114, 128, .32);
+		background: rgba(229, 231, 235, .94);
+		color: #4b5563;
+	}
+
+	.event-pill--iht {
+		border-color: rgba(79, 70, 229, .32);
+		background: rgba(238, 240, 254, .94);
+		color: #4f46e5;
 	}
 
 	.event-title-v2 {
@@ -690,12 +746,35 @@
 				<div class="event-price-strip">
 					<div>
 						<span class="event-price-label">Harga kelas</span>
-						<span class="event-price-value">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
-						@if($promoPrice > 0 && $price > $finalPrice)
+						<span class="event-price-value">{{ $priceLabel }}</span>
+						@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
 						<span class="event-price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 						@endif
 					</div>
-					<button type="button" class="event-primary-cta js-event-order-button" @unless($isUpcoming) data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false" @endunless data-course-status="{{ $courseStatus }}">Daftar Kelas</button>
+					@if($isIhtOrderable)
+					<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" class="m-0 js-iht-order-form">
+						@csrf
+						<button type="submit" class="event-primary-cta" data-loading-text="Memproses...">Daftar Kelas</button>
+					</form>
+					@else
+						<button
+							type="button"
+							class="event-primary-cta js-event-order-button"
+							@if($canRegister)
+							data-toggle="modal"
+							data-target="#eventRegistrationModal"
+							data-backdrop="static"
+							data-keyboard="false"
+							@endif
+							data-course-status="{{ $courseStatusClass }}"
+							data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
+							data-alert-title="{{ data_get($registrationAlert, 'title') }}"
+							data-alert-text="{{ data_get($registrationAlert, 'text') }}"
+							data-can-register="{{ $canRegister ? '1' : '0' }}"
+						>
+							Daftar Kelas
+						</button>
+					@endif
 				</div>
 			</div>
 		</div>
@@ -787,11 +866,34 @@
 		<aside class="event-side-stack" aria-label="Ringkasan kelas">
 			<section class="event-register-card">
 				<span class="event-register-card__label">Harga kelas</span>
-				<span class="event-register-card__price">{{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}</span>
-				@if($promoPrice > 0 && $price > $finalPrice)
+				<span class="event-register-card__price">{{ $priceLabel }}</span>
+				@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
 				<span class="event-register-card__original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
-				<button type="button" class="event-register-button js-event-order-button" @unless($isUpcoming) data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static" data-keyboard="false" @endunless data-course-status="{{ $courseStatus }}">Daftar / Beli Kelas</button>
+				@if($isIhtOrderable)
+				<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" class="m-0 js-iht-order-form">
+					@csrf
+					<button type="submit" class="event-register-button" data-loading-text="Memproses...">Daftar / Beli Kelas</button>
+				</form>
+				@else
+					<button
+						type="button"
+						class="event-register-button js-event-order-button"
+						@if($canRegister)
+						data-toggle="modal"
+						data-target="#eventRegistrationModal"
+						data-backdrop="static"
+						data-keyboard="false"
+						@endif
+						data-course-status="{{ $courseStatusClass }}"
+						data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
+						data-alert-title="{{ data_get($registrationAlert, 'title') }}"
+						data-alert-text="{{ data_get($registrationAlert, 'text') }}"
+						data-can-register="{{ $canRegister ? '1' : '0' }}"
+					>
+						Daftar / Beli Kelas
+					</button>
+				@endif
 				<p class="event-register-note">Pastikan data profil Anda sudah lengkap sebelum melakukan pembelian atau pendaftaran kelas.</p>
 			</section>
 
@@ -835,27 +937,49 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
+		document.querySelectorAll('.js-iht-order-form').forEach(function(form) {
+			form.addEventListener('submit', function(event) {
+				if (form.dataset.submitted === '1') {
+					event.preventDefault();
+					return;
+				}
+
+				form.dataset.submitted = '1';
+				const submitButton = form.querySelector('button[type="submit"]');
+
+				if (submitButton) {
+					submitButton.disabled = true;
+					submitButton.dataset.originalText = submitButton.textContent.trim();
+					submitButton.textContent = submitButton.dataset.loadingText || 'Memproses...';
+				}
+			});
+		});
+
 		document.querySelectorAll('.js-event-order-button').forEach(function(button) {
 			button.addEventListener('click', function(event) {
-				if (button.dataset.courseStatus !== 'Upcoming') {
+				if (button.dataset.canRegister === '1') {
 					return;
 				}
 
 				event.preventDefault();
 				event.stopPropagation();
 
+				const alertIcon = button.dataset.alertIcon || 'info';
+				const alertTitle = button.dataset.alertTitle || 'Kelas belum dapat didaftarkan';
+				const alertText = button.dataset.alertText || 'Kelas ini belum dapat diorder saat ini.';
+
 				if (window.Swal && typeof window.Swal.fire === 'function') {
 					window.Swal.fire({
-						icon: 'info',
-						title: 'Kelas masih upcoming',
-						text: 'Kelas ini belum dapat diorder karena periode pendaftaran belum berjalan.',
+						icon: alertIcon,
+						title: alertTitle,
+						text: alertText,
 						confirmButtonText: 'Mengerti'
 					});
 
 					return;
 				}
 
-				alert('Kelas ini belum dapat diorder karena masih upcoming.');
+				alert(alertText);
 			});
 		});
 	});

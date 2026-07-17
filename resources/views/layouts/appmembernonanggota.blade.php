@@ -20,6 +20,7 @@
 	</div>
 
 	@include('membernonkeanggotaan.partials.scripts')
+	@stack('scripts')
 </body>
 
 </html>
