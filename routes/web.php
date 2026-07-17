@@ -180,12 +180,13 @@ Route::middleware('auth')->group(function () {
         Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download-template');
         Route::post('users/import', [UserController::class, 'import'])->name('users.import');
         Route::get('users/beasiswa-approval', [UserController::class, 'beasiswaApprovalList'])->name('beasiswa.approval.list');
+        Route::post('/users/send-bulk-wa', [UserController::class, 'sendBulkWhatsapp'])->name('users.send-bulk-wa');
         Route::post('users/beasiswa-approval/{id}/{action}', [UserController::class, 'beasiswaApprovalProcess'])->name('users.beasiswa.approval.process');
         Route::resource('users', UserController::class);
     });
     Route::middleware(['role:6'])->group(function () {
         Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
-        Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
+        
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
         Route::get('/cvats', function () {
             return view('compact.cvats');
@@ -211,6 +212,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
+        Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
     });
 
     Route::post("/payment-membership", [PaymentController::class, "paymentmembership"]);

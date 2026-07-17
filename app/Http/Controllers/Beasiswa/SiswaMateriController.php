@@ -341,6 +341,17 @@ public function prosesBayarBeasiswa(Request $request, $id)
         return redirect()->back()->with('error', 'Akses ditolak. Anda bukan siswa penerima beasiswa.');
     }
 
+    // [VALIDASI TAMBAHAN] Cek apakah siswa sudah memiliki modul ini agar tidak beli 2 kali
+    $sudahPunyaModul = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        ->where('class_id', $id)
+        ->exists();
+
+    if ($sudahPunyaModul) {
+        return redirect()->route('siswa.materi.belajar', [$id])
+            ->with('info', 'Anda sudah terdaftar di kelas ini.');
+    }
+
     // Validasi kecukupan saldo
     if ($siswaProfile->saldo < $hargaMateri) {
         return redirect()->back()->with('error', 'Transaksi gagal. Saldo beasiswa Anda tidak mencukupi.');
@@ -352,8 +363,8 @@ public function prosesBayarBeasiswa(Request $request, $id)
         $siswaProfile->saldo -= $hargaMateri;
         $siswaProfile->save();
 
-        // 2. Masukkan ke Modul Aktif
-        DB::table('siswa_modul_aktif')->insert([
+        // 2. Masukkan ke Modul Aktif menggunakan insertOrIgnore untuk menghindari crash constraint
+        DB::table('siswa_modul_aktif')->insertOrIgnore([
             'user_id'    => $userId,
             'class_id'   => $id,
             'created_at' => now(),
@@ -376,6 +387,11 @@ public function prosesBayarBeasiswa(Request $request, $id)
 
     } catch (\Exception $e) {
         DB::rollBack();
+        
+        // Log error asli untuk mempermudah debugging di file laravel.log jika ada masalah lain
+        \Log::error('Gagal memproses bayar beasiswa: ' . $e->getMessage());
+
+        // Kembalikan ke halaman sebelumnya (jangan langsung ke halaman belajar karena transaksi GAGAL)
         return redirect()->back()->with('error', 'Terjadi kesalahan sistem saat memproses transaksi.');
     }
 }

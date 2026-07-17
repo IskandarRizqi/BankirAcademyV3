@@ -661,6 +661,60 @@
         .btn-md-inline { width: 100% !important; }
         .pdf-wrapper { height: 350px !important; }
     }
+    .custom-table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e0e6ed;
+    color: #515365;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 15px 10px;
+}
+.custom-table tbody tr.user-row {
+    transition: all 0.2s ease;
+}
+.custom-table tbody tr.user-row:hover {
+    background-color: rgba(67, 97, 238, 0.04) !important;
+}
+.custom-table td {
+    padding: 14px 10px;
+    vertical-align: middle !important;
+    border-bottom: 1px solid #e0e6ed;
+}
+.bg-light-success { background-color: rgba(40, 167, 69, 0.12) !important; }
+.bg-light-warning { background-color: rgba(255, 193, 7, 0.12) !important; }
+.bg-light-secondary { background-color: rgba(108, 117, 125, 0.12) !important; }
+.no-caret::after { display: none !important; }
+.font-weight-500 { font-weight: 500; }
+
+/* Custom Floating Bulk Bar Style */
+.floating-bulk-bar {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1b2e4b;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    padding: 14px 24px;
+    border-radius: 50px;
+    z-index: 1050;
+    width: 90%;
+    max-width: 650px;
+    display: flex;
+    align-items: center;
+    animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.id-count-badge {
+    background: #e7515a !important;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+@keyframes slideUp {
+    from { bottom: -60px; opacity: 0; }
+    to { bottom: 25px; opacity: 1; }
+}
 </style>
 
 <style>

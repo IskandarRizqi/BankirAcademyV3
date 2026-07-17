@@ -46,66 +46,140 @@
                 </div>
 
             @else
-                @if(($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 1)
-                    @if($quizAktif)
-                        <div class="card shadow-sm custom-card p-3 p-md-4 bg-white" style="border-radius: 16px;">
-                            <div class="d-flex flex-row justify-content-between align-items-center border-bottom pb-3 mb-3">
-                                <span class="badge badge-pill {{ $contentType === 'pre' ? 'badge-warning text-dark' : 'badge-danger' }} px-3 py-2 font-weight-bold" style="font-size: 0.75rem;">
-                                    <i class="fas fa-file-signature mr-1"></i> {{ $contentType === 'pre' ? 'PRE-TEST' : 'POST-TEST' }}
-                                </span>
-                                <span class="text-muted small font-weight-bold text-right ml-2" style="font-size: 0.75rem;"><i class="far fa-clock mr-1"></i> Pilihan Ganda</span>
-                            </div>
-                            
-                            <p class="text-muted small mb-4">Silakan jawab pertanyaan di bawah ini dengan memilih salah satu opsi jawaban yang paling tepat.</p>
+               @if(($contentType === 'pre' || $contentType === 'post') && $statusBeasiswaSiswa == 1)
+    @if($quizAktif)
+        <div class="card shadow-sm custom-card p-3 p-md-4 bg-white" style="border-radius: 16px;">
+            <div class="d-flex flex-row justify-content-between align-items-center border-bottom pb-3 mb-3">
+                <span class="badge badge-pill {{ $contentType === 'pre' ? 'badge-warning text-dark' : 'badge-danger' }} px-3 py-2 font-weight-bold" style="font-size: 0.75rem;">
+                    <i class="fas fa-file-signature mr-1"></i> {{ $contentType === 'pre' ? 'PRE-TEST' : 'POST-TEST' }}
+                </span>
+                <span class="text-muted small font-weight-bold text-right ml-2" style="font-size: 0.75rem;"><i class="far fa-clock mr-1"></i> Pilihan Ganda</span>
+            </div>
+            
+           <div id="section-panduan" class="p-4 border-0 shadow-sm position-relative overflow-hidden bg-white" 
+     style="border-radius: 20px; border: 1px solid #e2e8f0 !important;">
+    
+    <div class="text-center">
+        <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-circle shadow-sm" 
+             style="width: 64px; height: 64px; background: linear-gradient(135deg, #e0e7ff 0%, #eef2ff 100%);">
+            <i class="fas {{ $contentType === 'pre' ? 'fa-rocket text-indigo' : 'fa-trophy text-danger' }} fa-lg" style="font-size: 1.5rem; color: #4f46e5;"></i>
+        </div>
+        <h4 class="font-weight-bold text-dark mb-2" style="letter-spacing: -0.5px;">
+            {{ $contentType === 'pre' ? 'Siap Mengerjakan Pre-Test?' : 'Siap Menghadapi Post-Test?' }}
+        </h4>
+        <p class="text-muted mx-auto small-mobile-text" style="max-width: 480px; font-size: 0.9rem; line-height: 1.5;">
+            {{ $contentType === 'pre' ? 'Uji pemahaman awalmu sebelum masuk kelas. Kerjakan dengan santai untuk mengukur skill dasarmu!' : 'Saatnya membuktikan hasil belajarmu di bab ini. Kerjakan dengan performa terbaikmu!' }}
+        </p>
+    </div>
 
-                            <form action="{{ route('siswa.materi.simpan_test', [$materiAktif->id, $quizAktif->id]) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="classid" value="{{ $materiAktif->id }}">
+    <hr class="my-4" style="border-top: 1px dashed #e2e8f0;">
+
+    <div class="row mb-4">
+        <div class="col-12 col-md-4 mb-3 mb-md-0">
+            <div class="text-center h-100 rounded-lg border bg-light-gradient" style="border-radius: 14px; border-color: #f1f5f9 !important; background: #fafafa;">
+                <div class="text-primary mb-2 shadow-2xs d-inline-flex bg-white rounded-lg">
+                    <i class="fas fa-list-ol fa-fw"></i>
+                </div>
+                <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.85rem;">Tipe Soal</h6>
+                <p class="text-secondary mb-0" style="font-size: 0.78rem;">Pilihan Ganda (Single Choice)</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3 mb-md-0">
+            <div class="text-center h-100 rounded-lg border bg-light-gradient" style="border-radius: 14px; border-color: #f1f5f9 !important; background: #fafafa;">
+                <div class="text-success mb-2 shadow-2xs d-inline-flex bg-white rounded-lg">
+                    <i class="fas fa-user-shield fa-fw"></i>
+                </div>
+                <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.85rem;">Integritas</h6>
+                <p class="text-secondary mb-0" style="font-size: 0.78rem;">100% Jujur & Tanpa Menyontek</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="text-center h-100 rounded-lg border bg-light-gradient" style="border-radius: 14px; border-color: #f1f5f9 !important; background: #fafafa;">
+                <div class="text-warning mb-2 shadow-2xs d-inline-flex bg-white rounded-lg">
+                    <i class="fas fa-bullseye fa-fw"></i>
+                </div>
+                <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.85rem;">Fokus & Teliti</h6>
+                <p class="text-secondary mb-0" style="font-size: 0.78rem;">Baca cermat sebelum klik submit</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-3 mb-4 d-flex align-items-start rounded-lg" style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px;">
+        <i class="fas fa-info-circle text-warning mr-3 mt-1" style="font-size: 1.1rem;"></i>
+        <div class="small-mobile-text text-warning-dark" style="font-size: 0.8rem; color: #92400e; line-height: 1.5;">
+            <strong>Catatan Penting:</strong> Setelah Anda menekan tombol mulai, pastikan koneksi internet stabil. Anda tidak dapat mengulang tes ini setelah jawaban dikirimkan.
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="button" id="btn-mulai-kuis" class="btn btn-primary px-5 py-3 font-weight-bold shadow btn-modern btn-lg-responsive w-xs-100" 
+                style="border-radius: 50px; font-size: 0.95rem; letter-spacing: 0.3px; transition: all 0.3s ease;">
+            <i class="fas fa-play-circle mr-2 fa-lg align-middle"></i> Mulai Ujian Sekarang
+        </button>
+    </div>
+</div>
+            <form action="{{ route('siswa.materi.simpan_test', [$materiAktif->id, $quizAktif->id]) }}" method="POST" id="form-kuis" class="d-none">
+                @csrf
+                <input type="hidden" name="classid" value="{{ $materiAktif->id }}">
+                
+                @php
+                    $daftarSoal = is_string($quizAktif->soal) ? json_decode($quizAktif->soal, true) : $quizAktif->soal;
+                @endphp
+
+                @if(is_array($daftarSoal) && count($daftarSoal) > 0)
+                    <div class="progress mb-4 shadow-sm" style="height: 8px; border-radius: 10px;">
+                        <div id="quiz-progress-bar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                    </div>
+
+                    @foreach($daftarSoal as $indexSoal => $item)
+                        <div class="wrapper-soal-item d-none" data-soal-index="{{ $indexSoal }}" id="box-soal-{{ $indexSoal }}">
+                            <div class="mb-4 p-3 p-md-4 border-0 rounded-lg bg-light shadow-sm" style="border-radius: 12px;">
+                                <h6 class="font-weight-bold text-dark mb-3 d-flex align-items-start" style="line-height: 1.6; font-size: 0.95rem;">
+                                    <span class="badge badge-dark mr-2 px-2 py-1 flex-shrink-0" style="border-radius: 6px;">{{ $indexSoal + 1 }} dari {{ count($daftarSoal) }}</span> 
+                                    <span class="flex-grow-1 pt-0.5 small-mobile-text">{{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}</span>
+                                </h6>
                                 
-                                @php
-                                    $daftarSoal = is_string($quizAktif->soal) ? json_decode($quizAktif->soal, true) : $quizAktif->soal;
-                                @endphp
+                                <div class="mt-3">
+                                    @if(isset($item['opsi']) && is_array($item['opsi']))
+                                        @foreach($item['opsi'] as $keyOpsi => $valOpsi)
+                                            <label class="opsi-label d-flex align-items-center p-3 mb-2 bg-white shadow-sm rounded-lg label-pilihan-opsi" style="cursor: pointer; transition: all 0.2s;">
+                                                <input type="radio" name="jawaban[{{ $indexSoal }}]" value="{{ $keyOpsi }}" class="opsi-radio mr-3 flex-shrink-0 radio-input-opsi" required style="width: 18px; height: 18px; accent-color: #4f46e5;">
+                                                <span class="opsi-text text-dark small-mobile-text"><strong>{{ $keyOpsi }}.</strong> {{ $valOpsi }}</span>
+                                            </label>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
+                        <button type="button" id="btn-prev-soal" class="btn btn-outline-secondary btn-block-mobile px-4 py-2 font-weight-bold rounded-lg" disabled>
+                            <i class="fas fa-arrow-left mr-2"></i> Kembali
+                        </button>
+                        
+                        <button type="button" id="btn-next-soal" class="btn btn-primary btn-block-mobile px-4 py-2 font-weight-bold shadow-sm btn-modern rounded-lg">
+                            Selanjutnya <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
 
-                                @if(is_array($daftarSoal) && count($daftarSoal) > 0)
-                                    @foreach($daftarSoal as $indexSoal => $item)
-                                        <div class="mb-4 p-3 p-md-4 border-0 rounded-lg bg-light shadow-sm" style="border-radius: 12px;">
-                                            <h6 class="font-weight-bold text-dark mb-3 d-flex align-items-start" style="line-height: 1.6; font-size: 0.95rem;">
-                                                <span class="badge badge-dark mr-2 px-2 py-1 flex-shrink-0" style="border-radius: 6px;">{{ $indexSoal + 1 }}</span> 
-                                                <span class="flex-grow-1 pt-0.5 small-mobile-text">{{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}</span>
-                                            </h6>
-                                            
-                                            <div class="mt-3">
-                                                @if(isset($item['opsi']) && is_array($item['opsi']))
-                                                    @foreach($item['opsi'] as $keyOpsi => $valOpsi)
-                                                        <label class="opsi-label d-flex align-items-center p-3 mb-2 bg-white shadow-sm rounded-lg" style="cursor: pointer; transition: all 0.2s;">
-                                                            <input type="radio" name="jawaban[{{ $indexSoal }}]" value="{{ $keyOpsi }}" class="opsi-radio mr-3 flex-shrink-0" required style="width: 18px; height: 18px; accent-color: #4f46e5;">
-                                                            <span class="opsi-text text-dark small-mobile-text"><strong>{{ $keyOpsi }}.</strong> {{ $valOpsi }}</span>
-                                                        </label>
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                    
-                                    <div class="text-right mt-4 border-top pt-3">
-                                        <button type="submit" class="btn btn-primary btn-block-mobile px-5 py-2.5 font-weight-bold shadow-sm btn-modern">
-                                            <i class="fas fa-paper-plane mr-2"></i> Kirim Jawaban
-                                        </button>
-                                    </div>
-                                @else
-                                    <div class="text-center py-5 text-muted bg-light rounded" style="border-radius: 12px;">
-                                        <i class="fas fa-exclamation-triangle fa-2x mb-2 text-warning"></i>
-                                        <p class="mb-0"><em>Format soal kuis tidak valid atau data kosong.</em></p>
-                                    </div>
-                                @endif
-                            </form>
-                        </div>
-                    @else
-                        <div class="text-center py-5 bg-white shadow-sm custom-card" style="border-radius: 16px;">
-                            <i class="fas fa-exclamation-circle fa-3x text-muted mb-3"></i>
-                            <p class="text-secondary mb-0">Data ujian tidak ditemukan.</p>
-                        </div>
-                    @endif
+                        <button type="submit" id="btn-submit-kuis" class="btn btn-success btn-block-mobile px-5 py-2.5 font-weight-bold shadow-sm btn-modern d-none rounded-lg">
+                            <i class="fas fa-paper-plane mr-2"></i> Kirim Jawaban
+                        </button>
+                    </div>
+                @else
+                    <div class="text-center py-5 text-muted bg-light rounded" style="border-radius: 12px;">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2 text-warning"></i>
+                        <p class="mb-0"><em>Format soal kuis tidak valid atau data kosong.</em></p>
+                    </div>
+                @endif
+            </form>
+        </div>
+    @else
+        <div class="text-center py-5 bg-white shadow-sm custom-card" style="border-radius: 16px;">
+            <i class="fas fa-exclamation-circle fa-3x text-muted mb-3"></i>
+            <p class="text-secondary mb-0">Data ujian tidak ditemukan.</p>
+        </div>
+    @endif
 
                 @else
                     @if($subMateriAktif)
@@ -316,5 +390,75 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        let currentStep = 0;
+        const totalSoal = $(".wrapper-soal-item").length;
+
+        // 1. Aksi ketika tombol 'Mulai Ujian Sekarang' di klik
+        $("#btn-mulai-kuis").on("click", function() {
+            $("#section-panduan").slideUp(400, function() {
+                $("#form-kuis").removeClass("d-none");
+                showSoal(currentStep);
+            });
+        });
+
+        // 2. Fungsi Menampilkan Soal Berdasarkan Index
+        function showSoal(index) {
+            $(".wrapper-soal-item").addClass("d-none"); 
+            $(`#box-soal-${index}`).removeClass("d-none"); 
+
+            // Update Progress Bar
+            let progressPercent = ((index + 1) / totalSoal) * 100;
+            $("#quiz-progress-bar").css("width", progressPercent + "%");
+
+            // Pengaturan State Tombol Navigasi
+            if (index === 0) {
+                $("#btn-prev-soal").attr("disabled", true);
+            } else {
+                $("#btn-prev-soal").removeAttr("disabled");
+            }
+
+            if (index === totalSoal - 1) {
+                $("#btn-next-soal").addClass("d-none");
+                $("#btn-submit-kuis").removeClass("d-none");
+            } else {
+                $("#btn-next-soal").removeClass("d-none");
+                $("#btn-submit-kuis").addClass("d-none");
+            }
+        }
+
+        // 3. Tombol Selanjutnya
+        $("#btn-next-soal").on("click", function() {
+            // Validasi apakah user sudah memilih opsi jawaban di soal yang aktif saat ini
+            let inputChecked = $(`#box-soal-${currentStep} .radio-input-opsi:checked`).val();
+            if (!inputChecked) {
+                alert("Harap pilih salah satu jawaban terlebih dahulu sebelum lanjut!");
+                return false;
+            }
+
+            if (currentStep < totalSoal - 1) {
+                currentStep++;
+                showSoal(currentStep);
+            }
+        });
+
+        // 4. Tombol Kembali
+        $("#btn-prev-soal").on("click", function() {
+            if (currentStep > 0) {
+                currentStep--;
+                showSoal(currentStep);
+            }
+        });
+
+        // Effect Visual: Highlight background opsi saat dipilih
+        $(document).on("change", ".radio-input-opsi", function() {
+            $(this).closest(".wrapper-soal-item").find(".label-pilihan-opsi").removeClass("bg-indigo-50 border-primary-custom").css("background-color", "#ffffff");
+            if ($(this).is(":checked")) {
+                $(this).closest(".label-pilihan-opsi").css("background-color", "#f3f4f6");
+            }
+        });
+    });
+</script>
 @endsection

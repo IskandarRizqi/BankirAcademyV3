@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
@@ -93,6 +94,7 @@ class UserController extends Controller
         'kelas' => 'nullable|string|max:50',
         'jenis_kelamin' => 'nullable|in:L,P',
         'no_telp' => 'nullable|string|max:20',
+        'angkatan' => 'nullable|integer',
         'beasiswa' => 'nullable|integer|in:0,1,2',
         'alamat' => 'nullable|string',
         'email_pribadi' => 'nullable|string|email|max:255', // Validasi baru untuk email data profil siswa
@@ -203,6 +205,7 @@ class UserController extends Controller
             \App\Models\SiswaProfile::create([
                 'user_id' => $user->id,
                 'no_telp' => $request->no_telp,
+                'angkatan' => $request->angkatan,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'nisn' => trim($request->nisn),
                 'kelas' => $request->kelas,
@@ -212,7 +215,7 @@ class UserController extends Controller
                 'saldo' => $beasiswaStatus ? $saldoAwalSiswa : 0,
             ]);
         }
-
+         $this->sendWhatsappNotification($user, $passwordSiswa, $request->no_telp);
         DB::commit();
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil ditambahkan.');
     } catch (\Exception $e) {
@@ -305,6 +308,7 @@ class UserController extends Controller
 
         // Validasi field profil siswa
         'no_telp' => 'nullable|string|max:20',
+        'angkatan' => 'nullable|integer',
         'jenis_kelamin' => 'nullable|in:L,P',
         'nisn' => 'required_if:role,6|nullable|string|max:20',
         'kelas' => 'nullable|string|max:50',
@@ -409,6 +413,7 @@ class UserController extends Controller
                 ['user_id' => $user->id],
                 [
                     'no_telp'       => $request->no_telp,
+                    'angkatan'       => $request->angkatan,
                     'jenis_kelamin' => $request->jenis_kelamin,
                     'nisn'          => trim($request->nisn),
                     'kelas'         => $request->kelas,
@@ -509,5 +514,77 @@ public function beasiswaApprovalProcess($id, $action)
     }
 
     return redirect()->back()->with('error', 'Aksi tidak valid.');
+}
+public function sendBulkWhatsapp(Request $request)
+{
+    $userIds = $request->input('user_ids', []);
+
+    if (empty($userIds)) {
+        return response()->json(['success' => false, 'message' => 'Tidak ada pengguna yang dipilih.'], 400);
+    }
+
+    // Mengambil user dengan relasi siswa yang memiliki nomor telepon dan NISN
+    $users = User::whereIn('id', $userIds)
+        ->where('role', 6)
+        ->with('siswa')
+        ->get();
+
+    $successCount = 0;
+    
+    foreach ($users as $user) {
+        if ($user->siswa && !empty($user->siswa->no_telp) && !empty($user->siswa->nisn)) {
+            $isSent = $this->sendWhatsappNotification($user);
+            if ($isSent) {
+                $successCount++;
+            }
+        }
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => "Berhasil memproses pengiriman informasi akun ke {$successCount} siswa."
+    ]);
+}
+
+/**
+ * Pengiriman WhatsApp Tunggal menggunakan data dinamis NISN
+ */
+private function sendWhatsappNotification($user)
+{
+    // Bersihkan format nomor telepon
+    $target = preg_replace('/^0/', '62', $user->siswa->no_telp);
+    
+    // Auto generate logic sesuai request
+    $nisn = $user->siswa->nisn;
+    $generatedEmail = $nisn . '@gmail.com';
+    $generatedPassword = $nisn . 'Bankir!';
+
+    $message = "Pesan Otomatis Bankir\n" .
+        "__________________\n" .
+        "Informasi Akun Siswa\n" .
+        now()->format('d M Y') . "\n\n" .
+        "Salam sehat\n" .
+        "Yth *" . $user->name . "*,\n\n" .
+        "Berikut adalah detail akun Anda:\n" .
+        "Email: *" . $generatedEmail . "*\n" .
+        "Password: *" . $generatedPassword . "*\n" .
+        "----------------------------------------------\n" .
+        "Silakan cek bankiracademy.co.id untuk detail lebih lanjut.\n" .
+        "------------------------------------------\n" .
+        "Copyright\n" .
+        "bankiracademy.co.id | " . date('Y');
+
+    try {
+        $response = Http::withHeaders(['Authorization' => env('FONNTE_API_TOKEN')])
+            ->post(env('FONNTE_BASE_URL'), [
+                'target' => $target,
+                'message' => $message,
+            ]);
+            
+        return $response->successful();
+    } catch (\Exception $e) {
+        // Log error jika dibutuhkan: Log::error($e->getMessage());
+        return false;
+    }
 }
 }
