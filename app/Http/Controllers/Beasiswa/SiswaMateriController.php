@@ -285,7 +285,7 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
             }
         }
     }
-
+    
     return view('compact.belajar', compact(
         'materiAktif', 
         'subMateriAktif', 
@@ -790,12 +790,21 @@ public function umumBelajar(Request $request, $sub_materi_id)
             ->where('sub_materi_id', $sub_materi_id)
             ->exists();
     }
+    $preTest = PreposttestModel::where('id_submateri', $sub_materi_id)->where('tipe_prepost', 0)->first();
+    $postTest = PreposttestModel::where('id_submateri', $sub_materi_id)->where('tipe_prepost', 1)->first();
+    $contentType = $request->query('type', 'materi');
 
     // Kontrol Media Item Aktif lewat query string item_id
     $itemIdAktif = $request->query('item_id');
     $itemAktif = null;
     $embedUrl = null;
-
+    $quizAktif = null;
+      if ($contentType === 'pre' && $preTest) {
+        $quizAktif = $preTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
+        }
+      }
     if ($subMateriAktif->items->count() > 0) {
         if ($itemIdAktif) {
             $itemAktif = $subMateriAktif->items->where('id', $itemIdAktif)->first();
@@ -810,13 +819,17 @@ public function umumBelajar(Request $request, $sub_materi_id)
             $embedUrl = $this->parseGoogleDriveLink($itemAktif->link_item);
         }
     }
-
+    
     return view('compact.umum-belajar', compact(
         'materiAktif', 
         'subMateriAktif', 
         'itemAktif', 
         'embedUrl', 
         'statusBeasiswaSiswa',
+        'preTest',
+        'contentType',
+        'quizAktif',
+        'postTest',
         'sudahIkuti' // Kirim variabel status ke view
     ));
 }

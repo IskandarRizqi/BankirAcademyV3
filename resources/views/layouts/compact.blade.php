@@ -11,19 +11,19 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/select2.min.css') }}">
+    <link href="{{ asset('cbtemplate/assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('cbtemplate/assets/plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/css/forms/theme-checkbox-radio.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-    <script src="{{ asset('assets/js/libs/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('bootstrap/js/popper.min.js') }}"></script>
-    <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
-    <script src="{{ asset('plugins/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('plugins/select2/custom-select2.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/bootstrap/js/popper.min.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/plugins/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/plugins/select2/custom-select2.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.21/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
 
@@ -64,6 +64,21 @@
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
+    .style-radio-group .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        cursor: pointer;
+    }
+    .style-radio-group .form-check-label {
+        margin-left: 5px;
+        cursor: pointer;
+    }
+    .jawaban-radio {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
 
         a {
             text-decoration: none;
@@ -1586,7 +1601,7 @@
         <!-- SIDEBAR -->
         <div class="sidebar-wrapper">
             <div class="sidebar-brand">
-                <img src="{{ asset('assets/img/90x90.jpg') }}" alt="logo">
+                <img src="{{ asset('cbtemplate/assets/img/90x90.jpg') }}" alt="logo">
                 <span>Bankir Academy</span>
             </div>
 
@@ -1660,7 +1675,7 @@
                 <div class="dropdown">
                     <a href="javascript:void(0);" class="user-trigger" id="userProfileDropdown" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ asset('assets/img/90x90.jpg') }}" alt="Foto profil {{ auth()->user()->name }}">
+                        <img src="{{ asset('cbtemplate/assets/img/90x90.jpg') }}" alt="Foto profil {{ auth()->user()->name }}">
                         <span class="user-meta">
                             <div class="name">{{ auth()->user()->name }}</div>
                             <div class="role">{{ auth()->user()->role_name }}</div>
@@ -1727,11 +1742,11 @@
     </div>
 
     <!-- GLOBAL SCRIPTS -->
-    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
-    <script src="{{ asset('plugins/apex/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/js/app.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/js/custom.js') }}"></script>
+    <script src="{{ asset('cbtemplate/assets/plugins/apex/apexcharts.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
