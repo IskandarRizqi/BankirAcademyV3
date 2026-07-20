@@ -153,6 +153,7 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
                 'jenis_kelamin' => $row['jenis_kelamin'] ?? null,
                 'nisn' => $nisn,
                 'kelas' => $row['kelas'] ?? null,
+                'angkatan' => $row['angkatan'] ?? null,
                 'beasiswa' => $beasiswaStatus, // <--- Menggunakan variable status baru
                 'alamat' => $row['alamat'] ?? null, 
                 'email' => $row['email'] ?? null,   

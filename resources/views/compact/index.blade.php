@@ -245,137 +245,140 @@
     {{-- ========================================================================= --}}
     {{-- 4. INTERFACE FOR SISWA (TAMPILAN TIMELINE ORIGINAL ANDA)                  --}}
     {{-- ========================================================================= --}}
+    {{-- ========================================================================= --}}
+    {{-- 4. INTERFACE FOR SISWA (TAMPILAN MODERN GEN-Z)                            --}}
+    {{-- ========================================================================= --}}
     @elseif(auth()->user()->role == 6)
-        <!-- Stat Cards Siswa -->
         <div class="row mb-4">
-            <!-- KARTU 1: SALDO UTAMA SISWA -->
-            <div class="col-12 col-sm-6 col-xl-3 mb-3">
-                <div class="card border-0 shadow-sm text-white" style="border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="card border-0 shadow-sm text-white h-100" style="border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1"></span>Kredit Siswa
-                            <h2 class="font-weight-extrabold mb-0" style="font-size: 1.6rem; font-weight: 800; white-space: nowrap;">
+                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Kredit Siswa</span>
+                            <h2 class="font-weight-extrabold mb-0" style="font-size: 1.4rem; font-weight: 800; white-space: nowrap;">
                                 Rp {{ number_format($saldo_siswa, 0, ',', '.') }}
                             </h2>
                         </div>
-                        <div class="p-3 bg-white-10 rounded-circle" style="background: rgba(255,255,255,0.15); margin-left: 5px;">
-                            <i class="fas fa-wallet fa-2x"></i>
+                        <div class="p-2 bg-white-10 rounded-circle" style="background: rgba(255,255,255,0.15);">
+                            <i class="fas fa-wallet fa-lg"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- KARTU 2: TOTAL BAB DIKUTI -->
-            <div class="col-12 col-sm-6 col-xl-3 mb-3">
-                <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #3b82f6 !important;">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="card border-0 shadow-sm bg-white h-100" style="border-radius: 16px; border-left: 5px solid #3b82f6 !important;">
+                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Bab Diikuti</span>
-                            <h2 class="font-weight-extrabold text-dark mb-0" style="font-size: 2rem; font-weight: 800;">{{ $total_bab }}</h2>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Bab Diikuti</span>
+                            <h2 class="font-weight-extrabold text-dark mb-0" style="font-size: 1.6rem; font-weight: 800;">{{ $total_bab }}</h2>
                         </div>
-                        <div class="p-3 bg-soft-primary rounded-circle" style="background: rgba(59, 130, 246, 0.1);">
-                            <i class="fas fa-graduation-cap text-primary fa-2x"></i>
+                        <div class="p-2 bg-soft-primary rounded-circle" style="background: rgba(59, 130, 246, 0.1);">
+                            <i class="fas fa-graduation-cap text-primary fa-lg"></i>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- KARTU 3: KATEGORI KURSUS AKTIF -->
-            <!-- <div class="col-12 col-sm-6 col-xl-3 mb-3">
-                <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #6366f1 !important;">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="card border-0 shadow-sm bg-white h-100" style="border-radius: 16px; border-left: 5px solid #f59e0b !important;">
+                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Kursus Aktif</span>
-                            <h2 class="font-weight-extrabold text-dark mb-0" style="font-size: 2rem; font-weight: 800;">{{ $total_materi }}</h2>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Status Akun</span>
+                            <div class="mt-1">
+                                @if($profile && $profile->beasiswa == 1)
+                                    <span class="badge badge-warning px-2.5 py-1.5 text-white shadow-sm" style="border-radius: 6px; font-size: 0.75rem;">Beasiswa</span>
+                                @else
+                                    <span class="badge badge-secondary px-2.5 py-1.5 text-white" style="border-radius: 6px; font-size: 0.75rem;">Reguler</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="p-3 bg-soft-indigo rounded-circle" style="background: rgba(99, 102, 241, 0.1);">
-                            <i class="fas fa-book-open text-indigo fa-2x"></i>
+                        <div class="p-2 bg-soft-warning rounded-circle" style="background: rgba(245, 158, 11, 0.1);">
+                            <i class="fas fa-user-shield text-warning fa-lg"></i>
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
-            <!-- KARTU 4: STATUS KEANGGOTAAN -->
-            <div class="col-12 col-sm-6 col-xl-3 mb-3">
-                <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #f59e0b !important;">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                        <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Status Akun</span>
-                            <h2 class="font-weight-extrabold text-dark mb-0 h5 mt-2 font-weight-bold" style="color: #f59e0b !important;">
-                                @if($profile && $profile->beasiswa == 1)
-                                    <span class="badge badge-warning px-2 py-1.5 text-white" style="border-radius: 6px; font-size: 0.75rem;">Beasiswa</span>
-                                @else
-                                    <span class="badge badge-secondary px-2 py-1.5 text-white" style="border-radius: 6px; font-size: 0.75rem;">Reguler</span>
-                                @endif
-                            </h2>
+            <div class="col-12 col-sm-6 col-md-3 mb-3">
+                <div class="card border-0 shadow-sm bg-white h-100" style="border-radius: 16px; border-left: 5px solid #a855f7 !important;">
+                    <div class="card-body p-3 flex-column d-flex justify-content-center">
+                        <span class="d-block text-muted small font-weight-bold text-uppercase mb-1"><i class="fas fa-unlock-alt text-purple mr-1"></i> Modul Beasiswa</span>
+                        @if($profile && $profile->beasiswa == 1 && !$modul_aktif->isEmpty())
+                            <div class="d-flex align-items-center mt-1" style="gap: 4px; overflow-x: auto; white-space: nowrap; py-1;">
+                                @foreach($modul_aktif as $modul)
+                                    <span class="badge bg-light text-dark border p-2 text-truncate" style="max-width: 100px; border-radius: 6px; font-size: 11px;" title="{{ $modul->materi->nama ?? 'Modul' }}">
+                                        ⚡ {{ $modul->materi->nama ?? 'Modul' }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-muted small mt-1" style="font-size: 11px;">Tidak ada modul aktif</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm position-relative overflow-hidden" style="border-radius: 20px; background: linear-gradient(105deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%); min-height: 140px;">
+                    <div class="position-absolute" style="width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; top: -50px; right: -20px;"></div>
+                    <div class="position-absolute" style="width: 90px; height: 90px; background: rgba(255,255,255,0.06); border-radius: 50%; bottom: -20px; left: 30%;"></div>
+                    
+                    <div class="card-body p-4 p-md-4.5 d-flex flex-column flex-md-row align-items-md-center justify-content-between text-white position-relative" style="z-index: 2;">
+                        <div class="mb-3 mb-md-0 max-w-md">
+                            <span class="badge bg-white text-dark font-weight-bold px-3 py-1.5 text-uppercase mb-2 shadow-sm" style="border-radius: 30px; font-size: 11px; letter-spacing: 1px;">🚀 Level Up Your Skill</span>
+                            <h3 class="font-weight-extrabold mb-1" style="font-weight: 800; letter-spacing: -0.5px;">Investasi Masa Depan Mulai dari Nol! ✨</h3>
+                            <p class="text-white-50 mb-0 small font-weight-medium">Klaim voucher pelatihan premium & program magang bersertifikat khusus anak SMK/SMA. Jangan sampai FOMO!</p>
                         </div>
-                        <div class="p-3 bg-soft-warning rounded-circle" style="background: rgba(245, 158, 11, 0.1);">
-                            <i class="fas fa-user-shield text-warning fa-2x"></i>
+                        <div>
+                            <a href="#eksplor-materi" class="btn btn-white text-dark font-weight-bold px-4 py-2.5 shadow transition-all hover-scale" style="border-radius: 12px; background: #fff; font-size: 0.9rem; border: none;">
+                                Ambil Slot Sekarang <i class="fas fa-fire ml-2 text-warning"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        @if($profile && $profile->beasiswa == 1)
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm p-3 p-md-4 bg-white" style="border-radius: 16px; border: 1px solid rgba(59, 130, 246, 0.2) !important;">
-                        <h5 class="font-weight-bold text-primary mb-3"><i class="fas fa-unlock-alt mr-2"></i>Akses Modul Beasiswa Aktif Anda</h5>
-                        @if($modul_aktif->isEmpty())
-                            <p class="text-muted small mb-0">Belum ada paket modul khusus yang aktif di akun beasiswa Anda.</p>
-                        @else
-                            <div class="row">
-                                @foreach($modul_aktif as $modul)
-                                    <div class="col-md-6 col-lg-4 mb-2">
-                                        <div class="p-3 bg-light rounded d-flex align-items-center justify-content-between" style="border-radius: 10px !important;">
-                                            <div>
-                                                <small class="text-muted d-block text-uppercase font-weight-bold" style="font-size: 10px;">Materi ID: #{{ $modul->class_id }}</small>
-                                                <span class="font-weight-bold text-dark d-block mt-1">{{ $modul->materi->nama ?? 'Modul Terbuka' }}</span>
-                                            </div>
-                                            <span class="badge bg-soft-success text-success p-2 rounded-circle"><i class="fas fa-check"></i></span>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-3 p-md-4 bg-white" style="border-radius: 16px;">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="font-weight-bold text-dark mb-0"><i class="fas fa-stream mr-2 text-primary" style="font-size: 1.1rem;"></i>Aktivitas Belajar</h5>
+                        <span class="badge bg-light text-muted px-2 py-1 font-weight-bold" style="font-size: 11px;">Terbaru</span>
+                    </div>
+
+                    @if($history->count() > 0)
+                        <div class="list-group list-group-flush">
+                            @foreach($history as $item)
+                                <div class="list-group-item px-0 py-2.5 d-flex align-items-center justify-content-between border-light flex-wrap flex-sm-nowrap transition-all" style="border-bottom: 1px dashed #f1f5f9 !important;">
+                                    <div class="d-flex align-items-center mr-3 mb-2 mb-sm-0" style="gap: 12px;">
+                                        <div class="d-flex align-items-center justify-content-center bg-soft-primary rounded-circle text-primary flex-shrink-0" style="width: 32px; height: 32px; background: rgba(59, 130, 246, 0.1);">
+                                            <i class="fas fa-book-reader" style="font-size: 0.85rem;"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="font-weight-bold text-dark mb-0" style="font-size: 0.9rem; line-height: 1.3;">Bab {{ $item->urutan }}: {{ $item->nama_sub }}</h6>
+                                            <span class="text-muted d-inline-block mt-0.5" style="font-size: 11px;">
+                                                <i class="far fa-clock mr-1 text-muted"></i> {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d M, H:i') }} WIB
+                                            </span>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm p-3 p-md-4 bg-white" style="border-radius: 16px;">
-                    <h5 class="font-weight-bold text-dark mb-4"><i class="fas fa-history mr-2 text-primary"></i>Timeline Aktivitas Belajar</h5>
-                    @if($history->count() > 0)
-                        <div class="learning-timeline position-relative pl-4" style="border-left: 3px solid #e2e8f0; margin-left: 15px;">
-                            @foreach($history as $item)
-                                <div class="timeline-item position-relative mb-4 pb-2">
-                                    <div class="timeline-dot position-absolute bg-primary rounded-circle shadow-sm" style="width: 16px; height: 16px; left: -33px; top: 4px; border: 3px solid #fff;"></div>
-                                    <div class="card border border-light shadow-none hover-shadow transition-all w-100" style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
-                                        <div class="card-body p-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between">
-                                            <div class="mb-3 mb-md-0">
-                                                <h4 class="h5 font-weight-bold text-dark mb-1 mt-1">Bab {{ $item->urutan }}: {{ $item->nama_sub }}</h4>
-                                                <small class="text-muted d-block mt-2">
-                                                    <i class="far fa-clock mr-1 text-danger"></i> Mulai diakses pada: 
-                                                    <strong>{{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y, H:i') }} WIB</strong>
-                                                </small>
-                                            </div>
-                                            <div>
-                                                <a href="{{ route('siswa.umum.belajar', $item->sub_materi_id) }}" class="btn btn-outline-primary font-weight-bold px-4 py-2" style="border-radius: 8px; font-size: 0.85rem;">
-                                                    Lanjutkan Belajar <i class="fas fa-arrow-right ml-2" style="font-size: 0.75rem;"></i>
-                                                </a>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <a href="{{ route('siswa.umum.belajar', $item->sub_materi_id) }}" class="btn btn-sm btn-light text-primary font-weight-bold px-3" style="border-radius: 6px; font-size: 0.8rem; background: #f8fafc; border: 1px solid #e2e8f0;">
+                                            Gas Belajar <i class="fas fa-chevron-right ml-1" style="font-size: 0.7rem;"></i>
+                                        </a>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     @else
                         <div class="text-center py-4">
-                            <div class="p-4 bg-light rounded-circle d-inline-block mb-3" style="width: 100px; height: 100px;"><i class="fas fa-folder-open fa-3x text-muted"></i></div>
-                            <h4 class="h5 font-weight-bold text-dark">Belum Ada Riwayat Belajar</h4>
+                            <div class="p-3 bg-light rounded-circle d-inline-block mb-2" style="width: 70px; height: 70px; line-height: 40px;">
+                                <i class="fas fa-folder-open fa-2x text-muted"></i>
+                            </div>
+                            <h6 class="font-weight-bold text-muted mb-0">Belum ada history belajar nih.</h6>
                         </div>
                     @endif
                 </div>

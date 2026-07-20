@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Jobs\SendUserActivationEmail;
 use App\Models\AllowIpAksesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\HistoryIpAksesModel;
@@ -11,6 +12,10 @@ use App\Models\RefferralWithdrawModel;
 use App\Models\UserProfileModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class  GlobalHelper
 {
@@ -221,5 +226,99 @@ class  GlobalHelper
             'model' => $model,
             'deskripsi' => $desk,
         ]);
+    }
+    public static function sendEmailActivation($userId, $scope = 'default')
+    {
+        Log::info('sendEmailActivation', $userId);
+        $userIds = collect($userId)->unique()->values();
+        /*
+        * Single user
+        */
+        if ($userIds->count() === 1) {
+            $activationId = (string) Str::uuid();
+
+            SendUserActivationEmail::dispatch(
+                activationId: $activationId,
+                userId: (int) $userIds->first(),
+                scope: $scope,
+            );
+
+            return [
+                'success' => true,
+                'message' => 'Email aktivasi masuk ke antrean.',
+                'mode' => 'single',
+                'activation_id' => $activationId,
+                'batch_id' => null,
+                'total' => 1,
+            ];
+        }
+
+        /*
+         * Multi-user
+         */
+        $jobs = $userIds
+            ->values()
+            ->map(function ($userId, $index) use ($scope) {
+                return (new SendUserActivationEmail(
+                    activationId: (string) Str::uuid(),
+                    userId: (int) $userId,
+                    scope: $scope,
+                ))->delay(now()->addMinutes($index));
+            })
+            ->all();
+
+        $batch = Bus::batch($jobs)
+            ->name('Kirim email aktivasi user')
+            ->allowFailures()
+            ->onQueue('activation-mails')
+            ->dispatch();
+
+        return [
+            'success' => true,
+            'message' => 'Batch email aktivasi masuk ke antrean.',
+            'mode' => 'batch',
+            'activation_id' => null,
+            'batch_id' => $batch->id,
+            'total' => $userIds->count(),
+        ];
+    }
+
+    public static function sendWhatsappNotification($user)
+    {
+        // Bersihkan format nomor telepon
+        $target = preg_replace('/^0/', '62', $user->siswa->no_telp);
+
+        // Auto generate logic sesuai request
+        $nisn = $user->siswa->nisn;
+        $generatedEmail = $nisn . '@gmail.com';
+        $generatedPassword = $nisn . 'Bankir!';
+
+        $message = "Pesan Otomatis Bankir\n" .
+            "__________________\n" .
+            "Informasi Akun Siswa\n" .
+            now()->format('d M Y') . "\n\n" .
+            "Salam sehat\n" .
+            "Yth *" . $user->name . "*,\n\n" .
+            "Berikut adalah detail akun Anda:\n" .
+            "Email: *" . $generatedEmail . "*\n" .
+            "Password: *" . $generatedPassword . "*\n" .
+            "----------------------------------------------\n" .
+            "Silakan cek bankiracademy.co.id untuk detail lebih lanjut.\n" .
+            "------------------------------------------\n" .
+            "Copyright\n" .
+            "bankiracademy.co.id | " . date('Y');
+
+        try {
+            $response = Http::withHeaders(['Authorization' => env('FONNTE_API_TOKEN')])
+                ->post(env('FONNTE_BASE_URL'), [
+                    'target' => $target,
+                    'message' => $message,
+                ]);
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            // Log error jika dibutuhkan: Log::error($e->getMessage());
+            return false;
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActivationController;
+use App\Http\Controllers\ActivationDispatchController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Backend\InstructorController;
@@ -127,6 +129,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::delete("/admin/master/del/{id}", [App\Http\Controllers\Backend\RefferalController::class, "delMasterReff"]);
 });
 Route::middleware('auth')->group(function () {
+    Route::get('/users/sendemail', [UserController::class, 'resendEmail']);
     Route::post('/admin/inputlogopurusahaan', [App\Http\Controllers\HomeController::class, 'inputlogopurusahaan']);
     Route::get('/admin/classes/previewcertificate/{id}/{nama}/{instansi}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
     Route::post('/classes/biaya_certificate', [App\Http\Controllers\Admin\ClassesController::class, 'biayacertificate']);
@@ -180,12 +183,13 @@ Route::middleware('auth')->group(function () {
         Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download-template');
         Route::post('users/import', [UserController::class, 'import'])->name('users.import');
         Route::get('users/beasiswa-approval', [UserController::class, 'beasiswaApprovalList'])->name('beasiswa.approval.list');
+        Route::post('/users/send-bulk-wa', [UserController::class, 'sendBulkWhatsapp'])->name('users.send-bulk-wa');
         Route::post('users/beasiswa-approval/{id}/{action}', [UserController::class, 'beasiswaApprovalProcess'])->name('users.beasiswa.approval.process');
         Route::resource('users', UserController::class);
     });
     Route::middleware(['role:6'])->group(function () {
         Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
-        Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
+
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
         Route::get('/cvats', function () {
             return view('compact.cvats');
@@ -211,6 +215,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
+        Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
     });
 
     Route::post("/payment-membership", [PaymentController::class, "paymentmembership"]);
@@ -275,3 +280,44 @@ Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "creat
 Auth::routes();
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
 Route::get('authentikasi/login', [App\Http\Controllers\Front\HomeController::class, 'getlayoutauth']);
+
+
+
+// kirim aktivasi email single
+Route::get(
+    '/admin/users/{user}/send-activation-email',
+    [ActivationDispatchController::class, 'sendFromLink']
+)
+    ->middleware([
+        'auth',
+        'signed',
+        'throttle:5,1',
+    ])
+    ->name('activation.email.send-link');
+
+// kirim aktivasi email multi
+Route::middleware(['auth'])->group(function () {
+    Route::post(
+        '/admin/user-activations',
+        [ActivationDispatchController::class, 'store']
+    )->name('activation.dispatch');
+});
+
+Route::get(
+    '/aktivasi/{activation}',
+    [ActivationController::class, 'show']
+)->name('activation.show');
+
+// kirim ke fonnte default
+Route::post(
+    '/sendfonnte',
+    [ActivationDispatchController::class, 'send']
+);
+
+Route::post(
+    '/aktivasi/{activation}',
+    [ActivationController::class, 'consume']
+)->middleware([
+    'signed',
+    'throttle:5,1',
+])->name('activation.consume');

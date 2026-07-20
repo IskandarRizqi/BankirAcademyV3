@@ -1,28 +1,29 @@
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-.contact-info p {
-    display: flex;
-    align-items: flex-start;
-    margin: 7px 0;
-    color: black;
-}
+    .contact-info p {
+        display: flex;
+        align-items: flex-start;
+        margin: 7px 0;
+        color: black;
+    }
 
-.contact-info i {
-    margin-right: 8px;
-    margin-top: 3px; /* biar ikon sejajar atas teks */
-    color: black;
-    min-width: 18px; /* supaya semua ikon rata kiri */
-}
-
-
-
+    .contact-info i {
+        margin-right: 8px;
+        margin-top: 3px;
+        /* biar ikon sejajar atas teks */
+        color: black;
+        min-width: 18px;
+        /* supaya semua ikon rata kiri */
+    }
 </style>
-        <footer class="footer-light p-0 position-relative">
-                        <div id="particles-04" class="position-absolute h-100 top-0 left-0 z-index-minus-1 w-100" data-particle="true" data-particle-options='{"particles": {"number": {"value": 5,"density": {"enable": true,"value_area": 1000}},"color":{"value":["#b7b9be", "#dd6531"]},"shape": {"type": "circle","stroke":{"width":0,"color":"#000000"}},"opacity": {"value": 0.5,"random": false,"anim": {"enable": false,"speed": 1,"sync": false}},"size": {"value": 8,"random": true,"anim": {"enable": false,"sync": true}},"move": {"enable": true,"speed":2,"direction": "right","random": false,"straight": false}},"interactivity": {"detect_on": "canvas","events": {"onhover": {"enable": false,"mode": "repulse"},"onclick": {"enable": false,"mode": "push"},"resize": true}},"retina_detect": false}'></div>
-                        <div class="container"> 
-                            <div class="row justify-content-center pt-7 sm-pt-50px">
-                                <!-- start footer column -->
-                            <div class="col-lg-4 col-md-4 col-sm-12 text-md-center text-lg-start md-mb-30px">
+<footer class="footer-light p-0 position-relative">
+    <div id="particles-04" class="position-absolute h-100 top-0 left-0 z-index-minus-1 w-100" data-particle="true"
+        data-particle-options='{"particles": {"number": {"value": 5,"density": {"enable": true,"value_area": 1000}},"color":{"value":["#b7b9be", "#dd6531"]},"shape": {"type": "circle","stroke":{"width":0,"color":"#000000"}},"opacity": {"value": 0.5,"random": false,"anim": {"enable": false,"speed": 1,"sync": false}},"size": {"value": 8,"random": true,"anim": {"enable": false,"sync": true}},"move": {"enable": true,"speed":2,"direction": "right","random": false,"straight": false}},"interactivity": {"detect_on": "canvas","events": {"onhover": {"enable": false,"mode": "repulse"},"onclick": {"enable": false,"mode": "push"},"resize": true}},"retina_detect": false}'>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center pt-7 sm-pt-50px">
+            <!-- start footer column -->
+            <div class="col-lg-4 col-md-4 col-sm-12 text-md-center text-lg-start md-mb-30px">
                 <img src="/logo bankir-12-2.png" alt="" width="80%" style="margin-bottom:15px;">
                 <p class="mb-2 text-justify" style="color: black">
                     <b>{{ env('APP_NAME', 'Bankir Akademi') }}</b> merupakan platform digital learning
@@ -74,25 +75,25 @@
                 <b style="color: black">001922.04/DJAI.PSE/12/2022</b>
             </div>
 
-                   
-                    <!-- end footer column -->
-                </div> 
-                <br>
-            </div> 
-            <div id="copyrights" style="background-color:#0076f5; padding: 25px">
-                <div class="container">
-                    <div class="w-100 text-center text-white">
-                        Copyright 2022 PT. Bankir Academy Indonesia
-                    </div>
-                    {{-- <div class="w-100 text-center text-white">
-                        Management By PT. Bankir Academy Indonesia </br> Support Sistem By <a
-                            href="https://akarindo.id/">Akarindo.id</a>
-                    </div> --}}
-                </div>
-            </div>
-        </footer>
 
-        
+            <!-- end footer column -->
+        </div>
+        <br>
+    </div>
+    <div id="copyrights" style="background-color:#0076f5; padding: 25px">
+        <div class="container">
+            <div class="w-100 text-center text-white">
+                Copyright 2022 PT. Bankir Academy Indonesia
+            </div>
+            {{-- <div class="w-100 text-center text-white">
+                Management By PT. Bankir Academy Indonesia </br> Support Sistem By <a
+                    href="https://akarindo.id/">Akarindo.id</a>
+            </div> --}}
+        </div>
+    </div>
+</footer>
+
+
 
 <script>
     var tpj = jQuery;
@@ -268,7 +269,7 @@
                             // return location.reload();
                         }
                     }
-                }, 2000);
+                }, 2000000);
             },
             error: function(jqXhr, json, errorThrown) { // this are default for ajax errors
                 var errors = jqXhr.responseJSON;

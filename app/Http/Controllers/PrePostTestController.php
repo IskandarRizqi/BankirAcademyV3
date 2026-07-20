@@ -45,9 +45,17 @@ class PrePostTestController extends Controller
      */
     public function store(Request $request)
     {
+        // Cari ID dari materi yang bernama 'Umum'
+        $materiUmum = MateriModel::where('nama', 'Umum')->first();
+        $idMateriUmum = $materiUmum ? $materiUmum->id : null;
+
         $valid = Validator::make($request->all(), [
             'judul' => 'required',
             'id_materi' => 'required',
+            
+            // Wajib diisi JIKA id_materi bernilai sama dengan ID materi 'Umum'
+            'id_submateri' => 'required_if:id_materi,' . $idMateriUmum,
+            
             'tipe_prepost' => 'required',
             'soal' => 'required|array|min:1',
 
@@ -58,19 +66,26 @@ class PrePostTestController extends Controller
             'soal.*.opsi.C' => 'nullable|string',
             'soal.*.opsi.D' => 'nullable|string',
             'soal.*.opsi.E' => 'nullable|string',
-
             'soal.*.essay' => 'required_if:soal.*.tipe_pertanyaan,2'
+        ], [
+            // Custom pesan error agar lebih informatif
+            'id_submateri.required_if' => 'Sub Materi wajib diisi untuk kompetensi/materi Umum.'
         ]);
 
         if ($valid->fails()) {
-            return redirect()->back()->with('info', 'data tidak sesuai')->withInput($request->all());
+            // Mengembalikan error validasi ke halaman sebelumnya
+            return redirect()->back()
+                ->withErrors($valid)
+                ->with('info', 'data tidak sesuai')
+                ->withInput($request->all());
         }
 
         $i = [
             'judul' => $request->judul,
             'tipe_prepost' => $request->tipe_prepost,
             'id_materi' => $request->id_materi,
-            'id_submateri' => $request->id_submateri,
+            // Jika bukan materi umum dan tidak diisi, set null
+            'id_submateri' => $request->id_materi == $idMateriUmum ? $request->id_submateri : null,
             'soal' => json_encode($request->soal),
         ];
 

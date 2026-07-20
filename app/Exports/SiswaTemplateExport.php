@@ -35,6 +35,7 @@ class SiswaSheetTemplate implements FromArray, WithTitle, WithHeadings
                 'nama'          => 'Contoh Nama Siswa',
                 'nisn'          => '3535632',
                 'kelas'         => 'XII-RPL',
+                'angkatan'         => '2023',
                 'jenis_kelamin' => 'L/P',
                 'no_telepon'    => '081234567890',
                 'alamat'        => 'Jl. Contoh Alamat No. 123', // <-- Tambahan contoh alamat
@@ -50,6 +51,7 @@ class SiswaSheetTemplate implements FromArray, WithTitle, WithHeadings
             'Nama',
             'NISN',
             'Kelas',
+            'Angkatan',
             'Jenis Kelamin',
             'No Telepon',
             'Alamat', // <-- Tambahan heading Alamat

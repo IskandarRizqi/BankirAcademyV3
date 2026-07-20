@@ -137,29 +137,33 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Kompetensi <span class="text-danger">*</span></label>
-                                <select name="id_materi" id="id_materi" class="form-control">
-                                    <option value="">Pilih Kompetensi</option>
-                                    @foreach($materi as $key => $v)
-                                    <option value="{{$v->id}}">{{$v->nama}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        <!-- Ubah bagian dropdown Kompetensi (id_materi) agar menyimpan attribute data-nama -->
+<div class="col-md-3">
+    <div class="form-group">
+        <label>Kompetensi <span class="text-danger">*</span></label>
+        <select name="id_materi" id="id_materi" class="form-control">
+            <option value="">Pilih Kompetensi</option>
+            @foreach($materi as $key => $v)
+                <!-- Ditambahkan data-nama="{{ $v->nama }}" -->
+                <option value="{{$v->id}}" data-nama="{{ $v->nama }}">{{$v->nama}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
 
-                        <div class="col-md-3" hidden>
-                            <div class="form-group">
-                                <label>Sub Materi</label>
-                                <select name="id_submateri" id="id_submateri" class="form-control">
-                                    <option value="">Pilih Sub Materi</option>
-                                    @foreach($submateri as $key => $v)
-                                    <option value="{{$v->id}}">{{$v->nama}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+<!-- Hapus atribut 'hidden' pada wrapper Sub Materi ini, kita akan kontrol via JS -->
+<div class="col-md-3" id="wrapper_submateri" style="display: none;">
+    <div class="form-group">
+        <label>Sub Materi <span class="text-danger" id="req_submateri">*</span></label>
+        <select name="id_submateri" id="id_submateri" class="form-control">
+            <option value="">Pilih Sub Materi</option>
+            @foreach($submateri as $key => $v)
+                <!-- Tambahkan data-materi agar sub materi bisa difilter sesuai ID materi induknya -->
+                <option value="{{$v->id}}" data-materi="{{$v->id_materi}}">{{$v->nama}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
 
                         <div class="col-md-3">
                             <div class="form-group">
@@ -458,7 +462,7 @@
     });
 
     tambahSoal();
-
+   
     
     $(document).on('input', '.pertanyaan', function () {
     let text = $(this).val().trim();
@@ -479,6 +483,32 @@
         $('#mySelect2').select2({
             dropdownParent: $('#userModal')
         });
+         $('#id_materi').on('change', function() {
+        let namaMateri = $(this).find(':selected').data('nama');
+        let idMateri = $(this).val();
+        
+        // Cek apakah yang dipilih adalah materi bernama "Umum"
+        if (namaMateri === 'Umum') {
+            $('#wrapper_submateri').show();
+            $('#id_submateri').attr('required', true);
+            
+            // Opsional: Filter opsi sub materi agar hanya menampilkan yang berelasi dengan id_materi ini
+            // (Asumsi di tabel Sub Materi Anda ada field foreign key ke materi, ubah 'data-materi' di HTML sesuai kebutuhan)
+            $('#id_submateri option').each(function() {
+                let idMateriSub = $(this).data('materi');
+                if (idMateriSub == idMateri || $(this).val() == "") {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            // Sembunyikan dan bersihkan jika bukan materi Umum
+            $('#wrapper_submateri').hide();
+            $('#id_submateri').removeAttr('required').val('');
+        }
+    });
+
     })
 
     // Fungsi ketika tombol 'Edit' diklik
@@ -491,8 +521,11 @@
         $('#tipe_prepost1').removeAttr('checked')
         if (user) {
             $('#id').val(user.id);
-            $('#id_materi').val(user.id_materi);
+           $('#id_materi').val(user.id_materi).trigger('change');
             $('#id_submateri').val(user.id_submateri);
+            setTimeout(function() {
+        $('#id_submateri').val(user.id_submateri);
+    }, 100);
             $('#judul').val(user.judul);
             if (user.tipe_prepost == 0) {
                 $('#tipe_prepost0').attr('checked', true)

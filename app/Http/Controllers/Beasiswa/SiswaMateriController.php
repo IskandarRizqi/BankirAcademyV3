@@ -285,7 +285,7 @@ public function belajar(Request $request, $materi_id, $sub_materi_id = null)
             }
         }
     }
-
+    
     return view('compact.belajar', compact(
         'materiAktif', 
         'subMateriAktif', 
@@ -341,6 +341,17 @@ public function prosesBayarBeasiswa(Request $request, $id)
         return redirect()->back()->with('error', 'Akses ditolak. Anda bukan siswa penerima beasiswa.');
     }
 
+    // [VALIDASI TAMBAHAN] Cek apakah siswa sudah memiliki modul ini agar tidak beli 2 kali
+    $sudahPunyaModul = DB::table('siswa_modul_aktif')
+        ->where('user_id', $userId)
+        ->where('class_id', $id)
+        ->exists();
+
+    if ($sudahPunyaModul) {
+        return redirect()->route('siswa.materi.belajar', [$id])
+            ->with('info', 'Anda sudah terdaftar di kelas ini.');
+    }
+
     // Validasi kecukupan saldo
     if ($siswaProfile->saldo < $hargaMateri) {
         return redirect()->back()->with('error', 'Transaksi gagal. Saldo beasiswa Anda tidak mencukupi.');
@@ -352,8 +363,8 @@ public function prosesBayarBeasiswa(Request $request, $id)
         $siswaProfile->saldo -= $hargaMateri;
         $siswaProfile->save();
 
-        // 2. Masukkan ke Modul Aktif
-        DB::table('siswa_modul_aktif')->insert([
+        // 2. Masukkan ke Modul Aktif menggunakan insertOrIgnore untuk menghindari crash constraint
+        DB::table('siswa_modul_aktif')->insertOrIgnore([
             'user_id'    => $userId,
             'class_id'   => $id,
             'created_at' => now(),
@@ -376,6 +387,11 @@ public function prosesBayarBeasiswa(Request $request, $id)
 
     } catch (\Exception $e) {
         DB::rollBack();
+        
+        // Log error asli untuk mempermudah debugging di file laravel.log jika ada masalah lain
+        \Log::error('Gagal memproses bayar beasiswa: ' . $e->getMessage());
+
+        // Kembalikan ke halaman sebelumnya (jangan langsung ke halaman belajar karena transaksi GAGAL)
         return redirect()->back()->with('error', 'Terjadi kesalahan sistem saat memproses transaksi.');
     }
 }
@@ -774,12 +790,21 @@ public function umumBelajar(Request $request, $sub_materi_id)
             ->where('sub_materi_id', $sub_materi_id)
             ->exists();
     }
+    $preTest = PreposttestModel::where('id_submateri', $sub_materi_id)->where('tipe_prepost', 0)->first();
+    $postTest = PreposttestModel::where('id_submateri', $sub_materi_id)->where('tipe_prepost', 1)->first();
+    $contentType = $request->query('type', 'materi');
 
     // Kontrol Media Item Aktif lewat query string item_id
     $itemIdAktif = $request->query('item_id');
     $itemAktif = null;
     $embedUrl = null;
-
+    $quizAktif = null;
+      if ($contentType === 'pre' && $preTest) {
+        $quizAktif = $preTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
+        }
+      }
     if ($subMateriAktif->items->count() > 0) {
         if ($itemIdAktif) {
             $itemAktif = $subMateriAktif->items->where('id', $itemIdAktif)->first();
@@ -794,13 +819,17 @@ public function umumBelajar(Request $request, $sub_materi_id)
             $embedUrl = $this->parseGoogleDriveLink($itemAktif->link_item);
         }
     }
-
+    
     return view('compact.umum-belajar', compact(
         'materiAktif', 
         'subMateriAktif', 
         'itemAktif', 
         'embedUrl', 
         'statusBeasiswaSiswa',
+        'preTest',
+        'contentType',
+        'quizAktif',
+        'postTest',
         'sudahIkuti' // Kirim variabel status ke view
     ));
 }
