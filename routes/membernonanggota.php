@@ -5,6 +5,7 @@ use App\Http\Controllers\Front\InvoiceController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MemberNonAnggota\BillingController;
 use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
+use App\Http\Controllers\MemberNonAnggota\ListDaftarKelasController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/pembayaran/iht/{payment}', [PaymentController::class, 'paymentIht'])->name('membernonanggota.payment-iht');
     Route::get('/classes/cetakinvoicepending/{id}', [MembershipController::class, 'cetakinvoicepending']);
     Route::get('/classes/getinvoice/{id}', [InvoiceController::class, 'getInvoice']);
+    Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
+    Route::post('/kelas-event/{classId}/participants', [ListDaftarKelasController::class, 'storeParticipants'])
+        ->name('membernonanggota.class-participants.store');
+    Route::get('/kelas-event/participants/template', [ListDaftarKelasController::class, 'downloadParticipantTemplate'])
+        ->name('membernonanggota.class-participants.template');
+    Route::post('/kelas-event/{classId}/participants/import', [ListDaftarKelasController::class, 'importParticipants'])
+        ->name('membernonanggota.class-participants.import');
+    Route::delete('/kelas-event/{classId}/participants', [ListDaftarKelasController::class, 'destroyParticipants'])
+        ->name('membernonanggota.class-participants.destroy');
 });
