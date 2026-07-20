@@ -9,19 +9,19 @@
 
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-	<link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-	<link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('plugins/select2/select2.min.css') }}">
+	<link href="{{ asset('cbtemplate/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+	<link href="{{ asset('cbtemplate/plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/css/forms/theme-checkbox-radio.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/plugins/table/datatable/datatables.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/plugins/select2/select2.min.css') }}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-	<script src="{{ asset('assets/js/libs/jquery-3.1.1.min.js') }}"></script>
-	<script src="{{ asset('bootstrap/js/popper.min.js') }}"></script>
-	<script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
-	<script src="{{ asset('plugins/select2/select2.min.js') }}"></script>
-	<script src="{{ asset('plugins/select2/custom-select2.js') }}"></script>
+	<script src="{{ asset('cbtemplate/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
+	<script src="{{ asset('cbtemplate/bootstrap/js/popper.min.js') }}"></script>
+	<script src="{{ asset('cbtemplate/plugins/table/datatable/datatables.js') }}"></script>
+	<script src="{{ asset('cbtemplate/plugins/select2/select2.min.js') }}"></script>
+	<script src="{{ asset('cbtemplate/plugins/select2/custom-select2.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.21/dayjs.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
 

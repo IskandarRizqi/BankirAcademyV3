@@ -32,7 +32,7 @@
 	[
 	'label' => 'Kelas anda',
 	'icon' => 'kelas',
-	'url' => '#',
+	'url' => '/kelas-event',
 	'active' => request()->is('kelas-event'),
 	'can_see' => true,
 	'has_submenu' => false,

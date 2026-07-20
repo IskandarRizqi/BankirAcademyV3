@@ -2,7 +2,7 @@
 		$user = Auth::user();
 		$profile = $user ? $user->profile : null;
 		$profilePictureUrl = \App\Helper\GlobalHelper::userProfilePictureUrl($profile);
-		$profileFallbackUrl = asset('assets/img/90x90.jpg');
+		$profileFallbackUrl = asset('cbtemplate/assets/img/90x90.jpg');
 		@endphp
 
 		<!-- TOPBAR -->

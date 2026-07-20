@@ -8,153 +8,158 @@ use Illuminate\Support\Facades\DB;
 
 class ClassesModel extends Model
 {
-	use HasFactory;
-	protected $table = 'classes';
-	protected $fillable = [
-		'title',
-		'instructor',
-		'category',
-		'sub_category',
-		'tags',
-		'image',
-		'image_mobile',
-		'content',
-		'unique_id',
-		'participant_limit',
-		'date_start',
-		'date_end',
-		'tipe',
-		'level',
-		'jenis',
-		'og',
-		'meta',
-		'status',
-		'poin',
-		'is_open',
-		'is_terpopuler',
-		'is_sebelumnya',
-		'video',
-		'custom_jadwal',
-		'kategori',
-		'jam_acara',
-		'lokasi',
-		'iht'
-	];
+    use HasFactory;
 
+    protected $table = 'classes';
 
-	protected $appends = [
-		'instructor_list',
-		'pricing',
-		'content_list',
-		'events_exist',
-		'certif_exist',
-		'peserta_list',
-		'total_peserta',
-		'event_list',
-		'videos',
-		'contents',
-	];
+    protected $fillable = [
+        'title',
+        'instructor',
+        'category',
+        'sub_category',
+        'tags',
+        'image',
+        'image_mobile',
+        'content',
+        'unique_id',
+        'participant_limit',
+        'date_start',
+        'date_end',
+        'tipe',
+        'level',
+        'jenis',
+        'og',
+        'meta',
+        'status',
+        'poin',
+        'is_open',
+        'is_terpopuler',
+        'is_sebelumnya',
+        'video',
+        'custom_jadwal',
+        'kategori',
+        'jam_acara',
+        'lokasi',
+        'iht',
+    ];
 
-	public function getContentsAttribute()
-	{
-		if (array_key_exists('content', $this->attributes)) {
-			$s = $this->attributes['content'];
-			if (strlen($s) > 0) {
-				$s = substr(strip_tags($this->attributes['content']), 0, 200) . '...';
-			}
-			return $s;
-		}
-	}
+    protected $appends = [
+        'instructor_list',
+        'pricing',
+        'content_list',
+        'events_exist',
+        'certif_exist',
+        'peserta_list',
+        'total_peserta',
+        'event_list',
+        'videos',
+        'contents',
+    ];
 
-	public function getVideosAttribute()
-	{
-		if (array_key_exists('video', $this->attributes)) {
-			$v = json_decode($this->attributes['video']);
-			if ($v) {
-				return $v;
-			}
-			return null;
-		}
-	}
+    public function getContentsAttribute()
+    {
+        if (array_key_exists('content', $this->attributes)) {
+            $s = $this->attributes['content'];
+            if (strlen($s) > 0) {
+                $s = substr(strip_tags($this->attributes['content']), 0, 200).'...';
+            }
 
-	public function getInstructorListAttribute()
-	{
-		if (array_key_exists('instructor', $this->attributes)) {
-			$d = DB::table('instructor')->whereIn('id', json_decode($this->attributes['instructor']))->get();
-			foreach ($d as $key => $value) {
-				if ($value->picture) {
-					$value->picture_src = json_decode($value->picture);
-				}
-			}
-			return $d;
-		}
-	}
+            return $s;
+        }
+    }
 
-	public function getEventListAttribute()
-	{
-		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_event')->where('class_id', $this->attributes['id'])->orderBy('time_start')->get();
-		}
-	}
+    public function getVideosAttribute()
+    {
+        if (array_key_exists('video', $this->attributes)) {
+            $v = json_decode($this->attributes['video']);
+            if ($v) {
+                return $v;
+            }
 
-	public function getPricingAttribute()
-	{
-		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_pricing')->where('class_id', $this->attributes['id'])->first();
-		}
-	}
+            return null;
+        }
+    }
 
-	public function getEventsExistAttribute()
-	{
-		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_event')->where('class_id', $this->attributes['id'])->exists();
-		}
-	}
+    public function getInstructorListAttribute()
+    {
+        if (array_key_exists('instructor', $this->attributes)) {
+            $d = DB::table('instructor')->whereIn('id', json_decode($this->attributes['instructor']))->get();
+            foreach ($d as $key => $value) {
+                if ($value->picture) {
+                    $value->picture_src = json_decode($value->picture);
+                }
+            }
 
-	public function getCertifExistAttribute()
-	{
-		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_certificate_template')->where('class_id', $this->attributes['id'])->exists();
-		}
-	}
+            return $d;
+        }
+    }
 
-	public function getContentListAttribute()
-	{
-		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_content')->where('class_id', $this->attributes['id'])->get();
-		}
-	}
+    public function getEventListAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DB::table('class_event')->where('class_id', $this->attributes['id'])->orderBy('time_start')->get();
+        }
+    }
 
-	public function getTotalPesertaAttribute()
-	{
-		if (array_key_exists('id', $this->attributes)) {
-			return DB::table('class_payment')
-				->where('class_payment.class_id', $this->attributes['id'])
-				->sum('jumlah');
-		}
-	}
+    public function getPricingAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DB::table('class_pricing')->where('class_id', $this->attributes['id'])->first();
+        }
+    }
 
-	public function getPesertaListAttribute()
-	{
-		$data = [];
-		if (array_key_exists('id', $this->attributes)) {
-			// Base query untuk menghindari pengulangan kode
-			$baseQuery = DB::table('class_payment')
-				->select(
-					'class_payment.*',
-					'user_profile.name as user_name',
-					'user_profile.phone_region',
-					'user_profile.phone',
-					'user_profile.instansi',
-					'sertifikat_peserta.nama as nama_sertifikat' // Ambil nama dari tabel sertifikat
-				)
-				->leftJoin('user_profile', 'user_profile.user_id', '=', 'class_payment.user_id')
-				->leftJoin('sertifikat_peserta', 'sertifikat_peserta.payment_class_id', '=', 'class_payment.id')
-				->where('class_payment.class_id', $this->attributes['id']);
+    public function getEventsExistAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DB::table('class_event')->where('class_id', $this->attributes['id'])->exists();
+        }
+    }
 
-			$data['all'] = (clone $baseQuery)->get();
-			$data['lunas'] = (clone $baseQuery)->where('class_payment.status', 1)->get();
-		}
-		return $data;
-	}
+    public function getCertifExistAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DB::table('class_certificate_template')->where('class_id', $this->attributes['id'])->exists();
+        }
+    }
+
+    public function getContentListAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DB::table('class_content')->where('class_id', $this->attributes['id'])->get();
+        }
+    }
+
+    public function getTotalPesertaAttribute()
+    {
+        if (array_key_exists('id', $this->attributes)) {
+            return DB::table('class_payment')
+                ->where('class_payment.class_id', $this->attributes['id'])
+                ->sum('jumlah');
+        }
+    }
+
+    public function getPesertaListAttribute()
+    {
+        $data = [];
+        if (array_key_exists('id', $this->attributes)) {
+            // Base query untuk menghindari pengulangan kode
+            $baseQuery = DB::table('class_payment')
+                ->select(
+                    'class_payment.*',
+                    'user_profile.name as user_name',
+                    'user_profile.phone_region',
+                    'user_profile.phone',
+                    'user_profile.instansi',
+                    'sertifikat_peserta.nama as nama_sertifikat' // Ambil nama dari tabel sertifikat
+                )
+                ->leftJoin('user_profile', 'user_profile.user_id', '=', 'class_payment.user_id')
+                ->leftJoin('sertifikat_peserta', 'sertifikat_peserta.payment_class_id', '=', 'class_payment.id')
+                ->where('class_payment.class_id', $this->attributes['id']);
+
+            $data['all'] = (clone $baseQuery)->get();
+            $data['lunas'] = (clone $baseQuery)->where('class_payment.status', 1)->get();
+        }
+
+        return $data;
+    }
 }
