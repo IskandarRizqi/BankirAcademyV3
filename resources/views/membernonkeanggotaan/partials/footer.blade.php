@@ -1,4 +1,4 @@
 			<div class="page-footer">
 
-				<span>Bankir Academy Admin</span>
+				<span>BankirAcademy</span>
 			</div>
