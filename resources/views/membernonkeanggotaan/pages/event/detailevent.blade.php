@@ -4,122 +4,128 @@
 
 @section('content')
 @php
-	$levels = [
-		1 => 'Pemula',
-		2 => 'Menengah',
-		3 => 'Lanjutan',
-	];
+$levels = [
+1 => 'Pemula',
+2 => 'Menengah',
+3 => 'Lanjutan',
+];
 
-	$title = data_get($class, 'title', 'Detail Kelas');
-	$level = $levels[(int) data_get($class, 'level')] ?? 'Semua Level';
-	$category = data_get($class, 'category') ?: 'Kelas Bankir';
-	$mode = [
-		0 => 'Online',
-		1 => 'Offline',
-	][(int) data_get($class, 'kategori')] ?? 'Kelas';
-	$startDate = data_get($class, 'date_start');
-	$endDate = data_get($class, 'date_end');
-	$isIht = (int) data_get($class, 'iht') === 1;
-	$courseTime = data_get($class, 'jam_acara');
+$title = data_get($class, 'title', 'Detail Kelas');
+$level = $levels[(int) data_get($class, 'level')] ?? 'Semua Level';
+$category = data_get($class, 'category') ?: 'Kelas Bankir';
+$mode = [
+0 => 'Online',
+1 => 'Offline',
+][(int) data_get($class, 'kategori')] ?? 'Kelas';
+$startDate = data_get($class, 'date_start');
+$endDate = data_get($class, 'date_end');
+$isIht = (int) data_get($class, 'iht') === 1;
+$courseTime = data_get($class, 'jam_acara');
 	$courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
 	$location = data_get($class, 'lokasi');
 	$participantLimit = data_get($class, 'participant_limit');
-	$pricing = data_get($class, 'pricing');
-	$isPriceComingSoon = ! $pricing || (int) data_get($pricing, 'gratis', 0) === 1;
-	$price = (int) data_get($pricing, 'price', 0);
-	$promoPrice = (int) data_get($pricing, 'promo_price', 0);
-	$finalPrice = max(0, $price - $promoPrice);
-	$priceLabel = $isPriceComingSoon
-		? 'Price Coming Soon'
-		: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis');
-	$image = data_get($class, 'image_mobile') ?: data_get($class, 'image');
-	$image = $image ?: asset('assets/img/90x90.jpg');
-	$instructors = collect(data_get($class, 'instructor_list', []));
-	$events = collect(data_get($class, 'event_list', []));
-	$jenis = collect(json_decode((string) data_get($class, 'jenis'), true) ?: [])
-		->map(fn($value) => ucwords(strtolower(str_replace(['_', '-'], ' ', $value))))
-		->implode(', ');
-	$plainDescription = trim(strip_tags((string) data_get($class, 'content', '')));
-	$locationLabel = $mode === 'Online' ? 'Online Meeting' : ($location ?: 'Lokasi menyusul');
-	$shortMonths = [
-		1 => 'Jan',
-		2 => 'Feb',
-		3 => 'Mar',
-		4 => 'Apr',
-		5 => 'Mei',
-		6 => 'Jun',
-		7 => 'Jul',
-		8 => 'Agu',
-		9 => 'Sept',
-		10 => 'Okt',
-		11 => 'Nov',
-		12 => 'Des',
-	];
-	$formatCourseDate = function ($date, bool $withYear = true) use ($shortMonths) {
-		$date = \Carbon\Carbon::parse($date);
+$pricing = data_get($class, 'pricing');
+$isPriceComingSoon = ! $isIht && (! $pricing || (int) data_get($pricing, 'gratis', 0) === 1);
+$price = (int) data_get($pricing, 'price', 0);
+$promoPrice = (int) data_get($pricing, 'promo_price', 0);
+$finalPrice = max(0, $price - $promoPrice);
+$priceLabel = $isIht
+? 'Hubungi Tim Kami'
+: ($isPriceComingSoon
+? 'Price Coming Soon'
+: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis'));
+$image = data_get($class, 'image_mobile') ?: data_get($class, 'image');
+$image = $image ?: asset('assets/img/90x90.jpg');
+$instructors = collect(data_get($class, 'instructor_list', []));
+$events = collect(data_get($class, 'event_list', []));
+$jenis = collect(json_decode((string) data_get($class, 'jenis'), true) ?: [])
+->map(fn($value) => ucwords(strtolower(str_replace(['_', '-'], ' ', $value))))
+->implode(', ');
+$plainDescription = trim(strip_tags((string) data_get($class, 'content', '')));
+$locationLabel = $mode === 'Online' ? 'Online Meeting' : ($location ?: 'Lokasi menyusul');
+$shortMonths = [
+1 => 'Jan',
+2 => 'Feb',
+3 => 'Mar',
+4 => 'Apr',
+5 => 'Mei',
+6 => 'Jun',
+7 => 'Jul',
+8 => 'Agu',
+9 => 'Sept',
+10 => 'Okt',
+11 => 'Nov',
+12 => 'Des',
+];
+$formatCourseDate = function ($date, bool $withYear = true) use ($shortMonths) {
+$date = \Carbon\Carbon::parse($date);
 
-		return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
-	};
-	$formattedDate = 'Fleksibel';
+return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
+};
+$formattedDate = 'Fleksibel';
 	$courseStatus = 'Upcoming';
 	$courseStatusClass = 'upcoming';
 	$today = now()->startOfDay();
 	$registrationStart = $startDate ? \Carbon\Carbon::parse($startDate)->startOfDay() : null;
 	$registrationEnd = $endDate
+	? ($isIht
 		? \Carbon\Carbon::parse($endDate)->endOfDay()
-		: ($registrationStart ? $registrationStart->copy()->endOfDay() : null);
+		: \Carbon\Carbon::parse($endDate)->subDay()->endOfDay())
+	: ($registrationStart ? $registrationStart->copy()->endOfDay() : null);
 
 	if ($startDate && $endDate) {
-		$start = $registrationStart->copy();
-		$end = $registrationEnd->copy();
-		$formattedDate = $start->isSameMonth($end) && $start->isSameYear($end)
-			? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
-			: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
-	} elseif ($startDate) {
-		$formattedDate = $formatCourseDate($startDate);
-	}
+	$start = $registrationStart->copy();
+	$end = $registrationEnd->copy();
+	$formattedDate = $isIht
+	? ($start->isSameMonth($end) && $start->isSameYear($end)
+		? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
+		: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end))
+	: $formatCourseDate($end);
+} elseif ($startDate) {
+$formattedDate = $formatCourseDate($startDate);
+}
 
-	if ($registrationEnd && $today->greaterThan($registrationEnd)) {
-		$courseStatus = 'Completed';
-		$courseStatusClass = 'completed';
-	} elseif ($registrationStart && $registrationEnd && $today->betweenIncluded($registrationStart, $registrationEnd)) {
-		$courseStatus = 'Running';
-		$courseStatusClass = 'running';
-	}
+if ($registrationEnd && $today->greaterThan($registrationEnd)) {
+$courseStatus = 'Completed';
+$courseStatusClass = 'completed';
+} elseif ($registrationStart && $registrationEnd && $today->betweenIncluded($registrationStart, $registrationEnd)) {
+$courseStatus = 'Running';
+$courseStatusClass = 'running';
+}
 
-	if ($isIht && $courseStatusClass === 'upcoming') {
-		$courseStatus = 'IHT';
-		$courseStatusClass = 'iht';
-		$formattedDate = 'Hubungi Tim Kami';
-	}
+if ($isIht && $courseStatusClass === 'upcoming') {
+$courseStatus = 'IHT';
+$courseStatusClass = 'iht';
+$formattedDate = 'Hubungi Tim Kami';
+}
 
-	$isIhtOrderable = $isIht;
-	$canRegister = $courseStatusClass === 'running' && ! $isPriceComingSoon;
-	$registrationAlert = [
-		'upcoming' => [
-			'icon' => 'info',
-			'title' => 'Kelas masih upcoming',
-			'text' => 'Kelas ini belum dapat diorder karena periode pendaftaran belum berjalan.',
-		],
-		'completed' => [
-			'icon' => 'warning',
-			'title' => 'Pendaftaran sudah ditutup',
-			'text' => 'Pendaftaran kelas ini sudah ditutup karena periode pendaftaran telah berakhir.',
-		],
-		'iht' => [
-			'icon' => 'info',
-			'title' => 'Kelas IHT',
-			'text' => 'Silakan hubungi tim Bankir Academy untuk informasi pendaftaran kelas IHT.',
-		],
-	][$courseStatusClass] ?? null;
+$isIhtOrderable = $isIht;
+$canRegister = $courseStatusClass === 'running' && ! $isPriceComingSoon;
+$registrationAlert = [
+'upcoming' => [
+'icon' => 'info',
+'title' => 'Kelas masih upcoming',
+'text' => 'Kelas ini belum dapat diorder karena periode pendaftaran belum berjalan.',
+],
+'completed' => [
+'icon' => 'warning',
+'title' => 'Pendaftaran sudah ditutup',
+'text' => 'Pendaftaran kelas ini sudah ditutup karena periode pendaftaran telah berakhir.',
+],
+'iht' => [
+'icon' => 'info',
+'title' => 'Kelas IHT',
+'text' => 'Silakan hubungi tim Bankir Academy untuk informasi pendaftaran kelas IHT.',
+],
+][$courseStatusClass] ?? null;
 
-	if ($isPriceComingSoon) {
-		$registrationAlert = [
-			'icon' => 'info',
-			'title' => 'Price Coming Soon',
-			'text' => 'Harga kelas ini belum tersedia. Silakan cek kembali nanti atau hubungi tim Bankir Academy.',
-		];
-	}
+if ($isPriceComingSoon) {
+$registrationAlert = [
+'icon' => 'info',
+'title' => 'Price Coming Soon',
+'text' => 'Investasi kelas ini belum tersedia. Silakan cek kembali nanti atau hubungi tim Bankir Academy.',
+];
+}
 @endphp
 
 <style>
@@ -226,9 +232,9 @@
 	}
 
 	.event-pill--completed {
-		border-color: rgba(107, 114, 128, .32);
-		background: rgba(229, 231, 235, .94);
-		color: #4b5563;
+		border-color: rgba(239, 68, 68, .34);
+		background: rgba(254, 226, 226, .96);
+		color: #b91c1c;
 	}
 
 	.event-pill--iht {
@@ -345,6 +351,10 @@
 		font-size: 26px;
 		font-weight: 950;
 		letter-spacing: -.04em;
+	}
+
+	.event-price-value--coming-soon {
+		font-size: 24px;
 	}
 
 	.event-price-original {
@@ -580,6 +590,10 @@
 		line-height: 1;
 	}
 
+	.event-register-card__price--coming-soon {
+		font-size: 30px;
+	}
+
 	.event-register-card__original {
 		display: block;
 		margin-top: 5px;
@@ -639,6 +653,7 @@
 	}
 
 	@media (max-width: 1199.98px) {
+
 		.event-hero-v2__inner,
 		.event-body-layout {
 			grid-template-columns: 1fr;
@@ -719,7 +734,7 @@
 
 				<div class="event-hero-stats" aria-label="Ringkasan kelas">
 					<div class="event-stat-card">
-						<span class="event-stat-card__label">Pendaftaran</span>
+						<span class="event-stat-card__label">{{ $isIht ? 'Pendaftaran' : 'Batas Pendaftaran' }}</span>
 						<span class="event-stat-card__value">{{ $formattedDate }}</span>
 					</div>
 					<div class="event-stat-card">
@@ -739,41 +754,40 @@
 
 			<div class="event-hero-visual">
 				<div class="event-cover-card">
-					<img src="{{ $image }}" alt="{{ $title }}" onerror="this.src='{{ asset('assets/img/90x90.jpg') }}'">
+					<img src="{{ $image }}" alt="{{ $title }}" onerror="this.src='{{ asset('cbtemplate/assets/img/90x90.jpg') }}'">
 					<span class="event-cover-card__shade" aria-hidden="true"></span>
 				</div>
 
 				<div class="event-price-strip">
 					<div>
-						<span class="event-price-label">Harga kelas</span>
-						<span class="event-price-value">{{ $priceLabel }}</span>
+						<span class="event-price-label">Investasi</span>
+						<span class="event-price-value {{ $isPriceComingSoon ? 'event-price-value--coming-soon' : '' }}">{{ $priceLabel }}</span>
 						@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
 						<span class="event-price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 						@endif
 					</div>
 					@if($isIhtOrderable)
-					<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" class="m-0 js-iht-order-form">
+					<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" target="_blank" rel="noopener" class="m-0 js-iht-order-form">
 						@csrf
-						<button type="submit" class="event-primary-cta" data-loading-text="Memproses...">Daftar Kelas</button>
+						<button type="submit" class="event-primary-cta">Ajukan Penawaran</button>
 					</form>
 					@else
-						<button
-							type="button"
-							class="event-primary-cta js-event-order-button"
-							@if($canRegister)
-							data-toggle="modal"
-							data-target="#eventRegistrationModal"
-							data-backdrop="static"
-							data-keyboard="false"
-							@endif
-							data-course-status="{{ $courseStatusClass }}"
-							data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
-							data-alert-title="{{ data_get($registrationAlert, 'title') }}"
-							data-alert-text="{{ data_get($registrationAlert, 'text') }}"
-							data-can-register="{{ $canRegister ? '1' : '0' }}"
-						>
-							Daftar Kelas
-						</button>
+					<button
+						type="button"
+						class="event-primary-cta js-event-order-button"
+						@if($canRegister)
+						data-toggle="modal"
+						data-target="#eventRegistrationModal"
+						data-backdrop="static"
+						data-keyboard="false"
+						@endif
+						data-course-status="{{ $courseStatusClass }}"
+						data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
+						data-alert-title="{{ data_get($registrationAlert, 'title') }}"
+						data-alert-text="{{ data_get($registrationAlert, 'text') }}"
+						data-can-register="{{ $canRegister ? '1' : '0' }}">
+						Daftar Kelas
+					</button>
 					@endif
 				</div>
 			</div>
@@ -802,7 +816,7 @@
 					<h2 class="event-section-title" id="event-info-title">Informasi praktis sebelum mengikuti kelas</h2>
 					<div class="event-highlight-grid">
 						<div class="event-highlight-card">
-							<span class="event-highlight-card__label">Pendaftaran</span>
+							<span class="event-highlight-card__label">{{ $isIht ? 'Pendaftaran' : 'Batas Pendaftaran' }}</span>
 							<span class="event-highlight-card__value">{{ $formattedDate }}</span>
 						</div>
 						<div class="event-highlight-card">
@@ -847,10 +861,10 @@
 						@php
 						$pictureUrl = data_get($instructor, 'picture_src.url');
 						$picture = $pictureUrl ? asset('Image/' . $pictureUrl) : data_get($instructor, 'picture');
-						$picture = $picture ?: asset('assets/img/90x90.jpg');
+						$picture = $picture ?: asset('cbtemplate/assets/img/90x90.jpg');
 						@endphp
 						<div class="event-instructor-card">
-							<img src="{{ $picture }}" alt="{{ data_get($instructor, 'name', 'Instruktur') }}" class="event-instructor-avatar" onerror="this.src='{{ asset('assets/img/90x90.jpg') }}'">
+							<img src="{{ $picture }}" alt="{{ data_get($instructor, 'name', 'Instruktur') }}" class="event-instructor-avatar" onerror="this.src='{{ asset('cbtemplate/assets/img/90x90.jpg') }}'">
 							<div>
 								<h3 class="event-instructor-name">{{ data_get($instructor, 'name', 'Instruktur Bankir Academy') }}</h3>
 								<p class="event-instructor-title">{{ data_get($instructor, 'title') ?: 'Praktisi dan pengajar Bankir Academy' }}</p>
@@ -865,34 +879,33 @@
 
 		<aside class="event-side-stack" aria-label="Ringkasan kelas">
 			<section class="event-register-card">
-				<span class="event-register-card__label">Harga kelas</span>
-				<span class="event-register-card__price">{{ $priceLabel }}</span>
+				<span class="event-register-card__label">Investasi</span>
+				<span class="event-register-card__price {{ $isPriceComingSoon ? 'event-register-card__price--coming-soon' : '' }}">{{ $priceLabel }}</span>
 				@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
 				<span class="event-register-card__original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
 				@if($isIhtOrderable)
-				<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" class="m-0 js-iht-order-form">
+				<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" target="_blank" rel="noopener" class="m-0 js-iht-order-form">
 					@csrf
-					<button type="submit" class="event-register-button" data-loading-text="Memproses...">Daftar / Beli Kelas</button>
+					<button type="submit" class="event-register-button">Ajukan Penawaran</button>
 				</form>
 				@else
-					<button
-						type="button"
-						class="event-register-button js-event-order-button"
-						@if($canRegister)
-						data-toggle="modal"
-						data-target="#eventRegistrationModal"
-						data-backdrop="static"
-						data-keyboard="false"
-						@endif
-						data-course-status="{{ $courseStatusClass }}"
-						data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
-						data-alert-title="{{ data_get($registrationAlert, 'title') }}"
-						data-alert-text="{{ data_get($registrationAlert, 'text') }}"
-						data-can-register="{{ $canRegister ? '1' : '0' }}"
-					>
-						Daftar / Beli Kelas
-					</button>
+				<button
+					type="button"
+					class="event-register-button js-event-order-button"
+					@if($canRegister)
+					data-toggle="modal"
+					data-target="#eventRegistrationModal"
+					data-backdrop="static"
+					data-keyboard="false"
+					@endif
+					data-course-status="{{ $courseStatusClass }}"
+					data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
+					data-alert-title="{{ data_get($registrationAlert, 'title') }}"
+					data-alert-text="{{ data_get($registrationAlert, 'text') }}"
+					data-can-register="{{ $canRegister ? '1' : '0' }}">
+					Daftar / Beli Kelas
+				</button>
 				@endif
 				<p class="event-register-note">Pastikan data profil Anda sudah lengkap sebelum melakukan pembelian atau pendaftaran kelas.</p>
 			</section>
@@ -937,24 +950,6 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		document.querySelectorAll('.js-iht-order-form').forEach(function(form) {
-			form.addEventListener('submit', function(event) {
-				if (form.dataset.submitted === '1') {
-					event.preventDefault();
-					return;
-				}
-
-				form.dataset.submitted = '1';
-				const submitButton = form.querySelector('button[type="submit"]');
-
-				if (submitButton) {
-					submitButton.disabled = true;
-					submitButton.dataset.originalText = submitButton.textContent.trim();
-					submitButton.textContent = submitButton.dataset.loadingText || 'Memproses...';
-				}
-			});
-		});
-
 		document.querySelectorAll('.js-event-order-button').forEach(function(button) {
 			button.addEventListener('click', function(event) {
 				if (button.dataset.canRegister === '1') {

@@ -101,9 +101,9 @@ $levelOptions = [
 	.course-filter-card {
 		position: sticky;
 		top: calc(var(--topbar-h, 68px) + 18px);
-		padding: 16px;
+		padding: 12px;
 		border: 1px solid #e7e9f0;
-		border-radius: 18px;
+		border-radius: 14px;
 		background: #ffffff;
 		box-shadow: 0 10px 30px rgba(15, 23, 42, .04);
 	}
@@ -111,29 +111,29 @@ $levelOptions = [
 	.course-filter-form {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 8px;
 	}
 
 	.course-filter-card__title {
-		margin: 0 0 4px;
+		margin: 0 0 2px;
 		color: #111827;
-		font-size: 16px;
+		font-size: 14px;
 		font-weight: 900;
 		letter-spacing: -.02em;
 	}
 
 	.course-filter-card__subtitle {
-		margin: 0 0 14px;
+		margin: 0 0 10px;
 		color: #6b7280;
-		font-size: 13px;
-		line-height: 1.5;
+		font-size: 11px;
+		line-height: 1.4;
 	}
 
 	.course-filter-field label {
 		display: block;
-		margin-bottom: 6px;
+		margin-bottom: 4px;
 		color: #4b5563;
-		font-size: 12px;
+		font-size: 10px;
 		font-weight: 800;
 		letter-spacing: .04em;
 		text-transform: uppercase;
@@ -141,13 +141,13 @@ $levelOptions = [
 
 	.course-filter-control {
 		width: 100%;
-		height: 44px;
+		height: 36px;
 		border: 1px solid #e5e7eb;
-		border-radius: 12px;
+		border-radius: 9px;
 		background: #ffffff;
 		color: #111827;
-		padding: 0 13px;
-		font-size: 14px;
+		padding: 0 10px;
+		font-size: 12px;
 		font-weight: 600;
 		outline: none;
 		transition: border-color .18s ease, box-shadow .18s ease;
@@ -167,22 +167,22 @@ $levelOptions = [
 	.course-filter-actions {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 10px;
+		gap: 7px;
 		align-items: center;
-		padding-top: 4px;
+		padding-top: 2px;
 	}
 
 	.course-filter-button {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		height: 44px;
-		padding: 0 16px;
+		height: 36px;
+		padding: 0 10px;
 		border: 0;
-		border-radius: 12px;
+		border-radius: 9px;
 		background: var(--primary, #4F46E5);
 		color: #ffffff;
-		font-size: 13px;
+		font-size: 11px;
 		font-weight: 850;
 		cursor: pointer;
 		white-space: nowrap;
@@ -192,19 +192,19 @@ $levelOptions = [
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		height: 44px;
-		padding: 0 14px;
-		border-radius: 12px;
+		height: 36px;
+		padding: 0 10px;
+		border-radius: 9px;
 		background: #f3f4f6;
 		color: #4b5563;
-		font-size: 13px;
+		font-size: 11px;
 		font-weight: 800;
 		white-space: nowrap;
 	}
 
 	.course-list-layout {
 		display: grid;
-		grid-template-columns: 280px minmax(0, 1fr);
+		grid-template-columns: 235px minmax(0, 1fr);
 		gap: 22px;
 		align-items: start;
 	}
@@ -247,7 +247,106 @@ $levelOptions = [
 	.course-grid {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 18px;
+		gap: 14px;
+	}
+
+	/* Keep the event list compact so the event information stays prominent. */
+	.course-list-page .member-course-card {
+		border-radius: 14px;
+	}
+
+	.course-list-page .member-course-card__media {
+		aspect-ratio: 16 / 8.5;
+	}
+
+	.course-list-page .member-course-card__badge-row {
+		left: 10px;
+		right: 10px;
+		top: 10px;
+		gap: 6px;
+	}
+
+	.course-list-page .member-course-card__badge {
+		min-height: 24px;
+		padding: 5px 8px;
+		font-size: 11px;
+	}
+
+	.course-list-page .member-course-card__body {
+		padding: 13px;
+	}
+
+	.course-list-page .member-course-card__category {
+		gap: 5px;
+		margin-bottom: 6px;
+		font-size: 12px;
+	}
+
+	.course-list-page .member-course-card__category-badge {
+		min-height: 21px;
+		padding: 4px 7px;
+		font-size: 11px;
+	}
+
+	.course-list-page .member-course-card__title {
+		font-size: 17px;
+		line-height: 1.22;
+	}
+
+	.course-list-page .member-course-card__description {
+		margin-top: 7px;
+		font-size: 13px;
+		line-height: 1.45;
+		-webkit-line-clamp: 2;
+	}
+
+	.course-list-page .member-course-card__meta {
+		margin-top: 11px;
+		gap: 7px;
+	}
+
+	.course-list-page .member-course-card__meta-item {
+		padding: 8px;
+		border-radius: 9px;
+	}
+
+	.course-list-page .member-course-card__meta-label {
+		margin-bottom: 2px;
+		font-size: 8px;
+		letter-spacing: .02em;
+		white-space: nowrap;
+	}
+
+	.course-list-page .member-course-card__meta-value {
+		font-size: 11px;
+		line-height: 1.25;
+	}
+
+	.course-list-page .member-course-card__footer {
+		padding-top: 12px;
+		gap: 8px;
+	}
+
+	.course-list-page .member-course-card__price-label {
+		font-size: 10px;
+	}
+
+	.course-list-page .member-course-card__price-value {
+		font-size: 16px;
+	}
+
+	.course-list-page .member-course-card__price-value--coming-soon {
+		font-size: 14px;
+	}
+
+	.course-list-page .member-course-card__price-original {
+		font-size: 11px;
+	}
+
+	.course-list-page .member-course-card__button {
+		min-height: 34px;
+		padding: 8px 11px;
+		font-size: 12px;
 	}
 
 	.course-empty-state {
@@ -318,7 +417,7 @@ $levelOptions = [
 
 	@media (max-width: 1199.98px) {
 		.course-list-layout {
-			grid-template-columns: 260px minmax(0, 1fr);
+			grid-template-columns: 215px minmax(0, 1fr);
 		}
 
 		.course-grid {

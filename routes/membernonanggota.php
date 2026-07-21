@@ -25,6 +25,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-event/{unique_id}/{title}', [DataEventKelasController::class, 'detailevent']);
     Route::get('/pembayaran', [BillingController::class, 'databilling']);
     Route::post('/pembayaran/{payment}/expire', [BillingController::class, 'expirePayment']);
+    Route::post('/membership/cancel', [BillingController::class, 'cancelMembership'])
+        ->name('membernonanggota.membership.cancel');
+    Route::post('/membership/continue-payment', [BillingController::class, 'continueMembershipPayment'])
+        ->name('membernonanggota.membership.continue-payment');
     Route::post('/pembayaran/iht/{payment}', [PaymentController::class, 'paymentIht'])->name('membernonanggota.payment-iht');
     Route::get('/classes/cetakinvoicepending/{id}', [MembershipController::class, 'cetakinvoicepending']);
     Route::get('/classes/getinvoice/{id}', [InvoiceController::class, 'getInvoice']);

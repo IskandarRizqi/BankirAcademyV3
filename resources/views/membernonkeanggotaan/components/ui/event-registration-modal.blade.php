@@ -2,14 +2,17 @@
     $modalId = $modalId ?? 'eventRegistrationModal';
     $classId = data_get($class, 'id');
     $classTitle = data_get($class, 'title', 'Kelas Bankir Academy');
+    $isIht = (int) data_get($class, 'iht') === 1;
     $pricing = data_get($class, 'pricing');
-    $isPriceComingSoon = ! $pricing || (int) data_get($pricing, 'gratis', 0) === 1;
+    $isPriceComingSoon = ! $isIht && (! $pricing || (int) data_get($pricing, 'gratis', 0) === 1);
     $price = (int) data_get($pricing, 'price', 0);
     $promoPrice = (int) data_get($pricing, 'promo_price', 0);
     $finalPrice = max(0, $price - $promoPrice);
-    $priceLabel = $isPriceComingSoon
-        ? 'Price Coming Soon'
-        : ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis');
+    $priceLabel = $isIht
+        ? 'Hubungi Tim Kami'
+        : ($isPriceComingSoon
+            ? 'Price Coming Soon'
+            : ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis'));
     $certificateFee = (int) data_get($sertif ?? null, 'nominal', 100000);
 @endphp
 
@@ -65,6 +68,10 @@
         font-size: 18px;
         font-weight: 950;
         line-height: 1.35;
+    }
+
+    .event-registration-modal__value--coming-soon {
+        font-size: 16px;
     }
 
     .event-registration-option {
@@ -143,8 +150,8 @@
                             <span class="event-registration-modal__value">{{ $classTitle }}</span>
                         </div>
                         <div class="event-registration-modal__card">
-                            <span class="event-registration-modal__label">Harga</span>
-                            <span class="event-registration-modal__value">{{ $priceLabel }}</span>
+                            <span class="event-registration-modal__label">Investasi</span>
+                            <span class="event-registration-modal__value {{ $isPriceComingSoon ? 'event-registration-modal__value--coming-soon' : '' }}">{{ $priceLabel }}</span>
                         </div>
                     </div>
 

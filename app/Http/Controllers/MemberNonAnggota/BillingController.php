@@ -5,15 +5,22 @@ namespace App\Http\Controllers\MemberNonAnggota;
 use App\Http\Controllers\Controller;
 use App\Models\ClassPaymentModel;
 use App\Models\DataPayment;
+use App\Models\UserProfileModel;
+use App\Services\PaymentExpiryService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BillingController extends Controller
 {
+    public function __construct(private PaymentExpiryService $paymentExpiryService)
+    {
+    }
+
     public function databilling(Request $request)
     {
         $userId = (int) $request->user()->id;
-        $this->syncExpiredPayments($userId);
+        $this->paymentExpiryService->syncForUser($userId);
 
         $billingSummary = $this->getBillingSummary($userId);
         $billingFilters = $this->resolveBillingFilters($request);
@@ -36,13 +43,58 @@ class BillingController extends Controller
     {
         abort_unless((int) $payment->user_id === (int) $request->user()->id, 403);
 
-        $this->markPaymentAsExpired($payment);
+        $this->paymentExpiryService->expireIfNeeded($payment);
         $payment->refresh();
 
         return response()->json([
             'status' => (int) $payment->status,
             'is_canceled' => (int) $payment->status === DataPayment::STATUS_CANCELED,
         ]);
+    }
+
+    public function cancelMembership(Request $request)
+    {
+        $userId = (int) $request->user()->id;
+
+        DB::transaction(function () use ($userId) {
+            $pendingMemberships = DataPayment::query()
+                ->where('user_id', $userId)
+                ->where('tipe_pembelian', DataPayment::PURCHASE_TYPE_MEMBERSHIP)
+                ->where('status', DataPayment::STATUS_PENDING)
+                ->lockForUpdate()
+                ->get();
+
+            $pendingMemberships->each(function (DataPayment $payment) {
+                $payment->update([
+                    'status' => DataPayment::STATUS_CANCELED,
+                    'keterangan' => trim(($payment->keterangan ? $payment->keterangan . ' ' : '') . 'Order membership dibatalkan oleh pengguna.'),
+                ]);
+            });
+
+            UserProfileModel::query()
+                ->where('user_id', $userId)
+                ->lockForUpdate()
+                ->update(['status_membership' => 0]);
+        });
+
+        return back()->with('success', 'Order membership berhasil dibatalkan.');
+    }
+
+    public function continueMembershipPayment(Request $request)
+    {
+        $payment = DataPayment::query()
+            ->where('user_id', (int) $request->user()->id)
+            ->where('tipe_pembelian', DataPayment::PURCHASE_TYPE_MEMBERSHIP)
+            ->where('status', DataPayment::STATUS_PENDING)
+            ->whereNotNull('link_payment')
+            ->latest('id')
+            ->first();
+
+        if (! $payment || blank($payment->link_payment)) {
+            return back()->with('error', 'Link pembayaran membership tidak tersedia.');
+        }
+
+        return redirect()->away($payment->link_payment);
     }
 
     private function getBillingSummary(int $userId): array
@@ -150,40 +202,4 @@ class BillingController extends Controller
             ->withQueryString();
     }
 
-    private function syncExpiredPayments(int $userId): void
-    {
-        DataPayment::query()
-            ->where('user_id', $userId)
-            ->where('status', DataPayment::STATUS_PENDING)
-            ->get()
-            ->each(function (DataPayment $payment) {
-                $this->markPaymentAsExpired($payment);
-            });
-    }
-
-    private function markPaymentAsExpired(DataPayment $payment): bool
-    {
-        if ((int) $payment->status !== DataPayment::STATUS_PENDING) {
-            return false;
-        }
-
-        if ($payment->isIhtWithoutExpiry()) {
-            return false;
-        }
-
-        if ((int) $payment->is_iht === 1 && (int) $payment->is_konfirmasi === 1 && ! $payment->link_payment) {
-            return false;
-        }
-
-        $expiresAt = $payment->paymentExpiresAt();
-
-        if (! $expiresAt || $expiresAt->isFuture()) {
-            return false;
-        }
-
-        return $payment->update([
-            'status' => DataPayment::STATUS_CANCELED,
-            'keterangan' => trim(($payment->keterangan ? $payment->keterangan.' ' : '').'Pembayaran otomatis dibatalkan karena melewati batas waktu.'),
-        ]);
-    }
 }

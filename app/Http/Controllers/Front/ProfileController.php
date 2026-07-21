@@ -17,6 +17,7 @@ use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
 use App\Models\User;
 use App\Models\UserProfileModel;
+use App\Services\PaymentExpiryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -40,6 +41,10 @@ use Illuminate\Support\Facades\Session;
 
 class ProfileController extends Controller
 {
+    public function __construct(private PaymentExpiryService $paymentExpiryService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -161,6 +166,7 @@ class ProfileController extends Controller
     public function indexv2($request)
     {
         $auth_id = Auth::user()->id;
+        $this->paymentExpiryService->syncForUser((int) $auth_id);
         // $data['user'] = User::where('id', $auth_id)->first();
         // $data['isperusahaan'] = GlobalHelper::isperusahaan();
         // $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
