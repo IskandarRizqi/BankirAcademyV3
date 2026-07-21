@@ -13,19 +13,23 @@ $mode = [
 	0 => 'Online',
 	1 => 'Offline',
 ][(int) data_get($course, 'kategori')] ?? 'Kelas';
+$mediaIcon = $mode === 'Offline' ? 'fa-users' : 'fa-video';
+$mediaTooltip = $mode === 'Offline' ? 'Tatap muka di lokasi penyelenggara' : 'Online melalui Zoom';
 $startDate = data_get($course, 'date_start');
 $endDate = data_get($course, 'date_end');
 $isIht = (int) data_get($course, 'iht') === 1;
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
 $pricing = data_get($course, 'pricing');
-$isPriceComingSoon = ! $pricing || (int) data_get($pricing, 'gratis', 0) === 1;
+	$isPriceComingSoon = ! $isIht && (! $pricing || (int) data_get($pricing, 'gratis', 0) === 1);
 $price = (int) data_get($pricing, 'price', 0);
 $promoPrice = (int) data_get($pricing, 'promo_price', 0);
 $finalPrice = max(0, $price - $promoPrice);
-$priceLabel = $isPriceComingSoon
-	? 'Price Coming Soon'
-	: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis');
+	$priceLabel = $isIht
+		? 'Hubungi Tim Kami'
+		: ($isPriceComingSoon
+			? 'Price Coming Soon'
+			: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis'));
 $description = trim(strip_tags((string) data_get($course, 'content', '')));
 $description = $description !== '' ? \Illuminate\Support\Str::limit($description, 118) : 'Pelajari kompetensi perbankan melalui kelas terstruktur bersama Bankir Academy.';
 $image = data_get($course, 'image_mobile') ?: data_get($course, 'image');
@@ -56,18 +60,19 @@ $registrationDate = 'Fleksibel';
 $courseStatus = 'Upcoming';
 $courseStatusClass = 'upcoming';
 
-if ($startDate && $endDate) {
-	$start = \Carbon\Carbon::parse($startDate);
-	$end = \Carbon\Carbon::parse($endDate);
-	$today = now()->startOfDay();
+	if ($startDate && $endDate) {
+		$start = \Carbon\Carbon::parse($startDate);
+		$end = \Carbon\Carbon::parse($endDate);
+		$statusEnd = $isIht ? $end->copy() : $end->copy()->subDay();
+		$today = now()->startOfDay();
 	$registrationDate = $start->isSameMonth($end) && $start->isSameYear($end)
 		? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
 		: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
 
-	if ($today->betweenIncluded($start->copy()->startOfDay(), $end->copy()->endOfDay())) {
+	if ($today->betweenIncluded($start->copy()->startOfDay(), $statusEnd->endOfDay())) {
 		$courseStatus = 'Running';
 		$courseStatusClass = 'running';
-	} elseif ($today->greaterThan($end->copy()->endOfDay())) {
+	} elseif ($today->greaterThan($statusEnd->endOfDay())) {
 		$courseStatus = 'Completed';
 		$courseStatusClass = 'completed';
 	}
@@ -78,6 +83,10 @@ if ($startDate && $endDate) {
 		$courseStatus = 'Completed';
 		$courseStatusClass = 'completed';
 	}
+}
+
+if (! $isIht && $endDate) {
+	$registrationDate = $formatCourseDate(\Carbon\Carbon::parse($endDate)->subDay());
 }
 
 if ($isIht && $courseStatusClass === 'upcoming') {
@@ -244,6 +253,12 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 		color: #4b5563;
 	}
 
+	.member-course-card--completed .member-course-card__category-badge--status-completed {
+		background: #fee2e2;
+		border-color: #fecaca;
+		color: #b91c1c;
+	}
+
 	.member-course-card--completed .member-course-card__title,
 	.member-course-card--completed .member-course-card__description,
 	.member-course-card--completed .member-course-card__meta-value,
@@ -312,6 +327,49 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 		overflow-wrap: break-word;
 	}
 
+	.member-course-card__media-icon {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: rgba(17, 24, 39, .76);
+		color: #ffffff;
+		font-size: 11px;
+		cursor: help;
+	}
+
+	.member-course-card__media-icon::after {
+		content: attr(data-tooltip);
+		position: absolute;
+		left: 50%;
+		bottom: calc(100% + 8px);
+		z-index: 3;
+		width: max-content;
+		max-width: 190px;
+		padding: 6px 8px;
+		border-radius: 6px;
+		background: #111827;
+		color: #ffffff;
+		font-size: 10px;
+		font-weight: 600;
+		line-height: 1.3;
+		text-align: center;
+		white-space: normal;
+		pointer-events: none;
+		opacity: 0;
+		transform: translate(-50%, 4px);
+		transition: opacity .18s ease, transform .18s ease;
+	}
+
+	.member-course-card__media-icon:hover::after,
+	.member-course-card__media-icon:focus-visible::after {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+
 	.member-course-card__footer {
 		margin-top: auto;
 		padding-top: 18px;
@@ -340,6 +398,10 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 		font-weight: 900;
 		letter-spacing: -.03em;
 		line-height: 1.25;
+	}
+
+	.member-course-card__price-value--coming-soon {
+		font-size: 16px;
 	}
 
 	.member-course-card__price-original {
@@ -411,7 +473,6 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 	<div class="member-course-card__body">
 		<p class="member-course-card__category">
 			<span class="member-course-card__category-badge">{{ $category }}</span>
-			<span class="member-course-card__category-badge member-course-card__category-badge--mode">{{ $mode }}</span>
 			<span class="member-course-card__category-badge member-course-card__category-badge--status-{{ $courseStatusClass }}">{{ $courseStatus }}</span>
 		</p>
 		<h3 class="member-course-card__title">
@@ -421,7 +482,7 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 
 		<div class="member-course-card__meta" aria-label="Informasi kelas">
 			<div class="member-course-card__meta-item">
-				<span class="member-course-card__meta-label">Pendaftaran</span>
+				<span class="member-course-card__meta-label">{{ $isIht ? 'Pendaftaran' : 'Batas Pendaftaran' }}</span>
 				<span class="member-course-card__meta-value">
 					{{ $registrationDate }}
 				</span>
@@ -435,15 +496,25 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 				<span class="member-course-card__meta-value">{{ $level }}</span>
 			</div>
 			<div class="member-course-card__meta-item">
-				<span class="member-course-card__meta-label">Kuota</span>
-				<span class="member-course-card__meta-value">{{ $participantLimit ? $participantLimit . ' peserta' : 'Terbatas' }}</span>
+				<span class="member-course-card__meta-label">Media</span>
+				<span class="member-course-card__meta-value">
+					<span
+						class="member-course-card__media-icon"
+						tabindex="0"
+						role="img"
+						aria-label="{{ $mediaTooltip }}"
+						data-tooltip="{{ $mediaTooltip }}"
+					>
+						<i class="fas {{ $mediaIcon }}" aria-hidden="true"></i>
+					</span>
+				</span>
 			</div>
 		</div>
 
 		<div class="member-course-card__footer">
 			<div class="member-course-card__price">
-				<span class="member-course-card__price-label">Harga</span>
-				<span class="member-course-card__price-value">{{ $priceLabel }}</span>
+				<span class="member-course-card__price-label">Investasi</span>
+				<span class="member-course-card__price-value {{ $isPriceComingSoon ? 'member-course-card__price-value--coming-soon' : '' }}">{{ $priceLabel }}</span>
 				@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
 				<span class="member-course-card__price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif

@@ -64,32 +64,52 @@
 		line-height: 1.65;
 	}
 
-	.membership-pending-card__notice {
-		display: flex;
-		align-items: flex-start;
-		gap: 10px;
-		padding: 12px;
-		background: #f9fafb;
-		border: 1px solid #eef2f7;
-		border-radius: 10px;
-		color: #374151;
-		font-size: 13px;
-		font-weight: 700;
-		line-height: 1.5;
-	}
-
-	.membership-pending-card__notice-icon {
+	.membership-pending-card__cancel {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 22px;
-		height: 22px;
-		border-radius: 999px;
-		background: #fff7ed;
-		color: #c2410c;
-		font-size: 12px;
-		font-weight: 900;
-		flex: 0 0 auto;
+		min-height: 38px;
+		padding: 9px 14px;
+		border: 1px solid #fecaca;
+		border-radius: 8px;
+		background: #fff1f2;
+		color: #b91c1c;
+		font-size: 13px;
+		font-weight: 800;
+		cursor: pointer;
+		white-space: nowrap;
+		transition: background .18s ease, color .18s ease;
+	}
+
+	.membership-pending-card__cancel:hover {
+		background: #fee2e2;
+		color: #991b1b;
+	}
+
+	.membership-pending-card__actions {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.membership-pending-card__actions form {
+		margin: 0;
+		width: 100%;
+	}
+
+	.membership-pending-card__actions .membership-pending-card__cancel {
+		width: 100%;
+	}
+
+	.membership-pending-card__continue {
+		border-color: #c7d2fe;
+		background: #eef0fe;
+		color: #4338ca;
+	}
+
+	.membership-pending-card__continue:hover {
+		background: #e0e7ff;
+		color: #3730a3;
 	}
 
 	@media (max-width: 575.98px) {
@@ -101,6 +121,14 @@
 			flex-direction: column;
 			gap: 12px;
 		}
+
+		.membership-pending-card__cancel {
+			width: 100%;
+		}
+
+		.membership-pending-card__actions {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>
 @endonce
@@ -110,7 +138,7 @@
 		<div class="membership-pending-card__header">
 			<div>
 				<p class="membership-pending-card__eyebrow">Status Keanggotaan</p>
-				<h2 class="membership-pending-card__title" id="membership-pending-title">Menunggu Konfirmasi Pembayaran</h2>
+				<h2 class="membership-pending-card__title" id="membership-pending-title">Selesaikan proses pembayaran Anda</h2>
 			</div>
 			<span class="membership-pending-card__icon" aria-hidden="true">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -120,11 +148,49 @@
 			</span>
 		</div>
 
-		<p class="membership-pending-card__description mt-3">Bukti pembayaran Anda telah kami terima. Tim Admin Bankir Academy sedang melakukan verifikasi data pendaftaran Anda.</p>
+		<p class="membership-pending-card__description mt-3">Pembayaran membership Anda sedang diproses oleh sistem. Status membership akan diperbarui secara otomatis setelah pembayaran berhasil.</p>
 	</div>
 
-	<div class="membership-pending-card__notice">
-		<span class="membership-pending-card__notice-icon" aria-hidden="true">i</span>
-		<span>Proses verifikasi biasanya memakan waktu maksimal 1x24 jam.</span>
+	<div class="membership-pending-card__actions">
+		<form method="POST" action="{{ route('membernonanggota.membership.continue-payment') }}">
+			@csrf
+			<button type="submit" class="membership-pending-card__cancel membership-pending-card__continue">Lanjutkan Pembayaran</button>
+		</form>
+
+		<form method="POST" action="{{ route('membernonanggota.membership.cancel') }}" class="js-cancel-membership-form">
+			@csrf
+			<button type="submit" class="membership-pending-card__cancel">Batal Order Membership</button>
+		</form>
 	</div>
 </section>
+
+@push('scripts')
+<script>
+	(function() {
+		document.querySelectorAll('.js-cancel-membership-form').forEach(function(form) {
+			form.addEventListener('submit', function(event) {
+				if (!window.Swal || typeof window.Swal.fire !== 'function') {
+					return;
+				}
+
+				event.preventDefault();
+
+				window.Swal.fire({
+					title: 'Batalkan order membership?',
+					text: 'Proses pembayaran membership yang sedang berjalan akan dibatalkan.',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Ya, batalkan',
+					cancelButtonText: 'Tidak',
+					reverseButtons: true,
+					focusCancel: true
+				}).then(function(result) {
+					if (result.isConfirmed) {
+						HTMLFormElement.prototype.submit.call(form);
+					}
+				});
+			});
+		});
+	})();
+</script>
+@endpush
