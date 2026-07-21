@@ -23,6 +23,7 @@ use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrePostTestController;
+use App\Http\Controllers\SiswaVerificationController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -180,7 +181,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('memberships', MembershipController::class)->except(['create', 'show', 'edit']);
     });
     Route::middleware(['role:4,5'])->group(function () {
-        Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download-template');
+        Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download_template');
         Route::post('users/import', [UserController::class, 'import'])->name('users.import');
         Route::get('users/beasiswa-approval', [UserController::class, 'beasiswaApprovalList'])->name('beasiswa.approval.list');
         Route::post('/users/send-bulk-wa', [UserController::class, 'sendBulkWhatsapp'])->name('users.send-bulk-wa');
@@ -191,6 +192,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
 
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
+        Route::post('/pelatihan/simpan/{submateri_id}/{quiz_id}', [SiswaMateriController::class, 'savetest'])->name('siswa.umum.simpan_test');
         Route::get('/cvats', function () {
             return view('compact.cvats');
         })->name('cvats');
@@ -205,6 +207,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/sertifikat', [SiswaMateriController::class, 'listSertifikat'])->name('sertifikat');
         Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
         Route::get('/userprofile', [UserController::class, 'profile'])->name('profiless.index');
+        Route::get('/siswa/verifikasi-email/{id}/{hash}', [SiswaVerificationController::class, 'verify'])->name('siswa.verifikasi.email');
         Route::get('/materi-umum', [SiswaMateriController::class, 'umumIndex'])->name('siswa.umum.index');
         Route::get('/lowongan', [MembershipController::class, 'loker'])->name('lowongan');
         Route::get('/lowongan/{id}', [MembershipController::class, 'detil_loker'])->name('lowongan.show');

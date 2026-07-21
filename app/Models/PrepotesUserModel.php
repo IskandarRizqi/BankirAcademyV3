@@ -16,6 +16,7 @@ class PrepotesUserModel extends Model
         'user_id',
         'jawaban',
         'nilai_awal',
+        'submateri_id',
         'nilai_akhir',
         'jml_jawaban',
     ];
@@ -32,6 +33,7 @@ class PrepotesUserModel extends Model
         'jawaban',
         'nilai_awal',
         'nilai_akhir',
+        'submateri_id',
         'jml_jawaban',]) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }

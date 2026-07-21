@@ -108,7 +108,7 @@
         </button>
     </div>
 </div>
-            <form action="{{ route('siswa.materi.simpan_test', [$subMateriAktif->id, $quizAktif->id]) }}" method="POST" id="form-kuis" class="d-none">
+            <form action="{{ route('siswa.umum.simpan_test', [$subMateriAktif->id, $quizAktif->id]) }}" method="POST" id="form-kuis" class="d-none">
                 @csrf
                 <input type="hidden" name="classid" value="{{ $subMateriAktif->id }}">
                 
@@ -249,8 +249,8 @@
                         @endif
                     @endif
 
-                    <div class="bg-light px-4 py-2 text-muted font-weight-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.5px;">
-                        MATERI PELAJARAN ({{ count($materiAktif->subMateri ?? []) }} BAB)
+                    <!-- <div class="bg-light px-4 py-2 text-muted font-weight-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                        MATERI PELAJARAN ({{ count($subMateriAktif->items ?? []) }} BAB)
                     </div>
                     
                     @foreach($materiAktif->subMateri as $index => $sub)
@@ -285,7 +285,7 @@
                                     </div>
                                     <div class="w-100 overflow-hidden">
                                         <span class="d-block text-muted mb-1 text-uppercase font-weight-bold" style="font-size: 0.65rem;">Materi {{ $index + 1 }}</span>
-                                        <div class="text-truncate text-dark small {{ $isBabAktif ? 'font-weight-bold' : '' }}">{{ $sub->nama }}</div>
+                                        <div class="text-truncate text-dark small {{ $isBabAktif ? 'font-weight-bold' : '' }}">{{ $sub->items[0]->judul_item }}</div>
                                     </div>
                                 </div>
 
@@ -301,32 +301,17 @@
                                 @endif
                             </div>
                         @endif
-                    @endforeach
+                    @endforeach -->
 
-                    @if($postTest && $statusBeasiswaSiswa == 1)
-                        @php
-                            // Validasi kelulusan post test: bandingkan total bab aktif dengan total bab yang complete di DB
-                            $isPostTestLocked = !($sudahTerkunci ?? false) || (count(array_intersect($materiAktif->subMateri->pluck('id')->toArray(), $subMateriSelesaiIds ?? [])) < count($materiAktif->subMateri));
-                        @endphp
-
-                        @if($isPostTestLocked)
-                            <div class="playlist-item d-flex align-items-center p-3 text-muted" style="cursor: not-allowed; opacity: 0.6; background: #f8fafc; border-bottom: 1px solid #edf2f7;">
-                                <div class="mr-3 ml-1 flex-shrink-0"><i class="fas fa-lock text-secondary"></i></div>
-                                <div class="w-100 overflow-hidden">
-                                    <span class="d-block text-muted font-weight-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">KELULUSAN</span>
-                                    <div class="text-truncate small">🏆 Post-Test: {{ $postTest->judul }}</div>
-                                    <small class="text-danger d-block mt-1" style="font-size: 0.65rem;"><i class="fas fa-info-circle mr-1"></i>Selesaikan semua materi</small>
-                                </div>
-                            </div>
-                        @else
-                            <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}?type=post" class="playlist-item d-flex align-items-center p-3 text-decoration-none playlist-active">
+                    @if($postTest)
+                       
+                            <a href="{{ route('siswa.umum.belajar', $subMateriAktif->id) }}?type=post" class="playlist-item d-flex align-items-center p-3 text-decoration-none playlist-active">
                                 <div class="mr-3 ml-1 flex-shrink-0"><i class="fas fa-trophy text-danger fa-lg"></i></div>
                                 <div class="w-100 overflow-hidden">
                                     <span class="d-block text-muted font-weight-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">KELULUSAN</span>
                                     <div class="text-truncate text-dark small">🏆 Post-Test: {{ $postTest->judul }}</div>
                                 </div>
                             </a>
-                        @endif
                     @endif
                 </div>
             </div>
@@ -377,6 +362,7 @@
     }
      $(document).ready(function() {
         let currentStep = 0;
+        const totalSoal = $(".wrapper-soal-item").length;
      $("#btn-mulai-kuis").on("click", function() {
             $("#section-panduan").slideUp(400, function() {
                 $("#form-kuis").removeClass("d-none");
