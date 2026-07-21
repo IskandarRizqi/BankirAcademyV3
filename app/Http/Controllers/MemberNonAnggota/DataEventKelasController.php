@@ -243,6 +243,22 @@ class DataEventKelasController extends Controller
             ->where('unique_id', $unique)
             ->firstOrFail();
 
+        $message = rawurlencode(
+            "Halo Tim Bankir Academy, saya ingin order kelas IHT {$class->title}."
+        );
+
+        return redirect()->away("https://wa.me/6289682019523?text={$message}");
+    }
+
+    // Retained for the future flow that needs to persist IHT orders.
+    public function saveIhtOrder(Request $request, string $unique)
+    {
+        $class = ClassesModel::query()
+            ->where('status', 1)
+            ->where('iht', 1)
+            ->where('unique_id', $unique)
+            ->firstOrFail();
+
         $user = $request->user();
 
         $invoiceNumber = DB::transaction(function () use ($class, $user) {

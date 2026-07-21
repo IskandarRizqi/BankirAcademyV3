@@ -268,7 +268,7 @@ $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 <section class="membership-active-card" aria-labelledby="membership-active-title">
 	<div class="membership-active-card__content">
 		<div class="membership-active-card__header">
-			<img src="{{ asset('FE/logokartunew1.png') }}" alt="Bankir Academy" class="membership-active-card__logo">
+			<img src="{{ asset('logokartunew1.png') }}" alt="Bankir Academy" class="membership-active-card__logo">
 			<span class="membership-active-card__badge">
 				<span class="membership-active-card__badge-dot" aria-hidden="true"></span>
 				Active
