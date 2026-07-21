@@ -26,6 +26,7 @@ class User extends Authenticatable
         'parent_id',
         'bank_id',
         'sekolah_id',
+        'email_verified_at',
         'membership_id',
         'masa_aktif_member',
         'role',

@@ -30,7 +30,7 @@
                 </div>
                 <div class="d-flex gap-2 align-items-center">
                     @if(auth()->user()->email === 'cb@bankir.academy' || in_array(auth()->user()->role, [4, 5]))
-                    <a href="{{ route('users.download-template') }}"
+                    <a href="{{ route('users.download_template') }}"
                         class="btn btn-outline-info d-flex align-items-center rounded-pill px-3 shadow-sm mr-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

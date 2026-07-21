@@ -36,7 +36,7 @@
                         <i class="fas fa-arrow-left mr-2 text-primary"></i> Kembali ke Panel Laporan
                     </a>
                 @else
-                    <a href="{{ route('siswa.materi.belajar', $materiAktif->id) }}" class="btn btn-white text-dark font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px; background:#fff;">
+                    <a href="{{ route('siswa.materi.index') }}" class="btn btn-white text-dark font-weight-bold px-4 py-2 w-sm-100" style="border-radius: 8px; background:#fff;">
                         <i class="fas fa-book-open mr-2 text-warning"></i> Mulai Belajar Materi
                     </a>
                 @endif
@@ -117,7 +117,7 @@
     @endif
 
     {{-- DASHBOARD RINGKASAN PERBANDINGAN NILAI --}}
-    <div class="summary-box mb-4">
+    <!-- <div class="summary-box mb-4">
         <h5 class="font-weight-bold text-dark mb-3">
             <i class="fas fa-chart-bar mr-2 text-info"></i> Ringkasan Evaluasi Modul
         </h5>
@@ -149,93 +149,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    @if($tipeQuiz == 0 || ($tipeQuiz == 1 && $isLulus) || $isManajemen)
-        <div class="review-card">
-            <h4 class="font-weight-bold text-dark mb-1 h5-sm">
-                <i class="fas fa-poll-h mr-2 text-primary"></i> 
-                Analisis Jawaban - {{ $tipeQuiz == 0 ? 'Pre-Test' : 'Post-Test' }}
-            </h4>
-            <p class="text-muted small mb-3">Berikut adalah lembar koreksi lembar jawaban kuis.</p>
-            <hr>
-
-            @if(is_array($daftarSoal) && count($daftarSoal) > 0)
-                @foreach($daftarSoal as $index => $item)
-                    @php
-                        $kunci = strtoupper(trim($item['jawaban'] ?? $item['Jawaban'] ?? ''));
-                        $jawabanSiswa = isset($jawabanUser[$index]) ? strtoupper(trim($jawabanUser[$index])) : '';
-                        $isBenar = ($kunci === $jawabanSiswa);
-                    @endphp
-
-                    <div class="soal-box mb-3 p-3 border" style="border-radius: 8px;">
-                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-sm-between align-items-sm-start gap-2 mb-3">
-                            <h6 class="font-weight-bold text-dark mb-0 pr-sm-5" style="line-height: 1.5;">
-                                <span class="badge badge-secondary mr-2">{{ $index + 1 }}</span>
-                                {{ $item['pertanyaan'] ?? $item['Pertanyaan'] ?? '' }}
-                            </h6>
-                            <div>
-                                @if($isBenar)
-                                    <span class="badge bg-success text-white px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Benar</span>
-                                @else
-                                    <span class="badge bg-danger text-white px-2 py-1"><i class="fas fa-times-circle mr-1"></i> Salah</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="mt-2 pl-sm-4">
-                            @if(isset($item['opsi']) && is_array($item['opsi']))
-                                @foreach($item['opsi'] as $keyOpsi => $valOpsi)
-                                    @php
-                                        $keyOpsiUpper = strtoupper(trim($keyOpsi));
-                                        $styleText = 'text-dark';
-                                        $bgItem = 'background: transparent;';
-                                        $icon = '<i class="far fa-circle mr-2 text-muted"></i>';
-                                        
-                                        if ($keyOpsiUpper === $kunci) {
-                                            $styleText = 'text-success font-weight-bold';
-                                            $bgItem = 'background: #f0fdf4; border-radius: 6px;';
-                                            $icon = '<i class="fas fa-check-circle mr-2 text-success"></i>';
-                                        }
-                                        
-                                        if ($keyOpsiUpper === $jawabanSiswa && !$isBenar) {
-                                            $styleText = 'text-danger font-weight-bold';
-                                            $bgItem = 'background: #fef2f2; border-radius: 6px;';
-                                            $icon = '<i class="fas fa-times-circle mr-2 text-danger"></i>';
-                                        }
-                                    @endphp
-                                    <div class="p-2 mb-1 border-bottom {{ $styleText }} d-flex align-items-start" style="font-size:0.9rem; {{ $bgItem }}">
-                                        <span class="mr-1">{!! $icon !!}</span>
-                                        <div class="text-wrap w-100">
-                                            <strong>{{ $keyOpsiUpper }}.</strong> {{ $valOpsi }}
-                                            @if($keyOpsiUpper === $jawabanSiswa)
-                                                <span class="badge badge-light border text-muted ml-1 small font-weight-normal d-inline-block mt-1 mt-sm-0">(Jawaban Siswa)</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="text-center py-4 text-muted">
-                    <i class="fas fa-exclamation-circle fa-3x mb-3 text-muted"></i>
-                    <p>Tidak ada data tinjauan soal untuk kuis ini.</p>
-                </div>
-            @endif
-        </div>
-    @else
-        <div class="card mt-4 border-0 shadow-sm text-center py-5" style="border-radius: 12px; background: #fff;">
-            <div class="card-body px-3">
-                <i class="fas fa-lock fa-3x text-muted mb-3"></i>
-                <h5 class="font-weight-bold text-dark">Analisis Jawaban Dikunci</h5>
-                <p class="text-muted container px-2" style="max-width: 500px;">
-                    Maaf, detail lembar jawaban belum dapat ditampilkan karena nilai Anda masih di bawah batas kelulusan (**KKM 70**). Silakan pelajari kembali materi dan ikuti ujian remedi.
-                </p>
-            </div>
-        </div>
-    @endif
+    </div> -->
 
 </div>
 @endsection

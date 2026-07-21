@@ -478,14 +478,123 @@ public function savejawaban(Request $request, $materi_id, $quiz_id)
     } else {
         $nilai_final = 0;
     }
-
     // Ambil total percobaan pengerjaan sebelumnya di kelas ini untuk hitung total jml_jawaban global
     $totalPercobaanSebelumnya = PrepotesUserModel::where('class_id', $materi_id)
         ->where('user_id', $userId)
         ->count();
-
     $data = [
         'class_id' => $materi_id,
+        'user_id' => $userId,
+        'jawaban' => json_encode($jawabanUserArray), 
+        'jml_jawaban' => $totalPercobaanSebelumnya + 1,
+    ];
+
+    // 4. ALUR SIMPAN: Selalu create() entri baru, tidak ada update()
+    if ($quiz->tipe_prepost == 0) {
+        $data['nilai_awal'] = $nilai_final;
+        $data['nilai_akhir'] = 0; 
+
+        // Buat entri baru khusus Pre-test
+        $newPreTest = PrepotesUserModel::create($data);
+
+        // Alihkan ke report khusus Pre-test agar bisa melihat detail jawabannya langsung
+        return redirect()->route('siswa.materi.report', [$materi_id, $newPreTest->id])
+            ->with('success', 'Pre-test selesai! Nilai Anda: ' . $nilai_final . '. Silakan lanjutkan ke materi pelajaran.');
+            
+    } else {
+        $data['nilai_akhir'] = $nilai_final;
+        $data['nilai_awal'] = 0; 
+
+        // Buat entri baru khusus Post-test
+        $newPostTest = PrepotesUserModel::create($data);
+
+        if ($nilai_final < 70) {
+            // Jika gagal post test, arahkan ke report pengerjaan gagal ini agar bisa mengevaluasi salahnya di mana
+            return redirect()->route('siswa.materi.report', [$materi_id, $newPostTest->id])
+                ->with('warning', 'Nilai Post-test Anda: ' . $nilai_final . '. Anda belum mencapai batas kelulusan (70). Silakan pelajari kembali materi dan coba remedi.');
+        }
+
+        // KELULUSAN POST-TEST
+        return redirect()->route('siswa.materi.report', [$materi_id, $newPostTest->id])
+            ->with('success', 'Selamat! Anda lulus Post-test dengan nilai: ' . $nilai_final);
+    }
+}
+public function savetest(Request $request, $submateri_id, $quiz_id)
+{
+    $userId = Auth::user()->id;
+
+    // 1. Ambil data kuis/test dari database berdasarkan id
+    $quiz = DB::table('preposttest')->where('id', $quiz_id)->first();
+    if (!$quiz) {
+        return redirect()->back()->with('error', 'Data ujian tidak ditemukan.');
+    }
+
+    // 2. Cek riwayat pengerjaan user secara SPESIFIK & ketat (Ingat: Sekarang data selalu buat baru)
+    if ($quiz->tipe_prepost == 0) {
+        // Cek apakah user PERNAH mengisi Pre-test di materi ini
+        $pr = PrepotesUserModel::where('submateri_id', $submateri_id)
+            ->where('user_id', $userId)
+            ->where('nilai_awal', '>', 0) // atau mengecek entri dengan nilai_awal yang sudah terisi
+            ->first();
+            
+        if ($pr) {
+            return redirect()->route('siswa.umum.belajar', [$submateri_id])
+                ->with('error', 'Anda sudah mengikuti Pre-test sebelumnya. Pre-test hanya dapat diikuti 1 kali.');
+        }
+    } else {
+        // Cek apakah user sudah mengisi Post-test DAN nilainya lulus (>= 70)
+        $pr = PrepotesUserModel::where('submateri_id', $submateri_id)
+            ->where('user_id', $userId)
+            ->where('nilai_akhir', '>=', 70)
+            ->first();
+
+        if ($pr) {
+            return redirect()->route('siswa.umum.belajar', [$submateri_id])
+                ->with('error', 'Anda sudah lulus Post-test ini dengan nilai ' . $pr->nilai_akhir . '. Tidak dapat mengisi kembali.');
+        }
+    }
+
+    // 3. Pastikan data soal didecode sampai menjadi ARRAY murni
+    $daftarSoal = $quiz->soal;
+    while (is_string($daftarSoal)) {
+        $daftarSoal = json_decode($daftarSoal, true);
+    }
+
+    if (!is_array($daftarSoal)) {
+        return redirect()->back()->with('error', 'Gagal memproses format soal di database.');
+    }
+
+    $jawabanBenarCount = 0;
+    $totalSoal = count($daftarSoal);
+    $jawabanUserArray = $request->input('jawaban', []);
+
+    if ($totalSoal > 0 && !empty($jawabanUserArray)) {
+        foreach ($daftarSoal as $index => $soal) {
+            $kunciBenar = $soal['jawaban'] ?? $soal['jawaban'] ?? null;
+            $jawabanUser = $jawabanUserArray[$index] ?? null;
+
+            if (!is_null($jawabanUser) && !is_null($kunciBenar)) {
+                if (strtoupper(trim($jawabanUser)) === strtoupper(trim($kunciBenar))) {
+                    $jawabanBenarCount++;
+                }
+            }
+        }
+        $nilai_final = ($jawabanBenarCount / $totalSoal) * 100;
+    } else {
+        $nilai_final = 0;
+    }
+    $materi_id = null;
+    $submateri = SubMateriModel::where('id', $submateri_id)->first();
+    if ($submateri) {
+        $materi_id = $submateri->id_materi;
+    }
+    // Ambil total percobaan pengerjaan sebelumnya di kelas ini untuk hitung total jml_jawaban global
+    $totalPercobaanSebelumnya = PrepotesUserModel::where('submateri_id', $submateri_id)
+        ->where('user_id', $userId)
+        ->count();
+    $data = [
+        'submateri_id' => $submateri_id,
+        'class_id'=> $materi_id,
         'user_id' => $userId,
         'jawaban' => json_encode($jawabanUserArray), 
         'jml_jawaban' => $totalPercobaanSebelumnya + 1,
@@ -588,7 +697,7 @@ public function report($materi_id, $id, $userId = null)
         'isLulus',
         'isManajemen',
         'siswaUser',
-        'sertifikatMateri' // Dikirim ke view
+    'sertifikatMateri' // Dikirim ke viewa
     ));
 }
 
@@ -801,6 +910,11 @@ public function umumBelajar(Request $request, $sub_materi_id)
     $quizAktif = null;
       if ($contentType === 'pre' && $preTest) {
         $quizAktif = $preTest;
+        if (is_string($quizAktif->soal)) {
+            $quizAktif->soal = json_decode($quizAktif->soal, true);
+        }
+      } elseif ($contentType === 'post' && $postTest) {
+         $quizAktif = $postTest;
         if (is_string($quizAktif->soal)) {
             $quizAktif->soal = json_decode($quizAktif->soal, true);
         }
