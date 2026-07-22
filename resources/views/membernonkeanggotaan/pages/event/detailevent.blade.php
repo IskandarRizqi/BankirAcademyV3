@@ -21,9 +21,9 @@ $startDate = data_get($class, 'date_start');
 $endDate = data_get($class, 'date_end');
 $isIht = (int) data_get($class, 'iht') === 1;
 $courseTime = data_get($class, 'jam_acara');
-	$courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
-	$location = data_get($class, 'lokasi');
-	$participantLimit = data_get($class, 'participant_limit');
+$courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
+$location = data_get($class, 'lokasi');
+$participantLimit = data_get($class, 'participant_limit');
 $pricing = data_get($class, 'pricing');
 $isPriceComingSoon = ! $isIht && (! $pricing || (int) data_get($pricing, 'gratis', 0) === 1);
 $price = (int) data_get($pricing, 'price', 0);
@@ -63,24 +63,24 @@ $date = \Carbon\Carbon::parse($date);
 return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
 };
 $formattedDate = 'Fleksibel';
-	$courseStatus = 'Upcoming';
-	$courseStatusClass = 'upcoming';
-	$today = now()->startOfDay();
-	$registrationStart = $startDate ? \Carbon\Carbon::parse($startDate)->startOfDay() : null;
-	$registrationEnd = $endDate
-	? ($isIht
-		? \Carbon\Carbon::parse($endDate)->endOfDay()
-		: \Carbon\Carbon::parse($endDate)->subDay()->endOfDay())
-	: ($registrationStart ? $registrationStart->copy()->endOfDay() : null);
+$courseStatus = 'Upcoming';
+$courseStatusClass = 'upcoming';
+$today = now()->startOfDay();
+$registrationStart = $startDate ? \Carbon\Carbon::parse($startDate)->startOfDay() : null;
+$registrationEnd = $endDate
+? ($isIht
+? \Carbon\Carbon::parse($endDate)->endOfDay()
+: \Carbon\Carbon::parse($endDate)->subDay()->endOfDay())
+: ($registrationStart ? $registrationStart->copy()->endOfDay() : null);
 
-	if ($startDate && $endDate) {
-	$start = $registrationStart->copy();
-	$end = $registrationEnd->copy();
-	$formattedDate = $isIht
-	? ($start->isSameMonth($end) && $start->isSameYear($end)
-		? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
-		: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end))
-	: $formatCourseDate($end);
+if ($startDate && $endDate) {
+$start = $registrationStart->copy();
+$end = $registrationEnd->copy();
+$formattedDate = $isIht
+? ($start->isSameMonth($end) && $start->isSameYear($end)
+? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
+: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end))
+: $formatCourseDate($end);
 } elseif ($startDate) {
 $formattedDate = $formatCourseDate($startDate);
 }
@@ -246,7 +246,7 @@ $registrationAlert = [
 	.event-title-v2 {
 		max-width: 820px;
 		margin: 0;
-		font-size: clamp(32px, 4.6vw, 58px);
+		font-size: clamp(32px, 4.6vw, 35px);
 		font-weight: 950;
 		letter-spacing: -.06em;
 		line-height: .98;
@@ -727,9 +727,6 @@ $registrationAlert = [
 					</div>
 
 					<h1 class="event-title-v2" id="event-title">{{ $title }}</h1>
-					<p class="event-summary-v2">
-						{{ $plainDescription !== '' ? \Illuminate\Support\Str::limit($plainDescription, 190) : 'Pelajari kompetensi perbankan melalui kelas terstruktur bersama Bankir Academy.' }}
-					</p>
 				</div>
 
 				<div class="event-hero-stats" aria-label="Ringkasan kelas">
