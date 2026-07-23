@@ -6,7 +6,7 @@
             
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h4 class="mb-1" style="font-weight: 700; color: #3b3f5c;">Sub Materi</h4>
+                    <h4 class="mb-1" style="font-weight: 700; color: #3b3f5c;">materi</h4>
                     <p class="text-muted mb-0" style="font-size: 13px;">Kelola materi perkuliahan, tipe akses, harga, dan file lampiran.</p>
                 </div>
                 <button type="button" class="btn btn-primary px-4" data-toggle="modal" data-target="#userModal" onclick="resetForm()">
@@ -98,7 +98,7 @@
                                             ⚙️ Edit Data
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <form action="/sub-materi/{{ $x->id }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sub materi ini beserta seluruh filenya?')">
+                                        <form action="/sub-materi/{{ $x->id }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus materi ini beserta seluruh filenya?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">🗑️ Hapus</button>
@@ -109,7 +109,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted p-5">Tidak ada data sub materi ditemukan.</td>
+                            <td colspan="7" class="text-center text-muted p-5">Tidak ada data materi ditemukan.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -164,7 +164,7 @@
                         </div>
 
                         <div class="form-group col-lg-12 mb-4">
-                            <label style="font-weight: 600; color: #515365; display: block;" class="mb-2">Tipe Akses Sub Materi</label>
+                            <label style="font-weight: 600; color: #515365; display: block;" class="mb-2">Tipe Akses materi</label>
                             <div class="d-flex align-items-center" style="gap: 20px;">
                                 <div class="custom-control custom-radio">
                                     <input type="radio" id="tipe_beasiswa0" name="tipe_beasiswa" class="custom-control-input" value="0" checked>

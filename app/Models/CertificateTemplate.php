@@ -17,7 +17,11 @@ class CertificateTemplate extends Model
         'background_image',
         'coordinate_x',
         'coordinate_y',
-        'font_size'
+        'font_size',
+        'serial_y',
+        'serial_font_size',
+        'label_y',
+        'label_font_size'
     ];
 
     public function materi()

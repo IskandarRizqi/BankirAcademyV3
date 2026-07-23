@@ -39,8 +39,8 @@
                                         <th>Nama Paket</th>
                                         <th>Harga (Final)</th>
                                         <th>Diskon</th>
-                                        <th>Limit Siswa / Beasiswa</th>
-                                        <th>Saldo Siswa & Limit Materi</th>
+                                        <th>Limit Peserta / Beasiswa</th>
+                                        <th>Saldo Peserta & Limit Materi</th>
                                         <th>Masa Berlaku</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -67,7 +67,7 @@
                                             <span class="badge badge-danger">{{ $ms->diskon }}%</span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-info">Siswa: {{ $ms->limit_siswa }}</span>
+                                            <span class="badge badge-info">Peserta: {{ $ms->limit_siswa }}</span>
                                             <span class="badge badge-warning">Beasiswa: {{ $ms->limit_beasiswa }}</span>
                                         </td>
                                         <td>
@@ -151,7 +151,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6 form-group mb-3">
-                                        <label for="limit_siswa" style="font-weight: 600;">Limit Siswa</label>
+                                        <label for="limit_siswa" style="font-weight: 600;">Limit Peserta</label>
                                         <input type="number" id="limit_siswa" name="limit_siswa" class="form-control" required placeholder="0">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
@@ -160,10 +160,10 @@
                                     </div>
                                 </div>
 
-                                {{-- ROW BARU: Saldo Siswa & Limit Video --}}
+                                {{-- ROW BARU: Saldo Peserta & Limit Video --}}
                                 <div class="row">
                                     <div class="col-md-6 form-group mb-3">
-                                        <label for="saldo_siswa" style="font-weight: 600;">Saldo Siswa (Rp)</label>
+                                        <label for="saldo_siswa" style="font-weight: 600;">Saldo Peserta (Rp)</label>
                                         <input type="number" step="any" id="saldo_siswa" name="saldo_siswa" class="form-control" required placeholder="0">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">

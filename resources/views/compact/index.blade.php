@@ -9,7 +9,7 @@
             <h1 class="font-weight-bold text-dark h3 mb-1">
                 @if(auth()->user()->email == 'cb@bankir.academy') Panel Kendali Sistem Root
                 @elseif(auth()->user()->role == 4) Dashboard Performa Bank
-                @elseif(auth()->user()->role == 5) Konsol Manajemen Sekolah
+                @elseif(auth()->user()->role == 5) Konsol Manajemen Merchant
                 @else Dashboard Pelatihan Anda
                 @endif
             </h1>
@@ -50,7 +50,7 @@
                 <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #10b981 !important;">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Sekolah Mitra</span>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Merchant Mitra</span>
                             <h2 class="font-weight-extrabold text-dark mb-0" style="font-size: 2.2rem; font-weight: 800;">{{ $total_sekolah }}</h2>
                         </div>
                         <div class="p-3 bg-soft-success rounded-circle" style="background: rgba(16, 185, 129, 0.1);">
@@ -63,7 +63,7 @@
                 <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #f59e0b !important;">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Akun Siswa</span>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Akun Peserta</span>
                             <h2 class="font-weight-extrabold text-dark mb-0" style="font-size: 2.2rem; font-weight: 800;">{{ $total_siswa }}</h2>
                         </div>
                         <div class="p-3 bg-soft-warning rounded-circle" style="background: rgba(245, 158, 11, 0.1);">
@@ -81,16 +81,16 @@
                     <div class="table-responsive">
                         <table class="table table-hover border-0">
                             <thead>
-                                <tr class="text-uppercase text-muted small"><th class="border-0 pl-0">Nama Bank</th><th class="border-0">Email</th><th class="border-0 text-md-right pr-0">Opsi Administrasi</th></tr>
+                                <tr class="text-uppercase text-muted small"><th class="border-0 pl-0">Nama Bank</th><th class="border-0">Email</th></tr>
                             </thead>
                             <tbody>
                                 @foreach($user_bank as $bank)
                                 <tr>
                                     <td class="pl-0 font-weight-bold text-dark">{{ $bank->name }}</td>
                                     <td>{{ $bank->email }}</td>
-                                    <td class="text-md-right pr-0">
+                                    <!-- <td class="text-md-right pr-0">
                                         <button class="btn btn-sm btn-outline-primary font-weight-bold px-3" style="border-radius: 8px;"><i class="fas fa-user-cog mr-1"></i> Kelola User Bank</button>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -109,7 +109,7 @@
                 <div class="card border-0 shadow-sm bg-gradient-primary text-white" style="border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #047857 100%);">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Sekolah Binaan Anda</span>
+                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Merchant Binaan Anda</span>
                             <h2 class="font-weight-extrabold mb-0" style="font-size: 2.2rem; font-weight: 800;">{{ $total_sekolah }}</h2>
                         </div>
                         <div class="p-3 bg-white-10 rounded-circle" style="background: rgba(255,255,255,0.15);">
@@ -122,7 +122,7 @@
                 <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #3b82f6 !important;">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Siswa Terkoneksi</span>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Peserta Terkoneksi</span>
                             <h2 class="font-weight-extrabold text-dark mb-0" style="font-size: 2.2rem; font-weight: 800;">{{ $total_siswa }}</h2>
                         </div>
                         <div class="p-3 bg-soft-primary rounded-circle" style="background: rgba(59, 130, 246, 0.1);">
@@ -136,21 +136,21 @@
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow-sm p-3 p-md-4 bg-white" style="border-radius: 16px;">
-                    <h5 class="font-weight-bold text-dark mb-4"><i class="fas fa-chart-pie mr-2 text-success"></i>Monitoring Distribusi Siswa per Sekolah</h5>
+                    <h5 class="font-weight-bold text-dark mb-4"><i class="fas fa-chart-pie mr-2 text-success"></i>Monitoring Distribusi Peserta per Merchant</h5>
                     <div class="table-responsive">
                         <table class="table table-hover border-0">
                             <thead>
-                                <tr class="text-uppercase text-muted small"><th class="border-0 pl-0">Nama Sekolah</th><th class="border-0">Email Kontak</th><th class="border-0 text-center">Jumlah Siswa Aktif</th></tr>
+                                <tr class="text-uppercase text-muted small"><th class="border-0 pl-0">Nama Merchant</th><th class="border-0">Email Kontak</th><th class="border-0 text-center">Jumlah Peserta Aktif</th></tr>
                             </thead>
                             <tbody>
                                 @forelse($daftar_sekolah as $sch)
                                 <tr>
                                     <td class="pl-0 font-weight-bold text-dark">{{ $sch->name }}</td>
                                     <td>{{ $sch->email }}</td>
-                                    <td class="text-center"><span class="badge bg-soft-primary text-primary px-3 py-2 font-weight-bold" style="border-radius:6px;">{{ $sch->jumlah_siswa }} Siswa</span></td>
+                                    <td class="text-center"><span class="badge bg-soft-primary text-primary px-3 py-2 font-weight-bold" style="border-radius:6px;">{{ $sch->jumlah_siswa }} Peserta</span></td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="3" class="text-center text-muted">Belum terhubung dengan sekolah manapun.</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted">Belum terhubung dengan merchant manapun.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -168,7 +168,7 @@
                 <div class="card border-0 shadow-sm text-white" style="border-radius: 16px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Total Siswa Aktif</span>
+                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Total Peserta Aktif</span>
                             <h2 class="font-weight-extrabold mb-0" style="font-size: 2.2rem; font-weight: 800;">{{ $total_siswa }}</h2>
                         </div>
                         <div class="p-3 bg-white-10 rounded-circle" style="background: rgba(255,255,255,0.15);">
@@ -194,7 +194,7 @@
                 <div class="card border-0 shadow-sm bg-white" style="border-radius: 16px; border-left: 5px solid #3b82f6 !important;">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Akumulasi Kredit Siswa</span>
+                            <span class="d-block text-muted small font-weight-bold text-uppercase mb-1">Total Akumulasi Kredit Peserta</span>
                             <h2 class="font-weight-extrabold text-primary mb-0" style="font-size: 1.6rem; font-weight: 800; margin-top: 5px;">Rp {{ number_format($total_tabungan_siswa, 0, ',', '.') }}</h2>
                         </div>
                         <div class="p-3 bg-soft-primary rounded-circle" style="background: rgba(59, 130, 246, 0.1);">
@@ -208,7 +208,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow-sm p-3 p-md-4 bg-white" style="border-radius: 16px;">
-                    <h5 class="font-weight-bold text-dark mb-4"><i class="fas fa-user-check mr-2 text-warning"></i>Administrasi Profil Siswa Lembaga</h5>
+                    <h5 class="font-weight-bold text-dark mb-4"><i class="fas fa-user-check mr-2 text-warning"></i>Administrasi Profil Peserta Lembaga</h5>
                     <div class="table-responsive">
                         <table class="table table-hover border-0">
                             <thead>
@@ -233,7 +233,7 @@
                                     <td class="text-md-right pr-0 font-weight-bold text-success">Rp {{ number_format($s->siswa->saldo ?? 0, 0, ',', '.') }}</td>
                                 </tr>
                                 @empty
-                                <tr><td colspan="4" class="text-center text-muted">Belum ada siswa terdaftar.</td></tr>
+                                <tr><td colspan="4" class="text-center text-muted">Belum ada peserta terdaftar.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -254,7 +254,7 @@
                 <div class="card border-0 shadow-sm text-white h-100" style="border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                     <div class="card-body p-3 d-flex align-items-center justify-content-between">
                         <div>
-                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Kredit Siswa</span>
+                            <span class="d-block text-white-50 small font-weight-bold text-uppercase mb-1">Kredit Peserta</span>
                             <h2 class="font-weight-extrabold mb-0" style="font-size: 1.4rem; font-weight: 800; white-space: nowrap;">
                                 Rp {{ number_format($saldo_siswa, 0, ',', '.') }}
                             </h2>

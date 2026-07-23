@@ -626,15 +626,16 @@ public function savetest(Request $request, $submateri_id, $quiz_id)
         }
 
         // KELULUSAN POST-TEST
-        return redirect()->route('siswa.materi.report', [$materi_id, $newPostTest->id])
+        return redirect()->route('siswa.materi.report', ['materi_id' => $materi_id, 'id' => $newPostTest->id, 'sub_materi_id' => $submateri_id])
             ->with('success', 'Selamat! Anda lulus Post-test dengan nilai: ' . $nilai_final);
     }
 }
 
 // Modifikasi tipis pada fungsi utama agar user_id dinamis (default: user login saat ini)
-public function report($materi_id, $id, $userId = null)
+public function report($materi_id, $id, $sub_materi_id = null, $userId = null)
 {
     // Cek siapa yang sedang login saat ini
+    // return $sub_materi_id;
     $authCurrentUser = auth()->user();
     
     if (!$userId) {
@@ -681,10 +682,13 @@ public function report($materi_id, $id, $userId = null)
 
     // Ambil info user pengikut kelas untuk nama di sertifikat
     $siswaUser = \App\Models\User::find($userId); 
-
-    // AMBIL DATA SERTIFIKAT ASLI DARI DATABASE
-    // Sesuaikan 'SertifikatModel', 'materi_id', dan nama kolom file gambar ('file_sertifikat') dengan tabel Anda
-    $sertifikatMateri = CertificateTemplate::where('materi_id', $materi_id)->first();
+if ($sub_materi_id) {
+        // Jika sub_materi_id ada di URL, cari khusus berdasarkan sub_materi_id
+        $sertifikatMateri = CertificateTemplate::where('sub_materi_id', $sub_materi_id)->first();
+    } else {
+        // Jika tidak ada sub_materi_id, cari berdasarkan materi_id
+        $sertifikatMateri = CertificateTemplate::where('materi_id', $materi_id)->first();
+    }
 
     return view('compact.report-kelulusan', compact(
         'progressAktif', 
@@ -697,7 +701,7 @@ public function report($materi_id, $id, $userId = null)
         'isLulus',
         'isManajemen',
         'siswaUser',
-    'sertifikatMateri' // Dikirim ke viewa
+        'sertifikatMateri'
     ));
 }
 

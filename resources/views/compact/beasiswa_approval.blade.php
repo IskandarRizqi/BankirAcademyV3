@@ -4,7 +4,7 @@
 <div class="container-fluid mt-4">
     <div class="card shadow-sm" style="border-radius: 8px;">
         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0" style="font-weight: bold; color: #333;">Persetujuan Beasiswa Siswa (Pending)</h5>
+            <h5 class="mb-0" style="font-weight: bold; color: #333;">Persetujuan Beasiswa Peserta (Pending)</h5>
             <span class="badge badge-warning text-dark px-3 py-2" style="font-size: 13px;">
                 {{ $pendingSiswa->count() }} Menunggu Persetujuan
             </span>
@@ -36,8 +36,8 @@
                         <tr>
                             <th width="5%">No</th>
                             <th>NISN / Username</th>
-                            <th>Nama Siswa</th>
-                            <th>Sekolah</th>
+                            <th>Nama Peserta</th>
+                            <th>Merchant</th>
                             <th>Email Asli</th>
                             <th>Status</th>
                             <th width="18%" class="text-center">Aksi</th>
@@ -62,7 +62,7 @@
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center url-actions">
                                         <!-- Tombol Approve -->
-                                        <form action="{{ route('users.beasiswa.approval.process', [$siswa->id, 'approve']) }}" method="POST" class="mr-2" onsubmit="return confirm('Setujui beasiswa untuk siswa ini?')">
+                                        <form action="{{ route('users.beasiswa.approval.process', [$siswa->id, 'approve']) }}" method="POST" class="mr-2" onsubmit="return confirm('Setujui beasiswa untuk peserta ini?')">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-success px-3">
                                                 Approve
@@ -70,7 +70,7 @@
                                         </form>
 
                                         <!-- Tombol Reject -->
-                                        <form action="{{ route('users.beasiswa.approval.process', [$siswa->id, 'reject']) }}" method="POST" onsubmit="return confirm('Tolak pengajuan beasiswa siswa ini?')">
+                                        <form action="{{ route('users.beasiswa.approval.process', [$siswa->id, 'reject']) }}" method="POST" onsubmit="return confirm('Tolak pengajuan beasiswa peserta ini?')">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-danger px-3">
                                                 Reject

@@ -22,7 +22,7 @@
                         <i class="fas fa-users fa-2x"></i>
                     </div>
                     <div>
-                        <small class="text-muted font-weight-bold text-uppercase d-block">Siswa Belajar</small>
+                        <small class="text-muted font-weight-bold text-uppercase d-block">Peserta Belajar</small>
                         <h4 class="font-weight-bold text-dark mb-0">{{ $stats['total_siswa_aktif'] }}</h4>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                         <i class="fas fa-id-card fa-2x"></i>
                     </div>
                     <div>
-                        <small class="text-muted font-weight-bold text-uppercase d-block">Siswa Beasiswa</small>
+                        <small class="text-muted font-weight-bold text-uppercase d-block">Peserta Beasiswa</small>
                         <h4 class="font-weight-bold text-dark mb-0">{{ $stats['total_beasiswa'] }} Orang</h4>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                     @elseif($isBank)
                         <i class="fas fa-school text-success mr-2"></i> Grup Instansi/Sekolah: <span class="text-success">{{ $groupName }}</span>
                     @else
-                        <i class="fas fa-graduation-cap text-primary mr-2"></i> Data Siswa: <span class="text-primary">{{ $groupName }}</span>
+                        <i class="fas fa-graduation-cap text-primary mr-2"></i> Data Peserta: <span class="text-primary">{{ $groupName }}</span>
                     @endif
                 </h5>
                 <span class="badge badge-pill badge-light border text-muted px-3 py-1 font-weight-bold">
@@ -98,10 +98,10 @@
                         <thead class="bg-light text-secondary small font-weight-bold">
                             <tr>
                                 <th width="5%" class="pl-4">No</th>
-                                <th>Nama Siswa</th>
+                                <th>Nama Peserta</th>
                                 <th>Email</th>
                                 @if($isRoot)
-                                    <th>Asal Sekolah</th>
+                                    <th>Asal Merchant</th>
                                 @endif
                                 <th>Kategori Program</th>
                                 <th>Modul / Kelas yang Dipilih</th>
