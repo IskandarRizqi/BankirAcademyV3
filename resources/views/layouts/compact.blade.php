@@ -101,7 +101,7 @@
     'label' => 'Buat CV ATS',
     'icon' => 'zap',
     'url' => '/cvats',
-    'active' => request()->routeIs('cvats'),
+    'active' => request()->routeIs('cvats*'),
     'can_see' => ($role == 6),
     'has_submenu' => false,
     ],

@@ -12,6 +12,7 @@ use App\Models\DataPayment;
 use App\Models\DepositUsed;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\RiwayatTransaksi;
 use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use Carbon\Carbon;
@@ -232,9 +233,10 @@ class CheckoutController extends Controller
     private function processClassPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array
     {
         return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
+            $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+            if ($dataPayment->class_id) {
             $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
-
-            if (!$order) {
+            if (!$order && $dataPayment->class_id) {
                 return ['status' => 404, 'message' => 'Class payment not found'];
             }
 
@@ -247,9 +249,10 @@ class CheckoutController extends Controller
 
                 return ['status' => 422, 'message' => 'Invalid payment amount'];
             }
+            }
 
-            $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
-
+           
+ if ($dataPayment->class_id) {
             if ((int) $order->status === 1) {
                 if ($dataPayment && (int) $dataPayment->status !== DataPayment::STATUS_PAID) {
                     $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
@@ -305,9 +308,26 @@ class CheckoutController extends Controller
             $order->update([
                 'status' => 1,
             ]);
-
+ }
             if ($dataPayment) {
                 $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+            }
+            if ($dataPayment->materi_id) {
+                DB::table('siswa_modul_aktif')->insertOrIgnore([
+            'user_id'    => $dataPayment->user_id,
+            'class_id'   => $dataPayment->materi_id,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        RiwayatTransaksi::create([
+            'user_id'           => $dataPayment->user_id,
+            'class_id'          => $dataPayment->materi_id,
+            'nominal_transaksi' => $dataPayment->nominal,
+            'metode_pembayaran' => 'Virtual Akun',
+            'status'            => 'SUCCESS',
+            'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+        ]);
             }
 
             return ['status' => 200, 'message' => 'Class payment processed'];

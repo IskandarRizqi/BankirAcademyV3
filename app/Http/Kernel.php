@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'IsAdminRoot' => \App\Http\Middleware\IsAdminRoot::class,
         'aksesip' => \App\Http\Middleware\AksesByIpAddress::class,
         'role' => \App\Http\Middleware\CheckRole::class,
+        'siswa.verified' => \App\Http\Middleware\EnsureSiswaIsVerified::class,
     'is_root' => \App\Http\Middleware\OnlyRoot::class,
     ];
 }

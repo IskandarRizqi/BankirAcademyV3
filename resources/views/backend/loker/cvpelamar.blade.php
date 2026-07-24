@@ -29,9 +29,9 @@
                             </td>
                             <td>{{$p->is_approved==1?'Approved':'Belum Approved'}}</td>
                             <td>
-                                <a href="/datalamaran?cetak=true&auth_id={{$p->user_id}}">
-                                    <button class="btn btn-outline-info btn-sm">Cetak CV</button>
-                                </a>
+<a href="{{ route('cvats.pdf', $p->id) }}" target="_blank">
+    <button class="btn btn-outline-info btn-sm">Cetak CV</button>
+</a>
                                 <button class="btn btn-outline-info btn-sm" onclick="approveds({{$p}})">Approve
                                     CV</button>
                             </td>

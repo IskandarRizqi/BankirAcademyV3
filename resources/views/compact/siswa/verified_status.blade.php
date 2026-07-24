@@ -39,7 +39,7 @@
         <p class="text-muted mb-4">{{ $message }}</p>
 
         <div>
-            <a href="{{ url('/') }}" class="btn btn-primary w-100 py-2" style="border-radius: 8px;">
+            <a href="{{ url('/home') }}" class="btn btn-primary w-100 py-2" style="border-radius: 8px;">
                 Kembali ke Halaman Utama
             </a>
         </div>
