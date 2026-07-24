@@ -28,7 +28,7 @@
                     @endif
 
                     <div class="mt-4">
-                        <form action="{{ route('siswa.resend.vezrification') }}" method="POST">
+                        <form action="{{ route('siswa.resend.verification') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="bi bi-send me-1"></i> Kirim Ulang Email Verifikasi
