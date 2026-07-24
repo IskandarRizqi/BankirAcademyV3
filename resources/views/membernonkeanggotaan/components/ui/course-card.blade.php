@@ -21,15 +21,18 @@ $isIht = (int) data_get($course, 'iht') === 1;
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
 $pricing = data_get($course, 'pricing');
-	$isPriceComingSoon = ! $isIht && (! $pricing || (int) data_get($pricing, 'gratis', 0) === 1);
+	$isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
+	$isPriceComingSoon = ! $isIht && ! $pricing;
 $price = (int) data_get($pricing, 'price', 0);
 $promoPrice = (int) data_get($pricing, 'promo_price', 0);
 $finalPrice = max(0, $price - $promoPrice);
 	$priceLabel = $isIht
 		? 'Hubungi Tim Kami'
-		: ($isPriceComingSoon
+		: ($isFree
+			? 'Gratis'
+			: ($isPriceComingSoon
 			? 'Price Coming Soon'
-			: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis'));
+			: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis')));
 $description = trim(strip_tags((string) data_get($course, 'content', '')));
 $description = $description !== '' ? \Illuminate\Support\Str::limit($description, 118) : 'Pelajari kompetensi perbankan melalui kelas terstruktur bersama Bankir Academy.';
 $image = data_get($course, 'image_mobile') ?: data_get($course, 'image');

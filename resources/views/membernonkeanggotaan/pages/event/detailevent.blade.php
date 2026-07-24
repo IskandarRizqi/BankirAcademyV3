@@ -25,15 +25,18 @@ $courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i
 $location = data_get($class, 'lokasi');
 $participantLimit = data_get($class, 'participant_limit');
 $pricing = data_get($class, 'pricing');
-$isPriceComingSoon = ! $isIht && (! $pricing || (int) data_get($pricing, 'gratis', 0) === 1);
+$isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
+$isPriceComingSoon = ! $isIht && ! $pricing;
 $price = (int) data_get($pricing, 'price', 0);
 $promoPrice = (int) data_get($pricing, 'promo_price', 0);
 $finalPrice = max(0, $price - $promoPrice);
 $priceLabel = $isIht
 ? 'Hubungi Tim Kami'
+: ($isFree
+? 'Gratis'
 : ($isPriceComingSoon
 ? 'Price Coming Soon'
-: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis'));
+: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis')));
 $image = data_get($class, 'image_mobile') ?: data_get($class, 'image');
 $image = $image ?: asset('assets/img/90x90.jpg');
 $instructors = collect(data_get($class, 'instructor_list', []));
