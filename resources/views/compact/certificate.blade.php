@@ -17,8 +17,8 @@
                         <th>No.</th>
                         <th>Tipe Target</th>
                         <th>Nama Kompetensi / Sub Materi</th>
-                        <th>Ukuran Font</th>
-                        <th>Koordinat (X, Y)</th>
+                        <th>Ukuran Font Nama</th>
+                        <th>Koordinat Nama (X, Y)</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -63,10 +63,10 @@
 </div>
 
 <div class="modal fade" id="certModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content" style="background: #fff; border-radius: 8px;">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel" style="font-weight: bold;">Tambah Template Sertifikat</h5>
+                <h5 class="modal-title" id="modalLabel" style="font-weight: bold;">Tambah / Edit Template Sertifikat</h5>
             </div>
             <form id="certForm" action="/certificate-templates" enctype="multipart/form-data" method="POST">
                 @csrf
@@ -100,37 +100,82 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label style="font-weight: 600;">Koordinat Teks X (Horizontal Tengah)</label>
-                        <input type="number" name="coordinate_x" id="coordinate_x" class="form-control" value="600" required>
+                    <div class="row">
+                        <!-- Pengaturan Nomor Sertifikat -->
+                        <div class="col-md-6">
+                            <div class="card p-3 mb-3 bg-light">
+                                <h6><strong>1. Nomor Seri Sertifikat</strong></h6>
+                                <div class="form-group mb-2">
+                                    <label>Koordinat Y (Posisi No. Seri)</label>
+                                    <input type="number" name="serial_y" id="serial_y" class="form-control" value="330" required>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label>Ukuran Font No. Seri (px)</label>
+                                    <input type="number" name="serial_font_size" id="serial_font_size" class="form-control" value="18" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pengaturan Teks "Diberikan Kepada" -->
+                        <div class="col-md-6">
+                            <div class="card p-3 mb-3 bg-light">
+                                <h6><strong>2. Teks "Diberikan Kepada"</strong></h6>
+                                <div class="form-group mb-2">
+                                    <label>Koordinat Y (Posisi Label)</label>
+                                    <input type="number" name="label_y" id="label_y" class="form-control" value="390" required>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label>Ukuran Font Label (px)</label>
+                                    <input type="number" name="label_font_size" id="label_font_size" class="form-control" value="16" required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                        <label style="font-weight: 600;">Koordinat Teks Y (Posisi Nama)</label>
-                        <input type="number" name="coordinate_y" id="coordinate_y" class="form-control" value="450" required>
+
+                    <!-- Pengaturan Nama Peserta -->
+                    <div class="card p-3 mb-3 bg-light">
+                        <h6><strong>3. Nama Peserta</strong></h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group mb-2">
+                                    <label>Koordinat X (Horizontal Tengah)</label>
+                                    <input type="number" name="coordinate_x" id="coordinate_x" class="form-control" value="600" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-2">
+                                    <label>Koordinat Y (Posisi Nama)</label>
+                                    <input type="number" name="coordinate_y" id="coordinate_y" class="form-control" value="450" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-2">
+                                    <label>Ukuran Font Nama (px)</label>
+                                    <input type="number" name="font_size" id="font_size" class="form-control" value="40" required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                        <label style="font-weight: 600;">Ukuran Font Nama</label>
-                        <input type="number" name="font_size" id="font_size" class="form-control" value="40" required>
-                    </div>
+
                     <div class="form-group mb-3">
                         <label style="font-weight: 600;">Gambar Template Background</label>
                         <input type="file" name="background_image" id="background_image" class="form-control-file">
                         <small class="text-muted" id="file-info"></small>
                     </div>
+
                     <div class="form-group mb-3">
-    <label style="font-weight: 600; display: block;">Live Preview Posisi Nama</label>
-    <div style="width: 100%; max-height: 300px; overflow: auto; border: 1px dashed #ccc; padding: 5px; text-align: center; background: #f9f9f9;">
-        <canvas id="certificateCanvas" style="max-width: 100%; height: auto; display: none;"></canvas>
-        <div id="previewPlaceholder" class="text-muted py-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
-              <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-              <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
-            </svg>
-            <p class="mt-2 mb-0" style="font-size: 12px;">Pilih gambar atau edit data untuk melihat preview posisi nama</p>
-        </div>
-    </div>
-    <small class="text-info">*Gunakan nama contoh "NAMA MAHASISWA CONTOH" sebagai acuan visual.</small>
-</div>
+                        <label style="font-weight: 600; display: block;">Live Preview Posisi Elemen</label>
+                        <div style="width: 100%; max-height: 350px; overflow: auto; border: 1px dashed #ccc; padding: 5px; text-align: center; background: #f9f9f9;">
+                            <canvas id="certificateCanvas" style="max-width: 100%; height: auto; display: none;"></canvas>
+                            <div id="previewPlaceholder" class="text-muted py-5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                                  <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                  <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+                                </svg>
+                                <p class="mt-2 mb-0" style="font-size: 12px;">Pilih gambar atau edit data untuk melihat preview posisi</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal">Batal</button>
@@ -142,15 +187,16 @@
 </div>
 
 <script>
-   let currentBgImage = new Image();
+let currentBgImage = new Image();
 let isImageLoaded = false;
 
-// Daftarkan event listener untuk perubahan input agar otomatis meng-update preview
-document.getElementById('coordinate_x').addEventListener('input', drawPreview);
-document.getElementById('coordinate_y').addEventListener('input', drawPreview);
-document.getElementById('font_size').addEventListener('input', drawPreview);
+// Event Listener input untuk kalkulasi visual secara langsung (Live Preview)
+const previewInputs = ['coordinate_x', 'coordinate_y', 'font_size', 'serial_y', 'serial_font_size', 'label_y', 'label_font_size'];
+previewInputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', drawPreview);
+});
 
-// Event listener saat user memilih file gambar baru
+// Event Listener Upload Gambar
 document.getElementById('background_image').addEventListener('change', function(e) {
     var reader = new FileReader();
     reader.onload = function(event) {
@@ -178,19 +224,30 @@ function drawPreview() {
 
     ctx.drawImage(currentBgImage, 0, 0, 1122, 793);
 
-    const x = parseInt(document.getElementById('coordinate_x').value) || 0;
-    const y = parseInt(document.getElementById('coordinate_y').value) || 0;
-    const fontSize = parseInt(document.getElementById('font_size').value) || 40;
-
-    // Styling Teks
-    ctx.font = `bold ${fontSize}px Helvetica, Arial, sans-serif`;
-    ctx.fillStyle = '#000000';
-    ctx.textAlign = 'center'; 
+    const x = parseInt(document.getElementById('coordinate_x').value) || 600;
     
-    // KUNCI PERBAIKAN: Set baseline ke top agar sama dengan cara kerja CSS absolute top
+    // 1. Gambar Nomor Seri
+    const serialY = parseInt(document.getElementById('serial_y').value) || 330;
+    const serialFontSize = parseInt(document.getElementById('serial_font_size').value) || 18;
+    ctx.font = `${serialFontSize}px Helvetica, Arial, sans-serif`;
+    ctx.fillStyle = '#444444';
+    ctx.textAlign = 'center'; 
     ctx.textBaseline = 'top'; 
+    ctx.fillText('No. Sertifikat: CERT/2026/001/089', x, serialY);
 
-    ctx.fillText('NAMA MAHASISWA CONTOH', x, y);
+    // 2. Gambar Teks "Diberikan Kepada"
+    const labelY = parseInt(document.getElementById('label_y').value) || 390;
+    const labelFontSize = parseInt(document.getElementById('label_font_size').value) || 16;
+    ctx.font = `italic ${labelFontSize}px Helvetica, Arial, sans-serif`;
+    ctx.fillStyle = '#333333';
+    ctx.fillText('Diberikan Kepada:', x, labelY);
+
+    // 3. Gambar Nama Peserta
+    const nameY = parseInt(document.getElementById('coordinate_y').value) || 450;
+    const nameFontSize = parseInt(document.getElementById('font_size').value) || 40;
+    ctx.font = `bold ${nameFontSize}px Helvetica, Arial, sans-serif`;
+    ctx.fillStyle = '#000000';
+    ctx.fillText('NAMA MAHASISWA CONTOH', x, nameY);
 }
 
 function toggleTargetFields() {
@@ -209,12 +266,16 @@ function toggleTargetFields() {
 function resetForm() {
     document.getElementById('id').value = '';
     document.getElementById('target_type').value = 'materi';
+    
+    document.getElementById('serial_y').value = 330;
+    document.getElementById('serial_font_size').value = 18;
+    document.getElementById('label_y').value = 390;
+    document.getElementById('label_font_size').value = 16;
     document.getElementById('coordinate_x').value = 600;
     document.getElementById('coordinate_y').value = 450;
     document.getElementById('font_size').value = 40;
-    document.getElementById('file-info').innerText = '';
     
-    // Reset state preview gambar
+    document.getElementById('file-info').innerText = '';
     isImageLoaded = false;
     document.getElementById('certificateCanvas').style.display = 'none';
     document.getElementById('previewPlaceholder').style.display = 'block';
@@ -226,6 +287,11 @@ function editCert(data) {
     resetForm();
     document.getElementById('id').value = data.id;
     document.getElementById('target_type').value = data.target_type;
+    
+    document.getElementById('serial_y').value = data.serial_y || 330;
+    document.getElementById('serial_font_size').value = data.serial_font_size || 18;
+    document.getElementById('label_y').value = data.label_y || 390;
+    document.getElementById('label_font_size').value = data.label_font_size || 16;
     document.getElementById('coordinate_x').value = data.coordinate_x;
     document.getElementById('coordinate_y').value = data.coordinate_y;
     document.getElementById('font_size').value = data.font_size;
@@ -239,15 +305,12 @@ function editCert(data) {
 
     if(data.background_image) {
         document.getElementById('file-info').innerText = 'File aktif: ' + data.background_image;
-        
-        // Load gambar lama yang sudah ter-upload di server untuk kebutuhan preview saat edit
         currentBgImage.onload = function() {
             isImageLoaded = true;
             document.getElementById('certificateCanvas').style.display = 'inline-block';
             document.getElementById('previewPlaceholder').style.display = 'none';
             drawPreview();
         };
-        // Sesuaikan URL path asset dengan konfigurasi symlink storage Laravel Anda
         currentBgImage.src = '/storage/certificates/' + data.background_image;
     }
     $('#certModal').modal('show');

@@ -74,7 +74,7 @@
                     {{-- TOMBOL DOWNLOAD SERTIFIKAT DI PERTAHANKAN --}}
                     @if($sertifikatMateri)
                         @if($sertifikatMateri->target_type == 'sub_materi')
-                            <a href="{{ route('submateri.sertifikat', $sertifikatMateri->sub_materi_id) }}" class="btn btn-light text-primary font-weight-bold px-4 py-2 w-sm-100" style="border-radius:8px;">
+                            <a href="{{ route('umum.sertifikat', $sertifikatMateri->sub_materi_id) }}" class="btn btn-light text-primary font-weight-bold px-4 py-2 w-sm-100" style="border-radius:8px;">
                                 <i class="fas fa-download mr-2"></i> Unduh Sertifikat (PDF)
                             </a>
                         @else

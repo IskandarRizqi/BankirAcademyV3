@@ -134,7 +134,7 @@
                         <input type="number" min="0" name="urutan" id="urutan" class="form-control" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="nama" style="font-weight: 600;">Nama Materi</label>
+                        <label for="nama" style="font-weight: 600;">Nama Kompetensi</label>
                         <input type="text" min="0" name="nama" id="nama" class="form-control" required>
                     </div>
                     <div class="form-group mb-3">

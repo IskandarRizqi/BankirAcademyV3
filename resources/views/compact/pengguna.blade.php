@@ -26,7 +26,7 @@
             <div class="d-flex justify-content-between align-items-center px-4 pt-4 pb-2">
                 <div>
                     <h5 class="mb-1" style="font-weight: 700; color: #3b3f5c;">Daftar Pengguna</h5>
-                    <p class="text-muted small mb-0">Kelola data pengguna, hak akses, dan pengiriman akun siswa.</p>
+                    <p class="text-muted small mb-0">Kelola data pengguna, hak akses, dan pengiriman akun peserta.</p>
                 </div>
                 <div class="d-flex gap-2 align-items-center">
                     @if(auth()->user()->email === 'cb@bankir.academy' || in_array(auth()->user()->role, [4, 5]))
@@ -52,7 +52,7 @@
                             <line x1="12" y1="18" x2="12" y2="12"></line>
                             <line x1="9" y1="15" x2="15" y2="15"></line>
                         </svg>
-                        Import Siswa
+                        Import Peserta
                     </button>
                     @endif
                     <button type="button" class="btn btn-primary d-flex align-items-center rounded-pill px-4 shadow-sm"
@@ -135,10 +135,10 @@
                                     class="badge badge-pill text-success bg-light-success px-3 py-1 font-weight-bold">Bank</span>
                                 @elseif($user->role == 5)
                                 <span
-                                    class="badge badge-pill text-warning bg-light-warning px-3 py-1 font-weight-bold">Sekolah</span>
+                                    class="badge badge-pill text-warning bg-light-warning px-3 py-1 font-weight-bold">Merchant</span>
                                 @elseif($user->role == 6)
                                 <span
-                                    class="badge badge-pill text-secondary bg-light-secondary px-3 py-1 font-weight-bold">Siswa</span>
+                                    class="badge badge-pill text-secondary bg-light-secondary px-3 py-1 font-weight-bold">Peserta</span>
                                 @else
                                 <span class="badge badge-pill text-dark bg-light px-3 py-1">Role {{ $user->role
                                     }}</span>
@@ -239,7 +239,7 @@
                 <div class="d-flex align-items-center justify-content-between w-100 container-fluid">
                     <div class="text-white">
                         <span class="badge badge-dark mr-2 id-count-badge" id="selected-count-floating">0</span>
-                        Siswa terpilih untuk pengiriman WhatsApp.
+                        Peserta terpilih untuk pengiriman WhatsApp.
                     </div>
                     <div class="d-flex gap-2">
                         <button type="button" id="btn-cancel-bulk"
@@ -313,7 +313,7 @@
                         <td id="view-beasiswa">-</td>
                     </tr>
                     <tr id="row-sekolah">
-                        <th>Asal Sekolah</th>
+                        <th>Asal Merchant</th>
                         <td id="view-sekolah-induk">-</td>
                     </tr>
                     <tr id="row-bank">
@@ -405,7 +405,7 @@
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
                         <div style="font-size: 13px; color: #004085;">
-                            <strong style="display:block; margin-bottom: 4px;">Informasi Pembuatan Akun Siswa:</strong>
+                            <strong style="display:block; margin-bottom: 4px;">Informasi Pembuatan Akun Peserta:</strong>
                             <div class="row mt-2">
                                 <div class="col-sm-6">Email Login: <code id="info-email"
                                         style="font-weight: 600; background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #d6e9c6;">[nisn]@gmail.com</code>
@@ -438,8 +438,8 @@
                                 @for ($i = 0; $i <= 6; $i++) @if ($authEmail==='cb@bankir.academy' ) @if ($i==4 || $i==5
                                     || $i==6) <option value="{{ $i }}">
                                     @if($i == 4) Bank
-                                    @elseif($i == 5) Sekolah
-                                    @elseif($i == 6) Siswa
+                                    @elseif($i == 5) Merchant
+                                    @elseif($i == 6) Peserta
                                     @endif
                                     </option>
                                     @endif
@@ -447,8 +447,8 @@
                                     @if ($i > $authRole)
                                     <option value="{{ $i }}">
                                         @if($i == 4) Bank
-                                        @elseif($i == 5) Sekolah
-                                        @elseif($i == 6) Siswa
+                                        @elseif($i == 5) Merchant
+                                        @elseif($i == 6) Peserta
                                         @endif
                                     </option>
                                     @endif
@@ -458,7 +458,7 @@
                         </div>
                     </div>
 
-                    {{-- FIELD EMAIL & PASSWORD (UNTUK NON-SISWA) --}}
+                    {{-- FIELD EMAIL & PASSWORD (UNTUK NON-Peserta) --}}
                     <div class="row">
                         <div class="col-md-6 form-group mb-3" id="email-group">
                             <label for="email" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Alamat Email
@@ -493,10 +493,10 @@
                         </div>
                     </div>
 
-                    {{-- BOX INFO OTOMATIS GENERATE (KHUSUS SISWA) --}}
+                    {{-- BOX INFO OTOMATIS GENERATE (KHUSUS PESERTA) --}}
 
 
-                    {{-- FIELD DINAMIS ROLE: BANK & SEKOLAH --}}
+                    {{-- FIELD DINAMIS ROLE: BANK & MERCHANT --}}
                     <div class="row">
                         <div class="col-md-6 form-group mb-3 d-none" id="membership-group">
                             <label for="membership_id"
@@ -533,10 +533,10 @@
 
                         <div class="col-md-6 form-group mb-3 d-none" id="sekolah-group">
                             <label for="sekolah_id" style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Pilih
-                                Sekolah <span class="text-danger">*</span></label>
+                                Merchant <span class="text-danger">*</span></label>
                             <select id="sekolah_id" name="sekolah_id" class="form-control style-input"
                                 style="border-radius: 6px;">
-                                <option value="" selected disabled>-- Pilih Sekolah --</option>
+                                <option value="" selected disabled>-- Pilih Merchant --</option>
                                 @foreach($listSekolah as $sekolah)
                                 <option value="{{ $sekolah->id }}" data-bank="{{ $sekolah->bank_id }}">{{ $sekolah->name
                                     }}</option>
@@ -545,19 +545,19 @@
                         </div>
                     </div>
 
-                    {{-- SECTION 2: FIELD TAMBAHAN KHUSUS PROFILE SISWA --}}
+                    {{-- SECTION 2: FIELD TAMBAHAN KHUSUS PROFILE PESERTA --}}
                     <div id="siswa-profile-group" class="d-none mt-3 pt-3" style="border-top: 1px dashed #e0e6ed;">
                         <p class="mb-3"
                             style="font-weight: 700; font-size: 14px; color: #1b55e2; text-transform: uppercase; letter-spacing: 0.5px;">
-                            Data Profil Siswa</p>
+                            Data Profil Peserta</p>
 
                         <div class="row">
                             <div class="col-md-6 form-group mb-3">
                                 <label for="email_pribadi"
                                     style="font-weight: 600; color: #3b3f5c; font-size: 13px;">Email Pribadi
-                                    Siswa</label>
+                                    Peserta</label>
                                 <input type="email" id="email_pribadi" name="email_pribadi"
-                                    class="form-control style-input" placeholder="siswa@example.com"
+                                    class="form-control style-input" placeholder="peserta@example.com"
                                     style="border-radius: 6px;">
                             </div>
 
@@ -603,7 +603,7 @@
                                     Beasiswa</label>
                                 <select id="beasiswa" name="beasiswa" class="form-control style-input"
                                     style="border-radius: 6px;">
-                                    <option value="0">Tidak (Siswa Reguler)</option>
+                                    <option value="0">Tidak (Peserta Reguler)</option>
                                     <option value="1">Ya (Penerima Beasiswa)</option>
                                 </select>
                             </div>
@@ -643,7 +643,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" style="background: #fff; border-radius: 8px;">
             <div class="modal-header">
-                <h5 class="modal-title" id="importModalLabel" style="font-weight: bold;">Import Data Siswa</h5>
+                <h5 class="modal-title" id="importModalLabel" style="font-weight: bold;">Import Data Peserta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -660,8 +660,8 @@
                         <p class="mb-1"><strong>Informasi Sistem:</strong></p>
                         <ul class="pl-3 mb-0" style="font-size: 13px;">
                             <li>Gunakan file template yang telah disediakan.</li>
-                            <li>Email siswa otomatis: <code>[NISN]@gmail.com</code></li>
-                            <li>Password siswa otomatis: <code>[NISN]Bankir!</code></li>
+                            <li>Email peserta otomatis: <code>[NISN]@gmail.com</code></li>
+                            <li>Password peserta otomatis: <code>[NISN]Bankir!</code></li>
                         </ul>
                     </div>
 
@@ -688,10 +688,10 @@
                     {{-- Jika yang login ROOT atau BANK, wajib memilih Sekolah --}}
                     @if ($authEmail === 'cb@bankir.academy' || $authRole === 4)
                     <div class="form-group mb-3">
-                        <label for="import_sekolah_id" style="font-weight: 600;">Pilih Sekolah Tujuan <span
+                        <label for="import_sekolah_id" style="font-weight: 600;">Pilih Merchant Tujuan <span
                                 class="text-danger">*</span></label>
                         <select id="import_sekolah_id" name="import_sekolah_id" class="form-control" required>
-                            <option value="" selected disabled>-- Pilih Sekolah --</option>
+                            <option value="" selected disabled>-- Pilih Merchant --</option>
                             @foreach($listSekolah as $sekolah)
                             <option value="{{ $sekolah->id }}" data-bank="{{ $sekolah->bank_id }}">{{ $sekolah->name }}
                             </option>
@@ -789,7 +789,7 @@
     function sendWhatsappRequest(ids) {
         Swal.fire({
             title: 'Kirim Informasi Akun?',
-            text: `Sistem akan mengirim detail login otomatis WhatsApp untuk ${ids.length} siswa terpilih.`,
+            text: `Sistem akan mengirim detail login otomatis WhatsApp untuk ${ids.length} peserta terpilih.`,
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#4361ee',
@@ -847,7 +847,7 @@
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: `Anda akan menghapus pengguna "${userName}". Tindakan ini juga akan menghapus seluruh data profil siswa yang terkait secara permanen!`,
+                text: `Anda akan menghapus pengguna "${userName}". Tindakan ini juga akan menghapus seluruh data profil peserta yang terkait secara permanen!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#e7515a', // Warna merah bootstrap / menyesuaikan tema
@@ -899,7 +899,7 @@
         roleBadge.innerText = 'Bank';
         roleBadge.classList.add('badge-success');
     } else if (user.role == 5) {
-        roleBadge.innerText = 'Sekolah';
+        roleBadge.innerText = 'Merchant';
         roleBadge.classList.add('badge-warning');
         // Tampilkan Bank yang mengampu sekolah ini (jika ada)
         if (user.bank) {
@@ -907,7 +907,7 @@
             document.getElementById('view-bank-induk').innerText = user.bank.name;
         }
     } else if (user.role == 6) {
-        roleBadge.innerText = 'Siswa';
+        roleBadge.innerText = 'Peserta';
         roleBadge.classList.add('badge-secondary');
         
         // Tampilkan field khusus siswa
@@ -1179,7 +1179,7 @@ function filterSekolahImport() {
     let userDataTable = null;
 
     function roleLabel(role) {
-        const labels = { 4: 'Bank', 5: 'Sekolah', 6: 'Siswa' };
+        const labels = { 4: 'Bank', 5: 'Merchant', 6: 'Peserta' };
         return labels[parseInt(role)] || ('Role ' + role);
     }
 

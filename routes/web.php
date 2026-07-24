@@ -199,7 +199,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/prepotes/savejawaban', [PrepotestController::class, 'savejawaban']);
     });
     Route::middleware(['role:4,5,6'])->group(function () {
-        Route::get('/siswa/materi/{materi_id}/report/{id}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
+        Route::get('/siswa/materi/{materi_id}/report/{id}/{sub_materi_id?}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
         Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
         Route::get('/manajemen/report/user/{user_id}/materi/{materi_id}', [SiswaMateriController::class, 'reportOlehManajemen'])->name('manajemen.siswa.report');
         Route::get('/siswa/materi/{materi_id}/sertifikat/{id}/download', [SiswaMateriController::class, 'downloadSertifikat'])->name('siswa.materi.sertifikat.download');

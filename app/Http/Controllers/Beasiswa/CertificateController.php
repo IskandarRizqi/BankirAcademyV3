@@ -11,14 +11,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Facades\Image; // Pastikan sudah install intervention/image
 use Illuminate\Support\Str;
 
 class CertificateController extends Controller
 {
     public function index()
     {
-        // Ambil data untuk dropdown di form view
         $x['materi_non_umum'] = MateriModel::where('nama', '!=', 'Umum')->get();
         $x['sub_materi_umum'] = SubMateriModel::whereHas('materi', function($q) {
             $q->where('nama', 'Umum');
@@ -32,12 +30,16 @@ class CertificateController extends Controller
     public function store(Request $request)
     {
         $valid = Validator::make($request->all(), [
-            'target_type' => 'required|in:materi,sub_materi',
-            'materi_id' => 'required_if:target_type,materi',
-            'sub_materi_id' => 'required_if:target_type,sub_materi',
-            'coordinate_x' => 'required|integer',
-            'coordinate_y' => 'required|integer',
-            'font_size' => 'required|integer',
+            'target_type'       => 'required|in:materi,sub_materi',
+            'materi_id'         => 'required_if:target_type,materi',
+            'sub_materi_id'     => 'required_if:target_type,sub_materi',
+            'coordinate_x'     => 'required|integer',
+            'coordinate_y'     => 'required|integer',
+            'font_size'        => 'required|integer',
+            'serial_y'         => 'nullable|integer',
+            'serial_font_size' => 'nullable|integer',
+            'label_y'          => 'nullable|integer',
+            'label_font_size'  => 'nullable|integer',
             'background_image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
         ]);
 
@@ -49,7 +51,6 @@ class CertificateController extends Controller
         $namaFileGambar = $templateLama ? $templateLama->background_image : null;
 
         if ($request->hasFile('background_image')) {
-            // Hapus file lama jika update
             if ($templateLama && $templateLama->background_image && Storage::exists('public/certificates/' . $templateLama->background_image)) {
                 Storage::delete('public/certificates/' . $templateLama->background_image);
             }
@@ -60,12 +61,16 @@ class CertificateController extends Controller
         }
 
         CertificateTemplate::updateOrCreate(['id' => $request->id], [
-            'target_type' => $request->target_type,
-            'materi_id' => $request->target_type == 'materi' ? $request->materi_id : null,
-            'sub_materi_id' => $request->target_type == 'sub_materi' ? $request->sub_materi_id : null,
-            'coordinate_x' => $request->coordinate_x,
-            'coordinate_y' => $request->coordinate_y,
-            'font_size' => $request->font_size,
+            'target_type'      => $request->target_type,
+            'materi_id'        => $request->target_type == 'materi' ? $request->materi_id : null,
+            'sub_materi_id'    => $request->target_type == 'sub_materi' ? $request->sub_materi_id : null,
+            'coordinate_x'    => $request->coordinate_x,
+            'coordinate_y'    => $request->coordinate_y,
+            'font_size'       => $request->font_size,
+            'serial_y'         => $request->serial_y ?? 330,
+            'serial_font_size' => $request->serial_font_size ?? 18,
+            'label_y'          => $request->label_y ?? 390,
+            'label_font_size'  => $request->label_font_size ?? 16,
             'background_image' => $namaFileGambar,
         ]);
 
@@ -83,12 +88,9 @@ class CertificateController extends Controller
         return redirect()->back()->with('success', 'Template sertifikat berhasil dihapus');
     }
 
-    /**
-     * LOGIKA DOWNLOAD DINAMIS - SKEMA MATERI NON-UMUM
-     */
     public function downloadMateriCertificate($materiId)
     {
-        $user = auth()->user(); // Ambil data user login saat ini
+        $user = auth()->user();
         $materi = MateriModel::where('id', $materiId)->where('nama', '!=', 'Umum')->firstOrFail();
         
         $template = CertificateTemplate::where('target_type', 'materi')
@@ -98,9 +100,6 @@ class CertificateController extends Controller
         return $this->generatePdfCertificate($user, $template, $materi->nama);
     }
 
-    /**
-     * LOGIKA DOWNLOAD DINAMIS - SKEMA SUB-MATERI (KHUSUS MATERI UMUM)
-     */
     public function downloadSubMateriCertificate($subMateriId)
     {
         $user = auth()->user();
@@ -115,45 +114,42 @@ class CertificateController extends Controller
         return $this->generatePdfCertificate($user, $template, $subMateri->nama);
     }
 
-    /**
-     * HELPER GENERATOR SERTIFIKAT BERDASARKAN KOORDINAT
-     */
-   private function generatePdfCertificate($user, $template, $lessonName)
-{
-    // Pastikan path gambar background benar untuk ditarik di dalam Blade PDF
-    // Menggunakan base64 atau path relatif aman untuk DomPDF
-    $imagePath = storage_path('app/public/certificates/' . $template->background_image);
-    
-    if (!file_exists($imagePath)) {
-        return redirect()->back()->with('info', 'File template fisik tidak ditemukan.');
+    private function generatePdfCertificate($user, $template, $lessonName)
+    {
+        $imagePath = storage_path('app/public/certificates/' . $template->background_image);
+        
+        if (!file_exists($imagePath)) {
+            return redirect()->back()->with('info', 'File template fisik tidak ditemukan.');
+        }
+
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $imageSrc = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
+
+        // Ambil atau buat nomor sertifikat unik
+        $certificateCode = 'CERT/' . date('Ymd') . '/' . $user->id . '/' . $template->id;
+        $userCert = UserCertificate::firstOrCreate(
+            ['user_id' => $user->id, 'certificate_template_id' => $template->id],
+            ['certificate_code' => $certificateCode, 'issued_at' => now()]
+        );
+
+        // KUNCI PERBAIKAN: Kirim $noSertifikat dan atribut koordinat tambahan ke Blade
+        $data = [
+            'noSertifikat'   => $userCert->certificate_code ?? $certificateCode,
+            'namaSiswa'      => strtoupper($user->name),
+            'imageSrc'       => $imageSrc,
+            'coordinateX'    => $template->coordinate_x,
+            'coordinateY'    => $template->coordinate_y,
+            'fontSize'       => $template->font_size,
+            'serialY'        => $template->serial_y ?? 330,
+            'serialFontSize' => $template->serial_font_size ?? 18,
+            'labelY'         => $template->label_y ?? 390,
+            'labelFontSize'  => $template->label_font_size ?? 16,
+        ];
+
+        $pdf = Pdf::loadView('compact.pdf-sertifikat', $data)
+                  ->setPaper('a4', 'landscape')
+                  ->setWarnings(false);
+
+        return $pdf->download('Sertifikat-' . Str::slug($lessonName) . '.pdf');
     }
-
-    // Ambil data gambar untuk dikonversi ke Base64 agar aman di-render oleh DomPDF
-    $imageData = base64_encode(file_get_contents($imagePath));
-    $imageSrc = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $imageData;
-
-    // Catat riwayat download ke database jika belum pernah diklaim sebelumnya
-    $certificateCode = 'CERT/' . date('Ymd') . '/' . $user->id . '/' . $template->id;
-    UserCertificate::firstOrCreate(
-        ['user_id' => $user->id, 'certificate_template_id' => $template->id],
-        ['certificate_code' => $certificateCode, 'issued_at' => now()]
-    );
-
-    // Kumpulkan data yang akan dikirim ke view PDF
-    $data = [
-        'namaSiswa'   => strtoupper($user->name),
-        'imageSrc'    => $imageSrc,
-        'coordinateX' => $template->coordinate_x,
-        'coordinateY' => $template->coordinate_y,
-        'fontSize'    => $template->font_size,
-    ];
-
-    // Render ke view khusus PDF dengan ukuran kertas A4 posisi Landscape
-    $pdf = Pdf::loadView('compact.pdf-sertifikat', $data)
-              ->setPaper('a4', 'landscape')
-              ->setWarnings(false);
-
-    // Langsung download ke browser
-    return $pdf->download('Sertifikat-' . Str::slug($lessonName) . '.pdf');
-}
 }
