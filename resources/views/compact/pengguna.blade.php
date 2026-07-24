@@ -1138,6 +1138,7 @@ function filterSekolahImport() {
     // Isi data dasar user
     document.getElementById('name').value = user.name;
     document.getElementById('email').value = user.email;
+    document.getElementById('email_pribadi').value = user.siswa.email;
     document.getElementById('role').value = user.role;
     
     document.getElementById('password-help').classList.remove('d-none');
@@ -1165,6 +1166,7 @@ function filterSekolahImport() {
         document.getElementById('kelas').value = user.siswa.kelas || '';
         document.getElementById('jenis_kelamin').value = user.siswa.jenis_kelamin || '';
         document.getElementById('no_telp').value = user.siswa.no_telp || '';
+        document.getElementById('email_pribadi').value = user.siswa.email || '';
         document.getElementById('angkatan').value = user.siswa.angkatan || '';
         document.getElementById('beasiswa').value = user.siswa.beasiswa ? "1" : "0";
     }

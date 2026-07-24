@@ -109,36 +109,42 @@ class HomeController extends Controller
                     ->with('siswa')
                     ->get();
             } elseif ($auth->role == 6) {
-                $siswaProfile = SiswaProfile::where('user_id', $auth->id)->first();
-                $data['profile'] = $siswaProfile;
+            $siswaProfile = SiswaProfile::where('user_id', $auth->id)->first();
+            $data['profile'] = $siswaProfile;
 
-                // Tambahkan variabel saldo agar mudah dibaca di view (default ke 0 jika profile belum dibuat)
-                $data['saldo_siswa'] = $siswaProfile ? $siswaProfile->saldo : 0;
-
-                // Query history pelatihan siswa
-                $data['history'] = \DB::table('history_pelatihan')
-                    ->join('sub_materi', 'history_pelatihan.sub_materi_id', '=', 'sub_materi.id')
-                    ->where('history_pelatihan.user_id', $auth->id)
-                    ->select(
-                        'history_pelatihan.created_at as tanggal_mulai',
-                        'sub_materi.id as sub_materi_id',
-                        'sub_materi.nama as nama_sub',
-                        'sub_materi.urutan'
-                    )
-                    ->orderBy('history_pelatihan.created_at', 'desc')
-                    ->get();
-
-                $data['total_materi'] = $data['history']->unique('nama_sub')->count();
-                $data['total_bab'] = $data['history']->count();
-
-                if ($siswaProfile && $siswaProfile->beasiswa == 1) {
-                    $data['modul_aktif'] = SiswaModulAktif::where('user_id', $auth->id)->with('materi')->get();
-                } else {
-                    $data['modul_aktif'] = collect();
-                }
+            // --- CEK APAKAH SISWA BELUM AKTIF / BELUM VERIFIKASI ---
+            if ((int)$auth->is_active === 0) {
+                // Lempar ke view khusus/peringatan belum verifikasi
+                return view('compact.siswa.unverified', $data);
             }
-            return view('compact.index', $data);
+
+            // Jika Siswa Sudah Aktif (is_active == 1)
+            $data['saldo_siswa'] = $siswaProfile ? $siswaProfile->saldo : 0;
+
+            $data['history'] = DB::table('history_pelatihan')
+                ->join('sub_materi', 'history_pelatihan.sub_materi_id', '=', 'sub_materi.id')
+                ->where('history_pelatihan.user_id', $auth->id)
+                ->select(
+                    'history_pelatihan.created_at as tanggal_mulai',
+                    'sub_materi.id as sub_materi_id',
+                    'sub_materi.nama as nama_sub',
+                    'sub_materi.urutan'
+                )
+                ->orderBy('history_pelatihan.created_at', 'desc')
+                ->get();
+
+            $data['total_materi'] = $data['history']->unique('nama_sub')->count();
+            $data['total_bab'] = $data['history']->count();
+
+            if ($siswaProfile && $siswaProfile->beasiswa == 1) {
+                $data['modul_aktif'] = SiswaModulAktif::where('user_id', $auth->id)->with('materi')->get();
+            } else {
+                $data['modul_aktif'] = collect();
+            }
         }
+
+        return view('compact.index', $data);
+    }
         $data['fee'] = ClassPaymentModel::select('class_payment.*', 'classes.title', 'users.name')
             ->join('classes', 'classes.id', 'class_payment.class_id')
             ->join('users', 'users.id', 'class_payment.user_id')

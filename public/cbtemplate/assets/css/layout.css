@@ -1414,36 +1414,187 @@ body {
     border-color: #4361ee;
 }
 @media print {
-    body {
-        background: #fff !important;
-        color: #000 !important;
-    }
-
-    .profile-banner {
-        background: #fff !important;
-        color: #000 !important;
-        border: 1px solid #000;
-        padding: 20px !important;
-    }
-
-    .profile-banner h1,
-    .profile-banner h2,
-    .profile-banner p {
-        color: #000 !important;
-    }
-
-    .btn,
-    .badge-pill {
+    /* 1. Sembunyikan SELURUH komponen layout bawaan admin */
+    nav,
+    header,
+    footer,
+    aside,
+    .sidebar-wrapper,
+    .topbar,
+    .navbar,
+    .header-container,
+    .sidebar,
+    .sub-header,
+    .d-print-none {
         display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
-    .card {
+    /* 2. Reset Container & Wrapper Utama Template */
+    html,
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: "Calibri", "Arial", sans-serif !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* Hilangkan padding/margin acak dari class wrapper bootstrap/admin */
+    #content,
+    .main-content,
+    .container,
+    .container-fluid,
+    .layout-px-spacing,
+    .widget-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: static !important;
+    }
+
+    /* 3. Setup Ukuran Kertas ATS Standard (A4) */
+    @page {
+        size: A4 portrait;
+        margin: 15mm 15mm 15mm 15mm;
+    }
+
+    /* 4. Paksa Area CV menjadi 1 Kolom Penuh Berurutan */
+    #cv-ats-row,
+    .ats-body {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .ats-left-col,
+    .ats-right-col {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+        padding: 0 !important;
+        margin-bottom: 15px !important;
+    }
+
+    .ats-card {
+        padding: 0 !important;
         border: none !important;
         box-shadow: none !important;
+        background: transparent !important;
     }
 
-    h3 {
-        border-bottom: 2px solid #000 !important;
+    /* 5. Header CV Khusus ATS (Gaya Bersih & Formal) */
+    .ats-header {
+        background: none !important;
+        color: #000000 !important;
+        text-align: center !important;
+        padding: 0 0 15px 0 !important;
+        margin-bottom: 20px !important;
+        border-bottom: 2px solid #000000 !important;
+        border-radius: 0 !important;
+    }
+
+    .ats-header .col-md-8 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        text-align: center !important;
+    }
+
+    .ats-fullname {
+        color: #000000 !important;
+        font-size: 20pt !important;
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+        margin-bottom: 4px !important;
+    }
+
+    .ats-jobtitle {
+        color: #333333 !important;
+        font-size: 12pt !important;
+        font-weight: bold !important;
+        margin-bottom: 6px !important;
+    }
+
+    .ats-contacts {
+        color: #333333 !important;
+        font-size: 9.5pt !important;
+    }
+
+    /* 6. Judul & Isi Setiap Seksi */
+    .ats-section-title {
+        font-size: 11pt !important;
+        font-weight: bold !important;
+        color: #000000 !important;
+        text-transform: uppercase !important;
+        border-bottom: 1px solid #000000 !important;
+        padding-bottom: 2px !important;
+        margin-top: 15px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .ats-item {
+        margin-bottom: 10px !important;
+        border: none !important;
+        padding-bottom: 0 !important;
+        page-break-inside: avoid; /* Agar tidak terpotong antar halaman */
+    }
+
+    .ats-item-header {
+        display: flex !important;
+        justify-content: space-between !important;
+    }
+
+    .ats-item-title {
+        font-size: 10.5pt !important;
+        font-weight: bold !important;
+        color: #000000 !important;
+    }
+
+    .ats-company {
+        font-size: 10pt !important;
+        color: #333333 !important;
+        font-style: italic !important;
+    }
+
+    .ats-year {
+        font-size: 9.5pt !important;
+        color: #000000 !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        font-weight: normal !important;
+    }
+
+    .ats-item-desc {
+        color: #222222 !important;
+        font-size: 9.5pt !important;
+        margin-top: 3px !important;
+    }
+
+    .ats-cert-box {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    .ats-list li {
+        margin-bottom: 3px !important;
+        color: #000000 !important;
+    }
+
+    hr {
+        display: none !important;
     }
 }
 .wa-popup-container {
