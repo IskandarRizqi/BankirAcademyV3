@@ -207,22 +207,26 @@ class PaymentController extends Controller
         $classTotal = $pricePerParticipant * $jumlahPeserta;
         $certificateTotal = 0;
 
-        if (!$isFreeClass && (int) $validated['sertifikat_invoice'] === 1) {
+        if ((int) $validated['sertifikat_invoice'] === 1) {
             $certificateFee = BiayaSertifikatModel::where('class_id', $classId)->first();
 
             if ($certificateFee) {
-                $certificatePerParticipant = (int) $certificateFee->type > 0
+                // Sertifikat kelas gratis selalu memakai nominal tetap per peserta.
+                $certificatePerParticipant = $isFreeClass
+                    ? (float) $certificateFee->nominal
+                    : ((int) $certificateFee->type > 0
                     ? ($pricePerParticipant * ((float) $certificateFee->nominal / 100))
-                    : (float) $certificateFee->nominal;
+                    : (float) $certificateFee->nominal);
             } else {
                 $certificatePerParticipant = 100000;
             }
 
-            $certificateTotal = $certificatePerParticipant * $jumlahPeserta;
+            $certificateTotal = max(0, $certificatePerParticipant * $jumlahPeserta);
         }
 
         $grandTotal = $classTotal + $certificateTotal;
-        $paymentStatus = $isFreeClass ? DataPayment::STATUS_PAID : DataPayment::STATUS_PENDING;
+        $needsPaymentGateway = $grandTotal > 0;
+        $paymentStatus = $needsPaymentGateway ? DataPayment::STATUS_PENDING : DataPayment::STATUS_PAID;
 
         $result = DB::transaction(function () use (
             $user,
@@ -232,7 +236,7 @@ class PaymentController extends Controller
             $certificateTotal,
             $grandTotal,
             $paymentStatus,
-            $isFreeClass,
+            $needsPaymentGateway,
             $validated
         ) {
             $class = ClassesModel::select('id', 'participant_limit')->whereKey($classId)->lockForUpdate()->first();
@@ -309,7 +313,7 @@ class PaymentController extends Controller
                 'success' => true,
                 'classPayment' => $classPayment,
                 'dataPayment' => $dataPayment,
-                'needsPaymentGateway' => !$isFreeClass,
+                'needsPaymentGateway' => $needsPaymentGateway,
             ];
         });
 
