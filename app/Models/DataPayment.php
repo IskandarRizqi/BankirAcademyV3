@@ -32,6 +32,8 @@ class DataPayment extends Model
         'pembelian',
         'nominal',
         'expired',
+        'materi_id',
+        'submateri_id',
         'qty',
         'status',
         'keterangan',

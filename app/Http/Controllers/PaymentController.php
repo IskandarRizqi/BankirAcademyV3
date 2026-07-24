@@ -346,6 +346,68 @@ class PaymentController extends Controller
             'invoice_number' => $result['dataPayment']->no_invoice,
         ]);
     }
+    public function paymentordermaterial(Request $request)
+    {
+          $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
+
+        $validated = $request->validate([
+            'class_id' => ['required', 'integer'],
+            'price' => ['required', 'string'],
+            'nama' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'nomor_handphone' => ['required', 'string', 'max:30'],
+        ]);
+         $result = DB::transaction(function () use (
+            $user,
+            $validated
+        ) {
+            $dataPayment = DataPayment::create([
+                'no_invoice' => 'BANKIR-CLASS-DATA-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'user_id' => $user->id,
+                'materi_id' => $validated['class_id'],
+                'pembelian' => DataPayment::PURCHASE_CLASS,
+                'nominal' =>  $validated['price'],
+                'qty' => 1,
+                'status' => DataPayment::STATUS_PENDING,
+                'keterangan' => 'Pembelian kelas',
+                'tipe_pembelian' => DataPayment::PURCHASE_TYPE_CLASS,
+            ]);
+
+            $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
+            $dataPayment->update(['no_invoice' => $invoiceNumber]);
+              return [
+                'success' => true,
+                'dataPayment' => $dataPayment,
+            ];
+        });
+         if (!$result['success']) {
+            return back()->withInput()->with('error', $result['message']);
+        }
+         $paymentUrl = $this->createClassDokuPaymentUrl(
+                $result['dataPayment']->no_invoice,
+                $validated['price'],
+                $user,
+                $validated['class_id'],
+      1
+            );
+
+            if (!$paymentUrl) {
+                $result['dataPayment']->update([
+                    'status' => DataPayment::STATUS_CANCELED,
+                    'keterangan' => 'Gagal membuat link pembayaran kelas.',
+                ]);
+
+                return back()->withInput()->with('error', 'Gagal membuat link pembayaran kelas. Silakan coba lagi.');
+            }
+
+            $result['dataPayment']->update(['link_payment' => $paymentUrl]);
+            return redirect()->away($paymentUrl);
+
+    }
 
     public function paymentIht(Request $request, DataPayment $payment)
     {
@@ -513,7 +575,7 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $paymentAmount,
                 'invoice_number' => $invoiceNumber,
-                'callback_url' => url('/pembayaran'),
+                'callback_url' => $user->siswa ? route('siswa.materi.belajar',  $classId) : url('/pembayaran'),
                 'line_items' => [
                     [
                         'name' => 'Pembayaran Kelas',

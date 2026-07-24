@@ -11,7 +11,7 @@
                 </a>
             </div>
 
-            {{-- Alert Flash Message dari Controller --}}
+            {{-- Alert Flash Message --}}
             @if(session('error'))
                 <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius:12px;">
                     <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
@@ -87,7 +87,7 @@
                                 
                                 @if(!$saldoCukup)
                                     <small class="font-weight-bold d-block mt-2">
-                                        <i class="fas fa-times-circle mr-1"></i> Maaf, Saldo Beasiswa Anda Tidak Mencukupi untuk modul ini.
+                                        <i class="fas fa-exclamation-triangle mr-1"></i> Saldo Beasiswa Anda Tidak Mencukupi. Silakan lakukan pembayaran online di bawah ini.
                                     </small>
                                 @else
                                     <small class="d-block text-muted mt-1">Saldo mencukupi untuk melakukan pemotongan otomatis.</small>
@@ -95,6 +95,7 @@
                             </div>
 
                             @if($saldoCukup)
+                                {{-- Jika Saldo Cukup: Potong Saldo Beasiswa --}}
                                 <form action="{{ route('siswa.materi.bayar_beasiswa', $materi->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-block btn-lg py-3 font-weight-bold shadow-md" style="border-radius: 14px; border: none; font-size: 1.05rem;">
@@ -102,23 +103,43 @@
                                     </button>
                                 </form>
                             @else
-                                <button class="btn btn-secondary btn-block btn-lg py-3 font-weight-bold text-white shadow-sm" disabled style="border-radius: 14px; cursor: not-allowed; font-size: 1.05rem;">
-                                    <i class="fas fa-ban mr-2"></i> Saldo Tidak Cukup
-                                </button>
+                                {{-- Jika Saldo KANAN CUKUP: Arahkan ke Payment Gateway --}}
+                                <form action="{{ route('payment.order.material') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="class_id" value="{{ $materi->id }}">
+                                    <input type="hidden" name="price" value="{{ $materi->harga }}">
+                                    <input type="hidden" name="nama" value="{{ $user->name }}">
+                                    <input type="hidden" name="email" value="{{ $user->email }}">
+                                    <input type="hidden" name="nomor_handphone" value="{{ $siswaProfile->no_telp ?? '08123456789' }}">
+
+                                    <button type="submit" class="btn btn-primary btn-block btn-lg py-3 font-weight-bold shadow-md" style="border-radius: 14px; background: #4F46E5; border: none; font-size: 1.05rem;">
+                                        <i class="fas fa-credit-card mr-2"></i> Bayar Mandiri via Payment Gateway
+                                    </button>
+                                </form>
                             @endif
 
                         {{-- KONDISI JIKA USER ADALAH SISWA REGULER --}}
                         @else
                             <h5 class="font-weight-bold text-dark mb-3" style="font-size: 0.95rem;">Metode Pembelajaran Yang Didapatkan:</h5>
-                            <ul class="list-unstyled text-secondary small mb-5">
+                            <ul class="list-unstyled text-secondary small mb-4">
                                 <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Akses Selamanya Video Pelajaran</li>
                                 <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Unduh Modul Pendukung Materi (PDF)</li>
                                 <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Sertifikat Kelulusan Resmi Elektronik</li>
                             </ul>
 
-                            <button class="btn btn-primary btn-block btn-lg py-3 font-weight-bold shadow-md" id="btn-proses-bayar" style="border-radius: 14px; background: #4F46E5; border: none; font-size: 1.05rem;">
-                                <i class="fas fa-credit-card mr-2"></i> Selesaikan Pembayaran
-                            </button>
+                            {{-- Form Pembayaran untuk Siswa Reguler --}}
+                            <form action="{{ route('payment.order.material') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="class_id" value="{{ $materi->id }}">
+                                <input type="hidden" name="price" value="{{ $materi->harga }}">
+                                <input type="hidden" name="nama" value="{{ $user->name }}">
+                                <input type="hidden" name="email" value="{{ $user->email }}">
+                                <input type="hidden" name="nomor_handphone" value="{{ $siswaProfile->no_telp ?? '08123456789' }}">
+
+                                <button type="submit" class="btn btn-primary btn-block btn-lg py-3 font-weight-bold shadow-md" style="border-radius: 14px; background: #4F46E5; border: none; font-size: 1.05rem;">
+                                    <i class="fas fa-credit-card mr-2"></i> Selesaikan Pembayaran
+                                </button>
+                            </form>
                         @endif
                     </div>
 
@@ -128,19 +149,4 @@
         </div>
     </div>
 </div>
-
-@if($statusBeasiswaSiswa == 0)
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.getElementById('btn-proses-bayar').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Sistem Pembayaran Terpanggil',
-            text: 'Coming Soon untuk Siswa Reguler',
-            icon: 'info',
-            confirmButtonColor: '#4F46E5',
-            confirmButtonText: 'Selesai'
-        });
-    });
-</script>
-@endif
 @endsection

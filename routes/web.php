@@ -20,12 +20,15 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\LokerController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProfileController;
+use App\Http\Controllers\LamaranController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrePostTestController;
 use App\Http\Controllers\SiswaVerificationController;
 use App\Http\Middleware\IsAdminRoot;
+use App\Models\LamaranModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -129,6 +132,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post("/admin/master/store", [App\Http\Controllers\Backend\RefferalController::class, "storeMasterReff"]);
     Route::delete("/admin/master/del/{id}", [App\Http\Controllers\Backend\RefferalController::class, "delMasterReff"]);
 });
+Route::post('/siswa/resend-verification', [SiswaVerificationController::class, 'resend'])->name('siswa.resend.verification');
 Route::middleware('auth')->group(function () {
     Route::get('/users/sendemail', [UserController::class, 'resendEmail']);
     Route::post('/admin/inputlogopurusahaan', [App\Http\Controllers\HomeController::class, 'inputlogopurusahaan']);
@@ -165,9 +169,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/rekeningprofile', [App\Http\Controllers\Front\ProfileController::class, 'rekeningprofile']);
     Route::get('/getbillingkelas/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getbillingkelas']);
     Route::get('/getkelasanda/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getkelasanda']);
-
+Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name('cvats.pdf');
     // Loker Front
     Route::resource('/loker-front', LokerController::class);
+    Route::get('/siswa/verifikasi-email/{id}/{hash}', [SiswaVerificationController::class, 'verify'])->name('siswa.verifikasi.email');
     Route::middleware(['is_root'])->group(function () {
         Route::resource('kategori-materi', KategoriController::class);
         Route::resource('materi', MateriController::class);
@@ -188,17 +193,23 @@ Route::middleware('auth')->group(function () {
         Route::post('users/beasiswa-approval/{id}/{action}', [UserController::class, 'beasiswaApprovalProcess'])->name('users.beasiswa.approval.process');
         Route::resource('users', UserController::class);
     });
-    Route::middleware(['role:6'])->group(function () {
+    Route::middleware(['role:6', 'siswa.verified'])->group(function () {
         Route::get('/pelatihan', [SiswaMateriController::class, 'index'])->name('siswa.materi.index');
 
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
         Route::post('/pelatihan/simpan/{submateri_id}/{quiz_id}', [SiswaMateriController::class, 'savetest'])->name('siswa.umum.simpan_test');
-        Route::get('/cvats', function () {
-            return view('compact.cvats');
-        })->name('cvats');
+       Route::get('/cvats', [LamaranController::class, 'index'])->name('cvats.index');
+       
+
+    // Route Resource CRUD Lamaran
+    Route::get('/lamaran/create', [LamaranController::class, 'create'])->name('lamaran.create');
+    Route::post('/lamaran', [LamaranController::class, 'store'])->name('lamaran.store');
+    Route::get('/lamaran/{id}/edit', [LamaranController::class, 'edit'])->name('lamaran.edit');
+    Route::put('/lamaran/{id}', [LamaranController::class, 'update'])->name('lamaran.update');
+    Route::delete('/lamaran/{id}', [LamaranController::class, 'destroy'])->name('lamaran.destroy');
         Route::post('/prepotes/savejawaban', [PrepotestController::class, 'savejawaban']);
     });
-    Route::middleware(['role:4,5,6'])->group(function () {
+    Route::middleware(['role:4,5,6', 'siswa.verified'])->group(function () {
         Route::get('/siswa/materi/{materi_id}/report/{id}/{sub_materi_id?}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
         Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
         Route::get('/manajemen/report/user/{user_id}/materi/{materi_id}', [SiswaMateriController::class, 'reportOlehManajemen'])->name('manajemen.siswa.report');
@@ -207,16 +218,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/sertifikat', [SiswaMateriController::class, 'listSertifikat'])->name('sertifikat');
         Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
         Route::get('/userprofile', [UserController::class, 'profile'])->name('profiless.index');
-        Route::get('/siswa/verifikasi-email/{id}/{hash}', [SiswaVerificationController::class, 'verify'])->name('siswa.verifikasi.email');
+        
         Route::get('/materi-umum', [SiswaMateriController::class, 'umumIndex'])->name('siswa.umum.index');
         Route::get('/lowongan', [MembershipController::class, 'loker'])->name('lowongan');
         Route::get('/lowongan/{id}', [MembershipController::class, 'detil_loker'])->name('lowongan.show');
+        
         Route::post('/materi-umum/ikuti/{sub_materi_id}', [SiswaMateriController::class, 'ikutiPelatihan'])->name('siswa.umum.ikuti');
         Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
         Route::get('download-certificate/materi/{id}', [CertificateController::class, 'downloadMateriCertificate'])->name('materi.sertifikat');
         Route::get('download-certificate/sub-materi/{id}', [CertificateController::class, 'downloadSubMateriCertificate'])->name('umum.sertifikat');
         Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
+        Route::post('/payment/order-material', [PaymentController::class, 'paymentordermaterial'])->name('payment.order.material');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
         Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
     });

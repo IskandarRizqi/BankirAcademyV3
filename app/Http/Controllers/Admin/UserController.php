@@ -337,6 +337,7 @@ class UserController extends Controller
             'kelas' => 'nullable|string|max:50',
             'beasiswa' => 'nullable|integer|in:0,1,2',
             'alamat' => 'nullable|string',
+            'email_pribadi' => 'nullable|string|email|max:255',
         ];
 
         // Jika bukan siswa, validasi email biasa
@@ -442,6 +443,7 @@ class UserController extends Controller
                         'kelas'         => $request->kelas,
                         'beasiswa'      => $beasiswaStatus,
                         'alamat'        => $request->alamat,
+                        'email' => $request->email_pribadi
                     ]
                 );
             } else {
