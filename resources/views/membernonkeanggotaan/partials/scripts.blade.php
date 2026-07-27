@@ -93,5 +93,3 @@
 			});
 		}
 	</script>
-
-	@stack('scripts')

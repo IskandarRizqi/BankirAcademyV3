@@ -92,7 +92,9 @@ class DataEventKelasController extends Controller
     {
         $query
             ->orderByRaw('CASE WHEN iht = 1 AND date_start IS NULL AND date_end IS NULL THEN 0 ELSE 1 END')
-            ->orderByDesc('date_start');
+            ->orderByDesc('date_start')
+            // Keep pagination stable when multiple classes share the same start date.
+            ->orderBy('id');
     }
 
     private function applySearch($query, string $search): void
