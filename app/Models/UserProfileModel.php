@@ -27,8 +27,14 @@ class UserProfileModel extends Model
 		'status_membership',
 		'masa_aktif_membership',
 		'id_member',
-		'tanggal_bergabung_membership'
+		'tanggal_bergabung_membership',
+		'tipe_membership',
 	];
+
+	protected $casts = [
+		'tipe_membership' => 'integer',
+	];
+
 	public function membership(): HasOne
 	{
 		return $this->hasOne(MembershipModel::class, 'id', 'id_member');

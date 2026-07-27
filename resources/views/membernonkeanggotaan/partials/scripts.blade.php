@@ -6,6 +6,34 @@
 	<script src="{{ asset('cbtemplate/plugins/apex/apexcharts.min.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+	@php
+	$flashType = session('success') ? 'success' : (session('error') ? 'error' : (session('info') ? 'info' : null));
+	$flashMessage = $flashType ? session($flashType) : null;
+	$flashTitle = [
+		'success' => 'Berhasil',
+		'error' => 'Gagal',
+		'info' => 'Informasi',
+	][$flashType] ?? null;
+	@endphp
+
+	@if($flashMessage)
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			if (!window.Swal || typeof window.Swal.fire !== 'function') {
+				return;
+			}
+
+			window.Swal.fire({
+				icon: @json($flashType),
+				title: @json($flashTitle),
+				text: @json($flashMessage),
+				confirmButtonText: 'OK',
+				confirmButtonColor: '#4F46E5',
+			});
+		});
+	</script>
+	@endif
+
 	<script>
 		// Sidebar toggle (desktop collapses content, mobile slides drawer)
 		(function() {
