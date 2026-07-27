@@ -68,13 +68,40 @@
                                     </p>
                                     
                                     {{-- FOOTER / ACTION BUTTON --}}
-                                  <div class="border-top pt-3 d-flex align-items-center justify-content-between" style="border-color: #F1F5F9 !important;">
-    <span class="text-muted" style="font-size: 11px; font-weight: 500;">
-        <i class="fas fa-book mr-1 text-primary"></i> {{ $sub->items->count() }} Ebook
-    </span>
+                                {{-- FOOTER / ACTION BUTTON --}}
+<div class="border-top pt-3 d-flex align-items-center justify-content-between" style="border-color: #F1F5F9 !important;">
+    @php
+        // Hitung Video (tipe_link_item = 0) dan Ebook (tipe_link_item = 1)
+        $totalVideo = $sub->items->where('tipe_link_item', 0)->count();
+        $totalEbook = $sub->items->where('tipe_link_item', 1)->count();
+        $totalMedia = $sub->items->count();
+    @endphp
 
-    @if($sub->items->count() > 0)
-        {{-- Semua tombol (Gratis & Berbayar) langsung mengarah ke umumBelajar --}}
+    <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 500; gap: 8px;">
+        {{-- Tampilkan badge Video jika ada --}}
+        @if($totalVideo > 0)
+            <span class="text-secondary">
+                <i class="fas fa-video mr-1 text-danger"></i> {{ $totalVideo }} Video
+            </span>
+        @endif
+
+        {{-- Tampilkan badge Ebook jika ada --}}
+        @if($totalEbook > 0)
+            <span class="text-secondary">
+                <i class="fas fa-book mr-1 text-primary"></i> {{ $totalEbook }} Ebook
+            </span>
+        @endif
+
+        {{-- Jika tidak ada video & ebook sama sekali --}}
+        @if($totalMedia == 0)
+            <span class="text-muted">
+                <i class="fas fa-folder-open mr-1"></i> 0 Media
+            </span>
+        @endif
+    </div>
+
+    @if($totalMedia > 0)
+        {{-- Tombol jika item tersedia --}}
         <a href="{{ route('siswa.umum.belajar', [$sub->id]) }}"
            class="btn btn-primary btn-sm px-3 font-weight-bold"
            style="border-radius: 6px; font-size: 12px;">

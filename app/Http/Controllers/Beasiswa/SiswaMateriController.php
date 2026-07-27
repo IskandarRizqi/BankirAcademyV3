@@ -849,6 +849,7 @@ public function umumIndex()
     $user->load('bank');
     $bankProfile = $user->bank;
     $isMemberAktif = false;
+
     if ($bankProfile && $bankProfile->masa_aktif_member) {
         $isMemberAktif = \Carbon\Carbon::parse($bankProfile->masa_aktif_member)->isFuture();
     }
@@ -868,7 +869,10 @@ public function umumIndex()
         if ($materiUmum) {
             $subMateriUmum = SubMateriModel::where('id_materi', $materiUmum->id)
                 ->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
-                ->with('items')
+                ->with(['items' => function($query) {
+                    // Ambil item yang bertipe video (0) atau ebook (1)
+                    $query->whereIn('tipe_link_item', [0, 1]);
+                }])
                 ->orderBy('urutan', 'asc')
                 ->get();
         } else {

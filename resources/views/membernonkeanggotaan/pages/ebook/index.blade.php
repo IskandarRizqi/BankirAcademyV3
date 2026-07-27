@@ -4,7 +4,7 @@
 <div class="row" id="cancel-row">
     <div class="col-12 layout-top-spacing layout-spacing">
 
-        <div class="lms-banner text-center text-md-left mb-4">
+        <div class="lms-banner text-center text-md-left mb-4"  style="background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); padding: 2rem; border-radius: 12px;">
             <h2 class="display-5 font-weight-bold text-white mb-2">Katalog Ebook & Dokumen 📚</h2>
             <p class="mb-0 text-white-50" style="font-size: 1.05rem;">Akses e-book dan modul pembelajaran berkualitas dalam format digital.</p>
         </div>
