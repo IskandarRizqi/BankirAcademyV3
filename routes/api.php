@@ -5,6 +5,7 @@ use App\Http\Controllers\API\LokerController;
 use App\Http\Controllers\Backend\PembayaranController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\RecentRegistrationController;
 use App\Http\Middleware\AksesByIpAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +37,5 @@ Route::get('/tripay/ppob', [PembayaranController::class, 'tripayppob']);
 Route::post('/c4/notifikasi', [CheckoutController::class, 'handleDokuTransactionNotification']);
 Route::post('/doku/notification', [CheckoutController::class, 'handleNotification']);
 Route::post('/doku/membership/notification', [CheckoutController::class, 'handleNotificationmembership']);
+Route::get('/api/recent-registrations/random', [RecentRegistrationController::class, 'getRandomCustomer'])
+    ->name('api.recent-registrations.random');

@@ -249,60 +249,7 @@
                         @endif
                     @endif
 
-                    <!-- <div class="bg-light px-4 py-2 text-muted font-weight-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.5px;">
-                        MATERI PELAJARAN ({{ count($subMateriAktif->items ?? []) }} BAB)
-                    </div>
-                    
-                    @foreach($materiAktif->subMateri as $index => $sub)
-                        @php
-                            $isLocked = false;
-
-                            if (!$sudahIkuti) {
-                                $isLocked = true;
-                            } else {
-                                if ($statusBeasiswaSiswa == 1 && $preTest && (!$userProgress || is_null($userProgress->nilai_awal))) {
-                                    $isLocked = true;
-                                }
-                                // Lock jika bab sebelumnya belum berstatus selesai di DB
-                                if ($index > 0) {
-                                    $prevMateriValid = $materiAktif->subMateri[$index - 1];
-                                    if ($prevMateriValid && !in_array($prevMateriValid->id, $subMateriSelesaiIds ?? [])) {
-                                        $isLocked = true;
-                                    }
-                                }
-                            }
-                            
-                            $isBabAktif = ($subMateriAktif && $subMateriAktif->id == $sub->id);
-                        @endphp
-
-                        @if($isLocked)
-                           <p></p>
-                        @else
-                            <div class="p-3 {{ $isBabAktif ? 'bg-light border-left-primary' : '' }}" style="border-bottom: 1px solid #edf2f7;">
-                                <div class="d-flex align-items-center mb-2">
-                                    <div class="mr-3 ml-1 flex-shrink-0">
-                                        <i class="fas fa-check-circle text-success"></i>
-                                    </div>
-                                    <div class="w-100 overflow-hidden">
-                                        <span class="d-block text-muted mb-1 text-uppercase font-weight-bold" style="font-size: 0.65rem;">Materi {{ $index + 1 }}</span>
-                                        <div class="text-truncate text-dark small {{ $isBabAktif ? 'font-weight-bold' : '' }}">{{ $sub->items[0]->judul_item }}</div>
-                                    </div>
-                                </div>
-
-                                @if($sub->items && $sub->items->count() > 0)
-                                    <div class="mt-2 pl-2 ml-2" style="border-left: 2px solid #e2e8f0;">
-                                        @foreach($sub->items as $mediaItem)
-                                            <div class="d-flex align-items-center py-2 px-2 my-1 text-muted small rounded" style="font-size: 0.78rem; cursor: not-allowed; opacity: 0.6; background: #f8fafc;">
-                                                <i class="fas fa-lock mr-2 text-secondary flex-shrink-0" style="font-size: 0.7rem;"></i>
-                                                <span class="text-truncate">{{ $mediaItem->judul_item }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
-                    @endforeach -->
-
+                   
                     @if($postTest)
                        
                             <a href="{{ route('siswa.umum.belajar', $subMateriAktif->id) }}?type=post" class="playlist-item d-flex align-items-center p-3 text-decoration-none playlist-active">

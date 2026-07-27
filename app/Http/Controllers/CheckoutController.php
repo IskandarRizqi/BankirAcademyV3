@@ -70,6 +70,18 @@ class CheckoutController extends Controller
                 $notification['payment_status'],
                 $notification['amount']
             );
+        } elseif (
+            $purchaseType === DataPayment::PURCHASE_TYPE_EBOOK
+            || $purchaseName === DataPayment::PURCHASE_EBOOK ||
+            $purchaseType === DataPayment::PURCHASE_TYPE_VIDEO
+            || $purchaseName === DataPayment::PURCHASE_VIDEO
+            || ClassPaymentModel::where('no_invoice', $invoiceNumber)->exists()
+        ) {
+            $result = $this->processEbookPayment(
+                $invoiceNumber,
+                $notification['payment_status'],
+                $notification['amount']
+            );
         } else {
             Log::warning('DOKU notification purchase type unknown', [
                 'invoice' => $invoiceNumber,
@@ -329,6 +341,45 @@ class CheckoutController extends Controller
             'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
         ]);
             }
+            if ($dataPayment->submateri_id) {
+              DB::table('history_pelatihan')->insertOrIgnore([
+    'user_id' => $dataPayment->user_id,
+    'sub_materi_id'=> $dataPayment->submateri_id
+              ]);
+        RiwayatTransaksi::create([
+            'user_id'           => $dataPayment->user_id,
+            'class_id'          => $dataPayment->submateri_id,
+            'nominal_transaksi' => $dataPayment->nominal,
+            'metode_pembayaran' => 'Virtual Akun',
+            'status'            => 'SUCCESS',
+            'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+        ]);
+            }
+
+            return ['status' => 200, 'message' => 'Class payment processed'];
+        });
+    }
+    private function processEbookPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array
+    {
+        return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
+            $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+            if ($dataPayment) {
+                $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+            }
+         
+         
+              DB::table('history_pelatihan')->insertOrIgnore([
+    'user_id' => $dataPayment->user_id,
+    'sub_materi_id'=> $dataPayment->submateri_id
+              ]);
+        RiwayatTransaksi::create([
+            'user_id'           => $dataPayment->user_id,
+            'class_id'          => $dataPayment->submateri_id,
+            'nominal_transaksi' => $dataPayment->nominal,
+            'metode_pembayaran' => 'Virtual Akun',
+            'status'            => 'SUCCESS',
+            'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+        ]);
 
             return ['status' => 200, 'message' => 'Class payment processed'];
         });

@@ -130,6 +130,14 @@
     'has_submenu' => false,
     ],
     [
+    'label' => 'Fake Customer',
+    'icon' => 'zap',
+    'url' => route('recent-registrations.index'),
+    'active' => request()->routeIs('recent-registrations.*'),
+    'can_see' => $isRoot,
+    'has_submenu' => false,
+    ],
+    [
     'label' => 'Log Activity',
     'icon' => 'history',
     'url' => route('activity.index'),
@@ -176,10 +184,10 @@
 
         <!-- SIDEBAR -->
         <div class="sidebar-wrapper">
-            <div class="sidebar-brand">
-                <img src="{{ asset('cbtemplate/assets/img/90x90.jpg') }}" alt="logo">
-                <span>Bankir Academy</span>
-            </div>
+           <div class="sidebar-brand">
+			<img src="{{ asset('bankir-academy-icon.png') }}" alt="logo">
+			<span>Bankir Academy</span>
+		</div>
 
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu Utama</div>
@@ -427,56 +435,61 @@
             });
         }
     </script>
-    <script>
-    // Data Dummy Customer
-    const fakeCustomers = [
-        { name: "Budi Santoso", city: "Jakarta", program: "Program Klasifikasi Bankir", avatar: "https://i.pravatar.cc/100?img=12" },
-        { name: "Siti Rahmawati", city: "Surabaya", program: "Sertifikasi Manajemen Risiko", avatar: "https://i.pravatar.cc/100?img=47" },
-        { name: "Andi Wijaya", city: "Bandung", program: "Pelatihan Credit Officer", avatar: "https://i.pravatar.cc/100?img=33" },
-        { name: "Dewi Lestari", city: "Semarang", program: "Analis Kredit Banking", avatar: "https://i.pravatar.cc/100?img=5" },
-        { name: "Rian Hidayat", city: "Medan", program: "Program Klasifikasi Bankir", avatar: "https://i.pravatar.cc/100?img=60" },
-        { name: "Nabila Putri", city: "Yogyakarta", program: "Sertifikasi General Banking", avatar: "https://i.pravatar.cc/100?img=9" },
-        { name: "Fajar Pratama", city: "Makassar", program: "Pelatihan Wealth Management", avatar: "https://i.pravatar.cc/100?img=15" }
-    ];
-
-    const timeList = ["Baru saja", "1 menit yang lalu", "2 menit yang lalu", "3 menit yang lalu"];
-
+<script>
     let popupTimeout;
+
+    // Konversi jam ke milidetik (1 jam = 3.600.000 ms, 24 jam = 86.400.000 ms)
+    function getRandomIntervalInHours(minHours = 24, maxHours = 36) {
+        // Mengambil durasi acak antara minHours dan maxHours (misal: 24 s/d 36 jam)
+        const randomHours = Math.floor(Math.random() * (maxHours - minHours + 1)) + minHours;
+        return randomHours * 60 * 60 * 1000; // Konversi ke milidetik
+    }
 
     function showRandomCustomerPopup() {
         const popup = document.getElementById('wa-join-popup');
         
-        // Pilih random customer & waktu
-        const randomCustomer = fakeCustomers[Math.floor(Math.random() * fakeCustomers.length)];
-        const randomTime = timeList[Math.floor(Math.random() * timeList.length)];
+        // Fetch data dinamis dari API Controller
+        fetch("{{ route('api.recent-registrations.random') }}")
+            .then(response => response.json())
+            .then(res => {
+                if (res.success) {
+                    const data = res.data;
 
-        // Update UI
-        document.getElementById('wa-user-avatar').src = randomCustomer.avatar;
-        document.getElementById('wa-user-name').innerText = randomCustomer.name;
-        document.getElementById('wa-user-msg').innerText = `Bergabung dari ${randomCustomer.city} (${randomCustomer.program})`;
-        document.getElementById('wa-user-time').innerText = randomTime;
+                    // Update UI dengan data dari Database
+                    document.getElementById('wa-user-avatar').src = data.avatar;
+                    document.getElementById('wa-user-name').innerText = data.name;
+                    document.getElementById('wa-user-msg').innerText = `Bergabung dari ${data.city} (${data.program})`;
+                    document.getElementById('wa-user-time').innerText = data.time;
 
-        // Tampilkan Popup
-        popup.classList.add('show');
+                    // Tampilkan Popup
+                    popup.classList.add('show');
 
-        // Sembunyikan otomatis setelah 6 detik
-        setTimeout(() => {
-            closeWaPopup();
-        }, 6000);
-
-        // Jadwalkan kemunculan berikutnya secara acak (antara 12 s/d 25 detik)
-        const nextInterval = Math.floor(Math.random() * (25000 - 12000 + 1)) + 12000;
-        popupTimeout = setTimeout(showRandomCustomerPopup, nextInterval);
+                    // Sembunyikan otomatis setelah 5 detik
+                    setTimeout(() => {
+                        closeWaPopup();
+                    }, 5000);
+                }
+            })
+            .catch(error => console.error("Error fetching registration data:", error))
+            .finally(() => {
+                // Jadwalkan kemunculan berikutnya: Minimal 24 jam (1 hari), Maksimal 48 jam (2 hari)
+                const nextRandomInterval = getRandomIntervalInHours(24, 48);
+                popupTimeout = setTimeout(showRandomCustomerPopup, nextRandomInterval);
+            });
     }
 
     function closeWaPopup() {
         const popup = document.getElementById('wa-join-popup');
-        popup.classList.remove('show');
+        if (popup) {
+            popup.classList.remove('show');
+        }
     }
 
-    // Jalankan popup pertama kali setelah 3 detik halaman dimuat
+    // Jalankan popup pertama kali setelah jeda awal saat halaman dimuat
     document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(showRandomCustomerPopup, 3000);
+        // Jeda awal saat pertama buka website (misal: 5 s/d 15 detik pertama)
+        const initialDelay = Math.floor(Math.random() * (15 - 5 + 1) + 5) * 1000;
+        setTimeout(showRandomCustomerPopup, initialDelay);
     });
 </script>
 
