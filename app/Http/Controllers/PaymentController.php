@@ -171,7 +171,7 @@ class PaymentController extends Controller
             DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => [
                 'label' => 'Membership Perorangan',
                 'description' => 'Membership perorangan',
-                'price' => 299000,
+                'price' => 99000,
             ],
             default => throw new \InvalidArgumentException('Tipe membership tidak valid.'),
         };
@@ -240,8 +240,8 @@ class PaymentController extends Controller
                 $certificatePerParticipant = $isFreeClass
                     ? (float) $certificateFee->nominal
                     : ((int) $certificateFee->type > 0
-                    ? ($pricePerParticipant * ((float) $certificateFee->nominal / 100))
-                    : (float) $certificateFee->nominal);
+                        ? ($pricePerParticipant * ((float) $certificateFee->nominal / 100))
+                        : (float) $certificateFee->nominal);
             } else {
                 $certificatePerParticipant = 100000;
             }
@@ -370,11 +370,11 @@ class PaymentController extends Controller
             return redirect()->away($paymentUrl);
         }
 
-        return redirect('dash-beranda')->with('success', 'Data pembelian kelas berhasil disimpan.');
+        return redirect('/pembayaran?invoice_number=' . urlencode($result['dataPayment']->no_invoice));
     }
     public function paymentordermaterial(Request $request)
     {
-          $user = $request->user();
+        $user = $request->user();
 
         if (!$user) {
             abort(401);
@@ -387,7 +387,7 @@ class PaymentController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'nomor_handphone' => ['required', 'string', 'max:30'],
         ]);
-         $result = DB::transaction(function () use (
+        $result = DB::transaction(function () use (
             $user,
             $validated
         ) {
@@ -405,38 +405,37 @@ class PaymentController extends Controller
 
             $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
-              return [
+            return [
                 'success' => true,
                 'dataPayment' => $dataPayment,
             ];
         });
-         if (!$result['success']) {
+        if (!$result['success']) {
             return back()->withInput()->with('error', $result['message']);
         }
-         $paymentUrl = $this->createClassDokuPaymentUrl(
-                $result['dataPayment']->no_invoice,
-                $validated['price'],
-                $user,
-                $validated['class_id'],
-      1
-            );
+        $paymentUrl = $this->createClassDokuPaymentUrl(
+            $result['dataPayment']->no_invoice,
+            $validated['price'],
+            $user,
+            $validated['class_id'],
+            1
+        );
 
-            if (!$paymentUrl) {
-                $result['dataPayment']->update([
-                    'status' => DataPayment::STATUS_CANCELED,
-                    'keterangan' => 'Gagal membuat link pembayaran kelas.',
-                ]);
+        if (!$paymentUrl) {
+            $result['dataPayment']->update([
+                'status' => DataPayment::STATUS_CANCELED,
+                'keterangan' => 'Gagal membuat link pembayaran kelas.',
+            ]);
 
-                return back()->withInput()->with('error', 'Gagal membuat link pembayaran materi. Silakan coba lagi.');
-            }
+            return back()->withInput()->with('error', 'Gagal membuat link pembayaran materi. Silakan coba lagi.');
+        }
 
-            $result['dataPayment']->update(['link_payment' => $paymentUrl]);
-            return redirect()->away($paymentUrl);
-
+        $result['dataPayment']->update(['link_payment' => $paymentUrl]);
+        return redirect()->away($paymentUrl);
     }
     public function paymentorderebook(Request $request)
     {
-          $user = $request->user();
+        $user = $request->user();
 
         if (!$user) {
             abort(401);
@@ -449,7 +448,7 @@ class PaymentController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'nomor_handphone' => ['required', 'string', 'max:30'],
         ]);
-         $result = DB::transaction(function () use (
+        $result = DB::transaction(function () use (
             $user,
             $validated
         ) {
@@ -467,38 +466,37 @@ class PaymentController extends Controller
 
             $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
-              return [
+            return [
                 'success' => true,
                 'dataPayment' => $dataPayment,
             ];
         });
-         if (!$result['success']) {
+        if (!$result['success']) {
             return back()->withInput()->with('error', $result['message']);
         }
-         $paymentUrl = $this->createClassDokuPaymentUrl(
-                $result['dataPayment']->no_invoice,
-                $validated['price'],
-                $user,
-                $validated['class_id'],
-      1
-            );
+        $paymentUrl = $this->createClassDokuPaymentUrl(
+            $result['dataPayment']->no_invoice,
+            $validated['price'],
+            $user,
+            $validated['class_id'],
+            1
+        );
 
-            if (!$paymentUrl) {
-                $result['dataPayment']->update([
-                    'status' => DataPayment::STATUS_CANCELED,
-                    'keterangan' => 'Gagal membuat link pembayaran kelas.',
-                ]);
+        if (!$paymentUrl) {
+            $result['dataPayment']->update([
+                'status' => DataPayment::STATUS_CANCELED,
+                'keterangan' => 'Gagal membuat link pembayaran kelas.',
+            ]);
 
-                return back()->withInput()->with('error', 'Gagal membuat link pembayaran ebook. Silakan coba lagi.');
-            }
+            return back()->withInput()->with('error', 'Gagal membuat link pembayaran ebook. Silakan coba lagi.');
+        }
 
-            $result['dataPayment']->update(['link_payment' => $paymentUrl]);
-            return redirect()->away($paymentUrl);
-
+        $result['dataPayment']->update(['link_payment' => $paymentUrl]);
+        return redirect()->away($paymentUrl);
     }
     public function paymentordervideo(Request $request)
     {
-          $user = $request->user();
+        $user = $request->user();
 
         if (!$user) {
             abort(401);
@@ -511,7 +509,7 @@ class PaymentController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'nomor_handphone' => ['required', 'string', 'max:30'],
         ]);
-         $result = DB::transaction(function () use (
+        $result = DB::transaction(function () use (
             $user,
             $validated
         ) {
@@ -529,34 +527,33 @@ class PaymentController extends Controller
 
             $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
-              return [
+            return [
                 'success' => true,
                 'dataPayment' => $dataPayment,
             ];
         });
-         if (!$result['success']) {
+        if (!$result['success']) {
             return back()->withInput()->with('error', $result['message']);
         }
-         $paymentUrl = $this->createClassDokuPaymentUrl(
-                $result['dataPayment']->no_invoice,
-                $validated['price'],
-                $user,
-                $validated['class_id'],
-      1
-            );
+        $paymentUrl = $this->createClassDokuPaymentUrl(
+            $result['dataPayment']->no_invoice,
+            $validated['price'],
+            $user,
+            $validated['class_id'],
+            1
+        );
 
-            if (!$paymentUrl) {
-                $result['dataPayment']->update([
-                    'status' => DataPayment::STATUS_CANCELED,
-                    'keterangan' => 'Gagal membuat link pembayaran kelas.',
-                ]);
+        if (!$paymentUrl) {
+            $result['dataPayment']->update([
+                'status' => DataPayment::STATUS_CANCELED,
+                'keterangan' => 'Gagal membuat link pembayaran kelas.',
+            ]);
 
-                return back()->withInput()->with('error', 'Gagal membuat link pembayaran video. Silakan coba lagi.');
-            }
+            return back()->withInput()->with('error', 'Gagal membuat link pembayaran video. Silakan coba lagi.');
+        }
 
-            $result['dataPayment']->update(['link_payment' => $paymentUrl]);
-            return redirect()->away($paymentUrl);
-
+        $result['dataPayment']->update(['link_payment' => $paymentUrl]);
+        return redirect()->away($paymentUrl);
     }
 
     public function paymentIht(Request $request, DataPayment $payment)
