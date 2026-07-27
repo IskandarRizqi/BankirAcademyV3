@@ -295,6 +295,7 @@ $qty = 1;
 $pembelian = 'Membership';
 $keterangan = 'Membership perusahaan';
 $pembeliantipe = 1;
+$tipemembership = 1;
 @endphp
 
 <div class="modal fade membership-package-modal" id="membershipPackageModal" tabindex="-1" role="dialog" aria-labelledby="membershipPackageModalTitle" aria-hidden="true">
@@ -510,6 +511,7 @@ $pembeliantipe = 1;
 							<input type="hidden" name="pembelian" value="{{$pembelian}}">
 							<input type="hidden" name="keterangan" value="{{$keterangan}}">
 							<input type="hidden" name="pembelian_tipe" value="{{$pembeliantipe}}">
+							<input type="hidden" name="membership_tipe" value="{{$tipemembership}}">
 							@csrf
 							<button type="submit" class="membership-package-card__action">Berlangganan sekarang</button>
 						</form>

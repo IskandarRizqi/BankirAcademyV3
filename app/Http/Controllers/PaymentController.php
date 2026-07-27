@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class PaymentController extends Controller
 {
-    private const MEMBERSHIP_PRICE = 3000000;
     private const MEMBERSHIP_PAYMENT_DUE_MINUTES = 60;
     private const IHT_PAYMENT_DUE_MINUTES = 60;
 
@@ -30,6 +30,12 @@ class PaymentController extends Controller
         if (!$user) {
             abort(401);
         }
+
+        $validated = $request->validate([
+            'membership_tipe' => ['required', 'integer', Rule::in(DataPayment::MEMBERSHIP_TYPES)],
+        ]);
+        $membershipType = (int) $validated['membership_tipe'];
+        $membership = $this->membershipConfiguration($membershipType);
 
         $profile = UserProfileModel::where('user_id', $user->id)->first();
 
@@ -46,7 +52,7 @@ class PaymentController extends Controller
         }
 
         $qty = 1;
-        $totalbayar = self::MEMBERSHIP_PRICE * $qty;
+        $totalbayar = $membership['price'] * $qty;
         $temporaryInvoice = 'BANKIR-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999);
 
         $datapayment = DataPayment::create([
@@ -57,8 +63,9 @@ class PaymentController extends Controller
             'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
             'qty' => $qty,
             'status' => DataPayment::STATUS_PENDING,
-            'keterangan' => 'Membership perusahaan',
+            'keterangan' => $membership['description'],
             'tipe_pembelian' => DataPayment::PURCHASE_TYPE_MEMBERSHIP,
+            'tipe_membership' => $membershipType,
         ]);
 
         $nomorinvoice = 'BANKIR-' . $datapayment->created_at->format('YmdHis') . '-' . $datapayment->id;
@@ -71,11 +78,11 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $totalbayar,
                 'invoice_number' => $nomorinvoice,
-                'callback_url' => url('/pembayaran'),
+                'callback_url' => url('/pembayaran?invoice_number=' . urlencode($nomorinvoice)),
                 'line_items' => [
                     [
-                        'name' => 'Membership',
-                        'price' => self::MEMBERSHIP_PRICE,
+                        'name' => $membership['label'],
+                        'price' => $membership['price'],
                         'quantity' => $qty,
                     ],
                 ],
@@ -89,7 +96,8 @@ class PaymentController extends Controller
             ],
             'additional_info' => [
                 'user_id' => $user->id,
-                'pembelian_tipe' => 1,
+                'pembelian_tipe' => DataPayment::PURCHASE_TYPE_MEMBERSHIP,
+                'membership_tipe' => $membershipType,
                 'override_notification_url' => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
             ],
         ];
@@ -150,6 +158,23 @@ class PaymentController extends Controller
         ]);
 
         return back()->with('error', 'Gagal membuat link pembayaran. Silakan coba lagi.');
+    }
+
+    private function membershipConfiguration(int $membershipType): array
+    {
+        return match ($membershipType) {
+            DataPayment::MEMBERSHIP_TYPE_COMPANY => [
+                'label' => 'Membership Perusahaan',
+                'description' => 'Membership perusahaan',
+                'price' => 3000000,
+            ],
+            DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => [
+                'label' => 'Membership Perorangan',
+                'description' => 'Membership perorangan',
+                'price' => 299000,
+            ],
+            default => throw new \InvalidArgumentException('Tipe membership tidak valid.'),
+        };
     }
 
     public function paymentorderclass(Request $request)
@@ -345,10 +370,7 @@ class PaymentController extends Controller
             return redirect()->away($paymentUrl);
         }
 
-        return redirect('dash-beranda')->with([
-            'success_payment' => 'Data pembelian kelas berhasil disimpan.',
-            'invoice_number' => $result['dataPayment']->no_invoice,
-        ]);
+        return redirect('dash-beranda')->with('success', 'Data pembelian kelas berhasil disimpan.');
     }
     public function paymentordermaterial(Request $request)
     {
@@ -405,7 +427,7 @@ class PaymentController extends Controller
                     'keterangan' => 'Gagal membuat link pembayaran kelas.',
                 ]);
 
-                return back()->withInput()->with('error', 'Gagal membuat link pembayaran kelas. Silakan coba lagi.');
+                return back()->withInput()->with('error', 'Gagal membuat link pembayaran materi. Silakan coba lagi.');
             }
 
             $result['dataPayment']->update(['link_payment' => $paymentUrl]);
@@ -467,7 +489,7 @@ class PaymentController extends Controller
                     'keterangan' => 'Gagal membuat link pembayaran kelas.',
                 ]);
 
-                return back()->withInput()->with('error', 'Gagal membuat link pembayaran kelas. Silakan coba lagi.');
+                return back()->withInput()->with('error', 'Gagal membuat link pembayaran ebook. Silakan coba lagi.');
             }
 
             $result['dataPayment']->update(['link_payment' => $paymentUrl]);
@@ -529,7 +551,7 @@ class PaymentController extends Controller
                     'keterangan' => 'Gagal membuat link pembayaran kelas.',
                 ]);
 
-                return back()->withInput()->with('error', 'Gagal membuat link pembayaran kelas. Silakan coba lagi.');
+                return back()->withInput()->with('error', 'Gagal membuat link pembayaran video. Silakan coba lagi.');
             }
 
             $result['dataPayment']->update(['link_payment' => $paymentUrl]);
@@ -709,7 +731,9 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $paymentAmount,
                 'invoice_number' => $invoiceNumber,
-                'callback_url' => $user->siswa ? $callbackurl : url('/pembayaran'),
+                'callback_url' => $user->siswa
+                    ? $callbackurl
+                    : url('/pembayaran?invoice_number=' . urlencode($invoiceNumber)),
                 'line_items' => [
                     [
                         'name' => 'Pembayaran Kelas',
@@ -809,7 +833,7 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $paymentAmount,
                 'invoice_number' => $payment->no_invoice,
-                'callback_url' => url('/pembayaran'),
+                'callback_url' => url('/pembayaran?invoice_number=' . urlencode($payment->no_invoice)),
                 'line_items' => [
                     [
                         'name' => $itemName,
