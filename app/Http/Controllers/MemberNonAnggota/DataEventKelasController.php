@@ -91,8 +91,8 @@ class DataEventKelasController extends Controller
     private function applyListOrdering($query): void
     {
         $query
-            ->orderByRaw('CASE WHEN iht = 1 AND date_start IS NULL AND date_end IS NULL THEN 0 ELSE 1 END')
-            ->orderByDesc('date_start')
+            ->orderByRaw('CASE WHEN iht = 0 OR iht IS NULL THEN 0 ELSE 1 END')
+            ->orderByDesc('date_end')
             // Keep pagination stable when multiple classes share the same start date.
             ->orderBy('id');
     }

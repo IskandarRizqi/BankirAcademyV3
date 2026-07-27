@@ -769,7 +769,7 @@ $registrationAlert = [
 					@if($isIhtOrderable)
 					<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" target="_blank" rel="noopener" class="m-0 js-iht-order-form">
 						@csrf
-						<button type="submit" class="event-primary-cta">Ajukan Penawaran</button>
+						<button type="submit" class="event-primary-cta">Minta Penawaran</button>
 					</form>
 					@else
 					<button
@@ -852,6 +852,7 @@ $registrationAlert = [
 			@endif
 
 			@if($instructors->isNotEmpty())
+			@if(!$isIhtOrderable)
 			<section class="event-panel" aria-labelledby="event-instructor-title">
 				<div class="event-panel__body">
 					<span class="event-section-kicker">Mentor</span>
@@ -875,6 +876,7 @@ $registrationAlert = [
 				</div>
 			</section>
 			@endif
+			@endif
 		</main>
 
 		<aside class="event-side-stack" aria-label="Ringkasan kelas">
@@ -887,7 +889,7 @@ $registrationAlert = [
 				@if($isIhtOrderable)
 				<form action="{{ route('membernonanggota.event.order-iht', data_get($class, 'unique_id')) }}" method="POST" target="_blank" rel="noopener" class="m-0 js-iht-order-form">
 					@csrf
-					<button type="submit" class="event-register-button">Ajukan Penawaran</button>
+					<button type="submit" class="event-register-button">Minta Penawaran</button>
 				</form>
 				@else
 				<button

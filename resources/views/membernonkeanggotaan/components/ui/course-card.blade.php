@@ -10,8 +10,8 @@ $title = data_get($course, 'title', 'Kelas pembelajaran');
 $level = $levels[(int) data_get($course, 'level')] ?? 'Semua Level';
 $category = data_get($course, 'category') ?: 'Kelas Bankir';
 $mode = [
-	0 => 'Online',
-	1 => 'Offline',
+0 => 'Online',
+1 => 'Offline',
 ][(int) data_get($course, 'kategori')] ?? 'Kelas';
 $mediaIcon = $mode === 'Offline' ? 'fa-users' : 'fa-video';
 $mediaTooltip = $mode === 'Offline' ? 'Tatap muka di lokasi penyelenggara' : 'Online melalui Zoom';
@@ -21,18 +21,18 @@ $isIht = (int) data_get($course, 'iht') === 1;
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
 $pricing = data_get($course, 'pricing');
-	$isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
-	$isPriceComingSoon = ! $isIht && ! $pricing;
+$isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
+$isPriceComingSoon = ! $isIht && ! $pricing;
 $price = (int) data_get($pricing, 'price', 0);
 $promoPrice = (int) data_get($pricing, 'promo_price', 0);
 $finalPrice = max(0, $price - $promoPrice);
-	$priceLabel = $isIht
-		? 'Hubungi Tim Kami'
-		: ($isFree
-			? 'Gratis'
-			: ($isPriceComingSoon
-			? 'Price Coming Soon'
-			: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis')));
+$priceLabel = $isIht
+? 'Hubungi Tim Kami'
+: ($isFree
+? 'Gratis'
+: ($isPriceComingSoon
+? 'Price Coming Soon'
+: ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis')));
 $description = trim(strip_tags((string) data_get($course, 'content', '')));
 $description = $description !== '' ? \Illuminate\Support\Str::limit($description, 118) : 'Pelajari kompetensi perbankan melalui kelas terstruktur bersama Bankir Academy.';
 $image = data_get($course, 'image_mobile') ?: data_get($course, 'image');
@@ -55,47 +55,47 @@ $shortMonths = [
 12 => 'Des',
 ];
 $formatCourseDate = function ($date, bool $withYear = true) use ($shortMonths) {
-	$date = \Carbon\Carbon::parse($date);
+$date = \Carbon\Carbon::parse($date);
 
-	return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
+return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
 };
 $registrationDate = 'Fleksibel';
 $courseStatus = 'Upcoming';
 $courseStatusClass = 'upcoming';
 
-	if ($startDate && $endDate) {
-		$start = \Carbon\Carbon::parse($startDate);
-		$end = \Carbon\Carbon::parse($endDate);
-		$statusEnd = $isIht ? $end->copy() : $end->copy()->subDay();
-		$today = now()->startOfDay();
-	$registrationDate = $start->isSameMonth($end) && $start->isSameYear($end)
-		? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
-		: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
+if ($startDate && $endDate) {
+$start = \Carbon\Carbon::parse($startDate);
+$end = \Carbon\Carbon::parse($endDate);
+$statusEnd = $isIht ? $end->copy() : $end->copy()->subDay();
+$today = now()->startOfDay();
+$registrationDate = $start->isSameMonth($end) && $start->isSameYear($end)
+? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
+: $formatCourseDate($start, ! $start->isSameYear($end)) . ' - ' . $formatCourseDate($end);
 
-	if ($today->betweenIncluded($start->copy()->startOfDay(), $statusEnd->endOfDay())) {
-		$courseStatus = 'Running';
-		$courseStatusClass = 'running';
-	} elseif ($today->greaterThan($statusEnd->endOfDay())) {
-		$courseStatus = 'Completed';
-		$courseStatusClass = 'completed';
-	}
+if ($today->betweenIncluded($start->copy()->startOfDay(), $statusEnd->endOfDay())) {
+$courseStatus = 'Running';
+$courseStatusClass = 'running';
+} elseif ($today->greaterThan($statusEnd->endOfDay())) {
+$courseStatus = 'Completed';
+$courseStatusClass = 'completed';
+}
 } elseif ($startDate) {
-	$registrationDate = $formatCourseDate($startDate);
+$registrationDate = $formatCourseDate($startDate);
 
-	if (now()->startOfDay()->greaterThan(\Carbon\Carbon::parse($startDate)->endOfDay())) {
-		$courseStatus = 'Completed';
-		$courseStatusClass = 'completed';
-	}
+if (now()->startOfDay()->greaterThan(\Carbon\Carbon::parse($startDate)->endOfDay())) {
+$courseStatus = 'Completed';
+$courseStatusClass = 'completed';
+}
 }
 
 if (! $isIht && $endDate) {
-	$registrationDate = $formatCourseDate(\Carbon\Carbon::parse($endDate)->subDay());
+$registrationDate = $formatCourseDate(\Carbon\Carbon::parse($endDate)->subDay());
 }
 
 if ($isIht && $courseStatusClass === 'upcoming') {
-	$courseStatus = 'IHT';
-	$courseStatusClass = 'iht';
-	$registrationDate = 'Hubungi Tim Kami';
+$courseStatus = 'IHT';
+$courseStatusClass = 'iht';
+$registrationDate = 'Hubungi Tim Kami';
 }
 @endphp
 
@@ -506,8 +506,7 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 						tabindex="0"
 						role="img"
 						aria-label="{{ $mediaTooltip }}"
-						data-tooltip="{{ $mediaTooltip }}"
-					>
+						data-tooltip="{{ $mediaTooltip }}">
 						<i class="fas {{ $mediaIcon }}" aria-hidden="true"></i>
 					</span>
 				</span>
@@ -522,7 +521,7 @@ if ($isIht && $courseStatusClass === 'upcoming') {
 				<span class="member-course-card__price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
 			</div>
-			<a href="{{ $detailUrl }}" class="member-course-card__button">Lihat Kelas</a>
+			<a href="{{ $detailUrl }}" class="member-course-card__button">Detail kelas</a>
 		</div>
 	</div>
 </article>

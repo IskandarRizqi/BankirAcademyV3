@@ -201,7 +201,8 @@
 	}
 
 	.billing-history-card__payment-info span,
-	.billing-history-card__order-date span {
+	.billing-history-card__order-date span,
+	.billing-history-card__participant-count span {
 		display: block;
 		color: #6b7280;
 		font-size: 12px;
@@ -210,7 +211,8 @@
 	}
 
 	.billing-history-card__payment-info strong,
-	.billing-history-card__order-date strong {
+	.billing-history-card__order-date strong,
+	.billing-history-card__participant-count strong {
 		display: block;
 		margin-top: 2px;
 		color: #111827;

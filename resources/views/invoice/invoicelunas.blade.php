@@ -517,7 +517,7 @@
                             <th width='5%' style="text-align: right;">HARGA</th>
                             {{-- <th width='5%' style="text-align: right;">PROMO</th> --}}
                             <th width='5%' style="text-align: right;">ADD. DISKON</th>
-                            <th width='5%' style="text-align: right;">KODE UNIK</th>
+                            <!-- <th width='5%' style="text-align: right;">KODE UNIK</th> -->
                             <th width='5%' style="text-align: right;">(-)PROMO</th>
                             <th width='5%' style="text-align: right;">(-)KUPON</th>
                             <th width='5%' style="text-align: right;">(-)REFERRAL</th>
@@ -537,19 +537,17 @@
                             @if ($class->pricing->gratis != 1)
                             <td class="unit">{{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$class->pricing->price,"IDR"),0,-3) }}</td>
-                        @else
-                         <td class="unit">0</td>
-                                @endif
+                            @else
+                            <td class="unit">0</td>
+                            @endif
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                     \NumberFormatter::CURRENCY),0,"IDR"),0,-3) }}
                             </td>
-
-
-                            <td class="unit">
+                            {{--<td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
                                 \NumberFormatter::CURRENCY),$payment->unique_code,"IDR"),0,-3) }}
-                            </td>
+                            </td>--}}
                             <td class="unit">
                                 @if ($class->pricing->promo==1)
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
@@ -611,7 +609,7 @@
                 <div class="notices">
                     <div>Informasi:</div>
                     <div class="notice">
-                     Bank : BCA || No.Rekening : 8035559091 || Atas Nama
+                        Bank : BCA || No.Rekening : 8035559091 || Atas Nama
                         : PT. Bankir Academy Indonesia
                     </div>
                     <div class="notice">
