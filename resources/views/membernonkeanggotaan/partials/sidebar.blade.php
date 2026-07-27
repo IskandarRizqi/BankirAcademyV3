@@ -3,8 +3,10 @@
 	$role = $user ? $user->role : null;
 	$email = $user ? $user->email : null;
 	$isRoot = ($role == 4 && $email === 'cb@bankir.academy');
+	$profile = optional($user)->profile;
+	$membershipType = (int) data_get($profile, 'tipe_membership');
 
-	$menus = [
+	$defaultMenus = [
 	[
 	'label' => 'Dashboard',
 	'icon' => 'dashboard',
@@ -38,7 +40,7 @@
 	'has_submenu' => false,
 	],
 	[
-	'label' => 'Pembelian kelas',
+	'label' => 'Pembelian',
 	'icon' => 'billing',
 	'url' => '/pembayaran',
 	'active' => request()->is('pembayaran'),
@@ -46,7 +48,7 @@
 	'has_submenu' => false,
 	],
 	[
-	'label' => 'Kelas anda',
+	'label' => 'Pembelajaran anda',
 	'icon' => 'kelas',
 	'url' => '/kelas-event',
 	'active' => request()->is('kelas-event'),
@@ -63,6 +65,112 @@
 	],
 	];
 
+	$membershipMenus = match ($membershipType) {
+	\App\Models\DataPayment::MEMBERSHIP_TYPE_COMPANY => [
+		[
+		'label' => 'SOP',
+			'icon' => 'sop',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Pasang loker',
+			'icon' => 'loker',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Program Inkubasi UMKM',
+			'icon' => 'inkubasi',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Konsultasi',
+			'icon' => 'konsultasi',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Bonus Aplikasi Pendukung',
+			'icon' => 'aplikasi',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Komunitas & Program Afiliasi',
+			'icon' => 'komunitas',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+	],
+	\App\Models\DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => [
+		[
+			'label' => 'Informasi lowongan',
+			'icon' => 'lowongan',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Konsultasi',
+			'icon' => 'konsultasi',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Buat CV ATS',
+			'icon' => 'cv',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Komunitas',
+			'icon' => 'komunitas',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Program afiliasi',
+			'icon' => 'afiliasi',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+		[
+			'label' => 'Member point',
+			'icon' => 'point',
+			'url' => '#',
+			'active' => false,
+			'can_see' => true,
+			'has_submenu' => false,
+		],
+	],
+	default => [],
+	};
+
+	$menus = array_merge($defaultMenus, $membershipMenus);
+
 	$icons = [
 	'dashboard' => '<i class="fas fa-chart-line"></i>',
 	'event'=>'<i class="fas fa-chalkboard"></i>',
@@ -71,6 +179,16 @@
 	'billing'=>'<i class="fas fa-credit-card"></i>',
 	'kelas'=>'<i class="fas fa-address-book"></i>',
 	'sertifikat'=>'<i class="fas fa-medal"></i>',
+	'sop'=>'<i class="fas fa-file-alt"></i>',
+	'loker'=>'<i class="fas fa-briefcase"></i>',
+	'inkubasi'=>'<i class="fas fa-seedling"></i>',
+	'konsultasi'=>'<i class="fas fa-comments"></i>',
+	'aplikasi'=>'<i class="fas fa-tools"></i>',
+	'komunitas'=>'<i class="fas fa-users"></i>',
+	'lowongan'=>'<i class="fas fa-bullhorn"></i>',
+	'cv'=>'<i class="fas fa-file-signature"></i>',
+	'afiliasi'=>'<i class="fas fa-handshake"></i>',
+	'point'=>'<i class="fas fa-star"></i>',
 
 	];
 	@endphp

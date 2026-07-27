@@ -10,6 +10,45 @@ $avatar = \App\Helper\GlobalHelper::userProfilePictureUrl($profile);
 $avatarFallback = asset('assets/img/90x90.jpg');
 $activeUntil = data_get($profile, 'masa_aktif_membership');
 $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
+$membershipType = (int) data_get($profile, 'tipe_membership');
+$isIndividualMembership = $membershipType === \App\Models\DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL;
+$benefitTitle = $isIndividualMembership ? 'Benefit Member Perorangan' : 'Benefit Member Perusahaan';
+$benefitSubtitle = $isIndividualMembership
+? 'Fasilitas yang tersedia untuk membership perorangan Anda.'
+: 'Fasilitas yang tersedia untuk membership perusahaan Anda.';
+$membershipBenefits = $isIndividualMembership
+? [
+['name' => 'Informasi lowongan umum', 'detail' => 'Akses lebih luas'],
+['name' => 'Lowongan eksklusif mitra', 'detail' => 'Tersedia untuk member'],
+['name' => 'Diskon kelas', 'detail' => 'Diskon 15%'],
+['name' => 'E-book gratis', 'detail' => 'Tersedia'],
+['name' => 'Konsultasi karier melalui chat', 'detail' => 'Tersedia'],
+['name' => 'Buat CV ATS', 'detail' => 'Tersedia'],
+['name' => 'Review CV', 'detail' => 'Tersedia'],
+['name' => 'Grup komunitas', 'detail' => 'Tersedia'],
+['name' => 'Webinar eksklusif', 'detail' => 'Tersedia'],
+['name' => 'Program afiliasi', 'detail' => 'Tersedia'],
+['name' => 'Prioritas bootcamp', 'detail' => 'Tersedia'],
+['name' => 'Member point', 'detail' => 'Tersedia'],
+['name' => 'Mentoring', 'detail' => 'Tersedia'],
+['name' => 'Kartu member digital', 'detail' => 'Tersedia'],
+]
+: [
+['name' => 'Sertifikat Pelatihan (Digital)', 'detail' => 'Tersedia'],
+['name' => 'Aset Video Pembelajaran', 'detail' => 'Tersedia'],
+['name' => 'Akses Dokumen SOP Perbankan', 'detail' => 'Tersedia'],
+['name' => 'Pasang Lowongan Kerja', 'detail' => 'Tersedia'],
+['name' => 'Program Inkubasi UMKM', 'detail' => 'Tersedia'],
+['name' => 'Konsultasi', 'detail' => 'Tersedia'],
+['name' => 'Bonus Aplikasi Pendukung', 'detail' => 'Tersedia'],
+['name' => 'Akses Penuh Komunitas & Program Afiliasi', 'detail' => 'Tersedia'],
+['name' => 'Diskon Member Calon Bankir', 'detail' => 'Tersedia'],
+['name' => 'Diskon kelas', 'detail' => 'Harga khusus'],
+['name' => 'Pelatihan Online (Live Webinar & Interactive Class)', 'detail' => 'Diskon s.d 50%'],
+['name' => 'Pelatihan Offline', 'detail' => 'Diskon s.d 50%'],
+['name' => 'Pelatihan IHT (In House Training)', 'detail' => 'Diskon s.d 50%'],
+['name' => 'Video Pembelajaran (On-Demand Video Course)', 'detail' => 'Diskon s.d 50%'],
+];
 @endphp
 
 @once
@@ -195,14 +234,17 @@ $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 		justify-content: center;
 		min-height: 34px;
 		padding: 8px 12px;
+		border: 0;
 		border-radius: 999px;
 		background: rgba(255, 255, 255, .94);
 		color: #9a6b00;
+		font-family: inherit;
 		font-size: 12px;
 		font-weight: 900;
 		line-height: 1.2;
 		text-align: center;
 		white-space: nowrap;
+		cursor: pointer;
 		box-shadow: 0 8px 18px rgba(15, 23, 42, .12);
 		transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
 		touch-action: manipulation;
@@ -213,6 +255,123 @@ $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 		color: #9a6b00;
 		box-shadow: 0 10px 24px rgba(15, 23, 42, .18);
 		transform: translateY(-1px);
+	}
+
+	.membership-benefits-modal .modal-content {
+		border: 0;
+		border-radius: 18px;
+		overflow: hidden;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
+	}
+
+	.membership-benefits-modal .modal-header {
+		padding: 20px 22px 0;
+		border-bottom: 0;
+	}
+
+	.membership-benefits-modal .modal-body {
+		max-height: calc(100vh - 180px);
+		overflow-y: auto;
+		padding: 22px;
+	}
+
+	.membership-benefits-modal__eyebrow {
+		margin: 0 0 6px;
+		color: #9a6b00;
+		font-size: 11px;
+		font-weight: 800;
+		letter-spacing: .06em;
+		text-transform: uppercase;
+	}
+
+	.membership-benefits-modal__title {
+		margin: 0;
+		color: #111827;
+		font-size: 20px;
+		font-weight: 800;
+		letter-spacing: -.02em;
+		line-height: 1.3;
+	}
+
+	.membership-benefits-modal__subtitle {
+		margin: 6px 0 0;
+		color: #6b7280;
+		font-size: 13px;
+		line-height: 1.6;
+	}
+
+	.membership-benefits-modal__grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.membership-benefits-modal__item {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		min-width: 0;
+		padding: 12px;
+		border: 1px solid #eef2f7;
+		border-radius: 12px;
+		background: #ffffff;
+	}
+
+	.membership-benefits-modal__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		background: #ecfdf5;
+		color: #047857;
+		flex: 0 0 auto;
+	}
+
+	.membership-benefits-modal__icon svg {
+		width: 14px;
+		height: 14px;
+	}
+
+	.membership-benefits-modal__item-body {
+		display: grid;
+		gap: 3px;
+		min-width: 0;
+	}
+
+	.membership-benefits-modal__item-name {
+		color: #374151;
+		font-size: 13px;
+		font-weight: 800;
+		line-height: 1.4;
+		overflow-wrap: anywhere;
+	}
+
+	.membership-benefits-modal__item-detail {
+		color: #6b7280;
+		font-size: 11.5px;
+		font-weight: 600;
+		line-height: 1.4;
+	}
+
+	@media (max-width: 767.98px) {
+		.membership-benefits-modal__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 575.98px) {
+
+		.membership-benefits-modal .modal-header,
+		.membership-benefits-modal .modal-body {
+			padding-left: 16px;
+			padding-right: 16px;
+		}
+
+		.membership-benefits-modal .modal-body {
+			max-height: calc(100vh - 140px);
+		}
 	}
 
 	.membership-active-card__watermark {
@@ -303,10 +462,47 @@ $joinedAt = data_get($profile, 'tanggal_bergabung_membership');
 					{{ $joinedAt ? \Carbon\Carbon::parse($joinedAt)->translatedFormat('d F Y') : '-' }}
 				</span>
 			</div>
-			<a href="#benefit-member" class="membership-active-card__benefit-button">Lihat Benefit</a>
+			<button type="button" class="membership-active-card__benefit-button" data-toggle="modal" data-target="#membershipBenefitsModal" aria-controls="membershipBenefitsModal">
+				Lihat Benefit
+			</button>
 
 
 		</div>
 	</div>
 	<div class="membership-active-card__watermark">BA</div>
 </section>
+
+<div class="modal fade membership-benefits-modal" id="membershipBenefitsModal" tabindex="-1" role="dialog" aria-labelledby="membershipBenefitsModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div>
+					<p class="membership-benefits-modal__eyebrow">{{ $isIndividualMembership ? 'Membership Perorangan' : 'Membership Perusahaan' }}</p>
+					<h2 class="membership-benefits-modal__title" id="membershipBenefitsModalTitle">{{ $benefitTitle }}</h2>
+					<p class="membership-benefits-modal__subtitle">{{ $benefitSubtitle }}</p>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<div class="membership-benefits-modal__grid">
+					@foreach($membershipBenefits as $benefit)
+					<div class="membership-benefits-modal__item">
+						<span class="membership-benefits-modal__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M20 6 9 17l-5-5" />
+							</svg>
+						</span>
+						<span class="membership-benefits-modal__item-body">
+							<strong class="membership-benefits-modal__item-name">{{ $benefit['name'] }}</strong>
+							<span class="membership-benefits-modal__item-detail">{{ $benefit['detail'] }}</span>
+						</span>
+					</div>
+					@endforeach
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

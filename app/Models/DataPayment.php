@@ -156,6 +156,16 @@ class DataPayment extends Model
         return $this->belongsTo(ClassesModel::class, 'class_id');
     }
 
+    public function materi()
+    {
+        return $this->belongsTo(MateriModel::class, 'materi_id');
+    }
+
+    public function subMateri()
+    {
+        return $this->belongsTo(SubMateriModel::class, 'submateri_id');
+    }
+
     public function classPayment()
     {
         return $this->hasOne(ClassPaymentModel::class, 'no_invoice', 'no_invoice');

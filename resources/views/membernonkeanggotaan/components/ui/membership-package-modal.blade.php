@@ -325,10 +325,9 @@ $tipemembership = 1;
 								</svg>
 								<span>Sertifikat Pelatihan (Digital)</span>
 							</li>
-							<li class="membership-package-card__benefit membership-package-card__benefit--muted">
+							<li class="membership-package-card__benefit membership-package-card__benefit--available">
 								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-									<path d="M18 6 6 18" />
-									<path d="m6 6 12 12" />
+									<path d="M20 6 9 17l-5-5" />
 								</svg>
 								<span>Aset Video Pembelajaran</span>
 							</li>
