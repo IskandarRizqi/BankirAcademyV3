@@ -22,6 +22,22 @@
 	'has_submenu' => false,
 	],
 	[
+	'label' => 'Ebook',
+	'icon' => 'ebook',
+	'url' => '/ebook',
+	'active' => request()->is('ebook'),
+	'can_see' => true,
+	'has_submenu' => false,
+	],
+	[
+	'label' => 'Video',
+	'icon' => 'video',
+	'url' => '/video',
+	'active' => request()->is('video'),
+	'can_see' => true,
+	'has_submenu' => false,
+	],
+	[
 	'label' => 'Pembelian kelas',
 	'icon' => 'billing',
 	'url' => '/pembayaran',
@@ -50,6 +66,8 @@
 	$icons = [
 	'dashboard' => '<i class="fas fa-chart-line"></i>',
 	'event'=>'<i class="fas fa-chalkboard"></i>',
+	'ebook'=>'<i class="fas fa-book-reader"></i>',
+	'video'=>'<i class="fas fa-video"></i>',
 	'billing'=>'<i class="fas fa-credit-card"></i>',
 	'kelas'=>'<i class="fas fa-address-book"></i>',
 	'sertifikat'=>'<i class="fas fa-medal"></i>',
