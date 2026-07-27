@@ -334,26 +334,6 @@
 		line-height: 1.6;
 	}
 
-	.billing-flash {
-		margin: 0 0 18px;
-		padding: 12px 14px;
-		border-radius: 12px;
-		font-size: 13px;
-		font-weight: 750;
-	}
-
-	.billing-flash--success {
-		border: 1px solid #bbf7d0;
-		background: #f0fdf4;
-		color: #166534;
-	}
-
-	.billing-flash--error {
-		border: 1px solid #fecaca;
-		background: #fef2f2;
-		color: #991b1b;
-	}
-
 	.billing-history-loader {
 		display: flex;
 		justify-content: center;
@@ -432,14 +412,6 @@
 	}
 </style>
 @endonce
-
-@if(session('success'))
-<div class="billing-flash billing-flash--success">{{ session('success') }}</div>
-@endif
-
-@if(session('error'))
-<div class="billing-flash billing-flash--error">{{ session('error') }}</div>
-@endif
 
 <div class="row billing-summary-grid" id="cancel-row">
 	@foreach($billingCards as $card)

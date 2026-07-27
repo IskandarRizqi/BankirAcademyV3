@@ -23,6 +23,15 @@ class DataPayment extends Model
 
     public const PURCHASE_TYPE_MEMBERSHIP = 1;
 
+    public const MEMBERSHIP_TYPE_COMPANY = 1;
+
+    public const MEMBERSHIP_TYPE_INDIVIDUAL = 2;
+
+    public const MEMBERSHIP_TYPES = [
+        self::MEMBERSHIP_TYPE_COMPANY,
+        self::MEMBERSHIP_TYPE_INDIVIDUAL,
+    ];
+
     public const PURCHASE_TYPE_CLASS = 2;
     public const PURCHASE_TYPE_EBOOK = 3;
     public const PURCHASE_TYPE_VIDEO = 4;
@@ -43,6 +52,7 @@ class DataPayment extends Model
         'keterangan',
         'link_payment',
         'tipe_pembelian',
+        'tipe_membership',
         'is_konfirmasi',
         'is_iht',
     ];
@@ -55,6 +65,7 @@ class DataPayment extends Model
         'qty' => 'float',
         'status' => 'integer',
         'tipe_pembelian' => 'integer',
+        'tipe_membership' => 'integer',
         'is_konfirmasi' => 'integer',
         'is_iht' => 'integer',
     ];

@@ -229,6 +229,7 @@ class CheckoutController extends Controller
             $profileData = [
                 'status_membership' => DataPayment::STATUS_PAID,
                 'masa_aktif_membership' => $baseDate->copy()->addYear()->format('Y-m-d'),
+                'tipe_membership' => $this->resolveMembershipType($payment),
             ];
 
             if (!$profile->tanggal_bergabung_membership) {
@@ -240,6 +241,19 @@ class CheckoutController extends Controller
 
             return ['status' => 200, 'message' => 'Membership payment processed'];
         });
+    }
+
+    private function resolveMembershipType(DataPayment $payment): int
+    {
+        $membershipType = (int) $payment->tipe_membership;
+
+        if (in_array($membershipType, DataPayment::MEMBERSHIP_TYPES, true)) {
+            return $membershipType;
+        }
+
+        return str_contains(strtolower((string) $payment->keterangan), 'perorangan')
+            ? DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
+            : DataPayment::MEMBERSHIP_TYPE_COMPANY;
     }
 
     private function processClassPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array

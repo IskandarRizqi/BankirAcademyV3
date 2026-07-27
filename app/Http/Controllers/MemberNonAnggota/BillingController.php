@@ -8,6 +8,7 @@ use App\Models\DataPayment;
 use App\Models\UserProfileModel;
 use App\Services\PaymentExpiryService;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,6 +22,12 @@ class BillingController extends Controller
     {
         $userId = (int) $request->user()->id;
         $this->paymentExpiryService->syncForUser($userId);
+
+        $paymentReturn = $this->redirectAfterPayment($request, $userId);
+
+        if ($paymentReturn) {
+            return $paymentReturn;
+        }
 
         $billingSummary = $this->getBillingSummary($userId);
         $billingFilters = $this->resolveBillingFilters($request);
@@ -37,6 +44,76 @@ class BillingController extends Controller
         }
 
         return view('membernonkeanggotaan.pages.billing.billing', compact('billingSummary', 'billingFilters', 'paymentHistories'));
+    }
+
+    private function redirectAfterPayment(Request $request, int $userId): ?RedirectResponse
+    {
+        $invoiceNumber = $request->query('invoice_number')
+            ?? $request->query('invoiceNumber')
+            ?? $request->query('order.invoice_number')
+            ?? data_get($request->query('order'), 'invoice_number');
+
+        if (!filled($invoiceNumber)) {
+            return null;
+        }
+
+        $payment = DataPayment::query()
+            ->where('user_id', $userId)
+            ->where('no_invoice', $invoiceNumber)
+            ->first();
+
+        $paymentLabel = $payment ? $this->paymentLabel($payment) : null;
+
+        if (!$payment || !$paymentLabel) {
+            return null;
+        }
+
+        if ((int) $payment->status === DataPayment::STATUS_PAID) {
+            $message = $paymentLabel === 'membership'
+                ? 'Pembayaran membership ' . $this->membershipTypeLabel($payment) . ' berhasil. Masa aktif membership Anda telah diperbarui.'
+                : 'Pembayaran ' . $paymentLabel . ' berhasil. Akses Anda telah diperbarui.';
+
+            return redirect('/pembayaran')->with(
+                'success',
+                $message
+            );
+        }
+
+        if ((int) $payment->status === DataPayment::STATUS_CANCELED) {
+            return redirect('/pembayaran')->with(
+                'error',
+                'Pembayaran ' . $paymentLabel . ' gagal atau dibatalkan. Silakan buat order baru untuk mencoba lagi.'
+            );
+        }
+
+        return redirect('/pembayaran')->with(
+            'info',
+            'Order ' . $paymentLabel . ' berhasil dibuat dan pembayaran sedang diverifikasi.'
+        );
+    }
+
+    private function paymentLabel(DataPayment $payment): ?string
+    {
+        if (
+            (int) $payment->tipe_pembelian === DataPayment::PURCHASE_TYPE_MEMBERSHIP
+            || strtolower((string) $payment->pembelian) === DataPayment::PURCHASE_MEMBERSHIP
+        ) {
+            return 'membership';
+        }
+
+        return match ((int) $payment->tipe_pembelian) {
+            DataPayment::PURCHASE_TYPE_CLASS => 'kelas',
+            DataPayment::PURCHASE_TYPE_EBOOK => 'ebook',
+            DataPayment::PURCHASE_TYPE_VIDEO => 'video',
+            default => null,
+        };
+    }
+
+    private function membershipTypeLabel(DataPayment $payment): string
+    {
+        return (int) $payment->tipe_membership === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
+            ? 'perorangan'
+            : 'perusahaan';
     }
 
     public function expirePayment(Request $request, DataPayment $payment)
