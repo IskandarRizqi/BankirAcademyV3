@@ -15,21 +15,61 @@ class EbookController extends Controller
     // 1. KATALOG & BELAJAR EBOOK / PDF (tipe_link_item = 1)
     // ==========================================
 
-    public function indexPdf()
+    public function indexPdf(Request $request)
     {
         $user = Auth::user();
         $materiUmum = MateriModel::where('nama', 'Umum')->first();
 
         if ($materiUmum) {
-            $subMateriUmum = SubMateriModel::where('id_materi', $materiUmum->id)
-                ->whereHas('items', function ($query) {
-                    $query->where('tipe_link_item', 1); // Filter khusus PDF
+            $query = SubMateriModel::where('id_materi', $materiUmum->id)
+                ->whereHas('items', function ($q) {
+                    $q->where('tipe_link_item', 1); // Filter khusus PDF
                 })
-                ->with(['items' => function ($query) {
-                    $query->where('tipe_link_item', 1);
-                }])
-                ->orderBy('urutan', 'asc')
-                ->get();
+                ->with(['items' => function ($q) {
+                    $q->where('tipe_link_item', 1);
+                }]);
+
+            // --- 1. Fitur Search / Kata Kunci ---
+            if ($request->filled('q')) {
+                $search = $request->q;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama', 'like', "%{$search}%")
+                      ->orWhere('nama', 'like', "%{$search}%")
+                      ->orWhere('keterangan', 'like', "%{$search}%");
+                });
+            }
+
+            // --- 2. Fitur Filter Harga (Gratis / Berbayar) ---
+            if ($request->filled('tipe_harga')) {
+                if ($request->tipe_harga === 'gratis') {
+                    $query->where(function ($q) {
+                        $q->whereNull('harga_final')->where(function ($sub) {
+                            $sub->whereNull('harga')->orWhere('harga', 0);
+                        })->orWhere('harga_final', 0);
+                    });
+                } elseif ($request->tipe_harga === 'berbayar') {
+                    $query->where(function ($q) {
+                        $q->where('harga_final', '>', 0)
+                          ->orWhere(function ($sub) {
+                              $sub->whereNull('harga_final')->where('harga', '>', 0);
+                          });
+                    });
+                }
+            }
+
+            // --- 3. Fitur Sorting Harga (Terendah / Tertinggi) ---
+            if ($request->filled('sort_harga')) {
+                $sort = $request->sort_harga;
+                if (in_array($sort, ['asc', 'desc'])) {
+                    // COALESCE digunakan untuk memprioritaskan harga_final, jika null pakai harga
+                    $query->orderByRaw('COALESCE(harga_final, harga, 0) ' . strtoupper($sort));
+                }
+            } else {
+                // Default sorting berdasarkan urutan bawaan
+                $query->orderBy('urutan', 'asc');
+            }
+
+            $subMateriUmum = $query->get();
         } else {
             $subMateriUmum = collect();
         }
@@ -46,21 +86,59 @@ class EbookController extends Controller
     // 2. KATALOG & BELAJAR VIDEO (tipe_link_item = 0)
     // ==========================================
 
-    public function indexVideo()
+    public function indexVideo(Request $request)
     {
         $user = Auth::user();
         $materiUmum = MateriModel::where('nama', 'Umum')->first();
 
         if ($materiUmum) {
-            $subMateriUmum = SubMateriModel::where('id_materi', $materiUmum->id)
-                ->whereHas('items', function ($query) {
-                    $query->where('tipe_link_item', 0); // Filter khusus Video
+            $query = SubMateriModel::where('id_materi', $materiUmum->id)
+                ->whereHas('items', function ($q) {
+                    $q->where('tipe_link_item', 0); // Filter khusus Video
                 })
-                ->with(['items' => function ($query) {
-                    $query->where('tipe_link_item', 0);
-                }])
-                ->orderBy('urutan', 'asc')
-                ->get();
+                ->with(['items' => function ($q) {
+                    $q->where('tipe_link_item', 0);
+                }]);
+
+            // --- 1. Fitur Search / Kata Kunci ---
+            if ($request->filled('q')) {
+                $search = $request->q;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama', 'like', "%{$search}%")
+                      ->orWhere('nama', 'like', "%{$search}%")
+                      ->orWhere('keterangan', 'like', "%{$search}%");
+                });
+            }
+
+            // --- 2. Fitur Filter Harga (Gratis / Berbayar) ---
+            if ($request->filled('tipe_harga')) {
+                if ($request->tipe_harga === 'gratis') {
+                    $query->where(function ($q) {
+                        $q->whereNull('harga_final')->where(function ($sub) {
+                            $sub->whereNull('harga')->orWhere('harga', 0);
+                        })->orWhere('harga_final', 0);
+                    });
+                } elseif ($request->tipe_harga === 'berbayar') {
+                    $query->where(function ($q) {
+                        $q->where('harga_final', '>', 0)
+                          ->orWhere(function ($sub) {
+                              $sub->whereNull('harga_final')->where('harga', '>', 0);
+                          });
+                    });
+                }
+            }
+
+            // --- 3. Fitur Sorting Harga (Terendah / Tertinggi) ---
+            if ($request->filled('sort_harga')) {
+                $sort = $request->sort_harga;
+                if (in_array($sort, ['asc', 'desc'])) {
+                    $query->orderByRaw('COALESCE(harga_final, harga, 0) ' . strtoupper($sort));
+                }
+            } else {
+                $query->orderBy('urutan', 'asc');
+            }
+
+            $subMateriUmum = $query->get();
         } else {
             $subMateriUmum = collect();
         }
@@ -82,26 +160,23 @@ class EbookController extends Controller
         $user = Auth::user();
         $userId = $user->id;
 
-        // 1. Ambil SubMateri & filter items sesuai tipe_link_item
         $subMateriAktif = SubMateriModel::whereIn('tipe_beasiswa', [0, 1, 2])
             ->with(['items' => function ($q) use ($tipeLinkItem) {
                 $q->where('tipe_link_item', $tipeLinkItem);
             }, 'materi'])
             ->findOrFail($sub_materi_id);
 
-        // 2. Cek Akses / History Pelatihan
         $sudahIkuti = DB::table('history_pelatihan')
             ->where('user_id', $userId)
             ->where('sub_materi_id', $sub_materi_id)
             ->exists();
 
-        // 3. Pengecekan Pembayaran
         $hargaFinal = $subMateriAktif->harga_final ?? $subMateriAktif->harga ?? 0;
 
         if (!$sudahIkuti && $hargaFinal > 0) {
             $paymentView = ($tipeLinkItem == 1) 
-            ? 'compact.auto-submit-payment' 
-            : 'compact.payment-video';
+                ? 'compact.auto-submit-payment' 
+                : 'compact.payment-video';
             return view($paymentView, [
                 'subMateri' => $subMateriAktif,
                 'hargaFinal' => $hargaFinal,
@@ -109,7 +184,6 @@ class EbookController extends Controller
             ]);
         }
 
-        // 4. Pengaturan Item & URL Player/Viewer
         $materiAktif = $subMateriAktif->materi;
         $itemIdAktif = $request->query('item_id');
         $itemAktif = null;

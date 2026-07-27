@@ -41,14 +41,23 @@
                         <div class="col-md-4 col-xl-3 card-item-responsive mb-4">
                             <div class="card h-100 border-0 shadow-sm bg-white" style="border-radius: 12px; overflow: hidden;">
                                 
-                                {{-- THUMBNAIL PLACEHOLDER --}}
-                                <div style="position: relative; width: 100%; aspect-ratio: 3 / 2; background-color: #4F46E5;">
-                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2rem;">
-                                        <i class="fas fa-graduation-cap"></i>
-                                    </div>
+                                {{-- AREA THUMBNAIL --}}
+                                <div style="position: relative; width: 100%; aspect-ratio: 3 / 2; background-color: #4F46E5; overflow: hidden;">
+                                    
+                                    {{-- Cek Apakah Memiliki Thumbnail & File Eksis --}}
+                                    @if(!empty($sub->thumbnail) && file_exists(public_path($sub->thumbnail)))
+                                        <img src="{{ asset($sub->thumbnail) }}" 
+                                             alt="{{ $namaMateri }}" 
+                                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                                    @else
+                                        {{-- Fallback: Tampilan Placeholder Jika Tidak Ada Gambar --}}
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2rem;">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                    @endif
 
                                     {{-- Badge Harga Kartu --}}
-                                    <span class="badge position-absolute" style="bottom: 12px; right: 12px; background: rgba(15, 23, 42, 0.75); color: #fff; backdrop-filter: blur(4px); font-weight: 600; padding: 6px 10px; border-radius: 6px; font-size: 11px;">
+                                    <span class="badge position-absolute" style="bottom: 12px; right: 12px; background: rgba(15, 23, 42, 0.75); color: #fff; backdrop-filter: blur(4px); font-weight: 600; padding: 6px 10px; border-radius: 6px; font-size: 11px; z-index: 2;">
                                         @if($hargaFinal > 0)
                                             Rp {{ number_format($hargaFinal, 0, ',', '.') }}
                                         @else
@@ -68,51 +77,50 @@
                                     </p>
                                     
                                     {{-- FOOTER / ACTION BUTTON --}}
-                                {{-- FOOTER / ACTION BUTTON --}}
-<div class="border-top pt-3 d-flex align-items-center justify-content-between" style="border-color: #F1F5F9 !important;">
-    @php
-        // Hitung Video (tipe_link_item = 0) dan Ebook (tipe_link_item = 1)
-        $totalVideo = $sub->items->where('tipe_link_item', 0)->count();
-        $totalEbook = $sub->items->where('tipe_link_item', 1)->count();
-        $totalMedia = $sub->items->count();
-    @endphp
+                                    <div class="border-top pt-3 d-flex align-items-center justify-content-between" style="border-color: #F1F5F9 !important;">
+                                        @php
+                                            // Hitung Video (tipe_link_item = 0) dan Ebook (tipe_link_item = 1)
+                                            $totalVideo = $sub->items->where('tipe_link_item', 0)->count();
+                                            $totalEbook = $sub->items->where('tipe_link_item', 1)->count();
+                                            $totalMedia = $sub->items->count();
+                                        @endphp
 
-    <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 500; gap: 8px;">
-        {{-- Tampilkan badge Video jika ada --}}
-        @if($totalVideo > 0)
-            <span class="text-secondary">
-                <i class="fas fa-video mr-1 text-danger"></i> {{ $totalVideo }} Video
-            </span>
-        @endif
+                                        <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 500; gap: 8px;">
+                                            {{-- Tampilkan badge Video jika ada --}}
+                                            @if($totalVideo > 0)
+                                                <span class="text-secondary">
+                                                    <i class="fas fa-video mr-1 text-danger"></i> {{ $totalVideo }} Video
+                                                </span>
+                                            @endif
 
-        {{-- Tampilkan badge Ebook jika ada --}}
-        @if($totalEbook > 0)
-            <span class="text-secondary">
-                <i class="fas fa-book mr-1 text-primary"></i> {{ $totalEbook }} Ebook
-            </span>
-        @endif
+                                            {{-- Tampilkan badge Ebook jika ada --}}
+                                            @if($totalEbook > 0)
+                                                <span class="text-secondary">
+                                                    <i class="fas fa-book mr-1 text-primary"></i> {{ $totalEbook }} Ebook
+                                                </span>
+                                            @endif
 
-        {{-- Jika tidak ada video & ebook sama sekali --}}
-        @if($totalMedia == 0)
-            <span class="text-muted">
-                <i class="fas fa-folder-open mr-1"></i> 0 Media
-            </span>
-        @endif
-    </div>
+                                            {{-- Jika tidak ada video & ebook sama sekali --}}
+                                            @if($totalMedia == 0)
+                                                <span class="text-muted">
+                                                    <i class="fas fa-folder-open mr-1"></i> 0 Media
+                                                </span>
+                                            @endif
+                                        </div>
 
-    @if($totalMedia > 0)
-        {{-- Tombol jika item tersedia --}}
-        <a href="{{ route('siswa.umum.belajar', [$sub->id]) }}"
-           class="btn btn-primary btn-sm px-3 font-weight-bold"
-           style="border-radius: 6px; font-size: 12px;">
-            Akses Materi <i class="fas fa-arrow-right ml-1"></i>
-        </a>
-    @else
-        <button class="btn btn-light btn-sm px-3 disabled" style="font-size: 12px; color: #9CA3AF; border-radius: 6px;" disabled>
-            Kosong
-        </button>
-    @endif
-</div>
+                                        @if($totalMedia > 0)
+                                            {{-- Tombol jika item tersedia --}}
+                                            <a href="{{ route('siswa.umum.belajar', [$sub->id]) }}"
+                                               class="btn btn-primary btn-sm px-3 font-weight-bold"
+                                               style="border-radius: 6px; font-size: 12px;">
+                                                Akses Materi <i class="fas fa-arrow-right ml-1"></i>
+                                            </a>
+                                        @else
+                                            <button class="btn btn-light btn-sm px-3 disabled" style="font-size: 12px; color: #9CA3AF; border-radius: 6px;" disabled>
+                                                Kosong
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
 
                             </div>

@@ -20,6 +20,7 @@ class SubMateriModel extends Model
         'keterangan',
         'id_materi',
         'urutan',
+        'thumbnail',
         'tipe_link',
         'tipe_beasiswa',
         'masa_aktif',
