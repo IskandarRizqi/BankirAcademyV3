@@ -247,16 +247,15 @@ $facilities = [
 ['name' => 'Lowongan eksklusif mitra', 'non_member' => 'Tidak', 'member' => 'Ya'],
 ['name' => 'Diskon kelas', 'non_member' => 'Tidak ada', 'member' => '15%'],
 ['name' => 'E-book gratis', 'non_member' => 'Terbatas', 'member' => 'Ya'],
-['name' => 'Konsultasi karier melalui chat', 'non_member' => 'Berbayar', 'member' => 'Termasuk sesuai kuota'],
-['name' => 'Template CV ATS', 'non_member' => 'Berbayar', 'member' => 'Gratis'],
+['name' => 'Konsultasi karier melalui chat', 'non_member' => 'Berbayar', 'member' => 'Ya'],
+['name' => 'Buat CV ATS', 'non_member' => 'Berbayar', 'member' => 'Gratis'],
 ['name' => 'Review CV', 'non_member' => 'Berbayar', 'member' => 'Gratis'],
 ['name' => 'Grup komunitas', 'non_member' => 'Tidak', 'member' => 'Ya'],
 ['name' => 'Webinar eksklusif', 'non_member' => 'Tidak', 'member' => 'Ya'],
 ['name' => 'Program afiliasi', 'non_member' => 'Tidak', 'member' => 'Ya'],
-['name' => 'Talent pool', 'non_member' => 'Tidak', 'member' => 'Ya'],
 ['name' => 'Prioritas bootcamp', 'non_member' => 'Tidak', 'member' => 'Ya'],
 ['name' => 'Member point', 'non_member' => 'Tidak', 'member' => 'Ya'],
-['name' => 'Mentoring', 'non_member' => 'Harga normal', 'member' => 'Harga khusus'],
+['name' => 'Mentoring', 'non_member' => 'Harga normal', 'member' => 'Ya'],
 ['name' => 'Kartu member digital', 'non_member' => 'Tidak', 'member' => 'Ya'],
 ];
 
@@ -271,7 +270,7 @@ $membershipCards = [
 ],
 [
 'name' => 'Member',
-'price' => 'Rp299.000,-',
+'price' => 'Rp99.000,-',
 'description' => 'Akses premium untuk mendukung perkembangan karier dan peluang profesional.',
 'featured' => true,
 'column' => 'member',
@@ -280,7 +279,7 @@ $membershipCards = [
 ];
 
 
-$nominal = 299000;
+$nominal = 99000;
 $userid = Auth::user()->id;
 $statuspaymentmembership = 2;
 $qty = 1;
@@ -307,6 +306,9 @@ $tipemembership = 2;
 				<div class="membership-individual-grid">
 					@foreach($membershipCards as $card)
 					<article class="membership-individual-card {{ $card['featured'] ? 'membership-individual-card--featured' : '' }}" aria-labelledby="individual-{{ $card['column'] }}-title">
+						@if($card['featured'])
+						<del class="membership-package-card__price-before">Rp299.000,- /tahun</del>
+						@endif
 						<p class="membership-individual-card__price">{{ $card['price'] }} <small>/tahun</small></p>
 						<h3 class="membership-individual-card__name" id="individual-{{ $card['column'] }}-title">{{ $card['name'] }}</h3>
 						<p class="membership-individual-card__description">{{ $card['description'] }}</p>

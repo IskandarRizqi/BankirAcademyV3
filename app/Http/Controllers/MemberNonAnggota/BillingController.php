@@ -58,20 +58,25 @@ class BillingController extends Controller
         }
 
         $payment = DataPayment::query()
+            ->with([
+                'paymentClass:id,title',
+                'materi:id,nama',
+                'subMateri:id,nama',
+            ])
             ->where('user_id', $userId)
             ->where('no_invoice', $invoiceNumber)
             ->first();
 
-        $paymentLabel = $payment ? $this->paymentLabel($payment) : null;
+        $paymentContext = $payment ? $this->paymentContext($payment) : null;
 
-        if (!$payment || !$paymentLabel) {
+        if (!$payment || !$paymentContext) {
             return null;
         }
 
         if ((int) $payment->status === DataPayment::STATUS_PAID) {
-            $message = $paymentLabel === 'membership'
+            $message = $paymentContext['type'] === 'membership'
                 ? 'Pembayaran membership ' . $this->membershipTypeLabel($payment) . ' berhasil. Masa aktif membership Anda telah diperbarui.'
-                : 'Pembayaran ' . $paymentLabel . ' berhasil. Akses Anda telah diperbarui.';
+                : $this->confirmedPaymentMessage($paymentContext);
 
             return redirect('/pembayaran')->with(
                 'success',
@@ -82,30 +87,80 @@ class BillingController extends Controller
         if ((int) $payment->status === DataPayment::STATUS_CANCELED) {
             return redirect('/pembayaran')->with(
                 'error',
-                'Pembayaran ' . $paymentLabel . ' gagal atau dibatalkan. Silakan buat order baru untuk mencoba lagi.'
+                'Pembayaran ' . $paymentContext['label'] . ' gagal atau dibatalkan. Silakan buat order baru untuk mencoba lagi.'
             );
         }
 
         return redirect('/pembayaran')->with(
             'info',
-            'Order ' . $paymentLabel . ' berhasil dibuat dan pembayaran sedang diverifikasi.'
+            $this->pendingPaymentMessage($paymentContext)
         );
     }
 
-    private function paymentLabel(DataPayment $payment): ?string
+    private function paymentContext(DataPayment $payment): ?array
     {
         if (
             (int) $payment->tipe_pembelian === DataPayment::PURCHASE_TYPE_MEMBERSHIP
             || strtolower((string) $payment->pembelian) === DataPayment::PURCHASE_MEMBERSHIP
         ) {
-            return 'membership';
+            return [
+                'type' => 'membership',
+                'label' => 'membership',
+                'name' => null,
+            ];
         }
 
         return match ((int) $payment->tipe_pembelian) {
-            DataPayment::PURCHASE_TYPE_CLASS => 'kelas',
-            DataPayment::PURCHASE_TYPE_EBOOK => 'ebook',
-            DataPayment::PURCHASE_TYPE_VIDEO => 'video',
+            DataPayment::PURCHASE_TYPE_CLASS => [
+                'type' => 'kelas',
+                'label' => 'kelas',
+                'name' => data_get($payment, 'paymentClass.title')
+                    ?: data_get($payment, 'materi.nama', 'Kelas'),
+            ],
+            DataPayment::PURCHASE_TYPE_EBOOK => [
+                'type' => 'ebook',
+                'label' => 'ebook',
+                'name' => data_get($payment, 'subMateri.nama', 'Ebook'),
+            ],
+            DataPayment::PURCHASE_TYPE_VIDEO => [
+                'type' => 'video',
+                'label' => 'video',
+                'name' => data_get($payment, 'subMateri.nama', 'Video'),
+            ],
             default => null,
+        };
+    }
+
+    private function pendingPaymentMessage(array $paymentContext): string
+    {
+        if ($paymentContext['type'] === 'membership') {
+            return 'Order membership berhasil dibuat dan pembayaran sedang diverifikasi.';
+        }
+
+        return sprintf(
+            'Pesanan %s "%s" berhasil dibuat. Silakan selesaikan pembayaran untuk mengaktifkan akses ke %s.',
+            $paymentContext['label'],
+            $paymentContext['name'],
+            $paymentContext['label']
+        );
+    }
+
+    private function confirmedPaymentMessage(array $paymentContext): string
+    {
+        return match ($paymentContext['type']) {
+            'kelas' => sprintf(
+                'Pembayaran untuk kelas "%s" berhasil dikonfirmasi. Akses Anda ke kelas telah diaktifkan. Silakan buka menu Pembelajaran Saya Anda untuk mulai belajar.',
+                $paymentContext['name']
+            ),
+            'ebook' => sprintf(
+                'Pembayaran untuk Ebook "%s" berhasil dikonfirmasi. Akses Anda ke Ebook telah diaktifkan. Silakan buka menu Pembelajaran Saya untuk mulai belajar.',
+                $paymentContext['name']
+            ),
+            'video' => sprintf(
+                'Pembayaran untuk Video "%s" berhasil dikonfirmasi. Akses Anda ke video telah diaktifkan. Silakan buka menu Pembelajaran Saya untuk mulai belajar.',
+                $paymentContext['name']
+            ),
+            default => 'Pembayaran berhasil dikonfirmasi.',
         };
     }
 
@@ -249,6 +304,8 @@ class BillingController extends Controller
         return DataPayment::query()
             ->with([
                 'paymentClass:id,title,image,image_mobile',
+                'materi:id,nama',
+                'subMateri:id,nama',
                 'classPayment:id,no_invoice',
             ])
             ->where('user_id', $userId)
