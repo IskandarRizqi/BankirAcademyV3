@@ -9,6 +9,7 @@
 	$orderTitle = $isMembership ? 'Membership Bankir Academy' : data_get($payment, 'paymentClass.title', 'Kelas Bankir Academy');
 	$thumbnail = $isMembership ? $logoFallback : (data_get($payment, 'paymentClass.image_mobile') ?: data_get($payment, 'paymentClass.image') ?: $logoFallback);
 	$orderDate = optional($payment->created_at)->translatedFormat('d M Y, H:i');
+	$participantQuantity = $isMembership ? null : data_get($payment, 'qty');
 	$displayStatus = $payment->billingStatus();
 	$isIhtWithoutExpiry = $payment->isIhtWithoutExpiry();
 	$isWaitingForIhtConfirmation = $payment->isWaitingForIhtConfirmation();
@@ -59,6 +60,13 @@
 				<span>Tanggal order</span>
 				<strong>{{ $orderDate }}</strong>
 			</div>
+
+			@if(! $isMembership)
+			<div class="billing-history-card__participant-count">
+				<span>Jumlah peserta</span>
+				<strong>{{ $participantQuantity !== null ? number_format((float) $participantQuantity, 0, ',', '.') : '-' }}</strong>
+			</div>
+			@endif
 		</div>
 
 		<div class="billing-history-card__actions">
