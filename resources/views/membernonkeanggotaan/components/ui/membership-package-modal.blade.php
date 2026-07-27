@@ -157,6 +157,52 @@
 		background: #e5e7eb;
 	}
 
+	.membership-package-card__details-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		width: 100%;
+		min-height: 44px;
+		padding: 8px 0;
+		border: 0;
+		background: transparent;
+		color: var(--primary, #4F46E5);
+		font-size: 12px;
+		font-weight: 800;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.membership-package-card__details-toggle:hover {
+		color: #3730a3;
+	}
+
+	.membership-package-card__details-toggle:focus-visible {
+		outline: 3px solid rgba(79, 70, 229, .24);
+		outline-offset: 3px;
+	}
+
+	.membership-package-card__details-toggle-label {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.membership-package-card__details-toggle svg {
+		width: 16px;
+		height: 16px;
+		transition: transform .2s ease;
+	}
+
+	.membership-package-card__details-toggle[aria-expanded="true"] svg {
+		transform: rotate(180deg);
+	}
+
+	.membership-package-card__details {
+		padding-top: 2px;
+	}
+
 	.membership-package-card__notes {
 		display: grid;
 		gap: 9px;
@@ -228,7 +274,9 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.membership-package-card__action {
+
+		.membership-package-card__action,
+		.membership-package-card__details-toggle svg {
 			transition: none;
 		}
 
@@ -332,16 +380,35 @@ $pembeliantipe = 1;
 								</svg>
 								<span>Diskon Member Calon Bankir</span>
 							</li>
+							<li class="membership-package-card__benefit membership-package-card__benefit--muted">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M18 6 6 18" />
+									<path d="m6 6 12 12" />
+								</svg>
+								<span>Diskon kelas</span>
+							</li>
 						</ul>
 
 						<div class="membership-package-card__divider"></div>
 
-						<ul class="membership-package-card__notes">
-							<li class="membership-package-card__note">Biaya Pelatihan Online (Live Webinar &amp; Interactive Class)<br><strong>Rp650.000,-</strong></li>
-							<li class="membership-package-card__note">Biaya Pelatihan Offline<br><strong>Rp1.350.000,-</strong></li>
-							<li class="membership-package-card__note">Biaya Pelatihan IHT (In House Training)<br><strong>Rp350.000,-</strong></li>
-							<li class="membership-package-card__note">Biaya Video Pembelajaran (On-Demand Video Course)<br><strong>Rp200.000,-</strong></li>
-						</ul>
+						<button type="button" class="membership-package-card__details-toggle" data-toggle="collapse" data-target="#nonMemberTrainingDetails" aria-expanded="false" aria-controls="nonMemberTrainingDetails">
+							<span>Detail selengkapnya</span>
+							<span class="membership-package-card__details-toggle-label">
+								Lihat detail
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</span>
+						</button>
+
+						<div class="collapse membership-package-card__details" id="nonMemberTrainingDetails">
+							<ul class="membership-package-card__notes">
+								<li class="membership-package-card__note">Biaya Pelatihan Online (Live Webinar &amp; Interactive Class)<br></li>
+								<li class="membership-package-card__note">Biaya Pelatihan Offline<br></li>
+								<li class="membership-package-card__note">Biaya Pelatihan IHT (In House Training)<br></li>
+								<li class="membership-package-card__note">Biaya Video Pembelajaran (On-Demand Video Course)<br></li>
+							</ul>
+						</div>
 
 						<button type="button" class="membership-package-card__action" disabled>Paket Saat Ini</button>
 					</article>
@@ -407,16 +474,34 @@ $pembeliantipe = 1;
 								</svg>
 								<span>Diskon Member Calon Bankir</span>
 							</li>
+							<li class="membership-package-card__benefit membership-package-card__benefit--available">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M20 6 9 17l-5-5" />
+								</svg>
+								<span>Diskon kelas</span>
+							</li>
 						</ul>
 
 						<div class="membership-package-card__divider"></div>
 
-						<ul class="membership-package-card__notes">
-							<li class="membership-package-card__note">Biaya Pelatihan Online (Live Webinar &amp; Interactive Class) <del>Rp650.000,-</del>, <strong>Rp585.000,-</strong></li>
-							<li class="membership-package-card__note">Biaya Pelatihan Offline <del>Rp1.350.000,-</del> <strong>Rp1.215.000,-</strong></li>
-							<li class="membership-package-card__note">Biaya Pelatihan IHT (In House Training) <del>Rp350.000,-</del> <strong>Rp200.000,-</strong></li>
-							<li class="membership-package-card__note">Biaya Video Pembelajaran (On-Demand Video Course) <del>Rp200.000,-</del> <strong>Rp150.000,-</strong></li>
-						</ul>
+						<button type="button" class="membership-package-card__details-toggle" data-toggle="collapse" data-target="#memberTrainingDetails" aria-expanded="false" aria-controls="memberTrainingDetails">
+							<span>Detail selengkapnya</span>
+							<span class="membership-package-card__details-toggle-label">
+								Lihat detail
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</span>
+						</button>
+
+						<div class="collapse membership-package-card__details" id="memberTrainingDetails">
+							<ul class="membership-package-card__notes">
+								<li class="membership-package-card__note">Biaya Pelatihan Online (Live Webinar &amp; Interactive Class) <br> <strong>diskon s.d. 50%</strong></li>
+								<li class="membership-package-card__note">Biaya Pelatihan Offline <br><strong>diskon s.d. 50%</strong></li>
+								<li class="membership-package-card__note">Biaya Pelatihan IHT (In House Training) <br> <strong>diskon s.d. 50%</strong></li>
+								<li class="membership-package-card__note">Biaya Video Pembelajaran (On-Demand Video Course) <br> <strong>diskon s.d. 50%</strong></li>
+							</ul>
+						</div>
 						<form action="/payment-membership" method="post">
 							<input type="hidden" name="nominal" value="{{$nominal}}">
 							<input type="hidden" name="user_id" value="{{ $userid }}">
