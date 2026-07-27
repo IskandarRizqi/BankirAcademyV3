@@ -18,10 +18,14 @@ class DataPayment extends Model
     public const PURCHASE_MEMBERSHIP = 'membership';
 
     public const PURCHASE_CLASS = 'kelas';
+    public const PURCHASE_EBOOK = 'ebook';
+    public const PURCHASE_VIDEO = 'video';
 
     public const PURCHASE_TYPE_MEMBERSHIP = 1;
 
     public const PURCHASE_TYPE_CLASS = 2;
+    public const PURCHASE_TYPE_EBOOK = 3;
+    public const PURCHASE_TYPE_VIDEO = 4;
 
     protected $table = 'datapayment';
 

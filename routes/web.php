@@ -24,6 +24,7 @@ use App\Http\Controllers\LamaranController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrePostTestController;
+use App\Http\Controllers\RecentRegistrationController;
 use App\Http\Controllers\SiswaVerificationController;
 use App\Http\Middleware\IsAdminRoot;
 use App\Models\LamaranModel;
@@ -230,6 +231,7 @@ Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name(
         Route::get('/materi-umum/history', [SiswaMateriController::class, 'historyPelatihan'])->name('siswa.umum.history');
         Route::post('/materi/proses-bayar-beasiswa/{id}', [SiswaMateriController::class, 'prosesBayarBeasiswa'])->name('siswa.materi.bayar_beasiswa');
         Route::post('/payment/order-material', [PaymentController::class, 'paymentordermaterial'])->name('payment.order.material');
+        Route::post('/payment/order-ebook', [PaymentController::class, 'paymentorderebook'])->name('payment.order.ebook');
         Route::post('/pelatihan/{id}/ikuti', [SiswaMateriController::class, 'ikutiKelas'])->name('siswa.materi.ikuti');
         Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
     });
@@ -237,6 +239,7 @@ Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name(
     Route::post("/payment-membership", [PaymentController::class, "paymentmembership"]);
     Route::post("/payment-order-class", [PaymentController::class, "paymentorderclass"]);
 });
+Route::resource('recent-registrations', RecentRegistrationController::class)->except(['create', 'edit', 'show']);
 Route::get('getBerkas', function (Request $r) {
     return Storage::download($r->rf);
 })->middleware('auth');

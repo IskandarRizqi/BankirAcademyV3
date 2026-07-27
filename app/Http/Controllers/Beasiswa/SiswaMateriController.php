@@ -863,11 +863,9 @@ public function umumIndex()
         $siswaProfile = $user->siswa; 
         $statusBeasiswa = $siswaProfile ? $siswaProfile->beasiswa : 0; 
         
-        // Sesuaikan jika tipe_beasiswa butuh format array dinamis
         $allowedTipeSubMateri = ($statusBeasiswa == 1) ? [0, 1] : [0, 2];
 
         if ($materiUmum) {
-            // PERBAIKAN: Menggunakan 'id_materi' bukan 'materi_id'
             $subMateriUmum = SubMateriModel::where('id_materi', $materiUmum->id)
                 ->whereIn('tipe_beasiswa', $allowedTipeSubMateri)
                 ->with('items')
@@ -878,31 +876,44 @@ public function umumIndex()
         }
     }
 
-    return view('compact.umum-index', compact('subMateriUmum', 'isMemberAktif'));
+    return view('compact.umum-index', compact('subMateriUmum', 'isMemberAktif', 'user'));
 }
 
 public function umumBelajar(Request $request, $sub_materi_id)
 {
-    $userId = Auth::id();
-    $siswaProfile = auth()->user(); 
+    $user = Auth::user();
+    $userId = $user->id;
+    
+    $siswaProfile = $user->siswa; 
     $statusBeasiswaSiswa = $siswaProfile ? $siswaProfile->beasiswa : 0;
     $allowedTipeSubMateri = ($statusBeasiswaSiswa == 1) ? [0, 1] : [0, 2];
 
-    // Ambil Bab/Sub Materi Aktif beserta item medianya
+    // 1. Ambil SubMateri/Materi
     $subMateriAktif = SubMateriModel::whereIn('tipe_beasiswa', $allowedTipeSubMateri)
         ->with(['items', 'materi'])
         ->findOrFail($sub_materi_id);
 
+    // 2. Cek History Pelatihan (Akses yang sudah dibeli/diikuti sebelumnya)
+    $sudahIkuti = DB::table('history_pelatihan')
+        ->where('user_id', $userId)
+        ->where('sub_materi_id', $sub_materi_id) // ganti ke 'class_id' jika nama kolom di DB berupa class_id
+        ->exists();
+
+    // 3. Logika Pengecekan Akses Pembayaran
+    $hargaFinal = $subMateriAktif->harga_final ?? $subMateriAktif->harga ?? 0;
+
+if (!$sudahIkuti && $hargaFinal > 0) {
+    // Kembalikan view perantara yang akan melipat form POST secara otomatis
+    return view('compact.auto-submit-payment', [
+        'subMateri' => $subMateriAktif,
+        'hargaFinal' => $hargaFinal,
+        'user' => $user
+    ]);
+}
+
+    // 4. Jika gratis ATAU sudah ada di history_pelatihan, lanjutkan tampilkan materi
     $materiAktif = $subMateriAktif->materi;
 
-    // CEK APAKAH SUDAH MENGIKUTI PELATIHAN (Cek Tabel History)
-    $sudahIkuti = false;
-    if ($siswaProfile) {
-        $sudahIkuti = DB::table('history_pelatihan')
-            ->where('user_id', $siswaProfile->id)
-            ->where('sub_materi_id', $sub_materi_id)
-            ->exists();
-    }
     $preTest = PreposttestModel::where('id_submateri', $sub_materi_id)->where('tipe_prepost', 0)->first();
     $postTest = PreposttestModel::where('id_submateri', $sub_materi_id)->where('tipe_prepost', 1)->first();
     $contentType = $request->query('type', 'materi');
@@ -912,17 +923,19 @@ public function umumBelajar(Request $request, $sub_materi_id)
     $itemAktif = null;
     $embedUrl = null;
     $quizAktif = null;
-      if ($contentType === 'pre' && $preTest) {
+
+    if ($contentType === 'pre' && $preTest) {
         $quizAktif = $preTest;
         if (is_string($quizAktif->soal)) {
             $quizAktif->soal = json_decode($quizAktif->soal, true);
         }
-      } elseif ($contentType === 'post' && $postTest) {
-         $quizAktif = $postTest;
+    } elseif ($contentType === 'post' && $postTest) {
+        $quizAktif = $postTest;
         if (is_string($quizAktif->soal)) {
             $quizAktif->soal = json_decode($quizAktif->soal, true);
         }
-      }
+    }
+
     if ($subMateriAktif->items->count() > 0) {
         if ($itemIdAktif) {
             $itemAktif = $subMateriAktif->items->where('id', $itemIdAktif)->first();
@@ -937,7 +950,7 @@ public function umumBelajar(Request $request, $sub_materi_id)
             $embedUrl = $this->parseGoogleDriveLink($itemAktif->link_item);
         }
     }
-    
+
     return view('compact.umum-belajar', compact(
         'materiAktif', 
         'subMateriAktif', 
@@ -948,7 +961,7 @@ public function umumBelajar(Request $request, $sub_materi_id)
         'contentType',
         'quizAktif',
         'postTest',
-        'sudahIkuti' // Kirim variabel status ke view
+        'sudahIkuti'
     ));
 }
 
