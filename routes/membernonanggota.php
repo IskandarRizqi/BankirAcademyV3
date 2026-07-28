@@ -5,6 +5,7 @@ use App\Http\Controllers\Front\InvoiceController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MemberNonAnggota\BillingController;
 use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
+use App\Http\Controllers\MemberNonAnggota\DetailKelasController;
 use App\Http\Controllers\MemberNonAnggota\EbookController;
 use App\Http\Controllers\MemberNonAnggota\ListDaftarKelasController;
 use App\Http\Controllers\PaymentController;
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/classes/cetakinvoicepending/{id}', [MembershipController::class, 'cetakinvoicepending']);
     Route::get('/classes/getinvoice/{id}', [InvoiceController::class, 'getInvoice']);
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
+    Route::get('/detail-kelas/content/{contentId}', [DetailKelasController::class, 'showContent'])
+        ->name('membernonanggota.class.content');
+    Route::get('/detail-kelas/{uniqueId}/{title}', [DetailKelasController::class, 'show'])
+        ->name('membernonanggota.class.detail');
     Route::post('/kelas-event/{classId}/participants', [ListDaftarKelasController::class, 'storeParticipants'])
         ->name('membernonanggota.class-participants.store');
     Route::get('/kelas-event/participants/template', [ListDaftarKelasController::class, 'downloadParticipantTemplate'])
