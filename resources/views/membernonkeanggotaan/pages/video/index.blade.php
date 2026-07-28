@@ -304,7 +304,7 @@
 
     .catalog-card__title {
         margin: 0 0 8px;
-        color: white;
+        /* color: white; */
         font-size: 16px;
         font-weight: 800;
         line-height: 1.35;

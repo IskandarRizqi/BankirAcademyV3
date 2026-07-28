@@ -578,12 +578,15 @@
                                 Beli Ebook Sekarang
                             </a>
                         @else
-                            <form action="{{ route('ebook.claim', $subMateri->id) }}" method="POST" class="m-0">
+                            <!-- <form action="{{ route('ebook.claim', $subMateri->id) }}" method="POST" class="m-0">
                                 @csrf
                                 <button type="submit" class="ebook-register-button">
-                                    <i class="fas fa-download me-2"></i> Klaim Gratis
+                                    <i class="fas fa-download me-2"></i> Dapatkan Akses Gratis
                                 </button>
-                            </form>
+                            </form> -->
+                             <a href="{{ route('ebook.belajar', $subMateri->id) }}" class="ebook-register-button">
+                               Dapatkan Akses Gratis
+                            </a>
                         @endif
                     @endif
 

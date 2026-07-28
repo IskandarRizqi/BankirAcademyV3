@@ -282,7 +282,7 @@ class PaymentController extends Controller
                 ];
             }
 
-            $temporaryInvoice = 'BANKIR-CLASS-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999);
+            $temporaryInvoice = 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999);
 
             $classPayment = ClassPaymentModel::create([
                 'status' => $paymentStatus === DataPayment::STATUS_PAID ? 1 : 0,
@@ -298,7 +298,7 @@ class PaymentController extends Controller
             ]);
 
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-CLASS-DATA-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'class_id' => $classId,
                 'pembelian' => DataPayment::PURCHASE_CLASS,
@@ -392,7 +392,7 @@ class PaymentController extends Controller
             $validated
         ) {
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-CLASS-DATA-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'materi_id' => $validated['class_id'],
                 'pembelian' => DataPayment::PURCHASE_CLASS,
@@ -452,20 +452,24 @@ class PaymentController extends Controller
         if ($currentPayment) {
             return redirect()->away($currentPayment->link_payment);
         }
+         $needsPaymentGateway = $validated['price'] > 0;
+          $paymentStatus = $needsPaymentGateway ? DataPayment::STATUS_PENDING : DataPayment::STATUS_PAID;
         // $currentPayment = DataPayment::where('')
         $result = DB::transaction(function () use (
             $user,
+             $needsPaymentGateway,
+             $paymentStatus,
             $validated
         ) {
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-CLASS-DATA-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'submateri_id' => $validated['class_id'],
                 'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
                 'pembelian' => DataPayment::PURCHASE_EBOOK,
                 'nominal' =>  $validated['price'],
                 'qty' => 1,
-                'status' => DataPayment::STATUS_PENDING,
+                'status' => $paymentStatus,
                 'keterangan' => 'Pembelian Ebook',
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_EBOOK,
             ]);
@@ -474,12 +478,14 @@ class PaymentController extends Controller
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
             return [
                 'success' => true,
+                'needsPaymentGateway' => $needsPaymentGateway,
                 'dataPayment' => $dataPayment,
             ];
         });
         if (!$result['success']) {
             return back()->withInput()->with('error', $result['message']);
         }
+        if ($result['needsPaymentGateway']) {
         $paymentUrl = $this->createClassDokuPaymentUrl(
             $result['dataPayment']->no_invoice,
             $validated['price'],
@@ -499,6 +505,18 @@ class PaymentController extends Controller
 
         $result['dataPayment']->update(['link_payment' => $paymentUrl]);
         return redirect()->away($paymentUrl);
+        }
+         DB::table('history_pelatihan')->updateOrInsert(
+            [
+                'user_id'       => $user->id,
+                'sub_materi_id' => $validated['class_id']
+            ],
+            [
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]
+        );
+        return redirect('/pembayaran?invoice_number=' . urlencode($result['dataPayment']->no_invoice));
     }
     public function paymentordervideo(Request $request)
     {
@@ -519,19 +537,23 @@ class PaymentController extends Controller
         if ($currentPayment) {
             return redirect()->away($currentPayment->link_payment);
         }
+          $needsPaymentGateway = $validated['price'] > 0;
+           $paymentStatus = $needsPaymentGateway ? DataPayment::STATUS_PENDING : DataPayment::STATUS_PAID;
         $result = DB::transaction(function () use (
             $user,
+            $needsPaymentGateway,
+            $paymentStatus,
             $validated
         ) {
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-CLASS-DATA-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'submateri_id' => $validated['class_id'],
                 'pembelian' => DataPayment::PURCHASE_VIDEO,
                 'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
                 'nominal' =>  $validated['price'],
                 'qty' => 1,
-                'status' => DataPayment::STATUS_PENDING,
+                'status' => $paymentStatus,
                 'keterangan' => 'Pembelian Video Interaktif',
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_VIDEO,
             ]);
@@ -540,12 +562,14 @@ class PaymentController extends Controller
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
             return [
                 'success' => true,
+                'needsPaymentGateway' => $needsPaymentGateway,
                 'dataPayment' => $dataPayment,
             ];
         });
         if (!$result['success']) {
             return back()->withInput()->with('error', $result['message']);
         }
+         if ($result['needsPaymentGateway']) {
         $paymentUrl = $this->createClassDokuPaymentUrl(
             $result['dataPayment']->no_invoice,
             $validated['price'],
@@ -565,6 +589,18 @@ class PaymentController extends Controller
 
         $result['dataPayment']->update(['link_payment' => $paymentUrl]);
         return redirect()->away($paymentUrl);
+         }
+           DB::table('history_pelatihan')->updateOrInsert(
+            [
+                'user_id'       => $user->id,
+                'sub_materi_id' => $validated['class_id']
+            ],
+            [
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]
+        );
+         return redirect('/pembayaran?invoice_number=' . urlencode($result['dataPayment']->no_invoice));
     }
 
     public function paymentIht(Request $request, DataPayment $payment)
