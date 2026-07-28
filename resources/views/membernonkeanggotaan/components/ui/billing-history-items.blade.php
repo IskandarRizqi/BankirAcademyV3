@@ -1,101 +1,142 @@
 @php
-	$paymentHistories = $paymentHistories ?? collect();
-	$logoFallback = asset(ltrim(env('CUSTOM_FAVICON', '/359x404.png'), '/'));
+    $paymentHistories = $paymentHistories ?? collect();
+    $logoFallback = asset(ltrim(env('CUSTOM_FAVICON', '/359x404.png'), '/'));
 @endphp
 
 @foreach($paymentHistories as $payment)
 @php
-	$isMembership = is_null($payment->class_id) || $payment->pembelian === 'membership';
-	$orderTitle = $isMembership ? 'Membership Bankir Academy' : data_get($payment, 'paymentClass.title', 'Kelas Bankir Academy');
-	$thumbnail = $isMembership ? $logoFallback : (data_get($payment, 'paymentClass.image_mobile') ?: data_get($payment, 'paymentClass.image') ?: $logoFallback);
-	$orderDate = optional($payment->created_at)->translatedFormat('d M Y, H:i');
-	$participantQuantity = $isMembership ? null : data_get($payment, 'qty');
-	$displayStatus = $payment->billingStatus();
-	$isIhtWithoutExpiry = $payment->isIhtWithoutExpiry();
-	$isWaitingForIhtConfirmation = $payment->isWaitingForIhtConfirmation();
-	$canPayConfirmedIht = $payment->canPayConfirmedIht();
-	$expiredAtDate = $payment->paymentExpiresAt();
-	$expiredAt = optional($expiredAtDate)->toIso8601String();
-	$isPaid = $displayStatus === \App\Models\DataPayment::STATUS_PAID;
-	$isPending = $displayStatus === \App\Models\DataPayment::STATUS_PENDING;
-	$isExpired = $expiredAtDate ? $expiredAtDate->isPast() : true;
-	$pendingLabel = $isWaitingForIhtConfirmation ? 'Menunggu Konfirmasi' : 'Menunggu Pembayaran';
-	$classPaymentId = data_get($payment, 'classPayment.id');
-	$invoiceUrl = $isMembership ? url('/classes/cetakinvoicepending/' . $payment->id) : ($classPaymentId ? url('/classes/getinvoice/' . $classPaymentId) . '?payment_invoice=' . $classPaymentId : null);
-	$paymentUrl = $payment->link_payment;
+    // Identifikasi jenis pembelian berdasarkan kolom 'pembelian' atau 'tipe_pembelian'
+    $pembelian = strtolower((string) $payment->pembelian);
+    $tipe = (int) $payment->tipe_pembelian;
+
+    $isMembership = $pembelian === \App\Models\DataPayment::PURCHASE_MEMBERSHIP 
+                    || $tipe === \App\Models\DataPayment::PURCHASE_TYPE_MEMBERSHIP 
+                    || (is_null($payment->class_id) && blank($payment->pembelian));
+
+    $isEbook = $pembelian === \App\Models\DataPayment::PURCHASE_EBOOK 
+               || $tipe === \App\Models\DataPayment::PURCHASE_TYPE_EBOOK;
+
+    $isVideo = $pembelian === \App\Models\DataPayment::PURCHASE_VIDEO 
+               || $tipe === \App\Models\DataPayment::PURCHASE_TYPE_VIDEO;
+
+    $isClass = $pembelian === \App\Models\DataPayment::PURCHASE_CLASS 
+               || $tipe === \App\Models\DataPayment::PURCHASE_TYPE_CLASS 
+               || (! $isMembership && ! $isEbook && ! $isVideo);
+
+    // Menentukan Label Type & Class Badge
+    if ($isMembership) {
+        $typeLabel = 'Membership';
+        $typeClass = 'billing-history-type--membership';
+        $orderTitle = 'Membership Bankir Academy';
+    } elseif ($isEbook) {
+        $typeLabel = 'E-Book';
+        $typeClass = 'billing-history-type--ebook';
+        $orderTitle = data_get($payment, 'paymentClass.title', 'E-Book Bankir Academy');
+    } elseif ($isVideo) {
+        $typeLabel = 'Video';
+        $typeClass = 'billing-history-type--video';
+        $orderTitle = data_get($payment, 'paymentClass.title', 'Video Bankir Academy');
+    } else {
+        $typeLabel = 'Kelas';
+        $typeClass = 'billing-history-type--class';
+        $orderTitle = data_get($payment, 'paymentClass.title', 'Kelas Bankir Academy');
+    }
+
+    // Thumbnail, Date, Quantity, & Status
+    $thumbnail = $isMembership 
+        ? $logoFallback 
+        : (data_get($payment, 'paymentClass.image_mobile') ?: data_get($payment, 'paymentClass.image') ?: $logoFallback);
+        
+    $orderDate = optional($payment->created_at)->translatedFormat('d M Y, H:i');
+    $participantQuantity = $isMembership ? null : data_get($payment, 'qty');
+    $displayStatus = $payment->billingStatus();
+    $isIhtWithoutExpiry = $payment->isIhtWithoutExpiry();
+    $isWaitingForIhtConfirmation = $payment->isWaitingForIhtConfirmation();
+    $canPayConfirmedIht = $payment->canPayConfirmedIht();
+    $expiredAtDate = $payment->paymentExpiresAt();
+    $expiredAt = optional($expiredAtDate)->toIso8601String();
+    $isPaid = $displayStatus === \App\Models\DataPayment::STATUS_PAID;
+    $isPending = $displayStatus === \App\Models\DataPayment::STATUS_PENDING;
+    $isExpired = $expiredAtDate ? $expiredAtDate->isPast() : true;
+    $pendingLabel = $isWaitingForIhtConfirmation ? 'Menunggu Konfirmasi' : 'Menunggu Pembayaran';
+    $classPaymentId = data_get($payment, 'classPayment.id');
+    $invoiceUrl = $isMembership 
+        ? url('/classes/cetakinvoicepending/' . $payment->id) 
+        : ($classPaymentId ? url('/classes/getinvoice/' . $classPaymentId) . '?payment_invoice=' . $classPaymentId : null);
+    $paymentUrl = $payment->link_payment;
 @endphp
 
 <article class="billing-history-card">
-	<div class="billing-history-card__top">
-		<div class="billing-history-card__media">
-			<img src="{{ $thumbnail }}" alt="{{ $orderTitle }}" loading="lazy" onerror="this.src='{{ $logoFallback }}'">
-		</div>
+    <div class="billing-history-card__top">
+        <div class="billing-history-card__media">
+            <img src="{{ $thumbnail }}" alt="{{ $orderTitle }}" loading="lazy" onerror="this.src='{{ $logoFallback }}'">
+        </div>
 
-		<div class="billing-history-card__main">
-			<div>
-				<div class="billing-history-card__meta-row">
-					<span class="billing-history-type {{ $isMembership ? 'billing-history-type--membership' : 'billing-history-type--class' }}">{{ $isMembership ? 'Membership' : 'Kelas' }}</span>
-				</div>
-				<h3 class="billing-history-card__title">{{ $orderTitle }}</h3>
-				<p class="billing-history-card__invoice">{{ $payment->no_invoice }}</p>
-			</div>
+        <div class="billing-history-card__main">
+            <div>
+                <div class="billing-history-card__meta-row">
+                    <span class="billing-history-type {{ $typeClass }}">{{ $typeLabel }}</span>
+                </div>
+                <h3 class="billing-history-card__title">{{ $orderTitle }}</h3>
+                <p class="billing-history-card__invoice">{{ $payment->no_invoice }}</p>
+            </div>
 
-			<div class="billing-history-card__amount" aria-label="Total pembayaran">
-				<span>Total Pembayaran</span>
-				<strong>Rp {{ number_format((float) $payment->nominal, 0, ',', '.') }}</strong>
-			</div>
-		</div>
-	</div>
+            <div class="billing-history-card__amount" aria-label="Total pembayaran">
+                <span>Total Pembayaran</span>
+                <strong>Rp {{ number_format((float) $payment->nominal, 0, ',', '.') }}</strong>
+            </div>
+        </div>
+    </div>
 
-	@if($orderDate)
-	<hr class="billing-history-card__divider">
-	<div class="billing-history-card__footer">
-		<div class="billing-history-card__footer-info">
-			<div class="billing-history-card__payment-info">
-				<span>Status pembayaran</span>
-				<strong class="billing-history-countdown" data-expires-at="{{ $expiredAt }}" data-expire-url="{{ url('/pembayaran/' . $payment->id . '/expire') }}" data-payment-id="{{ $payment->id }}" data-status="{{ $displayStatus }}" data-pending-label="{{ $pendingLabel }}">-</strong>
-			</div>
+    @if($orderDate)
+    <hr class="billing-history-card__divider">
+    <div class="billing-history-card__footer">
+        <div class="billing-history-card__footer-info">
+            <div class="billing-history-card__payment-info">
+                <span>Status pembayaran</span>
+                <strong class="billing-history-countdown" data-expires-at="{{ $expiredAt }}" data-expire-url="{{ url('/pembayaran/' . $payment->id . '/expire') }}" data-payment-id="{{ $payment->id }}" data-status="{{ $displayStatus }}" data-pending-label="{{ $pendingLabel }}">-</strong>
+            </div>
 
-			<div class="billing-history-card__order-date">
-				<span>Tanggal order</span>
-				<strong>{{ $orderDate }}</strong>
-			</div>
+            <div class="billing-history-card__order-date">
+                <span>Tanggal order</span>
+                <strong>{{ $orderDate }}</strong>
+            </div>
 
-			@if(! $isMembership)
-			<div class="billing-history-card__participant-count">
-				<span>Jumlah peserta</span>
-				<strong>{{ $participantQuantity !== null ? number_format((float) $participantQuantity, 0, ',', '.') : '-' }}</strong>
-			</div>
-			@endif
-		</div>
+            @if(! $isMembership)
+            <div class="billing-history-card__participant-count">
+                <span>Jumlah {{ $isEbook || $isVideo ? 'item' : 'peserta' }}</span>
+                <strong>{{ $participantQuantity !== null ? number_format((float) $participantQuantity, 0, ',', '.') : '-' }}</strong>
+            </div>
+            @endif
+        </div>
 
-		<div class="billing-history-card__actions">
-			@if($isPaid && $invoiceUrl)
-			<a href="{{ $invoiceUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--invoice">
-				<i class="fas fa-file-invoice" aria-hidden="true"></i>
-				Cetak Invoice
-			</a>
-			@elseif($canPayConfirmedIht && $paymentUrl)
-			<a href="{{ $paymentUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--pay" data-payment-action data-expires-at="{{ $expiredAt }}">
-				<i class="fas fa-credit-card" aria-hidden="true"></i>
-				Bayar Sekarang
-			</a>
-			@elseif($canPayConfirmedIht)
-			<form action="{{ route('membernonanggota.payment-iht', $payment) }}" method="POST" data-iht-payment-form>
-				@csrf
-				<button type="submit" class="billing-history-action billing-history-action--pay" data-iht-payment-submit>
-					<i class="fas fa-credit-card" aria-hidden="true"></i>
-					Bayar Sekarang
-				</button>
-			</form>
-			@elseif($isPending && ! $isExpired && $paymentUrl)
-			<a href="{{ $paymentUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--pay" data-payment-action data-expires-at="{{ $expiredAt }}">
-				<i class="fas fa-credit-card" aria-hidden="true"></i>
-				Bayar Sekarang
-			</a>
-			@endif
-		</div>
-	</div>
-	@endif
+        <div class="billing-history-card__actions">
+            @if($isPaid && $invoiceUrl)
+            <a href="{{ $invoiceUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--invoice">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i>
+                Cetak Invoice
+            </a>
+            @elseif($canPayConfirmedIht && $paymentUrl)
+            <a href="{{ $paymentUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--pay" data-payment-action data-expires-at="{{ $expiredAt }}">
+                <i class="fas fa-credit-card" aria-hidden="true"></i>
+                Bayar Sekarang
+            </a>
+            @elseif($canPayConfirmedIht)
+            <form action="{{ route('membernonanggota.payment-iht', $payment) }}" method="POST" data-iht-payment-form>
+                @csrf
+                <button type="submit" class="billing-history-action billing-history-action--pay" data-iht-payment-submit>
+                    <i class="fas fa-credit-card" aria-hidden="true"></i>
+                    Bayar Sekarang
+                </button>
+            </form>
+            @elseif($isPending && ! $isExpired && $paymentUrl)
+            <a href="{{ $paymentUrl }}" target="_blank" rel="noopener" class="billing-history-action billing-history-action--pay" data-payment-action data-expires-at="{{ $expiredAt }}">
+                <i class="fas fa-credit-card" aria-hidden="true"></i>
+                Bayar Sekarang
+            </a>
+            @endif
+        </div>
+    </div>
+    @endif
 </article>
 @endforeach

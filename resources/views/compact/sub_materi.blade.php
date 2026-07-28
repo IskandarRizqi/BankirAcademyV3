@@ -128,7 +128,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="userForm" action="/sub-materi" method="POST">
+          <form id="userForm" action="/sub-materi" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="text" name="id" id="id" hidden>
                 <div class="modal-body p-4">
@@ -138,7 +138,7 @@
                             <select name="id_materi" id="id_materi" class="form-control" style="width:100%;" required>
                                 <option value="" disabled selected>-- Pilih Kompetensi --</option>
                                 @foreach($materi as $v)
-                                <option value="{{$v->id}}">{{$v->nama}}</option>
+                                <option value="{{$v->id}}" data-nama="{{ $v->nama }}">{{$v->nama}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -180,6 +180,20 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Container Field Thumbnail Gambar (Khusus Kompetensi Umum) -->
+<div class="form-group col-lg-12 mb-3" id="container-thumbnail" style="display: none;">
+    <label style="font-weight: 600; color: #515365;">Thumbnail Gambar Materi <span class="text-danger">*</span></label>
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewThumbnail(this)">
+        <label class="custom-file-label" for="thumbnail">Pilih file gambar...</label>
+    </div>
+    <small class="form-text text-muted">Format: JPG, JPEG, PNG, WEBP (Max: 2MB).</small>
+    
+    <!-- Preview Gambar -->
+    <div class="mt-2" id="preview-wrapper" style="display: none;">
+        <img id="img-preview" src="" alt="Thumbnail Preview" class="img-thumbnail" style="max-height: 150px;">
+    </div>
+</div>
                         
                         <div class="form-group col-lg-4 mb-3">
                             <label style="font-weight: 600; color: #515365;">Harga Jual</label>
@@ -217,23 +231,117 @@
 
 <script>
     $(document).ready(function () {
-        if (typeof createtable === 'function') { createtable('invoice-list'); }
-        $('#id_materi').select2({ dropdownParent: $('#userModal') });
+    if (typeof createtable === 'function') { createtable('invoice-list'); }
+    $('#id_materi').select2({ dropdownParent: $('#userModal') });
 
-        $('#harga_format').on('input', function() {
-            let value = $(this).val().replace(/[^0-9]/g, '');
-            $(this).val(formatRupiah(value));
-            hitunghargafinal();
-        });
-
-        $('#diskon').on('input', function() { hitunghargafinal(); });
-
-        $('#userForm').on('submit', function() {
-            let hargaInput = $('#harga_format');
-            let angkaMurni = hargaInput.val().replace(/[^0-9]/g, '');
-            hargaInput.val(angkaMurni); 
-        });
+    // EVENT DETEKSI PERUBAHAN KOMPETENSI
+    $('#id_materi').on('change', function() {
+        checkKompetensiUmum();
     });
+
+    $('#harga_format').on('input', function() {
+        let value = $(this).val().replace(/[^0-9]/g, '');
+        $(this).val(formatRupiah(value));
+        hitunghargafinal();
+    });
+
+    $('#diskon').on('input', function() { hitunghargafinal(); });
+
+    $('#userForm').on('submit', function() {
+        let hargaInput = $('#harga_format');
+        let angkaMurni = hargaInput.val().replace(/[^0-9]/g, '');
+        hargaInput.val(angkaMurni); 
+    });
+});
+
+// Fungsi untuk mengecek apakah kompetensi yang dipilih bernama "Umum"
+function checkKompetensiUmum() {
+    let selectedOption = $('#id_materi').find(':selected');
+    let namaKompetensi = selectedOption.data('nama') || '';
+
+    // Lakukan pencocokan teks (abaikan huruf besar/kecil)
+    if (namaKompetensi.toString().trim().toLowerCase() === 'umum') {
+        $('#container-thumbnail').slideDown();
+    } else {
+        $('#container-thumbnail').slideUp();
+        $('#thumbnail').val(''); // Reset file input
+        $('.custom-file-label').html('Pilih file gambar...');
+        $('#preview-wrapper').hide();
+    }
+}
+
+// Preview gambar lokal sebelum diunggah
+function previewThumbnail(input) {
+    let fileName = $(input).val().split('\\').pop();
+    $(input).next('.custom-file-label').addClass("selected").html(fileName || 'Pilih file gambar...');
+
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            $('#img-preview').attr('src', e.target.result);
+            $('#preview-wrapper').show();
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function resetForm() {
+    document.getElementById('id').value = '';
+    $('#id_materi').val('').trigger('change'); 
+    $('#urutan').val('');
+    $('#nama').val('');
+    
+    $('#media-items-container').html('');
+    addItemRow();
+
+    $('#harga_format').val('');
+    $('#diskon').val('');
+    $('#masa_aktif').val('');
+    $('#keterangan').val('');
+    $('#harga_final').text('harga final : Rp 0');
+    $('#tipe_beasiswa0').prop('checked', true);
+
+    // Reset Thumbnail
+    $('#thumbnail').val('');
+    $('.custom-file-label').html('Pilih file gambar...');
+    $('#preview-wrapper').hide();
+    $('#container-thumbnail').hide();
+}
+
+function editUser(user) {
+    resetForm();
+    if (user) {
+        document.getElementById('id').value = user.id;
+        $('#id_materi').val(user.id_materi).trigger('change');
+        $('#urutan').val(user.urutan);
+        $('#nama').val(user.nama);
+        
+        if (user.tipe_beasiswa == 0) $('#tipe_beasiswa0').prop('checked', true);
+        if (user.tipe_beasiswa == 1) $('#tipe_beasiswa1').prop('checked', true);
+        if (user.tipe_beasiswa == 2) $('#tipe_beasiswa2').prop('checked', true);
+        
+        if (user.harga) { $('#harga_format').val(formatRupiah(user.harga)); }
+        $('#diskon').val(user.diskon);
+        if (user.masa_aktif) { $('#masa_aktif').val(dayjs(user.masa_aktif).format('YYYY-MM-DD')); }
+        $('#keterangan').val(user.keterangan);
+        
+        if (user.items && user.items.length > 0) {
+            $('#media-items-container').html('');
+            user.items.forEach(function(item) {
+                addItemRow(item.judul_item, item.link_item, item.tipe_link_item);
+            });
+        }
+
+        // Tampilkan gambar thumbnail lama jika data edit memiliki thumbnail
+        if (user.thumbnail) {
+            $('#img-preview').attr('src', '/' + user.thumbnail);
+            $('#preview-wrapper').show();
+        }
+
+        hitunghargafinal();
+    }
+    $('#userModal').modal('show');
+}
 
     function formatRupiah(angka) {
         if (!angka) return '0';
