@@ -151,7 +151,7 @@ class EbookController extends Controller
 
         $hargaFinal = $subMateriAktif->harga_final ?? $subMateriAktif->harga ?? 0;
 
-        if (!$sudahIkuti && $hargaFinal > 0) {
+        if (!$sudahIkuti) {
             $paymentView = ($tipeLinkItem == 1) 
                 ? 'compact.auto-submit-payment' 
                 : 'compact.payment-video';
@@ -288,7 +288,7 @@ public function claimFreePdf($sub_materi_id)
     DB::transaction(function () use ($user, $subMateri) {
         // 1. Simpan ke DataPayment
         DataPayment::create([
-            'no_invoice'      => 'BANKIR-CLASS-DATA-SUCCESS-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+            'no_invoice'      => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
             'user_id'         => $user->id,
             'materi_id'       => $subMateri->id_materi,
             'submateri_id'    => $subMateri->id,
@@ -331,7 +331,7 @@ public function claimFreeVideo($sub_materi_id)
     DB::transaction(function () use ($user, $subMateri) {
         // 1. Simpan ke DataPayment
         DataPayment::create([
-            'no_invoice'      => 'BANKIR-CLASS-DATA-SUCCESS-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+            'no_invoice'      => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
             'user_id'         => $user->id,
             'materi_id'       => $subMateri->id_materi,
             'submateri_id'    => $subMateri->id,

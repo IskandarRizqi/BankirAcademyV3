@@ -278,12 +278,15 @@
                                 Beli Video Sekarang
                             </a>
                         @else
-                            <form action="{{ route('video.claim', $subMateri->id) }}" method="POST" class="m-0">
+                            <!-- <form action="{{ route('video.claim', $subMateri->id) }}" method="POST" class="m-0">
                                 @csrf
                                 <button type="submit" class="video-register-button">
-                                    <i class="fas fa-unlock me-2"></i> Klaim Gratis
+                                    <i class="fas fa-unlock me-2"></i> Dapatkan Akses Gratis
                                 </button>
-                            </form>
+                            </form> -->
+                              <a href="{{ route('video.belajar', $subMateri->id) }}" class="video-register-button">
+                               Dapatkan Akses Gratis
+                            </a>
                         @endif
                     @endif
 

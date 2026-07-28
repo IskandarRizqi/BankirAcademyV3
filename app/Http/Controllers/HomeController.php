@@ -109,6 +109,26 @@ class HomeController extends Controller
                     ->with('siswa')
                     ->get();
             } elseif ($auth->role == 6) {
+                if ($auth->bank_id) {
+        $bank = User::find($auth->bank_id);
+
+        // Jika Bank ditemukan dan memiliki tanggal 'masa_aktif_member'
+        if ($bank && $bank->masa_aktif_member) {
+            $expiryDate = \Carbon\Carbon::parse($bank->masa_aktif_member);
+
+            // Jika masa aktif Bank sudah terlewati (expired)
+            if ($expiryDate->isPast()) {
+                // Turunkan/ubah role siswa dari 6 (Siswa) menjadi 2 (Peserta)
+                $siswa = SiswaProfile::where('user_id', $auth->id)->first();
+                $siswa->delete();
+                $auth->role = 2;
+                $auth->save();
+
+                // Redirect atau render ulang view beranda standar untuk role 2
+                return redirect()->route('dash-beranda.index')->with('warning', 'Masa aktif membership Bank Anda telah berakhir. Role Anda telah diubah menjadi Peserta.');
+            }
+        }
+    }
             $siswaProfile = SiswaProfile::where('user_id', $auth->id)->first();
             $data['profile'] = $siswaProfile;
 

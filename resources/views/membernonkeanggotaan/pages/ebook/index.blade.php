@@ -548,6 +548,11 @@
                                         <span class="catalog-card__price-final text-emerald-600">
                                             Gratis
                                         </span>
+                                        @if($hasDiscount)
+                                            <span class="catalog-card__price-original">
+                                                Rp {{ number_format($hargaAsli, 0, ',', '.') }}
+                                            </span>
+                                        @endif
                                     @endif
                                 </div>
 
