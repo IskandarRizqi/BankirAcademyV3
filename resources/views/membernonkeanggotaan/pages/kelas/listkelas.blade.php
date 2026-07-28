@@ -55,6 +55,7 @@
 		font-weight: 700;
 		line-height: 1;
 		cursor: pointer;
+		text-decoration: none;
 		transition: background .15s ease, color .15s ease;
 		white-space: nowrap;
 	}
@@ -273,7 +274,28 @@
 					Selesai
 					<span class="tabs-nav__count">{{ $completedCount }}</span>
 				</button>
+				<button
+					role="tab"
+					aria-selected="{{ $activeTab === 'ebook' }}"
+					aria-controls="ebook-panel"
+					id="tab-ebook"
+					class="tabs-nav__item {{ $activeTab === 'ebook' ? 'tabs-nav__item--active' : '' }}"
+					onclick="switchTab('ebook')">
+					Ebook
+				</button>
+				<button
+					role="tab"
+					aria-selected="{{ $activeTab === 'video' }}"
+					aria-controls="video-panel"
+					id="tab-video"
+					class="tabs-nav__item {{ $activeTab === 'video' ? 'tabs-nav__item--active' : '' }}"
+					onclick="switchTab('video')">
+					Video
+				</button>
 			</nav>
+
+			<div role="tabpanel" id="ebook-panel" aria-labelledby="tab-ebook" class="tab-panel {{ $activeTab === 'ebook' ? '' : 'hidden' }}"></div>
+			<div role="tabpanel" id="video-panel" aria-labelledby="tab-video" class="tab-panel {{ $activeTab === 'video' ? '' : 'hidden' }}"></div>
 
 			<div role="tabpanel" id="active-panel" aria-labelledby="tab-active" class="tab-panel {{ $activeTab === 'active' ? '' : 'hidden' }}">
 				@if($activeClasses->count() > 0)
@@ -362,7 +384,7 @@
 			@if($activeTab !== 'active')
 			window.location.href = '{{ url()->current() }}?tab=active';
 			@endif
-		} else {
+		} else if (tab === 'completed') {
 			@if($activeTab !== 'completed')
 			window.location.href = '{{ url()->current() }}?tab=completed';
 			@endif
@@ -373,8 +395,8 @@
 		const urlParams = new URLSearchParams(window.location.search);
 		const tab = urlParams.get('tab') || '{{ $activeTab }}';
 
-		if (tab === 'completed') {
-			switchTab('completed');
+		if (['active', 'completed', 'ebook', 'video'].includes(tab)) {
+			switchTab(tab);
 		}
 	});
 </script>

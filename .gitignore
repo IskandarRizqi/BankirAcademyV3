@@ -6,6 +6,7 @@
 /vendor
 /public/Image
 /public/video
+/public/uploads/thumbnails/
 *.zip
 .env
 .env.backup

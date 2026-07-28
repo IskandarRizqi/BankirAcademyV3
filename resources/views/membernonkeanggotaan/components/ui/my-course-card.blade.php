@@ -19,8 +19,11 @@
     $image = data_get($course, 'image_mobile') ?: data_get($course, 'image');
     $image = $image ?: asset('assets/img/90x90.jpg');
     $detailUrl = data_get($course, 'unique_id')
-        ? url('/detail-event/' . data_get($course, 'unique_id') . '/' . \Illuminate\Support\Str::slug($title))
-        : 'javascript:void(0);';
+        ? route('membernonanggota.class.detail', [
+            'uniqueId' => data_get($course, 'unique_id'),
+            'title' => \Illuminate\Support\Str::slug($title),
+        ])
+        : '#';
 @endphp
 
 @once
@@ -217,9 +220,9 @@
         <div class="member-my-course-card__badges" aria-label="Informasi kelas">
             <span class="member-my-course-card__badge">{{ $category }}</span>
             <span class="member-my-course-card__badge member-my-course-card__badge--mode">{{ $mode }}</span>
-            <span class="member-my-course-card__badge {{ $isIht ? 'member-my-course-card__badge--iht' : 'member-my-course-card__badge--regular' }}">
-                {{ $isIht ? 'IHT' : 'Non-IHT' }}
-            </span>
+            @if ($isIht)
+                <span class="member-my-course-card__badge member-my-course-card__badge--iht">IHT</span>
+            @endif
         </div>
 
         <h3 class="member-my-course-card__title">
@@ -235,7 +238,7 @@
         ])
 
         <div class="member-my-course-card__footer">
-            <a href="{{ $detailUrl }}" class="member-my-course-card__button">Lihat Kelas</a>
+            <a href="{{ $detailUrl }}" class="member-my-course-card__button">Detail Kelas</a>
         </div>
     </div>
 </article>

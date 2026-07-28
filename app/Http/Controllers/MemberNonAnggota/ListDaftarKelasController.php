@@ -55,7 +55,7 @@ class ListDaftarKelasController extends Controller
         $this->attachParticipantData($completedClasses->getCollection(), $paidClassIds, $user->id);
 
         $activeTab = $request->query('tab', 'active');
-        $activeTab = in_array($activeTab, ['active', 'completed'], true) ? $activeTab : 'active';
+        $activeTab = in_array($activeTab, ['active', 'completed', 'ebook', 'video'], true) ? $activeTab : 'active';
 
         return view('membernonkeanggotaan.pages.kelas.listkelas', compact(
             'totalCount',
