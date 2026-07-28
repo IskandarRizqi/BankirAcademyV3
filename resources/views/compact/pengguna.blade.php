@@ -1129,6 +1129,7 @@ function filterSekolahImport() {
     // Fungsi ketika tombol 'Edit' diklik
    function editUser(user) {
     resetForm();
+    console.log("ok")
 
     // Ubah form menjadi mode EDIT
     document.getElementById('userModalLabel').innerText = "Edit Pengguna";
@@ -1138,7 +1139,7 @@ function filterSekolahImport() {
     // Isi data dasar user
     document.getElementById('name').value = user.name;
     document.getElementById('email').value = user.email;
-    document.getElementById('email_pribadi').value = user.siswa.email;
+    document.getElementById('email_pribadi').value = user.siswa?.email;
     document.getElementById('role').value = user.role;
     
     document.getElementById('password-help').classList.remove('d-none');
