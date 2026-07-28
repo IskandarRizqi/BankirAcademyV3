@@ -448,6 +448,11 @@ class PaymentController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'nomor_handphone' => ['required', 'string', 'max:30'],
         ]);
+        $currentPayment = DataPayment::where('user_id', $user->id)->where('submateri_id', $validated['class_id'])->where('status', 2)->first();
+        if ($currentPayment) {
+            return redirect()->away($currentPayment->link_payment);
+        }
+        // $currentPayment = DataPayment::where('')
         $result = DB::transaction(function () use (
             $user,
             $validated
@@ -456,6 +461,7 @@ class PaymentController extends Controller
                 'no_invoice' => 'BANKIR-CLASS-DATA-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'submateri_id' => $validated['class_id'],
+                'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
                 'pembelian' => DataPayment::PURCHASE_EBOOK,
                 'nominal' =>  $validated['price'],
                 'qty' => 1,
@@ -509,6 +515,10 @@ class PaymentController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'nomor_handphone' => ['required', 'string', 'max:30'],
         ]);
+        $currentPayment = DataPayment::where('user_id', $user->id)->where('submateri_id', $validated['class_id'])->where('status', 2)->first();
+        if ($currentPayment) {
+            return redirect()->away($currentPayment->link_payment);
+        }
         $result = DB::transaction(function () use (
             $user,
             $validated
@@ -518,6 +528,7 @@ class PaymentController extends Controller
                 'user_id' => $user->id,
                 'submateri_id' => $validated['class_id'],
                 'pembelian' => DataPayment::PURCHASE_VIDEO,
+                'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
                 'nominal' =>  $validated['price'],
                 'qty' => 1,
                 'status' => DataPayment::STATUS_PENDING,
