@@ -25,8 +25,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-kelas', [DataEventKelasController::class, 'dataeventkelas']);
     Route::get('/ebook', [EbookController::class, 'indexPdf'])->name('ebook.index');
     Route::get('/video', [EbookController::class, 'indexVideo'])->name('video.index');
-    Route::get('/ebook/belajar/{sub_materi_id}', [EbookController::class, 'belajarPdf'])->name('ebook.belajar');
-    Route::get('/video/belajar/{sub_materi_id}', [EbookController::class, 'belajarVideo'])->name('video.belajar');
+   Route::get('/ebook/detail/{sub_materi_id}', [EbookController::class, 'detailPdf'])->name('ebook.detail');
+Route::post('/ebook/claim-free/{sub_materi_id}', [EbookController::class, 'claimFreePdf'])->name('ebook.claim');
+Route::get('/ebook/belajar/{sub_materi_id}', [EbookController::class, 'belajarPdf'])->name('ebook.belajar');
+   Route::get('/video/detail/{sub_materi_id}', [EbookController::class, 'detailVideo'])->name('video.detail');
+Route::post('/video/claim-free/{sub_materi_id}', [EbookController::class, 'claimFreeVideo'])->name('video.claim');
+Route::get('/video/belajar/{sub_materi_id}', [EbookController::class, 'belajarVideo'])->name('video.belajar');
     Route::post('/payment/order-ebook', [PaymentController::class, 'paymentorderebook'])->name('payment.order.ebook');
     Route::post('/payment/order-video', [PaymentController::class, 'paymentordervideo'])->name('payment.order.video');
     Route::post('/detail-event/{unique_id}/order-iht', [DataEventKelasController::class, 'orderIht'])->name('membernonanggota.event.order-iht');

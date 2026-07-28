@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
+use App\Models\DataPayment;
 use App\Models\MateriModel;
 use App\Models\SubMateriModel;
 use Illuminate\Http\Request;
@@ -11,10 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class EbookController extends Controller
 {
-    // ==========================================
-    // 1. KATALOG & BELAJAR EBOOK / PDF (tipe_link_item = 1)
-    // ==========================================
-
     public function indexPdf(Request $request)
     {
         $user = Auth::user();
@@ -28,8 +25,6 @@ class EbookController extends Controller
                 ->with(['items' => function ($q) {
                     $q->where('tipe_link_item', 1);
                 }]);
-
-            // --- 1. Fitur Search / Kata Kunci ---
             if ($request->filled('q')) {
                 $search = $request->q;
                 $query->where(function ($q) use ($search) {
@@ -38,8 +33,6 @@ class EbookController extends Controller
                       ->orWhere('keterangan', 'like', "%{$search}%");
                 });
             }
-
-            // --- 2. Fitur Filter Harga (Gratis / Berbayar) ---
             if ($request->filled('tipe_harga')) {
                 if ($request->tipe_harga === 'gratis') {
                     $query->where(function ($q) {
@@ -56,16 +49,12 @@ class EbookController extends Controller
                     });
                 }
             }
-
-            // --- 3. Fitur Sorting Harga (Terendah / Tertinggi) ---
             if ($request->filled('sort_harga')) {
                 $sort = $request->sort_harga;
                 if (in_array($sort, ['asc', 'desc'])) {
-                    // COALESCE digunakan untuk memprioritaskan harga_final, jika null pakai harga
                     $query->orderByRaw('COALESCE(harga_final, harga, 0) ' . strtoupper($sort));
                 }
             } else {
-                // Default sorting berdasarkan urutan bawaan
                 $query->orderBy('urutan', 'asc');
             }
 
@@ -81,11 +70,6 @@ class EbookController extends Controller
     {
         return $this->renderBelajarPage($request, $sub_materi_id, 1, 'membernonkeanggotaan.pages.ebook.belajar');
     }
-
-    // ==========================================
-    // 2. KATALOG & BELAJAR VIDEO (tipe_link_item = 0)
-    // ==========================================
-
     public function indexVideo(Request $request)
     {
         $user = Auth::user();
@@ -94,13 +78,11 @@ class EbookController extends Controller
         if ($materiUmum) {
             $query = SubMateriModel::where('id_materi', $materiUmum->id)
                 ->whereHas('items', function ($q) {
-                    $q->where('tipe_link_item', 0); // Filter khusus Video
+                    $q->where('tipe_link_item', 0); 
                 })
                 ->with(['items' => function ($q) {
                     $q->where('tipe_link_item', 0);
                 }]);
-
-            // --- 1. Fitur Search / Kata Kunci ---
             if ($request->filled('q')) {
                 $search = $request->q;
                 $query->where(function ($q) use ($search) {
@@ -109,8 +91,6 @@ class EbookController extends Controller
                       ->orWhere('keterangan', 'like', "%{$search}%");
                 });
             }
-
-            // --- 2. Fitur Filter Harga (Gratis / Berbayar) ---
             if ($request->filled('tipe_harga')) {
                 if ($request->tipe_harga === 'gratis') {
                     $query->where(function ($q) {
@@ -127,8 +107,6 @@ class EbookController extends Controller
                     });
                 }
             }
-
-            // --- 3. Fitur Sorting Harga (Terendah / Tertinggi) ---
             if ($request->filled('sort_harga')) {
                 $sort = $request->sort_harga;
                 if (in_array($sort, ['asc', 'desc'])) {
@@ -214,6 +192,173 @@ class EbookController extends Controller
             'sudahIkuti'
         ));
     }
+public function detailPdf(Request $request, $sub_materi_id)
+{
+    $user = Auth::user();
+    
+    $subMateri = SubMateriModel::with(['items' => function($q) {
+        $q->where('tipe_link_item', 1); // Filter PDF
+    }])->findOrFail($sub_materi_id);
+
+    // Cek apakah user sudah membeli / klaim
+    $sudahAkses = DB::table('history_pelatihan')
+        ->where('user_id', $user->id)
+        ->where('sub_materi_id', $sub_materi_id)
+        ->exists();
+
+    $harga = $subMateri->harga ?? 0;
+    $hargaFinal = $subMateri->harga_final ?? $harga;
+    $diskon = $subMateri->diskon ?? 0;
+
+    // Ambil item pertama untuk preview (Google Drive Embed)
+    $previewItem = $subMateri->items->first();
+    $previewEmbedUrl = null;
+    if ($previewItem) {
+        $previewEmbedUrl = $this->parseGoogleDriveLink($previewItem->link_item);
+    }
+
+    // Cover Image
+    $coverImage = $subMateri->thumbnail 
+        ? asset($subMateri->thumbnail) 
+        : null;
+
+    return view('membernonkeanggotaan.pages.ebook.detail', compact(
+        'subMateri', 
+        'sudahAkses', 
+        'harga',
+        'hargaFinal', 
+        'diskon',
+        'previewEmbedUrl', 
+        'user',
+        'coverImage'
+    ));
+}
+    public function detailVideo(Request $request, $sub_materi_id)
+{
+    $user = Auth::user();
+    
+    $subMateri = SubMateriModel::with(['items' => function($q) {
+        $q->where('tipe_link_item', 0); // Filter PDF
+    }])->findOrFail($sub_materi_id);
+
+    // Cek apakah user sudah membeli / klaim
+    $sudahAkses = DB::table('history_pelatihan')
+        ->where('user_id', $user->id)
+        ->where('sub_materi_id', $sub_materi_id)
+        ->exists();
+
+    $hargaFinal = $subMateri->harga_final ?? $subMateri->harga ?? 0;
+     $harga = $subMateri->harga ?? 0;
+    $hargaFinal = $subMateri->harga_final ?? $harga;
+    $diskon = $subMateri->diskon ?? 0;
+
+    // Ambil item pertama untuk preview (Google Drive Embed)
+    $previewItem = $subMateri->items->first();
+    $previewEmbedUrl = null;
+    if ($previewItem) {
+        $previewEmbedUrl = $this->parseYoutubeCode($previewItem->link_item);
+    }
+     $coverImage = $subMateri->thumbnail 
+        ? asset($subMateri->thumbnail) 
+        : null;
+
+    return view('membernonkeanggotaan.pages.video.detail', compact(
+        'subMateri', 
+        'sudahAkses', 
+           'harga',
+        'hargaFinal', 
+        'hargaFinal', 
+        'previewEmbedUrl', 
+        'user',
+        'coverImage'
+    ));
+}
+public function claimFreePdf($sub_materi_id)
+{
+    $user = Auth::user();
+    $subMateri = SubMateriModel::findOrFail($sub_materi_id);
+    $hargaFinal = $subMateri->harga_final ?? $subMateri->harga ?? 0;
+
+    // Validasi apakah benar-benar gratis
+    if ($hargaFinal > 0) {
+        return redirect()->back()->with('error', 'Ebook ini berbayar.');
+    }
+
+    // Gunakan Transaction agar aman
+    DB::transaction(function () use ($user, $subMateri) {
+        // 1. Simpan ke DataPayment
+        DataPayment::create([
+            'no_invoice'      => 'BANKIR-CLASS-DATA-SUCCESS-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+            'user_id'         => $user->id,
+            'materi_id'       => $subMateri->id_materi,
+            'submateri_id'    => $subMateri->id,
+            'pembelian'       => DataPayment::PURCHASE_EBOOK,
+            'nominal'         => 0,
+            'qty'             => 1,
+            'status'          => DataPayment::STATUS_PAID, // langsung PAID (1)
+            'tipe_pembelian'  => DataPayment::PURCHASE_TYPE_EBOOK,
+            'keterangan'      => 'Klaim Ebook Gratis: ' . $subMateri->nama,
+        ]);
+
+        // 2. Simpan ke History Pelatihan agar user punya akses
+        DB::table('history_pelatihan')->updateOrInsert(
+            [
+                'user_id'       => $user->id,
+                'sub_materi_id' => $subMateri->id,
+            ],
+            [
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]
+        );
+    });
+
+    return redirect()->route('ebook.belajar', $subMateri->id)
+        ->with('success', 'Ebook gratis berhasil ditambahkan ke pustaka Anda!');
+}
+public function claimFreeVideo($sub_materi_id)
+{
+    $user = Auth::user();
+    $subMateri = SubMateriModel::findOrFail($sub_materi_id);
+    $hargaFinal = $subMateri->harga_final ?? $subMateri->harga ?? 0;
+
+    // Validasi apakah benar-benar gratis
+    if ($hargaFinal > 0) {
+        return redirect()->back()->with('error', 'Video ini berbayar.');
+    }
+
+    // Gunakan Transaction agar aman
+    DB::transaction(function () use ($user, $subMateri) {
+        // 1. Simpan ke DataPayment
+        DataPayment::create([
+            'no_invoice'      => 'BANKIR-CLASS-DATA-SUCCESS-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+            'user_id'         => $user->id,
+            'materi_id'       => $subMateri->id_materi,
+            'submateri_id'    => $subMateri->id,
+            'pembelian'       => DataPayment::PURCHASE_VIDEO,
+            'nominal'         => 0,
+            'qty'             => 1,
+            'status'          => DataPayment::STATUS_PAID, // langsung PAID (1)
+            'tipe_pembelian'  => DataPayment::PURCHASE_TYPE_VIDEO,
+            'keterangan'      => 'Klaim Video Gratis: ' . $subMateri->nama,
+        ]);
+
+        // 2. Simpan ke History Pelatihan agar user punya akses
+        DB::table('history_pelatihan')->updateOrInsert(
+            [
+                'user_id'       => $user->id,
+                'sub_materi_id' => $subMateri->id,
+            ],
+            [
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]
+        );
+    });
+
+    return redirect()->route('video.belajar', $subMateri->id)
+        ->with('success', 'Video gratis berhasil ditambahkan ke pustaka Anda!');
+}
 
     private function parseYoutubeCode($url)
     {

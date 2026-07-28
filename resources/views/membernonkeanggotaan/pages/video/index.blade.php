@@ -567,22 +567,16 @@
                                     @endif
                                 </div>
 
-                                <div class="catalog-card__footer">
-                                    <span class="catalog-card__meta">
-                                        <i class="fas fa-play-circle text-red-600 mr-1"></i> {{ $sub->items->count() }} Video
-                                    </span>
+<div class="catalog-card__footer">
+    <span class="catalog-card__meta">
+        <i class="fas fa-file-alt text-emerald-600 mr-1"></i> {{ $sub->items->count() }} Modul PDF
+    </span>
 
-                                    @if($sub->items->count() > 0)
-                                        <a href="{{ route('video.belajar', [$sub->id]) }}" class="catalog-card__button">
-                                            Tonton <i class="fas fa-arrow-right"></i>
-                                        </a>
-                                    @else
-                                        <button class="catalog-card__button" style="opacity: 0.5; cursor: not-allowed;" disabled>
-                                            Kosong
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
+    {{-- Tombol Selalu Mengarah ke Halaman Detail / Preview --}}
+    <a href="{{ route('video.detail', [$sub->id]) }}" class="catalog-card__button">
+        Detail Video <i class="fas fa-arrow-right"></i>
+    </a>
+</div>
                         </article>
                     @endforeach
                 </div>
