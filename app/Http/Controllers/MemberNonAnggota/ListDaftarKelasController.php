@@ -10,6 +10,7 @@ use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\DataPayment;
 use App\Models\SertifikatPesertaModel;
+use App\Models\SubMateriModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,13 @@ class ListDaftarKelasController extends Controller
         $completedCount = $completedClassesQuery->count();
         $completedClasses = $completedClassesQuery->paginate(6, ['*'], 'completed_page');
 
+        $ebooks = $this->purchasedEbooksQuery($user->id)
+            ->paginate(6, ['*'], 'ebook_page');
+        $ebookCount = $ebooks->total();
+        $videos = $this->purchasedVideosQuery($user->id)
+            ->paginate(6, ['*'], 'video_page');
+        $videoCount = $videos->total();
+
         $this->attachParticipantData($activeClasses->getCollection(), $paidClassIds, $user->id);
         $this->attachParticipantData($completedClasses->getCollection(), $paidClassIds, $user->id);
 
@@ -63,8 +71,58 @@ class ListDaftarKelasController extends Controller
             'completedCount',
             'activeClasses',
             'completedClasses',
+            'ebooks',
+            'ebookCount',
+            'videos',
+            'videoCount',
             'activeTab'
         ));
+    }
+
+    private function purchasedEbooksQuery(int $userId)
+    {
+        return $this->purchasedSubMateriQuery(
+            $userId,
+            DataPayment::PURCHASE_EBOOK,
+            DataPayment::PURCHASE_TYPE_EBOOK,
+            1
+        );
+    }
+
+    private function purchasedVideosQuery(int $userId)
+    {
+        return $this->purchasedSubMateriQuery(
+            $userId,
+            DataPayment::PURCHASE_VIDEO,
+            DataPayment::PURCHASE_TYPE_VIDEO,
+            0
+        );
+    }
+
+    private function purchasedSubMateriQuery(
+        int $userId,
+        string $purchaseName,
+        int $purchaseType,
+        int $itemType
+    ) {
+        $paidPurchase = function ($query) use ($userId, $purchaseName, $purchaseType) {
+            $query->where('user_id', $userId)
+                ->where('status', DataPayment::STATUS_PAID)
+                ->where('pembelian', $purchaseName)
+                ->where('tipe_pembelian', $purchaseType);
+        };
+
+        return SubMateriModel::query()
+            ->whereHas('items', function ($query) use ($itemType) {
+                $query->where('tipe_link_item', $itemType);
+            })
+            ->whereHas('payments', $paidPurchase)
+            ->with(['items' => function ($query) use ($itemType) {
+                $query->where('tipe_link_item', $itemType);
+            }])
+            ->withMax(['payments as latest_purchase_at' => $paidPurchase], 'created_at')
+            ->orderByDesc('latest_purchase_at')
+            ->orderByDesc('id');
     }
 
     public function storeParticipants(Request $request, int $classId)
@@ -192,7 +250,7 @@ class ListDaftarKelasController extends Controller
 
     private function validateImportedParticipants($rows, int $classId): array
     {
-        $requiredHeaders = ['nama', 'email', 'nomor_handphone'];
+        $requiredHeaders = IhtParticipantImport::REQUIRED_HEADERS;
         $firstRow = $rows->first();
 
         if (! $firstRow) {
@@ -324,26 +382,39 @@ class ListDaftarKelasController extends Controller
             ->with('classPayment:id,no_invoice')
             ->latest('id')
             ->get()
-            ->unique('class_id');
+            ->groupBy('class_id');
 
-        $paymentIds = $payments->pluck('classPayment.id')->filter();
+        $paymentIds = $payments
+            ->flatten(1)
+            ->pluck('classPayment.id')
+            ->filter()
+            ->unique()
+            ->values();
         $details = SertifikatPesertaModel::query()
             ->where('user_id', $userId)
             ->whereIn('payment_class_id', $paymentIds)
             ->get()
-            ->keyBy('payment_class_id');
+            ->groupBy('payment_class_id')
+            ->map(fn ($records) => $records->sortByDesc('id')->first());
 
         foreach ($classes as $class) {
-            $dataPayment = $payments->firstWhere('class_id', $class->id);
-            $classPayment = $dataPayment?->classPayment;
-            $detail = $classPayment ? $details->get($classPayment->id) : null;
-            $participantList = $this->decodeParticipants($detail);
-            $isIht = (int) ($dataPayment->is_iht ?? 0) === 1;
-            $participantCount = (int) ($dataPayment->qty ?? 0);
+            $participantList = [];
+            $participantCount = 0;
+            $isIht = false;
 
-            // IHT dibuat dengan qty default, tetapi belum memiliki peserta.
-            if ($isIht && count($participantList) === 0) {
-                $participantCount = 0;
+            foreach ($payments->get($class->id, collect()) as $dataPayment) {
+                $classPayment = $dataPayment->classPayment;
+                $detail = $classPayment ? $details->get($classPayment->id) : null;
+                $paymentParticipants = $this->decodeParticipants($detail);
+                $paymentIsIht = (int) ($dataPayment->is_iht ?? 0) === 1;
+
+                $participantList = array_merge($participantList, $paymentParticipants);
+                $isIht = $isIht || $paymentIsIht;
+
+                // IHT dibuat dengan qty default, tetapi belum memiliki peserta.
+                if (! $paymentIsIht || count($paymentParticipants) > 0) {
+                    $participantCount += (int) ($dataPayment->qty ?? 0);
+                }
             }
 
             $class->setAttribute('participant_count', $participantCount);

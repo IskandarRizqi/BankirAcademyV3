@@ -6,8 +6,8 @@
     <div class="row mb-3">
         <div class="col-12">
             <div class="mb-2">
-                <a href="{{ route('video.index') }}" class="btn btn-sm btn-white border px-3 py-2 bg-white d-inline-flex align-items-center shadow-sm" style="border-radius:8px; color:#64748b;">
-                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke Katalog Video
+                <a href="{{ url('/kelas-event') }}" class="btn btn-sm btn-white border px-3 py-2 bg-white d-inline-flex align-items-center shadow-sm" style="border-radius:8px; color:#64748b;">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke Pembelajaran Anda
                 </a>
             </div>
             

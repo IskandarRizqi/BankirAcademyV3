@@ -152,6 +152,18 @@
                 </a>
             </li>
             <li class="menu">
+                <a href="{{ route('admin.manual-class-orders.index') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 16H6V6h12v13z"></path>
+                            <path d="M8 8h8v2H8zm0 4h8v2H8zm0 4h5v2H8z"></path>
+                        </svg>
+                        <span>Order Kelas Manual</span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu">
                 <a href="#referralDropdownMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

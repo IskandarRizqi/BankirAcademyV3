@@ -282,6 +282,7 @@
 					class="tabs-nav__item {{ $activeTab === 'ebook' ? 'tabs-nav__item--active' : '' }}"
 					onclick="switchTab('ebook')">
 					Ebook
+					<span class="tabs-nav__count">{{ $ebookCount }}</span>
 				</button>
 				<button
 					role="tab"
@@ -291,11 +292,64 @@
 					class="tabs-nav__item {{ $activeTab === 'video' ? 'tabs-nav__item--active' : '' }}"
 					onclick="switchTab('video')">
 					Video
+					<span class="tabs-nav__count">{{ $videoCount }}</span>
 				</button>
 			</nav>
 
-			<div role="tabpanel" id="ebook-panel" aria-labelledby="tab-ebook" class="tab-panel {{ $activeTab === 'ebook' ? '' : 'hidden' }}"></div>
-			<div role="tabpanel" id="video-panel" aria-labelledby="tab-video" class="tab-panel {{ $activeTab === 'video' ? '' : 'hidden' }}"></div>
+			<div role="tabpanel" id="ebook-panel" aria-labelledby="tab-ebook" class="tab-panel {{ $activeTab === 'ebook' ? '' : 'hidden' }}">
+				@if($ebooks->count() > 0)
+				<div class="course-grid" role="list" aria-label="Daftar ebook yang telah dibeli">
+					@foreach($ebooks as $ebook)
+					@include('membernonkeanggotaan.components.ui.my-ebook-card', [
+					'ebook' => $ebook,
+					])
+					@endforeach
+				</div>
+
+				<div class="pagination-wrapper">
+					{{ $ebooks->appends(['tab' => 'ebook'])->links() }}
+				</div>
+				@else
+				<div class="empty-state" role="status">
+					<div class="empty-state__icon" aria-hidden="true">
+						<i class="fas fa-book-open"></i>
+					</div>
+					<h3 class="empty-state__title">Belum ada ebook</h3>
+					<p class="empty-state__text">Ebook yang telah Anda order akan muncul di sini.</p>
+					<a href="{{ route('ebook.index') }}" class="empty-state__btn">
+						<i class="fas fa-plus"></i>
+						Temukan Ebook
+					</a>
+				</div>
+				@endif
+			</div>
+			<div role="tabpanel" id="video-panel" aria-labelledby="tab-video" class="tab-panel {{ $activeTab === 'video' ? '' : 'hidden' }}">
+				@if($videos->count() > 0)
+				<div class="course-grid" role="list" aria-label="Daftar video yang telah dibeli">
+					@foreach($videos as $video)
+					@include('membernonkeanggotaan.components.ui.my-video-card', [
+					'video' => $video,
+					])
+					@endforeach
+				</div>
+
+				<div class="pagination-wrapper">
+					{{ $videos->appends(['tab' => 'video'])->links() }}
+				</div>
+				@else
+				<div class="empty-state" role="status">
+					<div class="empty-state__icon" aria-hidden="true">
+						<i class="fas fa-video-slash"></i>
+					</div>
+					<h3 class="empty-state__title">Belum ada video</h3>
+					<p class="empty-state__text">Video yang telah Anda order akan muncul di sini.</p>
+					<a href="{{ route('video.index') }}" class="empty-state__btn">
+						<i class="fas fa-plus"></i>
+						Temukan Video
+					</a>
+				</div>
+				@endif
+			</div>
 
 			<div role="tabpanel" id="active-panel" aria-labelledby="tab-active" class="tab-panel {{ $activeTab === 'active' ? '' : 'hidden' }}">
 				@if($activeClasses->count() > 0)

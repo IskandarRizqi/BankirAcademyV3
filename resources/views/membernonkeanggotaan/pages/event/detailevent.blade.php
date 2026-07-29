@@ -929,13 +929,13 @@ $registrationAlert = [
 				</div>
 			</section>
 
-			@if($relatedClasses->isNotEmpty())
+			@if($relatedClasses->where('status', 1)->isNotEmpty())
 			<section class="event-panel">
 				<div class="event-panel__body">
 					<span class="event-section-kicker">Rekomendasi</span>
 					<h2 class="event-section-title">Kelas terkait</h2>
 					<div class="event-related-list">
-						@foreach($relatedClasses as $related)
+						@foreach($relatedClasses->where('status', 1) as $related)
 						<a href="{{ url('/detail-event/' . $related->unique_id . '/' . \Illuminate\Support\Str::slug($related->title)) }}" class="event-related-link">
 							{{ $related->title }}
 						</a>
