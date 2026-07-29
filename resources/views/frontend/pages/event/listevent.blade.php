@@ -20,7 +20,7 @@ $selectedFilters = $selectedFilters ?? [
 								<div class="col-lg-12">
 									<div class="breadcam_wrap">
 										<h3>
-											Join the Millions for better learning experience
+											Gabung Kelas Terbaik Bankir
 										</h3>
 										<p>
 											Home / Courses

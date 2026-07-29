@@ -3,17 +3,19 @@
 		? \App\Support\AuthRedirector::pathFor(Auth::user())
 		: url('/authentikasi/login');
 		@endphp
-		<div class="aoraeditor-skip aoraeditor-header">
-
-			<header class="heading" id="sticky-header">
-				<div class="container-fluid">
-					<div class="row align-items-center">
-						<div class="col-12">
-							<div class="d-flex align-items-center justify-content-between">
+	<div class="aoraeditor-skip aoraeditor-header">
+    <header class="heading" id="sticky-header">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between">
 								<div class="d-flex align-items-center gap-3">
-									<a href="/" class="heading-logo d-block">
-										<img src="{{ asset('Bank-academy-logo-03.png')}}" class="home d-block" alt="Bankiracademy">
+								   <div class="sidebar-brand">
+									<a href="/">
+			<img src="{{ asset('bankir-academy-icon.png') }}" alt="logo">
+			<span>Bankir Academy</span>
 									</a>
+		</div>
 									<div class="heading-category">
 										<!-- <div class="heading-category-inner d-flex align-items-center" id="showCateDrop">
 											<svg width="20" height="20" viewBox="0 0 20 20" fill="none"

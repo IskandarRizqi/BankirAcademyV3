@@ -17,24 +17,19 @@
 						<div class="container">
 							<div class="row">
 								<div class="col-md-6 order-2 order-md-1 text-center text-md-start">
-									<h1>The most trusted & worthy tech skill learning Platform</h1>
-									<p>With our interactive courses, you may explore an infinite array of
-										learning possibilities from
-										thought leaders and industry professionals who will help you develop new
-										skills, and realise
-										your
-										full potential. </p>
+									<h1>Membangun Karir Cemerlang Untuk Masa Depan Indonesia</h1>
+									<p>Bankir Academy menghadirkan program pengembangan karir dan pelatihan kompetensi yang dirancang untuk membantu calon bankir serta insan perbankan meningkatkan keterampilan dan mencapai jenjang karir yang lebih tinggi di industri perbankan</p>
 
 									<div class="banner-area-btns">
-										<a href="login.html" class="primary-btn">Get Started <i
+										<a href="/authentikasi/login" class="primary-btn">Mulai<i
 												class="ti-arrow-right"></i></a>
-										<a href="register.html" class="secondary-btn">Join Now <i
+										<a href="/authentikasi/login" class="secondary-btn">Bergabung<i
 												class="ti-arrow-right"></i></a>
 									</div>
 								</div>
 
 								<div class="col-md-6 order-1 order-md-2 text-center banner-image">
-									<img src="frontend/infixlmstheme/img/banner/banner-default.jpg"
+									<img src="frontend/infixlmstheme/img/banner/banner2.png"
 										alt="banner">
 								</div>
 							</div>
@@ -65,8 +60,8 @@
 												</svg>
 											</div>
 											<div class="content">
-												<h4>50K + Online Course</h4>
-												<p>Enjoy lifetime access to course</p>
+												<h4>10K+ Program Kelas</h4>
+												<p>Pilihan Kelas Terbaik Bersama Praktisi Berpengalaman</p>
 											</div>
 										</div>
 									</div>
@@ -99,8 +94,8 @@
 												</svg>
 											</div>
 											<div class="content">
-												<h4>Teacher Directory</h4>
-												<p>Learn from industry experts</p>
+												<h4>Instruktur Berpengalaman</h4>
+												<p>Belajar dari Para Praktisi di Bidangnya</p>
 											</div>
 										</div>
 									</div>
@@ -118,8 +113,8 @@
 												</svg>
 											</div>
 											<div class="content">
-												<h4>Unlimited access</h4>
-												<p>Learn on your schedule</p>
+												<h4>Akses Fleksibel</h4>
+												<p>Kelas bisa diakses kapan saja</p>
 											</div>
 										</div>
 									</div>
@@ -149,162 +144,137 @@
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="category-slider owl-carousel">
-										<a href="courses5ffc.html?category_id[]=6" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Accounting
-												</div>
-											</div>
-										</a>
-										<a href="courses2a31.html?category_id[]=7" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													MBA
-												</div>
-											</div>
-										</a>
-										<a href="courses818f.html?category_id[]=1" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/1.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Business
-												</div>
-											</div>
-										</a>
-										<a href="courses8aad.html?category_id[]=2" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/2.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													3D Modeling
-												</div>
-											</div>
-										</a>
-										<a href="courses8a74.html?category_id[]=3" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/3.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													UI UX Design
-												</div>
-											</div>
-										</a>
-										<a href="courses8ec8.html?category_id[]=8" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Blender Creator
-												</div>
-											</div>
-										</a>
-										<a href="coursesd020.html?category_id[]=9" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													3D Environments
-												</div>
-											</div>
-										</a>
-										<a href="coursesa7ce.html?category_id[]=4" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/4.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Mobile Development
-												</div>
-											</div>
-										</a>
-										<a href="courses950f.html?category_id[]=5" class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Software Development
-												</div>
-											</div>
-										</a>
-										<a href="courses0601.html?category_id[]=10"
-											class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Adobe XD
-												</div>
-											</div>
-										</a>
-										<a href="courses3b3a.html?category_id[]=11"
-											class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													UI Design
-												</div>
-											</div>
-										</a>
-										<a href="courses7b89.html?category_id[]=12"
-											class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													App Development
-												</div>
-											</div>
-										</a>
-										<a href="courses5506.html?category_id[]=13"
-											class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Python
-												</div>
-											</div>
-										</a>
-										<a href="courses47aa.html?category_id[]=14"
-											class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													iOS Development
-												</div>
-											</div>
-										</a>
-										<a href="courses4ba9.html?category_id[]=15"
-											class="category-slider-item">
-											<div class="category-slider-item-inner">
-												<div class="category-slider-item-icon">
-													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-												</div>
-												<div class="category-slider-item-title">
-													Laravel
-												</div>
-											</div>
-										</a>
+										<a href="careers.html?category_id[]=1" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/1.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Bank Teller
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=2" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/2.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Loan Officer
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=3" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/3.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Branch Manager
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=4" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/4.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Financial Analyst
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=5" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Credit Analyst
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=6" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Investment Banker
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=7" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Risk Manager
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=8" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Compliance Officer
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=9" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Wealth Manager
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=10" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Customer Service (CSR)
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=11" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Internal Auditor
+        </div>
+    </div>
+</a>
+
+<a href="careers.html?category_id[]=12" class="category-slider-item">
+    <div class="category-slider-item-inner">
+        <div class="category-slider-item-icon">
+            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+        </div>
+        <div class="category-slider-item-title">
+            Relationship Manager
+        </div>
+    </div>
+</a>
 									</div>
 								</div>
 							</div>
@@ -328,409 +298,93 @@
 						<div class="container">
 							<div class="section_head withBtn">
 								<div>
-									<h2>Our Popular Courses</h2>
-									The world&rsquo;s largest selection of courses choose from 130,000 online
-									video courses with new additions published every month
+									<h2>Daftar Kelas</h2>
+									Daftar kelas bersertifikasi yang banyak di minati 
 								</div>
 								<div class="view-all-btn">
-									<a href="courses.html">View All <i class="fas fa-arrow-right fa-fw"></i></a>
+									<a href="/list-class">View All <i class="fas fa-arrow-right fa-fw"></i></a>
 								</div>
 							</div>
 
 
 							<div data-type="component-nonExisting" data-preview="" data-table=""
 								data-select="id,type,slug,title,thumbnail,price,discount_price,mode_of_delivery,about,total_reviews,total_enrolled,total_rating"
-								data-order="total_enrolled" data-dir="desc" data-limit="4" data-where-type="1"
+								data-order="total_enrolled" data-dir="desc"  data-where-type="1"
 								data-where-status="1" data-view="_single_course_v7"
 								data-model="Modules\CourseSetting\Entities\Course" data-with="lessons">
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="owl-carousel popular-course-carousel">
+@foreach ($data['kelas'] as $kelas) 
+<div class="course-item"
+    style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
+    onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
+    onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
 
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
+    <div class="course-item-img" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;"></div>
+        
+        {{-- Menampilkan Gambar secara Dinamis --}}
+        <img src="{{ asset($kelas->image ?? 'frontend/assets/course/1.jpg') }}" alt="{{ $kelas->title }}"
+            style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
+    </div>
 
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
+    <div class="course-item-info" style="padding:18px 20px 20px;">
+        {{-- Link Detail Kelas Dinamis --}}
+        <a href="#"
+            class="title" title="{{ $kelas->title }}"
+            style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
+            {{ $kelas->title }} 
+        </a>
 
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
+        <div class="d-flex align-itemes-center justify-content-between meta"
+            style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
+            <div class="rating"
+                style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
+                <svg width="14" height="13" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z" fill="#FFC107" />
+                </svg>
+                <span style="color:#FFE0B8; font-size:12.5px; font-weight:600;">
+                    {{ $kelas->poin ?? 0 }} ({{ $kelas->poin?? 0 }} Rating)
+                </span>
+            </div>
+            
+            <div class="enrolled-student">
+                <a href="#" style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
+                    <svg width="15" height="16" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z" fill="#D9C8FF" />
+                    </svg>
+                    {{ $kelas->total_peserta ?? 0 }} Students
+                </a>
+            </div>
+        </div>
 
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													MERN - Full Stack Web Development
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
+        {{-- Deskripsi Dinamis --}}
+        <div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
+            {{ Str::limit(strip_tags($kelas->description), 100) }}
+        </div>
 
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
+        <div class="course-item-footer d-flex justify-content-between">
+            <div class="price">
+                <span class="prise_tag">
+                    <span class="current" style="color: pink;">
+                        Rp.{{ number_format($kelas->pricing->price, 2) }}
+                    </span>
+                    @if(!empty($kelas->old_price))
+                        <del style="color: white;">
+                            Rp.{{ number_format($kelas->pricing->price, 2) }}
+                        </del>
+                    @endif
+                </span>
+            </div>
 
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn 3D In Blender Tutorial for Beginners
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="frontend/infixlmstheme/svg/cart.svg"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn WordPress Theme Development with WordPress
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn WordPress Theme Development with WordPress
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn English in 30 Days
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: white;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-
-
+            <a href="#" class="cart_store" data-id="{{ $kelas->id }}">
+                <img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}" alt="cart">
+            </a>
+        </div>
+    </div>
+</div>
+@endforeach
 									</div>
 
 
@@ -755,10 +409,10 @@
 					<div class="container">
 						<div class="clients-area">
 							<h3 class="clients-area-title">
-								Over <span class="count">6,000</span> users worldwide place their trust in us
+								Lebih dari <span class="count">6.000</span>  pengguna di seluruh dunia memercayai kami.
 							</h3>
 
-							<div data-preview="" data-table="" data-select="image" data-order="id"
+							<!-- <div data-preview="" data-table="" data-select="image" data-order="id"
 								data-limit="0" data-view="_single_sponsor_v7"
 								data-model="Modules\FrontendManage\Entities\Sponsor" data-where-status="1"
 								data-with="">
@@ -790,7 +444,7 @@
 
 
 								</div>
-							</div>
+							</div> -->
 
 
 						</div>
@@ -809,7 +463,7 @@
 
 					<div class="container">
 						<div class="section_head">
-							<h2 class="mb-0">Our Client Feedback</h2>
+							<h2 class="mb-0">Kepercayaan Mereka kepada Bankir Academy</h2>
 						</div>
 						<div class="testimonial position-relative mb-3 mb-md-4 section-margin-lg">
 							<div class="container-fluid">
@@ -824,133 +478,116 @@
 												data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 												<div class="testimonial-slider owl-carousel">
 													<div class="testimonial-single-container">
-														<div class="testimonial-single">
-															<div class="testimonial-top d-inline-block">
-																<div class="rating">
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																</div>
-															</div>
-															<div class="testimonial-content mb-4">
-																<p>"Kissmetrics customer describes how the
-																	software helped him achieve his goals.
-																	Notice how he highlights different features
-																	that Kissmetrics offers and how they
-																	directly impacted his business"</p>
-															</div>
-															<div class="align-items-end d-flex flex-grow-1">
-																<div class="testimonial-user">
-																	<div class="testimonial-user-img">
-																		<img src="https://ui-avatars.com/api/?background=random&amp;name=Spence%20Monn"
-																			alt="">
-																	</div>
-																	<div class="info">
-																		<p><strong>Spence Monn</strong></p>
-																		<span>LucidChart</span>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
+    <div class="testimonial-single">
+        <div class="testimonial-top d-inline-block">
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+        <div class="testimonial-content mb-4">
+            <p>"Materi ODP/BDP Prep Course-nya benar-benar daging semua! Mock interview dengan ex-HR Bank BUMN sangat membantu saya melewati tahap tes wawancara hingga akhirnya lolos di Bank Mandiri."</p>
+        </div>
+        <div class="align-items-end d-flex flex-grow-1">
+            <div class="testimonial-user">
+                <div class="testimonial-user-img">
+                    <img src="{{ asset('frontend/demo/testimonial/image/1.png') }}" alt="Rian Pratama">
+                </div>
+                <div class="info">
+                    <p><strong>Rian Pratama</strong></p>
+                    <span>Officer Development Program</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-													<div class="testimonial-single-container">
-														<div class="testimonial-single">
-															<div class="testimonial-top d-inline-block">
-																<div class="rating">
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																</div>
-															</div>
-															<div class="testimonial-content mb-4">
-																<p>"Working in conjunction with humanitarian aid
-																	agencies, we have supported programmes to
-																	help alleviate human suffering through."</p>
-															</div>
-															<div class="align-items-end d-flex flex-grow-1">
-																<div class="testimonial-user">
-																	<div class="testimonial-user-img">
-																		<img src="{{ asset('frontend/demo/testimonial/image/3.png') }}"
-																			alt="">
-																	</div>
-																	<div class="info">
-																		<p><strong>Mickel Clark</strong></p>
-																		<span>Cricketer</span>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
+<div class="testimonial-single-container">
+    <div class="testimonial-single">
+        <div class="testimonial-top d-inline-block">
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+        <div class="testimonial-content mb-4">
+            <p>"Awalnya bingung mau karir di perbankan tapi beda jurusan. Setelah ikut program pelatihan Credit Analyst di sini, pemahaman analisis keuangan saya meningkat drastis hingga siap kerja!"</p>
+        </div>
+        <div class="align-items-end d-flex flex-grow-1">
+            <div class="testimonial-user">
+                <div class="testimonial-user-img">
+                    <img src="{{ asset('frontend/demo/testimonial/image/2.png') }}" alt="Siti Rahmawati">
+                </div>
+                <div class="info">
+                    <p><strong>Siti Rahmawati</strong></p>
+                    <span>Credit Analyst</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-													<div class="testimonial-single-container">
-														<div class="testimonial-single">
-															<div class="testimonial-top d-inline-block">
-																<div class="rating">
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																</div>
-															</div>
-															<div class="testimonial-content mb-4">
-																<p>"Lorem Ipsum is simply dummy text of the
-																	printing and typesetting industry. Lorem
-																	Ipsum has been the industry&#039;s standard
-																	dummy text ever since the 1500s, when an
-																	unknown printer took a galley of type and
-																	scrambled it to make a type specimen book"
-																</p>
-															</div>
-															<div class="align-items-end d-flex flex-grow-1">
-																<div class="testimonial-user">
-																	<div class="testimonial-user-img">
-																		<img src="{{ asset('frontend/demo/testimonial/image/2.png') }}"
-																			alt="">
-																	</div>
-																	<div class="info">
-																		<p><strong>Steve Smith</strong></p>
-																		<span>Cricketer</span>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
+<div class="testimonial-single-container">
+    <div class="testimonial-single">
+        <div class="testimonial-top d-inline-block">
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+        <div class="testimonial-content mb-4">
+            <p>"Simulasi tes Psikotes dan SHL yang disediakan di course ini mirip sekali dengan soal tes asli. Sangat memangkas waktu belajar dan membuat saya percaya diri saat proses rekrutmen."</p>
+        </div>
+        <div class="align-items-end d-flex flex-grow-1">
+            <div class="testimonial-user">
+                <div class="testimonial-user-img">
+                    <img src="{{ asset('frontend/demo/testimonial/image/3.png') }}" alt="Budi Santoso">
+                </div>
+                <div class="info">
+                    <p><strong>Budi Santoso</strong></p>
+                    <span>Management Trainee</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-													<div class="testimonial-single-container">
-														<div class="testimonial-single">
-															<div class="testimonial-top d-inline-block">
-																<div class="rating">
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																	<i class="fas fa-star"></i>
-																</div>
-															</div>
-															<div class="testimonial-content mb-4">
-																<p>"Working in conjunction with humanitarian aid
-																	agencies, we have supported programmes to
-																	help alleviate human suffering through."</p>
-															</div>
-															<div class="align-items-end d-flex flex-grow-1">
-																<div class="testimonial-user">
-																	<div class="testimonial-user-img">
-																		<img src="{{ asset('frontend/demo/testimonial/image/1.png') }}"
-																			alt="">
-																	</div>
-																	<div class="info">
-																		<p><strong>Micky Mouse</strong></p>
-																		<span>Photographer</span>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
+<div class="testimonial-single-container">
+    <div class="testimonial-single">
+        <div class="testimonial-top d-inline-block">
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+        <div class="testimonial-content mb-4">
+            <p>"Modul pelatihan Banking Operations & Compliance di sini memberikan gambaran nyata industri keuangan. Sangat recommended buat lulusan baru yang mau akselerasi karir perbankan!"</p>
+        </div>
+        <div class="align-items-end d-flex flex-grow-1">
+            <div class="testimonial-user">
+                <div class="testimonial-user-img">
+                    <img src="{{ asset('frontend/demo/testimonial/image/4.png') }}" alt="Nadia Wijaya">
+                </div>
+                <div class="info">
+                    <p><strong>Nadia Wijaya</strong></p>
+                    <span>Customer Relations Staff</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 												</div>
 											</div>
@@ -976,11 +613,11 @@
 						<div class="container">
 							<div class="section_head withBtn">
 								<div>
-									<h2>Our Latest Courses</h2>
+									<h2>In House Training</h2>
 									<h5>Explore New Skills and Knowledge</h5>
 								</div>
 								<div class="view-all-btn">
-									<a href="courses.html">View All <i class="fas fa-arrow-right fa-fw"></i></a>
+									<a href="/list-class">View All <i class="fas fa-arrow-right fa-fw"></i></a>
 								</div>
 							</div>
 
@@ -993,388 +630,76 @@
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="owl-carousel popular-course-carousel">
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
+										@foreach ($data['iht'] as $kelas) 
+<div class="course-item"
+    style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
+    onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
+    onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
 
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
+    <div class="course-item-img" style="position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;"></div>
+        
+        {{-- Menampilkan Gambar secara Dinamis --}}
+        <img src="{{ asset($kelas->image ?? 'frontend/assets/course/1.jpg') }}" alt="{{ $kelas->title }}"
+            style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
+    </div>
 
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
+    <div class="course-item-info" style="padding:18px 20px 20px;">
+        {{-- Link Detail Kelas Dinamis --}}
+        <a href="#"
+            class="title" title="{{ $kelas->title }}"
+            style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
+            {{ $kelas->title }} 
+        </a>
 
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													MERN - Full Stack Web Development
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
+        <div class="d-flex align-itemes-center justify-content-between meta"
+            style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
+            <div class="rating"
+                style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
+                <svg width="14" height="13" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z" fill="#FFC107" />
+                </svg>
+                <span style="color:#FFE0B8; font-size:12.5px; font-weight:600;">
+                    {{ $kelas->poin ?? 0 }} ({{ $kelas->poin?? 0 }} Rating)
+                </span>
+            </div>
+            
+            <div class="enrolled-student">
+                <a href="#" style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
+                    <svg width="15" height="16" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z" fill="#D9C8FF" />
+                    </svg>
+                    {{ $kelas->total_peserta ?? 0 }} Students
+                </a>
+            </div>
+        </div>
 
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
+        {{-- Deskripsi Dinamis --}}
+        <div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
+            {{ Str::limit(strip_tags($kelas->description), 100) }}
+        </div>
 
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
+        <div class="course-item-footer d-flex justify-content-between">
+            <div class="price">
+                <span class="prise_tag">
+                    <span class="current" style="color: pink;">
+                        Rp.{{ number_format($kelas->pricing->price, 2) }}
+                    </span>
+                    @if(!empty($kelas->old_price))
+                        <del style="color: white;">
+                            Rp.{{ number_format($kelas->pricing->price, 2) }}
+                        </del>
+                    @endif
+                </span>
+            </div>
 
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn 3D In Blender Tutorial for Beginners
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn WordPress Theme Development with WordPress
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn WordPress Theme Development with WordPress
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: pink;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
-
-										<div class="course-item"
-											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
-
-											<div class="course-item-img"
-												style="position:relative; overflow:hidden;">
-
-												<div
-													style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;">
-												</div>
-												<img src="{{ asset('frontend/assets/course/1.jpg')}}" alt="course image"
-													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-											</div>
-
-											<div class="course-item-info" style="padding:18px 20px 20px;">
-												<a href="courses-details/mern-full-stack-web-development.html"
-													class="title" title="MERN - Full Stack Web Development"
-													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-													Learn English in 30 Days
-												</a>
-												<div class="d-flex align-itemes-center justify-content-between meta"
-													style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
-													<div class="rating"
-														style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
-														<svg width="14" height="13" viewBox="0 0 16 15"
-															fill="none" xmlns="http://www.w3.org/2000/svg">
-															<path
-																d="M14.9922 5.21624L10.2573 4.53056L8.1344 0.242104C8.09105 0.168678 8.02784 0.10754 7.9513 0.0649862C7.87476 0.0224321 7.78764 0 7.69892 0C7.6102 0 7.52308 0.0224321 7.44654 0.0649862C7.37 0.10754 7.3068 0.168678 7.26345 0.242104L5.14222 4.52977L0.40648 5.21624C0.31946 5.22916 0.237852 5.2645 0.170564 5.31841C0.103275 5.37231 0.0528901 5.44272 0.0249085 5.52194C-0.00307309 5.60116 -0.00757644 5.68614 0.01189 5.76762C0.0313563 5.8491 0.0740445 5.92394 0.135295 5.98398L3.57501 9.33111L2.76146 14.0591C2.74696 14.1436 2.75782 14.2304 2.79281 14.3094C2.8278 14.3883 2.88549 14.4564 2.95932 14.5058C3.03314 14.5551 3.12011 14.5838 3.2103 14.5886C3.30049 14.5933 3.39026 14.5739 3.46936 14.5325L7.6985 12.3153L11.9276 14.5333C12.0068 14.5746 12.0965 14.5941 12.1867 14.5893C12.2769 14.5846 12.3639 14.5559 12.4377 14.5066C12.5115 14.4572 12.5692 14.3891 12.6042 14.3101C12.6392 14.2311 12.6501 14.1444 12.6356 14.0599L11.822 9.3319L15.2634 5.98398C15.3253 5.92392 15.3685 5.84885 15.3883 5.76699C15.4082 5.68515 15.4039 5.59969 15.3758 5.52003C15.3478 5.44036 15.2972 5.36956 15.2295 5.31541C15.1618 5.26126 15.0797 5.22586 14.9922 5.21308V5.21624Z"
-																fill="#FFC107" />
-														</svg>
-														<span
-															style="color:#FFE0B8; font-size:12.5px; font-weight:600;">0
-															(0 Rating)</span>
-													</div>
-													<div class="enrolled-student">
-														<a href="#"
-															style="display:flex; align-items:center; gap:6px; color:#D9C8FF; font-size:12.5px; font-weight:600; text-decoration:none;">
-															<svg width="15" height="16" viewBox="0 0 16 18"
-																fill="none" xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M14.2508 3.87484L9.30078 1.0165C8.49245 0.549837 7.49245 0.549837 6.67578 1.0165L1.73411 3.87484C0.925781 4.3415 0.425781 5.20817 0.425781 6.14984V11.8498C0.425781 12.7832 0.925781 13.6498 1.73411 14.1248L6.68411 16.9832C7.49245 17.4498 8.49245 17.4498 9.30911 16.9832L14.2591 14.1248C15.0674 13.6582 15.5674 12.7915 15.5674 11.8498V6.14984C15.5591 5.20817 15.0591 4.34984 14.2508 3.87484ZM7.99245 5.1165C9.06745 5.1165 9.93411 5.98317 9.93411 7.05817C9.93411 8.13317 9.06745 8.99984 7.99245 8.99984C6.91745 8.99984 6.05078 8.13317 6.05078 7.05817C6.05078 5.9915 6.91745 5.1165 7.99245 5.1165ZM10.2258 12.8832H5.75911C5.08411 12.8832 4.69245 12.1332 5.06745 11.5748C5.63411 10.7332 6.73411 10.1665 7.99245 10.1665C9.25078 10.1665 10.3508 10.7332 10.9174 11.5748C11.2924 12.1248 10.8924 12.8832 10.2258 12.8832Z"
-																	fill="#D9C8FF" />
-															</svg>
-															1 Students
-														</a>
-													</div>
-												</div>
-
-												<div class="course-item-info-description"
-													style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-													This advanced course in managerial accounting covers
-													advanced topics such as cost behavior, budgeting, variance
-													analysis...
-												</div>
-
-												<div class="course-item-footer d-flex justify-content-between">
-													<div class="price">
-														<span class="prise_tag">
-															<span class="current" style="color: white;">
-																$151.00
-
-															</span>
-															<del style="color: white;">
-																$279.00
-															</del>
-														</span>
-													</div>
-
-													<a href="#" class="cart_store" data-id="2">
-														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}"
-															alt="cart">
-													</a>
-												</div>
-											</div>
-										</div>
+            <a href="#" class="cart_store" data-id="{{ $kelas->id }}">
+                <img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}" alt="cart">
+            </a>
+        </div>
+    </div>
+</div>
+@endforeach
 
 									</div>
 
@@ -1398,8 +723,8 @@
 					<div class="container">
 						<div class="team-section">
 							<div class="section_head">
-								<h2>Popular Instructors</h2>
-								<h5>Making sure that our products exceed customer expectations</h5>
+								<h2>Praktisi Berpengalaman di Bidangnya</h2>
+								<h5>Memastikan Materi relevan dengan industri bank sekarang</h5>
 							</div>
 
 
@@ -1413,7 +738,7 @@
 									<div class="team-slider owl-carousel">
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor1.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang2.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1427,7 +752,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor01.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang1.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1441,7 +766,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor02.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang2.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1455,7 +780,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor03.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang1.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1469,7 +794,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor04.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang2.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1483,7 +808,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor05.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang1.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1497,7 +822,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor06.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang2.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1511,7 +836,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor07.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang1.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1525,7 +850,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor08.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang2.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1539,7 +864,7 @@
 										</div>
 										<div class="team-section-item">
 											<div class="img bg1">
-												<img src="{{ asset('frontend/demo/user/instructor09.jpg') }}" alt="">
+												<img src="{{ asset('frontend/demo/user/orang1.png') }}" alt="">
 												<ul class="social-links">
 													<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
 													<li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -1684,30 +1009,25 @@
 							<div class="col-md-6">
 								<div class="cta-section d-flex align-items-center bg1">
 									<div class="cta-section-content">
-										<h3>Level - Up Your Raw Coding
-											Skills in Lockdown</h3>
-										<p class="lh2">With our interactive courses, you may explore an infinite
-											array of learning
-											possibilities from thought</p>
-										<a href="register.html" class="theme-btn">Join now</a>
+										<h3>Level-Up Skill & Akselerasi Karir Perbankanmu</h3>
+										<p class="lh2">Melalui kursus interaktif kami, jelajahi peluang belajar tanpa batas dan persiapkan dirimu menembus industri perbankan bersama para ahli.</p>
+										<a href="/authentikasi/login" class="theme-btn">Daftar Sekarang</a>
 									</div>
 									<div class="cta-section-img align-self-end">
-										<img src="{{ asset('frontend/infixlmstheme/img/cta/cta-1-default.png') }}" alt="">
+										<img src="{{ asset('frontend/infixlmstheme/img/cta/cta.png') }}" alt="">
 									</div>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="cta-section d-flex align-items-center bg2">
 									<div class="cta-section-content">
-										<p class="meta">New Information</p>
-										<h3>Become a new instructor</h3>
-										<p class="lh-base">With our interactive courses, you may explore an
-											infinite array of learning
-											possibilities from thought</p>
-										<a href="become-instructor.html" class="theme-btn">Join now</a>
+										<!-- <p class="meta">New Information</p> -->
+										<h3>Bagikan Pengalamanmu, Menjadi Mentor Perbankan</h3>
+										<p class="lh-base">Salurkan ilmu dan pengalaman praktismu di industri keuangan. Bantu ribuan talenta muda meraih karir impian mereka di bank terkemuka</p>
+										<a href="/authentikasi/login" class="theme-btn">Bergabung Sekarang</a>
 									</div>
 									<div class="cta-section-img align-self-end">
-										<img src="{{ asset('frontend/infixlmstheme/img/cta/cta-2-default.png') }}" alt="">
+										<img src="{{ asset('frontend/infixlmstheme/img/cta/cta2.png') }}" alt="">
 									</div>
 								</div>
 							</div>

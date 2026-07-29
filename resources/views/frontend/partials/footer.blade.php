@@ -6,7 +6,7 @@
 							<div class="pe-md-5">
 								<div class="footer-item">
 									<h5>
-										About
+										Tentang Kami
 
 									</h5>
 									<p>
@@ -15,8 +15,8 @@
 								</div>
 
 								<div class="footer-subscribe">
-									<h5>Never Miss A Post!</h5>
-									<p>Choose the most powerful courses and always be on demand</p>
+									<h5>Bankir Academy!</h5>
+									<p> Kami berkomitmen untuk mencetak talenta unggul melalui kurikulum berstandar industri, sertifikasi resmi, dan instruktur praktisi berpengalaman.</p>
 									<form action="https://infixlms.ischooll.com/subscribe" method="POST"
 										class="subscription relative"><input type="hidden" name="_token"
 											value="5uoINcsrnB5nHTnbgSvY2fQyCDrSsF0Kfsiuggit" autocomplete="off">
@@ -35,25 +35,23 @@
 						</div>
 						<div class="col-xl-3 col-md-4 col-sm-6">
 							<div class="footer-item">
-								<h5>Support Zone</h5>
+								<h5>Eksplorasi</h5>
 								<ul>
-									<li><a href="pages/unlock-your-potential.html">Unlock Your Potential </a></li>
-									<li><a href="pages/privacy-policy-and-cookie-policy.html">Privacy policy and cookie
-											policy </a></li>
-									<li><a href="pages/sitemap.html">Sitemap </a></li>
-									<li><a href="pages/featured-courses.html">Featured courses </a></li>
-									<li><a href="pages/join-us.html">Join Us </a></li>
+									<li><a href="pages/unlock-your-potential.html">Katalog Program</a></li>
+									<li><a href="pages/privacy-policy-and-cookie-policy.html">Sertifikasi Perbankan</a></li>
+									<li><a href="pages/sitemap.html">Pelatihan Korporat</a></li>
+									<li><a href="pages/featured-courses.html">Jadwal Webinar</a></li>
 								</ul>
 							</div>
 						</div>
 						<div class="col-xl-3 col-md-4 col-sm-6">
 							<div class="footer-item">
-								<h5>Company Info</h5>
+								<h5>Pusat Bantuan</h5>
 								<ul>
-									<li><a href="#">Learn with InfixLMS </a></li>
-									<li><a href="pages/teach-on-infixedu.html">Teach on InfixEdu </a></li>
-									<li><a href="pages/get-the-app.html">Get the app </a></li>
-									<li><a href="about-us.html">About us </a></li>
+									<li><a href="#">Tanya Jawab (FAQ)</a></li>
+									<li><a href="pages/teach-on-infixedu.html">Panduan Pendaftaran</a></li>
+									<li><a href="pages/get-the-app.html">Syarat & Ketentuan</a></li>
+									<li><a href="about-us.html">Kebijakan Privasi</a></li>
 									<li><a href="contact-us.html">Contact us </a></li>
 								</ul>
 							</div>
@@ -90,7 +88,7 @@
 											</div>
 											<div class="content">
 												<span class="fw-bold fs-14 text-uppercase d-block">Call Us 24/7</span>
-												<a href="tel:+968 9700 2784" class="currentColor">+968 9700 2784</a>
+												<a href="tel:+968 9700 2784" class="currentColor">info@bankir.academy.co.id</a>
 											</div>
 										</div>
 									</div>
@@ -120,22 +118,29 @@
 									<div class="col-lg-3 col-sm-6">
 										<h4 class="text-uppercase currentColor">Payment Method</h4>
 										<div class="d-flex align-items-center gap-2 flex-wrap">
-											<img src="{{ asset('frontend/demo/gateway/paypal.png') }}" class="payment-methods" alt="PayPal">
+											<img src="{{ asset('frontend/demo/gateway/bri.png') }}" class="payment-methods" alt="PayPal">
 
-											<img src="{{ asset('frontend/demo/gateway/stripe.png') }}" class="payment-methods" alt="Stripe">
+											<img src="{{ asset('frontend/demo/gateway/btn.png') }}" class="payment-methods" alt="Stripe">
 
-											<img src="{{ asset('frontend/demo/gateway/paystack.png') }}" class="payment-methods" alt="PayStack">
+											<img src="{{ asset('frontend/demo/gateway/bni.png') }}" class="payment-methods" alt="PayStack">
 
-											<img src="{{ asset('frontend/demo/gateway/razorpay.png') }}" class="payment-methods" alt="RazorPay">
+											<img src="{{ asset('frontend/demo/gateway/mandiri.png') }}" class="payment-methods" alt="RazorPay">
 
-											<img src="{{ asset('frontend/demo/gateway/paytm.png') }}" class="payment-methods" alt="PayTM">
+											<img src="{{ asset('frontend/demo/gateway/maybank.png') }}" class="payment-methods" alt="PayTM">
 
-											<img src="{{ asset('frontend/demo/gateway/mollie.png') }}" class="payment-methods" alt="Mollie">
+											<img src="{{ asset('frontend/demo/gateway/bsi.png') }}" class="payment-methods" alt="Mollie">
+											<img src="{{ asset('frontend/demo/gateway/danamon.png') }}" class="payment-methods" alt="Mollie">
 
-											<img src="{{ asset('frontend/demo/gateway/jazz-cash.png') }}" class="payment-methods"
+											<img src="{{ asset('frontend/demo/gateway/permata.png') }}" class="payment-methods"
 												alt="Jazz Cash">
 
-											<img src="{{ asset('frontend/demo/gateway/cc-avenue.png') }}" class="payment-methods"
+											<img src="{{ asset('frontend/demo/gateway/sinarmas.png') }}" class="payment-methods"
+												alt="CCAvenue">
+											<img src="{{ asset('frontend/demo/gateway/indomaret.png') }}" class="payment-methods"
+												alt="CCAvenue">
+											<img src="{{ asset('frontend/demo/gateway/alfamart.png') }}" class="payment-methods"
+												alt="CCAvenue">
+											<img src="{{ asset('frontend/demo/gateway/bnc.png') }}" class="payment-methods"
 												alt="CCAvenue">
 
 										</div>
@@ -149,9 +154,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-12 text-center">
-								<p>Copyright © 2024 InfixLMS. All rights reserved | Made By <a
-										href="https://aorasoft.com/" target="_blank"><span
-											style="color:var(--system_primery_gredient1, #BF37FF)">CodeThemes</span></a>
+								<p>Copyright © 2026 Bankir Academy. All rights reserved 
 								</p>
 							</div>
 						</div>
@@ -174,11 +177,11 @@
 						<div class="icon">
 							<img src="frontend/infixlmstheme/img/icon/cookies_icon.svg" alt="">
 						</div>
-						<p>We collect and use cookies to give you the best and most relevant website experience. Kindly
-							accept the cookies.
-							<a href='#'>Privacy Policy</a>
+						<p>Kami mengumpulkan dan menggunakan cookie untuk memberikan Anda pengalaman situs web terbaik dan paling relevan. Mohon
+terima cookie.
+							<a href='#'>Kebijakan Privasi</a>
 						</p>
-						<button type="button" class="cookie_btn" onclick="setCookies(1);">I Accept</button>
+						<button type="button" class="cookie_btn" onclick="setCookies(1);">Saya Setuju</button>
 						<button type="button" class="cookie_btn cookeSettingModalBtn">Customize Setting</button>
 
 						<!-- Modal -->
