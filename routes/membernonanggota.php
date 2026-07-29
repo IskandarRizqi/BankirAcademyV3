@@ -8,6 +8,7 @@ use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
 use App\Http\Controllers\MemberNonAnggota\DetailKelasController;
 use App\Http\Controllers\MemberNonAnggota\EbookController;
 use App\Http\Controllers\MemberNonAnggota\ListDaftarKelasController;
+use App\Http\Controllers\MemberNonAnggota\SertifikatController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,12 +26,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-kelas', [DataEventKelasController::class, 'dataeventkelas']);
     Route::get('/ebook', [EbookController::class, 'indexPdf'])->name('ebook.index');
     Route::get('/video', [EbookController::class, 'indexVideo'])->name('video.index');
-   Route::get('/ebook/detail/{sub_materi_id}', [EbookController::class, 'detailPdf'])->name('ebook.detail');
-Route::post('/ebook/claim-free/{sub_materi_id}', [EbookController::class, 'claimFreePdf'])->name('ebook.claim');
-Route::get('/ebook/belajar/{sub_materi_id}', [EbookController::class, 'belajarPdf'])->name('ebook.belajar');
-   Route::get('/video/detail/{sub_materi_id}', [EbookController::class, 'detailVideo'])->name('video.detail');
-Route::post('/video/claim-free/{sub_materi_id}', [EbookController::class, 'claimFreeVideo'])->name('video.claim');
-Route::get('/video/belajar/{sub_materi_id}', [EbookController::class, 'belajarVideo'])->name('video.belajar');
+    Route::get('/ebook/detail/{sub_materi_id}', [EbookController::class, 'detailPdf'])->name('ebook.detail');
+    Route::post('/ebook/claim-free/{sub_materi_id}', [EbookController::class, 'claimFreePdf'])->name('ebook.claim');
+    Route::get('/ebook/belajar/{sub_materi_id}', [EbookController::class, 'belajarPdf'])->name('ebook.belajar');
+    Route::get('/video/detail/{sub_materi_id}', [EbookController::class, 'detailVideo'])->name('video.detail');
+    Route::post('/video/claim-free/{sub_materi_id}', [EbookController::class, 'claimFreeVideo'])->name('video.claim');
+    Route::get('/video/belajar/{sub_materi_id}', [EbookController::class, 'belajarVideo'])->name('video.belajar');
     Route::post('/payment/order-ebook', [PaymentController::class, 'paymentorderebook'])->name('payment.order.ebook');
     Route::post('/payment/order-video', [PaymentController::class, 'paymentordervideo'])->name('payment.order.video');
     Route::post('/detail-event/{unique_id}/order-iht', [DataEventKelasController::class, 'orderIht'])->name('membernonanggota.event.order-iht');
@@ -45,6 +46,12 @@ Route::get('/video/belajar/{sub_materi_id}', [EbookController::class, 'belajarVi
     Route::get('/classes/cetakinvoicepending/{id}', [MembershipController::class, 'cetakinvoicepending']);
     Route::get('/classes/getinvoice/{id}', [InvoiceController::class, 'getInvoice']);
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
+    Route::get('/sertifikat-kelas', [SertifikatController::class, 'index'])
+        ->name('membernonanggota.certificates.index');
+    Route::get('/sertifikat-kelas/{classId}/cetak', [SertifikatController::class, 'show'])
+        ->name('membernonanggota.certificates.show');
+    Route::get('/sertifikat-kelas/{classId}/download', [SertifikatController::class, 'downloadZip'])
+        ->name('membernonanggota.certificates.download');
     Route::get('/detail-kelas/content/{contentId}', [DetailKelasController::class, 'showContent'])
         ->name('membernonanggota.class.content');
     Route::get('/detail-kelas/{uniqueId}/{title}', [DetailKelasController::class, 'show'])

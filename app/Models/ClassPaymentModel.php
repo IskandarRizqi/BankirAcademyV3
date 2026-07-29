@@ -26,6 +26,27 @@ class ClassPaymentModel extends Model
 		'sudah_cetak',
 	];
 	protected $appends = ['promo'];
+
+	public function dataPayment()
+	{
+		return $this->hasOne(DataPayment::class, 'no_invoice', 'no_invoice');
+	}
+
+	public function class()
+	{
+		return $this->belongsTo(ClassesModel::class, 'class_id');
+	}
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'user_id');
+	}
+
+	public function participant()
+	{
+		return $this->hasOne(ClassParticipantModel::class, 'payment_id');
+	}
+
 	public function getPromoAttribute()
 	{
 		if (array_key_exists('kode_promo', $this->attributes)) {

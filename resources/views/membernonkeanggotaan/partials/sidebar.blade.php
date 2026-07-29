@@ -58,8 +58,8 @@
 	[
 	'label' => 'Sertifikat',
 	'icon' => 'sertifikat',
-	'url' => '#',
-	'active' => request()->is('sertifikat'),
+	'url' => '/sertifikat-kelas',
+	'active' => request()->is('sertifikat-kelas*'),
 	'can_see' => true,
 	'has_submenu' => false,
 	],

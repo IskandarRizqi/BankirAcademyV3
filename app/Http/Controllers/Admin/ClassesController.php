@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use Faker\Factory;
 
 class ClassesController extends Controller
 {
@@ -486,7 +487,7 @@ class ClassesController extends Controller
 		return Redirect::back()->with('success', 'Certificate Updated');
 	}
 
-	public function previewcertificate(Request $r, $id, $nama, $instansi)
+	public function previewcertificate($id)
 	{
 		$data['class'] = ClassesModel::where('id', $id)->first();
 		if (!$data['class']) {
@@ -509,15 +510,38 @@ class ClassesController extends Controller
 		$data['certificate_code'] = "BAI-" . $datePart . "-" . $uniquePart;
 		// ---------------------------
 
-		$data['name'] = $nama;
-		$data['instansi'] = $instansi;
+		$data['name'] = $nama ?? '';
+		$data['instansi'] = $instansi ?? '';
 
 		// Mengganti placeholder di konten
-		$data['contents'] = str_replace(
-			["[[date_expired]]", "[[date_active]]", "[[class]]", "[[name]]"],
-			[$data['certs']->certificate_expired, $data['certs']->certificate_created, $data['class']->title, $data['name']],
-			$data['certs']->content
-		);
+		// $data['contents'] = str_replace(
+		// 	["[[date_expired]]", "[[date_active]]", "[[class]]", "[[name]]"],
+		// 	[$data['certs']->certificate_expired, $data['certs']->certificate_created, $data['class']->title, $data['name']],
+		// 	$data['certs']->content
+		// );
+		$faker = Factory::create('id_ID');
+
+		// $data['certificate_code'] = 'CERT-2026-000123';
+		$data['name'] = $faker->name();
+		$data['instansi'] = 'BANKIRACADEMY';
+		$data['contents'] = '';
+		// 		$data['contents'] = '<p>
+		// Sertifikat ini diberikan kepada peserta yang telah berhasil menyelesaikan
+		// <strong>Pelatihan Front Office Perbankan</strong> yang diselenggarakan oleh
+		// <strong>Bankir Academy</strong>.
+		// </p>
+
+		// <p>
+		// Peserta telah mengikuti seluruh rangkaian pelatihan yang meliputi pelayanan
+		// prima (Service Excellence), komunikasi efektif, penanganan keluhan nasabah,
+		// serta penerapan standar operasional layanan perbankan.
+		// </p>
+
+		// <p>
+		// Dengan demikian, peserta dinyatakan <strong>LULUS</strong> dan berhak menerima
+		// sertifikat ini sebagai bukti kompetensi dan partisipasi dalam program pelatihan.
+		// </p>
+		// ';
 
 		$pdf = PDF::loadView('backend/certificate/certificate', $data);
 		return $pdf->setPaper($data['certs']->page_size, 'landscape')->stream('certificate.pdf');
