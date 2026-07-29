@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
@@ -36,6 +37,11 @@ class SubMateriModel extends Model
     public function items()
     {
         return $this->hasMany(SubMateriItemModel::class, 'id_sub_materi');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(DataPayment::class, 'submateri_id');
     }
     public function certificateTemplate()
 {

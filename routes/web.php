@@ -65,6 +65,16 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/banner', BannerslideController::class);
     Route::post('/update-banner', [BannerslideController::class, 'updatebanner'])->name('updatebanner');
     Route::get('/admin/pembayaran', [App\Http\Controllers\Backend\PembayaranController::class, 'index']);
+    Route::get('/admin/order-kelas-manual', [App\Http\Controllers\Admin\ManualClassOrderController::class, 'index'])
+        ->name('admin.manual-class-orders.index');
+    Route::post('/admin/order-kelas-manual', [App\Http\Controllers\Admin\ManualClassOrderController::class, 'store'])
+        ->name('admin.manual-class-orders.store');
+    Route::get('/admin/order-kelas-manual/{id}/edit', [App\Http\Controllers\Admin\ManualClassOrderController::class, 'edit'])
+        ->name('admin.manual-class-orders.edit');
+    Route::put('/admin/order-kelas-manual/{id}', [App\Http\Controllers\Admin\ManualClassOrderController::class, 'update'])
+        ->name('admin.manual-class-orders.update');
+    Route::delete('/admin/order-kelas-manual/{id}', [App\Http\Controllers\Admin\ManualClassOrderController::class, 'destroy'])
+        ->name('admin.manual-class-orders.destroy');
     Route::post('/admin/pembayaran/approved', [App\Http\Controllers\Backend\PembayaranController::class, 'approved']);
     Route::post('/admin/pembayaran/certificate', [App\Http\Controllers\Backend\PembayaranController::class, 'publish_certificate']);
     Route::post('/admin/pembayaran/setsudahcetak', [App\Http\Controllers\Backend\PembayaranController::class, 'setsudahcetak']);
@@ -137,7 +147,7 @@ Route::post('/siswa/resend-verification', [SiswaVerificationController::class, '
 Route::middleware('auth')->group(function () {
     Route::get('/users/sendemail', [UserController::class, 'resendEmail']);
     Route::post('/admin/inputlogopurusahaan', [App\Http\Controllers\HomeController::class, 'inputlogopurusahaan']);
-    Route::get('/admin/classes/previewcertificate/{id}/{nama}/{instansi}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
+    Route::get('/admin/classes/previewcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'previewcertificate']);
     Route::post('/classes/biaya_certificate', [App\Http\Controllers\Admin\ClassesController::class, 'biayacertificate']);
     Route::get('/classes/getcertificate/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'getcertificate']);
     Route::post('/classes/multiinvoice', [App\Http\Controllers\Front\InvoiceController::class, 'multiInvoice']);
@@ -170,7 +180,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rekeningprofile', [App\Http\Controllers\Front\ProfileController::class, 'rekeningprofile']);
     Route::get('/getbillingkelas/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getbillingkelas']);
     Route::get('/getkelasanda/{type}', [App\Http\Controllers\Front\ProfileController::class, 'getkelasanda']);
-Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name('cvats.pdf');
+    Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name('cvats.pdf');
     // Loker Front
     Route::resource('/loker-front', LokerController::class);
     Route::get('/siswa/verifikasi-email/{id}/{hash}', [SiswaVerificationController::class, 'verify'])->name('siswa.verifikasi.email');
@@ -199,15 +209,15 @@ Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name(
 
         Route::post('/pelatihan/simpan-test/{materi_id}/{quiz_id}', [SiswaMateriController::class, 'savejawaban'])->name('siswa.materi.simpan_test');
         Route::post('/pelatihan/simpan/{submateri_id}/{quiz_id}', [SiswaMateriController::class, 'savetest'])->name('siswa.umum.simpan_test');
-       Route::get('/cvats', [LamaranController::class, 'index'])->name('cvats.index');
-       
+        Route::get('/cvats', [LamaranController::class, 'index'])->name('cvats.index');
 
-    // Route Resource CRUD Lamaran
-    Route::get('/lamaran/create', [LamaranController::class, 'create'])->name('lamaran.create');
-    Route::post('/lamaran', [LamaranController::class, 'store'])->name('lamaran.store');
-    Route::get('/lamaran/{id}/edit', [LamaranController::class, 'edit'])->name('lamaran.edit');
-    Route::put('/lamaran/{id}', [LamaranController::class, 'update'])->name('lamaran.update');
-    Route::delete('/lamaran/{id}', [LamaranController::class, 'destroy'])->name('lamaran.destroy');
+
+        // Route Resource CRUD Lamaran
+        Route::get('/lamaran/create', [LamaranController::class, 'create'])->name('lamaran.create');
+        Route::post('/lamaran', [LamaranController::class, 'store'])->name('lamaran.store');
+        Route::get('/lamaran/{id}/edit', [LamaranController::class, 'edit'])->name('lamaran.edit');
+        Route::put('/lamaran/{id}', [LamaranController::class, 'update'])->name('lamaran.update');
+        Route::delete('/lamaran/{id}', [LamaranController::class, 'destroy'])->name('lamaran.destroy');
         Route::post('/prepotes/savejawaban', [PrepotestController::class, 'savejawaban']);
     });
     Route::middleware(['role:4,5,6', 'siswa.verified'])->group(function () {
@@ -219,11 +229,11 @@ Route::get('/cvats/pdf/{id?}', [LamaranController::class, 'downloadPdf'])->name(
         Route::get('/sertifikat', [SiswaMateriController::class, 'listSertifikat'])->name('sertifikat');
         Route::get('/manajemen/laporan-siswa', [SiswaMateriController::class, 'indexLaporanManajemen'])->name('manajemen.laporan.index');
         Route::get('/userprofile', [UserController::class, 'profile'])->name('profiless.index');
-        
+
         Route::get('/materi-umum', [SiswaMateriController::class, 'umumIndex'])->name('siswa.umum.index');
         Route::get('/lowongan', [MembershipController::class, 'loker'])->name('lowongan');
         Route::get('/lowongan/{id}', [MembershipController::class, 'detil_loker'])->name('lowongan.show');
-        
+
         Route::post('/materi-umum/ikuti/{sub_materi_id}', [SiswaMateriController::class, 'ikutiPelatihan'])->name('siswa.umum.ikuti');
         Route::get('/materi-umum/belajar/{sub_materi_id}', [SiswaMateriController::class, 'umumBelajar'])->name('siswa.umum.belajar');
         Route::get('download-certificate/materi/{id}', [CertificateController::class, 'downloadMateriCertificate'])->name('materi.sertifikat');

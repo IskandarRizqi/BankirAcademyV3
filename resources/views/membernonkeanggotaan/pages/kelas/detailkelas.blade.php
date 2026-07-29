@@ -800,7 +800,7 @@ $courseStatusClass = $courseStatus === 'Selesai' ? 'completed' : 'owned';
 
                 <div class="member-owned-class-detail__stats" aria-label="Ringkasan kelas">
                     <div class="member-owned-class-detail__stat">
-                        <span class="member-owned-class-detail__stat-label">Peserta</span>
+                        <span class="member-owned-class-detail__stat-label">Peserta terdaftar</span>
                         <span class="member-owned-class-detail__stat-value">{{ $participantCount }} orang</span>
                     </div>
                     <div class="member-owned-class-detail__stat">
@@ -971,7 +971,7 @@ $courseStatusClass = $courseStatus === 'Selesai' ? 'completed' : 'owned';
             <section class="member-owned-class-detail__meeting-card" aria-labelledby="owned-class-meeting-title">
                 <span class="member-owned-class-detail__kicker">Pertemuan kelas</span>
                 <h2 class="member-owned-class-detail__meeting-title" id="owned-class-meeting-title">
-                    {{ $isOfflineEvent ? 'Informasi lokasi' : 'Akses Zoom' }}
+                    {{ $isOfflineEvent ? 'Informasi lokasi' : 'Video Conference' }}
                 </h2>
 
                 @if($accessEvent)

@@ -494,7 +494,7 @@ $levelOptions = [
 			<form class="course-filter-form" method="GET" action="{{ url('/event-kelas') }}">
 				<div class="course-filter-field">
 					<label for="course-search">Cari kelas</label>
-					<input type="search" id="course-search" class="course-filter-control" value="{{ $filters['q'] }}" placeholder="Cari kelas anda">
+					<input type="search" id="course-search" name="q" class="course-filter-control" value="{{ $filters['q'] }}" placeholder="Cari kelas anda">
 				</div>
 
 				<div class="course-filter-field">

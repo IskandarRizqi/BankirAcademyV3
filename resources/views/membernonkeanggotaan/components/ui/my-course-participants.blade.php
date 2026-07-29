@@ -99,6 +99,74 @@
         color: #6b7280;
         font-size: 13px;
     }
+
+    .participants-browser__toolbar {
+        margin-bottom: 14px;
+    }
+
+    .participants-browser__search-label {
+        display: block;
+        margin-bottom: 6px;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .participants-browser__search {
+        width: 100%;
+        min-height: 40px;
+        padding: 8px 12px 8px 36px;
+        border: 1px solid #dbe2ea;
+        border-radius: 9px;
+        background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236b7280' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-4-4'/%3E%3C/svg%3E") no-repeat 12px center;
+        color: #374151;
+        font-size: 13px;
+    }
+
+    .participants-browser__search:focus {
+        border-color: #4f46e5;
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, .12);
+    }
+
+    .participants-browser__pagination {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 16px;
+    }
+
+    .participants-browser__page {
+        min-width: 32px;
+        min-height: 32px;
+        padding: 5px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 7px;
+        background: #ffffff;
+        color: #4b5563;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .participants-browser__page:hover,
+    .participants-browser__page--active {
+        border-color: #4f46e5;
+        background: #eef0fe;
+        color: #4f46e5;
+    }
+
+    .participants-browser__page:disabled {
+        cursor: default;
+        opacity: .45;
+    }
+
+    .participants-browser__no-result {
+        margin: 14px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        text-align: center;
+    }
 </style>
 @endonce
 
@@ -193,14 +261,32 @@
             @else
                 <div class="modal-body">
                     @if(count($participants) > 0)
-                        <ul class="my-course-participants__list">
-                            @foreach($participants as $participant)
-                                <li class="my-course-participants__item">
-                                    <strong class="my-course-participants__name">{{ $participant['nama'] }}</strong>
-                                    <span class="my-course-participants__contact">{{ $participant['email'] }} · {{ $participant['nohp'] }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
+                        <div class="participants-browser" data-participant-browser data-page-size="8">
+                            <div class="participants-browser__toolbar">
+                                <label class="participants-browser__search-label" for="participant-search-{{ $classId }}">Cari nama peserta</label>
+                                <input
+                                    type="search"
+                                    class="participants-browser__search"
+                                    id="participant-search-{{ $classId }}"
+                                    data-participant-search
+                                    placeholder="Ketik nama peserta..."
+                                    autocomplete="off">
+                            </div>
+
+                            <ul class="my-course-participants__list" data-participant-list>
+                                @foreach($participants as $participant)
+                                    <li
+                                        class="my-course-participants__item"
+                                        data-participant-item
+                                        data-search-text="{{ strtolower($participant['nama'] . ' ' . $participant['email'] . ' ' . $participant['nohp']) }}">
+                                        <strong class="my-course-participants__name">{{ $participant['nama'] }}</strong>
+                                        <span class="my-course-participants__contact">{{ $participant['email'] }} · {{ $participant['nohp'] }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <p class="participants-browser__no-result" data-participant-no-result hidden>Peserta tidak ditemukan.</p>
+                            <nav class="participants-browser__pagination" data-participant-pagination aria-label="Navigasi daftar peserta"></nav>
+                        </div>
                     @else
                         <p class="my-course-participants__empty">Belum ada detail peserta yang tersimpan.</p>
                     @endif
@@ -281,5 +367,98 @@
             document.body.appendChild(this);
         }
     });
+</script>
+@endonce
+
+@once
+<script>
+    (function () {
+        function initParticipantBrowser(browser) {
+            if (browser.dataset.initialized === 'true') {
+                return;
+            }
+
+            browser.dataset.initialized = 'true';
+
+            var searchInput = browser.querySelector('[data-participant-search]');
+            var items = Array.prototype.slice.call(browser.querySelectorAll('[data-participant-item]'));
+            var noResult = browser.querySelector('[data-participant-no-result]');
+            var pagination = browser.querySelector('[data-participant-pagination]');
+            var pageSize = Number(browser.dataset.pageSize) || 8;
+            var currentPage = 1;
+
+            function getFilteredItems() {
+                var keyword = (searchInput.value || '').trim().toLowerCase();
+
+                return items.filter(function (item) {
+                    return !keyword || (item.dataset.searchText || '').toLowerCase().includes(keyword);
+                });
+            }
+
+            function renderPagination(totalPages) {
+                pagination.innerHTML = '';
+
+                if (totalPages <= 1) {
+                    return;
+                }
+
+                for (var page = 1; page <= totalPages; page++) {
+                    var button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'participants-browser__page' + (page === currentPage ? ' participants-browser__page--active' : '');
+                    button.dataset.page = page;
+                    button.textContent = page;
+                    button.setAttribute('aria-label', 'Halaman ' + page);
+                    button.setAttribute('aria-current', page === currentPage ? 'page' : 'false');
+                    pagination.appendChild(button);
+                }
+            }
+
+            function render() {
+                var filteredItems = getFilteredItems();
+                var totalPages = Math.max(1, Math.ceil(filteredItems.length / pageSize));
+                currentPage = Math.min(currentPage, totalPages);
+                var firstItem = (currentPage - 1) * pageSize;
+                var lastItem = firstItem + pageSize;
+
+                items.forEach(function (item) {
+                    item.hidden = true;
+                });
+
+                filteredItems.slice(firstItem, lastItem).forEach(function (item) {
+                    item.hidden = false;
+                });
+
+                noResult.hidden = filteredItems.length > 0;
+                pagination.hidden = filteredItems.length === 0;
+                renderPagination(totalPages);
+            }
+
+            searchInput.addEventListener('input', function () {
+                currentPage = 1;
+                render();
+            });
+
+            pagination.addEventListener('click', function (event) {
+                var pageButton = event.target.closest('[data-page]');
+
+                if (!pageButton) {
+                    return;
+                }
+
+                currentPage = Number(pageButton.dataset.page) || 1;
+                render();
+            });
+
+            render();
+        }
+
+        function initAllParticipantBrowsers() {
+            document.querySelectorAll('[data-participant-browser]').forEach(initParticipantBrowser);
+        }
+
+        document.addEventListener('DOMContentLoaded', initAllParticipantBrowsers);
+        $(document).on('shown.bs.modal', '.my-course-participants-modal', initAllParticipantBrowsers);
+    })();
 </script>
 @endonce

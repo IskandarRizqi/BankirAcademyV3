@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class ClassesModel extends Model
@@ -55,6 +56,11 @@ class ClassesModel extends Model
         'videos',
         'contents',
     ];
+
+    public function classEvents(): HasMany
+    {
+        return $this->hasMany(ClassEventModel::class, 'class_id');
+    }
 
     public function getContentsAttribute()
     {
