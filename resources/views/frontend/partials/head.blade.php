@@ -50,6 +50,21 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
+	<style>
+		.sidebar-brand img {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.sidebar-brand span {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+	</style>
 
 	<title>Bankir Academy | Homepage</title>
 	<!-- <link rel="icon" href="uploads/settings/favicon8cc9.png?v=9.4.1" type="image/png" /> -->

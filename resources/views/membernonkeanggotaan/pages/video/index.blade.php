@@ -569,7 +569,7 @@
 
 <div class="catalog-card__footer">
     <span class="catalog-card__meta">
-        <i class="fas fa-file-alt text-emerald-600 mr-1"></i> {{ $sub->items->count() }} Modul PDF
+        <i class="fas fa-file-alt text-emerald-600 mr-1"></i> {{ $sub->items->count() }} Modul Video
     </span>
 
     {{-- Tombol Selalu Mengarah ke Halaman Detail / Preview --}}

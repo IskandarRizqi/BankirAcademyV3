@@ -328,8 +328,16 @@ class HomeController extends Controller
 
         $data['kelas'] = ClassesModel::query()
             ->whereYear('date_start', $currentYear)
-            ->where('date_end', '>=', $now->format('Y-m-d'))
+            ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
+            ->where('status', 1)->where('iht', 0)
+            ->orderBy('date_end', 'asc')
+            ->take(4)
+            ->get();
+        $data['iht'] = ClassesModel::query()
+            ->whereYear('date_start', $currentYear)
+            ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
             ->where('status', 1)
+            ->where('iht', 1)
             ->orderBy('date_end', 'asc')
             ->take(4)
             ->get();
@@ -368,7 +376,7 @@ class HomeController extends Controller
         // $data['use_new_template'] = true;
         // return view('front.homev2.homev2', $data);
         // return view('front.homev3.index', $data);
-        return view('frontend.pages.homepage.index');
+        return view('frontend.pages.homepage.index', compact('data'));
     }
     public function index(Request $request)
     {
