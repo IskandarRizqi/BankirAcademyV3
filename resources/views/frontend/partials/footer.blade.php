@@ -37,9 +37,9 @@
 							<div class="footer-item">
 								<h5>Eksplorasi</h5>
 								<ul>
-									<li><a href="pages/unlock-your-potential.html">Katalog Program</a></li>
+									<li><a href="/list-class">Katalog Program</a></li>
 									<li><a href="pages/privacy-policy-and-cookie-policy.html">Sertifikasi Perbankan</a></li>
-									<li><a href="pages/sitemap.html">Pelatihan Korporat</a></li>
+									<li><a href="pages/sitemap.html">In House Training</a></li>
 									<li><a href="pages/featured-courses.html">Jadwal Webinar</a></li>
 								</ul>
 							</div>
@@ -52,7 +52,7 @@
 									<li><a href="pages/teach-on-infixedu.html">Panduan Pendaftaran</a></li>
 									<li><a href="pages/get-the-app.html">Syarat & Ketentuan</a></li>
 									<li><a href="about-us.html">Kebijakan Privasi</a></li>
-									<li><a href="contact-us.html">Contact us </a></li>
+									<li><a href="contact-us.html">Kontak Kami</a></li>
 								</ul>
 							</div>
 						</div>
@@ -99,7 +99,7 @@
 												data-cfemail="80e8e5ececefc0e1eff2e1f3efe6f4aee3efed">[email&#160;protected]</span></a> -->
 									</div>
 									<div class="col-lg-3 col-sm-6">
-										<div class="ps-lg-5">
+										<!-- <div class="ps-lg-5">
 											<h4 class="text-uppercase currentColor">Follow Us</h4>
 											<ul class="social-list">
 												<li><a target="_blank" href="https://gitlab.com/" class=""
@@ -113,7 +113,7 @@
 												<li><a target="_blank" href="https://linkedin.com/" class=""
 														title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
 											</ul>
-										</div>
+										</div> -->
 									</div>
 									<div class="col-lg-3 col-sm-6">
 										<h4 class="text-uppercase currentColor">Payment Method</h4>

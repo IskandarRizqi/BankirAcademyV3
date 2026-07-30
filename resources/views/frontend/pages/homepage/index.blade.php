@@ -902,7 +902,7 @@
 
 								</h2>
 								<h5>
-									Some common question & answer
+									Beberapa pertanyaan dan jawaban umum
 								</h5>
 							</div>
 							<div class="row">
