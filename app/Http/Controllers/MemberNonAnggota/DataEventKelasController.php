@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassPaymentModel;
 use App\Models\ClassesModel;
+use App\Models\ClassPaymentModel;
 use App\Models\DataPayment;
 use App\Models\InstructorModel;
+use App\Services\ClassPricingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -27,14 +28,14 @@ class DataEventKelasController extends Controller
         ];
 
         $classes = $this->activeClassesQuery()
-            ->when($filters['q'] !== '', fn($query) => $this->applySearch($query, $filters['q']))
-            ->when(in_array((string) $filters['level'], ['1', '2', '3'], true), fn($query) => $query->where('level', $filters['level']))
-            ->when($filters['category'] !== [], fn($query) => $query->whereIn('category', $filters['category']))
-            ->when($filters['jenis'] !== [], fn($query) => $this->applyJsonArrayFilter($query, 'jenis', $filters['jenis']))
-            ->when($filters['kategori'] !== [], fn($query) => $query->whereIn('kategori', $filters['kategori']))
-            ->when($filters['iht'] !== [], fn($query) => $this->applyIhtFilter($query, $filters['iht']))
-            ->when($filters['instructor'] !== [], fn($query) => $this->applyInstructorFilter($query, $filters['instructor']))
-            ->tap(fn($query) => $this->applyListOrdering($query))
+            ->when($filters['q'] !== '', fn ($query) => $this->applySearch($query, $filters['q']))
+            ->when(in_array((string) $filters['level'], ['1', '2', '3'], true), fn ($query) => $query->where('level', $filters['level']))
+            ->when($filters['category'] !== [], fn ($query) => $query->whereIn('category', $filters['category']))
+            ->when($filters['jenis'] !== [], fn ($query) => $this->applyJsonArrayFilter($query, 'jenis', $filters['jenis']))
+            ->when($filters['kategori'] !== [], fn ($query) => $query->whereIn('kategori', $filters['kategori']))
+            ->when($filters['iht'] !== [], fn ($query) => $this->applyIhtFilter($query, $filters['iht']))
+            ->when($filters['instructor'] !== [], fn ($query) => $this->applyInstructorFilter($query, $filters['instructor']))
+            ->tap(fn ($query) => $this->applyListOrdering($query))
             ->paginate(9)
             ->withQueryString();
 
@@ -151,11 +152,11 @@ class DataEventKelasController extends Controller
 
                 return is_array($decoded) ? $decoded : Arr::wrap($value);
             })
-            ->filter(fn($value) => $value !== null && $value !== '')
-            ->map(fn($value) => (string) $value)
+            ->filter(fn ($value) => $value !== null && $value !== '')
+            ->map(fn ($value) => (string) $value)
             ->unique()
             ->sort()
-            ->mapWithKeys(fn($value) => [$value => $this->formatOptionLabel($value)])
+            ->mapWithKeys(fn ($value) => [$value => $this->formatOptionLabel($value)])
             ->all();
     }
 
@@ -172,7 +173,7 @@ class DataEventKelasController extends Controller
             ->distinct()
             ->orderBy($column)
             ->pluck($column)
-            ->mapWithKeys(fn($value) => [(string) $value => (string) $value])
+            ->mapWithKeys(fn ($value) => [(string) $value => (string) $value])
             ->all();
     }
 
@@ -184,8 +185,8 @@ class DataEventKelasController extends Controller
 
                 return is_array($decoded) ? $decoded : [];
             })
-            ->filter(fn($value) => $value !== null && $value !== '')
-            ->map(fn($value) => (string) $value)
+            ->filter(fn ($value) => $value !== null && $value !== '')
+            ->map(fn ($value) => (string) $value)
             ->unique()
             ->values();
 
@@ -197,20 +198,20 @@ class DataEventKelasController extends Controller
             ->whereIn('id', $ids->all())
             ->orderBy('name')
             ->pluck('name', 'id')
-            ->mapWithKeys(fn($name, $id) => [(string) $id => $name])
+            ->mapWithKeys(fn ($name, $id) => [(string) $id => $name])
             ->all();
     }
 
     private function arrayFilter($value, array $allowedValues = []): array
     {
         $values = collect(Arr::wrap($value))
-            ->filter(fn($item) => $item !== null && $item !== '')
-            ->map(fn($item) => (string) $item)
+            ->filter(fn ($item) => $item !== null && $item !== '')
+            ->map(fn ($item) => (string) $item)
             ->unique()
             ->values();
 
         if ($allowedValues !== []) {
-            $values = $values->filter(fn($item) => in_array($item, $allowedValues, true))->values();
+            $values = $values->filter(fn ($item) => in_array($item, $allowedValues, true))->values();
         }
 
         return $values->all();
@@ -226,7 +227,7 @@ class DataEventKelasController extends Controller
         $relatedClasses = ClassesModel::query()
             ->where('status', 1)
             ->where('unique_id', '!=', $unique)
-            ->when($class->category, fn($query) => $query->where('category', $class->category))
+            ->when($class->category, fn ($query) => $query->where('category', $class->category))
             ->orderByDesc('date_start')
             ->limit(3)
             ->get();
@@ -277,8 +278,8 @@ class DataEventKelasController extends Controller
                 return $existingPayment->no_invoice;
             }
 
-            $invoiceNumber = 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999);
-            $classPrice = $this->classPrice($class->pricing);
+            $invoiceNumber = 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999);
+            $classPrice = app(ClassPricingService::class)->resolve($class, $user)['final_price'];
 
             DataPayment::create([
                 'no_invoice' => $invoiceNumber,
@@ -317,20 +318,5 @@ class DataEventKelasController extends Controller
         );
 
         return redirect()->away("https://wa.me/6289682019523?text={$message}");
-    }
-
-    private function classPrice($pricing): float
-    {
-        if (! $pricing) {
-            return 0;
-        }
-
-        $price = (float) data_get($pricing, 'price', 0);
-
-        if ((int) data_get($pricing, 'promo', 0) !== 1) {
-            return $price;
-        }
-
-        return max(0, $price - (float) data_get($pricing, 'promo_price', 0));
     }
 }

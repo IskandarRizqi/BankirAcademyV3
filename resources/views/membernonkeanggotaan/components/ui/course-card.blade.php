@@ -21,11 +21,12 @@ $isIht = (int) data_get($course, 'iht') === 1;
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
 $pricing = data_get($course, 'pricing');
+$resolvedPricing = data_get($pricing, 'resolved', []);
 $isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
 $isPriceComingSoon = ! $isIht && ! $pricing;
 $price = (int) data_get($pricing, 'price', 0);
-$promoPrice = (int) data_get($pricing, 'promo_price', 0);
-$finalPrice = max(0, $price - $promoPrice);
+$finalPrice = (int) data_get($resolvedPricing, 'final_price', max(0, $price - (int) data_get($pricing, 'promo_price', 0)));
+$discountPercent = round((float) data_get($resolvedPricing, 'discount_percent', 0));
 $priceLabel = $isIht
 ? 'Hubungi Tim Kami'
 : ($isFree
@@ -517,7 +518,7 @@ $registrationDate = 'Hubungi Tim Kami';
 			<div class="member-course-card__price">
 				<span class="member-course-card__price-label">Investasi</span>
 				<span class="member-course-card__price-value {{ $isPriceComingSoon ? 'member-course-card__price-value--coming-soon' : '' }}">{{ $priceLabel }}</span>
-				@if(! $isPriceComingSoon && $promoPrice > 0 && $price > $finalPrice)
+				@if(! $isPriceComingSoon && data_get($resolvedPricing, 'total_discount', 0) > 0 && $price > $finalPrice)
 				<span class="member-course-card__price-original">Rp {{ number_format($price, 0, ',', '.') }}</span>
 				@endif
 			</div>

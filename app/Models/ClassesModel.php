@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ClassPricingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -110,7 +111,23 @@ class ClassesModel extends Model
     public function getPricingAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
-            return DB::table('class_pricing')->where('class_id', $this->attributes['id'])->first();
+            $pricing = ClassPricingModel::query()
+                ->where('class_id', $this->attributes['id'])
+                ->first();
+
+            if ($pricing) {
+                $pricingService = app(ClassPricingService::class);
+                $pricing->setAttribute(
+                    'resolved',
+                    $pricingService->resolvePricing(
+                        $this,
+                        $pricing,
+                        $pricingService->activeMembershipType(auth()->user())
+                    )
+                );
+            }
+
+            return $pricing;
         }
     }
 

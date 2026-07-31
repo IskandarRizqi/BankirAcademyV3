@@ -1,7 +1,9 @@
 @foreach($class as $value)
 @php
 $realprice = $value->pricing->price ?? 0;
-$afterpromo = $value->pricing->promo_price ?? 0;
+$resolvedPricing = data_get($value->pricing, 'resolved', []);
+$afterpromo = data_get($resolvedPricing, 'total_discount', $value->pricing->promo_price ?? 0);
+$finalprice = data_get($resolvedPricing, 'final_price', $realprice - $afterpromo);
 $isIht = (int) data_get($value, 'iht') === 1;
 $startDate = data_get($value, 'date_start');
 $endDate = data_get($value, 'date_end');
@@ -52,7 +54,7 @@ $courseStatus = $isIht ? 'IHT' : $courseStatus;
 			<div class="course-item-footer d-flex justify-content-between">
 				<div class="price">
 					<span class="prise_tag">
-						<span class="current">Rp. {{ number_format($realprice - $afterpromo, 0, ',', ' ') }}</span>
+						<span class="current">Rp. {{ number_format($finalprice, 0, ',', ' ') }}</span>
 						@if($afterpromo > 0)
 						<del>Rp. {{ number_format($realprice, 0, ',', ' ') }}</del>
 						@endif
