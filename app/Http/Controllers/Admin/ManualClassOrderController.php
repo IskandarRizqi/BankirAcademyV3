@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
-use App\Models\ClassesModel;
 use App\Models\DataPayment;
 use App\Models\SertifikatPesertaModel;
 use App\Models\User;
+use App\Services\ClassPricingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -83,14 +84,16 @@ class ManualClassOrderController extends Controller
         $validated = $this->validateOrder($request);
         $class = $this->findEligibleClass((int) $validated['class_id'], (int) $order->class_id);
         $user = $this->findEligibleUser((int) $validated['user_id']);
+        $pricingSnapshot = $this->pricingSnapshot($class, $user, (float) $validated['nominal']);
 
-        DB::transaction(function () use ($validated, $order, $class, $user) {
+        DB::transaction(function () use ($validated, $order, $class, $user, $pricingSnapshot) {
             $order->update([
                 'status' => 1,
                 'user_id' => $user->id,
                 'class_id' => $class->id,
                 'price' => (float) $validated['nominal'],
                 'price_final' => (float) $validated['nominal'],
+                'additional_discount' => json_encode($pricingSnapshot),
                 'jumlah' => 0,
                 'biaya_sertifikat' => 0,
             ]);
@@ -237,6 +240,8 @@ class ManualClassOrderController extends Controller
 
     private function createClassPayment(array $validated, ClassesModel $class, User $user, string $invoiceNumber): ClassPaymentModel
     {
+        $pricingSnapshot = $this->pricingSnapshot($class, $user, (float) $validated['nominal']);
+
         return ClassPaymentModel::create([
             'status' => 1,
             'user_id' => $user->id,
@@ -244,11 +249,28 @@ class ManualClassOrderController extends Controller
             'unique_code' => $this->generateUniqueCode(),
             'price' => (float) $validated['nominal'],
             'price_final' => (float) $validated['nominal'],
+            'additional_discount' => json_encode($pricingSnapshot),
             'expired' => null,
             'no_invoice' => $invoiceNumber,
             'jumlah' => 0,
             'biaya_sertifikat' => 0,
         ]);
+    }
+
+    private function pricingSnapshot(ClassesModel $class, User $user, float $nominal): array
+    {
+        $pricing = app(ClassPricingService::class)->resolve($class, $user);
+
+        return [
+            'base_price' => $pricing['base_price'],
+            'general_discount' => $pricing['general_discount'],
+            'membership_discount' => $pricing['membership_discount'],
+            'total_discount' => $pricing['total_discount'],
+            'discount_percent' => $pricing['discount_percent'],
+            'membership_type' => $pricing['membership_type'],
+            'discount_source' => $pricing['discount_source'],
+            'manual_nominal' => $nominal,
+        ];
     }
 
     private function createParticipant(ClassPaymentModel $classPayment, ClassesModel $class, User $user): ClassParticipantModel

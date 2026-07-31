@@ -7,14 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
 use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
-use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
-use App\Models\ClassPricingModel;
 use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
 use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
+use App\Services\ClassPricingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,10 +35,10 @@ class OrderController extends Controller
     public function multibayar(Request $request)
     {
         // return $request->all();
-        if (!$request->dataInvoiceMulti) {
+        if (! $request->dataInvoiceMulti) {
             return Redirect::back()->with('error', 'Data Tidak Ditemukan');
         }
-        if (!$request->imageBuktiMulti) {
+        if (! $request->imageBuktiMulti) {
             return Redirect::back()->with('error', 'Gambar Tidak Ditemukan');
         }
 
@@ -115,15 +114,16 @@ class OrderController extends Controller
             }
             $available = 1;
 
-            $gambar = $request->file('imageBuktiMulti')->store('order/' . Auth::user()->email . '/' . time());
+            $gambar = $request->file('imageBuktiMulti')->store('order/'.Auth::user()->email.'/'.time());
             ClassPaymentModel::where('id', $v->payment_id)->update([
                 'file' => $gambar,
-                'additional_discount' => json_encode($additional_discount)
+                'additional_discount' => json_encode($additional_discount),
             ]);
         }
 
         return Redirect::back()->with('success', 'Upload Bukti Berhasil');
     }
+
     public function bayarv2(Request $request)
     {
         $insert = [];
@@ -163,20 +163,20 @@ class OrderController extends Controller
                 return response()->json(['status' => false, 'message' => 'Size Maximum 1Mb']);
             }
 
-            $filename = time() . '-' . $name;
+            $filename = time().'-'.$name;
             $file = $request->file('gambar');
-            $insert['file'] = $file->store('order/' . Auth::user()->email . '/' . time());
+            $insert['file'] = $file->store('order/'.Auth::user()->email.'/'.time());
         }
 
         // Promo dari Banner
         $bp = BannerModel::where('jenis', 2)->where('kode', $request->kode)->where('mulai', '<', Carbon::now())->where('selesai', '>=', Carbon::now())->get();
-        $kp = KodePromoModel::where('kode', $request->kode)->where('class_title', 'like', '%"' . urldecode($request->class_title) . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        $kp = KodePromoModel::where('kode', $request->kode)->where('class_title', 'like', '%"'.urldecode($request->class_title).'"%')->where('tgl_selesai', '>=', Carbon::now())->get();
         // $kp = KodePromoModel::where('kode', $kode_promo)->where('class_title', 'like', '%"' . $title_kelas . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
         if (count($kp) > 0) {
             $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
                 'kode_promo' => $request->kode,
             ]);
-            if (!$cpm) {
+            if (! $cpm) {
                 return response()->json(['message' => 'Update Promo Banner Gagal', 'status' => false]);
             }
         }
@@ -184,7 +184,7 @@ class OrderController extends Controller
             $cpm = ClassPaymentModel::where('id', $request->payment_id)->update([
                 'kode_promo' => $request->kode,
             ]);
-            if (!$cpm) {
+            if (! $cpm) {
                 return response()->json(['message' => 'Update Kode Promo Gagal', 'status' => false]);
             }
         }
@@ -229,7 +229,7 @@ class OrderController extends Controller
 
                     RefferralModel::updateOrCreate([
                         'user_aplicator' => $data['profile']['user_id'],
-                        'class_id' => $request->class_id
+                        'class_id' => $request->class_id,
                     ], [
                         'user_id' => $reff->user_id,
                         'user_aplicator' => $reff->user_aplicator,
@@ -255,8 +255,10 @@ class OrderController extends Controller
         if ($cpm) {
             return response()->json(['status' => true, 'message' => 'Data Tersimpan']);
         }
+
         return response()->json(['message' => 'Upload Bukti Gagal', 'status' => false, 'data' => $update]);
     }
+
     public function bayar(Request $request)
     {
         if ($request->ajax()) {
@@ -267,6 +269,7 @@ class OrderController extends Controller
             ClassPaymentModel::where('id', $request->payment_id)->update([
                 'jumlah' => $request->jumlah,
             ]);
+
             return response()->json(['status' => true, 'message' => 'Input Participant Berhasil']);
         }
         $validator = Validator::make($request->all(), [
@@ -283,7 +286,7 @@ class OrderController extends Controller
             if (($size / 1024) > 100) {
                 return Redirect::back()->with('error', 'Size Maximum 100kb');
             }
-            $gambar = $value->store('order/' . Auth::user()->email . '/' . time());
+            $gambar = $value->store('order/'.Auth::user()->email.'/'.time());
         }
 
         $data['payment'] = ClassPaymentModel::where('id', $request->payment_id)->first();
@@ -325,7 +328,7 @@ class OrderController extends Controller
 
                     RefferralModel::updateOrCreate([
                         'user_aplicator' => $data['profile']['user_id'],
-                        'class_id' => $request->class_id
+                        'class_id' => $request->class_id,
                     ], [
                         'user_id' => $reff->user_id,
                         'user_aplicator' => $reff->user_aplicator,
@@ -342,14 +345,16 @@ class OrderController extends Controller
 
         $data = [
             'file' => $gambar,
-            'additional_discount' => json_encode($additional_discount)
+            'additional_discount' => json_encode($additional_discount),
         ];
         $update = ClassPaymentModel::where('id', $request->payment_id)->update($data);
         if ($update) {
             return Redirect::back()->with('success', 'Upload Bukti Berhasil');
         }
+
         return Redirect::back()->with('error', 'Upload Bukti Gagal');
     }
+
     public function order_class(Request $request)
     {
         //  return view('front.kelas.pembayaran');
@@ -360,22 +365,25 @@ class OrderController extends Controller
         // }
 
         $auth = Auth::user()->id;
-        if (!$request->class_id) {
+        if (! $request->class_id) {
             // Redirect::back()->with('error', 'Kelas Ditemukan');
             return response()->json(['msg' => 'Kelas tidak ditemukan', 'rc' => '07']);
         }
-        $kelas = ClassesModel::where('id', $request->class_id)->where('is_open', 1)->exists();
-        if (!$kelas) {
+        $class = ClassesModel::where('id', $request->class_id)->where('is_open', 1)->first();
+        if (! $class) {
             return response()->json(['msg' => 'Kelas Sudah Penuh', 'rc' => '07']);
             // Redirect::back()->with('error', 'Kelas Sudah Penuh');
         }
-        if (!$auth) {
+        if (! $auth) {
             return response()->json(['msg' => 'Silahkan login terlebih dahulu', 'rc' => '07']);
             // Redirect::back()->with('error', 'Belum Login');
         }
         if (Auth::user()->role != 2) {
             return response()->json(['msg' => 'Silahkan Pakai Akun Member', 'rc' => '07']);
             // Redirect::back()->with('error', 'Silahkan Pakai Akun Member');
+        }
+        if ((int) $class->iht === 1) {
+            return response()->json(['msg' => 'Kelas IHT diproses melalui order manual admin', 'rc' => '07']);
         }
         if ($auth && Auth::user()->corporate != null) {
             return response()->json(['msg' => 'Lengkapi Data Profile Terlebih Dahulu', 'rc' => '03']);
@@ -398,114 +406,128 @@ class OrderController extends Controller
         do {
             $no_invoice = uniqid();
         } while (in_array($no_invoice, $numbers));
-$price = 0;
-$price_final = 0;
-$cp = ClassPricingModel::where('class_id', $request->class_id)->first();
+        $pricingService = app(ClassPricingService::class);
+        $resolvedPricing = $pricingService->resolve($class, Auth::user());
 
-$jmlpeserta = 1;
-// Perbaikan kondisi: pastikan nominal di atas 0
-if ($request->jml_peserta != null && $request->jml_peserta > 0) {
-    $jmlpeserta = $request->jml_peserta;
-}
+        $price = $resolvedPricing['final_price'];
+        $price_final = 0;
 
-if ($cp) {
-    $price = $cp->price;
-    $price_final = $price * $jmlpeserta;
-    if ($cp->promo == 1) {
-        $price = $cp->price - $cp->promo_price;
-        $price_final = $price * $jmlpeserta;
-    }
-}
-
-$biaya_sertifikat_per_orang = 0;
-
-// Perbaikan: Request yang datang dari Radio bertipe string "1" atau "0"
-if ($request->sertifikat_invoice == "1" || $request->sertifikat_invoice > 0) {
-    $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
-    if ($s) {
-        $biaya_sertifikat_per_orang = $s->nominal;
-        if ($s->type > 0) {
-            // Jika tipenya persentase (misal: persen dari harga promo/final per orang)
-            $biaya_sertifikat_per_orang = ($price * ($s->nominal / 100));
+        $jmlpeserta = 1;
+        // Perbaikan kondisi: pastikan nominal di atas 0
+        if ($request->jml_peserta != null && $request->jml_peserta > 0) {
+            $jmlpeserta = $request->jml_peserta;
         }
-    } else {
-        $biaya_sertifikat_per_orang = 100000; // Default jika data master tidak ada
+
+        $price_final = $price * $jmlpeserta;
+
+        $biaya_sertifikat_per_orang = 0;
+
+        // Perbaikan: Request yang datang dari Radio bertipe string "1" atau "0"
+        if ($request->sertifikat_invoice == '1' || $request->sertifikat_invoice > 0) {
+            $s = BiayaSertifikatModel::where('class_id', $request->class_id)->first();
+            if ($s) {
+                $biaya_sertifikat_per_orang = $s->nominal;
+                if ($s->type > 0) {
+                    // Jika tipenya persentase (misal: persen dari harga promo/final per orang)
+                    $biaya_sertifikat_per_orang = ($price * ($s->nominal / 100));
+                }
+            } else {
+                $biaya_sertifikat_per_orang = 100000; // Default jika data master tidak ada
+            }
+        }
+
+        // Hitung total biaya sertifikat untuk semua peserta
+        $total_biaya_sertifikat = $biaya_sertifikat_per_orang * $jmlpeserta;
+
+        if ($resolvedPricing['final_price'] <= 0) {
+            $price_final = 0;
+        }
+
+        // Kondisi 1: Jika Kelas Gratis DAN user memilih TIDAK pakai sertifikat (biaya = 0)
+        if (($resolvedPricing['final_price'] <= 0) && $total_biaya_sertifikat == 0) {
+            $order = ClassPaymentModel::create([
+                'status' => 1,
+                'user_id' => $auth,
+                'class_id' => $request->class_id,
+                'unique_code' => $randomNumber,
+                'price' => $price,
+         'additional_discount' => json_encode([
+                    'base_price' => $resolvedPricing['base_price'],
+                    'general_discount' => $resolvedPricing['general_discount'],
+                    'membership_discount' => $resolvedPricing['membership_discount'],
+                    'total_discount' => $resolvedPricing['total_discount'],
+                    'discount_percent' => $resolvedPricing['discount_percent'],
+                    'membership_type' => $resolvedPricing['membership_type'],
+                    'discount_source' => $resolvedPricing['discount_source'],
+         ]),
+                'jumlah' => $jmlpeserta,
+                'biaya_sertifikat' => 0,
+                'price_final' => 0,
+                'expired' => date('Y-m-d').' 23:59:59',
+                'no_invoice' => $no_invoice,
+            ]);
+
+            $order->refresh();
+
+            SertifikatPesertaModel::create([
+                'user_id' => Auth::user()->id,
+                'class_id' => $request->class_id,
+                'payment_class_id' => $order->id,
+                'nama' => $request->input('nama', '[]'),
+                'email' => $request->input('email', '[]'),
+                'nohp' => $request->input('nomor_handphone', '[]'),
+            ]);
+
+            return response()->json(['msg' => 'Order Berhasil', 'rc' => '00', 'order_id' => $order->id]);
+        }
+        // Kondisi 2: Kelas Berbayar ATAU Kelas Gratis tapi nominal sertifikat > 0
+        else {
+            $order = ClassPaymentModel::create([
+                'status' => 0,
+                'user_id' => $auth,
+                'class_id' => $request->class_id,
+                'unique_code' => $randomNumber,
+                'price' => $price,
+         'additional_discount' => json_encode([
+                    'base_price' => $resolvedPricing['base_price'],
+                    'general_discount' => $resolvedPricing['general_discount'],
+                    'membership_discount' => $resolvedPricing['membership_discount'],
+                    'total_discount' => $resolvedPricing['total_discount'],
+                    'discount_percent' => $resolvedPricing['discount_percent'],
+                    'membership_type' => $resolvedPricing['membership_type'],
+                    'discount_source' => $resolvedPricing['discount_source'],
+         ]),
+                'jumlah' => $jmlpeserta,
+                'biaya_sertifikat' => $total_biaya_sertifikat,
+                'price_final' => $price_final + $total_biaya_sertifikat, // Sudah mengcover berbayar maupun gratis berkombinasi sertifikat
+                'expired' => date('Y-m-d').' 23:59:59',
+                'no_invoice' => $no_invoice,
+            ]);
+
+            $order->refresh();
+
+            SertifikatPesertaModel::create([
+                'user_id' => Auth::user()->id,
+                'class_id' => $request->class_id,
+                'payment_class_id' => $order->id,
+                'nama' => $request->nama ? json_encode($request->nama) : json_encode([]),
+                'email' => $request->email ? json_encode($request->email) : json_encode([]),
+                'nohp' => $request->nomor_handphone ? json_encode($request->nomor_handphone) : json_encode([]),
+            ]);
+
+            return response()->json(['msg' => 'Order Berhasil', 'rc' => '00', 'order_id' => $order->id]);
+        }
     }
-}
 
-// Hitung total biaya sertifikat untuk semua peserta
-$total_biaya_sertifikat = $biaya_sertifikat_per_orang * $jmlpeserta;
-
-if ($cp && $cp->gratis == 1) {
-    $price_final = 0;
-}
-
-// Kondisi 1: Jika Kelas Gratis DAN user memilih TIDAK pakai sertifikat (biaya = 0)
-if (($cp && $cp->gratis == 1) && $total_biaya_sertifikat == 0) {
-    $order = ClassPaymentModel::create([
-        'status' => 1,
-        'user_id' => $auth,
-        'class_id' => $request->class_id,
-        'unique_code' => $randomNumber,
-        'price' => $price,
-        'jumlah'=> $jmlpeserta,
-        'biaya_sertifikat' => 0,
-        'price_final' => 0,
-        'expired' => date('Y-m-d') . ' 23:59:59',
-        'no_invoice' => $no_invoice,
-    ]);
-    
-    $order->refresh();
-    
-    SertifikatPesertaModel::create([
-        'user_id' => Auth::user()->id,
-        'class_id' => $request->class_id,
-        'payment_class_id' => $order->id,
-      'nama'  => $request->input('nama', '[]'),
-    'email' => $request->input('email', '[]'),
-    'nohp'  => $request->input('nomor_handphone', '[]')
-    ]);
-    
-   return response()->json(['msg' => 'Order Berhasil', 'rc' => '00', 'order_id' => $order->id]);
-} 
-// Kondisi 2: Kelas Berbayar ATAU Kelas Gratis tapi nominal sertifikat > 0
-else {
-    $order = ClassPaymentModel::create([
-        'status' => 0,
-        'user_id' => $auth,
-        'class_id' => $request->class_id,
-        'unique_code' => $randomNumber,
-        'price' => $price,
-         'jumlah'=> $jmlpeserta,
-        'biaya_sertifikat' => $total_biaya_sertifikat,
-        'price_final' => $price_final + $total_biaya_sertifikat, // Sudah mengcover berbayar maupun gratis berkombinasi sertifikat
-        'expired' => date('Y-m-d') . ' 23:59:59',
-        'no_invoice' => $no_invoice,
-    ]);
-    
-    $order->refresh();
-    
-    SertifikatPesertaModel::create([
-        'user_id' => Auth::user()->id,
-        'class_id' => $request->class_id,
-        'payment_class_id' => $order->id,
-        'nama' => $request->nama ? json_encode($request->nama) : json_encode([]),
-        'email' => $request->email ? json_encode($request->email) : json_encode([]),
-        'nohp' => $request->nomor_handphone ? json_encode($request->nomor_handphone) : json_encode([])
-    ]);
-    
-    return response()->json(['msg' => 'Order Berhasil', 'rc' => '00', 'order_id' => $order->id]);
-}
-    }
     public function laman_pembayaran($id)
-{
-    // Ambil data pembayaran berdasarkan ID beserta relasi kelasnya
-    $order = \App\Models\ClassPaymentModel::findOrFail($id);
-    
-    // Ambil data kelas terkait
-    $kelas = \App\Models\ClassesModel::find($order->class_id);
+    {
+        // Ambil data pembayaran berdasarkan ID beserta relasi kelasnya
+        $order = ClassPaymentModel::findOrFail($id);
 
-    // Kirim data ke view blade
-    return view('front.kelas.pembayaran', compact('order', 'kelas'));
-}
+        // Ambil data kelas terkait
+        $kelas = ClassesModel::find($order->class_id);
+
+        // Kirim data ke view blade
+        return view('front.kelas.pembayaran', compact('order', 'kelas'));
+    }
 }

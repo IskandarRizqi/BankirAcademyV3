@@ -144,9 +144,9 @@ class PerusahaanController extends Controller
      */
     public function destroy($id)
     {
-        if (!$this->checkAuth()) {
-            return Redirect::back()->with('info', 'Silahkan Login Dahulu');
-        }
+        // if (!$this->checkAuth()) {
+        //     return Redirect::back()->with('info', 'Silahkan Login Dahulu');
+        // }
         $l = PerusahaanModel::where('id', $id)->delete();
         if ($l) {
             return Redirect::back()->with('success', 'Data Terhapus');

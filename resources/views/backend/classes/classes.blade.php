@@ -342,48 +342,91 @@
             }
         });
         $('#numClassPrice').on('input change', function() {
-            var v = $(this).val();
-            var n = Number(v).toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR'
-            });
-            $('#nomClassPrice').text(n);
+            toggleDiscountInput();
+            updatePricingPreview();
         });
 
-        $('#numClassPromo').on('input change', function() {
-            var v = $(this).val();
-            var n = Number(v).toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR'
-            });
-            $('#nomClassPromo').text(n);
+        $(document).on('click', '.pricing-help', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            $('.pricing-help-panel').remove();
+            $('<span>', {
+                class: 'pricing-help-panel',
+                role: 'tooltip',
+                text: $(this).data('help-title') + ': ' + $(this).data('help-content')
+            }).insertAfter(this);
         });
 
-        $('.clsNumberOnPrice').on('input change', function() {
-            var n = $('#numClassPrice').val();
-            var p = $('#numClassPromo').val();
-            var s = $('#numClassPromoPrctg').val();
-            var c = $('#numClassCashbackPrctg').val();
-
-            var rp = (Number(n) * Number(s)) / 100;
-            var rs = (Number(p) * 100) / Number(n);
-            var rc = (Number(n) * Number(c)) / 100;
-            console.log([n, p, s, rp, rs]);
-            if ($(this).attr('id') == 'numClassPromo' || $(this).attr('id') == 'numClassPrice') {
-                // rp = p;
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.pricing-help, .pricing-help-panel').length) {
+                $('.pricing-help-panel').remove();
             }
-            if ($(this).attr('id') == 'numClassPromoPrctg') {
-                // rs = s;
-            }
-            if ($(this).attr('id') == 'numClassCashbackPrctg') {}
-            $('#nomClassPromo').html('Rp. ' + rp.toLocaleString());
-            $('#nomClassCashback').html('Rp. ' + rc.toLocaleString());
+        });
 
-            $('#numClassPromo').val(rp);
-            $('#numClassCashback').val(rc);
-            // $('#numClassPromoPrctg').val(rs);
+        $('#discount_type').on('change', function() {
+            toggleDiscountInput();
+            updatePricingPreview();
+        });
+
+        $('#discount_value').on('input change', function() {
+            if ($('#discount_type').val() === 'nominal') {
+                $(this).val(formatRupiah($(this).val()));
+            }
+            updatePricingPreview();
+        });
+
+        $('#newClassesForm').on('submit', function() {
+            if ($('#discount_type').val() === 'nominal') {
+                $('#discount_value').val(normalizeRupiah($('#discount_value').val()));
+            }
         });
     })
+
+    function toggleDiscountInput() {
+        var nominal = $('#discount_type').val() === 'nominal';
+        var price = Number($('#numClassPrice').val()) || 0;
+        $('#discount-currency-prefix').toggle(nominal);
+        $('#discount-percent-suffix').toggle(!nominal);
+        $('#discount_value').attr('max', nominal ? price * 0.15 : 15);
+
+        if (nominal) {
+            $('#discount_value').attr('inputmode', 'numeric');
+            $('#discount_value').val(formatRupiah($('#discount_value').val()));
+        } else {
+            $('#discount_value').attr('inputmode', 'decimal');
+            $('#discount_value').val(normalizePercent($('#discount_value').val()));
+        }
+    }
+
+    function normalizeRupiah(value) {
+        return String(value || '').replace(/\D/g, '');
+    }
+
+    function formatRupiah(value) {
+        var normalized = normalizeRupiah(value);
+        return normalized ? Number(normalized).toLocaleString('id-ID') : '';
+    }
+
+    function normalizePercent(value) {
+        return String(value || '').replace(/[^0-9.,]/g, '').replace(',', '.');
+    }
+
+    function updatePricingPreview() {
+        var price = Number($('#numClassPrice').val()) || 0;
+        var rawValue = $('#discount_type').val() === 'nominal'
+            ? normalizeRupiah($('#discount_value').val())
+            : normalizePercent($('#discount_value').val());
+        var value = Number(rawValue) || 0;
+        var discount = $('#discount_type').val() === 'percent'
+            ? price * value / 100
+            : value;
+
+        $('#nomClassPrice').text('Rp. ' + price.toLocaleString('id-ID'));
+        $('#discount-preview').text(
+            'Harga setelah diskon: Rp ' + Math.max(0, price - discount).toLocaleString('id-ID')
+        );
+    }
 
     function biayasertifikat(id, tipe, nominal) {
         $('#id_kelas').val(id);
@@ -506,30 +549,48 @@ function openPeserta(data, id_class) {
     }
 
     function classPricing(c) {
-        console.log('price', c);
         $('#numClassPrice').val(0);
-        $('#numClassPromo').val(0);
-        $('#bolClassPromo').prop('checked', false);
+        $('#discount_type').val('percent');
+        $('#discount_value').val(0);
+        $('#individual_discount').val(0);
+        $('#company_online_discount').val(0);
+        $('#company_offline_discount').val(0);
+        $('#company_iht_discount').val(0);
+        $('#iht-discount-only').val(0);
         $('#bolClassGratis').prop('checked', false);
-        $('#datPromoDateStart').val('')
-        $('#datPromoDateEnd').val('')
+
+        const isIht = Number(c.iht) === 1;
+        const classType = isIht ? 'iht' : (Number(c.kategori) === 1 ? 'offline' : 'online');
+        $('#regular-pricing-fields').toggle(!isIht);
+        $('#iht-pricing-fields').toggle(isIht);
+        $('#numClassPrice').prop('required', !isIht);
+        $('.company-discount-online').toggle(classType === 'online');
+        $('.company-discount-offline').toggle(classType === 'offline');
+        $('.company-discount-iht').toggle(classType === 'iht');
+
         if (c.pricing) {
             $('#numClassPrice').val(c.pricing.price).trigger('change').trigger('input');
-            $('#numClassPromo').val(c.pricing.promo_price).trigger('change').trigger('input');
-            if (c.pricing.promo == 1) {
-                $('#bolClassPromo').prop('checked', true);
-            }
             if (c.pricing.gratis == 1) {
                 $('#bolClassGratis').prop('checked', true);
             }
-            $('#numClassPromoPrctg').val((c.pricing.promo_price / c.pricing.price) * 100)
 
-            $('#datPromoDateStart').val(c.pricing.promo_start)
-            $('#datPromoDateEnd').val(c.pricing.promo_end)
+            $('#discount_type').val(c.pricing.discount_type || 'nominal');
+            $('#discount_value').val(c.pricing.discount_value || c.pricing.promo_price || 0);
 
-            $('#numClassCashback').val(c.pricing.cashback_nominal)
-            $('#numClassCashbackPrctg').val(c.pricing.cashback_persen)
+            const discounts = c.pricing.membership_discounts || [];
+            const getDiscount = (membershipType, category) => {
+                const discount = discounts.find(item => item.membership_type === membershipType && item.discount_category === category);
+                return discount ? discount.discount_percent : 0;
+            };
+
+            $('#individual_discount').val(getDiscount('individual', 'individual_class'));
+            $('#company_online_discount').val(getDiscount('company', 'company_online'));
+            $('#company_offline_discount').val(getDiscount('company', 'company_offline'));
+            $('#company_iht_discount').val(getDiscount('company', 'company_iht'));
+            $('#iht-discount-only').val(getDiscount('company', 'company_iht'));
         }
+
+        $('#discount_type').trigger('change');
         $('.hdnClassesId').val(c.id);
         $('.activeClassTitle').text(c.title);
         openmodal('#classPricingModal');
