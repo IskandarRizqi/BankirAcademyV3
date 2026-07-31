@@ -549,6 +549,10 @@
             @if($lokers->count() > 0)
                 <div class="loker-grid" id="lokerGrid">
                     @include('membernonkeanggotaan.components.ui.loker-card-items', ['lokers' => $lokers])
+
+                    @for($index = 0; $index < $lokerSkeletonCount; $index++)
+                        @include('membernonkeanggotaan.components.ui.loker-skeleton-card')
+                    @endfor
                 </div>
 
                 @if(method_exists($lokers, 'hasPages') && $lokers->hasPages())

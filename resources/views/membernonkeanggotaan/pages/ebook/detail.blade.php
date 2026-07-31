@@ -3,6 +3,7 @@
 @section('title', 'Detail Ebook - ' . $subMateri->nama)
 
 @section('content')
+@php($isUpcoming = (int) ($subMateri->upcoming ?? 0) === 1)
 <style>
     .ebook-detail-v2 {
         display: flex;
@@ -316,6 +317,19 @@
         text-transform: uppercase;
     }
 
+    .ebook-upcoming-badge {
+        display: inline-flex;
+        margin-top: 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #059669;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
     .ebook-register-card__price {
         display: block;
         margin-top: 4px;
@@ -347,6 +361,16 @@
     .ebook-register-button:hover {
         color: #111827;
         transform: translateY(-1px);
+    }
+
+    .ebook-register-button--disabled,
+    .ebook-register-button--disabled:hover {
+        color: #f9fafb;
+        background: #9ca3af;
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: .85;
+        transform: none;
     }
 
     .ebook-register-note {
@@ -558,8 +582,13 @@
             <aside class="ebook-side-stack">
                 <section class="ebook-register-card">
                     <span class="ebook-register-card__label">Harga Ebook</span>
+                    @if($isUpcoming)
+                        <span class="ebook-upcoming-badge">Upcoming</span>
+                    @endif
                     <span class="ebook-register-card__price">
-                        @if($hargaFinal > 0)
+                        @if($isUpcoming)
+                            Rp.-
+                        @elseif($hargaFinal > 0)
                             Rp {{ number_format($hargaFinal, 0, ',', '.') }}
                         @else
                             Gratis
@@ -569,7 +598,11 @@
                         <span class="ebook-price-original">Rp {{ number_format($harga, 0, ',', '.') }}</span>
                     @endif
 
-                    @if($sudahAkses)
+                    @if($isUpcoming)
+                        <button type="button" class="ebook-register-button ebook-register-button--disabled" disabled aria-disabled="true">
+                            Upcoming
+                        </button>
+                    @elseif($sudahAkses)
                         <a href="{{ route('ebook.belajar', $subMateri->id) }}" class="ebook-register-button">
                             <i class="fas fa-book-open me-2 mr-4"></i> Baca Sekarang
                         </a>

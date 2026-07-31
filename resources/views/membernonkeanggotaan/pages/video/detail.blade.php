@@ -3,6 +3,7 @@
 @section('title', 'Detail Video - ' . $subMateri->nama)
 
 @section('content')
+@php($isUpcoming = (int) ($subMateri->upcoming ?? 0) === 1)
 <style>
     .video-detail-v2 {
         display: flex;
@@ -125,6 +126,19 @@
         text-transform: uppercase;
     }
 
+    .video-upcoming-badge {
+        display: inline-flex;
+        margin-top: 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #059669;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
     .video-register-card__price {
         display: block;
         margin-top: 4px;
@@ -165,6 +179,16 @@
     .video-register-button:hover {
         color: #111827;
         transform: translateY(-1px);
+    }
+
+    .video-register-button--disabled,
+    .video-register-button--disabled:hover {
+        color: #f9fafb;
+        background: #9ca3af;
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: .85;
+        transform: none;
     }
 
     .video-register-note {
@@ -258,8 +282,13 @@
             <aside class="video-side-stack">
                 <section class="video-register-card">
                     <span class="video-register-card__label">Harga Video</span>
+                    @if($isUpcoming)
+                        <span class="video-upcoming-badge">Upcoming</span>
+                    @endif
                     <span class="video-register-card__price">
-                        @if($hargaFinal > 0)
+                        @if($isUpcoming)
+                            Rp.-
+                        @elseif($hargaFinal > 0)
                             Rp {{ number_format($hargaFinal, 0, ',', '.') }}
                         @else
                             Gratis
@@ -269,7 +298,11 @@
                         <span class="video-price-original">Rp {{ number_format($harga, 0, ',', '.') }}</span>
                     @endif
 
-                    @if($sudahAkses)
+                    @if($isUpcoming)
+                        <button type="button" class="video-register-button video-register-button--disabled" disabled aria-disabled="true">
+                            Upcoming
+                        </button>
+                    @elseif($sudahAkses)
                         <a href="{{ route('video.belajar', $subMateri->id) }}" class="video-register-button">
                             <i class="fas fa-play-circle me-2"></i> Tonton Sekarang
                         </a>
