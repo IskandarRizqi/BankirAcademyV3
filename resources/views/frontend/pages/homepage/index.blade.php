@@ -337,7 +337,7 @@
             {{ $kelas->title }} 
         </a>
 
-        <div class="d-flex align-itemes-center justify-content-between meta"
+        <!-- <div class="d-flex align-itemes-center justify-content-between meta"
             style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
             <div class="rating"
                 style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
@@ -357,7 +357,7 @@
                     {{ $kelas->total_peserta ?? 0 }} Students
                 </a>
             </div>
-        </div>
+        </div> -->
 
         {{-- Deskripsi Dinamis --}}
         <div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
@@ -368,7 +368,7 @@
             <div class="price">
                 <span class="prise_tag">
                     <span class="current" style="color: pink;">
-                        Rp.{{ number_format($kelas->pricing->price, 2) }}
+                        Rp.{{ number_format($kelas->pricing->price, 0) }}
                     </span>
                     @if(!empty($kelas->old_price))
                         <del style="color: white;">
@@ -652,7 +652,7 @@
             {{ $kelas->title }} 
         </a>
 
-        <div class="d-flex align-itemes-center justify-content-between meta"
+        <!-- <div class="d-flex align-itemes-center justify-content-between meta"
             style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
             <div class="rating"
                 style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
@@ -672,7 +672,7 @@
                     {{ $kelas->total_peserta ?? 0 }} Students
                 </a>
             </div>
-        </div>
+        </div> -->
 
         {{-- Deskripsi Dinamis --}}
         <div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
@@ -683,7 +683,7 @@
             <div class="price">
                 <span class="prise_tag">
                     <span class="current" style="color: pink;">
-                        Rp.{{ number_format($kelas->pricing->price, 2) }}
+                        Rp.{{ number_format($kelas->pricing->price, 0) }}
                     </span>
                     @if(!empty($kelas->old_price))
                         <del style="color: white;">
@@ -902,7 +902,7 @@
 
 								</h2>
 								<h5>
-									Some common question & answer
+									Beberapa pertanyaan dan jawaban umum
 								</h5>
 							</div>
 							<div class="row">

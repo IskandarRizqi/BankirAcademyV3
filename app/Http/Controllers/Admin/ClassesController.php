@@ -824,7 +824,8 @@ class ClassesController extends Controller
 		// }
 
 		// // Jika diakses pertama kali lewat browser (bukan AJAX), load semua data layout pendukung
-		$query = ClassesModel::where('status', 1)
+		$now = Carbon::now();
+		$query = ClassesModel::where('status', 1)->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
 			->when(count($filters['category']) > 0, function ($sql) use ($filters) {
 				$sql->whereIn('category', $filters['category']);
 			})
@@ -852,7 +853,7 @@ class ClassesController extends Controller
 
 		if ($request->ajax()) {
 			return response()->json([
-				'html' => view('frontend.partials.class-items', $data)->render(),
+				// 'html' => view('frontend.partials.class-items', $data)->render(),
 				'next_page_url' => $data['class']->nextPageUrl(),
 				'has_more_pages' => $data['class']->hasMorePages(),
 			]);
@@ -861,7 +862,7 @@ class ClassesController extends Controller
 		// return $data;
 
 		return view('frontend.pages.event.listevent', $data);
-		//  return view('front.kelas.listclass', $data);
+		 return view('front.kelas.listclass', $data);
 	}
 	public function findClass(Request $request)
 	{
