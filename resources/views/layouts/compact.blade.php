@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <title>@yield('title', 'Dashboard') - Bankir Academy</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}" />
 
@@ -21,6 +22,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <script src="{{ asset('cbtemplate/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
+    
     <script src="{{ asset('cbtemplate/assets/bootstrap/js/popper.min.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/plugins/select2/select2.min.js') }}"></script>
@@ -113,6 +115,14 @@
     'can_see' => ($role == 6),
     'has_submenu' => false,
     ],
+       [
+    'label' => 'Album',
+    'icon' => 'list',
+    'url' => '/album',
+    'active' => request()->is('album*'),
+    'can_see' => $isRoot,
+    'has_submenu' => false,
+    ],
     [
     'label' => 'Rekap Modul',
     'icon' => 'bar-chart-2',
@@ -173,7 +183,8 @@
     'teacher'=> '<i class="fas fa-book-open"></i>',
     'history'=> '<i class="fas fa-history"></i>',
     'dashboard' => '<i class="fas fa-chart-line"></i>',
-    'sertificate'=>'<i class="fas fa-award"></i>'
+    'sertificate'=>'<i class="fas fa-award"></i>',
+    'list'=>'<i class="fas fa-tasks"></i>'
 
     ];
     @endphp
