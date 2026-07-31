@@ -315,7 +315,12 @@
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="owl-carousel popular-course-carousel">
-@foreach ($data['kelas'] as $kelas) 
+@foreach ($data['kelas'] as $kelas)
+@php
+    $resolvedPricing = data_get($kelas->pricing, 'resolved', []);
+    $displayPrice = data_get($resolvedPricing, 'final_price', data_get($kelas->pricing, 'price', 0));
+    $displayDiscount = data_get($resolvedPricing, 'total_discount', data_get($kelas->pricing, 'promo_price', 0));
+@endphp
 <div class="course-item"
     style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
     onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
@@ -368,11 +373,11 @@
             <div class="price">
                 <span class="prise_tag">
                     <span class="current" style="color: pink;">
-                        Rp.{{ number_format($kelas->pricing->price, 2) }}
+                        Rp.{{ number_format($displayPrice, 0, ',', '.') }}
                     </span>
-                    @if(!empty($kelas->old_price))
+                    @if($displayDiscount > 0)
                         <del style="color: white;">
-                            Rp.{{ number_format($kelas->pricing->price, 2) }}
+                            Rp.{{ number_format($kelas->pricing->price, 0, ',', '.') }}
                         </del>
                     @endif
                 </span>
@@ -630,7 +635,8 @@
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="owl-carousel popular-course-carousel">
-										@foreach ($data['iht'] as $kelas) 
+						@foreach ($data['iht'] as $kelas)
+@php $isIht = (int) $kelas->iht === 1; @endphp
 <div class="course-item"
     style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
     onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
@@ -683,11 +689,11 @@
             <div class="price">
                 <span class="prise_tag">
                     <span class="current" style="color: pink;">
-                        Rp.{{ number_format($kelas->pricing->price, 2) }}
+                        {{ $isIht ? 'Hubungi Tim Kami' : 'Rp.' . number_format(data_get($kelas->pricing, 'resolved.final_price', data_get($kelas->pricing, 'price', 0)), 0, ',', '.') }}
                     </span>
-                    @if(!empty($kelas->old_price))
+                    @if(!$isIht && data_get($kelas->pricing, 'resolved.total_discount', 0) > 0)
                         <del style="color: white;">
-                            Rp.{{ number_format($kelas->pricing->price, 2) }}
+                            Rp.{{ number_format(data_get($kelas->pricing, 'price', 0), 0, ',', '.') }}
                         </del>
                     @endif
                 </span>

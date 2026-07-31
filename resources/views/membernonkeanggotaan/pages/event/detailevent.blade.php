@@ -25,11 +25,12 @@ $courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i
 $location = data_get($class, 'lokasi');
 $participantLimit = data_get($class, 'participant_limit');
 $pricing = data_get($class, 'pricing');
+$resolvedPricing = data_get($pricing, 'resolved', []);
 $isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
 $isPriceComingSoon = ! $isIht && ! $pricing;
 $price = (int) data_get($pricing, 'price', 0);
-$promoPrice = (int) data_get($pricing, 'promo_price', 0);
-$finalPrice = max(0, $price - $promoPrice);
+$finalPrice = (int) data_get($resolvedPricing, 'final_price', max(0, $price - (int) data_get($pricing, 'promo_price', 0)));
+$discountPercent = round((float) data_get($resolvedPricing, 'discount_percent', 0));
 $priceLabel = $isIht
 ? 'Hubungi Tim Kami'
 : ($isFree
