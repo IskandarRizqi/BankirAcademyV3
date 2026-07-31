@@ -145,136 +145,136 @@
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="category-slider owl-carousel">
 										<a href="careers.html?category_id[]=1" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/1.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Bank Teller
-        </div>
-    </div>
-</a>
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/1.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Bank Teller
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=2" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/2.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Loan Officer
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=2" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/2.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Loan Officer
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=3" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/3.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Branch Manager
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=3" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/3.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Branch Manager
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=4" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/4.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Financial Analyst
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=4" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/4.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Financial Analyst
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=5" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Credit Analyst
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=5" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Credit Analyst
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=6" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Investment Banker
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=6" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Investment Banker
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=7" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Risk Manager
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=7" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Risk Manager
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=8" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Compliance Officer
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=8" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Compliance Officer
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=9" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Wealth Manager
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=9" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Wealth Manager
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=10" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Customer Service (CSR)
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=10" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Customer Service (CSR)
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=11" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Internal Auditor
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=11" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Internal Auditor
+												</div>
+											</div>
+										</a>
 
-<a href="careers.html?category_id[]=12" class="category-slider-item">
-    <div class="category-slider-item-inner">
-        <div class="category-slider-item-icon">
-            <img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
-        </div>
-        <div class="category-slider-item-title">
-            Relationship Manager
-        </div>
-    </div>
-</a>
+										<a href="careers.html?category_id[]=12" class="category-slider-item">
+											<div class="category-slider-item-inner">
+												<div class="category-slider-item-icon">
+													<img src="{{ asset('frontend/demo/category/image/5.svg') }}" alt="">
+												</div>
+												<div class="category-slider-item-title">
+													Relationship Manager
+												</div>
+											</div>
+										</a>
 									</div>
 								</div>
 							</div>
@@ -299,7 +299,7 @@
 							<div class="section_head withBtn">
 								<div>
 									<h2>Daftar Kelas</h2>
-									Daftar kelas bersertifikasi yang banyak di minati 
+									Daftar kelas bersertifikasi yang banyak di minati
 								</div>
 								<div class="view-all-btn">
 									<a href="/list-class">View All <i class="fas fa-arrow-right fa-fw"></i></a>
@@ -309,40 +309,40 @@
 
 							<div data-type="component-nonExisting" data-preview="" data-table=""
 								data-select="id,type,slug,title,thumbnail,price,discount_price,mode_of_delivery,about,total_reviews,total_enrolled,total_rating"
-								data-order="total_enrolled" data-dir="desc"  data-where-type="1"
+								data-order="total_enrolled" data-dir="desc" data-where-type="1"
 								data-where-status="1" data-view="_single_course_v7"
 								data-model="Modules\CourseSetting\Entities\Course" data-with="lessons">
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="owl-carousel popular-course-carousel">
-@foreach ($data['kelas'] as $kelas)
-@php
-    $resolvedPricing = data_get($kelas->pricing, 'resolved', []);
-    $displayPrice = data_get($resolvedPricing, 'final_price', data_get($kelas->pricing, 'price', 0));
-    $displayDiscount = data_get($resolvedPricing, 'total_discount', data_get($kelas->pricing, 'promo_price', 0));
-@endphp
-<div class="course-item"
-    style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-    onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-    onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
+										@foreach ($data['kelas'] as $kelas)
+										@php
+										$resolvedPricing = data_get($kelas->pricing, 'resolved', []);
+										$displayPrice = data_get($resolvedPricing, 'final_price', data_get($kelas->pricing, 'price', 0));
+										$displayDiscount = data_get($resolvedPricing, 'total_discount', data_get($kelas->pricing, 'promo_price', 0));
+										@endphp
+										<div class="course-item"
+											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
+											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
+											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
 
-    <div class="course-item-img" style="position:relative; overflow:hidden;">
-        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;"></div>
-        
-        {{-- Menampilkan Gambar secara Dinamis --}}
-        <img src="{{ asset($kelas->image ?? 'frontend/assets/course/1.jpg') }}" alt="{{ $kelas->title }}"
-            style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-    </div>
+											<div class="course-item-img" style="position:relative; overflow:hidden;">
+												<div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;"></div>
 
-    <div class="course-item-info" style="padding:18px 20px 20px;">
-        {{-- Link Detail Kelas Dinamis --}}
-        <a href="#"
-            class="title" title="{{ $kelas->title }}"
-            style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-            {{ $kelas->title }} 
-        </a>
+												{{-- Menampilkan Gambar secara Dinamis --}}
+												<img src="{{ asset($kelas->image ?? 'frontend/assets/course/1.jpg') }}" alt="{{ $kelas->title }}"
+													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
+											</div>
 
-        <div class="d-flex align-itemes-center justify-content-between meta"
+											<div class="course-item-info" style="padding:18px 20px 20px;">
+												{{-- Link Detail Kelas Dinamis --}}
+												<a href="#"
+													class="title" title="{{ $kelas->title }}"
+													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
+													{{ $kelas->title }}
+												</a>
+
+												<!-- <div class="d-flex align-itemes-center justify-content-between meta"
             style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
             <div class="rating"
                 style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
@@ -362,34 +362,34 @@
                     {{ $kelas->total_peserta ?? 0 }} Students
                 </a>
             </div>
-        </div>
+        </div> -->
 
-        {{-- Deskripsi Dinamis --}}
-        <div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-            {{ Str::limit(strip_tags($kelas->description), 100) }}
-        </div>
+												{{-- Deskripsi Dinamis --}}
+												<div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
+													{{ Str::limit(strip_tags($kelas->description), 100) }}
+												</div>
 
-        <div class="course-item-footer d-flex justify-content-between">
-            <div class="price">
-                <span class="prise_tag">
-                    <span class="current" style="color: pink;">
-                        Rp.{{ number_format($displayPrice, 0, ',', '.') }}
-                    </span>
-                    @if($displayDiscount > 0)
-                        <del style="color: white;">
-                            Rp.{{ number_format($kelas->pricing->price, 0, ',', '.') }}
-                        </del>
-                    @endif
-                </span>
-            </div>
+												<div class="course-item-footer d-flex justify-content-between">
+													<div class="price">
+														<span class="prise_tag">
+															<span class="current" style="color: pink;">
+																Rp.{{ number_format($displayPrice, 0, ',', '.') }}
+															</span>
+															@if($displayDiscount > 0)
+															<del style="color: white;">
+																Rp.{{ number_format($kelas->pricing->price, 0, ',', '.') }}
+															</del>
+															@endif
+														</span>
+													</div>
 
-            <a href="#" class="cart_store" data-id="{{ $kelas->id }}">
-                <img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}" alt="cart">
-            </a>
-        </div>
-    </div>
-</div>
-@endforeach
+													<a href="#" class="cart_store" data-id="{{ $kelas->id }}">
+														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}" alt="cart">
+													</a>
+												</div>
+											</div>
+										</div>
+										@endforeach
 									</div>
 
 
@@ -414,7 +414,7 @@
 					<div class="container">
 						<div class="clients-area">
 							<h3 class="clients-area-title">
-								Lebih dari <span class="count">6.000</span>  pengguna di seluruh dunia memercayai kami.
+								Lebih dari <span class="count">6.000</span> pengguna di seluruh dunia memercayai kami.
 							</h3>
 
 							<!-- <div data-preview="" data-table="" data-select="image" data-order="id"
@@ -483,116 +483,116 @@
 												data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 												<div class="testimonial-slider owl-carousel">
 													<div class="testimonial-single-container">
-    <div class="testimonial-single">
-        <div class="testimonial-top d-inline-block">
-            <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-            </div>
-        </div>
-        <div class="testimonial-content mb-4">
-            <p>"Materi ODP/BDP Prep Course-nya benar-benar daging semua! Mock interview dengan ex-HR Bank BUMN sangat membantu saya melewati tahap tes wawancara hingga akhirnya lolos di Bank Mandiri."</p>
-        </div>
-        <div class="align-items-end d-flex flex-grow-1">
-            <div class="testimonial-user">
-                <div class="testimonial-user-img">
-                    <img src="{{ asset('frontend/demo/testimonial/image/1.png') }}" alt="Rian Pratama">
-                </div>
-                <div class="info">
-                    <p><strong>Rian Pratama</strong></p>
-                    <span>Officer Development Program</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+														<div class="testimonial-single">
+															<div class="testimonial-top d-inline-block">
+																<div class="rating">
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																</div>
+															</div>
+															<div class="testimonial-content mb-4">
+																<p>"Materi ODP/BDP Prep Course-nya benar-benar daging semua! Mock interview dengan ex-HR Bank BUMN sangat membantu saya melewati tahap tes wawancara hingga akhirnya lolos di Bank Mandiri."</p>
+															</div>
+															<div class="align-items-end d-flex flex-grow-1">
+																<div class="testimonial-user">
+																	<div class="testimonial-user-img">
+																		<img src="{{ asset('frontend/demo/testimonial/image/1.png') }}" alt="Rian Pratama">
+																	</div>
+																	<div class="info">
+																		<p><strong>Rian Pratama</strong></p>
+																		<span>Officer Development Program</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
 
-<div class="testimonial-single-container">
-    <div class="testimonial-single">
-        <div class="testimonial-top d-inline-block">
-            <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-            </div>
-        </div>
-        <div class="testimonial-content mb-4">
-            <p>"Awalnya bingung mau karir di perbankan tapi beda jurusan. Setelah ikut program pelatihan Credit Analyst di sini, pemahaman analisis keuangan saya meningkat drastis hingga siap kerja!"</p>
-        </div>
-        <div class="align-items-end d-flex flex-grow-1">
-            <div class="testimonial-user">
-                <div class="testimonial-user-img">
-                    <img src="{{ asset('frontend/demo/testimonial/image/2.png') }}" alt="Siti Rahmawati">
-                </div>
-                <div class="info">
-                    <p><strong>Siti Rahmawati</strong></p>
-                    <span>Credit Analyst</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+													<div class="testimonial-single-container">
+														<div class="testimonial-single">
+															<div class="testimonial-top d-inline-block">
+																<div class="rating">
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																</div>
+															</div>
+															<div class="testimonial-content mb-4">
+																<p>"Awalnya bingung mau karir di perbankan tapi beda jurusan. Setelah ikut program pelatihan Credit Analyst di sini, pemahaman analisis keuangan saya meningkat drastis hingga siap kerja!"</p>
+															</div>
+															<div class="align-items-end d-flex flex-grow-1">
+																<div class="testimonial-user">
+																	<div class="testimonial-user-img">
+																		<img src="{{ asset('frontend/demo/testimonial/image/2.png') }}" alt="Siti Rahmawati">
+																	</div>
+																	<div class="info">
+																		<p><strong>Siti Rahmawati</strong></p>
+																		<span>Credit Analyst</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
 
-<div class="testimonial-single-container">
-    <div class="testimonial-single">
-        <div class="testimonial-top d-inline-block">
-            <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-            </div>
-        </div>
-        <div class="testimonial-content mb-4">
-            <p>"Simulasi tes Psikotes dan SHL yang disediakan di course ini mirip sekali dengan soal tes asli. Sangat memangkas waktu belajar dan membuat saya percaya diri saat proses rekrutmen."</p>
-        </div>
-        <div class="align-items-end d-flex flex-grow-1">
-            <div class="testimonial-user">
-                <div class="testimonial-user-img">
-                    <img src="{{ asset('frontend/demo/testimonial/image/3.png') }}" alt="Budi Santoso">
-                </div>
-                <div class="info">
-                    <p><strong>Budi Santoso</strong></p>
-                    <span>Management Trainee</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+													<div class="testimonial-single-container">
+														<div class="testimonial-single">
+															<div class="testimonial-top d-inline-block">
+																<div class="rating">
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																</div>
+															</div>
+															<div class="testimonial-content mb-4">
+																<p>"Simulasi tes Psikotes dan SHL yang disediakan di course ini mirip sekali dengan soal tes asli. Sangat memangkas waktu belajar dan membuat saya percaya diri saat proses rekrutmen."</p>
+															</div>
+															<div class="align-items-end d-flex flex-grow-1">
+																<div class="testimonial-user">
+																	<div class="testimonial-user-img">
+																		<img src="{{ asset('frontend/demo/testimonial/image/3.png') }}" alt="Budi Santoso">
+																	</div>
+																	<div class="info">
+																		<p><strong>Budi Santoso</strong></p>
+																		<span>Management Trainee</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
 
-<div class="testimonial-single-container">
-    <div class="testimonial-single">
-        <div class="testimonial-top d-inline-block">
-            <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-            </div>
-        </div>
-        <div class="testimonial-content mb-4">
-            <p>"Modul pelatihan Banking Operations & Compliance di sini memberikan gambaran nyata industri keuangan. Sangat recommended buat lulusan baru yang mau akselerasi karir perbankan!"</p>
-        </div>
-        <div class="align-items-end d-flex flex-grow-1">
-            <div class="testimonial-user">
-                <div class="testimonial-user-img">
-                    <img src="{{ asset('frontend/demo/testimonial/image/4.png') }}" alt="Nadia Wijaya">
-                </div>
-                <div class="info">
-                    <p><strong>Nadia Wijaya</strong></p>
-                    <span>Customer Relations Staff</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+													<div class="testimonial-single-container">
+														<div class="testimonial-single">
+															<div class="testimonial-top d-inline-block">
+																<div class="rating">
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
+																</div>
+															</div>
+															<div class="testimonial-content mb-4">
+																<p>"Modul pelatihan Banking Operations & Compliance di sini memberikan gambaran nyata industri keuangan. Sangat recommended buat lulusan baru yang mau akselerasi karir perbankan!"</p>
+															</div>
+															<div class="align-items-end d-flex flex-grow-1">
+																<div class="testimonial-user">
+																	<div class="testimonial-user-img">
+																		<img src="{{ asset('frontend/demo/testimonial/image/4.png') }}" alt="Nadia Wijaya">
+																	</div>
+																	<div class="info">
+																		<p><strong>Nadia Wijaya</strong></p>
+																		<span>Customer Relations Staff</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
 
 												</div>
 											</div>
@@ -635,30 +635,30 @@
 								<div class="dynamicData"
 									data-dynamic-href="https://infixlms.ischooll.com/get-dynamic-data">
 									<div class="owl-carousel popular-course-carousel">
-						@foreach ($data['iht'] as $kelas)
-@php $isIht = (int) $kelas->iht === 1; @endphp
-<div class="course-item"
-    style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
-    onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
-    onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
+										@foreach ($data['iht'] as $kelas)
+										@php $isIht = (int) $kelas->iht === 1; @endphp
+										<div class="course-item"
+											style="border-radius:2px; background:linear-gradient(160deg, #6A2FD9 0%, #7B3FE4 55%, #4E1FAE 100%); box-shadow:0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08); border:1.5px solid transparent; overflow:hidden; transition:all 0.35s ease; font-family:'Inter', sans-serif;"
+											onmouseover="this.style.border='1.5px solid #FFA45B'; this.style.boxShadow='0 0 0 3px rgba(255,164,91,0.45), 0 20px 40px rgba(255,164,91,0.3), 0 8px 20px rgba(76,32,180,0.4)'; this.style.transform='translateY(-6px)';"
+											onmouseout="this.style.border='1.5px solid transparent'; this.style.boxShadow='0 12px 28px rgba(76,32,180,0.35), 0 0 0 1px rgba(255,255,255,0.08)'; this.style.transform='translateY(0)';">
 
-    <div class="course-item-img" style="position:relative; overflow:hidden;">
-        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;"></div>
-        
-        {{-- Menampilkan Gambar secara Dinamis --}}
-        <img src="{{ asset($kelas->image ?? 'frontend/assets/course/1.jpg') }}" alt="{{ $kelas->title }}"
-            style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
-    </div>
+											<div class="course-item-img" style="position:relative; overflow:hidden;">
+												<div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(78,31,174,0) 50%, rgba(78,31,174,0.9) 100%); z-index:1;"></div>
 
-    <div class="course-item-info" style="padding:18px 20px 20px;">
-        {{-- Link Detail Kelas Dinamis --}}
-        <a href="#"
-            class="title" title="{{ $kelas->title }}"
-            style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
-            {{ $kelas->title }} 
-        </a>
+												{{-- Menampilkan Gambar secara Dinamis --}}
+												<img src="{{ asset($kelas->image ?? 'frontend/assets/course/1.jpg') }}" alt="{{ $kelas->title }}"
+													style="width:100%; aspect-ratio:16/10; object-fit:cover; display:block;">
+											</div>
 
-        <div class="d-flex align-itemes-center justify-content-between meta"
+											<div class="course-item-info" style="padding:18px 20px 20px;">
+												{{-- Link Detail Kelas Dinamis --}}
+												<a href="#"
+													class="title" title="{{ $kelas->title }}"
+													style="display:block; color:#FFFFFF; font-size:18px; font-weight:700; letter-spacing:0.2px; line-height:1.35; margin-bottom:12px; text-decoration:none;">
+													{{ $kelas->title }}
+												</a>
+
+												<!-- <div class="d-flex align-itemes-center justify-content-between meta"
             style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.12);">
             <div class="rating"
                 style="display:flex; align-items:center; gap:6px; background:rgba(255,193,7,0.15); padding:4px 10px; border-radius:999px;">
@@ -678,34 +678,34 @@
                     {{ $kelas->total_peserta ?? 0 }} Students
                 </a>
             </div>
-        </div>
+        </div> -->
 
-        {{-- Deskripsi Dinamis --}}
-        <div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
-            {{ Str::limit(strip_tags($kelas->description), 100) }}
-        </div>
+												{{-- Deskripsi Dinamis --}}
+												<div class="course-item-info-description" style="color:#D6C6F5; font-size:13.5px; line-height:1.6; margin-bottom:18px;">
+													{{ Str::limit(strip_tags($kelas->description), 100) }}
+												</div>
 
-        <div class="course-item-footer d-flex justify-content-between">
-            <div class="price">
-                <span class="prise_tag">
-                    <span class="current" style="color: pink;">
-                        {{ $isIht ? 'Hubungi Tim Kami' : 'Rp.' . number_format(data_get($kelas->pricing, 'resolved.final_price', data_get($kelas->pricing, 'price', 0)), 0, ',', '.') }}
-                    </span>
-                    @if(!$isIht && data_get($kelas->pricing, 'resolved.total_discount', 0) > 0)
-                        <del style="color: white;">
-                            Rp.{{ number_format(data_get($kelas->pricing, 'price', 0), 0, ',', '.') }}
-                        </del>
-                    @endif
-                </span>
-            </div>
+												<div class="course-item-footer d-flex justify-content-between">
+													<div class="price">
+														<span class="prise_tag">
+															<span class="current" style="color: pink;">
+																{{ $isIht ? 'Hubungi Tim Kami' : 'Rp.' . number_format(data_get($kelas->pricing, 'resolved.final_price', data_get($kelas->pricing, 'price', 0)), 0, ',', '.') }}
+															</span>
+															@if(!$isIht && data_get($kelas->pricing, 'resolved.total_discount', 0) > 0)
+															<del style="color: white;">
+																Rp.{{ number_format(data_get($kelas->pricing, 'price', 0), 0, ',', '.') }}
+															</del>
+															@endif
+														</span>
+													</div>
 
-            <a href="#" class="cart_store" data-id="{{ $kelas->id }}">
-                <img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}" alt="cart">
-            </a>
-        </div>
-    </div>
-</div>
-@endforeach
+													<a href="#" class="cart_store" data-id="{{ $kelas->id }}">
+														<img src="{{ asset('frontend/infixlmstheme/svg/cart.svg') }}" alt="cart">
+													</a>
+												</div>
+											</div>
+										</div>
+										@endforeach
 
 									</div>
 
@@ -908,7 +908,7 @@
 
 								</h2>
 								<h5>
-									Some common question & answer
+									Beberapa pertanyaan dan jawaban umum
 								</h5>
 							</div>
 							<div class="row">

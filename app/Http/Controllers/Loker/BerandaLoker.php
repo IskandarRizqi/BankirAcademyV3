@@ -71,54 +71,60 @@ class BerandaLoker extends Controller
     //     }
     //     return view('front.loker.loker', $x);
     // }
-    public function index(Request $request)
-    {
-        $auth = Auth::user();
-        if (!$auth) {
-            return Redirect::back()->with('akses', 'auth');
-        }
-
-        $x['provinsi'] = DB::table('provinsi')->orderBy('name')->get();
-
-        if ($request->ajax()) {
-            $data = [];
-            $data['data'] = LokerModel::select(
-                'loker.*',
-                'users.name',
-                'users.corporate',
-                'users.google_id',
-                'user_profile.picture',
-                'user_profile.description'
-            )
-                ->join('users', 'users.id', 'loker.user_id')
-                ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
-                ->leftJoin('perusahaan_models', 'perusahaan_models.id', 'loker.perusahaan_id')
-                ->where(function ($query) use ($request) {
-                    if ($request->provinsi && $request->provinsi != 'Pilih') {
-                        $query->where('perusahaan_models.provinsi', $request->provinsi);
-                    }
-                })
-                ->where(function ($query) use ($request) {
-                    if ($request->kabupaten && $request->kabupaten != 'Pilih' && $request->kabupaten != 'Pilih Provinsi Terlebih Dahulu') {
-                        $query->where('perusahaan_models.kabupaten', $request->kabupaten);
-                    }
-                })
-                ->where(function ($query) use ($request) {
-                    if ($request->cari_lowongan) {
-                        $query->where('loker.title', 'like', '%' . $request->cari_lowongan . '%');
-                    }
-                })
-                ->whereDate('tanggal_awal', '<=', Carbon::now())
-                ->whereDate('tanggal_akhir', '>=', Carbon::now())
-                ->orderBy('tanggal_awal', 'desc')
-                ->where('loker.status', 1)
-                ->paginate(6);
-
-            return response()->json($data); 
-        }
-
-        return view('front.loker.loker', $x);
+   public function index(Request $request)
+{
+    $auth = Auth::user();
+    if (!$auth) {
+        return Redirect::back()->with('akses', 'auth');
     }
+
+    $provinsi = DB::table('provinsi')->orderBy('name')->get();
+
+    // Base Query Data Loker
+    $query = LokerModel::select(
+            'loker.*',
+            'users.name as user_name',
+            'users.corporate',
+            'users.google_id',
+            'user_profile.picture',
+            'user_profile.description as profile_description',
+            'perusahaan_models.nama as nama_perusahaan',
+            'perusahaan_models.provinsi',
+            'perusahaan_models.kabupaten'
+        )
+        ->join('users', 'users.id', '=', 'loker.user_id')
+        ->leftJoin('user_profile', 'user_profile.user_id', '=', 'loker.user_id')
+        ->leftJoin('perusahaan_models', 'perusahaan_models.id', '=', 'loker.perusahaan_id')
+        ->where('loker.status', 1);
+
+    // Filter Kata Kunci / Search
+    if ($request->filled('search') || $request->filled('cari_lowongan')) {
+        $keyword = $request->search ?? $request->cari_lowongan;
+        $query->where('loker.title', 'like', '%' . $keyword . '%');
+    }
+
+    // Filter Provinsi / Lokasi
+    if ($request->filled('location') && $request->location != 'Pilih') {
+        $query->where('perusahaan_models.provinsi', $request->location);
+    }
+
+    // Tanggal Aktif Lowongan
+    $query->whereDate('tanggal_awal', '<=', Carbon::now())
+          ->whereDate('tanggal_akhir', '>=', Carbon::now())
+          ->orderBy('tanggal_awal', 'desc');
+
+    // Jika Request via AJAX
+    if ($request->ajax()) {
+        $data['data'] = $query->paginate(6);
+        return response()->json($data);
+    }
+
+    // Load Pertama / Normal Page Request
+    $lokers = $query->get();
+    $totalLoker = $lokers->count();
+
+    return view('frontend.pages.careers.index', compact('lokers', 'provinsi', 'totalLoker'));
+}
     public function index_admin(Request $request)
     {
         $data = [];

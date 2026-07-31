@@ -127,7 +127,7 @@ class ClassesController extends Controller
             if ($sizemeta_image >= 1048576) {
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
-            $filename2 = time().'-'.$namemeta_image;
+            $filename2 = time() . '-' . $namemeta_image;
             $file = $r->file('meta_image');
             $file->move(public_path('image/laman/meta_image'), $filename2);
             $og['image'] = $filename2;
@@ -147,10 +147,10 @@ class ClassesController extends Controller
             return Redirect::back()->with('error', 'Ukuran File Mobile Melebihi 1 MB');
         }
 
-        $filename = time().'-'.$name;
+        $filename = time() . '-' . $name;
         $file = $r->file('filClassesImage');
         $file->move(public_path('image/classes'), $filename);
-        $filenameMobile = time().'-'.$nameMobile;
+        $filenameMobile = time() . '-' . $nameMobile;
         $fileMobile = $r->file('filClassesImageMobile');
         $fileMobile->move(public_path('image/classes'), $filenameMobile);
 
@@ -159,8 +159,8 @@ class ClassesController extends Controller
             'instructor' => json_encode($r->txtClassesInstructor),
             'category' => $r->slcClassesCategory,
             'tags' => json_encode($r->slcClassesTags),
-            'image' => ('/image/classes/'.$filename),
-            'image_mobile' => ('/image/classes/'.$filenameMobile),
+            'image' => ('/image/classes/' . $filename),
+            'image_mobile' => ('/image/classes/' . $filenameMobile),
             'content' => $r->txaClassesContent,
             'unique_id' => uniqid(),
             'participant_limit' => $r->numClassesLimit,
@@ -287,7 +287,7 @@ class ClassesController extends Controller
             if ($sizemeta_image >= 1048576) {
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
-            $filename2 = time().'-'.$namemeta_image;
+            $filename2 = time() . '-' . $namemeta_image;
             $file = $r->file('meta_image');
             $file->move(public_path('image/laman/meta_image'), $filename2);
             $og['image'] = $filename2;
@@ -303,11 +303,11 @@ class ClassesController extends Controller
                 return Redirect::back()->with('error', 'Ukur, File Melebihi 1 MB');
             }
 
-            $filename = time().'-'.$name;
+            $filename = time() . '-' . $name;
             $file = $r->file('filClassesImage');
             $file->move(public_path('image/classes'), $filename);
 
-            $tobeins['image'] = ('/image/classes/'.$filename);
+            $tobeins['image'] = ('/image/classes/' . $filename);
         }
         if ($r->file('filClassesImageMobile')) {
             $nameMobile = $r->file('filClassesImageMobile')->getClientOriginalName();
@@ -317,11 +317,11 @@ class ClassesController extends Controller
                 return Redirect::back()->with('error', 'Ukur, File Melebihi 1 MB');
             }
 
-            $filenameMobile = time().'-'.$nameMobile;
+            $filenameMobile = time() . '-' . $nameMobile;
             $fileMobile = $r->file('filClassesImageMobile');
             $fileMobile->move(public_path('image/classes'), $filenameMobile);
 
-            $tobeins['image_mobile'] = ('/image/classes/'.$filenameMobile);
+            $tobeins['image_mobile'] = ('/image/classes/' . $filenameMobile);
         }
 
         ClassesModel::where('id', $id)->update($tobeins);
@@ -374,9 +374,9 @@ class ClassesController extends Controller
             // if ($sizevideo >= 1048576) {
             // 	return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             // }
-            $filename2 = time().'-'.$namevideo;
+            $filename2 = time() . '-' . $namevideo;
             $file = $r->file('video');
-            $file->move(public_path('video/kelas/'.Auth::user()->email), $filename2);
+            $file->move(public_path('video/kelas/' . Auth::user()->email), $filename2);
             $video['image'] = $filename2;
             $video['size'] = $sizevideo;
         }
@@ -530,12 +530,12 @@ class ClassesController extends Controller
         for ($i = 0; $i < count($r->slcClassContentType); $i++) {
             $file = '-';
             if ($r->slcClassContentType[$i] == 1) {
-                if ($r->file('txtClassContentDoc.'.$i)) {
-                    $file = $r->file('txtClassContentDoc.'.$i)->store('classes/content/'.time());
+                if ($r->file('txtClassContentDoc.' . $i)) {
+                    $file = $r->file('txtClassContentDoc.' . $i)->store('classes/content/' . time());
                 }
             } elseif ($r->slcClassContentType[$i] == 2) {
-                if ($r->file('txtClassContentImg.'.$i)) {
-                    $file = $r->file('txtClassContentImg.'.$i)->store('classes/content/'.time());
+                if ($r->file('txtClassContentImg.' . $i)) {
+                    $file = $r->file('txtClassContentImg.' . $i)->store('classes/content/' . time());
                 }
             } elseif ($r->slcClassContentType[$i] == 3) {
                 $file = $r->txtClassContentVid[$i];
@@ -587,11 +587,11 @@ class ClassesController extends Controller
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 5 MB');
             }
 
-            $filename = time().'-'.$name;
+            $filename = time() . '-' . $name;
             $file = $r->file('filBackground');
             $file->move(public_path('image/classes/cert'), $filename);
 
-            $tobeins['background'] = ('image/classes/cert/'.$filename);
+            $tobeins['background'] = ('image/classes/cert/' . $filename);
         }
 
         ClassCertificateTemplate::UpdateOrCreate(['class_id' => $id], $tobeins);
@@ -619,7 +619,7 @@ class ClassesController extends Controller
         // str_pad berguna agar angka 1 menjadi 001, angka 12 menjadi 012
         $uniquePart = strtoupper(substr(uniqid(), -3));
 
-        $data['certificate_code'] = 'BAI-'.$datePart.'-'.$uniquePart;
+        $data['certificate_code'] = 'BAI-' . $datePart . '-' . $uniquePart;
         // ---------------------------
 
         $data['name'] = $nama ?? '';
@@ -859,7 +859,7 @@ class ClassesController extends Controller
             $banner = BannerModel::where('jenis', 8)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->first();
         }
         if ($banner) {
-            $j = '/Image/'.$banner->image;
+            $j = '/Image/' . $banner->image;
         }
 
         return $j;
@@ -1034,13 +1034,13 @@ class ClassesController extends Controller
             // })
             ->where(function ($sql) use ($request) {
                 if ($request->titlekelas) {
-                    $sql->where('title', 'like', '%'.$request->titlekelas.'%');
+                    $sql->where('title', 'like', '%' . $request->titlekelas . '%');
                 }
                 if ($request->instructor) {
-                    $sql->where('instructor', '%'.$request->instructor.'%');
+                    $sql->where('instructor', '%' . $request->instructor . '%');
                 }
                 if ($request->slcClassesCategory) {
-                    $sql->where('category', '%'.$request->slcClassesCategory.'%');
+                    $sql->where('category', '%' . $request->slcClassesCategory . '%');
                 }
             })
             ->where('date_end', '>=', Carbon::now()->subMonths(3)->format('Y-m-d'))
