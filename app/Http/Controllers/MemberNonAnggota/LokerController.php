@@ -30,6 +30,9 @@ class LokerController extends Controller
         $lokers = $isMember
             ? $query->paginate(self::PAGE_SIZE)->withQueryString()
             : $query->limit(max(0, $limit))->get();
+        $lokerSkeletonCount = !$isMember && $limit > 0 && $lokers->count() === $limit
+            ? (3 - ($lokers->count() % 3)) % 3
+            : 0;
 
         if ($isMember && $request->ajax()) {
             return response()->json([
@@ -50,6 +53,7 @@ class LokerController extends Controller
             'selectedCityName' => $this->cityName($filters['kabupaten'], $filters['provinsi']),
             'isMember' => $isMember,
             'nonMembershipLimit' => $limit,
+            'lokerSkeletonCount' => $lokerSkeletonCount,
         ]);
     }
 

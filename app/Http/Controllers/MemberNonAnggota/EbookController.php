@@ -16,6 +16,7 @@ class EbookController extends Controller
     {
         $user = Auth::user();
         $materiUmum = MateriModel::where('nama', 'Umum')->first();
+        $subMateriBaruCount = 0;
 
         if ($materiUmum) {
             $query = SubMateriModel::where('id_materi', $materiUmum->id)
@@ -24,7 +25,8 @@ class EbookController extends Controller
                 })
                 ->with(['items' => function ($q) {
                     $q->where('tipe_link_item', 1);
-                }]);
+                }])
+                ->orderByRaw('COALESCE(upcoming, 0) ASC');
             if ($request->filled('q')) {
                 $search = $request->q;
                 $query->where(function ($q) use ($search) {
@@ -49,6 +51,11 @@ class EbookController extends Controller
                     });
                 }
             }
+
+            $subMateriBaruCount = (clone $query)
+                ->where('created_at', '>=', now()->subMonth())
+                ->count();
+
             if ($request->filled('sort_harga')) {
                 $sort = $request->sort_harga;
                 if (in_array($sort, ['asc', 'desc'])) {
@@ -63,7 +70,7 @@ class EbookController extends Controller
             $subMateriUmum = collect();
         }
 
-        return view('membernonkeanggotaan.pages.ebook.index', compact('subMateriUmum', 'materiUmum', 'user'));
+        return view('membernonkeanggotaan.pages.ebook.index', compact('subMateriUmum', 'materiUmum', 'user', 'subMateriBaruCount'));
     }
 
     public function belajarPdf(Request $request, $sub_materi_id)
@@ -74,6 +81,7 @@ class EbookController extends Controller
     {
         $user = Auth::user();
         $materiUmum = MateriModel::where('nama', 'Umum')->first();
+        $subMateriBaruCount = 0;
 
         if ($materiUmum) {
             $query = SubMateriModel::where('id_materi', $materiUmum->id)
@@ -82,7 +90,8 @@ class EbookController extends Controller
                 })
                 ->with(['items' => function ($q) {
                     $q->where('tipe_link_item', 0);
-                }]);
+                }])
+                ->orderByRaw('COALESCE(upcoming, 0) ASC');
             if ($request->filled('q')) {
                 $search = $request->q;
                 $query->where(function ($q) use ($search) {
@@ -107,6 +116,11 @@ class EbookController extends Controller
                     });
                 }
             }
+
+            $subMateriBaruCount = (clone $query)
+                ->where('created_at', '>=', now()->subMonth())
+                ->count();
+
             if ($request->filled('sort_harga')) {
                 $sort = $request->sort_harga;
                 if (in_array($sort, ['asc', 'desc'])) {
@@ -121,7 +135,7 @@ class EbookController extends Controller
             $subMateriUmum = collect();
         }
 
-        return view('membernonkeanggotaan.pages.video.index', compact('subMateriUmum', 'materiUmum', 'user'));
+        return view('membernonkeanggotaan.pages.video.index', compact('subMateriUmum', 'materiUmum', 'user', 'subMateriBaruCount'));
     }
 
     public function belajarVideo(Request $request, $sub_materi_id)

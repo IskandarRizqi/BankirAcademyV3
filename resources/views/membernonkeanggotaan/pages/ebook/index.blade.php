@@ -226,6 +226,18 @@
         box-shadow: 0 12px 30px rgba(15, 23, 42, .08);
     }
 
+    .catalog-card--upcoming {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+        box-shadow: none;
+    }
+
+    .catalog-card--upcoming:hover {
+        transform: none;
+        border-color: #d1d5db;
+        box-shadow: none;
+    }
+
     .catalog-card__media {
         position: relative;
         width: 100%;
@@ -238,6 +250,11 @@
         width: 100%;
         height: 100%;
         object-fit: contain;
+    }
+
+    .catalog-card--upcoming .catalog-card__media img {
+        filter: grayscale(1);
+        opacity: .62;
     }
 
     .catalog-card__placeholder {
@@ -267,6 +284,19 @@
     .catalog-card__badge--promo {
         background: #4F46E5;
         box-shadow: 0 2px 10px rgba(79, 70, 229, .4);
+    }
+
+    .catalog-card__upcoming-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 2;
+        padding: 5px 10px;
+        border-radius: 8px;
+        background: #059669;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 800;
     }
 
     .catalog-card__discount-tag {
@@ -487,7 +517,7 @@
                     <h2>Daftar Ebook</h2>
                     <p>Materi dan modul bacaan aktif yang dapat Anda pelajari.</p>
                 </div>
-                <span class="catalog-result-count">{{ $subMateriUmum->count() }} Ebook Tersedia</span>
+                <span class="catalog-result-count">{{ $subMateriBaruCount }} Ebook terbaru</span>
             </div>
 
             @if($subMateriUmum->count() > 0)
@@ -498,10 +528,15 @@
                             $hargaFinal = $sub->harga_final ?? $hargaAsli;
                             $diskon = $sub->diskon ?? 0;
                             $namaMateri = $sub->nama ?? $sub->nama_kelas ?? 'Ebook Tanpa Nama';
-                            $hasDiscount = ($diskon > 0 || $hargaAsli > $hargaFinal) && $hargaAsli > 0;
+                            $isUpcoming = (int) ($sub->upcoming ?? 0) === 1;
+                            $hasDiscount = !$isUpcoming && ($diskon > 0 || $hargaAsli > $hargaFinal) && $hargaAsli > 0;
                         @endphp
-                        <article class="catalog-card">
+                        <article class="catalog-card {{ $isUpcoming ? 'catalog-card--upcoming' : '' }}">
                             <div class="catalog-card__media">
+                                @if($isUpcoming)
+                                    <span class="catalog-card__upcoming-badge">Upcoming</span>
+                                @endif
+
                                 {{-- Discount Ribbon Badge --}}
                                 @if($hasDiscount)
                                     <span class="catalog-card__discount-tag">
@@ -519,7 +554,9 @@
 
                                 {{-- Status Label pada Thumbnail --}}
                                 <span class="catalog-card__badge {{ $hasDiscount ? 'catalog-card__badge--promo' : '' }}">
-                                    @if($hargaFinal > 0)
+                                    @if($isUpcoming)
+                                        Rp.-
+                                    @elseif($hargaFinal > 0)
                                         Rp {{ number_format($hargaFinal, 0, ',', '.') }}
                                     @else
                                         Gratis
@@ -535,7 +572,9 @@
 
                                 {{-- Rincian Harga & Diskon Coret --}}
                                 <div class="catalog-card__price-wrapper">
-                                    @if($hargaFinal > 0)
+                                    @if($isUpcoming)
+                                        <span class="catalog-card__price-final">Rp.-</span>
+                                    @elseif($hargaFinal > 0)
                                         <span class="catalog-card__price-final">
                                             Rp {{ number_format($hargaFinal, 0, ',', '.') }}
                                         </span>
