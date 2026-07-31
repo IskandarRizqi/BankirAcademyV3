@@ -31,20 +31,15 @@
         display: block;
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
-        background: var(--primary, #4F46E5);
+        aspect-ratio: 3 / 2;
+        background: #f3f4f6;
         overflow: hidden;
     }
 
     .member-ebook-card__media img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        transition: transform .2s ease;
-    }
-
-    .member-ebook-card:hover .member-ebook-card__media img {
-        transform: scale(1.03);
+        object-fit: contain;
     }
 
     .member-ebook-card__placeholder {
