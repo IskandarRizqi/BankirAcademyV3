@@ -129,102 +129,118 @@
                 </button>
             </div>
           <form id="userForm" action="/sub-materi" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="text" name="id" id="id" hidden>
-                <div class="modal-body p-4">
-                    <div class="row">
-                        <div class="form-group col-lg-5 mb-3">
-                            <label style="font-weight: 600; color: #515365;">Nama Kompetensi</label>
-                            <select name="id_materi" id="id_materi" class="form-control" style="width:100%;" required>
-                                <option value="" disabled selected>-- Pilih Kompetensi --</option>
-                                @foreach($materi as $v)
-                                <option value="{{$v->id}}" data-nama="{{ $v->nama }}">{{$v->nama}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-5 mb-3">
-                            <label style="font-weight: 600; color: #515365;">Nama Materi</label>
-                            <input type="text" name="nama" id="nama" class="form-control" placeholder="Contoh: Pengenalan Algoritma" required>
-                        </div>
-                        <div class="form-group col-lg-2 mb-3">
-                            <label style="font-weight: 600; color: #515365;">Urutan</label>
-                            <input type="number" min="0" name="urutan" id="urutan" class="form-control" placeholder="1" required>
-                        </div>
+    @csrf
+    <input type="text" name="id" id="id" hidden>
+    <div class="modal-body p-4">
+        <div class="row">
+            <div class="form-group col-lg-5 mb-3">
+                <label style="font-weight: 600; color: #515365;">Nama Kompetensi</label>
+                <select name="id_materi" id="id_materi" class="form-control" style="width:100%;" required>
+                    <option value="" disabled selected>-- Pilih Kompetensi --</option>
+                    @foreach($materi as $v)
+                    <option value="{{$v->id}}" data-nama="{{ $v->nama }}">{{$v->nama}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-lg-5 mb-3">
+                <label style="font-weight: 600; color: #515365;">Nama Materi</label>
+                <input type="text" name="nama" id="nama" class="form-control" placeholder="Contoh: Pengenalan Algoritma" required>
+            </div>
+            <div class="form-group col-lg-2 mb-3">
+                <label style="font-weight: 600; color: #515365;">Urutan</label>
+                <input type="number" min="0" name="urutan" id="urutan" class="form-control" placeholder="1" required>
+            </div>
 
-                        <div class="col-lg-12 mb-4 mt-2">
-                            <div class="d-flex justify-content-between align-items-center p-3 mb-3" style="background-color: #f4f6fd; border-radius: 8px; border-left: 4px solid #4361ee;">
-                                <div>
-                                    <label class="mb-0" style="font-weight: 700; color: #4361ee; font-size: 14px;">Daftar File / Video Materi</label>
-                                    <small class="text-muted d-block">Sematkan dokumen PDF atau URL video pembelajaran terkait.</small>
-                                </div>
-                                <button type="button" class="btn btn-sm btn-primary px-3" onclick="addItemRow()">+ Tambah Baris Link</button>
-                            </div>
-                            <div id="media-items-container">
-                                </div>
-                        </div>
+            <div class="col-lg-12 mb-4 mt-2">
+                <div class="d-flex justify-content-between align-items-center p-3 mb-3" style="background-color: #f4f6fd; border-radius: 8px; border-left: 4px solid #4361ee;">
+                    <div>
+                        <label class="mb-0" style="font-weight: 700; color: #4361ee; font-size: 14px;">Daftar File / Video Materi</label>
+                        <small class="text-muted d-block">Sematkan dokumen PDF atau URL video pembelajaran terkait.</small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary px-3" onclick="addItemRow()">+ Tambah Baris Link</button>
+                </div>
+                <div id="media-items-container">
+                </div>
+            </div>
 
-                        <div class="form-group col-lg-12 mb-4">
-                            <label style="font-weight: 600; color: #515365; display: block;" class="mb-2">Tipe Akses materi</label>
-                            <div class="d-flex align-items-center" style="gap: 20px;">
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="tipe_beasiswa0" name="tipe_beasiswa" class="custom-control-input" value="0" checked>
-                                    <label class="custom-control-label" for="tipe_beasiswa0" style="cursor: pointer;">Terbuka Untuk Semua</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="tipe_beasiswa1" name="tipe_beasiswa" class="custom-control-input" value="1">
-                                    <label class="custom-control-label" for="tipe_beasiswa1" style="cursor: pointer;">Khusus Beasiswa</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="tipe_beasiswa2" name="tipe_beasiswa" class="custom-control-input" value="2">
-                                    <label class="custom-control-label" for="tipe_beasiswa2" style="cursor: pointer;">Non Beasiswa (Mandiri)</label>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Container Field Thumbnail Gambar (Khusus Kompetensi Umum) -->
-<div class="form-group col-lg-12 mb-3" id="container-thumbnail" style="display: none;">
-    <label style="font-weight: 600; color: #515365;">Thumbnail Gambar Materi <span class="text-danger">*</span></label>
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewThumbnail(this)">
-        <label class="custom-file-label" for="thumbnail">Pilih file gambar...</label>
-    </div>
-    <small class="form-text text-muted">Format: JPG, JPEG, PNG, WEBP (Max: 2MB).</small>
-    
-    <!-- Preview Gambar -->
-    <div class="mt-2" id="preview-wrapper" style="display: none;">
-        <img id="img-preview" src="" alt="Thumbnail Preview" class="img-thumbnail" style="max-height: 150px;">
-    </div>
-</div>
-                        
-                        <div class="form-group col-lg-4 mb-3">
-                            <label style="font-weight: 600; color: #515365;">Harga Jual</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text bg-light" style="border-right: none;">Rp</span></div>
-                                <input type="text" name="harga" id="harga_format" class="form-control" placeholder="0" required>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-4 mb-3">
-                            <label style="font-weight: 600; color: #515365;">Diskon Potongan</label>
-                            <div class="input-group">
-                                <input type="number" min="0" max="100" name="diskon" id="diskon" class="form-control" placeholder="0" required>
-                                <div class="input-group-append"><span class="input-group-text bg-light">%</span></div>
-                            </div>
-                            <small id="harga_final" class="form-text text-success mt-1" style="font-weight: 700; font-size: 12px;">harga final : Rp 0</small>
-                        </div>
-                        <div class="form-group col-lg-4 mb-3">
-                            <label style="font-weight: 600; color: #515365;">Batas Masa Aktif</label>
-                            <input type="date" name="masa_aktif" id="masa_aktif" class="form-control" required>
-                        </div>
-                        <div class="form-group col-lg-12 mb-0">
-                            <label style="font-weight: 600; color: #515365;">Keterangan / Deskripsi Tambahan</label>
-                            <textarea name="keterangan" id="keterangan" cols="30" rows="3" class="form-control" placeholder="Catatan internal singkat mengenai materi ini..."></textarea>
-                        </div>
+            <!-- Tambahan Input Boolean: Upcoming -->
+            <div class="form-group col-lg-12 mb-4">
+                <label style="font-weight: 600; color: #515365; display: block;" class="mb-2">Status Upcoming (Materi Mendatang)</label>
+                <div class="d-flex align-items-center" style="gap: 20px;">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="upcoming0" name="upcoming" class="custom-control-input" value="0" checked>
+                        <label class="custom-control-label" for="upcoming0" style="cursor: pointer;">Tidak (Materi Aktif)</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="upcoming1" name="upcoming" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="upcoming1" style="cursor: pointer;">Ya (Materi Mendatang / Upcoming)</label>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 1px solid #f1f2f3;">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary px-4">Simpan Perubahan</button>
+            </div>
+
+            <div class="form-group col-lg-12 mb-4">
+                <label style="font-weight: 600; color: #515365; display: block;" class="mb-2">Tipe Akses materi</label>
+                <div class="d-flex align-items-center" style="gap: 20px;">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="tipe_beasiswa0" name="tipe_beasiswa" class="custom-control-input" value="0" checked>
+                        <label class="custom-control-label" for="tipe_beasiswa0" style="cursor: pointer;">Terbuka Untuk Semua</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="tipe_beasiswa1" name="tipe_beasiswa" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="tipe_beasiswa1" style="cursor: pointer;">Khusus Beasiswa</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="tipe_beasiswa2" name="tipe_beasiswa" class="custom-control-input" value="2">
+                        <label class="custom-control-label" for="tipe_beasiswa2" style="cursor: pointer;">Non Beasiswa (Mandiri)</label>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+            <!-- Container Field Thumbnail Gambar (Khusus Kompetensi Umum) -->
+            <div class="form-group col-lg-12 mb-3" id="container-thumbnail" style="display: none;">
+                <label style="font-weight: 600; color: #515365;">Thumbnail Gambar Materi <span class="text-danger">*</span></label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewThumbnail(this)">
+                    <label class="custom-file-label" for="thumbnail">Pilih file gambar...</label>
+                </div>
+                <small class="form-text text-muted">Format: JPG, JPEG, PNG, WEBP (Max: 2MB).</small>
+                
+                <!-- Preview Gambar -->
+                <div class="mt-2" id="preview-wrapper" style="display: none;">
+                    <img id="img-preview" src="" alt="Thumbnail Preview" class="img-thumbnail" style="max-height: 150px;">
+                </div>
+            </div>
+            
+            <div class="form-group col-lg-4 mb-3">
+                <label style="font-weight: 600; color: #515365;">Harga Jual</label>
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text bg-light" style="border-right: none;">Rp</span></div>
+                    <input type="text" name="harga" id="harga_format" class="form-control" placeholder="0" required>
+                </div>
+            </div>
+            <div class="form-group col-lg-4 mb-3">
+                <label style="font-weight: 600; color: #515365;">Diskon Potongan</label>
+                <div class="input-group">
+                    <input type="number" min="0" max="100" name="diskon" id="diskon" class="form-control" placeholder="0" required>
+                    <div class="input-group-append"><span class="input-group-text bg-light">%</span></div>
+                </div>
+                <small id="harga_final" class="form-text text-success mt-1" style="font-weight: 700; font-size: 12px;">harga final : Rp 0</small>
+            </div>
+            <div class="form-group col-lg-4 mb-3">
+                <label style="font-weight: 600; color: #515365;">Batas Masa Aktif</label>
+                <input type="date" name="masa_aktif" id="masa_aktif" class="form-control" required>
+            </div>
+            <div class="form-group col-lg-12 mb-0">
+                <label style="font-weight: 600; color: #515365;">Keterangan / Deskripsi Tambahan</label>
+                <textarea name="keterangan" id="keterangan" cols="30" rows="3" class="form-control" placeholder="Catatan internal singkat mengenai materi ini..."></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="border-top: 1px solid #f1f2f3;">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary px-4">Simpan Perubahan</button>
+    </div>
+</form>
         </div>
     </div>
 </div>
@@ -300,6 +316,7 @@ function resetForm() {
     $('#keterangan').val('');
     $('#harga_final').text('harga final : Rp 0');
     $('#tipe_beasiswa0').prop('checked', true);
+    $('#upcoming0').prop('checked', true);
 
     // Reset Thumbnail
     $('#thumbnail').val('');
@@ -316,6 +333,13 @@ function editUser(user) {
         $('#urutan').val(user.urutan);
         $('#nama').val(user.nama);
         
+        // --- PENERAPAN UPCOMING (Radio Button) ---
+        if (user.upcoming == 1 || user.upcoming === true) {
+            $('#upcoming1').prop('checked', true);
+        } else {
+            $('#upcoming0').prop('checked', true); // Default ke 0 jika tidak dicentang
+        }
+
         if (user.tipe_beasiswa == 0) $('#tipe_beasiswa0').prop('checked', true);
         if (user.tipe_beasiswa == 1) $('#tipe_beasiswa1').prop('checked', true);
         if (user.tipe_beasiswa == 2) $('#tipe_beasiswa2').prop('checked', true);
@@ -407,35 +431,6 @@ function editUser(user) {
         $('#keterangan').val('');
         $('#harga_final').text('harga final : Rp 0');
         $('#tipe_beasiswa0').prop('checked', true);
-    }
-
-    function editUser(user) {
-        resetForm();
-        if (user) {
-            document.getElementById('id').value = user.id;
-            $('#id_materi').val(user.id_materi).trigger('change');
-            $('#urutan').val(user.urutan);
-            $('#nama').val(user.nama);
-            
-            if (user.tipe_beasiswa == 0) $('#tipe_beasiswa0').prop('checked', true);
-            if (user.tipe_beasiswa == 1) $('#tipe_beasiswa1').prop('checked', true);
-            if (user.tipe_beasiswa == 2) $('#tipe_beasiswa2').prop('checked', true);
-            
-            if (user.harga) { $('#harga_format').val(formatRupiah(user.harga)); }
-            $('#diskon').val(user.diskon);
-            if (user.masa_aktif) { $('#masa_aktif').val(dayjs(user.masa_aktif).format('YYYY-MM-DD')); }
-            $('#keterangan').val(user.keterangan);
-            
-            if (user.items && user.items.length > 0) {
-                $('#media-items-container').html('');
-                user.items.forEach(function(item) {
-                    addItemRow(item.judul_item, item.link_item, item.tipe_link_item);
-                });
-            }
-
-            hitunghargafinal();
-        }
-        $('#userModal').modal('show');
     }
 
     function hitunghargafinal() {

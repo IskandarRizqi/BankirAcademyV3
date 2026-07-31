@@ -23,6 +23,7 @@ use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\LamaranController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PhotoAlbumController;
 use App\Http\Controllers\PrePostTestController;
 use App\Http\Controllers\RecentRegistrationController;
 use App\Http\Controllers\SiswaVerificationController;
@@ -190,6 +191,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('sub-materi', SubMateriController::class);
         Route::resource('ppt', PrePostTestController::class);
         Route::resource('certificate-templates', CertificateController::class);
+      Route::get('/album', [PhotoAlbumController::class, 'index'])->name('album.index');
+Route::post('/album', [PhotoAlbumController::class, 'store'])->name('album.store');
+Route::put('/album/{id}', [PhotoAlbumController::class, 'update'])->name('album.update');
+Route::delete('/album/batch-delete', [PhotoAlbumController::class, 'destroyBatch'])->name('album.destroyBatch');
 
         // Route User untuk Download Sertifikat secara dinamis
 

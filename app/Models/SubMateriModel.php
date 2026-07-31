@@ -25,6 +25,7 @@ class SubMateriModel extends Model
         'tipe_link',
         'tipe_beasiswa',
         'masa_aktif',
+        'upcoming',
         'harga',
         'diskon',
         'harga_final',
