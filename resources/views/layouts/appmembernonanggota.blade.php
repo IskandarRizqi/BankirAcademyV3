@@ -21,6 +21,7 @@
 
 	@include('membernonkeanggotaan.partials.scripts')
 	@stack('scripts')
+	@include('components.live-purchase-toast')
 </body>
 
 </html>

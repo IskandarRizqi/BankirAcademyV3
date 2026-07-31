@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\LokerApplyController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\LayananController;
 use App\Http\Controllers\Front\PagesController;
+use App\Http\Controllers\LivePurchaseToastController;
 use App\Http\Controllers\Loker\BerandaLoker;
 use Illuminate\Support\Facades\Route;
 
@@ -52,3 +53,7 @@ Route::get('/template', function () {
 Route::get('/kurikulum', function () {
 	return view('frontend.pages.kurikulum.kurikulum');
 });
+
+Route::get('/live-purchase-toast', LivePurchaseToastController::class)
+    ->middleware('throttle:60,1')
+    ->name('live-purchase-toast');
