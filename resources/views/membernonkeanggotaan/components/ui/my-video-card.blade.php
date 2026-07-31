@@ -31,7 +31,7 @@
         display: block;
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 3 / 2;
         background: linear-gradient(135deg, #1e293b, #0f172a);
         overflow: hidden;
     }
@@ -39,12 +39,7 @@
     .member-video-card__media img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        transition: transform .2s ease;
-    }
-
-    .member-video-card:hover .member-video-card__media img {
-        transform: scale(1.03);
+        object-fit: contain;
     }
 
     .member-video-card__placeholder {

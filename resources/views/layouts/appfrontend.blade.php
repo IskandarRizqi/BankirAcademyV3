@@ -15,6 +15,7 @@
 	</div>
 
 	@stack('frontend-scripts')
+	@include('components.live-purchase-toast')
 </body>
 
 </html>

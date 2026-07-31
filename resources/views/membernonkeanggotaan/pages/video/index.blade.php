@@ -240,7 +240,7 @@
     .catalog-card__media {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 3 / 2;
         background: linear-gradient(135deg, #1e293b, #0f172a);
         overflow: hidden;
     }
@@ -248,7 +248,7 @@
     .catalog-card__media img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     .catalog-card__placeholder {

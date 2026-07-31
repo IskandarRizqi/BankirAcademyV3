@@ -60,6 +60,16 @@ return [
 
     'loker_non_membership_limit' => 10,
 
+    'live_purchase_toast' => [
+        'enabled' => true,
+        'max_per_ip_per_day' => 50,
+        'start_time' => '09:00',
+        'end_time' => '20:00',
+        'min_interval_seconds' => 60,
+        'max_interval_seconds' => 3600,
+        'display_seconds' => 10,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

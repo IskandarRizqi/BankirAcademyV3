@@ -229,15 +229,15 @@
     .catalog-card__media {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
-        background: var(--primary, #4F46E5);
+        aspect-ratio: 3 / 2;
+        background: #f3f4f6;
         overflow: hidden;
     }
 
     .catalog-card__media img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     .catalog-card__placeholder {

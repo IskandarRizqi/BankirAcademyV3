@@ -11,6 +11,7 @@
     }
 .ebook-cover-card {
         position: relative;
+        aspect-ratio: 3 / 2;
         border-radius: 24px;
         overflow: hidden;
         background: rgba(255, 255, 255, .08);
@@ -19,9 +20,9 @@
     .ebook-cover-card img {
         width: 100%;
         height: 100%;
-        min-height: 300px;
+        min-height: 0;
         display: block;
-        object-fit: cover;
+        object-fit: contain;
     }
     /* Layout Body Main/Sidebar */
     .video-body-layout {
@@ -175,7 +176,7 @@
     .catalog-card__media {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 3 / 2;
         background: linear-gradient(135deg, #1e293b, #0f172a);
         overflow: hidden;
     }
@@ -183,7 +184,7 @@
     .catalog-card__media img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
      .catalog-card__placeholder {
         position: absolute;

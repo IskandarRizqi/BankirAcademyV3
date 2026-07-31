@@ -153,6 +153,7 @@
 
     .ebook-cover-card {
         position: relative;
+        aspect-ratio: 3 / 2;
         border-radius: 24px;
         overflow: hidden;
         background: rgba(255, 255, 255, .08);
@@ -162,9 +163,9 @@
     .ebook-cover-card img {
         width: 100%;
         height: 100%;
-        min-height: 300px;
+        min-height: 0;
         display: block;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     .ebook-cover-card__shade {
@@ -386,7 +387,7 @@
         }
 
         .ebook-cover-card img {
-            min-height: 220px;
+            min-height: 0;
         }
 
         .ebook-price-strip {
@@ -414,15 +415,15 @@
      .catalog-card__media {
         position: relative;
         width: 100%;
-        aspect-ratio: 16 / 9;
-        background: var(--primary, #4F46E5);
+        aspect-ratio: 3 / 2;
+        background: #f3f4f6;
         overflow: hidden;
     }
 
-    .catalog-card__media img {
+     .catalog-card__media img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 </style>
 
