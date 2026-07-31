@@ -58,6 +58,8 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'loker_non_membership_limit' => 10,
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

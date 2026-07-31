@@ -63,6 +63,14 @@
 	'can_see' => true,
 	'has_submenu' => false,
 	],
+	[
+	'label' => 'Loker',
+	'icon' => 'loker',
+	'url' => route('membernonanggota.loker.index'),
+	'active' => request()->is('member/loker*'),
+	'can_see' => (int) $role === 2,
+	'has_submenu' => false,
+	],
 	];
 
 	$membershipMenus = match ($membershipType) {
