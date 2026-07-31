@@ -256,7 +256,15 @@ $levelOptions = [
 	}
 
 	.course-list-page .member-course-card__media {
-		aspect-ratio: 16 / 8.5;
+		aspect-ratio: 3 / 2;
+	}
+
+	.course-list-page .member-course-card__media img {
+		object-fit: contain;
+	}
+
+	.course-list-page .member-course-card:hover .member-course-card__media img {
+		transform: none;
 	}
 
 	.course-list-page .member-course-card__badge-row {

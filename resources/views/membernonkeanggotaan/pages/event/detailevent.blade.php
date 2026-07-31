@@ -29,7 +29,8 @@ $resolvedPricing = data_get($pricing, 'resolved', []);
 $isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
 $isPriceComingSoon = ! $isIht && ! $pricing;
 $price = (int) data_get($pricing, 'price', 0);
-$finalPrice = (int) data_get($resolvedPricing, 'final_price', max(0, $price - (int) data_get($pricing, 'promo_price', 0)));
+$promoPrice = (int) data_get($pricing, 'promo_price', 0);
+$finalPrice = (int) data_get($resolvedPricing, 'final_price', max(0, $price - $promoPrice));
 $discountPercent = round((float) data_get($resolvedPricing, 'discount_percent', 0));
 $priceLabel = $isIht
 ? 'Hubungi Tim Kami'
@@ -307,6 +308,7 @@ $registrationAlert = [
 
 	.event-cover-card {
 		position: relative;
+		aspect-ratio: 3 / 2;
 		border-radius: 24px;
 		overflow: hidden;
 		background: rgba(255, 255, 255, .08);
@@ -316,9 +318,9 @@ $registrationAlert = [
 	.event-cover-card img {
 		width: 100%;
 		height: 100%;
-		min-height: 300px;
+		min-height: 0;
 		display: block;
-		object-fit: cover;
+		object-fit: contain;
 	}
 
 	.event-cover-card__shade {
@@ -689,7 +691,7 @@ $registrationAlert = [
 		}
 
 		.event-cover-card img {
-			min-height: 220px;
+			min-height: 0;
 		}
 
 		.event-price-strip {

@@ -8,6 +8,7 @@ use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
 use App\Http\Controllers\MemberNonAnggota\DetailKelasController;
 use App\Http\Controllers\MemberNonAnggota\EbookController;
 use App\Http\Controllers\MemberNonAnggota\ListDaftarKelasController;
+use App\Http\Controllers\MemberNonAnggota\LokerController;
 use App\Http\Controllers\MemberNonAnggota\SertifikatController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
     Route::get('/sertifikat-kelas', [SertifikatController::class, 'index'])
         ->name('membernonanggota.certificates.index');
+    Route::middleware('role:2')->group(function () {
+        Route::get('/member/loker', [LokerController::class, 'index'])
+            ->name('membernonanggota.loker.index');
+        Route::get('/member/loker/cities', [LokerController::class, 'cities'])
+            ->name('membernonanggota.loker.cities');
+        Route::get('/member/loker/{id}', [LokerController::class, 'show'])
+            ->whereNumber('id')
+            ->name('membernonanggota.loker.show');
+    });
     Route::get('/sertifikat-kelas/{classId}/cetak', [SertifikatController::class, 'show'])
         ->name('membernonanggota.certificates.show');
     Route::get('/sertifikat-kelas/{classId}/download', [SertifikatController::class, 'downloadZip'])
