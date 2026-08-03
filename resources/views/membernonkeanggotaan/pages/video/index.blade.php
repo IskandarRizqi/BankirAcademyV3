@@ -555,8 +555,15 @@
                                     </span>
                                 @endif
 
-                                @if(!empty($sub->thumbnail) && file_exists(public_path($sub->thumbnail)))
-                                    <img src="{{ asset($sub->thumbnail) }}" alt="{{ $namaMateri }}">
+                                @if(!empty($sub->thumbnail) && str_contains($sub->thumbnail, 'uploads') && file_exists(public_path($sub->thumbnail)))
+        <img src="{{ asset($sub->thumbnail) }}" 
+             alt="{{ $namaMateri }}" >
+
+    {{-- Cek Jika Mengandung Kata 'photos' --}}
+    @elseif(!empty($sub->thumbnail) && str_contains($sub->thumbnail, 'photos'))
+        <img src="{{ asset('storage/' . $sub->thumbnail) }}" 
+             alt="Banner {{ $sub->nama }}">
+
                                 @else
                                     <div class="catalog-card__placeholder">
                                         <i class="fas fa-play-circle"></i>

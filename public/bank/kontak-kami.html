@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Hubungi Bankir Academy untuk konsultasi pelatihan, layanan perbankan, pengembangan talenta, LMS, program CSR, kerja sama pendidikan, dan dukungan pengguna." name="description"/>
+<title>Kontak Kami | Bankir Academy</title>
+<!--
+    INTEGRASI KE WEBSITE:
+    1. Tempatkan file ini pada direktori halaman website.
+    2. Sesuaikan href menu apabila struktur URL berbeda.
+    3. Ganti URL logo pada elemen .brand-logo dengan logo yang digunakan index utama.
+    4. Bila Bootstrap/stylesheet index utama sudah tersedia, CSS di bawah dapat dipindahkan
+       ke stylesheet utama agar komponen header/footer benar-benar identik.
+  -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --primary: #6255d9;
+      --primary-dark: #30276f;
+      --primary-soft: #f1efff;
+      --secondary: #00b7a8;
+      --accent: #ffcc5c;
+      --navy: #15123b;
+      --text: #41415a;
+      --muted: #74748a;
+      --line: #e8e7f1;
+      --surface: #ffffff;
+      --page: #fafaff;
+      --success: #188b65;
+      --shadow: 0 20px 55px rgba(33, 28, 88, .10);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --container: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--page);
+      font-family: "Inter", Arial, sans-serif;
+      line-height: 1.75;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button, input { font: inherit; }
+    .container { width: min(var(--container), calc(100% - 40px)); margin-inline: auto; }
+
+    /* HEADER — meniru gaya halaman utama */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(232,231,241,.9);
+    }
+    .header-inner {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: max-content;
+    }
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), #8b7ff0);
+      box-shadow: 0 10px 25px rgba(98,85,217,.28);
+      font: 800 18px/1 "Manrope", sans-serif;
+    }
+    .brand-name {
+      color: var(--navy);
+      font: 800 19px/1.15 "Manrope", sans-serif;
+    }
+    .brand-name small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font: 600 10px/1.2 "Inter", sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 27px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .nav-menu a:hover, .nav-menu a.active { color: var(--primary); }
+    .header-actions { display: flex; gap: 10px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .btn-primary {
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 10px 22px rgba(98,85,217,.24);
+    }
+    .btn-primary:hover { transform: translateY(-2px); background: #5145c6; }
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--navy);
+    }
+
+    /* HERO */
+    .legal-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 78px 0 70px;
+      background:
+        radial-gradient(circle at 15% 25%, rgba(0,183,168,.16), transparent 27%),
+        radial-gradient(circle at 84% 28%, rgba(255,204,92,.20), transparent 25%),
+        linear-gradient(135deg, #f5f2ff 0%, #fff 52%, #edfafa 100%);
+    }
+    .legal-hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -140px auto;
+      width: 360px;
+      height: 360px;
+      border: 54px solid rgba(98,85,217,.06);
+      border-radius: 50%;
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      align-items: center;
+      gap: 55px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 13px;
+      color: var(--primary-dark);
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(98,85,217,.16);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--secondary);
+    }
+    h1, h2, h3 { margin-top: 0; color: var(--navy); font-family: "Manrope", sans-serif; }
+    h1 {
+      max-width: 730px;
+      margin: 21px 0 18px;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+    .hero-copy {
+      max-width: 690px;
+      margin: 0 0 26px;
+      color: #626279;
+      font-size: 17px;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      color: var(--primary-dark);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(33,28,88,.05);
+    }
+    .illustration-card {
+      position: relative;
+      padding: 24px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+    }
+    .illustration-card svg { width: 100%; height: auto; }
+
+    /* CONTENT */
+    .legal-section { padding: 76px 0 100px; }
+    .legal-layout {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      align-items: start;
+      gap: 35px;
+    }
+    .legal-sidebar {
+      position: sticky;
+      top: 108px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      box-shadow: 0 15px 38px rgba(33,28,88,.07);
+    }
+    .legal-sidebar h2 { margin-bottom: 14px; font-size: 18px; }
+    .toc {
+      display: grid;
+      gap: 3px;
+      max-height: calc(100vh - 210px);
+      overflow: auto;
+      padding-right: 5px;
+    }
+    .toc a {
+      padding: 8px 10px;
+      color: var(--muted);
+      border-radius: 9px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .toc a:hover { color: var(--primary); background: var(--primary-soft); }
+
+    .legal-content {
+      padding: clamp(26px, 4vw, 54px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+    .notice {
+      margin-bottom: 34px;
+      padding: 20px 22px;
+      color: #4e4675;
+      background: linear-gradient(135deg, #f2efff, #f7ffff);
+      border: 1px solid #ddd8ff;
+      border-left: 5px solid var(--primary);
+      border-radius: 14px;
+    }
+    .legal-article {
+      scroll-margin-top: 115px;
+      padding: 31px 0;
+      border-top: 1px solid var(--line);
+    }
+    .legal-article:first-of-type { border-top: 0; padding-top: 0; }
+    .legal-article h2 {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin-bottom: 14px;
+      font-size: clamp(21px, 2.6vw, 27px);
+      line-height: 1.35;
+    }
+    .article-no {
+      flex: 0 0 auto;
+      display: inline-grid;
+      place-items: center;
+      width: 37px;
+      height: 37px;
+      color: #fff;
+      background: var(--primary);
+      border-radius: 11px;
+      font: 800 13px/1 "Inter", sans-serif;
+    }
+    .legal-article p { margin: 10px 0; }
+    .legal-article ol, .legal-article ul { margin: 12px 0 0; padding-left: 22px; }
+    .legal-article li { margin: 8px 0; padding-left: 3px; }
+    .legal-article strong { color: var(--navy); }
+    .highlight-box {
+      margin-top: 18px;
+      padding: 18px 20px;
+      background: #fbfbff;
+      border: 1px dashed #cfcbee;
+      border-radius: 14px;
+    }
+
+    /* CTA */
+    .help-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 25px;
+      margin-top: 34px;
+      padding: 28px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      border-radius: 20px;
+    }
+    .help-card h2 { margin-bottom: 8px; color: #fff; font-size: 24px; }
+    .help-card p { margin: 0; color: rgba(255,255,255,.78); }
+    .help-card .btn { color: var(--primary-dark); background: #fff; }
+
+    /* FOOTER — struktur mengikuti homepage */
+    .site-footer {
+      color: rgba(255,255,255,.77);
+      background: #141132;
+    }
+    .footer-main { padding: 65px 0 45px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 46px;
+    }
+    .footer-brand .brand-name, .footer-title { color: #fff; }
+    .footer-brand p { max-width: 420px; margin: 19px 0 22px; }
+    .footer-title {
+      margin-bottom: 17px;
+      font: 800 15px/1.2 "Manrope", sans-serif;
+    }
+    .footer-links { display: grid; gap: 10px; font-size: 14px; }
+    .footer-links a:hover, .footer-links a.active { color: #fff; }
+    .newsletter {
+      display: flex;
+      max-width: 390px;
+      padding: 5px;
+      background: #fff;
+      border-radius: 12px;
+    }
+    .newsletter input {
+      width: 100%;
+      min-width: 0;
+      padding: 0 13px;
+      border: 0;
+      outline: none;
+    }
+    .newsletter button {
+      min-width: 45px;
+      border: 0;
+      border-radius: 9px;
+      color: #fff;
+      background: var(--primary);
+      cursor: pointer;
+    }
+    .footer-bottom {
+      padding: 19px 0;
+      border-top: 1px solid rgba(255,255,255,.10);
+      font-size: 13px;
+    }
+    .footer-bottom-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    @media (max-width: 1000px) {
+      .nav-menu, .header-actions { display: none; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .nav-menu.open {
+        position: absolute;
+        top: 82px;
+        left: 20px;
+        right: 20px;
+        display: grid;
+        gap: 0;
+        padding: 15px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      .nav-menu.open a { padding: 12px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .illustration-card { max-width: 590px; }
+      .legal-layout { grid-template-columns: 1fr; }
+      .legal-sidebar { position: static; }
+      .toc { grid-template-columns: repeat(2, minmax(0,1fr)); max-height: none; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 28px, var(--container)); }
+      .legal-hero { padding: 56px 0; }
+      h1 { font-size: 39px; }
+      .legal-section { padding: 45px 0 70px; }
+      .toc { grid-template-columns: 1fr; }
+      .legal-content { padding: 24px 20px; }
+      .legal-article h2 { font-size: 21px; }
+      .help-card { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 34px; }
+      .footer-bottom-inner { align-items: flex-start; flex-direction: column; }
+    }
+  
+
+    /* Header & Footer alignment with homepage */
+    html{scroll-padding-top:100px}
+    body.menu-open{overflow:hidden}
+    .site-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.92);border-bottom:1px solid rgba(232,231,241,.86);backdrop-filter:blur(17px);transition:.25s ease}
+    .site-header.scrolled{box-shadow:0 9px 28px rgba(31,27,82,.08)}
+    .header-inner{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:inline-flex;align-items:center;gap:12px;min-width:max-content}
+    .brand-logo{width:49px;height:49px;filter:drop-shadow(0 10px 14px rgba(103,87,217,.20))}
+    .brand-copy strong{display:block;color:var(--navy);font:800 19px/1.1 "Manrope",sans-serif}
+    .brand-copy small{display:block;margin-top:5px;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    .desktop-nav{display:flex;align-items:center;gap:4px}
+    .nav-item{position:relative}
+    .nav-link{display:flex;align-items:center;gap:6px;padding:12px 13px;color:#48475F;border-radius:10px;font-size:13px;font-weight:700;transition:.18s ease}
+    .nav-link:hover,.nav-link.active{color:var(--primary);background:var(--primary-soft)}
+    .chevron{font-size:10px;transition:.18s}.nav-item:hover .chevron{transform:rotate(180deg)}
+    .dropdown{position:absolute;top:calc(100% + 12px);left:0;width:300px;padding:10px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(9px);transition:.18s ease}
+    .nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+    .dropdown.wide{width:680px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .drop-link{display:flex;gap:12px;padding:12px;border-radius:12px;transition:.18s}.drop-link:hover{background:var(--primary-soft)}
+    .drop-icon{flex:0 0 auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--primary);background:#F3F1FF;font-size:17px}
+    .drop-link strong{display:block;color:var(--navy);font-size:13px}.drop-link span{display:block;margin-top:2px;color:var(--muted);font-size:11px;line-height:1.45}
+    .header-action{display:flex;align-items:center;gap:9px}.btn-outline{color:var(--primary-dark);background:rgba(255,255,255,.75);border:1px solid #DCD9F0}.btn-sm{min-height:42px;padding:0 17px;font-size:13px}
+    .menu-toggle{display:none;width:45px;height:45px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy)}
+    .mobile-panel{display:none;position:fixed;inset:82px 0 0;z-index:99;padding:18px 20px 35px;background:#fff;overflow:auto}.mobile-panel.open{display:block}
+    .mobile-group{border-bottom:1px solid var(--line)}.mobile-main{width:100%;display:flex;align-items:center;justify-content:space-between;padding:15px 4px;border:0;background:none;color:var(--navy);font-weight:800;text-align:left}.mobile-sub{display:none;padding:0 0 12px 12px}.mobile-sub.open{display:grid}.mobile-sub a{padding:9px 8px;color:var(--muted);font-size:14px}.mobile-login{margin-top:20px;width:100%}
+    .legal-hero{padding-top:160px}
+    .site-footer{color:rgba(255,255,255,.72);background:#141132}.footer-main{padding:68px 0 46px}.footer-grid{display:grid;grid-template-columns:1.45fr repeat(3,1fr);gap:48px}.footer-brand p{max-width:390px;margin:19px 0 22px;font-size:12px}.footer-brand .brand-copy strong,.footer-title{color:#fff}.footer-title{margin-bottom:18px;font:800 14px "Manrope"}.footer-links{display:grid;gap:10px}.footer-links a{font-size:12px;transition:.18s}.footer-links a:hover,.footer-links a.active{color:#fff;transform:translateX(3px)}.footer-contact{display:grid;gap:10px;margin-top:18px}.contact-row{display:flex;gap:10px;font-size:11px}.contact-row i{font-style:normal;color:#AFA6FF}.newsletter{display:flex;max-width:395px;margin-top:17px;padding:5px;background:#fff;border-radius:12px}.newsletter input{width:100%;min-width:0;padding:0 12px;border:0;outline:0;font-size:11px}.newsletter button{width:43px;border:0;border-radius:9px;color:#fff;background:var(--primary)}.footer-bottom{padding:19px 0;border-top:1px solid rgba(255,255,255,.09);font-size:10px}.footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}.footer-legal{display:flex;flex-wrap:wrap;gap:15px}
+    @media(max-width:1060px){.desktop-nav,.header-action .btn-outline{display:none}.menu-toggle{display:grid;place-items:center}.footer-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.brand-copy small{display:none}.brand-logo{width:43px;height:43px}.header-inner{min-height:74px}.mobile-panel{inset:74px 0 0}.header-action .btn-primary{display:none}.legal-hero{padding-top:128px}.footer-grid{grid-template-columns:1fr}.footer-bottom-inner{align-items:flex-start;flex-direction:column}}
+
+
+
+    /* CONTACT PAGE */
+    .contact-hero{padding:156px 0 86px;background:radial-gradient(circle at 14% 23%,rgba(0,183,168,.14),transparent 27%),radial-gradient(circle at 87% 20%,rgba(255,201,92,.20),transparent 24%),linear-gradient(135deg,#F4F1FF 0%,#FFFFFF 52%,#EDFBF9 100%)}
+    .contact-hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:58px;align-items:center}
+    .contact-hero h1{margin:20px 0 18px;font-size:clamp(42px,5.2vw,67px);line-height:1.06}
+    .gradient-text{background:linear-gradient(90deg,var(--primary),var(--secondary-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .contact-lead{max-width:680px;color:#626278;font-size:17px}
+    .contact-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+    .contact-proof{display:flex;flex-wrap:wrap;gap:15px;margin-top:28px}
+    .contact-proof span{display:flex;align-items:center;gap:8px;color:#5d5c72;font-size:12px;font-weight:700}
+    .contact-proof i{width:28px;height:28px;display:grid;place-items:center;font-style:normal;color:var(--secondary-dark);background:#e9faf7;border-radius:9px}
+    .contact-visual{position:relative;min-height:500px;padding:24px;background:rgba(255,255,255,.80);border:1px solid rgba(255,255,255,.95);border-radius:34px;box-shadow:var(--shadow)}
+    .contact-dashboard{height:100%;padding:25px;color:#fff;background:linear-gradient(150deg,#282162,#17143D);border-radius:25px;overflow:hidden}
+    .contact-dashboard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;font-size:12px;font-weight:800}
+    .contact-dashboard-top span:last-child{padding:6px 9px;color:#b9fff6;background:rgba(0,183,168,.14);border-radius:999px;font-size:8px}
+    .contact-dashboard-main{padding:22px;background:linear-gradient(135deg,rgba(103,87,217,.67),rgba(0,183,168,.36));border:1px solid rgba(255,255,255,.12);border-radius:19px}
+    .contact-dashboard-main small{color:#d9d4ff;font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+    .contact-dashboard-main h3{margin:8px 0;color:#fff;font-size:25px}.contact-dashboard-main p{margin:0;color:rgba(255,255,255,.68);font-size:11px}
+    .contact-mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+    .contact-mini-card{padding:16px;background:#fff;border-radius:15px}.contact-mini-card strong{display:block;color:var(--navy);font-size:12px}.contact-mini-card span{display:block;margin-top:4px;color:var(--muted);font-size:9px}
+    .contact-float{position:absolute;display:flex;align-items:center;gap:11px;padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow-sm)}
+    .contact-float.one{left:-15px;top:74px}.contact-float.two{right:-12px;bottom:68px}
+    .contact-float i{width:38px;height:38px;display:grid;place-items:center;font-style:normal;color:var(--primary);background:var(--primary-soft);border-radius:11px}.contact-float strong{display:block;color:var(--navy);font-size:11px}.contact-float span{display:block;color:var(--muted);font-size:8px}
+    .contact-strip{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .contact-strip-grid{display:grid;grid-template-columns:1.25fr repeat(3,1fr);gap:20px;align-items:center;padding:24px 0}
+    .contact-strip-copy strong{display:block;color:var(--navy);font-size:13px}.contact-strip-copy span{color:var(--muted);font-size:11px}
+    .strip-item{display:flex;align-items:center;justify-content:center;gap:9px;color:#69677d;font-size:11px;font-weight:800}.strip-item i{width:34px;height:34px;display:grid;place-items:center;font-style:normal;color:var(--primary);background:var(--primary-soft);border-radius:10px}
+    .contact-section{padding:96px 0}.section-soft{background:linear-gradient(180deg,#f8f7ff,#fff)}
+    .section-head{max-width:760px;margin:0 auto 46px;text-align:center}.section-head h2{margin:14px 0 15px;font-size:clamp(31px,4vw,48px);line-height:1.14}.section-head p{color:var(--muted);font-size:16px}
+    .contact-channel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .channel-card{position:relative;overflow:hidden;min-height:245px;padding:25px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-sm);transition:.22s}
+    .channel-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+    .channel-card i{width:50px;height:50px;display:grid;place-items:center;font-style:normal;color:var(--primary);background:var(--primary-soft);border-radius:15px;font-size:20px}.channel-card:nth-child(2n) i{color:var(--secondary-dark);background:#e9faf7}.channel-card h3{margin:18px 0 8px;font-size:18px}.channel-card p{color:var(--muted);font-size:12px}.channel-card a{color:var(--primary);font-size:11px;font-weight:800}
+    .contact-layout{display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start}
+    .contact-form-card,.contact-info-card{background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow-sm)}
+    .contact-form-card{padding:34px}.contact-form-card h2,.contact-info-card h2{margin-bottom:9px;font-size:28px}.contact-form-card>p,.contact-info-card>p{color:var(--muted);font-size:13px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:17px;margin-top:25px}.form-group{display:grid;gap:7px}.form-group.full{grid-column:1/-1}.form-group label{color:var(--navy);font-size:11px;font-weight:800}.form-group input,.form-group select,.form-group textarea{width:100%;padding:13px 14px;color:var(--text);background:#fbfbff;border:1px solid var(--line);border-radius:12px;outline:none;transition:.18s}.form-group textarea{min-height:145px;resize:vertical}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(103,87,217,.6);box-shadow:0 0 0 4px rgba(103,87,217,.09);background:#fff}.form-help{margin-top:8px;color:var(--muted);font-size:9px}.form-consent{display:flex;align-items:flex-start;gap:9px;margin:17px 0;color:var(--muted);font-size:10px}.form-consent input{margin-top:4px}.form-submit{width:100%}
+    .contact-info-card{padding:30px}.info-list{display:grid;gap:13px;margin-top:23px}.info-row{display:grid;grid-template-columns:43px 1fr;gap:12px;padding:15px;background:#fafaff;border:1px solid var(--line);border-radius:15px}.info-row i{width:39px;height:39px;display:grid;place-items:center;font-style:normal;color:var(--secondary-dark);background:#e9faf7;border-radius:11px}.info-row strong{display:block;color:var(--navy);font-size:12px}.info-row span,.info-row a{display:block;margin-top:3px;color:var(--muted);font-size:10px}
+    .response-box{margin-top:20px;padding:21px;color:#fff;background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:18px}.response-box h3{color:#fff;font-size:18px}.response-box p{margin:0;color:rgba(255,255,255,.72);font-size:11px}.response-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}.response-step{padding:11px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.1);border-radius:11px}.response-step strong{display:block;color:#fff;font-size:10px}.response-step span{font-size:8px;color:rgba(255,255,255,.6)}
+    .needs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.need-card{padding:24px;background:#fff;border:1px solid var(--line);border-radius:20px}.need-card i{display:grid;place-items:center;width:42px;height:42px;font-style:normal;color:var(--primary);background:var(--primary-soft);border-radius:12px}.need-card h3{margin:16px 0 7px;font-size:17px}.need-card p{margin:0;color:var(--muted);font-size:11px}
+    .map-panel{display:grid;grid-template-columns:.95fr 1.05fr;gap:25px;padding:35px;background:linear-gradient(145deg,#f0edff,#eafbF8);border:1px solid #e2dff7;border-radius:30px}.map-copy h2{font-size:34px}.map-copy p{color:var(--muted)}.map-card{min-height:320px;padding:25px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-sm)}.map-grid{height:100%;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(5,1fr);gap:8px}.map-block{background:#f1efff;border-radius:8px}.map-block:nth-child(3n){background:#e9faf7}.map-pin{grid-column:3/5;grid-row:2/4;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;font-size:28px;box-shadow:0 15px 30px rgba(103,87,217,.25)}
+    .faq-wrap{max-width:880px;margin:0 auto}.faq-item{margin-bottom:11px;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:19px 21px;border:0;background:#fff;color:var(--navy);font-weight:800;text-align:left}.faq-plus{width:28px;height:28px;display:grid;place-items:center;color:var(--primary);background:var(--primary-soft);border-radius:9px}.faq-a{display:none;padding:0 21px 20px;color:var(--muted);font-size:12px}.faq-item.open .faq-a{display:block}.faq-item.open .faq-plus{transform:rotate(45deg)}
+    .contact-cta{padding:76px 0}.contact-cta-box{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;padding:42px 48px;color:#fff;background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:30px}.contact-cta-box h2{margin-bottom:8px;color:#fff;font-size:clamp(28px,4vw,42px)}.contact-cta-box p{margin:0;color:rgba(255,255,255,.72)}.contact-cta-actions{display:flex;gap:10px;flex-wrap:wrap}
+    @media(max-width:1060px){.contact-hero-grid,.contact-layout,.map-panel{grid-template-columns:1fr}.contact-channel-grid{grid-template-columns:repeat(2,1fr)}.needs-grid{grid-template-columns:repeat(2,1fr)}.contact-strip-grid{grid-template-columns:repeat(2,1fr)}.contact-strip-copy{grid-column:1/-1;text-align:center}}
+    @media(max-width:700px){.contact-hero{padding:124px 0 62px}.contact-hero h1{font-size:42px}.contact-visual{min-height:440px}.contact-float.one{left:-5px}.contact-float.two{right:-4px}.contact-channel-grid,.needs-grid,.form-grid,.contact-strip-grid,.response-steps{grid-template-columns:1fr}.form-group.full{grid-column:auto}.contact-section{padding:69px 0}.contact-form-card,.contact-info-card{padding:24px}.contact-cta-box{grid-template-columns:1fr;padding:34px 25px}.contact-cta-actions{flex-direction:column}.map-panel{padding:23px}.map-card{min-height:260px}}
+
+  
+    /* Header navigation refinement — unified multipage */
+    .desktop-nav{gap:10px}
+    .nav-link{
+      position:relative;
+      gap:7px;
+      padding:12px 5px;
+      border:0;
+      border-radius:0;
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+    .nav-link:hover,.nav-link.active{
+      color:var(--primary);
+      background:transparent!important;
+    }
+    .nav-link::after{
+      content:"";
+      position:absolute;
+      left:5px;right:5px;bottom:4px;
+      height:2px;
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      border-radius:99px;
+      transform:scaleX(0);
+      transform-origin:center;
+      transition:transform .2s ease;
+    }
+    .nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+.mobile-main{gap:10px}
+@media(max-width:1060px){.desktop-nav{gap:4px}}
+</style>
+<meta content="kontak-kami.html" name="bankir-page"/></head>
+<body>
+<!-- Logo SVG reusable -->
+<svg height="0" style="position:absolute" width="0">
+<symbol id="logo-ba" viewbox="0 0 64 64">
+<defs>
+<lineargradient id="logoGradient" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0%" stop-color="#7668E5"></stop>
+<stop offset="100%" stop-color="#5142C1"></stop>
+</lineargradient>
+</defs>
+<rect fill="url(#logoGradient)" height="64" rx="17" width="64"></rect>
+<path d="M19 13h19c8 0 13 4 13 10 0 4-2 7-6 9 5 2 8 5 8 10 0 8-6 12-15 12H19V13zm10 8v8h8c3 0 5-1 5-4s-2-4-5-4h-8zm0 16v9h9c4 0 6-2 6-5s-2-4-6-4h-9z" fill="#fff"></path>
+<path d="M14 18h5v31h-5z" fill="#00B7A8"></path>
+</symbol>
+</svg>
+<header class="site-header" id="siteHeader">
+<div class="container header-inner">
+<a aria-label="Bankir Academy" class="brand" href="index.html">
+<svg aria-hidden="true" class="brand-logo"><use href="#logo-ba"></use></svg>
+<span class="brand-copy">
+<strong>Bankir Academy</strong>
+<small>Learning · Talent · Banking Solutions</small>
+</span>
+</a>
+<nav aria-label="Navigasi utama" class="desktop-nav">
+<a class="nav-link" href="index.html">Beranda</a>
+<div class="nav-item">
+<a class="nav-link" href="index.html#layanan">Layanan <span class="chevron">▼</span></a>
+<div class="dropdown wide">
+<a class="drop-link" href="banking-solution.html">
+<span class="drop-icon">▦</span>
+<span><strong>Banking Solution</strong><span>Solusi terapan untuk kebutuhan operasional dan pengembangan bank.</span></span>
+</a>
+<a class="drop-link" href="capacity-building.html">
+<span class="drop-icon">↗</span>
+<span><strong>Capacity Building</strong><span>Program peningkatan kompetensi berbasis kebutuhan organisasi.</span></span>
+</a>
+<a class="drop-link" href="banking-talent-solution.html">
+<span class="drop-icon">◇</span>
+<span><strong>Banking Talent Solution</strong><span>Pengembangan dan pemetaan talenta sektor perbankan.</span></span>
+</a>
+<a class="drop-link" href="learning-management-system.html">
+<span class="drop-icon">▶</span>
+<span><strong>Learning Management System</strong><span>Pembelajaran digital, asesmen, dan pelaporan terintegrasi.</span></span>
+</a>
+<a class="drop-link" href="inovasi-program.html">
+<span class="drop-icon">✦</span>
+<span><strong>Inovasi Program</strong><span>Riset, analisis produk, automasi, dan pengembangan AI terapan.</span></span>
+</a>
+<a class="drop-link" href="program-csr.html">
+<span class="drop-icon">♡</span>
+<span><strong>Program CSR</strong><span>Edukasi industri perbankan bagi pelajar dan calon bankir.</span></span>
+</a>
+</div>
+</div>
+<div class="nav-item">
+<a class="nav-link" href="index.html#talent-solutions">Talent Solutions <span class="chevron">▼</span></a>
+<div class="dropdown">
+<a class="drop-link" href="headhunting.html">
+<span class="drop-icon">⌕</span>
+<span><strong>Headhunting</strong><span>Pencarian kandidat sesuai kriteria dan kebutuhan organisasi.</span></span>
+</a>
+<a class="drop-link" href="outsourcing.html">
+<span class="drop-icon">◎</span>
+<span><strong>Outsourcing</strong><span>Dukungan tenaga kerja berbasis ruang lingkup yang disepakati.</span></span>
+</a>
+<a class="drop-link" href="job-connect.html">
+<span class="drop-icon">⇄</span>
+<span><strong>Job Connect</strong><span>Menghubungkan kandidat dan peluang kerja yang relevan.</span></span>
+</a>
+</div>
+</div>
+<div class="nav-item">
+<a class="nav-link" href="index.html#foundations">Foundations <span class="chevron">▼</span></a>
+<div class="dropdown">
+<a class="drop-link" href="bakti-pendidikan.html">
+<span class="drop-icon">🎓</span>
+<span><strong>Bakti Pendidikan</strong><span>Literasi, pengenalan karier, dan pembelajaran industri.</span></span>
+</a>
+<a class="drop-link" href="bakti-umkm.html">
+<span class="drop-icon">⌂</span>
+<span><strong>Bakti UMKM</strong><span>Penguatan kapasitas usaha dan literasi pengelolaan bisnis.</span></span>
+</a>
+</div>
+</div>
+</nav>
+<div class="header-action">
+<a class="btn btn-outline btn-sm" href="kontak-kami.html">Konsultasi</a>
+<a class="btn btn-primary btn-sm" href="login.html">Login</a>
+<button aria-expanded="false" aria-label="Buka menu" class="menu-toggle" id="menuToggle" type="button">☰</button>
+</div>
+</div>
+</header>
+<div class="mobile-panel" id="mobilePanel">
+<div class="mobile-group">
+<a class="mobile-main" href="index.html"><span>Beranda</span></a>
+</div>
+<div class="mobile-group">
+<button class="mobile-main" type="button"><span>Layanan</span><span>＋</span></button>
+<div class="mobile-sub">
+<a href="banking-solution.html">Banking Solution</a>
+<a href="capacity-building.html">Capacity Building</a>
+<a href="banking-talent-solution.html">Banking Talent Solution</a>
+<a href="learning-management-system.html">LMS</a>
+<a href="inovasi-program.html">Inovasi Program</a>
+<a href="program-csr.html">Program CSR</a>
+</div>
+</div>
+<div class="mobile-group">
+<button class="mobile-main" type="button"><span>Talent Solutions</span><span>＋</span></button>
+<div class="mobile-sub">
+<a href="headhunting.html">Headhunting</a>
+<a href="outsourcing.html">Outsourcing</a>
+<a href="job-connect.html">Job Connect</a>
+</div>
+</div>
+<div class="mobile-group">
+<button class="mobile-main" type="button"><span>Foundations</span><span>＋</span></button>
+<div class="mobile-sub">
+<a href="bakti-pendidikan.html">Bakti Pendidikan</a>
+<a href="bakti-umkm.html">Bakti UMKM</a>
+</div>
+</div>
+<a class="btn btn-primary mobile-login" href="login.html">Login</a>
+</div>
+<main>
+<section class="contact-hero" id="kontak">
+<div class="container contact-hero-grid">
+<div>
+<span class="eyebrow">Pusat Bantuan &amp; Kolaborasi</span>
+<h1>Mari Diskusikan Kebutuhan Anda Bersama <span class="gradient-text">Bankir Academy</span></h1>
+<p class="contact-lead">Hubungi kami untuk konsultasi pelatihan, solusi perbankan, pengembangan talenta, LMS, program CSR, kerja sama sekolah atau kampus, pemberdayaan UMKM, serta dukungan penggunaan layanan.</p>
+<div class="contact-actions">
+<a class="btn btn-primary" href="#form-kontak">Kirim Pesan <span>→</span></a>
+<a class="btn btn-outline" href="mailto:info@bankiracademy.co.id">Kirim Email</a>
+</div>
+<div class="contact-proof">
+<span><i>✓</i>Respons terarah sesuai kebutuhan</span>
+<span><i>✓</i>Konsultasi awal tanpa komitmen</span>
+<span><i>✓</i>Dukungan institusi dan individu</span>
+</div>
+</div>
+<div aria-label="Ilustrasi pusat komunikasi Bankir Academy" class="contact-visual">
+<div class="contact-dashboard">
+<div class="contact-dashboard-top"><span>CONTACT &amp; COLLABORATION HUB</span><span>Ready to Help</span></div>
+<div class="contact-dashboard-main"><small>Integrated Support</small><h3>Connect. Discuss. Design. Deliver.</h3><p>Satu pintu untuk konsultasi program, pertanyaan layanan, kerja sama, dan dukungan pengguna.</p></div>
+<div class="contact-mini-grid">
+<div class="contact-mini-card"><strong>Program Consultation</strong><span>Pemetaan kebutuhan dan pilihan solusi</span></div>
+<div class="contact-mini-card"><strong>Client Support</strong><span>Bantuan akun, program, dan transaksi</span></div>
+<div class="contact-mini-card"><strong>Partnership</strong><span>Kolaborasi bank, sekolah, kampus, dan komunitas</span></div>
+<div class="contact-mini-card"><strong>Talent &amp; Career</strong><span>Headhunting, outsourcing, dan Job Connect</span></div>
+</div>
+</div>
+<div class="contact-float one"><i>✉</i><span><strong>Email Support</strong><span>info@bankiracademy.co.id</span></span></div>
+<div class="contact-float two"><i>⌂</i><span><strong>Semarang, Indonesia</strong><span>Senin–Jumat, 08.00–17.00 WIB</span></span></div>
+</div>
+</div>
+</section>
+<div class="contact-strip"><div class="container contact-strip-grid">
+<div class="contact-strip-copy"><strong>Satu kanal untuk berbagai kebutuhan</strong><span>Pilih topik yang paling relevan agar pesan Anda diteruskan kepada tim yang tepat.</span></div>
+<div class="strip-item"><i>▦</i>Program &amp; Pelatihan</div><div class="strip-item"><i>◇</i>Talent Solutions</div><div class="strip-item"><i>♡</i>Kolaborasi Sosial</div>
+</div></div>
+<section class="contact-section" id="kanal">
+<div class="container">
+<div class="section-head"><span class="eyebrow">Kanal Komunikasi</span><h2>Pilih Cara Menghubungi Kami yang Paling Nyaman</h2><p>Gunakan kanal resmi Bankir Academy agar pertanyaan, permintaan, atau keluhan dapat tercatat dan ditindaklanjuti dengan tepat.</p></div>
+<div class="contact-channel-grid">
+<article class="channel-card"><i>✉</i><h3>Email</h3><p>Untuk proposal, dokumen resmi, pertanyaan layanan, dan korespondensi yang memerlukan lampiran.</p><a href="mailto:info@bankiracademy.co.id">info@bankiracademy.co.id →</a></article>
+<article class="channel-card"><i>☎</i><h3>WhatsApp</h3><p>Untuk konsultasi awal, konfirmasi program, serta dukungan cepat pada jam layanan.</p><a href="#form-kontak">Minta dihubungi →</a></article>
+<article class="channel-card"><i>⌂</i><h3>Kunjungan &amp; Pertemuan</h3><p>Pertemuan tatap muka dilakukan berdasarkan penjadwalan dan konfirmasi terlebih dahulu.</p><a href="#form-kontak">Jadwalkan melalui formulir →</a></article>
+<article class="channel-card"><i>◎</i><h3>Dukungan Pengguna</h3><p>Untuk kendala akun, pembayaran, kelas, materi, sertifikat, dan penggunaan platform.</p><a href="#form-kontak">Ajukan bantuan →</a></article>
+</div>
+</div>
+</section>
+<section class="contact-section section-soft" id="form-kontak">
+<div class="container contact-layout">
+<div class="contact-form-card">
+<span class="eyebrow">Form Kontak</span><h2>Ceritakan Kebutuhan Anda</h2><p>Lengkapi informasi berikut agar tim kami dapat memahami konteks dan menyiapkan respons yang relevan.</p>
+<form action="#" method="post">
+<div class="form-grid">
+<div class="form-group"><label for="nama">Nama lengkap *</label><input id="nama" name="nama" placeholder="Masukkan nama lengkap" required="" type="text"/></div>
+<div class="form-group"><label for="institusi">Institusi / perusahaan</label><input id="institusi" name="institusi" placeholder="Nama bank, sekolah, perusahaan, atau usaha" type="text"/></div>
+<div class="form-group"><label for="email">Email *</label><input id="email" name="email" placeholder="nama@institusi.co.id" required="" type="email"/></div>
+<div class="form-group"><label for="telepon">Nomor WhatsApp *</label><input id="telepon" name="telepon" placeholder="08xxxxxxxxxx" required="" type="tel"/></div>
+<div class="form-group full"><label for="kategori">Kategori kebutuhan *</label><select id="kategori" name="kategori" required=""><option value="">Pilih kategori</option><option>Capacity Building / Pelatihan</option><option>Banking Solution</option><option>Banking Talent Solution</option><option>Learning Management System</option><option>Inovasi Program</option><option>Headhunting / Outsourcing / Job Connect</option><option>Program CSR / Bakti Pendidikan / Bakti UMKM</option><option>Dukungan akun, kelas, pembayaran, atau sertifikat</option><option>Media, kemitraan, atau kebutuhan lainnya</option></select></div>
+<div class="form-group full"><label for="subjek">Subjek *</label><input id="subjek" name="subjek" placeholder="Tuliskan ringkasan kebutuhan" required="" type="text"/></div>
+<div class="form-group full"><label for="pesan">Pesan *</label><textarea id="pesan" name="pesan" placeholder="Jelaskan tujuan, jumlah peserta, waktu pelaksanaan, lokasi, kendala, atau hasil yang diharapkan." required=""></textarea><span class="form-help">Jangan mengirim kata sandi, kode OTP, nomor kartu, atau data sensitif lain melalui formulir ini.</span></div>
+</div>
+<label class="form-consent"><input required="" type="checkbox"/><span>Saya menyetujui pemrosesan data yang saya kirimkan untuk menanggapi pertanyaan ini sesuai Kebijakan Privasi Bankir Academy.</span></label>
+<button class="btn btn-primary form-submit" type="submit">Kirim Pesan</button>
+</form>
+</div>
+<aside class="contact-info-card">
+<span class="eyebrow">Informasi Resmi</span><h2>Kontak Bankir Academy</h2><p>Pastikan Anda menggunakan kanal resmi berikut untuk menghindari informasi atau pembayaran yang tidak sah.</p>
+<div class="info-list">
+<div class="info-row"><i>✉</i><span><strong>Email</strong><a href="mailto:info@bankiracademy.co.id">info@bankiracademy.co.id</a></span></div>
+<div class="info-row"><i>⌂</i><span><strong>Alamat</strong><span>Permata Puri, Ngaliyan, Semarang, Jawa Tengah</span></span></div>
+<div class="info-row"><i>◷</i><span><strong>Jam layanan</strong><span>Senin–Jumat, 08.00–17.00 WIB<br/>Selain hari libur nasional</span></span></div>
+<div class="info-row"><i>◎</i><span><strong>Website</strong><a href="https://www.bankiracademy.co.id/">www.bankiracademy.co.id</a></span></div>
+</div>
+<div class="response-box"><h3>Bagaimana pesan ditangani?</h3><p>Pesan akan ditinjau, dikategorikan, kemudian diteruskan kepada tim yang relevan.</p><div class="response-steps"><div class="response-step"><strong>1. Review</strong><span>Pemeriksaan awal</span></div><div class="response-step"><strong>2. Routing</strong><span>Diteruskan ke tim</span></div><div class="response-step"><strong>3. Response</strong><span>Tindak lanjut</span></div></div></div>
+</aside>
+</div>
+</section>
+<section class="contact-section" id="kebutuhan">
+<div class="container"><div class="section-head"><span class="eyebrow">Kami Dapat Membantu</span><h2>Berbagai Kebutuhan dalam Satu Ekosistem</h2><p>Tim kami dapat membantu mengarahkan kebutuhan Anda ke layanan dan bentuk kerja sama yang paling sesuai.</p></div>
+<div class="needs-grid">
+<article class="need-card"><i>↗</i><h3>Pelatihan &amp; Capacity Building</h3><p>Public class, in-house training, workshop, coaching, blended learning, serta program pengembangan pimpinan.</p></article>
+<article class="need-card"><i>▦</i><h3>Solusi Institusi</h3><p>Konsultasi, SOP, perangkat kerja, pendampingan proses, dashboard, digitalisasi, dan inovasi program.</p></article>
+<article class="need-card"><i>◇</i><h3>Talent Solutions</h3><p>Pemetaan kompetensi, headhunting, outsourcing, Job Connect, talent pool, dan pengembangan karier.</p></article>
+<article class="need-card"><i>▶</i><h3>LMS &amp; Pembelajaran Digital</h3><p>Implementasi LMS, kelas online, materi digital, asesmen, sertifikat, serta pelaporan pembelajaran.</p></article>
+<article class="need-card"><i>♡</i><h3>Program CSR &amp; Foundations</h3><p>Bakti Pendidikan, literasi keuangan, persiapan karier, beasiswa belajar, dan pemberdayaan UMKM.</p></article>
+<article class="need-card"><i>◎</i><h3>Dukungan Pengguna</h3><p>Bantuan akun, pendaftaran, pembayaran, akses materi, perubahan data, sertifikat, dan pengaduan.</p></article>
+</div>
+</div>
+</section>
+<section class="contact-section" id="faq"><div class="container"><div class="section-head"><span class="eyebrow">Pertanyaan Umum</span><h2>Sebelum Menghubungi Kami</h2><p>Beberapa informasi berikut dapat membantu Anda menyiapkan pertanyaan yang lebih lengkap.</p></div><div class="faq-wrap">
+<div class="faq-item"><button class="faq-q" type="button">Informasi apa yang perlu disampaikan untuk meminta proposal?<span class="faq-plus">＋</span></button><div class="faq-a">Sampaikan nama institusi, tujuan program, profil peserta, perkiraan jumlah peserta, waktu dan lokasi, format pelaksanaan, serta hasil yang diharapkan. Informasi tersebut membantu kami menyiapkan ruang lingkup awal.</div></div>
+<div class="faq-item"><button class="faq-q" type="button">Apakah konsultasi awal dikenakan biaya?<span class="faq-plus">＋</span></button><div class="faq-a">Diskusi awal untuk memahami kebutuhan umumnya tidak dikenakan biaya. Biaya hanya berlaku apabila terdapat pekerjaan analisis, desain, asesmen, atau layanan lain yang disepakati.</div></div>
+<div class="faq-item"><button class="faq-q" type="button">Apakah Bankir Academy melayani program di luar Semarang?<span class="faq-plus">＋</span></button><div class="faq-a">Ya. Program dapat diselenggarakan secara daring, tatap muka di lokasi mitra, maupun blended, dengan pengaturan transportasi, akomodasi, sarana, dan jadwal sesuai kesepakatan.</div></div>
+<div class="faq-item"><button class="faq-q" type="button">Bagaimana melaporkan kendala akun atau pembayaran?<span class="faq-plus">＋</span></button><div class="faq-a">Cantumkan nama, email atau nomor telepon terdaftar, nama program, nomor transaksi bila tersedia, kronologi, dan bukti pendukung. Jangan pernah mengirim kata sandi atau kode OTP.</div></div>
+<div class="faq-item"><button class="faq-q" type="button">Apakah saya dapat mengirim dokumen melalui formulir ini?<span class="faq-plus">＋</span></button><div class="faq-a">Form contoh ini belum menyediakan unggahan dokumen. Proposal, TOR, atau lampiran dapat dikirim melalui email resmi setelah memastikan alamat tujuan yang benar.</div></div>
+</div></div></section>
+<section class="contact-cta"><div class="container"><div class="contact-cta-box"><div><h2>Siap Memulai Diskusi?</h2><p>Sampaikan kebutuhan Anda dan tim Bankir Academy akan membantu mengarahkan langkah berikutnya.</p></div><div class="contact-cta-actions"><a class="btn btn-light" href="#form-kontak">Isi Form Kontak</a><a class="btn btn-secondary" href="mailto:info@bankiracademy.co.id">Kirim Email</a></div></div></div></section>
+</main>
+<footer class="site-footer">
+<div class="footer-main">
+<div class="container footer-grid">
+<div class="footer-brand">
+<a class="brand" href="index.html">
+<svg aria-hidden="true" class="brand-logo"><use href="#logo-ba"></use></svg>
+<span class="brand-copy"><strong>Bankir Academy</strong><small style="color:#AAA5CF">Learning · Talent · Banking Solutions</small></span>
+</a>
+<p>
+            Platform pembelajaran dan pengembangan ekosistem perbankan untuk calon bankir,
+            profesional, institusi, sekolah, kampus, UMKM, dan komunitas.
+          </p>
+<form action="#" class="newsletter" method="post" onsubmit="event.preventDefault(); alert('Terima kasih. Fitur berlangganan dapat dihubungkan ke sistem email Anda.');">
+<label class="sr-only" for="newsletterEmail">Alamat email</label>
+<input id="newsletterEmail" placeholder="Masukkan alamat email" required="" type="email"/>
+<button aria-label="Berlangganan" type="submit">→</button>
+</form>
+<div class="footer-contact">
+<span class="contact-row"><i>✉</i> info@bankiracademy.co.id</span>
+<span class="contact-row"><i>⌖</i> Permata Puri, Ngaliyan, Semarang</span>
+<span class="contact-row"><i>◎</i> bankiracademy.co.id</span>
+</div>
+</div>
+<div>
+<div class="footer-title">Kenali</div>
+<nav class="footer-links">
+<a href="index.html#beranda">Tentang Kami</a>
+<a href="kurikulum.html">Kurikulum</a>
+</nav>
+</div>
+<div>
+<div class="footer-title">Pusat Bantuan</div>
+<nav class="footer-links">
+<a href="tanya-jawab.html">Tanya Jawab (FAQ)</a>
+<a href="tanya-jawab.html#administrasi">Panduan Pendaftaran</a>
+<a href="syarat-dan-ketentuan.html">Syarat &amp; Ketentuan</a>
+<a href="kebijakan-privasi.html">Kebijakan Privasi</a>
+<a class="active" href="kontak-kami.html">Kontak Kami</a>
+</nav>
+</div>
+<div>
+<div class="footer-title">Tautan</div>
+<nav class="footer-links">
+<a href="index.html#kelas-online">Promo</a>
+<a href="job-connect.html">Pusat Lowongan Kerja</a>
+<a href="index.html#kelas-online">Kelas Online</a>
+<a href="login.html">Login</a>
+</nav>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="container footer-bottom-inner">
+<span>Copyright © 2026 Bankir Academy. All rights reserved.</span>
+<div class="footer-legal">
+<a href="syarat-dan-ketentuan.html">Syarat &amp; Ketentuan</a>
+<a href="kebijakan-privasi.html">Kebijakan Privasi</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- Ganti href dengan URL WhatsApp resmi Bankir Academy -->
+<a aria-label="Hubungi Bankir Academy" class="floating-help" href="mailto:info@bankiracademy.co.id">
+<span>✉</span><span>Butuh bantuan?</span>
+</a>
+<script>
+  const siteHeader = document.getElementById('siteHeader');
+  const menuToggle = document.getElementById('menuToggle');
+  const mobilePanel = document.getElementById('mobilePanel');
+  window.addEventListener('scroll',()=>siteHeader && siteHeader.classList.toggle('scrolled',window.scrollY>12));
+  if(menuToggle && mobilePanel){menuToggle.addEventListener('click',()=>{const open=mobilePanel.classList.toggle('open');document.body.classList.toggle('menu-open',open);menuToggle.setAttribute('aria-expanded',String(open));menuToggle.textContent=open?'✕':'☰';});}
+  document.querySelectorAll('.mobile-main[type="button"]').forEach(btn=>btn.addEventListener('click',()=>{const sub=btn.nextElementSibling;sub.classList.toggle('open');btn.querySelector('span').textContent=sub.classList.contains('open')?'−':'＋';}));
+  document.querySelectorAll('.mobile-sub a,.mobile-panel>a').forEach(link=>link.addEventListener('click',()=>{mobilePanel?.classList.remove('open');document.body.classList.remove('menu-open');if(menuToggle){menuToggle.textContent='☰';menuToggle.setAttribute('aria-expanded','false');}}));
+  document.querySelectorAll('.faq-q').forEach(button=>button.addEventListener('click',()=>{const item=button.closest('.faq-item');const wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(open=>open.classList.remove('open'));if(!wasOpen)item.classList.add('open');}));
+  const contactForm=document.querySelector('.contact-form-card form');
+  if(contactForm){contactForm.addEventListener('submit',e=>{e.preventDefault();alert('Form ini merupakan tampilan contoh. Hubungkan action form ke sistem backend atau layanan formulir sebelum dipublikasikan.');});}
+</script>
+</body>
+</html>

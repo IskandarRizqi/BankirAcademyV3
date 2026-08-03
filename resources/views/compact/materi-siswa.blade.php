@@ -84,7 +84,7 @@
                 {{-- THUMBNAIL AREA (Disesuaikan ke rasio 3:2 / 1090x726) --}}
                 <div style="position: relative; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; background-color: #F8FAFC;">
                     @if($mat->banner)
-                        <img src="{{ asset('storage/banner/' . $mat->banner) }}" alt="Banner {{ $mat->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="{{ asset('storage/' . $mat->banner) }}" alt="Banner {{ $mat->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
                         <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #6366F1 0%, #A855F7 100%); opacity: 0.85;"></div>
                     @endif
