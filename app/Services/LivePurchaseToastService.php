@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ClassesModel;
 use App\Models\FakeOrderCustomer;
+use App\Models\LokerModel;
 use App\Models\SubMateriModel;
 use Carbon\Carbon;
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -91,14 +92,10 @@ class LivePurchaseToastService
             'next_display_at' => $nextDisplayAt,
         ]);
 
-        $typeLabel = $product['type'];
-        $message = sprintf(
-            '%s dari %s membeli %s %s',
-            $customerName,
-            $customerCity,
-            $typeLabel,
-            $product['name']
-        );
+        $isJobApplication = $product['type'] === 'loker';
+        $message = $isJobApplication
+            ? sprintf('%s dari %s melamar lowongan %s', $customerName, $customerCity, $product['name'])
+            : sprintf('%s dari %s membeli %s %s', $customerName, $customerCity, $product['type'], $product['name']);
 
         return [
             'success' => true,
@@ -107,6 +104,7 @@ class LivePurchaseToastService
                 'city' => $customerCity,
                 'type' => $product['type'],
                 'product_name' => $product['name'],
+                'title' => $isJobApplication ? 'Lowongan Dilamar' : 'Pembelian terbaru',
                 'time_ago' => $timeAgo,
                 'message' => $message,
             ],
@@ -116,7 +114,7 @@ class LivePurchaseToastService
 
     private function randomProduct(): ?array
     {
-        foreach (Arr::shuffle(['class', 'video', 'ebook']) as $type) {
+        foreach (Arr::shuffle(['class', 'video', 'ebook', 'loker']) as $type) {
             $product = match ($type) {
                 'class' => ClassesModel::query()
                     ->select(['id', 'title'])
@@ -139,13 +137,20 @@ class LivePurchaseToastService
                     ->where('nama', '!=', '')
                     ->inRandomOrder()
                     ->first(),
+                'loker' => LokerModel::query()
+                    ->select(['id', 'title'])
+                    ->where('status', 1)
+                    ->whereNotNull('title')
+                    ->where('title', '!=', '')
+                    ->inRandomOrder()
+                    ->first(),
             };
 
             if ($product) {
                 return [
                     'id' => $product->id,
                     'type' => $type,
-                    'name' => $type === 'class' ? $product->title : $product->nama,
+                    'name' => in_array($type, ['class', 'loker'], true) ? $product->title : $product->nama,
                 ];
             }
         }

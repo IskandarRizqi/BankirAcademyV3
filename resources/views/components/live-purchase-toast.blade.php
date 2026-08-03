@@ -14,7 +14,7 @@
             <div class="live-purchase-toast__icon" aria-hidden="true">BA</div>
             <div class="live-purchase-toast__body">
                 <div class="live-purchase-toast__title-row">
-                    <strong class="live-purchase-toast__title">Pembelian terbaru</strong>
+                    <strong class="live-purchase-toast__title" data-toast-title>Pembelian terbaru</strong>
                     <span class="live-purchase-toast__time" data-toast-time></span>
                 </div>
                 <p class="live-purchase-toast__message" data-toast-message>
