@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Beasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\KategoriModel;
 use App\Models\MateriModel;
+use App\Models\Photo;
 use App\Models\SubMateriModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,127 +13,160 @@ use Illuminate\Support\Facades\Validator;
 
 class MateriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $x['kategori'] = KategoriModel::get();
-        $x['data'] = MateriModel::select()
+        $x['photos']   = Photo::latest()->get();
+        $x['data']     = MateriModel::select()
             ->with('kategori')
             ->get();
-        // return $x['data'];
+
         return view('compact.materi', $x);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
-{
-    $valid = Validator::make($request->all(), [
-        'id_kategori' => 'required',
-        'urutan' => 'required',
-        'nama' => 'required',
-        'harga' => 'required|numeric|min:0',
-        'jumlah_peserta' => 'nullable|integer|min:0',
-        'icon' => 'nullable|string',
-        'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Maksimal 2MB
-    ]);
+    {
+        $valid = Validator::make($request->all(), [
+            'id_kategori'    => 'required',
+            'urutan'         => 'required',
+            'nama'           => 'required',
+            'harga'          => 'required|numeric|min:0',
+            'jumlah_peserta' => 'nullable|integer|min:0',
+            'icon'           => 'nullable|string',
+            'photo_id'       => 'nullable|exists:photos,id',
+        ]);
 
-    if ($valid->fails()) {
-        return redirect()->back()->with('info', 'data tidak sesuai, harap cek kembali')->withInput($request->all());
-    }
-
-    // Ambil data materi lama jika sedang melakukan Update/Edit
-    $materiLama = MateriModel::find($request->id);
-    $namaFileBanner = $materiLama ? $materiLama->banner : null;
-
-    // Proses upload banner jika ada file baru yang diunggah
-    if ($request->hasFile('banner')) {
-        // Hapus file banner lama jika ada (opsional untuk menghemat storage)
-        if ($materiLama && $materiLama->banner && file_exists(storage_path('app/public/banner/' . $materiLama->banner))) {
-            unlink(storage_path('app/public/banner/' . $materiLama->banner));
+        if ($valid->fails()) {
+            return redirect()->back()->with('info', 'Data tidak sesuai, harap cek kembali')->withInput($request->all());
         }
 
-        $file = $request->file('banner');
-        $namaFileBanner = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('public/banner', $namaFileBanner);
+        $materiLama = MateriModel::find($request->id);
+        $namaFileBanner = $materiLama ? $materiLama->banner : null;
+
+        // Ambil path dari tabel Photo jika ada pilihan photo_id
+        if ($request->photo_id) {
+            $photo = Photo::find($request->photo_id);
+            if ($photo) {
+                $namaFileBanner = $photo->path;
+            }
+        }
+
+        $m = MateriModel::updateOrCreate(['id' => $request->id], [
+            'id_kategori'    => $request->id_kategori,
+            'urutan'         => $request->urutan,
+            'nama'           => $request->nama,
+            'keterangan'     => $request->keterangan,
+            'harga'          => $request->harga,
+            'icon'           => $request->icon ?? 'fas fa-graduation-cap',
+            'jumlah_peserta' => $request->jumlah_peserta ?? 0,
+            'banner'         => $namaFileBanner,
+        ]);
+
+        if (!$m) {
+            Log::critical('Gagal simpan materi', [$m]);
+            return redirect()->back()->with('info', 'Data tidak tersimpan')->withInput($request->all());
+        }
+
+        return redirect()->back()->with('info', 'Data tersimpan');
     }
 
-    $m = MateriModel::updateOrCreate(['id' => $request->id], [
-        'id_kategori' => $request->id_kategori,
-        'urutan' => $request->urutan,
-        'nama' => $request->nama,
-        'keterangan' => $request->keterangan,
-        'harga' => $request->harga,
-        'icon' => $request->icon ?? 'fas fa-graduation-cap',
-        'jumlah_peserta' => $request->jumlah_peserta ?? 0,
-        'banner' => $namaFileBanner,
-    ]);
+    /**
+     * AJAX Endpoint untuk upload cepat ke Album Galeri (Tabel Photo)
+     */
+    public function uploadQuickPhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
 
-    if (!$m) {
-        Log::critical('gagal simpan materi', [$m]);
-        return redirect()->back()->with('info', 'data tidak tersimpan')->withInput($request->all());
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+        }
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalName = $file->getClientOriginalName();
+            $path = $file->store('banner', 'public'); // Simpan ke storage/app/public/banner
+
+            $photo = Photo::create([
+                'title'     => pathinfo($originalName, PATHINFO_FILENAME),
+                'path'      => $path,
+                'file_size' => $file->getSize(),
+            ]);
+
+            return response()->json([
+                'status'  => 'success',
+                'data'    => [
+                    'id'    => $photo->id,
+                    'title' => $photo->title,
+                    'path'  => $photo->path,
+                    'url'   => $photo->url,
+                ]
+            ]);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Upload gagal'], 400);
     }
-    return redirect()->back()->with('info', 'data tersimpan');
+    public function uploadQuickPhotoEbook(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+        }
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $originalName = $file->getClientOriginalName();
+            $path = $file->store('photos', 'public'); // Simpan ke storage/app/public/banner
+
+            $photo = Photo::create([
+                'title'     => pathinfo($originalName, PATHINFO_FILENAME),
+                'path'      => $path,
+                'file_size' => $file->getSize(),
+            ]);
+
+            return response()->json([
+                'status'  => 'success',
+                'data'    => [
+                    'id'    => $photo->id,
+                    'title' => $photo->title,
+                    'path'  => $photo->path,
+                    'url'   => $photo->url,
+                ]
+            ]);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Upload gagal'], 400);
+    }
+    public function getPhotosList(Request $request)
+{
+    try {
+        // Query ambil data foto diurutkan dari yang terbaru
+        $query = Photo::query()->latest();
+
+        // Fitur pencarian server-side (opsional jika dikirim parameter search)
+        if ($request->has('q') && !empty($request->q)) {
+            $query->where('title', 'like', '%' . $request->q . '%');
+        }
+
+        $photos = $query->get();
+
+        return response()->json([
+            'status'  => 'success',
+            'data'    => $photos
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'Gagal mengambil data foto: ' . $e->getMessage()
+        ], 500);
+    }
 }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         if ($id) {

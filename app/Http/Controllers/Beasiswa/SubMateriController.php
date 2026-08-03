@@ -30,13 +30,11 @@ class SubMateriController extends Controller
         return view('compact.sub_materi', $x);
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
 {
-    // 1. Cek terlebih dahulu nama kompetensi dari id_materi
     $materiParent = MateriModel::find($request->id_materi);
     $isUmum = $materiParent && strtolower(trim($materiParent->nama)) == 'umum';
 
-    // 2. Susun Aturan Validasi
     $rules = [
         'nama' => 'required',
         'keterangan' => 'nullable',
@@ -55,10 +53,8 @@ class SubMateriController extends Controller
         'tipe_link_item.*' => 'required|in:0,1',
     ];
 
-    // Jika Kompetensi "Umum", validasi file thumbnail
     if ($isUmum) {
-        // Jika mode simpan baru (bukan edit), thumbnail wajib diisi
-        $rules['thumbnail'] = $request->id ? 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048' : 'required|image|mimes:jpeg,png,jpg,webp|max:2048';
+        $rules['thumbnail'] = 'required|string';
     }
 
     $valid = Validator::make($request->all(), $rules);
@@ -84,35 +80,15 @@ class SubMateriController extends Controller
         $i['harga_final'] = $request->harga - ($request->harga * ($request->diskon / 100));
     }
 
-    // 3. Proses Upload Thumbnail Jika Kompetensi "Umum"
-    if ($isUmum && $request->hasFile('thumbnail')) {
-        // Hapus thumbnail lama jika ada (Mode Edit)
-        if ($request->id) {
-            $oldData = SubMateriModel::find($request->id);
-            if ($oldData && $oldData->thumbnail && file_exists(public_path($oldData->thumbnail))) {
-                @unlink(public_path($oldData->thumbnail));
-            }
-        }
-
-        $file = $request->file('thumbnail');
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        
-        // Simpan file ke folder 'uploads/thumbnails' di directory public
-        $file->move(public_path('uploads/thumbnails'), $filename);
-        $i['thumbnail'] = 'uploads/thumbnails/' . $filename;
+    // Assign path gambar jika umum
+    if ($isUmum && $request->thumbnail) {
+        $i['thumbnail'] = $request->thumbnail;
     }
 
-    // Simpan / Update SubMateri
     $m = SubMateriModel::updateOrCreate(['id' => $request->id], $i);
 
-    if (!$m) {
-        Log::critical('gagal simpan materi', [$m]);
-        return redirect()->back()->with('info', 'data tidak tersimpan')->withInput($request->all());
-    }
-
-    // PROSES MULTI-ITEM VIDEO / PDF
+    // Sync Item Video/PDF
     SubMateriItemModel::where('id_sub_materi', $m->id)->delete();
-
     foreach ($request->judul_item as $key => $judul) {
         SubMateriItemModel::create([
             'id_sub_materi' => $m->id,
@@ -122,7 +98,7 @@ class SubMateriController extends Controller
         ]);
     }
 
-    return redirect()->back()->with('info', 'data tersimpan');
+    return redirect()->back()->with('info', 'Data berhasil tersimpan');
 }
     /**
      * Display the specified resource.

@@ -194,6 +194,9 @@ Route::middleware('auth')->group(function () {
       Route::get('/album', [PhotoAlbumController::class, 'index'])->name('album.index');
 Route::post('/album', [PhotoAlbumController::class, 'store'])->name('album.store');
 Route::put('/album/{id}', [PhotoAlbumController::class, 'update'])->name('album.update');
+Route::post('/photos/upload-quick', [App\Http\Controllers\Beasiswa\MateriController::class, 'uploadQuickPhoto']);
+Route::post('/photos/upload', [App\Http\Controllers\Beasiswa\MateriController::class, 'uploadQuickPhotoEbook']);
+Route::get('/photos/list', [App\Http\Controllers\Beasiswa\MateriController::class, 'getPhotosList']);
 Route::delete('/album/batch-delete', [PhotoAlbumController::class, 'destroyBatch'])->name('album.destroyBatch');
 
         // Route User untuk Download Sertifikat secara dinamis
@@ -278,7 +281,7 @@ Route::get('/all-laman', [App\Http\Controllers\Front\HomeController::class, 'get
 Route::post('/registerUser', [App\Http\Controllers\Front\HomeController::class, 'registerUser']);
 Route::post('/registercorporate', [App\Http\Controllers\Front\HomeController::class, 'registercorporate']);
 
-Route::get('/sdank', [App\Http\Controllers\Front\PagesController::class, 'showsdank']);
+Route::redirect('/sdank', '/syarat-dan-ketentuan', 301);
 Route::get('/registerinstructor', function () {
     return view('front.registerinstructor');
 });
@@ -313,7 +316,7 @@ Route::get('/admin/corporates/{id}', [CorporateController::class, 'show']);
 Route::get('/createSitemap', [App\Http\Controllers\HomeController::class, "createSitemap"]);
 Auth::routes();
 Route::get('tesapi', [App\Http\Controllers\Front\HomeController::class, 'tesapi']);
-Route::get('authentikasi/login', [App\Http\Controllers\Front\HomeController::class, 'getlayoutauth']);
+Route::get('authentikasi/login', [App\Http\Controllers\Front\HomeController::class, 'getlayoutauth'])->name('login.new');
 
 
 
