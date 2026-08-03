@@ -103,7 +103,7 @@
         <div class="contacts">
             {{ $lamaran->alamatdomisili ?? '' }} 
             @if(!empty($lamaran->telpdomisili)) | Telp: {{ $lamaran->telpdomisili }} @endif
-            | Email: {{ $user->siswa->email }}
+            | Email: {{ $user->email ?? '' }}
         </div>
     </div>
 

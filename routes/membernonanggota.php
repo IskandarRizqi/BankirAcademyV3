@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\MembershipController;
 use App\Http\Controllers\Front\InvoiceController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MemberNonAnggota\BillingController;
+use App\Http\Controllers\MemberNonAnggota\CvAtsController;
 use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
 use App\Http\Controllers\MemberNonAnggota\DetailKelasController;
 use App\Http\Controllers\MemberNonAnggota\EbookController;
@@ -49,6 +50,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
     Route::get('/sertifikat-kelas', [SertifikatController::class, 'index'])
         ->name('membernonanggota.certificates.index');
+    Route::prefix('member/cv-ats')->name('membernonanggota.cv-ats.')->controller(CvAtsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/buat', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/', 'update')->name('update');
+        Route::get('/cetak', 'pdf')->name('pdf');
+    });
     Route::middleware('role:2')->group(function () {
         Route::get('/member/loker', [LokerController::class, 'index'])
             ->name('membernonanggota.loker.index');
