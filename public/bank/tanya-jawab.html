@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="#6757D9" name="theme-color"/>
+<meta content="Pusat Tanya Jawab Bankir Academy mengenai kelas, pelatihan, LMS, solusi perbankan, talent solutions, CSR, Bakti Pendidikan, Bakti UMKM, akun, pembayaran, sertifikat, dan dukungan pengguna." name="description"/>
+<meta content="FAQ Bankir Academy, tanya jawab pelatihan perbankan, LMS, headhunting, outsourcing, job connect, CSR, Bakti Pendidikan, Bakti UMKM" name="keywords"/>
+<meta content="Bankir Academy" name="author"/>
+<title>Tanya Jawab (FAQ) — Bankir Academy</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root{
+      --primary:#6757D9;--primary-dark:#342A78;--primary-light:#F1EFFF;
+      --secondary:#00B7A8;--secondary-dark:#087E76;--accent:#FFC95C;
+      --navy:#17143D;--text:#44445B;--muted:#737388;--line:#E8E7F1;
+      --white:#FFFFFF;--page:#FAFAFF;--shadow:0 22px 60px rgba(31,27,82,.10);
+      --shadow-sm:0 12px 30px rgba(31,27,82,.08);--container:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{margin:0;color:var(--text);background:var(--page);font-family:"Inter",Arial,sans-serif;line-height:1.7;overflow-x:hidden}
+    body.menu-open{overflow:hidden}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    h1,h2,h3,h4,p{margin-top:0}
+    h1,h2,h3,h4{color:var(--navy);font-family:"Manrope",sans-serif;letter-spacing:-.025em}
+    .container{width:min(var(--container),calc(100% - 40px));margin-inline:auto}
+    .section{padding:92px 0}
+    .section-soft{background:linear-gradient(180deg,#F8F7FF 0%,#FFFFFF 100%)}
+    .section-head{max-width:780px;margin:0 auto 46px;text-align:center}
+    .section-head h2{margin:14px 0 15px;font-size:clamp(31px,4vw,48px);line-height:1.14}
+    .section-head p{color:var(--muted);font-size:16px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 12px;color:var(--primary-dark);background:#fff;border:1px solid rgba(103,87,217,.17);border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.10em;text-transform:uppercase}
+    .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--secondary);box-shadow:0 0 0 5px rgba(0,183,168,.12)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 21px;border:1px solid transparent;border-radius:13px;font-weight:750;transition:.22s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{color:#fff;background:var(--primary);box-shadow:0 12px 28px rgba(103,87,217,.28)}
+    .btn-outline{color:var(--primary-dark);background:rgba(255,255,255,.78);border-color:#DCD9F0}
+    .btn-light{color:var(--primary-dark);background:#fff}
+    .btn-secondary{color:#fff;background:var(--secondary)}
+    .btn-sm{min-height:42px;padding:0 17px;font-size:13px}
+
+    .site-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.92);border-bottom:1px solid rgba(232,231,241,.86);backdrop-filter:blur(17px);transition:.25s}
+    .site-header.scrolled{box-shadow:0 9px 28px rgba(31,27,82,.08)}
+    .header-inner{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:inline-flex;align-items:center;gap:12px;min-width:max-content}
+    .brand-logo{width:49px;height:49px;filter:drop-shadow(0 10px 14px rgba(103,87,217,.20))}
+    .brand-copy strong{display:block;color:var(--navy);font:800 19px/1.1 "Manrope",sans-serif}
+    .brand-copy small{display:block;margin-top:5px;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    .desktop-nav{display:flex;align-items:center;gap:4px}
+    .nav-item{position:relative}
+    .nav-link{display:flex;align-items:center;gap:6px;padding:12px 13px;color:#48475F;border-radius:10px;font-size:13px;font-weight:700;transition:.18s}
+    .nav-link:hover,.nav-link.active{color:var(--primary);background:var(--primary-light)}
+    .chevron{font-size:10px;transition:.18s}
+    .nav-item:hover .chevron{transform:rotate(180deg)}
+    .dropdown{position:absolute;top:calc(100% + 12px);left:0;width:300px;padding:10px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(9px);transition:.18s}
+    .nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+    .dropdown.wide{width:680px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .drop-link{display:flex;gap:12px;padding:12px;border-radius:12px;transition:.18s}
+    .drop-link:hover{background:var(--primary-light)}
+    .drop-icon{flex:0 0 auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--primary);background:#F3F1FF;font-size:17px}
+    .drop-link strong{display:block;color:var(--navy);font-size:13px}
+    .drop-link span{display:block;margin-top:2px;color:var(--muted);font-size:11px;line-height:1.45}
+    .header-action{display:flex;align-items:center;gap:9px}
+    .menu-toggle{display:none;width:45px;height:45px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy)}
+    .mobile-panel{display:none;position:fixed;inset:82px 0 0;z-index:99;padding:18px 20px 35px;background:#fff;overflow:auto}
+    .mobile-panel.open{display:block}
+    .mobile-group{border-bottom:1px solid var(--line)}
+    .mobile-main{width:100%;display:flex;align-items:center;justify-content:space-between;padding:15px 4px;border:0;background:none;color:var(--navy);font-weight:800;text-align:left}
+    .mobile-sub{display:none;padding:0 0 12px 12px}
+    .mobile-sub.open{display:grid}
+    .mobile-sub a{padding:9px 8px;color:var(--muted);font-size:14px}
+    .mobile-login{margin-top:20px;width:100%}
+
+    .hero{position:relative;overflow:hidden;padding:154px 0 92px;background:radial-gradient(circle at 14% 23%,rgba(0,183,168,.14),transparent 27%),radial-gradient(circle at 87% 20%,rgba(255,201,92,.20),transparent 24%),linear-gradient(135deg,#F4F1FF 0%,#FFFFFF 52%,#EDFBF9 100%)}
+    .hero::before{content:"";position:absolute;left:-110px;bottom:-145px;width:360px;height:360px;border:52px solid rgba(103,87,217,.055);border-radius:50%}
+    .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.03fr .97fr;gap:62px;align-items:center}
+    .hero h1{margin:20px 0 19px;font-size:clamp(42px,5.2vw,68px);line-height:1.05}
+    .gradient-text{background:linear-gradient(90deg,var(--primary),var(--secondary-dark));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-lead{max-width:700px;color:#626278;font-size:17px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+    .hero-proof{display:flex;flex-wrap:wrap;gap:16px;margin-top:30px}
+    .proof-item{display:flex;align-items:center;gap:9px;color:#5D5C72;font-size:12px;font-weight:700}
+    .proof-icon{width:28px;height:28px;display:grid;place-items:center;color:var(--secondary-dark);background:#E9FAF7;border-radius:9px}
+    .hero-visual{position:relative;min-height:490px}
+    .visual-main{position:absolute;inset:10px 0 15px 35px;padding:22px;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.95);border-radius:34px;box-shadow:var(--shadow);backdrop-filter:blur(15px)}
+    .faq-board{height:100%;padding:24px;background:linear-gradient(150deg,#282162,#17143D);border-radius:25px;overflow:hidden}
+    .board-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;color:#fff;font-size:12px;font-weight:800}
+    .board-status{padding:5px 8px;color:#B9FFF6;background:rgba(0,183,168,.15);border-radius:99px;font-size:8px}
+    .board-search{padding:16px;background:#fff;border-radius:15px}
+    .board-search small{display:block;color:var(--muted);font-size:9px}
+    .board-search strong{display:block;margin-top:3px;color:var(--navy);font-size:13px}
+    .board-categories{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+    .board-card{padding:15px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:14px}
+    .board-card i{display:grid;place-items:center;width:34px;height:34px;margin-bottom:10px;color:#fff;background:rgba(103,87,217,.55);border-radius:10px;font-style:normal}
+    .board-card strong{display:block;color:#fff;font-size:11px}
+    .board-card span{display:block;margin-top:2px;color:rgba(255,255,255,.55);font-size:8px}
+    .board-answer{margin-top:12px;padding:17px;background:linear-gradient(135deg,rgba(103,87,217,.64),rgba(0,183,168,.30));border:1px solid rgba(255,255,255,.10);border-radius:16px}
+    .board-answer strong{display:block;color:#fff;font-size:13px}
+    .board-answer p{margin:5px 0 0;color:rgba(255,255,255,.65);font-size:9px}
+    .float-card{position:absolute;z-index:2;display:flex;align-items:center;gap:11px;padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow-sm)}
+    .float-card.one{left:0;top:71px}.float-card.two{right:-8px;bottom:54px}
+    .float-card i{width:38px;height:38px;display:grid;place-items:center;font-style:normal;color:var(--primary);background:var(--primary-light);border-radius:11px}
+    .float-card strong{display:block;color:var(--navy);font-size:11px}.float-card span{display:block;color:var(--muted);font-size:8px}
+
+    .quick-categories{position:relative;z-index:3;margin-top:-32px}
+    .category-grid{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow-sm);overflow:hidden}
+    .category-link{display:flex;align-items:center;gap:10px;padding:18px;border-right:1px solid var(--line);transition:.18s}
+    .category-link:last-child{border-right:0}
+    .category-link:hover{background:var(--primary-light)}
+    .category-link i{width:34px;height:34px;display:grid;place-items:center;font-style:normal;color:var(--primary);background:var(--primary-light);border-radius:10px}
+    .category-link strong{display:block;color:var(--navy);font-size:10px}
+    .category-link span{display:block;color:var(--muted);font-size:8px}
+
+    .help-tools{max-width:930px;margin:0 auto 38px}
+    .search-box{display:flex;align-items:center;gap:12px;padding:8px 9px 8px 18px;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow-sm)}
+    .search-box span{font-size:20px}
+    .search-box input{width:100%;min-width:0;padding:12px 0;border:0;outline:0;color:var(--text);background:transparent}
+    .search-box button{min-height:42px;padding:0 17px;border:0;border-radius:11px;color:#fff;background:var(--primary);font-weight:800}
+    .filter-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px}
+    .filter-btn{min-height:39px;padding:0 14px;border:1px solid var(--line);border-radius:10px;color:var(--muted);background:#fff;font-size:11px;font-weight:800}
+    .filter-btn.active{color:#fff;background:var(--primary);border-color:var(--primary)}
+
+    .faq-layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;align-items:start}
+    .faq-sidebar{position:sticky;top:105px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow-sm)}
+    .faq-sidebar h3{margin-bottom:14px;font-size:17px}
+    .side-links{display:grid;gap:5px}
+    .side-links button{width:100%;padding:10px 11px;border:0;border-radius:9px;color:var(--muted);background:transparent;text-align:left;font-size:12px;font-weight:700}
+    .side-links button:hover,.side-links button.active{color:var(--primary);background:var(--primary-light)}
+    .side-note{margin-top:18px;padding:15px;color:#5A5770;background:#F8F7FF;border-radius:12px;font-size:10px}
+    .faq-content{display:grid;gap:32px}
+    .faq-group{scroll-margin-top:110px}
+    .group-head{display:flex;align-items:center;gap:14px;margin-bottom:15px}
+    .group-icon{width:44px;height:44px;display:grid;place-items:center;color:var(--primary);background:var(--primary-light);border-radius:13px;font-size:18px}
+    .group-head h2{margin:0;font-size:24px}
+    .group-head p{margin:2px 0 0;color:var(--muted);font-size:11px}
+    .faq-item{margin-bottom:10px;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.18s}
+    .faq-item:hover{border-color:#D7D3F4}
+    .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:19px 21px;border:0;background:#fff;color:var(--navy);font-weight:800;text-align:left}
+    .faq-plus{flex:0 0 auto;width:29px;height:29px;display:grid;place-items:center;color:var(--primary);background:var(--primary-light);border-radius:9px;transition:.2s}
+    .faq-a{display:none;padding:0 21px 21px;color:var(--muted);font-size:13px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-a a{color:var(--primary);font-weight:800}
+    .faq-item.open{box-shadow:var(--shadow-sm)}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-plus{transform:rotate(45deg)}
+    .faq-item.hidden,.faq-group.hidden{display:none}
+
+    .service-hub{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
+    .hub-card{position:relative;overflow:hidden;min-height:215px;padding:23px;background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow-sm);transition:.22s}
+    .hub-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+    .hub-card i{width:45px;height:45px;display:grid;place-items:center;font-style:normal;color:var(--primary);background:var(--primary-light);border-radius:13px}
+    .hub-card:nth-child(2n) i{color:var(--secondary-dark);background:#E9FAF7}
+    .hub-card h3{margin:15px 0 7px;font-size:16px}
+    .hub-card p{color:var(--muted);font-size:10px}
+    .hub-card a{position:absolute;left:23px;bottom:20px;color:var(--primary);font-size:11px;font-weight:800}
+
+    .final-cta{padding:76px 0}
+    .cta-box{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr auto;gap:35px;align-items:center;padding:42px 48px;color:#fff;background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:30px}
+    .cta-box::after{content:"";position:absolute;right:-80px;top:-110px;width:270px;height:270px;border:45px solid rgba(255,255,255,.07);border-radius:50%}
+    .cta-box h2{margin-bottom:9px;color:#fff;font-size:clamp(28px,4vw,43px)}
+    .cta-box p{margin:0;color:rgba(255,255,255,.70)}
+    .cta-actions{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+
+    .site-footer{color:rgba(255,255,255,.72);background:#141132}
+    .footer-main{padding:68px 0 46px}
+    .footer-grid{display:grid;grid-template-columns:1.45fr repeat(3,1fr);gap:48px}
+    .footer-brand p{max-width:390px;margin:19px 0 22px;font-size:12px}
+    .footer-brand .brand-copy strong,.footer-title{color:#fff}
+    .footer-title{margin-bottom:18px;font:800 14px "Manrope"}
+    .footer-links{display:grid;gap:10px}
+    .footer-links a{font-size:12px;transition:.18s}
+    .footer-links a:hover,.footer-links a.active{color:#fff;transform:translateX(3px)}
+    .footer-contact{display:grid;gap:10px;margin-top:18px}
+    .contact-row{display:flex;gap:10px;font-size:11px}
+    .contact-row i{font-style:normal;color:#AFA6FF}
+    .newsletter{display:flex;max-width:395px;margin-top:17px;padding:5px;background:#fff;border-radius:12px}
+    .newsletter input{width:100%;min-width:0;padding:0 12px;border:0;outline:0;font-size:11px}
+    .newsletter button{width:43px;border:0;border-radius:9px;color:#fff;background:var(--primary)}
+    .footer-bottom{padding:19px 0;border-top:1px solid rgba(255,255,255,.09);font-size:10px}
+    .footer-bottom-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .footer-legal{display:flex;flex-wrap:wrap;gap:15px}
+    .floating-help{position:fixed;right:22px;bottom:22px;z-index:90;display:flex;align-items:center;gap:10px;padding:11px 15px;color:#fff;background:#1FAF6D;border-radius:99px;box-shadow:0 15px 35px rgba(16,119,73,.28);font-size:11px;font-weight:800}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    @media(max-width:1060px){
+      .desktop-nav,.header-action .btn-outline{display:none}.menu-toggle{display:grid;place-items:center}
+      .hero-grid{grid-template-columns:1fr}.hero-visual{max-width:650px;width:100%;margin:0 auto}
+      .category-grid{grid-template-columns:repeat(2,1fr)}.category-link{border-bottom:1px solid var(--line)}
+      .faq-layout{grid-template-columns:1fr}.faq-sidebar{position:static}.side-links{grid-template-columns:repeat(3,1fr)}
+      .service-hub{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:700px){
+      .container{width:min(100% - 28px,var(--container))}.section{padding:68px 0}
+      .brand-copy small{display:none}.brand-logo{width:43px;height:43px}.header-inner{min-height:74px}.mobile-panel{inset:74px 0 0}
+      .header-action .btn-primary{display:none}.hero{padding:122px 0 66px}.hero h1{font-size:42px}.hero-lead{font-size:15px}
+      .hero-visual{min-height:445px}.visual-main{inset:8px 0 22px 18px}.float-card.one{left:-3px}.float-card.two{right:-3px}
+      .quick-categories{margin-top:-18px}.category-grid,.side-links,.service-hub,.footer-grid{grid-template-columns:1fr}
+      .category-link{border-right:0}.search-box{align-items:stretch;flex-wrap:wrap}.search-box button{width:100%}
+      .faq-q{padding:17px}.faq-a{padding:0 17px 18px}.cta-box{grid-template-columns:1fr;padding:34px 25px}.cta-actions{flex-direction:column}
+      .footer-bottom-inner{align-items:flex-start;flex-direction:column}.floating-help{right:14px;bottom:14px;padding:11px}.floating-help span:last-child{display:none}
+    }
+  
+    /* Header navigation refinement — unified multipage */
+    .desktop-nav{gap:10px}
+    .nav-link{
+      position:relative;
+      gap:7px;
+      padding:12px 5px;
+      border:0;
+      border-radius:0;
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+    .nav-link:hover,.nav-link.active{
+      color:var(--primary);
+      background:transparent!important;
+    }
+    .nav-link::after{
+      content:"";
+      position:absolute;
+      left:5px;right:5px;bottom:4px;
+      height:2px;
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      border-radius:99px;
+      transform:scaleX(0);
+      transform-origin:center;
+      transition:transform .2s ease;
+    }
+    .nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+.mobile-main{gap:10px}
+@media(max-width:1060px){.desktop-nav{gap:4px}}
+</style>
+<meta content="tanya-jawab.html" name="bankir-page"/></head>
+<body>
+<svg height="0" style="position:absolute" width="0">
+<symbol id="logo-ba" viewbox="0 0 64 64">
+<defs><lineargradient id="logoGradient" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#7668E5"></stop><stop offset="100%" stop-color="#5142C1"></stop></lineargradient></defs>
+<rect fill="url(#logoGradient)" height="64" rx="17" width="64"></rect>
+<path d="M19 13h19c8 0 13 4 13 10 0 4-2 7-6 9 5 2 8 5 8 10 0 8-6 12-15 12H19V13zm10 8v8h8c3 0 5-1 5-4s-2-4-5-4h-8zm0 16v9h9c4 0 6-2 6-5s-2-4-6-4h-9z" fill="#fff"></path>
+<path d="M14 18h5v31h-5z" fill="#00B7A8"></path>
+</symbol>
+</svg>
+<header class="site-header" id="siteHeader">
+<div class="container header-inner">
+<a aria-label="Bankir Academy" class="brand" href="index.html">
+<svg class="brand-logo"><use href="#logo-ba"></use></svg>
+<span class="brand-copy"><strong>Bankir Academy</strong><small>Learning · Talent · Banking Solutions</small></span>
+</a>
+<nav aria-label="Navigasi utama" class="desktop-nav">
+<a class="nav-link" href="index.html">Beranda</a>
+<div class="nav-item">
+<a class="nav-link" href="index.html#layanan">Layanan <span class="chevron">▼</span></a>
+<div class="dropdown wide">
+<a class="drop-link" href="banking-solution.html"><span class="drop-icon">▦</span><span><strong>Banking Solution</strong><span>Solusi proses bisnis, tata kelola, layanan, dan transformasi.</span></span></a>
+<a class="drop-link" href="capacity-building.html"><span class="drop-icon">↗</span><span><strong>Capacity Building</strong><span>Pengembangan kompetensi berbasis kebutuhan organisasi.</span></span></a>
+<a class="drop-link" href="banking-talent-solution.html"><span class="drop-icon">◇</span><span><strong>Banking Talent Solution</strong><span>Pemetaan, pengembangan, dan kesiapan talenta.</span></span></a>
+<a class="drop-link" href="learning-management-system.html"><span class="drop-icon">▶</span><span><strong>Learning Management System</strong><span>Pembelajaran digital, asesmen, dan pelaporan.</span></span></a>
+<a class="drop-link" href="inovasi-program.html"><span class="drop-icon">✦</span><span><strong>Inovasi Program</strong><span>Riset, prototipe, automasi, dan AI terapan.</span></span></a>
+<a class="drop-link" href="program-csr.html"><span class="drop-icon">♡</span><span><strong>Program CSR</strong><span>Program sosial dan pemberdayaan yang terukur.</span></span></a>
+</div>
+</div>
+<div class="nav-item">
+<a class="nav-link" href="index.html#talent-solutions">Talent Solutions <span class="chevron">▼</span></a>
+<div class="dropdown">
+<a class="drop-link" href="headhunting.html"><span class="drop-icon">⌕</span><span><strong>Headhunting</strong><span>Pencarian kandidat untuk posisi tertentu.</span></span></a>
+<a class="drop-link" href="outsourcing.html"><span class="drop-icon">◎</span><span><strong>Outsourcing</strong><span>Dukungan tenaga kerja sesuai ruang lingkup.</span></span></a>
+<a class="drop-link" href="job-connect.html"><span class="drop-icon">⇄</span><span><strong>Job Connect</strong><span>Penghubung kandidat dengan peluang kerja.</span></span></a>
+</div>
+</div>
+<div class="nav-item">
+<a class="nav-link" href="index.html#foundations">Foundations <span class="chevron">▼</span></a>
+<div class="dropdown">
+<a class="drop-link" href="bakti-pendidikan.html"><span class="drop-icon">🎓</span><span><strong>Bakti Pendidikan</strong><span>Literasi, karier, dan akses pembelajaran.</span></span></a>
+<a class="drop-link" href="bakti-umkm.html"><span class="drop-icon">⌂</span><span><strong>Bakti UMKM</strong><span>Penguatan keuangan dan kapasitas usaha.</span></span></a>
+</div>
+</div>
+</nav>
+<div class="header-action">
+<a class="btn btn-outline btn-sm" href="kontak-kami.html">Konsultasi</a>
+<a class="btn btn-primary btn-sm" href="login.html">Login</a>
+<button aria-expanded="false" aria-label="Buka menu" class="menu-toggle" id="menuToggle">☰</button>
+</div>
+</div>
+</header>
+<div class="mobile-panel" id="mobilePanel">
+<div class="mobile-group"><a class="mobile-main" href="index.html"><span>Beranda</span></a></div>
+<div class="mobile-group"><button class="mobile-main"><span>Layanan</span><span>＋</span></button><div class="mobile-sub">
+<a href="banking-solution.html">Banking Solution</a><a href="capacity-building.html">Capacity Building</a><a href="banking-talent-solution.html">Banking Talent Solution</a><a href="learning-management-system.html">LMS</a><a href="inovasi-program.html">Inovasi Program</a><a href="program-csr.html">Program CSR</a>
+</div></div>
+<div class="mobile-group"><button class="mobile-main"><span>Talent Solutions</span><span>＋</span></button><div class="mobile-sub"><a href="headhunting.html">Headhunting</a><a href="outsourcing.html">Outsourcing</a><a href="job-connect.html">Job Connect</a></div></div>
+<div class="mobile-group"><button class="mobile-main"><span>Foundations</span><span>＋</span></button><div class="mobile-sub"><a href="bakti-pendidikan.html">Bakti Pendidikan</a><a href="bakti-umkm.html">Bakti UMKM</a></div></div>
+<a class="btn btn-primary mobile-login" href="login.html">Login</a>
+</div>
+<main>
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<span class="eyebrow">Pusat Bantuan Bankir Academy</span>
+<h1>Temukan Jawaban untuk <span class="gradient-text">Setiap Layanan dan Program</span></h1>
+<p class="hero-lead">Pusat Tanya Jawab ini membantu peserta, kandidat, institusi, sekolah, kampus, bank, BPR/BPRS, UMKM, komunitas, dan mitra memahami program, proses, hak, kewajiban, serta batasan layanan Bankir Academy.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="#daftar-faq">Cari Jawaban →</a><a class="btn btn-outline" href="kontak-kami.html">Hubungi Tim Kami</a></div>
+<div class="hero-proof"><span class="proof-item"><span class="proof-icon">✓</span>Jawaban dikelompokkan</span><span class="proof-item"><span class="proof-icon">✓</span>Mencakup seluruh layanan</span><span class="proof-item"><span class="proof-icon">✓</span>Dilengkapi batasan layanan</span></div>
+</div>
+<div class="hero-visual">
+<div class="visual-main"><div class="faq-board">
+<div class="board-top"><span>HELP &amp; KNOWLEDGE CENTER</span><span class="board-status">Available</span></div>
+<div class="board-search"><small>Pertanyaan populer</small><strong>Bagaimana memilih program yang sesuai?</strong></div>
+<div class="board-categories">
+<div class="board-card"><i>🎓</i><strong>Pembelajaran</strong><span>Kelas, pelatihan, LMS</span></div>
+<div class="board-card"><i>◇</i><strong>Talenta</strong><span>Talent, karier, rekrutmen</span></div>
+<div class="board-card"><i>▦</i><strong>Institusi</strong><span>Banking solution dan inovasi</span></div>
+<div class="board-card"><i>♡</i><strong>Dampak Sosial</strong><span>CSR dan foundations</span></div>
+</div>
+<div class="board-answer"><strong>Mulai dari kebutuhan dan hasil yang ingin dicapai.</strong><p>Tim akan membantu memetakan sasaran, peserta, metode, durasi, indikator, dan output program.</p></div>
+</div></div>
+<div class="float-card one"><i>?</i><span><strong>Pertanyaan Terstruktur</strong><span>Mudah dicari per kategori</span></span></div>
+<div class="float-card two"><i>✓</i><span><strong>Jawaban Transparan</strong><span>Termasuk batasan layanan</span></span></div>
+</div>
+</div>
+</section>
+<div class="quick-categories">
+<div class="container category-grid">
+<a class="category-link" href="#umum"><i>◎</i><span><strong>Umum</strong><span>Profil dan pemilihan layanan</span></span></a>
+<a class="category-link" href="#pembelajaran"><i>▶</i><span><strong>Pembelajaran</strong><span>Kelas, pelatihan, LMS</span></span></a>
+<a class="category-link" href="#institusi"><i>▦</i><span><strong>Institusi</strong><span>Solusi, inovasi, CSR</span></span></a>
+<a class="category-link" href="#talenta"><i>◇</i><span><strong>Talenta</strong><span>Rekrutmen dan karier</span></span></a>
+<a class="category-link" href="#administrasi"><i>✓</i><span><strong>Administrasi</strong><span>Akun, pembayaran, sertifikat</span></span></a>
+</div>
+</div>
+<section class="section" id="daftar-faq">
+<div class="container">
+<div class="section-head"><span class="eyebrow">Tanya Jawab Terintegrasi</span><h2>Cari Berdasarkan Pertanyaan atau Kategori</h2><p>Ketik kata kunci seperti “sertifikat”, “LMS”, “headhunting”, “CSR”, “pembayaran”, atau nama layanan yang ingin dipahami.</p></div>
+<div class="help-tools">
+<div class="search-box"><span>⌕</span><label class="sr-only" for="faqSearch">Cari pertanyaan</label><input id="faqSearch" placeholder="Cari pertanyaan atau layanan..." type="search"/><button id="clearSearch" type="button">Bersihkan</button></div>
+<div class="filter-row">
+<button class="filter-btn active" data-filter="all">Semua</button><button class="filter-btn" data-filter="umum">Umum</button><button class="filter-btn" data-filter="pembelajaran">Pembelajaran</button><button class="filter-btn" data-filter="institusi">Institusi</button><button class="filter-btn" data-filter="talenta">Talenta</button><button class="filter-btn" data-filter="foundation">CSR &amp; Foundations</button><button class="filter-btn" data-filter="administrasi">Administrasi</button>
+</div>
+</div>
+<div class="faq-layout">
+<aside class="faq-sidebar">
+<h3>Kategori FAQ</h3>
+<div class="side-links">
+<button class="active" data-scroll="umum">Umum</button><button data-scroll="pembelajaran">Pembelajaran</button><button data-scroll="institusi">Institusi</button><button data-scroll="talenta">Talent Solutions</button><button data-scroll="foundation">CSR &amp; Foundations</button><button data-scroll="administrasi">Akun &amp; Administrasi</button>
+</div>
+<div class="side-note">Informasi khusus pada halaman program, penawaran resmi, kontrak, atau perjanjian kerja sama berlaku sebagai acuan untuk layanan yang bersangkutan.</div>
+</aside>
+<div class="faq-content">
+<section class="faq-group" data-category="umum" id="umum">
+<div class="group-head"><span class="group-icon">◎</span><div><h2>Informasi Umum</h2><p>Profil, sasaran, metode, dan pemilihan layanan.</p></div></div>
+<div class="faq-item" data-category="umum"><button class="faq-q">Apa itu Bankir Academy?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Bankir Academy adalah platform pembelajaran dan pengembangan ekosistem perbankan yang menghubungkan peningkatan kompetensi, solusi institusi, pengembangan talenta, pembelajaran digital, riset terapan, serta program pemberdayaan bagi bank, BPR/BPRS, profesional, calon bankir, sekolah, kampus, UMKM, dan komunitas.</p></div></div>
+<div class="faq-item" data-category="umum"><button class="faq-q">Siapa yang dapat menggunakan layanan Bankir Academy?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Layanan dapat digunakan oleh peserta individu, calon bankir, pegawai dan pimpinan bank, institusi keuangan, perusahaan, sekolah, kampus, pemerintah, asosiasi, komunitas, serta pelaku UMKM. Kelayakan peserta tetap mengikuti persyaratan masing-masing program.</p></div></div>
+<div class="faq-item" data-category="umum"><button class="faq-q">Bagaimana memilih layanan yang paling sesuai?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Pilih berdasarkan masalah dan hasil yang ingin dicapai. Capacity Building berfokus pada kompetensi; Banking Solution pada proses dan tata kelola; Banking Talent Solution pada pemetaan dan pengembangan talenta; LMS pada pembelajaran digital; Inovasi Program pada riset, prototipe, automasi, dan AI; Talent Solutions pada pencarian atau penyediaan tenaga kerja; sedangkan CSR dan Foundations pada dampak sosial serta pemberdayaan.</p></div></div>
+<div class="faq-item" data-category="umum"><button class="faq-q">Apakah program dapat disesuaikan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Ya. Ruang lingkup, peserta, metode, durasi, fasilitator, materi, asesmen, output, jadwal, dan indikator dapat disesuaikan berdasarkan kebutuhan serta kesepakatan. Penyesuaian dituangkan pada proposal, penawaran, atau dokumen kerja sama.</p></div></div>
+<div class="faq-item" data-category="umum"><button class="faq-q">Apakah program tersedia secara daring dan tatap muka?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Program dapat diselenggarakan secara daring, tatap muka, mandiri, atau blended. Format final menyesuaikan tujuan pembelajaran, karakter peserta, akses teknologi, lokasi, dan kesepakatan program.</p></div></div>
+</section>
+<section class="faq-group" data-category="pembelajaran" id="pembelajaran">
+<div class="group-head"><span class="group-icon">▶</span><div><h2>Pembelajaran, Pelatihan, dan LMS</h2><p>Capacity Building, kelas online, materi, asesmen, dan sistem pembelajaran.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Apa perbedaan public class dan in-house training?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Public class dibuka untuk peserta dari berbagai institusi dengan jadwal dan kurikulum yang ditetapkan penyelenggara. In-house training disusun khusus untuk satu institusi dan dapat menyesuaikan kebutuhan, kasus, kebijakan internal, waktu, serta profil peserta.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Bagaimana kebutuhan pelatihan dianalisis?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Analisis dapat dilakukan melalui diskusi kebutuhan, telaah jabatan, gap kompetensi, sasaran organisasi, data asesmen, kuesioner, atau dokumen yang diberikan secara sah. Kedalaman analisis disesuaikan dengan ruang lingkup program.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Metode belajar apa saja yang tersedia?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Metode dapat meliputi paparan, diskusi, studi kasus, simulasi, praktik, kuis, pre-test, post-test, tugas, coaching, mentoring, video, e-book, kelas langsung, dan pembelajaran mandiri melalui LMS.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Apakah hasil pelatihan menjamin peningkatan kinerja?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak ada jaminan hasil kinerja tertentu. Program membantu meningkatkan pengetahuan, keterampilan, dan kesiapan penerapan. Hasil akhir juga dipengaruhi dukungan atasan, lingkungan kerja, kesempatan praktik, kebijakan organisasi, dan konsistensi peserta.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Apa saja fitur Learning Management System?<span class="faq-plus">＋</span></button><div class="faq-a"><p>LMS dapat mencakup pengelolaan kelas dan konten, pengguna dan kelompok, hak akses, video, e-book, kuis, tugas, pre-test, post-test, progres belajar, sertifikat, notifikasi, dashboard, serta laporan. Fitur final mengikuti paket dan konfigurasi yang disepakati.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Apakah LMS dapat menggunakan materi milik institusi?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Dapat, sepanjang institusi memiliki hak penggunaan dan materi memenuhi format yang diperlukan. Proses kurasi, konversi, migrasi, pengamanan, serta pembaruan konten mengikuti ruang lingkup implementasi.</p></div></div>
+<div class="faq-item" data-category="pembelajaran"><button class="faq-q">Apakah LMS dapat diintegrasikan dengan sistem lain?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Integrasi dapat dikaji berdasarkan kebutuhan, ketersediaan API, keamanan, struktur data, hak akses, dan kompatibilitas sistem. Integrasi tidak otomatis tersedia pada setiap paket dan perlu pengujian teknis terpisah.</p></div></div>
+</section>
+<section class="faq-group" data-category="institusi" id="institusi">
+<div class="group-head"><span class="group-icon">▦</span><div><h2>Solusi Institusi dan Inovasi</h2><p>Banking Solution, transformasi proses, riset, prototipe, data, dan AI.</p></div></div>
+<div class="faq-item" data-category="institusi"><button class="faq-q">Apa yang dimaksud dengan Banking Solution?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Banking Solution adalah layanan konsultatif dan pendampingan terapan untuk membantu institusi memetakan kebutuhan, memperbaiki proses, menyusun panduan atau perangkat kerja, memperkuat tata kelola, layanan, pengembangan bisnis, dan transformasi operasional.</p></div></div>
+<div class="faq-item" data-category="institusi"><button class="faq-q">Apa output yang dapat dihasilkan dari Banking Solution?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Output dapat berupa laporan kebutuhan, gap analysis, rekomendasi, SOP atau panduan, template kerja, dashboard, roadmap, prototipe, materi sosialisasi, rencana implementasi, dan laporan evaluasi sesuai ruang lingkup.</p></div></div>
+<div class="faq-item" data-category="institusi"><button class="faq-q">Apakah Bankir Academy mengambil keputusan operasional institusi?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Bankir Academy menyediakan analisis, fasilitasi, rekomendasi, perangkat, dan pendampingan. Persetujuan, keputusan, penerapan, pengawasan, serta tanggung jawab operasional tetap berada pada pejabat atau institusi yang berwenang.</p></div></div>
+<div class="faq-item" data-category="institusi"><button class="faq-q">Bagaimana proses Inovasi Program dijalankan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Proses umumnya mencakup discover, define, design, prototype, pilot, review, dan scale. Tahapannya dapat meliputi riset kebutuhan, desain produk atau proses, pembuatan prototipe, pengujian terbatas, evaluasi, dokumentasi, serta roadmap implementasi.</p></div></div>
+<div class="faq-item" data-category="institusi"><button class="faq-q">Apakah penggunaan AI selalu otomatis tanpa pemeriksaan manusia?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Keluaran AI diposisikan sebagai alat bantu dan tetap memerlukan verifikasi, pengujian, kontrol akses, peninjauan manusia, serta keputusan dari personel yang berwenang. Data rahasia tidak boleh digunakan tanpa dasar, kewenangan, dan pengamanan yang memadai.</p></div></div>
+<div class="faq-item" data-category="institusi"><button class="faq-q">Bagaimana kerahasiaan data institusi dijaga?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Penggunaan data dibatasi pada tujuan dan ruang lingkup yang disepakati. Akses dapat dibatasi berdasarkan peran, dan kewajiban kerahasiaan dapat dituangkan dalam perjanjian. Institusi tetap perlu memastikan data yang diberikan sah, relevan, dan telah memperoleh persetujuan atau dasar pemrosesan yang diperlukan.</p></div></div>
+</section>
+<section class="faq-group" data-category="talenta" id="talenta">
+<div class="group-head"><span class="group-icon">◇</span><div><h2>Talent Solutions dan Karier</h2><p>Banking Talent Solution, Headhunting, Outsourcing, dan Job Connect.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apa perbedaan Banking Talent Solution dan Headhunting?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Banking Talent Solution berfokus pada competency mapping, talent pool, career path, learning path, individual development plan, leadership development, dan succession readiness. Headhunting berfokus pada pencarian serta penyaringan kandidat untuk posisi yang ditentukan klien.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apakah hasil assessment menentukan promosi atau mutasi?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Hasil assessment merupakan salah satu bahan pertimbangan. Keputusan promosi, mutasi, penempatan, pengembangan, atau suksesi tetap menjadi kewenangan institusi dan sebaiknya mempertimbangkan data lain yang relevan.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apakah Headhunting menjamin kandidat menerima penawaran?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Layanan membantu profiling posisi, market mapping, pendekatan kandidat, penyaringan awal, shortlist, dan koordinasi proses. Keputusan akhir klien dan keputusan kandidat untuk menerima penawaran berada di luar jaminan Bankir Academy.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Bagaimana informasi kandidat diverifikasi?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Verifikasi dapat dilakukan melalui dokumen, wawancara, referensi, atau metode lain yang disepakati dan diizinkan. Kandidat bertanggung jawab atas kebenaran informasi, sedangkan keputusan verifikasi lanjutan tetap mengikuti kebijakan klien.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apa yang termasuk layanan Outsourcing?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Layanan dapat mencakup workforce planning, rekrutmen awal, penempatan, onboarding, administrasi, pemantauan layanan, evaluasi, pelaporan, eskalasi, dan dukungan pergantian tenaga kerja sesuai kontrak dan ketentuan yang berlaku.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apakah outsourcing mengalihkan tanggung jawab utama institusi?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Pembagian tanggung jawab ditetapkan dalam perjanjian. Institusi tetap bertanggung jawab atas kewenangan, kebijakan, akses, pengawasan, keamanan, serta fungsi utama yang tidak dapat dialihkan.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apakah Job Connect menjamin kandidat diterima kerja?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Job Connect menyediakan publikasi peluang, profil kandidat, pencocokan awal, aplikasi, dan dukungan persiapan karier. Pemanggilan, seleksi, penawaran, dan penerimaan sepenuhnya mengikuti proses perusahaan.</p></div></div>
+<div class="faq-item" data-category="talenta"><button class="faq-q">Apakah kandidat dikenakan biaya untuk memperoleh pekerjaan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Setiap biaya program persiapan karier atau layanan lain harus diinformasikan secara transparan. Kandidat tidak boleh menganggap pembayaran sebagai jaminan penerimaan kerja. Hindari pembayaran kepada rekening atau pihak yang tidak diumumkan melalui kanal resmi.</p></div></div>
+</section>
+<section class="faq-group" data-category="foundation" id="foundation">
+<div class="group-head"><span class="group-icon">♡</span><div><h2>Program CSR dan Foundations</h2><p>Bakti Pendidikan, Bakti UMKM, penerima manfaat, dampak, dan pelaporan.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Apa perbedaan Program CSR dan Foundations?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Program CSR merupakan kerangka kolaborasi sosial yang dapat dikembangkan bersama mitra berdasarkan tujuan, penerima manfaat, indikator, dokumentasi, dan laporan. Foundations adalah fokus program Bankir Academy melalui Bakti Pendidikan dan Bakti UMKM.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Apa saja program Bakti Pendidikan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Program dapat mencakup literasi keuangan, Inside the Bank, Career Ready, keterampilan digital, dukungan guru atau mentor, serta beasiswa pembelajaran bagi siswa, mahasiswa, fresh graduate, dan pendamping.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Bagaimana penerima beasiswa pembelajaran ditentukan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Kriteria penerima ditetapkan secara jelas bersama mitra, misalnya berdasarkan sasaran wilayah, kebutuhan, prestasi, kondisi sosial, atau kriteria program lain. Proses seleksi, kuota, verifikasi, dan bentuk manfaat harus diinformasikan kepada pihak terkait.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Apa saja program Bakti UMKM?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Program dapat meliputi pencatatan dan keuangan usaha, HPP dan margin, arus kas, pemasaran dan penjualan, kesiapan pembiayaan, digitalisasi, operasional, layanan pelanggan, mentoring, dan klinik bisnis.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Apakah Bakti UMKM menjamin pembiayaan atau peningkatan omzet?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Program membantu meningkatkan pengetahuan, kerapian administrasi, kesiapan usaha, dan kemampuan menyusun rencana tindakan. Persetujuan pembiayaan, penjualan, omzet, laba, dan keberhasilan bisnis dipengaruhi banyak faktor dan tidak dijamin.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Bagaimana dampak program CSR diukur?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Pengukuran dapat mencakup input, jumlah peserta, aktivitas, kehadiran, penyelesaian tugas, peningkatan pengetahuan, umpan balik, penerapan praktik, dokumentasi, rekomendasi, dan tindak lanjut. Indikator dipilih sesuai tujuan dan kapasitas program.</p></div></div>
+<div class="faq-item" data-category="foundation"><button class="faq-q">Apakah mitra memperoleh laporan program?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Dapat. Laporan dapat memuat tujuan, profil peserta, aktivitas, dokumentasi, hasil evaluasi, capaian indikator, kendala, dan rekomendasi. Bentuk dan kedalaman laporan mengikuti ruang lingkup kerja sama.</p></div></div>
+</section>
+<section class="faq-group" data-category="administrasi" id="administrasi">
+<div class="group-head"><span class="group-icon">✓</span><div><h2>Akun, Pendaftaran, Pembayaran, dan Sertifikat</h2><p>Administrasi peserta dan ketentuan penggunaan layanan.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Kapan pendaftaran dinyatakan berhasil?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Pendaftaran dinyatakan berhasil setelah data yang dipersyaratkan diterima dan, untuk program berbayar, pembayaran telah diverifikasi. Pengisian formulir tanpa verifikasi belum selalu menjamin tempat jika kuota terbatas.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Apakah akun dapat digunakan bersama?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak. Akun bersifat pribadi dan tidak boleh dipindahtangankan, dijual, disewakan, atau dibagikan tanpa izin tertulis. Pengguna bertanggung jawab menjaga kata sandi, OTP, dan akses akun.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Metode pembayaran apa yang digunakan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Pembayaran harus dilakukan melalui metode dan rekening resmi yang diinformasikan pada halaman program, invoice, atau penawaran. Biaya administrasi dan pajak dapat berlaku sesuai informasi transaksi.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Bagaimana kebijakan pembatalan dan pengembalian dana?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Kebijakan mengikuti jenis program dan informasi saat pendaftaran. Produk digital yang telah diakses atau dikirim pada umumnya tidak dapat dikembalikan. Permintaan pembatalan kelas terjadwal harus diajukan melalui kanal resmi dan dapat dikenakan biaya administrasi. Rujuk halaman <a href="syarat-dan-ketentuan.html">Syarat &amp; Ketentuan</a>.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Apakah semua program memperoleh sertifikat?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Sertifikat mengikuti ketentuan program dan dapat mensyaratkan kehadiran, penyelesaian materi, tugas, asesmen, atau pembayaran. Tidak semua kegiatan otomatis menerbitkan sertifikat.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Apakah sertifikat Bankir Academy merupakan lisensi profesi?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Tidak otomatis. Sertifikat dapat menunjukkan keikutsertaan atau penyelesaian program, tetapi bukan gelar akademik, lisensi profesi, atau jaminan pengakuan regulator maupun perusahaan kecuali dinyatakan secara khusus.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Bagaimana data pribadi peserta digunakan?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Data dapat digunakan untuk pendaftaran, pelaksanaan, pembayaran, sertifikat, dukungan, keamanan, evaluasi, komunikasi, dan peningkatan layanan. Informasi lebih lengkap tersedia pada halaman <a href="kebijakan-privasi.html">Kebijakan Privasi</a>.</p></div></div>
+<div class="faq-item" data-category="administrasi"><button class="faq-q">Bagaimana menghubungi Bankir Academy jika jawaban belum tersedia?<span class="faq-plus">＋</span></button><div class="faq-a"><p>Sampaikan nama, email atau nomor telepon terdaftar, nama program atau layanan, kronologi, serta bukti pendukung melalui halaman <a href="kontak-kami.html">Kontak Kami</a> atau email info@bankiracademy.co.id agar permintaan dapat diarahkan ke tim yang sesuai.</p></div></div>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section class="section section-soft">
+<div class="container">
+<div class="section-head"><span class="eyebrow">Jelajahi Layanan</span><h2>Masih Membutuhkan Informasi Lebih Spesifik?</h2><p>Buka halaman layanan untuk melihat ruang lingkup, proses, output, ketentuan, dan FAQ yang lebih rinci.</p></div>
+<div class="service-hub">
+<article class="hub-card"><i>▦</i><h3>Solusi &amp; Pembelajaran</h3><p>Banking Solution, Capacity Building, LMS, dan Inovasi Program.</p><a href="index.html#layanan">Jelajahi layanan →</a></article>
+<article class="hub-card"><i>◇</i><h3>Talent Solutions</h3><p>Banking Talent Solution, Headhunting, Outsourcing, dan Job Connect.</p><a href="index.html#talent-solutions">Jelajahi talenta →</a></article>
+<article class="hub-card"><i>♡</i><h3>CSR &amp; Foundations</h3><p>Program CSR, Bakti Pendidikan, dan Bakti UMKM.</p><a href="index.html#foundations">Jelajahi program →</a></article>
+<article class="hub-card"><i>?</i><h3>Dukungan Pengguna</h3><p>Syarat, privasi, bantuan akun, transaksi, dan pertanyaan lainnya.</p><a href="kontak-kami.html">Hubungi kami →</a></article>
+</div>
+</div>
+</section>
+<section class="final-cta">
+<div class="container"><div class="cta-box">
+<div><h2>Belum Menemukan Jawaban yang Dibutuhkan?</h2><p>Kirimkan pertanyaan dengan nama layanan, tujuan, jumlah peserta atau pengguna, jadwal, dan informasi pendukung agar tim kami dapat memberikan arahan yang lebih tepat.</p></div>
+<div class="cta-actions"><a class="btn btn-light" href="kontak-kami.html">Buka Kontak Kami</a><a class="btn btn-secondary" href="mailto:info@bankiracademy.co.id?subject=Pertanyaan%20Bankir%20Academy">Kirim Email</a></div>
+</div></div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="footer-main"><div class="container footer-grid">
+<div class="footer-brand">
+<a class="brand" href="index.html"><svg class="brand-logo"><use href="#logo-ba"></use></svg><span class="brand-copy"><strong>Bankir Academy</strong><small style="color:#AAA5CF">Learning · Talent · Banking Solutions</small></span></a>
+<p>Platform pembelajaran dan pengembangan ekosistem perbankan untuk calon bankir, profesional, institusi, sekolah, kampus, UMKM, dan komunitas.</p>
+<form class="newsletter" onsubmit="event.preventDefault();alert('Terima kasih. Fitur ini dapat dihubungkan ke sistem email Bankir Academy.');"><label class="sr-only" for="newsletterEmail">Alamat email</label><input id="newsletterEmail" placeholder="Masukkan alamat email" required="" type="email"/><button aria-label="Berlangganan">→</button></form>
+<div class="footer-contact"><span class="contact-row"><i>✉</i> info@bankiracademy.co.id</span><span class="contact-row"><i>⌖</i> Permata Puri, Ngaliyan, Semarang</span><span class="contact-row"><i>◎</i> bankiracademy.co.id</span></div>
+</div>
+<div><div class="footer-title">Kenali</div><nav class="footer-links"><a href="index.html#beranda">Tentang Kami</a><a href="kurikulum.html">Kurikulum</a></nav></div>
+<div><div class="footer-title">Pusat Bantuan</div><nav class="footer-links"><a class="active" href="tanya-jawab.html">Tanya Jawab (FAQ)</a><a class="active" href="tanya-jawab.html#administrasi">Panduan Pendaftaran</a><a href="syarat-dan-ketentuan.html">Syarat &amp; Ketentuan</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a><a href="kontak-kami.html">Kontak Kami</a></nav></div>
+<div><div class="footer-title">Tautan</div><nav class="footer-links"><a href="index.html#kelas-online">Promo</a><a href="job-connect.html">Pusat Lowongan Kerja</a><a href="index.html#kelas-online">Kelas Online</a><a href="login.html">Login</a></nav></div>
+</div></div>
+<div class="footer-bottom"><div class="container footer-bottom-inner"><span>Copyright © 2026 Bankir Academy. All rights reserved.</span><div class="footer-legal"><a href="syarat-dan-ketentuan.html">Syarat &amp; Ketentuan</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a></div></div></div>
+</footer>
+<a aria-label="Hubungi Bankir Academy" class="floating-help" href="kontak-kami.html"><span>✉</span><span>Butuh bantuan?</span></a>
+<script>
+const header=document.getElementById('siteHeader'),menuToggle=document.getElementById('menuToggle'),mobilePanel=document.getElementById('mobilePanel');
+window.addEventListener('scroll',()=>header.classList.toggle('scrolled',window.scrollY>20));
+menuToggle.addEventListener('click',()=>{const open=mobilePanel.classList.toggle('open');document.body.classList.toggle('menu-open',open);menuToggle.setAttribute('aria-expanded',String(open));menuToggle.textContent=open?'✕':'☰'});
+document.querySelectorAll('.mobile-main').forEach(btn=>{if(btn.tagName==='BUTTON')btn.addEventListener('click',()=>{const sub=btn.nextElementSibling;sub.classList.toggle('open');btn.querySelector('span').textContent=sub.classList.contains('open')?'−':'＋'})});
+document.querySelectorAll('.faq-q').forEach(btn=>btn.addEventListener('click',()=>btn.parentElement.classList.toggle('open')));
+
+const search=document.getElementById('faqSearch'),clear=document.getElementById('clearSearch'),items=[...document.querySelectorAll('.faq-item')],groups=[...document.querySelectorAll('.faq-group')],filters=[...document.querySelectorAll('.filter-btn')];
+let currentFilter='all';
+function applyFilters(){
+  const q=search.value.toLowerCase().trim();
+  groups.forEach(group=>{
+    let visible=0;
+    group.querySelectorAll('.faq-item').forEach(item=>{
+      const matchFilter=currentFilter==='all'||item.dataset.category===currentFilter;
+      const matchSearch=!q||item.textContent.toLowerCase().includes(q);
+      item.classList.toggle('hidden',!(matchFilter&&matchSearch));
+      if(matchFilter&&matchSearch) visible++;
+    });
+    group.classList.toggle('hidden',visible===0);
+  });
+}
+search.addEventListener('input',applyFilters);
+clear.addEventListener('click',()=>{search.value='';currentFilter='all';filters.forEach((b,i)=>b.classList.toggle('active',i===0));applyFilters();search.focus()});
+filters.forEach(btn=>btn.addEventListener('click',()=>{currentFilter=btn.dataset.filter;filters.forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyFilters()}));
+document.querySelectorAll('[data-scroll]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-scroll]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.scroll).scrollIntoView({behavior:'smooth'})}));
+</script>
+</body>
+</html>

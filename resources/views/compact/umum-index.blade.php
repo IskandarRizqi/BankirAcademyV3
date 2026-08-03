@@ -43,28 +43,35 @@
                                 
                                 {{-- AREA THUMBNAIL --}}
                                 <div style="position: relative; width: 100%; aspect-ratio: 3 / 2; background-color: #4F46E5; overflow: hidden;">
-                                    
-                                    {{-- Cek Apakah Memiliki Thumbnail & File Eksis --}}
-                                    @if(!empty($sub->thumbnail) && file_exists(public_path($sub->thumbnail)))
-                                        <img src="{{ asset($sub->thumbnail) }}" 
-                                             alt="{{ $namaMateri }}" 
-                                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
-                                    @else
-                                        {{-- Fallback: Tampilan Placeholder Jika Tidak Ada Gambar --}}
-                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2rem;">
-                                            <i class="fas fa-graduation-cap"></i>
-                                        </div>
-                                    @endif
+    
+    {{-- Cek Jika Mengandung Kata 'uploads' --}}
+    @if(!empty($sub->thumbnail) && str_contains($sub->thumbnail, 'uploads') && file_exists(public_path($sub->thumbnail)))
+        <img src="{{ asset($sub->thumbnail) }}" 
+             alt="{{ $namaMateri }}" 
+             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
 
-                                    {{-- Badge Harga Kartu --}}
-                                    <span class="badge position-absolute" style="bottom: 12px; right: 12px; background: rgba(15, 23, 42, 0.75); color: #fff; backdrop-filter: blur(4px); font-weight: 600; padding: 6px 10px; border-radius: 6px; font-size: 11px; z-index: 2;">
-                                        @if($hargaFinal > 0)
-                                            Rp {{ number_format($hargaFinal, 0, ',', '.') }}
-                                        @else
-                                            Gratis
-                                        @endif
-                                    </span>
-                                </div>
+    {{-- Cek Jika Mengandung Kata 'photos' --}}
+    @elseif(!empty($sub->thumbnail) && str_contains($sub->thumbnail, 'photos'))
+        <img src="{{ asset('storage/' . $sub->thumbnail) }}" 
+             alt="Banner {{ $sub->nama }}" 
+             style="width: 100%; height: 100%; object-fit: cover;">
+
+    @else
+        {{-- Fallback: Tampilan Placeholder Jika Tidak Ada Gambar --}}
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 2rem;">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+    @endif
+
+    {{-- Badge Harga Kartu --}}
+    <span class="badge position-absolute" style="bottom: 12px; right: 12px; background: rgba(15, 23, 42, 0.75); color: #fff; backdrop-filter: blur(4px); font-weight: 600; padding: 6px 10px; border-radius: 6px; font-size: 11px; z-index: 2;">
+        @if($hargaFinal > 0)
+            Rp {{ number_format($hargaFinal, 0, ',', '.') }}
+        @else
+            Gratis
+        @endif
+    </span>
+</div>
 
                                 {{-- CARD BODY --}}
                                 <div class="card-body d-flex flex-column p-3">

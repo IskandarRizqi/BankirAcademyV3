@@ -232,9 +232,13 @@ public function detailPdf(Request $request, $sub_materi_id)
     }
 
     // Cover Image
-    $coverImage = $subMateri->thumbnail 
-        ? asset($subMateri->thumbnail) 
-        : null;
+   if (!empty($subMateri->thumbnail) && str_contains($subMateri->thumbnail, 'uploads')) {
+    $coverImage = asset($subMateri->thumbnail);
+} elseif (!empty($subMateri->thumbnail) && str_contains($subMateri->thumbnail, 'photos')) {
+    $coverImage = asset('storage/' . $subMateri->thumbnail);
+} else {
+    $coverImage = null;
+}
 
     return view('membernonkeanggotaan.pages.ebook.detail', compact(
         'subMateri', 
@@ -272,9 +276,13 @@ public function detailPdf(Request $request, $sub_materi_id)
     if ($previewItem) {
         $previewEmbedUrl = $this->parseYoutubeCode($previewItem->link_item);
     }
-     $coverImage = $subMateri->thumbnail 
-        ? asset($subMateri->thumbnail) 
-        : null;
+   if (!empty($subMateri->thumbnail) && str_contains($subMateri->thumbnail, 'uploads')) {
+    $coverImage = asset($subMateri->thumbnail);
+} elseif (!empty($subMateri->thumbnail) && str_contains($subMateri->thumbnail, 'photos')) {
+    $coverImage = asset('storage/' . $subMateri->thumbnail);
+} else {
+    $coverImage = null;
+}
 
     return view('membernonkeanggotaan.pages.video.detail', compact(
         'subMateri', 

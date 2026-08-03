@@ -35,7 +35,7 @@ class SiswaVerificationController extends Controller
 
         // 3. Cek jika sudah pernah diverifikasi
         if ($user->email_verified_at !== null) {
-            return view('siswa.verified_status', [
+            return view('compact.siswa.verified_status', [
                 'status' => 'already', 
                 'message' => 'Email ini sudah diverifikasi sebelumnya.'
             ]);

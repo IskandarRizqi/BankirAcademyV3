@@ -925,7 +925,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('login') }}" class="activation-button">
+                        <a href="{{ route('login.new') }}" class="activation-button">
                             Masuk ke Akun
 
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -989,7 +989,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('login') }}" class="secondary-button">
+                        <a href="{{ route('login.new') }}" class="secondary-button">
                             Kembali ke halaman login
                         </a>
 

@@ -42,7 +42,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return redirect('/');
+        return redirect()->route('login.new');
     }
 
     protected function authenticated(Request $request, $user)

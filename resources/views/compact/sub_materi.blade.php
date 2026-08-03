@@ -197,19 +197,65 @@
             </div>
 
             <!-- Container Field Thumbnail Gambar (Khusus Kompetensi Umum) -->
-            <div class="form-group col-lg-12 mb-3" id="container-thumbnail" style="display: none;">
-                <label style="font-weight: 600; color: #515365;">Thumbnail Gambar Materi <span class="text-danger">*</span></label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewThumbnail(this)">
-                    <label class="custom-file-label" for="thumbnail">Pilih file gambar...</label>
+            <!-- Container Thumbnail (Khusus Kompetensi "Umum") -->
+<div class="form-group col-lg-12 mb-3" id="container-thumbnail" style="display: none;">
+    <label style="font-weight: 600; color: #515365;">
+        Thumbnail Gambar Materi <span class="text-danger">*</span>
+    </label>
+    
+    <!-- Input Hidden untuk menyimpan PATH photo yang dipilih -->
+    <input type="hidden" name="thumbnail" id="thumbnail_path_input" required>
+
+    <div class="d-flex gap-2 align-items-center mb-2" style="gap: 10px;">
+        <!-- Button Pilih Galeri -->
+        <button type="button" class="btn btn-outline-primary btn-sm" onclick="openPhotoPicker()">
+            🖼️ Pilih dari Galeri Photo
+        </button>
+        <!-- Button Quick Upload Foto Baru -->
+        <button type="button" class="btn btn-outline-success btn-sm" onclick="$('#quickPhotoInput').click()">
+            ⬆️ Upload Foto Baru
+        </button>
+        <input type="file" id="quickPhotoInput" accept="image/*" style="display: none;" onchange="handleQuickUpload(this)">
+    </div>
+
+    <!-- Preview Media Terpilih -->
+    <div id="preview-wrapper" class="p-2 border rounded align-items-center" style="display: none; background-color: #f8f9fa; gap: 12px;">
+        <img id="img-preview" src="" alt="Thumbnail" style="max-height: 80px; width: 120px; object-fit: cover;" class="rounded border">
+        <div>
+            <span id="preview-title" class="font-weight-bold d-block text-dark"></span>
+            <small class="text-muted" id="preview-path"></small>
+        </div>
+        <button type="button" class="btn btn-sm btn-link text-danger ml-auto" onclick="clearSelectedPhoto()">Hapus</button>
+    </div>
+</div>
+
+<!-- Sub-Modal: Modal Pemilih Galeri Foto (Photo Picker) -->
+<div class="modal fade" id="photoPickerModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight: 700;">Galeri Photo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-3">
+                <!-- Search Box -->
+                <div class="mb-3">
+                    <input type="text" id="searchPhotoInput" class="form-control" placeholder="Cari nama/title foto..." onkeyup="filterPhotos()">
                 </div>
-                <small class="form-text text-muted">Format: JPG, JPEG, PNG, WEBP (Max: 2MB).</small>
                 
-                <!-- Preview Gambar -->
-                <div class="mt-2" id="preview-wrapper" style="display: none;">
-                    <img id="img-preview" src="" alt="Thumbnail Preview" class="img-thumbnail" style="max-height: 150px;">
+                <!-- Grid Photo Galeri -->
+                <div class="row" id="photo-gallery-container" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Item foto di-generate via JavaScript -->
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
             
             <div class="form-group col-lg-4 mb-3">
                 <label style="font-weight: 600; color: #515365;">Harga Jual</label>
@@ -246,6 +292,7 @@
 </div>
 
 <script>
+    let photoList = [];
     $(document).ready(function () {
     if (typeof createtable === 'function') { createtable('invoice-list'); }
     $('#id_materi').select2({ dropdownParent: $('#userModal') });
@@ -254,7 +301,13 @@
     $('#id_materi').on('change', function() {
         checkKompetensiUmum();
     });
-
+    loadPhotoGallery()
+    $(document).on('hidden.bs.modal', '.modal', function () {
+        if ($('.modal:visible').length) {
+            $('body').addClass('modal-open');
+        }
+    });
+    
     $('#harga_format').on('input', function() {
         let value = $(this).val().replace(/[^0-9]/g, '');
         $(this).val(formatRupiah(value));
@@ -269,38 +322,132 @@
         hargaInput.val(angkaMurni); 
     });
 });
+function loadPhotoGallery() {
+    // Memanggil API photo yang ada (Menggunakan endpoint show/index Photo)
+    $.get('/photos/list', function(res) {
+        // Asumsi data JSON mengembalikan array photo
+        photosList = res.data || res;
+        renderPhotos(photosList);
+    }).fail(function() {
+        console.warn('Gagal memuat daftar foto galeri.');
+    });
+}
+
+// Render Grid Galeri Foto
+function renderPhotos(data) {
+    let html = '';
+    if(!data || data.length === 0) {
+        html = '<div class="col-12 text-center text-muted py-4">Belum ada foto di galeri.</div>';
+    } else {
+        data.forEach(function(photo) {
+            html += `
+                <div class="col-6 col-md-3 mb-3 photo-item" data-title="${photo.title.toLowerCase()}">
+                    <div class="card h-100 border" style="cursor: pointer; transition: transform 0.2s;" onclick="selectPhoto('${photo.path}', '${photo.url}', '${photo.title}')">
+                        <img src="${photo.url}" class="card-img-top" style="height: 110px; object-fit: cover;">
+                        <div class="card-body p-2 text-center">
+                            <small class="d-block font-weight-bold text-truncate" title="${photo.title}">${photo.title}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    $('#photo-gallery-container').html(html);
+}
+
+// Fitur Pencarian Foto secara Realtime
+function filterPhotos() {
+    let query = $('#searchPhotoInput').val().toLowerCase();
+    $('.photo-item').each(function() {
+        let title = $(this).data('title');
+        if(title.includes(query)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+}
+
+// Membuka Modal Picker Photo
+function openPhotoPicker() {
+    $('#searchPhotoInput').val('');
+    filterPhotos();
+    $('#photoPickerModal').modal('show');
+}
+
+// Memilih Foto dari Modal Picker
+function selectPhoto(path, url, title) {
+    $('#thumbnail_path_input').val(path);
+    $('#img-preview').attr('src', url);
+    $('#preview-title').text(title);
+    $('#preview-path').text(path);
+    
+    $('#preview-wrapper').addClass('d-flex').show();
+    $('#photoPickerModal').modal('hide');
+}
+
+// Reset Pilihan Gambar
+function clearSelectedPhoto() {
+    $('#thumbnail_path_input').val('');
+    $('#img-preview').attr('src', '');
+    $('#preview-title').text('');
+    $('#preview-path').text('');
+    $('#preview-wrapper').removeClass('d-flex').hide();
+}
+
+// Fitur Quick Upload Foto Baru via AJAX
+function handleQuickUpload(input) {
+    if (!input.files || !input.files[0]) return;
+
+    let formData = new FormData();
+    formData.append('file', input.files[0]);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    $.ajax({
+        url: '/photos/upload',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+            // Indikator loading sederhana
+            alert('Sedang mengunggah foto...');
+        },
+        success: function(response) {
+            if(response.status === 'success') {
+                let photo = response.data;
+                
+                // Tambahkan data baru ke galeri & panggil fungsi pilih
+                photosList.unshift(photo);
+                renderPhotos(photosList);
+                selectPhoto(photo.path, photo.url, photo.title);
+                
+                // Clear file input
+                $(input).val('');
+            }
+        },
+        error: function(xhr) {
+            let res = xhr.responseJSON;
+            alert(res && res.message ? res.message : 'Gagal mengunggah foto.');
+            $(input).val('');
+        }
+    });
+}
 
 // Fungsi untuk mengecek apakah kompetensi yang dipilih bernama "Umum"
 function checkKompetensiUmum() {
     let selectedOption = $('#id_materi').find(':selected');
     let namaKompetensi = selectedOption.data('nama') || '';
 
-    // Lakukan pencocokan teks (abaikan huruf besar/kecil)
     if (namaKompetensi.toString().trim().toLowerCase() === 'umum') {
         $('#container-thumbnail').slideDown();
     } else {
         $('#container-thumbnail').slideUp();
-        $('#thumbnail').val(''); // Reset file input
-        $('.custom-file-label').html('Pilih file gambar...');
-        $('#preview-wrapper').hide();
+        clearSelectedPhoto();
     }
 }
 
-// Preview gambar lokal sebelum diunggah
-function previewThumbnail(input) {
-    let fileName = $(input).val().split('\\').pop();
-    $(input).next('.custom-file-label').addClass("selected").html(fileName || 'Pilih file gambar...');
-
-    if (input.files && input.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function (e) {
-            $('#img-preview').attr('src', e.target.result);
-            $('#preview-wrapper').show();
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
+// Penyesuaian Reset Form
 function resetForm() {
     document.getElementById('id').value = '';
     $('#id_materi').val('').trigger('change'); 
@@ -318,13 +465,11 @@ function resetForm() {
     $('#tipe_beasiswa0').prop('checked', true);
     $('#upcoming0').prop('checked', true);
 
-    // Reset Thumbnail
-    $('#thumbnail').val('');
-    $('.custom-file-label').html('Pilih file gambar...');
-    $('#preview-wrapper').hide();
+    clearSelectedPhoto();
     $('#container-thumbnail').hide();
 }
 
+// Penyesuaian Edit Form Data
 function editUser(user) {
     resetForm();
     if (user) {
@@ -333,11 +478,10 @@ function editUser(user) {
         $('#urutan').val(user.urutan);
         $('#nama').val(user.nama);
         
-        // --- PENERAPAN UPCOMING (Radio Button) ---
         if (user.upcoming == 1 || user.upcoming === true) {
             $('#upcoming1').prop('checked', true);
         } else {
-            $('#upcoming0').prop('checked', true); // Default ke 0 jika tidak dicentang
+            $('#upcoming0').prop('checked', true);
         }
 
         if (user.tipe_beasiswa == 0) $('#tipe_beasiswa0').prop('checked', true);
@@ -356,10 +500,11 @@ function editUser(user) {
             });
         }
 
-        // Tampilkan gambar thumbnail lama jika data edit memiliki thumbnail
+        // Tampilkan foto jika thumbnail terikat
         if (user.thumbnail) {
-            $('#img-preview').attr('src', '/' + user.thumbnail);
-            $('#preview-wrapper').show();
+            let filename = user.thumbnail.split('/').pop().split('.')[0];
+            let fullUrl = '/storage/' + user.thumbnail; // sesuaikan resolver URL storage
+            selectPhoto(user.thumbnail, fullUrl, filename);
         }
 
         hitunghargafinal();

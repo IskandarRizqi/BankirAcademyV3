@@ -1,0 +1,48 @@
+{
+  "homepage": "index.html",
+  "pages": [
+    "bakti-pendidikan.html",
+    "bakti-umkm.html",
+    "banking-solution.html",
+    "banking-talent-solution.html",
+    "capacity-building.html",
+    "headhunting.html",
+    "index.html",
+    "inovasi-program.html",
+    "job-connect.html",
+    "kebijakan-privasi.html",
+    "kontak-kami.html",
+    "kurikulum.html",
+    "learning-management-system.html",
+    "login.html",
+    "outsourcing.html",
+    "program-csr.html",
+    "syarat-dan-ketentuan.html",
+    "tanya-jawab.html"
+  ],
+  "navigation": {
+    "Layanan": [
+      "banking-solution.html",
+      "capacity-building.html",
+      "banking-talent-solution.html",
+      "learning-management-system.html",
+      "inovasi-program.html",
+      "program-csr.html"
+    ],
+    "Talent Solutions": [
+      "headhunting.html",
+      "outsourcing.html",
+      "job-connect.html"
+    ],
+    "Foundations": [
+      "bakti-pendidikan.html",
+      "bakti-umkm.html"
+    ],
+    "Pusat Bantuan": [
+      "tanya-jawab.html",
+      "syarat-dan-ketentuan.html",
+      "kebijakan-privasi.html",
+      "kontak-kami.html"
+    ]
+  }
+}
