@@ -9,6 +9,7 @@
     }
 
     var message = toast.querySelector('[data-toast-message]');
+    var title = toast.querySelector('[data-toast-title]');
     var customer = toast.querySelector('[data-toast-customer]');
     var context = toast.querySelector('[data-toast-context]');
     var product = toast.querySelector('[data-toast-product]');
@@ -34,12 +35,19 @@
             return;
         }
 
+        var isJobApplication = data.type === 'loker';
+
+        title.textContent = data.title || (isJobApplication ? 'Lowongan Dilamar' : 'Pembelian terbaru');
         customer.textContent = data.name;
-        context.textContent = ' dari ' + data.city + ' membeli ' + data.type + ' ';
+        context.textContent = isJobApplication
+            ? ' dari ' + data.city + ' melamar lowongan '
+            : ' dari ' + data.city + ' membeli ' + data.type + ' ';
         product.textContent = data.product_name;
         time.textContent = data.time_ago || '5 menit yang lalu';
         message.setAttribute('aria-label', data.message || (
-            data.name + ' dari ' + data.city + ' membeli ' + data.type + ' ' + data.product_name
+            isJobApplication
+                ? data.name + ' dari ' + data.city + ' melamar lowongan ' + data.product_name
+                : data.name + ' dari ' + data.city + ' membeli ' + data.type + ' ' + data.product_name
         ));
         toast.hidden = false;
         toast.setAttribute('aria-hidden', 'false');
