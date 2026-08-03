@@ -16,6 +16,7 @@ class LamaranModel extends Model
         'job_id',
         'status',
         'user_id',
+        'is_cv_ats',
         'nama_lengkap',
         'nama_panggilan',
         'tmpttgllahir',
@@ -80,6 +81,10 @@ class LamaranModel extends Model
 
     protected $appends = ['namaagama'];
 
+    protected $casts = [
+        'is_cv_ats' => 'boolean',
+    ];
+
     // Mutator & Accessor untuk konversi Agama
     public function getNamaAgamaAttribute()
     {
@@ -92,7 +97,20 @@ class LamaranModel extends Model
             5 => 'Tuhan Yang Maha Esa',
         ];
 
-        return $map[$this->attributes['agama'] ?? 0] ?? 'Islam';
+        $agama = $this->attributes['agama'] ?? 0;
+
+        if (is_numeric($agama)) {
+            return $map[(int) $agama] ?? 'Islam';
+        }
+
+        return [
+            'islam' => 'Islam',
+            'katholik' => 'Katholik',
+            'protestan' => 'Protestan',
+            'hindu' => 'Hindu',
+            'budha' => 'Budha',
+            'tuhan yang maha esa' => 'Tuhan Yang Maha Esa',
+        ][strtolower(trim($agama))] ?? ucfirst($agama);
     }
 
     // Relasi ke User

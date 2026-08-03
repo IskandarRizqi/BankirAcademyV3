@@ -20,6 +20,13 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			if (!window.Swal || typeof window.Swal.fire !== 'function') {
+				var fallbackAlert = document.createElement('div');
+				var fallbackType = @json($flashType) === 'error' ? 'danger' : @json($flashType);
+				fallbackAlert.className = 'alert alert-' + fallbackType;
+				fallbackAlert.setAttribute('role', 'alert');
+				fallbackAlert.style.cssText = 'position: fixed; top: 84px; right: 24px; z-index: 1100; max-width: 420px; box-shadow: 0 10px 30px rgba(15, 23, 42, .12);';
+				fallbackAlert.textContent = @json($flashMessage);
+				document.body.prepend(fallbackAlert);
 				return;
 			}
 
