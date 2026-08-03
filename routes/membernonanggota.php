@@ -50,14 +50,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
     Route::get('/sertifikat-kelas', [SertifikatController::class, 'index'])
         ->name('membernonanggota.certificates.index');
-    Route::prefix('member/cv-ats')->name('membernonanggota.cv-ats.')->controller(CvAtsController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/buat', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/edit', 'edit')->name('edit');
-        Route::put('/', 'update')->name('update');
-        Route::get('/cetak', 'pdf')->name('pdf');
-    });
+    Route::prefix('member/cv-ats')
+        ->name('membernonanggota.cv-ats.')
+        ->middleware('membership.type:individual')
+        ->controller(CvAtsController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/buat', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/edit', 'edit')->name('edit');
+            Route::put('/', 'update')->name('update');
+            Route::get('/cetak', 'pdf')->name('pdf');
+        });
     Route::middleware('role:2')->group(function () {
         Route::get('/member/loker', [LokerController::class, 'index'])
             ->name('membernonanggota.loker.index');

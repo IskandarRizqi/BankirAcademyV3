@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
-use App\Models\DataPayment;
 use App\Models\LamaranModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -30,7 +29,6 @@ class CvAtsController extends Controller
 
     public function index(Request $request)
     {
-        $this->ensureIndividualMembership($request);
         $cv = $this->findCv($request);
 
         return view('membernonkeanggotaan.pages.cv-ats.index', [
@@ -42,8 +40,6 @@ class CvAtsController extends Controller
 
     public function create(Request $request)
     {
-        $this->ensureIndividualMembership($request);
-
         if ($this->findCv($request)) {
             return redirect()->route('membernonanggota.cv-ats.index')
                 ->with('info', 'CV ATS Anda sudah tersedia. Anda dapat memperbarui datanya.');
@@ -63,8 +59,6 @@ class CvAtsController extends Controller
         // ]);
 
         // return $request->all();
-        $this->ensureIndividualMembership($request);
-
         try {
             $this->validateCv($request);
         } catch (ValidationException $exception) {
@@ -102,7 +96,6 @@ class CvAtsController extends Controller
 
     public function edit(Request $request)
     {
-        $this->ensureIndividualMembership($request);
         $cv = $this->findCv($request);
 
         abort_unless($cv, 404);
@@ -116,8 +109,6 @@ class CvAtsController extends Controller
 
     public function update(Request $request)
     {
-        $this->ensureIndividualMembership($request);
-
         try {
             $this->validateCv($request);
         } catch (ValidationException $exception) {
@@ -145,7 +136,6 @@ class CvAtsController extends Controller
 
     public function pdf(Request $request)
     {
-        $this->ensureIndividualMembership($request);
         $cv = $this->findCv($request);
 
         abort_unless($cv, 404);
@@ -165,14 +155,6 @@ class CvAtsController extends Controller
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream($fileName);
-    }
-
-    private function ensureIndividualMembership(Request $request): void
-    {
-        abort_unless(
-            (int) data_get($request->user()->profile, 'tipe_membership') === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL,
-            403
-        );
     }
 
     private function findCv(Request $request): ?LamaranModel

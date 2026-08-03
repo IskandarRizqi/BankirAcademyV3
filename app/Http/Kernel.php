@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'aksesip' => \App\Http\Middleware\AksesByIpAddress::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'siswa.verified' => \App\Http\Middleware\EnsureSiswaIsVerified::class,
+        'membership.type' => \App\Http\Middleware\EnsureMembershipType::class,
     'is_root' => \App\Http\Middleware\OnlyRoot::class,
     ];
 }
