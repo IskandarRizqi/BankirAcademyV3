@@ -4,6 +4,8 @@ use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\ActivationDispatchController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BonusAplikasiController;
+use App\Http\Controllers\Admin\SopController;
 use App\Http\Controllers\Backend\InstructorController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Backend\BannerslideController;
@@ -133,6 +135,23 @@ Route::middleware([IsAdminRoot::class])->group(function () {
 
     // IP
     Route::resource('/admin/ipakses', App\Http\Controllers\Backend\IpController::class);
+
+    // SOP hanya dapat dikelola oleh admin dengan role 0.
+    Route::middleware(['role:0'])->group(function () {
+        Route::get('/admin/sop/dokumen/{id}/download', [SopController::class, 'downloadDocument'])
+            ->name('admin.sop.documents.download');
+        Route::delete('/admin/sop/dokumen/{id}', [SopController::class, 'destroyDocument'])
+            ->name('admin.sop.documents.destroy');
+        Route::resource('/admin/sop', SopController::class)
+            ->except(['show'])
+            ->names('admin.sop');
+
+        Route::get('/admin/bonus-aplikasi/{id}/download', [BonusAplikasiController::class, 'download'])
+            ->name('admin.bonus_aplikasi.download');
+        Route::resource('/admin/bonus-aplikasi', BonusAplikasiController::class)
+            ->except(['show'])
+            ->names('admin.bonus_aplikasi');
+    });
 
     // Member
     Route::resource('/admin/member', App\Http\Controllers\Backend\MembershipController::class);
