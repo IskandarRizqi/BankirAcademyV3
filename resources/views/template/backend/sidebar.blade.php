@@ -348,6 +348,32 @@
                     </div>
                 </a>
             </li>
+            @if ((int) Auth::user()->role === 0)
+            <li class="menu">
+                <a href="{{ route('admin.sop.index') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L18.5 9H15zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"></path>
+                        </svg>
+                        <span>SOP</span>
+                    </div>
+                </a>
+            </li>
+            @endif
+            @if ((int) Auth::user()->role === 0)
+            <li class="menu">
+                <a href="{{ route('admin.bonus_aplikasi.index') }}" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: rgba(0, 0, 0, 1);">
+                            <path d="M20 6h-3V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM9 4h6v2H9V4zm10 14H5v-8h14v8z"></path>
+                        </svg>
+                        <span>Bonus Aplikasi</span>
+                    </div>
+                </a>
+            </li>
+            @endif
             <li class="menu">
                 <h5 class="text-center text-uppercase mt-3 mb-1">Coming soon</h5>
             </li>
