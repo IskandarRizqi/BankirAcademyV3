@@ -1,0 +1,45 @@
+{
+    "files.associations": {
+        "*.blade.php": "blade",
+        "*.vue": "vue"
+    },
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    },
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter",
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "intelephense.format.enable": true,
+    "intelephense.format.braces": "per",
+    "intelephense.environment.phpVersion": "8.0.2",
+    "intelephense.environment.documentRoot": "public",
+    "LaravelExtraIntellisense.basePath": "${workspaceFolder}",
+    "LaravelExtraIntellisense.basePathForCode": "${workspaceFolder}",
+    "LaravelExtraIntellisense.phpCommand": "php -r \"{code}\""
+}

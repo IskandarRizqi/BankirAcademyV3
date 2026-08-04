@@ -9,25 +9,24 @@
 				<div class="row gutter-40 col-mb-80">
 					@foreach ($data['data'] as $v)
 					<div class="col-lg-4 col-sm-6">
-						<div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 550px">
-							<img src="{{ '/Image/' . $v['image'] }}" width="100%" style="border-radius: 8px">
-							<div class="card-body" style="padding: 0.75rem">
+						<div class="card shadow mb-5 bg-white promo-card">
+							<img class="rounded-8" src="{{ '/Image/' . $v['image'] }}" width="100%">
+							<div class="card-body card-body-compact">
 								<h3 class="text-capitalize m-0">{{$v['nama']}}</h3>
 								{{$v['description']}}
 								@if ($v['kode'])
 								@endif
-								<span class="btn mt-4"
-									style="background-color: #efefef;border-radius: 8px;position: absolute; bottom: 10px; left: 10px; right: 10px;">
+                                <span class="btn mt-4 promo-info">
 									<div class="row align-items-center">
 										<div class="col text-left ml-2">
 											<small class="fs-2">Kode Promo</small>
-											<h4 class="" style="margin-bottom: 0px !important; font-weight: bold">
+											<h4 class="promo-title">
 												{{ $v['kode']?$v['kode']:'-' }}
 											</h4>
 										</div>
 										<div class="col">
-											<span class="btn btn-outline-primary btn-sm float-right"
-												style="border-radius: 8px">Copy</span>
+											<span class="btn btn-outline-primary btn-sm float-right rounded-8"
+											>Copy</span>
 										</div>
 									</div>
 								</span>

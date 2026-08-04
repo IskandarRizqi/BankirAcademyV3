@@ -11,14 +11,14 @@
 					<div class="col-lg-4 col-sm-6">
 						<a href="/pages/blog/{{ $v['id'] }}/{{ urlencode(str_ireplace(['\'', '/', '//', '"', ' ,', ';' , '<'
                         , '>' ], '' , $v['title'])) }}">
-							<div class="card shadow mb-5 bg-white" style="border-radius: 8px; min-height: 550px">
-								<img src="{{ $v['thumbnail'] }}" width="100%" style="border-radius: 8px">
-								<div class="card-body" style="padding: 0.75rem">
+							<div class="card shadow mb-5 bg-white promo-card">
+								<img class="rounded-8" src="{{ $v['thumbnail'] }}" width="100%">
+								<div class="card-body card-body-compact">
 									<h3 class="text-capitalize mb-2">{{ $v['title'] }}</h3>
 									{!! $v['description'] !!}
 									{{-- <div class="text-center mt-2 w-100"><a
-                                        class="btn btn-primary btn-block btn-rounded"
-                                        style="border-radius:10px !important" href=""> Baca </a>
+                                        class="btn btn-primary btn-block btn-rounded rounded-10"
+                                        href=""> Baca </a>
                                 </div> --}}
 								</div>
 							</div>
