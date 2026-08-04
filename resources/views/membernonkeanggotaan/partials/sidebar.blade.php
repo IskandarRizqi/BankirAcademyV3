@@ -67,7 +67,7 @@
 	'label' => 'Loker',
 	'icon' => 'loker',
 	'url' => route('membernonanggota.loker.index'),
-	'active' => request()->is('member/loker*'),
+	'active' => request()->routeIs('membernonanggota.loker.index', 'membernonanggota.loker.show'),
 	'can_see' => (int) $role === 2,
 	'has_submenu' => false,
 	],
@@ -78,18 +78,48 @@
 	[
 	'label' => 'SOP',
 	'icon' => 'sop',
-	'url' => '#',
-	'active' => false,
+	'url' => route('membernonanggota.sop.index'),
+	'active' => request()->routeIs('membernonanggota.sop.*'),
+	'can_see' => true,
+	'has_submenu' => false,
+	],
+	[
+	'label' => 'Bonus Aplikasi',
+	'icon' => 'aplikasi',
+	'url' => route('membernonanggota.bonus-aplikasi.index'),
+	'active' => request()->routeIs('membernonanggota.bonus-aplikasi.*'),
 	'can_see' => true,
 	'has_submenu' => false,
 	],
 	[
 	'label' => 'Pasang loker',
 	'icon' => 'loker',
-	'url' => '#',
-	'active' => false,
+	'url' => route('membernonanggota.loker.manage.index'),
+	'active' => request()->routeIs('membernonanggota.loker.manage.*'),
 	'can_see' => true,
-	'has_submenu' => false,
+	'has_submenu' => true,
+	'submenu_id' => 'member-company-loker-submenu',
+	'submenu_items' => [
+	[
+	'label' => 'Profil',
+	'url' => route('membernonanggota.loker.manage.company.edit'),
+	'active' => request()->routeIs('membernonanggota.loker.manage.company.*'),
+	'can_see' => true,
+	],
+	[
+	'label' => 'Posting',
+	'url' => route('membernonanggota.loker.manage.index'),
+	'active' => request()->routeIs(
+	'membernonanggota.loker.manage.index',
+	'membernonanggota.loker.manage.create',
+	'membernonanggota.loker.manage.edit',
+	'membernonanggota.loker.manage.store',
+	'membernonanggota.loker.manage.update',
+	'membernonanggota.loker.manage.destroy'
+	),
+	'can_see' => true,
+	],
+	],
 	],
 	[
 	'label' => 'Program Inkubasi UMKM',
@@ -107,14 +137,7 @@
 	'can_see' => true,
 	'has_submenu' => false,
 	],
-	[
-	'label' => 'Bonus Aplikasi Pendukung',
-	'icon' => 'aplikasi',
-	'url' => '#',
-	'active' => false,
-	'can_see' => true,
-	'has_submenu' => false,
-	],
+
 	[
 	'label' => 'Komunitas & Program Afiliasi',
 	'icon' => 'komunitas',
@@ -217,11 +240,19 @@
 					</svg>
 				</a>
 				<div class="submenu-panel" id="{{ $menu['submenu_id'] }}">
+					@if(isset($menu['submenu_items']))
+					@foreach($menu['submenu_items'] as $submenuItem)
+					@if($submenuItem['can_see'])
+					<a class="sub-link {{ $submenuItem['active'] ? 'active' : '' }}" href="{{ $submenuItem['url'] }}">{{ $submenuItem['label'] }}</a>
+					@endif
+					@endforeach
+					@else
 					<a class="sub-link {{ request()->is('kategori-materi*') ? 'active' : '' }}" href="/kategori-materi">Bidang</a>
 					<a class="sub-link {{ request()->is('materi*') ? 'active' : '' }}" href="/materi">Kompetensi</a>
 					<a class="sub-link {{ request()->is('sub-materi*') ? 'active' : '' }}" href="/sub-materi">Materi</a>
 					<a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}" href="/ppt">PPT</a>
 					<a class="sub-link {{ request()->is('certificate-templates*') ? 'active' : '' }}" href="/certificate-templates">Sertifikat</a>
+					@endif
 				</div>
 			</div>
 			@else
