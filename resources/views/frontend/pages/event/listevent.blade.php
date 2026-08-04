@@ -13,8 +13,8 @@ $selectedFilters = $selectedFilters ?? [
 		<div class="col-sm-12 ui-resizable" data-type="container-content">
 			<div data-type="component-text">
 				<div>
-					<div class="breadcrumb_area"
-						style="background-image: url('frontend/infixlmstheme/img/new_bread_crumb_bg.png')">
+					<div class="breadcrumb_area event-breadcrumb"
+					>
 						<div class="container">
 							<div class="row">
 								<div class="col-lg-12">
