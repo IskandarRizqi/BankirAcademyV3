@@ -42,7 +42,11 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return redirect()->route('login.new');
+        if (auth()->check()) {
+            return redirect('/home');
+        }
+
+        return view('auth.login');
     }
 
     protected function authenticated(Request $request, $user)

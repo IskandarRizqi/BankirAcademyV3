@@ -3,12 +3,10 @@
         <div class="container footer-grid">
           <div class="footer-brand">
             <a class="brand active" href="{{ route('frontend.home') }}">
-              <svg aria-hidden="true" class="brand-logo">
-                <use href="#logo-ba"></use>
-              </svg>
+              <img src="{{ asset('bankir-academy-icon.png') }}" alt="logo">
               <span class="brand-copy"
                 ><strong>Bankir Academy</strong
-                ><small style="color: #aaa5cf"
+                 ><small class="brand-copy-muted"
                   >Learning · Talent · Banking Solutions</small
                 ></span
               >
@@ -92,67 +90,4 @@
     >
       <span>✉</span><span>Butuh bantuan?</span>
     </a>
-    <script>
-          const header = document.getElementById('siteHeader');
-          const menuToggle = document.getElementById('menuToggle');
-          const mobilePanel = document.getElementById('mobilePanel');
-
-          window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 20);
-          });
-
-          menuToggle.addEventListener('click', () => {
-            const open = mobilePanel.classList.toggle('open');
-            document.body.classList.toggle('menu-open', open);
-            menuToggle.setAttribute('aria-expanded', String(open));
-            menuToggle.textContent = open ? '✕' : '☰';
-          });
-
-          document.querySelectorAll('.mobile-main[type="button"]').forEach(button => {
-            button.addEventListener('click', () => {
-              const sub = button.nextElementSibling;
-              const open = sub.classList.toggle('open');
-              button.querySelector('span').textContent = open ? '−' : '＋';
-            });
-          });
-
-          document.querySelectorAll('.mobile-panel a').forEach(link => {
-            link.addEventListener('click', () => {
-              mobilePanel.classList.remove('open');
-              document.body.classList.remove('menu-open');
-              menuToggle.setAttribute('aria-expanded', 'false');
-              menuToggle.textContent = '☰';
-            });
-          });
-
-          document.querySelectorAll('.faq-q').forEach(button => {
-            button.addEventListener('click', () => {
-              const item = button.closest('.faq-item');
-              const wasOpen = item.classList.contains('open');
-              document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-              if (!wasOpen) item.classList.add('open');
-            });
-          });
-
-          const sections = document.querySelectorAll('main section[id]');
-          const navLinks = document.querySelectorAll('.desktop-nav > a.nav-link, .desktop-nav > .nav-item > a.nav-link');
-          const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-              if (!entry.isIntersecting) return;
-              navLinks.forEach(link => link.classList.remove('active'));
-              const id = entry.target.id;
-              const direct = document.querySelector(`.desktop-nav a[href="#${id}"]`);
-              if (direct) direct.classList.add('active');
-              if (['banking-solution','capacity-building','banking-talent','lms','inovasi','csr','layanan','innovation-lab'].includes(id)) {
-                document.querySelector('.desktop-nav a[href="#layanan"]')?.classList.add('active');
-              }
-              if (['talent-solutions'].includes(id)) {
-                document.querySelector('.desktop-nav a[href="#talent-solutions"]')?.classList.add('active');
-              }
-              if (['foundations'].includes(id)) {
-                document.querySelector('.desktop-nav a[href="#foundations"]')?.classList.add('active');
-              }
-            });
-          }, {rootMargin:'-35% 0px -55% 0px'});
-          sections.forEach(section => observer.observe(section));
-    </script>
+    <script src="{{ asset('frontend/js/bankir-academy.js') }}" defer></script>

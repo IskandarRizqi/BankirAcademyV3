@@ -5,7 +5,7 @@
     <div class="full-page" data-type="component-text">
         
         <!-- ================= HERO & SEARCH HEADER ================= -->
-        <div class="bg-gradient-primary text-white py-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #1b2a4a 0%, #2c3e50 100%);">
+        <div class="bg-gradient-primary text-white py-5 position-relative overflow-hidden careers-hero">
             <div class="container position-relative z-index-2 py-4">
                 <div class="row justify-content-center text-center mb-4">
                     <div class="col-lg-8">
@@ -112,8 +112,7 @@
             @endphp
 
             <!-- Job Card Item -->
-            <div class="card border-0 shadow-sm p-3 position-relative job-card cursor-pointer {{ $index === 0 ? 'border-start border-4 border-primary bg-white active-card' : 'bg-white opacity-90' }}" 
-                 style="transition: all 0.2s ease; cursor: pointer;"
+            <div class="card border-0 shadow-sm p-3 position-relative job-card cursor-pointer job-card-clickable {{ $index === 0 ? 'border-start border-4 border-primary bg-white active-card' : 'bg-white opacity-90' }}"
                  data-job="{{ json_encode($jobPayload, JSON_HEX_APOS | JSON_HEX_QUOT) }}"
                  onclick="selectJob(this)">
                 
@@ -154,7 +153,7 @@
                                 $firstWorkType = is_array($firstJob->type) ? implode(', ', array_map('ucfirst', $firstJob->type)) : (is_string($firstJob->type) ? ucfirst($firstJob->type) : 'Onsite / WFO');
                             @endphp
 
-                            <div class="card border-0 shadow-sm p-4 bg-white sticky-top" id="job-detail-card" style="top: 100px; z-index: 1;">
+                            <div class="card border-0 shadow-sm p-4 bg-white sticky-top job-detail-sticky" id="job-detail-card">
                                 
                                 <div class="d-flex justify-content-between align-items-start pb-3 mb-3 border-bottom">
                                     <div>
@@ -196,14 +195,14 @@
                                         {!! $firstJob->deskripsi !!}
                                     </div>
 
-                                    <div id="detail-jobdesk-wrapper" style="{{ !empty($firstJob->jobdesk) ? '' : 'display:none;' }}">
+                                    <div id="detail-jobdesk-wrapper" class="{{ empty($firstJob->jobdesk) ? 'd-none' : '' }}">
                                         <h5 class="fw-bold text-dark mb-2">Tanggung Jawab Utama:</h5>
                                         <div class="text-muted small ps-3 mb-4" id="detail-jobdesk">
                                             {!! $firstJob->jobdesk !!}
                                         </div>
                                     </div>
 
-                                    <div id="detail-skills-wrapper" style="{{ !empty($firstJob->skill) ? '' : 'display:none;' }}">
+                                    <div id="detail-skills-wrapper" class="{{ empty($firstJob->skill) ? 'd-none' : '' }}">
                                         <h5 class="fw-bold text-dark mb-2">Kualifikasi & Keahlian:</h5>
                                         <div class="mb-4" id="detail-skills">
                                             @if(is_array($firstJob->skill))

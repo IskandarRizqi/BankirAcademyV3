@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html dir="" lang="en-US">
 
-@include('frontend.partials.head')
+@include('frontend.partials.head', ['includeMarketingStyles' => true])
 
 <body>
 
