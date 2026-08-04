@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, LogsActivity;
+    use HasApiTokens, HasFactory, LogsActivity, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -63,7 +64,9 @@ class User extends Authenticatable
         'activated_at' => 'datetime',
         'password_sent_at' => 'datetime',
     ];
+
     protected $appends = ['profile', 'rekening', 'corporates', 'role_name'];
+
     public function getRoleNameAttribute()
     {
         $role = [
@@ -79,15 +82,19 @@ class User extends Authenticatable
         if ($this->attributes['email'] == 'cb@bankir.academy') {
             return 'Root';
         }
+
         return $role[$this->attributes['role']];
     }
+
     public function getProfileAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
             return UserProfileModel::with('membership')->where('user_id', $this->attributes['id'])->first();
         }
+
         return null;
     }
+
     public function bank()
     {
         return $this->belongsTo(User::class, 'bank_id');
@@ -97,26 +104,36 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'sekolah_id');
     }
+
     public function siswa()
     {
         return $this->hasOne(SiswaProfile::class, 'user_id');
     }
+
     public function membership()
     {
         return $this->belongsTo(Membership::class, 'membership_id');
     }
+
+    public function perusahaan(): HasOne
+    {
+        return $this->hasOne(PerusahaanModel::class, 'user_id');
+    }
+
     public function getRekeningAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
             return DataRekeningModel::where('user_id', $this->attributes['id'])->first();
         }
     }
+
     public function getCorporatesAttribute()
     {
         if (array_key_exists('corporate', $this->attributes)) {
             return json_decode($this->attributes['corporate']);
         }
     }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
