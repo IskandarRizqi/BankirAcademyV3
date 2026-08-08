@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class PerusahaanModel extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $fillable = [
+        'user_id',
         'nama',
         'email',
         'alamat',
@@ -20,12 +23,32 @@ class PerusahaanModel extends Model
         'kelurahan',
         'image',
     ];
+
     protected $appends = [
         'provinsi_name',
         'kabupaten_name',
         'kecamatan_name',
         'kelurahan_name',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function isComplete(): bool
+    {
+        return collect([
+            $this->nama,
+            $this->email,
+            $this->alamat,
+            $this->provinsi,
+            $this->kabupaten,
+            $this->kecamatan,
+            $this->kelurahan,
+            $this->image,
+        ])->every(fn ($value) => filled($value));
+    }
 
     public function getKelurahanNameAttribute()
     {
@@ -36,6 +59,7 @@ class PerusahaanModel extends Model
                 $a = $d->name;
             }
         }
+
         return $a;
     }
 
@@ -48,6 +72,7 @@ class PerusahaanModel extends Model
                 $a = $d->name;
             }
         }
+
         return $a;
     }
 
@@ -60,6 +85,7 @@ class PerusahaanModel extends Model
                 $a = $d->name;
             }
         }
+
         return $a;
     }
 
@@ -72,6 +98,7 @@ class PerusahaanModel extends Model
                 $a = $d->name;
             }
         }
+
         return $a;
     }
 }

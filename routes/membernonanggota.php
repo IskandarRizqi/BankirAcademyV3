@@ -4,13 +4,18 @@ use App\Http\Controllers\Backend\MembershipController;
 use App\Http\Controllers\Front\InvoiceController;
 use App\Http\Controllers\Front\ProfileController;
 use App\Http\Controllers\MemberNonAnggota\BillingController;
+use App\Http\Controllers\MemberNonAnggota\BonusAplikasiController;
+use App\Http\Controllers\MemberNonAnggota\CompanyLocationController;
+use App\Http\Controllers\MemberNonAnggota\CompanyProfileController;
 use App\Http\Controllers\MemberNonAnggota\CvAtsController;
 use App\Http\Controllers\MemberNonAnggota\DataEventKelasController;
 use App\Http\Controllers\MemberNonAnggota\DetailKelasController;
 use App\Http\Controllers\MemberNonAnggota\EbookController;
 use App\Http\Controllers\MemberNonAnggota\ListDaftarKelasController;
 use App\Http\Controllers\MemberNonAnggota\LokerController;
+use App\Http\Controllers\MemberNonAnggota\LokerPostingController;
 use App\Http\Controllers\MemberNonAnggota\SertifikatController;
+use App\Http\Controllers\MemberNonAnggota\SopController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +87,57 @@ Route::middleware('auth')->group(function () {
             ->middleware(['membership.type:individual', 'throttle:apply-loker'])
             ->name('membernonanggota.loker.apply.store');
     });
+    Route::middleware(['role:2', 'membership.type:company'])
+        ->prefix('member/pasang-loker')
+        ->name('membernonanggota.loker.manage.')
+        ->group(function () {
+            Route::get('/perusahaan', [CompanyProfileController::class, 'edit'])
+                ->name('company.edit');
+            Route::put('/perusahaan', [CompanyProfileController::class, 'update'])
+                ->name('company.update');
+            Route::get('/locations/cities', [CompanyLocationController::class, 'cities'])
+                ->name('locations.cities');
+            Route::get('/locations/districts', [CompanyLocationController::class, 'districts'])
+                ->name('locations.districts');
+            Route::get('/locations/villages', [CompanyLocationController::class, 'villages'])
+                ->name('locations.villages');
+            Route::get('/posting', [LokerPostingController::class, 'index'])
+                ->name('index');
+            Route::get('/posting/create', [LokerPostingController::class, 'create'])
+                ->name('create');
+            Route::post('/posting', [LokerPostingController::class, 'store'])
+                ->name('store');
+            Route::get('/posting/{id}/edit', [LokerPostingController::class, 'edit'])
+                ->whereNumber('id')
+                ->name('edit');
+            Route::put('/posting/{id}', [LokerPostingController::class, 'update'])
+                ->whereNumber('id')
+                ->name('update');
+            Route::delete('/posting/{id}', [LokerPostingController::class, 'destroy'])
+                ->whereNumber('id')
+                ->name('destroy');
+        });
+    Route::middleware(['role:2', 'membership.type:company'])
+        ->prefix('member/sop')
+        ->name('membernonanggota.sop.')
+        ->controller(SopController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->whereNumber('id')->name('show');
+            Route::get('/documents/{id}/download', 'downloadDocument')
+                ->whereNumber('id')
+                ->name('documents.download');
+        });
+    Route::middleware(['role:2', 'membership.type:company'])
+        ->prefix('member/bonus-aplikasi')
+        ->name('membernonanggota.bonus-aplikasi.')
+        ->controller(BonusAplikasiController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}/access', 'access')
+                ->whereNumber('id')
+                ->name('access');
+        });
     Route::get('/sertifikat-kelas/{classId}/cetak', [SertifikatController::class, 'show'])
         ->name('membernonanggota.certificates.show');
     Route::get('/sertifikat-kelas/{classId}/download', [SertifikatController::class, 'downloadZip'])
