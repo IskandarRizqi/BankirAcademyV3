@@ -16,13 +16,14 @@
     <link href="{{ asset('cbtemplate/assets/css/layout.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('cbtemplate/assets/plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/css/forms/theme-checkbox-radio.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/plugins/select2/select2.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <script src="{{ asset('cbtemplate/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
-    
+
     <script src="{{ asset('cbtemplate/assets/bootstrap/js/popper.min.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/plugins/select2/select2.min.js') }}"></script>
@@ -30,163 +31,168 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.21/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
 
-   
+
 </head>
 
 <body>
 
     @php
-    $user = auth()->user();
-    $role = $user ? $user->role : null;
-    $email = $user ? $user->email : null;
-    $isRoot = ($role == 4 && $email === 'cb@bankir.academy');
+        $user = auth()->user();
+        $role = $user ? $user->role : null;
+        $email = $user ? $user->email : null;
+        $isRoot = $role == 4 && $email === 'cb@bankir.academy';
 
-    $menus = [
-    [
-    'label' => 'Dashboard',
-    'icon' => 'dashboard',
-    'url' => '/home',
-    'active' => request()->is('home'),
-    'can_see' => true,
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Pembelajaran',
-    'icon' => 'teacher',
-    'url' => '#dashboard',
-    'active' => request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*'),
-    'can_see' => $isRoot,
-    'has_submenu' => true,
-    'submenu_id' => 'dashboard',
-    ],
-    [
-    'label' => 'Pengguna',
-    'icon' => 'cpu',
-    'url' => route('users.index'),
-    'active' => request()->routeIs('users.*'),
-    'can_see' => in_array($role, [4, 5]),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Kompetensi',
-    'icon' => 'graduate',
-    'url' => '/pelatihan',
-    'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
-    'can_see' => ($role == 6),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Pelatihan Umum',
-    'icon' => 'teacher',
-    'url' => '/materi-umum',
-    'active' => request()->routeIs('siswa.umum.index*') && !request()->is('*report*'),
-    'can_see' => ($role == 6),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'History Pelatihan',
-    'icon' => 'history',
-    'url' => '/materi-umum/history',
-    'active' => request()->routeIs('siswa.umum.history*'),
-    'can_see' => ($role == 6),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Lowongan Kerja',
-    'icon' => 'bar-chart-2',
-    'url' => '/lowongan',
-    'active' => request()->routeIs('lowongan*'),
-    'can_see' => ($role == 6),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Buat CV ATS',
-    'icon' => 'zap',
-    'url' => '/cvats',
-    'active' => request()->routeIs('cvats*'),
-    'can_see' => ($role == 6),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Sertifikat',
-    'icon' => 'sertificate',
-    'url' => '/sertifikat',
-    'active' => request()->routeIs('sertifikat*'),
-    'can_see' => ($role == 6),
-    'has_submenu' => false,
-    ],
-       [
-    'label' => 'Album',
-    'icon' => 'list',
-    'url' => '/album',
-    'active' => request()->is('album*'),
-    'can_see' => $isRoot,
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Rekap Modul',
-    'icon' => 'bar-chart-2',
-    'url' => '/manajemen/laporan-siswa',
-    'active' => request()->is('*manajemen/report*') || request()->is('*laporan-siswa*'),
-    'can_see' => in_array($role, [4, 5]),
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Membership',
-    'icon' => 'zap',
-    'url' => route('memberships.index'),
-    'active' => request()->routeIs('memberships.*'),
-    'can_see' => $isRoot,
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Fake Customer',
-    'icon' => 'zap',
-    'url' => route('recent-registrations.index'),
-    'active' => request()->routeIs('recent-registrations.*'),
-    'can_see' => $isRoot,
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Log Activity',
-    'icon' => 'history',
-    'url' => route('activity.index'),
-    'active' => request()->routeIs('activity.*'),
-    'can_see' => $isRoot,
-    'has_submenu' => false,
-    ],
-    [
-    'label' => 'Approval',
-    'icon' => 'zap',
-    'url' => route('beasiswa.approval.list'),
-    'active' => request()->routeIs('beasiswa.approval.list'),
-    'can_see' => in_array($role, [4, 5]),
-    'has_submenu' => false,
-    ],
-    ];
+        $menus = [
+            [
+                'label' => 'Dashboard',
+                'icon' => 'dashboard',
+                'url' => '/home',
+                'active' => request()->is('home'),
+                'can_see' => true,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Pembelajaran',
+                'icon' => 'teacher',
+                'url' => '#dashboard',
+                'active' => request()->is(
+                    'kategori-materi*',
+                    'materi*',
+                    'sub-materi*',
+                    'ppt*',
+                    'certificate-templates*',
+                ),
+                'can_see' => $isRoot,
+                'has_submenu' => true,
+                'submenu_id' => 'dashboard',
+            ],
+            [
+                'label' => 'Pengguna',
+                'icon' => 'cpu',
+                'url' => route('users.index'),
+                'active' => request()->routeIs('users.*'),
+                'can_see' => in_array($role, [4, 5]),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Kompetensi',
+                'icon' => 'graduate',
+                'url' => '/pelatihan',
+                'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
+                'can_see' => $role == 6,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Pelatihan Umum',
+                'icon' => 'teacher',
+                'url' => '/materi-umum',
+                'active' => request()->routeIs('siswa.umum.index*') && !request()->is('*report*'),
+                'can_see' => $role == 6,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'History Pelatihan',
+                'icon' => 'history',
+                'url' => '/materi-umum/history',
+                'active' => request()->routeIs('siswa.umum.history*'),
+                'can_see' => $role == 6,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Lowongan Kerja',
+                'icon' => 'bar-chart-2',
+                'url' => '/lowongan',
+                'active' => request()->routeIs('lowongan*'),
+                'can_see' => $role == 6,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Buat CV ATS',
+                'icon' => 'zap',
+                'url' => '/cvats',
+                'active' => request()->routeIs('cvats*'),
+                'can_see' => $role == 6,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Sertifikat',
+                'icon' => 'sertificate',
+                'url' => '/sertifikat',
+                'active' => request()->routeIs('sertifikat*'),
+                'can_see' => $role == 6,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Album',
+                'icon' => 'list',
+                'url' => '/album',
+                'active' => request()->is('album*'),
+                'can_see' => $isRoot,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Rekap Modul',
+                'icon' => 'bar-chart-2',
+                'url' => '/manajemen/laporan-siswa',
+                'active' => request()->is('*manajemen/report*') || request()->is('*laporan-siswa*'),
+                'can_see' => in_array($role, [4, 5]),
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Membership',
+                'icon' => 'zap',
+                'url' => route('memberships.index'),
+                'active' => request()->routeIs('memberships.*'),
+                'can_see' => $isRoot,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Fake Customer',
+                'icon' => 'zap',
+                'url' => route('recent-registrations.index'),
+                'active' => request()->routeIs('recent-registrations.*'),
+                'can_see' => $isRoot,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Log Activity',
+                'icon' => 'history',
+                'url' => route('activity.index'),
+                'active' => request()->routeIs('activity.*'),
+                'can_see' => $isRoot,
+                'has_submenu' => false,
+            ],
+            [
+                'label' => 'Approval',
+                'icon' => 'zap',
+                'url' => route('beasiswa.approval.list'),
+                'active' => request()->routeIs('beasiswa.approval.list'),
+                'can_see' => in_array($role, [4, 5]),
+                'has_submenu' => false,
+            ],
+        ];
 
-    $icons = [
-    'home' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        $icons = [
+            'home' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
         <polyline points="9 22 9 12 15 12 15 22"></polyline>
     </svg>',
-    'zap' => '<i class="fas fa-id-card"></i>',
-    'cpu' => '<i class="fas fa-user-friends"></i>',
-    'bar-chart-2' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            'zap' => '<i class="fas fa-id-card"></i>',
+            'cpu' => '<i class="fas fa-user-friends"></i>',
+            'bar-chart-2' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="20" x2="18" y2="10"></line>
         <line x1="12" y1="20" x2="12" y2="4"></line>
         <line x1="6" y1="20" x2="6" y2="14"></line>
     </svg>',
-    'graduate'=>'<i class="fas fa-user-graduate"></i> <i class="fas fa-fire text-warning mr-1"></i>',
-    'teacher'=> '<i class="fas fa-book-open"></i>',
-    'history'=> '<i class="fas fa-history"></i>',
-    'dashboard' => '<i class="fas fa-chart-line"></i>',
-    'sertificate'=>'<i class="fas fa-award"></i>',
-    'list'=>'<i class="fas fa-tasks"></i>'
-
-    ];
+            'graduate' => '<i class="fas fa-user-graduate"></i> <i class="fas fa-fire text-warning mr-1"></i>',
+            'teacher' => '<i class="fas fa-book-open"></i>',
+            'history' => '<i class="fas fa-history"></i>',
+            'dashboard' => '<i class="fas fa-chart-line"></i>',
+            'sertificate' => '<i class="fas fa-award"></i>',
+            'list' => '<i class="fas fa-tasks"></i>',
+        ];
     @endphp
 
     <div class="main-container" id="container">
@@ -195,46 +201,49 @@
 
         <!-- SIDEBAR -->
         <div class="sidebar-wrapper">
-           <div class="sidebar-brand">
-			<img src="{{ asset('bankir-academy-icon.png') }}" alt="logo">
-			<span>Bankir Academy</span>
-		</div>
+            <div class="sidebar-brand">
+                <img src="{{ asset('bankir-academy-icon.png') }}" alt="logo">
+                <span>Bankir Academy</span>
+            </div>
 
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu Utama</div>
 
-                @foreach($menus as $menu)
-                @if($menu['can_see'])
-                @if($menu['has_submenu'])
-                <div class="menu {{ $menu['active'] ? 'submenu-open' : '' }}">
-                    <a href="javascript:void(0);" class="nav-item-link {{ $menu['active'] ? 'active' : '' }}"
-                        onclick="this.closest('.menu').classList.toggle('submenu-open')">
-                        <span class="nav-icon">{!! $icons[$menu['icon']] !!}</span>
-                        <span>{{ $menu['label'] }}</span>
-                        <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </a>
-                    <div class="submenu-panel" id="{{ $menu['submenu_id'] }}">
-                        <a class="sub-link {{ request()->is('kategori-materi*') ? 'active' : '' }}"
-                            href="/kategori-materi">Bidang</a>
-                        <a class="sub-link {{ request()->is('materi*') ? 'active' : '' }}" href="/materi">Kompetensi</a>
-                        <a class="sub-link {{ request()->is('sub-materi*') ? 'active' : '' }}"
-                            href="/sub-materi">Materi</a>
-                        <a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}" href="/ppt">PPT</a>
-                        <a class="sub-link {{ request()->is('certificate-templates*') ? 'active' : '' }}"
-                            href="/certificate-templates">Sertifikat</a>
-                    </div>
-                </div>
-                @else
-                <a href="{{ $menu['url'] }}" class="nav-item-link {{ $menu['active'] ? 'active' : '' }}">
-                    <span class="nav-icon">{!! $icons[$menu['icon']] !!}</span>
-                    <span>{{ $menu['label'] }}</span>
-                </a>
-                @endif
-                @endif
+                @foreach ($menus as $menu)
+                    @if ($menu['can_see'])
+                        @if ($menu['has_submenu'])
+                            <div class="menu {{ $menu['active'] ? 'submenu-open' : '' }}">
+                                <a href="javascript:void(0);"
+                                    class="nav-item-link {{ $menu['active'] ? 'active' : '' }}"
+                                    onclick="this.closest('.menu').classList.toggle('submenu-open')">
+                                    <span class="nav-icon">{!! $icons[$menu['icon']] !!}</span>
+                                    <span>{{ $menu['label'] }}</span>
+                                    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16"
+                                        height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </a>
+                                <div class="submenu-panel" id="{{ $menu['submenu_id'] }}">
+                                    <a class="sub-link {{ request()->is('kategori-materi*') ? 'active' : '' }}"
+                                        href="/kategori-materi">Bidang</a>
+                                    <a class="sub-link {{ request()->is('materi*') ? 'active' : '' }}"
+                                        href="/materi">Kompetensi</a>
+                                    <a class="sub-link {{ request()->is('sub-materi*') ? 'active' : '' }}"
+                                        href="/sub-materi">Materi</a>
+                                    <a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}"
+                                        href="/ppt">PPT</a>
+                                    <a class="sub-link {{ request()->is('certificate-templates*') ? 'active' : '' }}"
+                                        href="/certificate-templates">Sertifikat</a>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ $menu['url'] }}" class="nav-item-link {{ $menu['active'] ? 'active' : '' }}">
+                                <span class="nav-icon">{!! $icons[$menu['icon']] !!}</span>
+                                <span>{{ $menu['label'] }}</span>
+                            </a>
+                        @endif
+                    @endif
                 @endforeach
             </nav>
 
@@ -242,7 +251,8 @@
                 <div class="help-card">
                     <strong style="font-size:13px;">Butuh bantuan?</strong>
                     <p>Tim support kami siap membantu pertanyaan seputar platform.</p>
-                    <a href="javascript:void(0);">Hubungi Support</a>
+                    <a href="https://wa.me/6289682019523?text=Halo%20Tim%20Bankir%20Academy,%20saya%20butuh%20bantuan"
+                        target="_blank">Hubungi Support</a>
                 </div>
             </div>
         </div>
@@ -253,8 +263,9 @@
             <div class="topbar-left">
                 <a href="javascript:void(0);" class="sidebar-toggle" id="sidebarToggle"
                     aria-label="Buka atau tutup menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
                         <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -268,9 +279,10 @@
 
             <div class="topbar-right">
                 <div class="dropdown">
-                    <a href="javascript:void(0);" class="user-trigger" id="userProfileDropdown" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ asset('cbtemplate/assets/img/90x90.jpg') }}" alt="Foto profil {{ auth()->user()->name }}">
+                    <a href="javascript:void(0);" class="user-trigger" id="userProfileDropdown"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ asset('cbtemplate/assets/img/90x90.jpg') }}"
+                            alt="Foto profil {{ auth()->user()->name }}">
                         <span class="user-meta">
                             <div class="name">{{ auth()->user()->name }}</div>
                             <div class="role">{{ auth()->user()->role_name }}</div>
@@ -282,7 +294,8 @@
                         </svg>
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userProfileDropdown">
+                    <div class="dropdown-menu dropdown-menu-right user-dropdown"
+                        aria-labelledby="userProfileDropdown">
                         <div class="dropdown-header-block">
                             <img src="{{ asset('assets/img/90x90.jpg') }}" alt="avatar">
                             <div>
@@ -292,9 +305,9 @@
                         </div>
 
                         <a href="{{ url('userprofile') }}" class="menu-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
@@ -303,9 +316,9 @@
 
                         <a href="{{ route('logout') }}" class="menu-item logout-item"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                                 <polyline points="16 17 21 12 16 7"></polyline>
                                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -336,22 +349,22 @@
 
     </div>
     <div id="wa-join-popup" class="wa-popup-container">
-    <div class="wa-popup-card">
-        <button type="button" class="wa-popup-close" onclick="closeWaPopup()">&times;</button>
-        <div class="wa-popup-avatar">
-            <img id="wa-user-avatar" src="" alt="User Avatar">
-            <span class="wa-status-online"></span>
-        </div>
-        <div class="wa-popup-content">
-            <div class="wa-popup-header">
-                <strong id="wa-user-name">Nama User</strong>
-                <span class="wa-badge"><i class="fab fa-whatsapp"></i> Baru Bergabung</span>
+        <div class="wa-popup-card">
+            <button type="button" class="wa-popup-close" onclick="closeWaPopup()">&times;</button>
+            <div class="wa-popup-avatar">
+                <img id="wa-user-avatar" src="" alt="User Avatar">
+                <span class="wa-status-online"></span>
             </div>
-            <p class="wa-popup-message" id="wa-user-msg">Baru saja mendaftar di Bankir Academy!</p>
-            <span class="wa-popup-time" id="wa-user-time">Baru saja</span>
+            <div class="wa-popup-content">
+                <div class="wa-popup-header">
+                    <strong id="wa-user-name">Nama User</strong>
+                    <span class="wa-badge"><i class="fab fa-whatsapp"></i> Baru Bergabung</span>
+                </div>
+                <p class="wa-popup-message" id="wa-user-msg">Baru saja mendaftar di Bankir Academy!</p>
+                <span class="wa-popup-time" id="wa-user-time">Baru saja</span>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- GLOBAL SCRIPTS -->
     <script src="{{ asset('cbtemplate/assets/bootstrap/js/bootstrap.min.js') }}"></script>
@@ -367,9 +380,11 @@
         const toggleBtn = document.getElementById('sidebarToggle');
         const overlay = document.getElementById('mobileOverlay');
 
-        function isMobile() { return window.innerWidth < 992; }
+        function isMobile() {
+            return window.innerWidth < 992;
+        }
 
-        toggleBtn.addEventListener('click', function () {
+        toggleBtn.addEventListener('click', function() {
             if (isMobile()) {
                 container.classList.toggle('sidebar-open');
             } else {
@@ -377,35 +392,37 @@
             }
         });
 
-        overlay.addEventListener('click', function () {
+        overlay.addEventListener('click', function() {
             container.classList.remove('sidebar-open');
         });
 
-        $(document).ready(function () {
-            if (typeof App !== 'undefined') { App.init(); }
+        $(document).ready(function() {
+            if (typeof App !== 'undefined') {
+                App.init();
+            }
         });
-        
+
         function openloading() {
             let timerInterval;
             Swal.fire({
-            title: "Loading!",
-            html: "Tunggu hingga proses selesai",
-            timer: false,
-            timerProgressBar: true,
-            allowOutsideClick: false, // Prevents clicking outside to close
-            allowEscapeKey: false,     // Prevents Esc key from closing
-            didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-                // timerInterval = setInterval(() => {
-                // timer.textContent = `${Swal.getTimerLeft()}`;
-                // }, 100);
-            },
-            // willClose: () => {
-            //     clearInterval(timerInterval);
-            // }
+                title: "Loading!",
+                html: "Tunggu hingga proses selesai",
+                timer: false,
+                timerProgressBar: true,
+                allowOutsideClick: false, // Prevents clicking outside to close
+                allowEscapeKey: false, // Prevents Esc key from closing
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    // timerInterval = setInterval(() => {
+                    // timer.textContent = `${Swal.getTimerLeft()}`;
+                    // }, 100);
+                },
+                // willClose: () => {
+                //     clearInterval(timerInterval);
+                // }
             }).then((result) => {
-            /* Read more about handling dismissals below */
+                /* Read more about handling dismissals below */
             });
         }
 
@@ -425,8 +442,10 @@
                     "sLengthMenu": "Tampilkan: _MENU_",
                 },
                 "stripeClasses": [],
-                "columnDefs": [
-                    { "targets": [0], "orderable": false } // Disables sorting on the 1st and 5th columns (0-indexed)
+                "columnDefs": [{
+                        "targets": [0],
+                        "orderable": false
+                    } // Disables sorting on the 1st and 5th columns (0-indexed)
                 ],
                 "lengthMenu": [10, 20, 50],
                 "pageLength": 10,
@@ -440,69 +459,70 @@
                 noImmediatePrefix: true,
                 numeralDecimalMark: ',',
                 delimiter: '.',
-                onValueChanged: function (e) {
+                onValueChanged: function(e) {
                     document.getElementById(target).value = e.target.rawValue;
                 }
             });
         }
     </script>
-<script>
-    let popupTimeout;
+    <script>
+        let popupTimeout;
 
-    // Konversi jam ke milidetik (1 jam = 3.600.000 ms, 24 jam = 86.400.000 ms)
-    function getRandomIntervalInHours(minHours = 24, maxHours = 36) {
-        // Mengambil durasi acak antara minHours dan maxHours (misal: 24 s/d 36 jam)
-        const randomHours = Math.floor(Math.random() * (maxHours - minHours + 1)) + minHours;
-        return randomHours * 60 * 60 * 1000; // Konversi ke milidetik
-    }
-
-    function showRandomCustomerPopup() {
-        const popup = document.getElementById('wa-join-popup');
-        
-        // Fetch data dinamis dari API Controller
-        fetch("{{ route('api.recent-registrations.random') }}")
-            .then(response => response.json())
-            .then(res => {
-                if (res.success) {
-                    const data = res.data;
-
-                    // Update UI dengan data dari Database
-                    document.getElementById('wa-user-avatar').src = data.avatar;
-                    document.getElementById('wa-user-name').innerText = data.name;
-                    document.getElementById('wa-user-msg').innerText = `Bergabung dari ${data.city} (${data.program})`;
-                    document.getElementById('wa-user-time').innerText = data.time;
-
-                    // Tampilkan Popup
-                    popup.classList.add('show');
-
-                    // Sembunyikan otomatis setelah 5 detik
-                    setTimeout(() => {
-                        closeWaPopup();
-                    }, 5000);
-                }
-            })
-            .catch(error => console.error("Error fetching registration data:", error))
-            .finally(() => {
-                // Jadwalkan kemunculan berikutnya: Minimal 24 jam (1 hari), Maksimal 48 jam (2 hari)
-                const nextRandomInterval = getRandomIntervalInHours(24, 48);
-                popupTimeout = setTimeout(showRandomCustomerPopup, nextRandomInterval);
-            });
-    }
-
-    function closeWaPopup() {
-        const popup = document.getElementById('wa-join-popup');
-        if (popup) {
-            popup.classList.remove('show');
+        // Konversi jam ke milidetik (1 jam = 3.600.000 ms, 24 jam = 86.400.000 ms)
+        function getRandomIntervalInHours(minHours = 24, maxHours = 36) {
+            // Mengambil durasi acak antara minHours dan maxHours (misal: 24 s/d 36 jam)
+            const randomHours = Math.floor(Math.random() * (maxHours - minHours + 1)) + minHours;
+            return randomHours * 60 * 60 * 1000; // Konversi ke milidetik
         }
-    }
 
-    // Jalankan popup pertama kali setelah jeda awal saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
-        // Jeda awal saat pertama buka website (misal: 5 s/d 15 detik pertama)
-        const initialDelay = Math.floor(Math.random() * (15 - 5 + 1) + 5) * 1000;
-        setTimeout(showRandomCustomerPopup, initialDelay);
-    });
-</script>
+        function showRandomCustomerPopup() {
+            const popup = document.getElementById('wa-join-popup');
+
+            // Fetch data dinamis dari API Controller
+            fetch("{{ route('api.recent-registrations.random') }}")
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        const data = res.data;
+
+                        // Update UI dengan data dari Database
+                        document.getElementById('wa-user-avatar').src = data.avatar;
+                        document.getElementById('wa-user-name').innerText = data.name;
+                        document.getElementById('wa-user-msg').innerText =
+                            `Bergabung dari ${data.city} (${data.program})`;
+                        document.getElementById('wa-user-time').innerText = data.time;
+
+                        // Tampilkan Popup
+                        popup.classList.add('show');
+
+                        // Sembunyikan otomatis setelah 5 detik
+                        setTimeout(() => {
+                            closeWaPopup();
+                        }, 5000);
+                    }
+                })
+                .catch(error => console.error("Error fetching registration data:", error))
+                .finally(() => {
+                    // Jadwalkan kemunculan berikutnya: Minimal 24 jam (1 hari), Maksimal 48 jam (2 hari)
+                    const nextRandomInterval = getRandomIntervalInHours(24, 48);
+                    popupTimeout = setTimeout(showRandomCustomerPopup, nextRandomInterval);
+                });
+        }
+
+        function closeWaPopup() {
+            const popup = document.getElementById('wa-join-popup');
+            if (popup) {
+                popup.classList.remove('show');
+            }
+        }
+
+        // Jalankan popup pertama kali setelah jeda awal saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Jeda awal saat pertama buka website (misal: 5 s/d 15 detik pertama)
+            const initialDelay = Math.floor(Math.random() * (15 - 5 + 1) + 5) * 1000;
+            setTimeout(showRandomCustomerPopup, initialDelay);
+        });
+    </script>
 
     @stack('scripts')
 </body>
