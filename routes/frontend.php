@@ -46,7 +46,6 @@ $frontendPages = [
     'frontend.support.privacy' => ['kebijakan-privasi', 'frontend.pages.support.privacy'],
     'frontend.support.contact' => ['kontak-kami', 'frontend.pages.support.contact'],
     'frontend.curriculum' => ['kurikulum', 'frontend.pages.kurikulum.kurikulum'],
-    'frontend.classes.index' => ['kelas-online', 'frontend.pages.event.bank-catalog'],
 ];
 
 foreach ($frontendPages as $name => [$uri, $view]) {
@@ -54,11 +53,14 @@ foreach ($frontendPages as $name => [$uri, $view]) {
         ->defaults('frontendView', $view)
         ->name($name);
 }
+// Route::get('/allclass', function () {
+//     return view('frontend.pages.event.bank-catalog');
+// })->name('frontend.classes.index');
 
 Route::get('/kelas/{slug}', [BankPageController::class, 'classPage'])
     ->name('frontend.class.detail');
 // Class
-Route::get('/list-class', [ClassesController::class, 'listClass']);
+Route::get('/list-class', [ClassesController::class, 'listClass'])->name('frontend.classes.index');
 Route::post('/list-class', [ClassesController::class, 'findClass']);
 // Loker Apply
 Route::resource('admin/apply', LokerApplyController::class);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +34,12 @@ class LokerApply extends Model
     {
         return $this->hasOne(LokerModel::class, 'id', 'loker_id');
     }
+
+    public function loker(): BelongsTo
+    {
+        return $this->belongsTo(LokerModel::class, 'loker_id');
+    }
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');

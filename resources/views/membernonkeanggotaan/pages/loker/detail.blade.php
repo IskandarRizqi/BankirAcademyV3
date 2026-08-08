@@ -270,6 +270,52 @@
         text-align: center;
     }
 
+    .loker-detail-apply {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 22px;
+        border: 1px solid #c7d2fe;
+        border-radius: 18px;
+        background: linear-gradient(145deg, #eef2ff, #ffffff);
+    }
+
+    .loker-detail-apply h2 {
+        margin: 0;
+        color: #111827;
+        font-size: 18px;
+        font-weight: 900;
+    }
+
+    .loker-detail-apply p {
+        margin: 0;
+        color: #4b5563;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .loker-detail-apply__button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 4px;
+        border-radius: 10px;
+        background: #4f46e5;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .loker-detail-apply__button:hover,
+    .loker-detail-apply__button:focus-visible {
+        background: #3730a3;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
     .loker-related {
         display: grid;
         gap: 16px;
@@ -375,6 +421,17 @@
         </article>
 
         <aside class="loker-detail-side">
+            @if($canApply)
+                <section class="loker-detail-apply" aria-labelledby="loker-apply-title">
+                    <h2 id="loker-apply-title">Tertarik dengan lowongan ini?</h2>
+                    <p>Periksa kembali CV ATS Anda sebelum melanjutkan proses lamaran.</p>
+                    <a class="loker-detail-apply__button" href="{{ route('membernonanggota.loker.apply', $loker->id) }}">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                        Lamar dengan CV ATS
+                    </a>
+                </section>
+            @endif
+
             <section class="loker-detail-card loker-detail-info" aria-labelledby="loker-summary-title">
                 <h2 id="loker-summary-title">Ringkasan informasi</h2>
                 <dl class="loker-detail-info-list">

@@ -19,10 +19,10 @@
             @endforelse
         </div>
 
-        {{-- <div class="course-more">
+        <div class="course-more">
             <a class="btn btn-primary" href="{{ route('frontend.classes.index') }}">
                 Lihat Kelas Selengkapnya <span class="icon-arrow">→</span>
             </a>
-        </div> --}}
+        </div>
     </div>
 </section>

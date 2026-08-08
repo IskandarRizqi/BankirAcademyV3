@@ -67,9 +67,20 @@ Route::middleware('auth')->group(function () {
             ->name('membernonanggota.loker.index');
         Route::get('/member/loker/cities', [LokerController::class, 'cities'])
             ->name('membernonanggota.loker.cities');
+        Route::get('/member/loker/riwayat', [LokerController::class, 'history'])
+            ->middleware('membership.type:individual')
+            ->name('membernonanggota.loker.history');
         Route::get('/member/loker/{id}', [LokerController::class, 'show'])
             ->whereNumber('id')
             ->name('membernonanggota.loker.show');
+        Route::get('/member/loker/{id}/apply', [LokerController::class, 'applyPreview'])
+            ->whereNumber('id')
+            ->middleware('membership.type:individual')
+            ->name('membernonanggota.loker.apply');
+        Route::post('/member/loker/{id}/apply', [LokerController::class, 'submitApplication'])
+            ->whereNumber('id')
+            ->middleware(['membership.type:individual', 'throttle:apply-loker'])
+            ->name('membernonanggota.loker.apply.store');
     });
     Route::get('/sertifikat-kelas/{classId}/cetak', [SertifikatController::class, 'show'])
         ->name('membernonanggota.certificates.show');

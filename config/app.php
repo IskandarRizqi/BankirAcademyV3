@@ -60,6 +60,8 @@ return [
 
     'loker_non_membership_limit' => 10,
 
+    'loker_daily_cv_email_rate_limit' => (int) env('LOKER_DAILY_CV_EMAIL_RATE_LIMIT', 10),
+
     'live_purchase_toast' => [
         'enabled' => true,
         'max_per_ip_per_day' => 50,

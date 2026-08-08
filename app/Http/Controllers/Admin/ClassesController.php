@@ -867,12 +867,13 @@ class ClassesController extends Controller
 
     public function listClass(Request $request)
     {
-        $limit = 9;
+        $limit = 6;
         $filters = [
             'category' => array_values(array_filter((array) $request->input('category', []))),
             'level' => array_values(array_filter((array) $request->input('level', []))),
             'instructor' => array_values(array_filter((array) $request->input('instructor', []))),
         ];
+        $now = Carbon::now();
         // $data['sebelumnya'] = $request->sebelumnya ?? '';
         // $data['titlekelas'] = $request->titlekelas ?? '';
         // $data['judul'] = 'Kelas';
@@ -949,43 +950,52 @@ class ClassesController extends Controller
         // }
 
         // // Jika diakses pertama kali lewat browser (bukan AJAX), load semua data layout pendukung
-        $query = ClassesModel::where('status', 1)
-            ->when(count($filters['category']) > 0, function ($sql) use ($filters) {
-                $sql->whereIn('category', $filters['category']);
-            })
-            ->when(count($filters['level']) > 0, function ($sql) use ($filters) {
-                $sql->whereIn('level', $filters['level']);
-            })
-            ->when(count($filters['instructor']) > 0, function ($sql) use ($filters) {
-                $sql->where(function ($query) use ($filters) {
-                    foreach ($filters['instructor'] as $instructorId) {
-                        $query->orWhereJsonContains('instructor', (string) $instructorId);
+        // $query = ClassesModel::where('status', 1)
+        //     ->when(count($filters['category']) > 0, function ($sql) use ($filters) {
+        //         $sql->whereIn('category', $filters['category']);
+        //     })
+        //     ->when(count($filters['level']) > 0, function ($sql) use ($filters) {
+        //         $sql->whereIn('level', $filters['level']);
+        //     })
+        //     ->when(count($filters['instructor']) > 0, function ($sql) use ($filters) {
+        //         $sql->where(function ($query) use ($filters) {
+        //             foreach ($filters['instructor'] as $instructorId) {
+        //                 $query->orWhereJsonContains('instructor', (string) $instructorId);
 
-                        if (is_numeric($instructorId)) {
-                            $query->orWhereJsonContains('instructor', (int) $instructorId);
-                        }
-                    }
-                });
-            });
+        //                 if (is_numeric($instructorId)) {
+        //                     $query->orWhereJsonContains('instructor', (int) $instructorId);
+        //                 }
+        //             }
+        //         });
+        //     });
 
-        $data['class'] = $query->orderBy('date_start', 'DESC')
-            ->paginate($limit)
-            ->withQueryString();
+        // $data['class'] = $query->orderBy('date_start', 'DESC')
+        //     ->paginate($limit)
+        //     ->withQueryString();
         // $data['banner'] = $this->bannerClass($data['judul']);
-        $data['pencarian'] = $this->pencarian();
-        $data['selectedFilters'] = $filters;
+        // $data['pencarian'] = $this->pencarian();
+        // $data['selectedFilters'] = $filters;
 
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('frontend.partials.class-items', $data)->render(),
-                'next_page_url' => $data['class']->nextPageUrl(),
-                'has_more_pages' => $data['class']->hasMorePages(),
-            ]);
-        }
+        // if ($request->ajax()) {
+        //     return response()->json([
+        //         'html' => view('frontend.partials.class-items', $data)->render(),
+        //         'next_page_url' => $data['class']->nextPageUrl(),
+        //         'has_more_pages' => $data['class']->hasMorePages(),
+        //     ]);
+        // }
+        $currentMonth = $now->month;
+        $currentYear  = $now->year;
+        $data['kelas'] = ClassesModel::query()
+            ->whereYear('date_start', $currentYear)
+            ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
+            ->where('status', 1)->where('iht', 0)
+            ->orderBy('date_end', 'asc')
+            ->take($limit)
+            ->get();
 
-        // return $data;
+        // return $data['kelas'];
 
-        return view('frontend.pages.event.listevent', $data);
+        return view('frontend.pages.event.bank-catalog', compact('data'));
         //  return view('front.kelas.listclass', $data);
     }
 

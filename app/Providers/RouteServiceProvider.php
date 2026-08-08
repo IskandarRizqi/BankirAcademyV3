@@ -54,5 +54,10 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        RateLimiter::for('loker-daily-cv-email', function () {
+            return Limit::perMinute((int) config('app.loker_daily_cv_email_rate_limit', 10))
+                ->by('loker-daily-cv-email');
+        });
     }
 }

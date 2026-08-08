@@ -134,6 +134,14 @@
 	'has_submenu' => false,
 	],
 	[
+	'label' => 'Riwayat Lamaran',
+	'icon' => 'riwayat',
+	'url' => route('membernonanggota.loker.history'),
+	'active' => request()->routeIs('membernonanggota.loker.history'),
+	'can_see' => true,
+	'has_submenu' => false,
+	],
+	[
 	'label' => 'Konsultasi',
 	'icon' => 'konsultasi',
 	'url' => '#',
@@ -187,6 +195,7 @@
 	'komunitas'=>'<i class="fas fa-users"></i>',
 	'lowongan'=>'<i class="fas fa-bullhorn"></i>',
 	'cv'=>'<i class="fas fa-file-signature"></i>',
+	'riwayat'=>'<i class="fas fa-history"></i>',
 	'afiliasi'=>'<i class="fas fa-handshake"></i>',
 	'point'=>'<i class="fas fa-star"></i>',
 

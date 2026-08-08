@@ -1,3 +1,6 @@
+@php
+    $loginUrl = Auth::check() ? \App\Support\AuthRedirector::pathFor(Auth::user()) : url('/authentikasi/login');
+@endphp
 <!-- Logo SVG reusable -->
 <svg class="logo-symbol" height="0" width="0">
     <symbol id="logo-ba" viewbox="0 0 64 64">
@@ -105,16 +108,9 @@
         </nav>
         <div class="header-action">
             <a class="btn btn-outline btn-sm" href="{{ route('frontend.support.contact') }}">Konsultasi</a>
-
-            @auth
-                <!-- Tampil jika pengguna SUDAH login -->
-                <a class="btn btn-primary btn-sm" href="{{ url('/home') }}">Admin</a>
-            @endauth
-
-            @guest
-                <!-- Tampil jika pengguna BELUM login -->
-                <a class="btn btn-primary btn-sm" href="{{ route('login.new') }}">Login</a>
-            @endguest
+            <a href="{{ $loginUrl }}" class="btn btn-primary btn-sm">
+                <span>Login</span>
+            </a>
 
             <button aria-expanded="false" aria-label="Buka menu" class="menu-toggle" id="menuToggle" type="button">
                 ☰
@@ -160,13 +156,16 @@
         </div>
     </div>
 
-    @auth
+    {{-- @auth
         <!-- Tampil di menu mobile jika pengguna SUDAH login -->
-        <a class="btn btn-primary mobile-login" href="{{ url('/home') }}">Admin</a>
+        <a class="btn btn-primary mobile-login" href="{{ url('/home') }}">Login</a>
     @endauth
 
     @guest
         <!-- Tampil di menu mobile jika pengguna BELUM login -->
         <a class="btn btn-primary mobile-login" href="{{ route('login.new') }}">Login</a>
-    @endguest
+    @endguest --}}
+    <a href="{{ $loginUrl }}" class="btn btn-primary mobile-login">
+        <span>Login</span>
+    </a>
 </div>
