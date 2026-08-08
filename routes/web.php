@@ -210,13 +210,16 @@ Route::middleware('auth')->group(function () {
         Route::resource('sub-materi', SubMateriController::class);
         Route::resource('ppt', PrePostTestController::class);
         Route::resource('certificate-templates', CertificateController::class);
-      Route::get('/album', [PhotoAlbumController::class, 'index'])->name('album.index');
-Route::post('/album', [PhotoAlbumController::class, 'store'])->name('album.store');
-Route::put('/album/{id}', [PhotoAlbumController::class, 'update'])->name('album.update');
-Route::post('/photos/upload-quick', [App\Http\Controllers\Beasiswa\MateriController::class, 'uploadQuickPhoto']);
-Route::post('/photos/upload', [App\Http\Controllers\Beasiswa\MateriController::class, 'uploadQuickPhotoEbook']);
-Route::get('/photos/list', [App\Http\Controllers\Beasiswa\MateriController::class, 'getPhotosList']);
-Route::delete('/album/batch-delete', [PhotoAlbumController::class, 'destroyBatch'])->name('album.destroyBatch');
+        Route::get('/album', [PhotoAlbumController::class, 'index'])->name('album.index');
+        Route::post('/album', [PhotoAlbumController::class, 'store'])->name('album.store');
+        Route::put('/album/{id}', [PhotoAlbumController::class, 'update'])->name('album.update');
+        Route::post('/photos/upload-quick', [App\Http\Controllers\Beasiswa\MateriController::class, 'uploadQuickPhoto']);
+        Route::post('/photos/upload', [App\Http\Controllers\Beasiswa\MateriController::class, 'uploadQuickPhotoEbook']);
+        Route::get('/photos/list', [App\Http\Controllers\Beasiswa\MateriController::class, 'getPhotosList']);
+        // Route::delete('/album/batch-delete', [PhotoAlbumController::class, 'destroyBatch'])->name('album.destroyBatch');
+        Route::post('/destroy-batch', [PhotoAlbumController::class, 'destroyBatch'])->name('album.destroy-batch');
+        Route::post('/restore-batch', [PhotoAlbumController::class, 'restoreBatch'])->name('album.restore-batch');
+        Route::post('/force-delete-batch', [PhotoAlbumController::class, 'forceDeleteBatch'])->name('album.force-delete-batch');
 
         // Route User untuk Download Sertifikat secara dinamis
 

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ApplicationSubmittedMail;
 use App\Models\DataPayment;
+use App\Models\LamaranModel;
+use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\User;
 use Carbon\Carbon;
@@ -12,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class LokerController extends Controller
 {
@@ -72,14 +77,14 @@ class LokerController extends Controller
         $cities = DB::table('kota')
             ->where('provinsi_id', $provinceId)
             ->when($search !== '', function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+                $query->where('name', 'like', '%' . $search . '%');
             })
             ->orderBy('name')
             ->paginate(20);
 
         return response()->json([
             'results' => $cities->getCollection()
-                ->map(fn ($city) => [
+                ->map(fn($city) => [
                     'id' => $city->id,
                     'text' => $city->name,
                 ])
@@ -116,6 +121,143 @@ class LokerController extends Controller
         return view('membernonkeanggotaan.pages.loker.detail', [
             'loker' => $loker,
             'relatedLokers' => $relatedLokers,
+            'canApply' => $this->hasActiveIndividualMembership($request->user()),
+        ]);
+    }
+
+    public function applyPreview(Request $request, int $id)
+    {
+        if (! $this->hasActiveIndividualMembership($request->user())) {
+            return redirect()->route('dash-beranda.index')
+                ->with('error', 'Fitur lamaran hanya tersedia untuk member perorangan aktif.');
+        }
+
+        $loker = $this->activeLokerQuery()
+            ->where('loker.id', $id)
+            ->firstOrFail();
+        $cv = LamaranModel::query()
+            ->where('user_id', $request->user()->id)
+            ->where('is_cv_ats', true)
+            ->first();
+
+        if (! $cv) {
+            return redirect()->route('membernonanggota.cv-ats.create')
+                ->with('info', 'Silakan buat CV ATS terlebih dahulu sebelum melamar.');
+        }
+
+        $alreadyApplied = LokerApply::query()
+            ->where('user_id', $request->user()->id)
+            ->where('loker_id', $loker->id)
+            ->exists();
+
+        return view('membernonkeanggotaan.pages.loker.apply-preview', [
+            'loker' => $loker,
+            'cv' => $cv,
+            'alreadyApplied' => $alreadyApplied,
+        ]);
+    }
+
+    public function submitApplication(Request $request, int $id)
+    {
+        if (! $this->hasActiveIndividualMembership($request->user())) {
+            return redirect()->route('dash-beranda.index')
+                ->with('error', 'Fitur lamaran hanya tersedia untuk member perorangan aktif.');
+        }
+
+        $loker = $this->activeLokerQuery()
+            ->where('loker.id', $id)
+            ->firstOrFail();
+
+        $masterCv = LamaranModel::query()
+            ->where('user_id', $request->user()->id)
+            ->where('is_cv_ats', true)
+            ->first();
+
+        if (! $masterCv) {
+            return redirect()->route('membernonanggota.cv-ats.create')
+                ->with('info', 'Silakan buat CV ATS terlebih dahulu sebelum melamar.');
+        }
+
+        $alreadyApplied = LokerApply::query()
+            ->where('user_id', $request->user()->id)
+            ->where('loker_id', $loker->id)
+            ->exists();
+
+        if ($alreadyApplied) {
+            return redirect()->route('membernonanggota.loker.history')
+                ->with('info', 'Anda sudah melamar pada lowongan ini.');
+        }
+
+        $jobApplicationCv = null;
+
+        DB::transaction(function () use ($request, $loker, $masterCv, &$jobApplicationCv) {
+            // 1. Duplikasi CV Master
+            $jobApplicationCv = $masterCv->replicate();
+            $jobApplicationCv->job_id = $loker->id;
+            $jobApplicationCv->is_cv_ats = null;
+            $jobApplicationCv->save();
+
+            // 2. Simpan Riwayat
+            LokerApply::create([
+                'loker_id' => $loker->id,
+                'user_id' => $request->user()->id,
+                'status' => 1,
+            ]);
+        });
+
+        // 3. Kirim Email ke Perusahaan dengan Validasi Konfigurasi Mailer
+        $companyEmail = $loker->perusahaan->email ?? $loker->email ?? null;
+        $emailSent = false;
+        $emailErrorMsg = null;
+
+        if ($companyEmail) {
+            // Cek dulu apakah variabel .env mailer sudah lengkap
+            if (! ApplicationSubmittedMail::hasValidConfig()) {
+                Log::warning('Pengiriman email dibatalkan: Konfigurasi MAIL pada .env belum lengkap.');
+                $emailErrorMsg = 'Konfigurasi server email belum lengkap.';
+            } else {
+                try {
+                    Mail::to($companyEmail)->send(new ApplicationSubmittedMail($jobApplicationCv, $loker));
+                    $emailSent = true;
+                } catch (\Exception $e) {
+                    Log::error('Gagal mengirim email lamaran ke perusahaan: ' . $e->getMessage());
+                    $emailErrorMsg = 'Terjadi kendala pada layanan pengiriman email.';
+                }
+            }
+        } else {
+            Log::info("Lowongan ID {$loker->id} tidak memiliki email tujuan.");
+        }
+
+        // 4. Feedback ke Pengguna
+        if ($emailSent) {
+            return redirect()->route('membernonanggota.loker.history')
+                ->with('success', 'Lamaran Anda berhasil dikirim dan email notifikasi telah diteruskan ke perusahaan.');
+        }
+
+        // Jika lamaran database sukses tapi email gagal/tidak ada email
+        $warningText = $emailErrorMsg
+            ? " ($emailErrorMsg Notifikasi email ke perusahaan tidak dapat dikirimkan saat ini)."
+            : "";
+
+        return redirect()->route('membernonanggota.loker.history')
+            ->with('success', 'CV berhasil disimpan ke sistem.' . $warningText);
+    }
+
+    public function history(Request $request)
+    {
+        if (! $this->hasActiveIndividualMembership($request->user())) {
+            return redirect()->route('dash-beranda.index')
+                ->with('error', 'Riwayat lamaran hanya tersedia untuk member perorangan aktif.');
+        }
+
+        $applications = LokerApply::query()
+            ->with('loker')
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->paginate(10);
+
+        return view('membernonkeanggotaan.pages.loker.history', [
+            'applications' => $applications,
         ]);
     }
 
@@ -139,9 +281,9 @@ class LokerController extends Controller
     {
         if ($filters['q'] !== '') {
             $query->where(function (Builder $searchQuery) use ($filters) {
-                $searchQuery->where('loker.title', 'like', '%'.$filters['q'].'%')
-                    ->orWhere('loker.nama', 'like', '%'.$filters['q'].'%')
-                    ->orWhere('perusahaan_models.nama', 'like', '%'.$filters['q'].'%');
+                $searchQuery->where('loker.title', 'like', '%' . $filters['q'] . '%')
+                    ->orWhere('loker.nama', 'like', '%' . $filters['q'] . '%')
+                    ->orWhere('perusahaan_models.nama', 'like', '%' . $filters['q'] . '%');
             });
         }
 
@@ -238,7 +380,7 @@ class LokerController extends Controller
         }
 
         return DB::table('kota')
-            ->when($provinceId !== '', fn ($query) => $query->where('provinsi_id', $provinceId))
+            ->when($provinceId !== '', fn($query) => $query->where('provinsi_id', $provinceId))
             ->where('id', $cityId)
             ->value('name');
     }
@@ -251,11 +393,11 @@ class LokerController extends Controller
 
                 return is_array($decoded) ? $decoded : Arr::wrap($value);
             })
-            ->filter(fn ($value) => $value !== null && $value !== '')
-            ->map(fn ($value) => (string) $value)
+            ->filter(fn($value) => $value !== null && $value !== '')
+            ->map(fn($value) => (string) $value)
             ->unique()
             ->sort()
-            ->mapWithKeys(fn ($value) => [$value => $this->formatOptionLabel($value)])
+            ->mapWithKeys(fn($value) => [$value => $this->formatOptionLabel($value)])
             ->all();
     }
 
@@ -274,6 +416,15 @@ class LokerController extends Controller
 
         return ! $profile->masa_aktif_membership
             || Carbon::parse($profile->masa_aktif_membership)->endOfDay()->isFuture();
+    }
+
+    private function hasActiveIndividualMembership(User $user): bool
+    {
+        $profile = $user->profile;
+
+        return $profile
+            && (int) $profile->tipe_membership === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
+            && $this->hasActiveMembership($user);
     }
 
     private function nonMemberLokerIds(): Collection

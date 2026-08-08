@@ -4,7 +4,7 @@ namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
 use App\Models\LamaranModel;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\CvAtsPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -134,25 +134,14 @@ class CvAtsController extends Controller
             ->with('success', 'CV ATS berhasil diperbarui.');
     }
 
-    public function pdf(Request $request)
+    public function pdf(Request $request, CvAtsPdfService $pdfService)
     {
         $cv = $this->findCv($request);
 
         abort_unless($cv, 404);
 
-        $cv->setAttribute('pekerjaanperusahaan', $this->decodeList($cv->pekerjaanperusahaan));
-        $cv->setAttribute('pekerjaanjabatan', $this->decodeList($cv->pekerjaanjabatan));
-        $cv->setAttribute('pekerjaantahun', $this->decodeList($cv->pekerjaantahun));
-        $cv->setAttribute('pekerjaantanggungjawab', $this->decodeList($cv->pekerjaantanggungjawab, ';'));
-        $cv->setAttribute('pelatihannama', $this->decodeList($cv->pelatihannama));
-        $cv->setAttribute('pelatihanpenyelanggara', $this->decodeList($cv->pelatihanpenyelanggara));
-        $cv->setAttribute('pelatihantahun', $this->decodeList($cv->pelatihantahun));
-
-        $fileName = 'CV_ATS_'.str_replace(' ', '_', $cv->nama_lengkap).'.pdf';
-        $pdf = Pdf::loadView('compact.cvats_pdf', [
-            'user' => $request->user(),
-            'lamaran' => $cv,
-        ])->setPaper('a4', 'portrait');
+        $fileName = $pdfService->filename($cv);
+        $pdf = $pdfService->make($cv, $request->user());
 
         return $pdf->stream($fileName);
     }
@@ -175,9 +164,9 @@ class CvAtsController extends Controller
                 'max:100',
                 'regex:/^[\p{L}][\p{L}\s.\'-]*,\s\d{1,2}\s(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s\d{4}$/iu',
             ],
-            'agama' => ['required', 'in:'.implode(',', self::RELIGIONS)],
+            'agama' => ['required', 'in:' . implode(',', self::RELIGIONS)],
             'telpdomisili' => ['required', 'string', 'max:30', 'regex:/^[0-9]+$/'],
-            'statusperkawinan' => ['required', 'in:'.implode(',', self::MARITAL_STATUSES)],
+            'statusperkawinan' => ['required', 'in:' . implode(',', self::MARITAL_STATUSES)],
             'kodepos' => ['required', 'digits:5'],
             'alamatdomisili' => ['required', 'string', 'max:1000'],
             'pengalamanspesifik' => ['required', 'string', 'max:2000'],

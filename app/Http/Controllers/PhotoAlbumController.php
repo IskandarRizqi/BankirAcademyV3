@@ -12,6 +12,11 @@ class PhotoAlbumController extends Controller
     {
         $query = Photo::query();
 
+        // Filter untuk menampilkan data yang di-trash jika diminta
+        if ($request->boolean('trashed_only')) {
+            $query->onlyTrashed();
+        }
+
         // 1. Filter Pencarian berdasarkan Judul
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
@@ -28,7 +33,7 @@ class PhotoAlbumController extends Controller
         // 3. Filter Ukuran File (Preset)
         if ($request->filled('size')) {
             switch ($request->size) {
-                case 'small': // < 500 KB (512,000 Byte)
+                case 'small': // < 500 KB
                     $query->where('file_size', '<', 512000);
                     break;
                 case 'medium': // 500 KB - 2 MB
@@ -40,8 +45,8 @@ class PhotoAlbumController extends Controller
             }
         }
 
-        // Fetch Data dengan urutan terbaru
-        $photos = $query->latest()->get(['id', 'title', 'path', 'file_size', 'created_at']);
+        // Fetch Data
+        $photos = $query->latest()->get(['id', 'title', 'path', 'file_size', 'created_at', 'deleted_at']);
 
         // Format data URL, ukuran terformat, dan tanggal
         $photos->transform(function ($photo) {
@@ -68,7 +73,7 @@ class PhotoAlbumController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('photos', 'public');
-                $fileSize = $file->getSize(); // Ambil ukuran file dalam byte
+                $fileSize = $file->getSize();
                 $originalTitle = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
                 Photo::create([
@@ -106,6 +111,9 @@ class PhotoAlbumController extends Controller
         return redirect()->route('album.index')->with('success', 'Foto berhasil diperbarui!');
     }
 
+    /**
+     * Soft Delete Batch (Hapus Sementara)
+     */
     public function destroyBatch(Request $request)
     {
         $request->validate([
@@ -113,17 +121,56 @@ class PhotoAlbumController extends Controller
             'ids.*' => 'exists:photos,id',
         ]);
 
-        $photos = Photo::whereIn('id', $request->ids)->get();
+        // Melakukan Soft Delete (File di storage tetap aman)
+        $count = Photo::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'message' => $count . ' foto berhasil dipindahkan ke tempat sampah.'
+        ]);
+    }
+
+    /**
+     * Restore Batch (Mengembalikan foto yang dihapus sementara)
+     */
+    public function restoreBatch(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array',
+            'ids.*' => 'exists:photos,id',
+        ]);
+
+        // Restore foto dari status soft deleted
+        $count = Photo::onlyTrashed()->whereIn('id', $request->ids)->restore();
+
+        return response()->json([
+            'message' => $count . ' foto berhasil dipulihkan.'
+        ]);
+    }
+
+    /**
+     * Force Delete Batch (Hapus Permanen beserta file di storage)
+     */
+    public function forceDeleteBatch(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array',
+            'ids.*' => 'exists:photos,id',
+        ]);
+
+        // Ambil data foto yang berada di status soft delete
+        $photos = Photo::onlyTrashed()->whereIn('id', $request->ids)->get();
 
         foreach ($photos as $photo) {
+            // Hapus file fisik dari storage
             if (Storage::disk('public')->exists($photo->path)) {
                 Storage::disk('public')->delete($photo->path);
             }
-            $photo->delete();
+            // Hapus permanen record dari database
+            $photo->forceDelete();
         }
 
         return response()->json([
-            'message' => count($photos) . ' foto berhasil dihapus.'
+            'message' => count($photos) . ' foto berhasil dihapus secara permanen.'
         ]);
     }
 
