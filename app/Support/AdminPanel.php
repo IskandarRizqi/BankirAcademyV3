@@ -14,7 +14,7 @@ final class AdminPanel
     public static function isCbRoot(?User $user): bool
     {
         return $user !== null
-            && (int) $user->role === 4
+            && (int) $user->role === 4 || (int) $user->role === 0
             && $user->email === 'cb@bankir.academy';
     }
 
