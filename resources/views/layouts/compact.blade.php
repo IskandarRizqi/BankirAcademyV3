@@ -19,8 +19,10 @@
     <link rel="stylesheet" type="text/css"
         href="{{ asset('cbtemplate/assets/plugins/table/datatable/datatables.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/assets/plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('Backend/plugins/boxicon/css/boxicons.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{ asset('Backend/plugins/file-upload/file-upload-with-preview.min.css') }}">
 
     <script src="{{ asset('cbtemplate/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
 
@@ -40,7 +42,7 @@
         $user = auth()->user();
         $role = $user ? $user->role : null;
         $email = $user ? $user->email : null;
-        $isRoot = $role == 4 && $email === 'cb@bankir.academy';
+        $isRoot = \App\Support\AdminPanel::canAccess($user);
 
         $menus = [
             [
@@ -188,10 +190,15 @@
     </svg>',
             'graduate' => '<i class="fas fa-user-graduate"></i> <i class="fas fa-fire text-warning mr-1"></i>',
             'teacher' => '<i class="fas fa-book-open"></i>',
+            'instructor' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>',
+            'classes' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
             'history' => '<i class="fas fa-history"></i>',
             'dashboard' => '<i class="fas fa-chart-line"></i>',
             'sertificate' => '<i class="fas fa-award"></i>',
             'list' => '<i class="fas fa-tasks"></i>',
+            'billing' => '<i class="fas fa-credit-card"></i>',
+            'briefcase' => '<i class="fas fa-briefcase"></i>',
+            'file' => '<i class="fas fa-file-alt"></i>',
         ];
     @endphp
 
@@ -208,6 +215,8 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu Utama</div>
+
+                @include('compact.partials.admin-menu')
 
                 @foreach ($menus as $menu)
                     @if ($menu['can_see'])
@@ -372,6 +381,8 @@
     <script src="{{ asset('cbtemplate/assets/js/app.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/js/custom.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/plugins/apex/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('Backend/plugins/file-upload/file-upload-with-preview.min.js') }}"></script>
+    <script src="{{ asset('Backend/plugins/ckeditor/ckeditor.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -464,6 +475,36 @@
                 }
             });
         }
+
+        function createDataTable(selector, options = {}) {
+            return $(selector).DataTable({
+                ...options,
+                dom: "<'dt--top-section'<'row'<'col-12 col-sm-6'l><'col-12 col-sm-6'f>>><'table-responsive'tr><'dt--bottom-section d-sm-flex justify-content-sm-between'<'dt--pages-count'i><'dt--pagination'p>>",
+                language: {
+                    search: 'Cari:',
+                    lengthMenu: 'Tampilkan _MENU_',
+                    info: 'Menampilkan _PAGE_ dari _PAGES_',
+                    paginate: { previous: 'Sebelumnya', next: 'Berikutnya' },
+                },
+            });
+        }
+
+        function openmodal(selector) {
+            $(selector).modal('show');
+        }
+
+        function closemodal(selector) {
+            $(selector).modal('hide');
+        }
+
+        function getImgData(input, preview) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = event => $(preview).attr('src', event.target.result);
+            reader.readAsDataURL(file);
+        }
     </script>
     <script>
         let popupTimeout;
@@ -524,6 +565,7 @@
         });
     </script>
 
+    @yield('custom-js')
     @stack('scripts')
 </body>
 

@@ -156,6 +156,116 @@
             background: #f3f4f6;
         }
 
+        /* --- Custom Modal Overlay --- */
+        .custom-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease-in-out;
+        }
+
+        .custom-modal-overlay.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- Custom Modal Card --- */
+        .custom-modal {
+            width: 100%;
+            max-width: 420px;
+            padding: 28px 24px 24px;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.25s ease-in-out;
+        }
+
+        .custom-modal-overlay.is-visible .custom-modal {
+            transform: scale(1);
+        }
+
+        .custom-modal__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            margin-bottom: 16px;
+            border-radius: 50%;
+            background: #e0e7ff;
+            color: #4f46e5;
+            font-size: 24px;
+        }
+
+        .custom-modal__title {
+            margin: 0 0 8px;
+            color: #111827;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .custom-modal__description {
+            margin: 0 0 24px;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .custom-modal__actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .custom-modal__btn {
+            display: inline-flex;
+            flex: 1;
+            min-height: 44px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .custom-modal__btn--cancel {
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            color: #374151;
+        }
+
+        .custom-modal__btn--cancel:hover {
+            background: #f9fafb;
+            color: #111827;
+        }
+
+        .custom-modal__btn--confirm {
+            border: 0;
+            background: #4f46e5;
+            color: #ffffff;
+        }
+
+        .custom-modal__btn--confirm:hover {
+            background: #3730a3;
+        }
+
+        .custom-modal__btn--confirm:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         @media (max-width: 767.98px) {
             .loker-apply-preview__header {
                 align-items: flex-start;
@@ -202,10 +312,10 @@
                         Lihat Riwayat
                     </a>
                 @else
-                    <form action="{{ route('membernonanggota.loker.apply.store', $loker->id) }}" method="POST"
-                        onsubmit="return handleApplySubmit(this);">
+                    <form id="apply-form" action="{{ route('membernonanggota.loker.apply.store', $loker->id) }}"
+                        method="POST">
                         @csrf
-                        <button class="loker-apply-preview__submit" type="submit" id="btn-submit-apply">
+                        <button class="loker-apply-preview__submit" type="button" onclick="openApplyModal()">
                             <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             <span>Kirim CV</span>
                         </button>
@@ -223,24 +333,57 @@
                 title="Preview CV ATS {{ $cv->nama_lengkap }}"></iframe>
         </section>
     </div>
+
+    <!-- Modal Konfirmasi Custom -->
+    <div class="custom-modal-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="custom-modal">
+            <div class="custom-modal__icon">
+                <i class="fas fa-paper-plane"></i>
+            </div>
+            <h3 class="custom-modal__title" id="modal-title">Kirim Lamaran?</h3>
+            <p class="custom-modal__description">
+                Apakah Anda yakin ingin mengirim CV ATS untuk posisi <strong>{{ $loker->title }}</strong>?
+            </p>
+            <div class="custom-modal__actions">
+                <button type="button" class="custom-modal__btn custom-modal__btn--cancel" onclick="closeApplyModal()">
+                    Batal
+                </button>
+                <button type="button" class="custom-modal__btn custom-modal__btn--confirm" id="btn-confirm-apply"
+                    onclick="processApply()">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Ya, Kirim Sekarang</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function handleApplySubmit(form) {
-            if (!confirm('Kirim CV ATS untuk lowongan ini?')) {
-                return false;
-            }
+        const modal = document.getElementById('confirm-modal');
+        const applyForm = document.getElementById('apply-form');
+        const confirmBtn = document.getElementById('btn-confirm-apply');
 
-            const button = form.querySelector('button[type="submit"]');
-            if (button) {
-                // Nonaktifkan tombol agar tidak bisa diklik lagi
-                button.disabled = true;
-                button.style.opacity = '0.7';
-                button.style.cursor = 'not-allowed';
-
-                // Ubah tampilan text dan ikon menjadi loading
-                button.innerHTML = `<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Memproses...`;
-            }
-
-            return true;
+        function openApplyModal() {
+            modal.classList.add('is-visible');
         }
+
+        function closeApplyModal() {
+            modal.classList.remove('is-visible');
+        }
+
+        function processApply() {
+            // Ubah tombol konfirmasi ke state loading
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memproses...`;
+
+            // Submit form
+            applyForm.submit();
+        }
+
+        // Tutup modal jika pengguna mengklik area luar modal (backdrop)
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal && !confirmBtn.disabled) {
+                closeApplyModal();
+            }
+        });
     </script>
 @endsection

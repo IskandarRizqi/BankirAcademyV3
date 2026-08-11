@@ -13,62 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class PagesController extends Controller
 {
-	public function index()
-	{
-		$page = [];
-		$page['data'] = Pages::get();
-		return view('backend.page.page', $page);
-	}
-	public function edit($id)
-	{
-		$data = [];
-		$page = [];
-		if ($id !== 'null') {
-			$page['page'] = Pages::where('id', $id)->first();
-
-			$m = [];
-			$me = [];
-			$m = json_decode($page['page']->og);
-			$me = json_decode($page['page']->meta);
-
-			// $page['page']['meta_description'] = $m ? $m->description : null;
-			// $page['page']['meta_title'] = $m ? $m->title : null;
-			// $page['page']['meta_image'] = $m ? $m->image : null;
-			// $page['page']['meta_size_image'] = $m ? $m->size : null;
-			$page['page']['meta_description'] = null;
-			$page['page']['meta_title'] = null;
-			$page['page']['meta_image'] = null;
-			$page['page']['meta_size_image'] = null;
-			if ($m) {
-				// $page['page']['meta_title'] = $m->title;
-				// $page['page']['meta_image'] = $m->image;
-				// $page['page']['meta_size_image'] = $m->size;
-				if (property_exists($m, 'description')) {
-					$page['page']['meta_description'] = $m->description;
-				}
-				if (property_exists($m, 'title')) {
-					$page['page']['meta_title'] = $m->title;
-				}
-				if (property_exists($m, 'image')) {
-					$page['page']['meta_image'] = $m->image;
-				}
-				if (property_exists($m, 'size')) {
-					$page['page']['meta_size_image'] = $m->size;
-				}
-			}
-			$page['page']['meta_name'] = $me;
-			if (is_object($me)) {
-				if (property_exists($me, 'name')) {
-					$page['page']['meta_name'] = $me->name;
-				}
-				if (property_exists($me, 'content')) {
-					$page['page']['meta_content'] = $me->content;
-				}
-			}
-		}
-		// return $page;
-		return view('backend.page.edit', $page);
-	}
 	public function update(Request $r)
 	{
 		// return $r->all();

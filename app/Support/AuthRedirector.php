@@ -7,17 +7,17 @@ use App\Providers\RouteServiceProvider;
 
 class AuthRedirector
 {
-	public static function pathFor(?User $user): string
-	{
-		// \Log::info($user);
-		if (!$user) {
-			return '/';
-		}
+    public static function pathFor(?User $user): string
+    {
+        // \Log::info($user);
+        if (! $user) {
+            return '/';
+        }
 
-		if ($user->email === 'cb@bankir.academy') {
-			return RouteServiceProvider::HOME;
-		}
+        if (AdminPanel::canAccess($user)) {
+            return RouteServiceProvider::HOME;
+        }
 
-		return (int) $user->role === 2 ? '/dash-beranda' : RouteServiceProvider::HOME;
-	}
+        return (int) $user->role === 2 ? '/dash-beranda' : RouteServiceProvider::HOME;
+    }
 }

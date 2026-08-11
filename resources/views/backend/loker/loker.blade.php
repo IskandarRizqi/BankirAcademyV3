@@ -1,4 +1,4 @@
-@extends('backend.template')
+@extends('layouts.compact')
 @section('content')
 <div class="col-lg-12">
     <div class="card">
@@ -11,7 +11,7 @@
             </a> --}}
         </div>
         <div class="card-body">
-            <form class="mb-4" action="/loker" method="POST" enctype="multipart/form-data">
+            <form class="mb-4" action="{{ route('admin.loker.store') }}" method="POST" enctype="multipart/form-data">
                 <fieldset class="border p-2">
                     @csrf
                     <input type="text" name="loker_id" id="loker_id" hidden>
@@ -354,7 +354,7 @@
         kosong();
             $.ajax({
                 type:'GET',
-                url:'/loker/'+id,
+                url:'{{ url('/admin/loker') }}/'+id,
                 data:'_token = <?php echo csrf_token() ?>',
                 success:function(data) {
                     if (data.image) {
@@ -401,7 +401,7 @@
 			padding: '2em'
 		}).then(function(result) {
 			if (result.value) {
-				$('#formdelclasses').attr('action','/loker/'+id);
+                $('#formdelclasses').attr('action','{{ url('/admin/loker') }}/'+id);
 				$('#formdelclasses').submit();
 			}else{
 				$('#formdelclasses').attr('action','#');

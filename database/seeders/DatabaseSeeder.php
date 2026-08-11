@@ -23,11 +23,15 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        DB::table('users')->insert([
-            'name' => 'Root',
-            'email' => 'root@root.root',
-            'role' => 0,
-            'password' => Hash::make('rootADMINsuper321'),
-        ]);
+        DB::table('users')->updateOrInsert(
+            ['email' => 'root@root.root'],
+            [
+                'name' => 'Root',
+                'role' => 0,
+                'password' => Hash::make('rootADMINsuper321'),
+            ]
+        );
+
+        $this->call(UserRootSeeder::class);
     }
 }

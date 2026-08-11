@@ -1,4 +1,4 @@
-@extends('backend.template')
+@extends('layouts.compact')
 @section('content')
 <!-- Button trigger modal -->
 <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">

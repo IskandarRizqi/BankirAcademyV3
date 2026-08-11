@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\MasterRefferralModel;
-use App\Models\RefferralPesertaModelModel;
 use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
-use App\Models\User;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,56 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class RefferalController extends Controller
 {
-    public function dashboard()
-    {
-        $data = [];
-        $data['data'] = User::select('users.*', 'refferral_peserta.code', 'refferral_peserta.url')
-            ->leftJoin('refferral_peserta', 'refferral_peserta.user_id', 'users.id')
-            ->where('users.role', 2)
-            ->get();
-        foreach ($data['data'] as $key => $v) {
-            $v->aplicator = RefferralModel::select()
-                ->where('user_id', $v->id)
-                ->get();
-        }
-        // return $data;
-        return view('backend.referral.dashboard', $data);
-    }
-    public function masterReff()
-    {
-        $data = [];
-        $data['data'] = MasterRefferralModel::get();
-        return view('backend.referral.masteradmin', $data);
-    }
-    public function storeMasterReff(Request $request)
-    {
-        $valid = Validator::make($request->all(), [
-            'nominal' => 'required',
-            'potongan_harga' => 'required',
-        ]);
-        //response error validation
-        if ($valid->fails()) {
-            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Sesuai');
-        }
-        $mr = MasterRefferralModel::updateOrCreate([
-            'id' => $request->id
-        ], [
-            'nominal' => $request->nominal,
-            'potongan_harga' => $request->potongan_harga,
-        ]);
-        if ($mr) {
-            return Redirect::back()->with('success', 'Simpan Data Berhasil');
-        }
-        return Redirect::back()->with('error', 'Simpan Data Gagal');
-    }
-    public function delMasterReff($id)
-    {
-        $mr = MasterRefferralModel::where('id', $id)->delete();
-        if ($mr) {
-            return Redirect::back()->with('success', 'Hapus Data Berhasil');
-        }
-        return Redirect::back()->with('error', 'Hapus Data Gagal');
-    }
     public function setMasterRefferal(Request $request)
     {
         $up = UserProfileModel::where('user_id', Auth::user()->id)->first();

@@ -1,4 +1,4 @@
-@extends('backend.template')
+@extends('layouts.compact')
 @section('content')
 @include('backend.classes.partials.classes-form-style')
 <div class="col-lg-12">
@@ -77,7 +77,7 @@
 									<div class="col">
 										<div class="form-group">
 											<label for="slcClassesType">Type</label>
-											<select class="form-control tagging" name="slcClassesType[]"
+											<select class="form-control js-class-fixed-multiselect" name="slcClassesType[]"
 												id="slcClassesType" multiple required>
 												<option value="BANK">BANK</option>
 												<option value="BPR">BPR</option>
@@ -91,7 +91,7 @@
 									<div class="col">
 										<div class="form-group">
 											<label for="slcClassesJenis">Jenis</label>
-											<select class="form-control tagging" name="slcClassesJenis[]"
+											<select class="form-control js-class-fixed-multiselect" name="slcClassesJenis[]"
 												id="slcClassesJenis" multiple required>
 												<option value="CALON_BANKIR">CALON BANKIR</option>
 												<option value="BANKIR">BANKIR</option>
@@ -108,7 +108,7 @@
 									<label for="txtClassesInstructor">Narasumber</label>
 									<small class="inputerrormessage text-danger" input-target="txtClassesInstructor"
 										style="display: none;"></small>
-									<select class="form-control slc2" multiple name="txtClassesInstructor[]"
+									<select class="form-control js-class-instructor" name="txtClassesInstructor"
 										id="txtClassesInstructor" required>
 										@foreach ($instructor as $ins)
 										<option value="{{($ins->id)}}">{{$ins->name}}</option>
@@ -121,7 +121,7 @@
 									<label for="slcClassesTags">Tag</label>
 									<small class="inputerrormessage text-danger" input-target="slcClassesTags"
 										style="display: none;"></small>
-									<select class="form-control tagging slc2tag" multiple name="slcClassesTags[]"
+									<select class="form-control js-class-tags" multiple name="slcClassesTags[]"
 										id="slcClassesTags" required>
 										@foreach ($tags as $ctg)
 										<option value="{{$ctg}}">{{$ctg}}</option>
@@ -216,11 +216,10 @@
 						<div class="col">
 							<div class="form-group">
 								<label for="subCategory">Sub Category</label>
-								<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
+								<small class="inputerrormessage text-danger" input-target="subCategory"
 									style="display: none;"></small>
-								<select class="form-control tagging slc2tag" name="subCategory[]" id="subCategory"
+								<select class="form-control js-class-subcategory" name="subCategory[]" id="subCategory"
 									multiple required>
-									<option value=""></option>
 									@foreach ($subcategory as $ctg)
 									<option value="{{$ctg}}">{{$ctg}}</option>
 									@endforeach
@@ -290,7 +289,7 @@
 						</div>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-block btn-primary" onclick="submitClassesForm()">Save</button>
+				<button type="submit" class="btn btn-block btn-primary">Save</button>
 			</form>
 		</div>
 	</div>
@@ -300,15 +299,37 @@
 @section('custom-js')
 <script>
 	var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
-	$('#slcClassesType').select2({
-		tagging: true,
-	})
-	$('#slcClassesJenis').select2({
-		tagging: true,
-	})
-	// $('#subCategory').select2({
-	// 	tagging:true,
-	// })
+	function createClassTag(params) {
+		var term = $.trim(params.term);
+		if (!term) {
+			return null;
+		}
+
+		return {
+			id: term,
+			text: term,
+			newTag: true
+		};
+	}
+
+	$('#slcClassesType, #slcClassesJenis').select2({
+		width: '100%'
+	});
+	$('#subCategory').select2({
+		width: '100%',
+		placeholder: 'Pilih sub category'
+	});
+	$('#txtClassesInstructor').select2({
+		width: '100%',
+		placeholder: 'Pilih narasumber',
+		allowClear: true
+	});
+	$('#slcClassesTags').select2({
+		width: '100%',
+		tags: true,
+		createTag: createClassTag,
+		placeholder: 'Pilih atau ketik tag baru'
+	});
 	createDataTable('#tblClasses');
 	$('#filClassesImage').change(function(e) {
 		getImgData(this, '#prvClassesImage');
@@ -326,7 +347,7 @@
 		$('.inputerrormessage').hide();
 		$('#txaClassesContent').val(newClassCKEditor.getData());
 		var saveable = true;
-		var req = ['txtClassesTitle', 'slcClassesCategory', 'txtClassesInstructor', 'slcClassesTags', 'filClassesImage', 'numClassesLimit', 'txaClassesContent', 'filClassesImageMobile'];
+		var req = ['txtClassesTitle', 'slcClassesCategory', 'subCategory', 'txtClassesInstructor', 'slcClassesTags', 'filClassesImage', 'numClassesLimit', 'txaClassesContent', 'filClassesImageMobile'];
 		$('#newClassesForm').find('input,select,textarea').each(function() {
 			var nm = $(this).attr('id');
 			if (req.includes(nm)) {

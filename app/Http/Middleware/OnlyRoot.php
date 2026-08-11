@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\AdminPanel;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +14,8 @@ class OnlyRoot
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Hanya user dengan role 4 DAN email cb@bankir.academy yang lolos
-        if (auth()->check() && auth()->user()->role == 4 && auth()->user()->email === 'cb@bankir.academy') {
+        $user = auth()->user();
+        if (AdminPanel::canAccess($user)) {
             return $next($request);
         }
 

@@ -1,4 +1,4 @@
-@extends('backend.template')
+@extends('layouts.compact')
 @section('content')
 <div class="col-lg-12">
     <div class="widget">

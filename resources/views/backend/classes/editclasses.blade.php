@@ -1,6 +1,14 @@
-@extends('backend.template')
+@extends('layouts.compact')
 @section('content')
 @include('backend.classes.partials.classes-form-style')
+@php
+$selectedInstructorIds = json_decode($classes->instructor, true);
+$selectedInstructorId = is_array($selectedInstructorIds) ? ($selectedInstructorIds[0] ?? null) : $selectedInstructorIds;
+$selectedTags = json_decode($classes->tags, true);
+$selectedTags = is_array($selectedTags) ? $selectedTags : [];
+$selectedSubcategories = json_decode($classes->sub_category, true);
+$selectedSubcategories = is_array($selectedSubcategories) ? $selectedSubcategories : [];
+@endphp
 <div class="col-lg-12">
 	<div class="widget">
 		<div class="widget-heading">
@@ -87,7 +95,7 @@
 											<input type="text" name="" id="oldSlcClassesType" value="{{$classes->tipe}}"
 												hidden>
 											<label for="slcClassesType">Type</label>
-											<select class="form-control tagging" name="slcClassesType[]"
+											<select class="form-control js-class-fixed-multiselect" name="slcClassesType[]"
 												id="slcClassesType" multiple required>
 												<option value="BANK">BANK</option>
 												<option value="BPR">BPR</option>
@@ -103,7 +111,7 @@
 											<input type="text" name="" id="oldSlcClassesJenis"
 												value="{{$classes->jenis}}" hidden>
 											<label for="slcClassesJenis">Jenis</label>
-											<select class="form-control tagging" name="slcClassesJenis[]"
+											<select class="form-control js-class-fixed-multiselect" name="slcClassesJenis[]"
 												id="slcClassesJenis" multiple>
 												<option value="CALON_BANKIR">CALON BANKIR</option>
 												<option value="BANKIR">BANKIR</option>
@@ -120,10 +128,10 @@
 									<label for="txtClassesInstructor">Instruktor</label>
 									<small class="inputerrormessage text-danger" input-target="txtClassesInstructor"
 										style="display: none;"></small>
-									<select class="form-control slc2" multiple name="txtClassesInstructor[]"
+									<select class="form-control js-class-instructor" name="txtClassesInstructor"
 										id="txtClassesInstructor" required>
 										@foreach ($instructor as $ins)
-										@if (in_array($ins->id,json_decode($classes->instructor)))
+										@if ($ins->id == $selectedInstructorId)
 										<option value="{{($ins->id)}}" selected="selected">{{$ins->name}}</option>
 										@else
 										<option value="{{($ins->id)}}">{{$ins->name}}</option>
@@ -137,10 +145,10 @@
 									<label for="slcClassesTags">Tag</label>
 									<small class="inputerrormessage text-danger" input-target="slcClassesTags"
 										style="display: none;"></small>
-									<select class="form-control tagging slc2tag" multiple name="slcClassesTags[]"
+									<select class="form-control js-class-tags" multiple name="slcClassesTags[]"
 										id="slcClassesTags" required>
 										@foreach ($tags as $ctg)
-										@if (in_array($ctg,json_decode($classes->tags)))
+										@if (in_array($ctg, $selectedTags, true))
 										<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
 										@else
 										<option value="{{$ctg}}">{{$ctg}}</option>
@@ -242,21 +250,12 @@
 						<div class="col">
 							<div class="form-group">
 								<label for="subCategory">Sub Category</label>
-								<small class="inputerrormessage text-danger" input-target="slcClassesCategory"
+								<small class="inputerrormessage text-danger" input-target="subCategory"
 									style="display: none;"></small>
-								<select class="form-control tagging slc2tag" name="subCategory[]" id="subCategory"
+								<select class="form-control js-class-subcategory" name="subCategory[]" id="subCategory"
 									multiple required>
-									<option value=""></option>
 									@foreach ($subcategory as $ctg)
-									@if($classes->sub_category)
-									@foreach (json_decode($classes->sub_category) as $v)
-									@if ($ctg==$v)
-									<option value="{{$ctg}}" selected="selected">{{$ctg}}</option>
-									@else
-									<option value="{{$ctg}}">{{$ctg}}</option>
-									@endif
-									@endforeach
-									@endif
+									<option value="{{$ctg}}" {{in_array($ctg, $selectedSubcategories, true) ? 'selected' : ''}}>{{$ctg}}</option>
 									@endforeach
 								</select>
 							</div>
@@ -338,7 +337,7 @@
 						</div>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-block btn-primary" onclick="submitClassesForm()">Save</button>
+				<button type="submit" class="btn btn-block btn-primary">Save</button>
 			</form>
 		</div>
 	</div>
@@ -353,12 +352,37 @@
 			$("#slcClassesJenis").val(JSON.parse(old_jenis)).trigger('change');
 		})
 		var newClassCKEditor = CKEDITOR.replace("txaClassesContent");
-		$('#slcClassesType').select2({
-			tagging: true,
-		})
-		$('#slcClassesJenis').select2({
-			tagging: true,
-		})
+		function createClassTag(params) {
+			var term = $.trim(params.term);
+			if (!term) {
+				return null;
+			}
+
+			return {
+				id: term,
+				text: term,
+				newTag: true
+			};
+		}
+
+		$('#slcClassesType, #slcClassesJenis').select2({
+			width: '100%'
+		});
+		$('#subCategory').select2({
+			width: '100%',
+			placeholder: 'Pilih sub category'
+		});
+		$('#txtClassesInstructor').select2({
+			width: '100%',
+			placeholder: 'Pilih narasumber',
+			allowClear: true
+		});
+		$('#slcClassesTags').select2({
+			width: '100%',
+			tags: true,
+			createTag: createClassTag,
+			placeholder: 'Pilih atau ketik tag baru'
+		});
 		createDataTable('#tblClasses');
 		$('#filClassesImage').change(function(e) {
 			getImgData(this, '#prvClassesImage');
@@ -376,7 +400,7 @@
 			$('.inputerrormessage').hide();
 			$('#txaClassesContent').val(newClassCKEditor.getData());
 			var saveable = true;
-			var req = ['txtClassesTitle', 'slcClassesCategory', 'txtClassesInstructor', 'slcClassesTags', 'numClassesLimit', 'txaClassesContent', ];
+			var req = ['txtClassesTitle', 'slcClassesCategory', 'subCategory', 'txtClassesInstructor', 'slcClassesTags', 'numClassesLimit', 'txaClassesContent', ];
 			$('#newClassesForm').find('input,select,textarea').each(function() {
 				var nm = $(this).attr('id');
 				if (req.includes(nm)) {

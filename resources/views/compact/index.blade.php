@@ -7,7 +7,7 @@
     <div class="row mb-4 align-items-center">
         <div class="col-md-8 mb-3 mb-md-0">
             <h1 class="font-weight-bold text-dark h3 mb-1">
-                @if(auth()->user()->email == 'cb@bankir.academy') Panel Kendali Sistem Root
+                @if(\App\Support\AdminPanel::canAccess(auth()->user())) Panel Kendali Sistem Root
                 @elseif(auth()->user()->role == 4) Dashboard Performa Bank
                 @elseif(auth()->user()->role == 5) Konsol Manajemen Merchant
                 @else Dashboard Pelatihan Anda
@@ -31,7 +31,7 @@
     {{-- ========================================================================= --}}
     {{-- 1. INTERFACE FOR ROOT                                                     --}}
     {{-- ========================================================================= --}}
-    @if(auth()->user()->email == 'cb@bankir.academy')
+    @if(\App\Support\AdminPanel::canAccess(auth()->user()))
         <div class="row mb-4">
             <div class="col-12 col-sm-6 col-xl-4 mb-3">
                 <div class="card border-0 shadow-sm bg-gradient-primary text-white" style="border-radius: 16px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
