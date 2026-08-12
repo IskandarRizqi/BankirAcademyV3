@@ -434,8 +434,9 @@
                                 @php
                                 $authRole = (int) auth()->user()->role;
                                 $authEmail = auth()->user()->email;
+                                $isRoot = \App\Support\AdminPanel::canAccess(auth()->user());
                                 @endphp
-                                @for ($i = 0; $i <= 6; $i++) @if ($authEmail==='cb@bankir.academy' ) @if ($i==4 || $i==5
+                                @for ($i = 0; $i <= 6; $i++) @if ($isRoot) @if ($i==4 || $i==5
                                     || $i==6) <option value="{{ $i }}">
                                     @if($i == 4) Bank
                                     @elseif($i == 5) Merchant
@@ -668,10 +669,11 @@
                     @php
                     $authRole = (int) auth()->user()->role;
                     $authEmail = auth()->user()->email;
+                    $isRoot = \App\Support\AdminPanel::canAccess(auth()->user());
                     @endphp
 
                     {{-- Jika yang login ROOT utama, tampilkan opsi pilih Bank --}}
-                    @if ($authEmail === 'cb@bankir.academy')
+                    @if ($isRoot)
                     <div class="form-group mb-3">
                         <label for="import_bank_id" style="font-weight: 600;">Pilih Bank Tujuan <span
                                 class="text-danger">*</span></label>
@@ -686,7 +688,7 @@
                     @endif
 
                     {{-- Jika yang login ROOT atau BANK, wajib memilih Sekolah --}}
-                    @if ($authEmail === 'cb@bankir.academy' || $authRole === 4)
+                    @if ($isRoot || $authRole === 4)
                     <div class="form-group mb-3">
                         <label for="import_sekolah_id" style="font-weight: 600;">Pilih Merchant Tujuan <span
                                 class="text-danger">*</span></label>

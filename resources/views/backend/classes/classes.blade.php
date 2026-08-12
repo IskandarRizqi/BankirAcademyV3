@@ -1,178 +1,241 @@
 @extends('layouts.compact')
+
 @section('content')
     <div class="col-lg-12">
-        <div class="widget">
-            <div class="widget-heading">
-                <form action="/admin/classes">
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="input-group mb-4">
-                                <input type="date" class="form-control" value="{{ $param['date_start'] }}"
-                                    placeholder="Date Start" aria-label="Date Start" name="param_date_start">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon5">s/d</span>
+        <div class="card shadow-sm border-0 mb-4">
+            {{-- Card Header / Filter Bar --}}
+            <div class="card-body">
+                <form action="/admin/classes" method="GET">
+                    <div class="row align-items-center justify-content-between g-3">
+                        <div class="col-lg-8">
+                            <div class="row align-items-center">
+                                {{-- Range Date Filter --}}
+                                <div class="col-md-7 mb-2 mb-md-0">
+                                    <label class="form-label font-weight-bold text-muted small mb-1">Periode Tanggal</label>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control" value="{{ $param['date_start'] }}"
+                                            name="param_date_start" aria-label="Date Start">
+                                        <div class="input-group-append input-group-prepend">
+                                            <span class="input-group-text bg-light text-muted">s/d</span>
+                                        </div>
+                                        <input type="date" class="form-control" value="{{ $param['date_end'] }}"
+                                            name="param_date_end" aria-label="Date End">
+                                    </div>
                                 </div>
-                                <input type="date" class="form-control" value="{{ $param['date_end'] }}"
-                                    placeholder="Date End" aria-label="Date End" name="param_date_end">
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <button class="btn btn-primary btn-block" type="submit">Cari</button>
-                                </div>
-                                <div class="col-lg-4">
-                                    <a href="/admin/classes" class="btn btn-warning btn-block" type="button">Reset</a>
+
+                                {{-- Action Buttons --}}
+                                <div class="col-md-5 d-flex align-items-end mt-2 mt-md-0 pt-md-4">
+                                    <button class="btn btn-primary mr-2 flex-grow-1" type="submit">
+                                        <i class="bx bx-search-alt mr-1"></i> Cari
+                                    </button>
+                                    <a href="/admin/classes" class="btn btn-outline-secondary">
+                                        <i class="bx bx-refresh mr-1"></i> Reset
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 text-right">
-                            <A class="btn btn-primary btn-large" type="button" href="/admin/classes/create">New</A>
+
+                        {{-- Add New Class --}}
+                        <div class="col-lg-4 text-lg-right mt-3 mt-lg-0 pt-lg-4">
+                            <a href="/admin/classes/create" class="btn btn-success px-4">
+                                <i class="bx bx-plus mr-1"></i> Tambah Kelas Baru
+                            </a>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="widget-content">
+        </div>
+
+        {{-- Main Table Section --}}
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table id="tblClasses" class="table table-bordered table-striped">
-                        <thead>
+                    <table id="tblClasses" class="table table-hover align-middle mb-0">
+                        <thead class="thead-light">
                             <tr>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Type</th>
+                                <th width="5%">Status</th>
+                                <th>Tanggal</th>
+                                <th>Tipe</th>
                                 <th>Jam</th>
-                                <th>Class</th>
-                                <th>Category</th>
-                                <th>Instructor</th>
-                                <th class="text-center">
-                                    <p>
-                                        Jml Peserta
-                                    </p>
-                                    <span class="bs-tooltip text-danger" title="All">A</span>|<span
-                                        class="bs-tooltip text-success" title="Lunas">L</span>
+                                <th width="20%">Kelas</th>
+                                <th>Kategori</th>
+                                <th>Instruktur</th>
+                                <th class="text-center" width="10%">
+                                    Peserta<br>
+                                    <small class="text-muted"><span class="text-danger font-weight-bold">A</span> (All) |
+                                        <span class="text-success font-weight-bold">L</span> (Lunas)</small>
                                 </th>
-                                <th>Data</th>
-                                <th>Action</th>
+                                <th class="text-center">Data</th>
+                                <th class="text-center" width="8%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($classes as $k => $v)
                                 <tr>
-                                    <td><span
-                                            class="badge badge-{{ $v->status == 1 ? 'info' : 'danger' }}">{{ $v->status == 1 ? 'Activated' : 'De-Activated' }}</span>
-                                    </td>
+                                    {{-- Status Badge --}}
                                     <td>
-                                        <span hidden>
-                                            {{ $v->date_start ? Carbon\Carbon::parse($v->date_start)->format('U') : 0 }}
+                                        <span
+                                            class="badge badge-{{ $v->status == 1 ? 'success' : 'danger' }} badge-pill px-2 py-1">
+                                            {{ $v->status == 1 ? 'Active' : 'Inactive' }}
                                         </span>
+                                    </td>
+
+                                    {{-- Date --}}
+                                    <td>
+                                        <span
+                                            hidden>{{ $v->date_start ? Carbon\Carbon::parse($v->date_start)->format('U') : 0 }}</span>
                                         @if (!$v->date_start && !$v->date_end && $v->iht == 1)
-                                            <div class="text-center">
-                                                <span class="badge badge-info">Kelas IHT</span>
-                                            </div>
+                                            <span class="badge badge-soft-info badge-pill">Kelas IHT</span>
                                         @elseif($v->date_start)
-                                            {{ Carbon\Carbon::parse($v->date_start)->format('d-m-Y') }}
-                                            s/d
-                                            {{ Carbon\Carbon::parse($v->date_end)->format('d-m-Y') }}
+                                            <div class="small font-weight-bold">
+                                                {{ Carbon\Carbon::parse($v->date_start)->format('d/m/Y') }}
+                                                <span class="text-muted">s/d</span>
+                                                {{ Carbon\Carbon::parse($v->date_end)->format('d/m/Y') }}
+                                            </div>
                                         @else
-                                            Akan Datang
+                                            <span class="badge badge-light text-muted">Akan Datang</span>
                                         @endif
                                     </td>
+
+                                    {{-- Class Type --}}
                                     <td>
-                                        @if ($v->kategori == 0)
-                                            <span class="badge badge-primary">Online</span>
-                                        @else
-                                            <span class="badge badge-info">Offline</span>
-                                        @endif
+                                        <span class="badge badge-{{ $v->kategori == 0 ? 'primary' : 'info' }}">
+                                            {{ $v->kategori == 0 ? 'Online' : 'Offline' }}
+                                        </span>
                                     </td>
+
+                                    {{-- Time --}}
                                     <td>
                                         @if (!$v->date_start && !$v->date_end && $v->iht == 1)
-                                            <div class="text-center">
-                                                <span class="badge badge-info">Kelas IHT</span>
-                                            </div>
+                                            <span class="badge badge-soft-info">Kelas IHT</span>
                                         @elseif($v->jam_acara != null)
-                                            {{ $v->jam_acara }}
+                                            <small class="font-weight-bold text-dark"><i
+                                                    class="bx bx-time-five mr-1"></i>{{ $v->jam_acara }}</small>
                                         @else
-                                            <span class="badge badge-danger">Belum di setting</span>
+                                            <span class="badge badge-soft-danger text-danger">Belum Set</span>
                                         @endif
                                     </td>
-                                    <td class="text-truncate" style="max-width: 200px" title="{{ $v->title }}">
-                                        {{ $v->title }}
+
+                                    {{-- Class Title --}}
+                                    <td>
+                                        <div class="text-truncate font-weight-bold text-dark" style="max-width: 220px;"
+                                            title="{{ $v->title }}">
+                                            {{ $v->title }}
+                                        </div>
                                     </td>
-                                    <td>{{ $v->category }}</td>
+
+                                    {{-- Category --}}
+                                    <td><span class="text-muted small font-weight-bold">{{ $v->category }}</span></td>
+
+                                    {{-- Instructors --}}
                                     <td>
                                         @foreach ($v->instructor_list as $i)
-                                            <span class="badge badge-primary">{{ $i->name }}</span>
+                                            <span
+                                                class="badge badge-light border text-dark mr-1 mb-1">{{ $i->name }}</span>
                                         @endforeach
                                     </td>
+
+                                    {{-- Participants Count --}}
                                     <td class="text-center">
-                                        <span class="badge badge-danger" data-toggle="modal" data-target="#listPesertaModal"
-                                            onclick="openPeserta({{ $v->peserta_list['all'] }},  {{ $v->id }})">
+                                        <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2 bs-tooltip"
+                                            title="Total Peserta" data-toggle="modal" data-target="#listPesertaModal"
+                                            onclick="openPeserta({{ $v->peserta_list['all'] }}, {{ $v->id }})">
                                             {{ count($v->peserta_list['all']) }}
-                                        </span>
-                                        |
-                                        <span class="badge badge-success" data-toggle="modal"
-                                            data-target="#listPesertaModal"
+                                        </button>
+                                        <span class="text-muted mx-1">|</span>
+                                        <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 bs-tooltip"
+                                            title="Peserta Lunas" data-toggle="modal" data-target="#listPesertaModal"
                                             onclick="openPeserta({{ $v->peserta_list['lunas'] }}, {{ $v->id }})">
                                             {{ count($v->peserta_list['lunas']) }}
-                                        </span>
+                                        </button>
                                     </td>
-                                    <td>
-                                        <button class="btn bs-tooltip {{ $v->pricing ? 'btn-info' : 'btn-dark' }}"
-                                            title="Pricing" onclick="classPricing({{ $v }})"><i
-                                                class="bx bx-dollar"></i></button>
-                                        <button
-                                            class="btn bs-tooltip {{ count($v->content_list) > 0 ? 'btn-success' : 'btn-dark' }}"
-                                            title="File" onclick="classContent({{ $v }})"><i
-                                                class="bx bx-file"></i></button>
-                                        <a class="btn bs-tooltip {{ $v->events_exist ? 'btn-primary' : 'btn-dark' }}"
-                                            title="Event" href="/admin/classes/createevent/{{ $v->id }}"><i
-                                                class="bx bx-calendar"></i></a>
-                                        <button
-                                            class="btn bs-tooltip  {{ $v->certif_exist ? 'btn-warning' : 'btn-dark' }} dropdown-toggle"
-                                            type="button" data-toggle="dropdown" aria-expanded="false" title="Certificate">
-                                            <i class="bx bx-cog"></i></button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" title="Certificate"
-                                                href="/admin/classes/createcertificate/{{ $v->id }}">Create
-                                                Certificate</a>
-                                            <a class="dropdown-item" title="Preview"
-                                                href="/admin/classes/previewcertificate/{{ $v->id }}"
-                                                target="_blank">Show
-                                                Certificate</a>
-                                            <a class="dropdown-item" title="Preview"
-                                                href="/admin/classes/getreview/{{ $v->id }}" target="_blank">Show
-                                                Review</a>
-                                            <span class="dropdown-item" title="Preview" data-toggle="modal"
-                                                data-target="#modalSertifikat"
-                                                onclick="biayasertifikat('{{ $v->id }}','{{ $v->tipebs }}','{{ $v->nominal }}')">Biaya
-                                                Sertifikat</span>
-                                        </div>
-                                        <button class="btn bs-tooltip {{ $v->videos ? 'btn-info' : 'btn-dark' }}"
-                                            title="Video" onclick="classVideo({{ $v }})"><i
-                                                class='bx bx-video-plus'></i></button>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-warning dropdown-toggle btn-sm" type="button"
-                                                data-toggle="dropdown" aria-expanded="false" title="Opsi">
-                                                <i class="bx bx-cog"></i>
+
+                                    {{-- Quick Data Actions --}}
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button
+                                                class="btn {{ $v->pricing ? 'btn-info' : 'btn-outline-secondary' }} bs-tooltip"
+                                                title="Pricing" onclick="classPricing({{ $v }})">
+                                                <i class="bx bx-dollar"></i>
                                             </button>
-                                            <div class="dropdown-menu" style="top: -20px !important">
-                                                <a class="dropdown-item" title="Edit"
-                                                    href="/admin/classes/{{ $v->id }}/edit">Edit</a>
-                                                <a class="dropdown-item" title="Delete"
-                                                    onclick="deleteClasses({{ $v->id }})">Hapus</a>
+                                            <button
+                                                class="btn {{ count($v->content_list) > 0 ? 'btn-success' : 'btn-outline-secondary' }} bs-tooltip"
+                                                title="File Content" onclick="classContent({{ $v }})">
+                                                <i class="bx bx-file"></i>
+                                            </button>
+                                            <a class="btn {{ $v->events_exist ? 'btn-primary' : 'btn-outline-secondary' }} bs-tooltip"
+                                                title="Event Schedule"
+                                                href="/admin/classes/createevent/{{ $v->id }}">
+                                                <i class="bx bx-calendar"></i>
+                                            </a>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button
+                                                    class="btn {{ $v->certif_exist ? 'btn-warning text-white' : 'btn-outline-secondary' }} dropdown-toggle bs-tooltip"
+                                                    type="button" data-toggle="dropdown" aria-expanded="false"
+                                                    title="Certificate Setting">
+                                                    <i class="bx bx-certification"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right shadow border-0">
+                                                    <a class="dropdown-item"
+                                                        href="/admin/classes/createcertificate/{{ $v->id }}"><i
+                                                            class="bx bx-plus-circle mr-2"></i>Create Certificate</a>
+                                                    <a class="dropdown-item"
+                                                        href="/admin/classes/previewcertificate/{{ $v->id }}"
+                                                        target="_blank"><i class="bx bx-show mr-2"></i>Show
+                                                        Certificate</a>
+                                                    <a class="dropdown-item"
+                                                        href="/admin/classes/getreview/{{ $v->id }}"
+                                                        target="_blank"><i class="bx bx-star mr-2"></i>Show Review</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item text-primary" href="javascript:void(0)"
+                                                        data-toggle="modal" data-target="#modalSertifikat"
+                                                        onclick="biayasertifikat('{{ $v->id }}','{{ $v->tipebs }}','{{ $v->nominal }}')">
+                                                        <i class="bx bx-coin-stack mr-2"></i>Biaya Sertifikat
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <button
+                                                class="btn {{ $v->videos ? 'btn-info' : 'btn-outline-secondary' }} bs-tooltip"
+                                                title="Video Material" onclick="classVideo({{ $v }})">
+                                                <i class="bx bx-video-plus"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    {{-- Main Options Dropdown --}}
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
+                                                data-toggle="dropdown" aria-expanded="false">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right shadow border-0">
+                                                <a class="dropdown-item"
+                                                    href="/admin/classes/{{ $v->id }}/edit"><i
+                                                        class="bx bx-edit text-warning mr-2"></i>Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                    onclick="activedClasses({{ $v->id }},{{ $v->status }})">
+                                                    <i
+                                                        class="bx bx-power-off text-info mr-2"></i>{{ $v->status == 1 ? 'De-Activate' : 'Activate' }}
+                                                </a>
+                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                    onclick="openClasses({{ $v->id }},{{ $v->is_open }})">
+                                                    <i
+                                                        class="bx bx-door-open text-primary mr-2"></i>{{ $v->is_open == 1 ? 'Close Class' : 'Open Class' }}
+                                                </a>
+                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                    data-target="#upcomingmodal" data-toggle="modal"
+                                                    onclick="setupcoming({{ $v }})">
+                                                    <i class="bx bx-time text-secondary mr-2"></i>Set Status Running
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item text-danger" href="javascript:void(0)"
+                                                    onclick="deleteClasses({{ $v->id }})">
+                                                    <i class="bx bx-trash mr-2"></i>Hapus
+                                                </a>
                                                 <form action="#" method="post" id="formdelclasses">@csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                <a class="dropdown-item" title="Activated"
-                                                    onclick="activedClasses({{ $v->id }},{{ $v->status }})">{{ $v->status == 1 ? 'De-Activated' : 'Activated' }}</a>
-                                                <a class="dropdown-item" title="Open"
-                                                    onclick="openClasses({{ $v->id }},{{ $v->is_open }})">{{ $v->is_open == 1 ? 'Closed' : 'Open' }}</a>
-                                                <a class="dropdown-item" data-target="#upcomingmodal" data-toggle="modal"
-                                                    title="Upcoming"
-                                                    onclick="setupcoming({{ $v }})">Upcoming</a>
-                                                <form action="#" method="get" id="formacclasses">@csrf
-                                                </form>
+                                                    @method('DELETE')</form>
+                                                <form action="#" method="get" id="formacclasses">@csrf</form>
                                             </div>
                                         </div>
                                     </td>
@@ -180,150 +243,148 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <!-- Modal -->
-                    <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="listPesertaModalLabel">List Peserta Sertifikat</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="table-responsive">
-                                        <table id="tblListPeserta" class="table table-bordered table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Status</th>
-                                                    <th>Nama Akun</th>
-                                                    <th>Nama Sertifikat</th>
-                                                    <th>No HP</th>
-                                                    <th>Instansi</th>
-                                                    <th>Price</th>
-                                                    <th>Sertifikat</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="listPeserta">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal Sertifikat-->
-                    <div class="modal fade" id="modalSertifikat" tabindex="-1" aria-labelledby="modalSertifikatLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <form action="/classes/biaya_certificate" method="POST">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalSertifikatLabel">List Peserta</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        @csrf
-                                        <input type="text" name="id_kelas" id="id_kelas" hidden>
-                                        <div class="form-group">
-                                            <label for="">Tipe</label>
-                                            <select name="tipe" id="tipe" class="form-control" required>
-                                                <option value="0">Nominal</option>
-                                                <option value="1">Persentase</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Nominal</label>
-                                            <input type="text" name="nominal" id="nominal" class="form-control"
-                                                required>
-                                            <small id="labelNominal"></small>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- Upcoming --}}
-                    <div class="modal fade" id="upcomingmodal" tabindex="-1" aria-labelledby="upcomingmodalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Upcoming, Reschedule, Runing</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="/admin/classes/setupcoming" method="POST">
-                                        @csrf
-                                        <input type="text" name="upcoming_id" id="upcoming_id" hidden>
-                                        <div class="row">
-                                            <div class="form-group col-lg-4">
-                                                <div class="n-chk">
-                                                    <label
-                                                        class="new-control new-radio square-radio new-radio-text radio-primary">
-                                                        <input type="radio" class="new-control-input" name="upcoming"
-                                                            id="upcoming0" value="0">
-                                                        <span class="new-control-indicator"></span><span
-                                                            class="new-radio-content">Running</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-lg-4">
-                                                <div class="n-chk">
-                                                    <label
-                                                        class="new-control new-radio square-radio new-radio-text radio-primary">
-                                                        <input type="radio" class="new-control-input" name="upcoming"
-                                                            id="upcoming2" value="2">
-                                                        <span class="new-control-indicator"></span><span
-                                                            class="new-radio-content">Re-Schedule</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-lg-4">
-                                                <div class="n-chk">
-                                                    <label
-                                                        class="new-control new-radio square-radio new-radio-text radio-primary">
-                                                        <input type="radio" class="new-control-input" name="upcoming"
-                                                            id="upcoming3" value="1">
-                                                        <span class="new-control-indicator"></span><span
-                                                            class="new-radio-content">Upcoming</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-primary" type="submit">Simpan</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- Modal List Peserta --}}
+    <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title font-weight-bold" id="listPesertaModalLabel"><i
+                            class="bx bx-group mr-2"></i>List Peserta Sertifikat</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="tblListPeserta" class="table table-hover table-striped mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Nama Akun</th>
+                                    <th>Nama Sertifikat</th>
+                                    <th>No HP</th>
+                                    <th>Instansi</th>
+                                    <th>Price</th>
+                                    <th>Sertifikat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listPeserta"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Biaya Sertifikat --}}
+    <div class="modal fade" id="modalSertifikat" tabindex="-1" aria-labelledby="modalSertifikatLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <form action="/classes/biaya_certificate" method="POST">
+                    @csrf
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title font-weight-bold" id="modalSertifikatLabel"><i
+                                class="bx bx-coin-stack mr-2"></i>Biaya Sertifikat</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" name="id_kelas" id="id_kelas" hidden>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Tipe Biaya</label>
+                            <select name="tipe" id="tipe" class="form-control" required>
+                                <option value="0">Nominal (Fixed IDR)</option>
+                                <option value="1">Persentase (%)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Nominal / Persentase</label>
+                            <input type="text" name="nominal" id="nominal" class="form-control"
+                                placeholder="Masukkan nilai" required>
+                            <small id="labelNominal" class="form-text text-primary font-weight-bold mt-1"></small>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary px-4">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Upcoming / Reschedule / Running --}}
+    <div class="modal fade" id="upcomingmodal" tabindex="-1" aria-labelledby="upcomingmodalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title font-weight-bold"><i class="bx bx-time-five mr-2"></i>Update Status Kelas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/admin/classes/setupcoming" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="text" name="upcoming_id" id="upcoming_id" hidden>
+                        <div class="form-group">
+                            <label class="font-weight-bold mb-3">Pilih Status Keberlangsungan Kelas:</label>
+                            <div class="custom-control custom-radio mb-2">
+                                <input type="radio" id="upcoming0" name="upcoming" value="0"
+                                    class="custom-control-input">
+                                <label class="custom-control-label font-weight-bold text-success" for="upcoming0">
+                                    Running <small class="text-muted d-block">Kelas sedang berjalan aktif</small>
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio mb-2">
+                                <input type="radio" id="upcoming2" name="upcoming" value="2"
+                                    class="custom-control-input">
+                                <label class="custom-control-label font-weight-bold text-warning" for="upcoming2">
+                                    Re-Schedule <small class="text-muted d-block">Jadwal kelas ditunda / diubah</small>
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="upcoming3" name="upcoming" value="1"
+                                    class="custom-control-input">
+                                <label class="custom-control-label font-weight-bold text-info" for="upcoming3">
+                                    Upcoming <small class="text-muted d-block">Kelas dijadwalkan di masa depan</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Batal</button>
+                        <button class="btn btn-primary px-4" type="submit">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @include('backend.classes.newclassesmodal')
     @include('backend.classes.classpricingmodal')
     @include('backend.classes.classvideomodal')
     @include('backend.classes.classcontentmodal')
 @endsection
+
 @section('custom-js')
     <script>
         createDataTable('#tblClasses');
         createDataTable('#tblListPeserta');
+
         $(document).ready(function() {
-            $('#tipe').on('input change', function() {
+            $('#tipe, #nominal').on('input change', function() {
                 var v = $('#nominal').val();
                 if ($('#tipe').val() == 0) {
                     var n = Number(v).toLocaleString('id-ID', {
@@ -335,18 +396,7 @@
                     $('#labelNominal').text(v + ' %');
                 }
             });
-            $('#nominal').on('input change', function() {
-                var v = $(this).val();
-                if ($('#tipe').val() == 0) {
-                    var n = Number(v).toLocaleString('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR'
-                    });
-                    $('#labelNominal').text(n);
-                } else {
-                    $('#labelNominal').text(v + ' %');
-                }
-            });
+
             $('#numClassPrice').on('input change', function() {
                 toggleDiscountInput();
                 updatePricingPreview();
@@ -387,7 +437,7 @@
                     $('#discount_value').val(normalizeRupiah($('#discount_value').val()));
                 }
             });
-        })
+        });
 
         function toggleDiscountInput() {
             var nominal = $('#discount_type').val() === 'nominal';
@@ -443,73 +493,28 @@
 
         function openPeserta(data, id_class) {
             let html = '';
-            $('#listPeserta').html(''); // Kosongkan tabel
+            $('#listPeserta').html('');
 
             if (data.length > 0) {
                 data.forEach(el => {
-                    let status = el.status ? 'Lunas' : 'Belum Lunas';
-                    let price = Number(el.price_final).toLocaleString('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR'
-                    });
-
-                    // Parse data nama sertifikat
-                    let daftarNama = [];
-                    try {
-                        if (el.nama_sertifikat && el.nama_sertifikat.startsWith('[')) {
-                            daftarNama = JSON.parse(el.nama_sertifikat);
-                        } else if (el.nama_sertifikat) {
-                            daftarNama = [el.nama_sertifikat]; // Jika bukan array, jadikan array tunggal
-                        } else {
-                            daftarNama = [el.user_name]; // Fallback ke nama akun jika data sertifikat kosong
-                        }
-                    } catch (e) {
-                        daftarNama = [el.nama_sertifikat];
-                    }
-
-                    // Loop setiap nama agar menjadi baris terpisah
-                    daftarNama.forEach(namaIndividu => {
-                        html += '<tr>';
-                        html += '<td>' + status + '</td>';
-                        html += '<td>' + el.user_name + '</td>'; // Nama akun (tetap sama)
-                        html += '<td>' + namaIndividu + '</td>'; // Nama di sertifikat (terpisah)
-                        html += '<td>' + (el.phone_region || '') + (el.phone || '') + '</td>';
-                        html += '<td>' + (el.instansi || el.user_name) + '</td>';
-                        html += '<td>' + price + '</td>';
-                        html +=
-                            '<td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/' +
-                            id_class + '/' + namaIndividu + '/' + el.user_name +
-                            '" target="_blank">Show Certificate</a></td>';
-                        html += '</tr>';
-                    });
+                    let status = el.status ? '<span class="badge badge-success">Lunas</span>' :
+                        '<span class="badge badge-warning">Belum Lunas</span>';
+                    html += `
+                    <tr>
+                        <td>${status}</td>
+                        <td class="font-weight-bold">${el.account_name ?? '-'}</td>
+                        <td>${el.certificate_name ?? '-'}</td>
+                        <td>${el.phone ?? '-'}</td>
+                        <td>${el.institution ?? '-'}</td>
+                        <td>Rp ${Number(el.price || 0).toLocaleString('id-ID')}</td>
+                        <td>${el.certificate_code ?? '-'}</td>
+                    </tr>
+                `;
                 });
-                $('#listPeserta').html(html);
             } else {
-                $('#listPeserta').html('<tr><td colspan="6" class="text-center">Data tidak ditemukan</td></tr>');
+                html = `<tr><td colspan="7" class="text-center text-muted py-3">Tidak ada data peserta.</td></tr>`;
             }
-        }
-
-        function setupcoming(data) {
-            $('#upcoming_id').val(data.id);
-            $('#upcoming' + data.custom_jadwal).attr('checked', true);
-        }
-
-        function openClasses(id, s) {
-            swal({
-                title: 'Are you sure?',
-                text: "You want change status class?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Confirm',
-                padding: '2em'
-            }).then(function(result) {
-                if (result.value) {
-                    $('#formacclasses').attr('action', '/admin/classes/open/' + id + '/' + s);
-                    $('#formacclasses').submit();
-                } else {
-                    $('#formacclasses').attr('action', '#');
-                }
-            })
+            $('#listPeserta').html(html);
         }
 
         function activedClasses(id, s) {

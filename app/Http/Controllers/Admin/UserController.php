@@ -10,6 +10,7 @@ use App\Mail\VerifikasiEmailSiswaMail;
 use App\Models\Membership;
 use App\Models\SiswaProfile;
 use App\Models\User;
+use App\Support\AdminPanel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,12 +29,13 @@ class UserController extends Controller
         $currentUser = auth()->user();
         $currentRole = (int) $currentUser->role;
         $currentEmail = $currentUser->email;
+        $isRoot = AdminPanel::canAccess($currentUser);
 
         // Sematkan proteksi: Sembunyikan akun root utama dari list tabel apa pun
         $query = User::where('email', '!=', 'cb@bankir.academy')->latest();
 
-        if ($currentRole === 4 && $currentEmail === 'cb@bankir.academy') {
-            // Khusus root: Bisa melihat semua role dari tingkatan 4 sampai 6
+        if ($isRoot) {
+            // Root dapat melihat seluruh pengguna operasional dari kedua skema.
             $query->where('role', '>=', 4);
         } else {
             // Aturan umum: Hanya bisa melihat role yang ANGKA-nya LEBIH BESAR
@@ -60,7 +62,7 @@ class UserController extends Controller
 
         // Query Sekolah disesuaikan dengan siapa yang login
         $sekolahQuery = User::where('role', 5)->orderBy('name', 'asc');
-        if ($currentRole === 4 && $currentEmail !== 'cb@bankir.academy') {
+        if ($currentRole === 4 && ! $isRoot) {
             // Jika Bank biasa, hanya ambil sekolah yang terikat dengan Bank ini
             $sekolahQuery->where('bank_id', $currentUser->id);
         }
@@ -111,7 +113,7 @@ class UserController extends Controller
             $rules['password'] = 'required|string|min:8';
         }
 
-        if ($authEmail === 'cb@bankir.academy') {
+        if (AdminPanel::canAccess($authUser)) {
             $rules['bank_id'] = 'required_if:role,5,6|nullable|exists:users,id';
             $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
         } else if ($authRole === 4) {
@@ -129,7 +131,7 @@ class UserController extends Controller
         $bankId = null;
         $sekolahId = null;
 
-        if ($authEmail === 'cb@bankir.academy') {
+        if (AdminPanel::canAccess($authUser)) {
             $bankId = in_array($request->role, [5, 6]) ? $request->bank_id : null;
             $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
         } else if ($authRole === 4) {
@@ -159,7 +161,7 @@ class UserController extends Controller
 
             // Tentukan status beasiswa otomatis berdasarkan yang menginput
             if ($beasiswaStatus === 1) {
-                if ($authEmail === 'cb@bankir.academy' || $authRole === 4) {
+                if (AdminPanel::canAccess($authUser) || $authRole === 4) {
                     $beasiswaStatus = 1;
                 } else if ($authRole === 5) {
                     $beasiswaStatus = 2;
@@ -261,7 +263,7 @@ class UserController extends Controller
             'file_excel' => 'required|mimes:xlsx,xls,csv|max:10240',
         ];
 
-        if ($authEmail === 'cb@bankir.academy') {
+        if (AdminPanel::canAccess($authUser)) {
             $rules['import_bank_id'] = 'required|exists:users,id';
             $rules['import_sekolah_id'] = 'required|exists:users,id';
         } else if ($authRole === 4) {
@@ -346,7 +348,7 @@ class UserController extends Controller
             $rules['password'] = 'nullable|string|min:8';
         }
 
-        if ($authEmail === 'cb@bankir.academy') {
+        if (AdminPanel::canAccess($authUser)) {
             $rules['bank_id'] = 'required_if:role,5,6|nullable|exists:users,id';
             $rules['sekolah_id'] = 'required_if:role,6|nullable|exists:users,id';
         } else if ($authRole === 4) {
@@ -362,7 +364,7 @@ class UserController extends Controller
         $bankId = null;
         $sekolahId = null;
 
-        if ($authEmail === 'cb@bankir.academy') {
+        if (AdminPanel::canAccess($authUser)) {
             $bankId = in_array($request->role, [5, 6]) ? $request->bank_id : null;
             $sekolahId = $request->role == 6 ? $request->sekolah_id : null;
         } else if ($authRole === 4) {
@@ -388,7 +390,7 @@ class UserController extends Controller
             }
 
             if ($beasiswaStatus === 1) {
-                if ($authEmail === 'cb@bankir.academy' || $authRole === 4) {
+                if (AdminPanel::canAccess($authUser) || $authRole === 4) {
                     $beasiswaStatus = 1;
                 } else if ($authRole === 5) {
                     $beasiswaStatus = 2;
@@ -477,7 +479,7 @@ class UserController extends Controller
         $authEmail = $authUser->email;
 
         // Hanya Root (email tertentu) dan Bank (role 4) yang boleh mengakses menu ini
-        if ($authEmail !== 'cb@bankir.academy' && $authRole !== 4) {
+        if (! AdminPanel::canAccess($authUser) && $authRole !== 4) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
@@ -502,7 +504,7 @@ class UserController extends Controller
         $authRole = (int) $authUser->role;
         $authEmail = $authUser->email;
 
-        if ($authEmail !== 'cb@bankir.academy' && $authRole !== 4) {
+        if (! AdminPanel::canAccess($authUser) && $authRole !== 4) {
             abort(403);
         }
 

@@ -12,6 +12,7 @@ use App\Models\SubMateriModel;
 use App\Models\PrepotesUserModel; // Model progress/test user
 use App\Models\RiwayatTransaksi;
 use App\Models\SiswaModulAktif;
+use App\Support\AdminPanel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -776,8 +777,8 @@ public function indexLaporanManajemen()
     $userId = $authCurrentUser->id;
 
     // Menentukan hak akses role terpilih
-    $isRoot = ($role == 4 && $email == 'cb@bankir.academy');
-    $isBank = ($role == 4 && $email != 'cb@bankir.academy');
+    $isRoot = AdminPanel::canAccess($authCurrentUser);
+    $isBank = ($role == 4 && ! $isRoot);
     $isSekolah = ($role == 5);
 
     // Jika bukan salah satu dari 3 role di atas, batalkan akses

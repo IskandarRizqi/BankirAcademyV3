@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('memberships', MembershipController::class)->except(['create', 'show', 'edit']);
     });
 
-    Route::middleware(['role:4,5'])->group(function () {
+    Route::middleware(['role:0,4,5'])->group(function () {
         Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('users.download_template');
         Route::post('users/import', [UserController::class, 'import'])->name('users.import');
         Route::get('users/beasiswa-approval', [UserController::class, 'beasiswaApprovalList'])->name('beasiswa.approval.list');
@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/prepotes/savejawaban', [PrepotestController::class, 'savejawaban']);
     });
 
-    Route::middleware(['role:4,5,6', 'siswa.verified'])->group(function () {
+    Route::middleware(['role:0,4,5,6', 'siswa.verified'])->group(function () {
         Route::get('/siswa/materi/{materi_id}/report/{id}/{sub_materi_id?}', [SiswaMateriController::class, 'report'])->name('siswa.materi.report');
         Route::get('/siswa/materi/{materi_id}/report-latest', [SiswaMateriController::class, 'reportByClass'])->name('siswa.materi.report.latest');
         Route::get('/manajemen/report/user/{user_id}/materi/{materi_id}', [SiswaMateriController::class, 'reportOlehManajemen'])->name('manajemen.siswa.report');

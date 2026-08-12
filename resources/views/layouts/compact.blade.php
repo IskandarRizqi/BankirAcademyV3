@@ -52,29 +52,16 @@
                 'active' => request()->is('home'),
                 'can_see' => true,
                 'has_submenu' => false,
-            ],
-            [
-                'label' => 'Pembelajaran',
-                'icon' => 'teacher',
-                'url' => '#dashboard',
-                'active' => request()->is(
-                    'kategori-materi*',
-                    'materi*',
-                    'sub-materi*',
-                    'ppt*',
-                    'certificate-templates*',
-                ),
-                'can_see' => $isRoot,
-                'has_submenu' => true,
-                'submenu_id' => 'dashboard',
+                'section' => 'Beranda',
             ],
             [
                 'label' => 'Pengguna',
                 'icon' => 'cpu',
                 'url' => route('users.index'),
                 'active' => request()->routeIs('users.*'),
-                'can_see' => in_array($role, [4, 5]),
+                'can_see' => ! $isRoot && in_array($role, [4, 5]),
                 'has_submenu' => false,
+                'section' => 'Calon Bankir',
             ],
             [
                 'label' => 'Kompetensi',
@@ -83,6 +70,7 @@
                 'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
                 'can_see' => $role == 6,
                 'has_submenu' => false,
+                'section' => 'Pembelajaran Peserta',
             ],
             [
                 'label' => 'Pelatihan Umum',
@@ -91,6 +79,7 @@
                 'active' => request()->routeIs('siswa.umum.index*') && !request()->is('*report*'),
                 'can_see' => $role == 6,
                 'has_submenu' => false,
+                'section' => 'Pembelajaran Peserta',
             ],
             [
                 'label' => 'History Pelatihan',
@@ -99,6 +88,7 @@
                 'active' => request()->routeIs('siswa.umum.history*'),
                 'can_see' => $role == 6,
                 'has_submenu' => false,
+                'section' => 'Pembelajaran Peserta',
             ],
             [
                 'label' => 'Lowongan Kerja',
@@ -107,6 +97,7 @@
                 'active' => request()->routeIs('lowongan*'),
                 'can_see' => $role == 6,
                 'has_submenu' => false,
+                'section' => 'Karier Peserta',
             ],
             [
                 'label' => 'Buat CV ATS',
@@ -115,6 +106,7 @@
                 'active' => request()->routeIs('cvats*'),
                 'can_see' => $role == 6,
                 'has_submenu' => false,
+                'section' => 'Karier Peserta',
             ],
             [
                 'label' => 'Sertifikat',
@@ -123,54 +115,25 @@
                 'active' => request()->routeIs('sertifikat*'),
                 'can_see' => $role == 6,
                 'has_submenu' => false,
-            ],
-            [
-                'label' => 'Album',
-                'icon' => 'list',
-                'url' => '/album',
-                'active' => request()->is('album*'),
-                'can_see' => $isRoot,
-                'has_submenu' => false,
+                'section' => 'Pembelajaran Peserta',
             ],
             [
                 'label' => 'Rekap Modul',
                 'icon' => 'bar-chart-2',
                 'url' => '/manajemen/laporan-siswa',
                 'active' => request()->is('*manajemen/report*') || request()->is('*laporan-siswa*'),
-                'can_see' => in_array($role, [4, 5]),
+                'can_see' => ! $isRoot && in_array($role, [4, 5]),
                 'has_submenu' => false,
-            ],
-            [
-                'label' => 'Membership',
-                'icon' => 'zap',
-                'url' => route('memberships.index'),
-                'active' => request()->routeIs('memberships.*'),
-                'can_see' => $isRoot,
-                'has_submenu' => false,
-            ],
-            [
-                'label' => 'Fake Customer',
-                'icon' => 'zap',
-                'url' => route('recent-registrations.index'),
-                'active' => request()->routeIs('recent-registrations.*'),
-                'can_see' => $isRoot,
-                'has_submenu' => false,
-            ],
-            [
-                'label' => 'Log Activity',
-                'icon' => 'history',
-                'url' => route('activity.index'),
-                'active' => request()->routeIs('activity.*'),
-                'can_see' => $isRoot,
-                'has_submenu' => false,
+                'section' => 'Calon Bankir',
             ],
             [
                 'label' => 'Approval',
                 'icon' => 'zap',
                 'url' => route('beasiswa.approval.list'),
                 'active' => request()->routeIs('beasiswa.approval.list'),
-                'can_see' => in_array($role, [4, 5]),
+                'can_see' => ! $isRoot && in_array($role, [4, 5]),
                 'has_submenu' => false,
+                'section' => 'Calon Bankir',
             ],
         ];
 
@@ -190,8 +153,10 @@
     </svg>',
             'graduate' => '<i class="fas fa-user-graduate"></i> <i class="fas fa-fire text-warning mr-1"></i>',
             'teacher' => '<i class="fas fa-book-open"></i>',
-            'instructor' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>',
-            'classes' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+            'instructor' =>
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>',
+            'classes' =>
+                '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
             'history' => '<i class="fas fa-history"></i>',
             'dashboard' => '<i class="fas fa-chart-line"></i>',
             'sertificate' => '<i class="fas fa-award"></i>',
@@ -199,6 +164,8 @@
             'billing' => '<i class="fas fa-credit-card"></i>',
             'briefcase' => '<i class="fas fa-briefcase"></i>',
             'file' => '<i class="fas fa-file-alt"></i>',
+            'approval' => '<i class="fas fa-user-check"></i>',
+            'users' => '<i class="fas fa-users"></i>',
         ];
     @endphp
 
@@ -216,10 +183,15 @@
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu Utama</div>
 
-                @include('compact.partials.admin-menu')
 
+
+                @php $currentMenuSection = null; @endphp
                 @foreach ($menus as $menu)
                     @if ($menu['can_see'])
+                        @if (($menu['section'] ?? null) && $currentMenuSection !== $menu['section'])
+                            <div class="nav-section-label">{{ $menu['section'] }}</div>
+                            @php $currentMenuSection = $menu['section']; @endphp
+                        @endif
                         @if ($menu['has_submenu'])
                             <div class="menu {{ $menu['active'] ? 'submenu-open' : '' }}">
                                 <a href="javascript:void(0);"
@@ -254,6 +226,7 @@
                         @endif
                     @endif
                 @endforeach
+                @include('compact.partials.admin-menu')
             </nav>
 
             <div class="sidebar-footer">
@@ -484,7 +457,10 @@
                     search: 'Cari:',
                     lengthMenu: 'Tampilkan _MENU_',
                     info: 'Menampilkan _PAGE_ dari _PAGES_',
-                    paginate: { previous: 'Sebelumnya', next: 'Berikutnya' },
+                    paginate: {
+                        previous: 'Sebelumnya',
+                        next: 'Berikutnya'
+                    },
                 },
             });
         }
