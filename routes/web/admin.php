@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ClassesController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\InstructorController as AdminInstructorController;
 use App\Http\Controllers\Admin\LokerController as AdminLokerController;
+use App\Http\Controllers\Admin\LokerApplicationController;
 use App\Http\Controllers\Admin\ManualClassOrderController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\SopController;
@@ -85,6 +86,12 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::delete('/admin/loker/{id}', [AdminLokerController::class, 'destroy'])
         ->middleware('admin.panel')
         ->name('admin.loker.destroy');
+    Route::get('/admin/loker/getkabupaten/{id}', [AdminLokerController::class, 'getkabupaten'])
+        ->middleware('admin.panel');
+    Route::get('/admin/loker/getkecamatan/{id}', [AdminLokerController::class, 'getkecamatan'])
+        ->middleware('admin.panel');
+    Route::get('/admin/loker/getkelurahan/{id}', [AdminLokerController::class, 'getkelurahan'])
+        ->middleware('admin.panel');
     Route::get('/admin/perusahaan', [CompanyController::class, 'index'])
         ->middleware('admin.panel')
         ->name('perusahaan.index');
@@ -94,6 +101,15 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::delete('/admin/perusahaan/{id}', [CompanyController::class, 'destroy'])
         ->middleware('admin.panel')
         ->name('perusahaan.destroy');
+    Route::get('/admin/apply', [LokerApplicationController::class, 'index'])
+        ->middleware('admin.panel')
+        ->name('apply.index');
+    Route::get('/admin/getdatacvpelamar', [LokerApplicationController::class, 'getdatacvpelamar'])
+        ->middleware('admin.panel')
+        ->name('admin.applications.cv');
+    Route::post('/admin/approvecvpelamar', [LokerApplicationController::class, 'approvecvpelamar'])
+        ->middleware('admin.panel')
+        ->name('admin.applications.approve');
 
     Route::middleware(['admin.panel'])->group(function () {
         Route::get('/admin/sop/dokumen/{id}/download', [SopController::class, 'downloadDocument'])

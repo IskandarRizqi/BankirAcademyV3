@@ -32,6 +32,10 @@ class RouteArchitectureTest extends TestCase
             'siswa.materi.index',
             'membernonanggota.cv-ats.index',
             'api.recent-registrations.random',
+            'perusahaan.index',
+            'admin.loker.index',
+            'apply.index',
+            'admin.applications.cv',
         ] as $name) {
             $this->assertNotNull(Route::getRoutes()->getByName($name), $name.' route is missing');
         }

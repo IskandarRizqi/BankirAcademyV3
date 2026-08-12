@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -43,65 +44,67 @@ class PerusahaanController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->kelurahan);
+        $isUpdate = $request->filled('loker_id');
+
         $valid = Validator::make($request->all(), [
-            'loker_alamat' => 'required',
-            'loker_email' => 'required',
-            'loker_nama' => 'required',
-            'provinsi' => 'required',
-            'kabupaten' => 'required',
-            'kecamatan' => 'required',
-            'kelurahan' => 'required',
-            'filClassesImage' => 'required_if:loker_id,==,null',
+            'loker_alamat'    => 'required',
+            'loker_email'     => 'required|email',
+            'loker_nama'      => 'required',
+            'provinsi'        => 'required',
+            'kabupaten'       => 'required',
+            'kecamatan'       => 'required',
+            'kelurahan'       => 'required',
+            // Jika buat baru (loker_id kosong), gambar wajib diisi. Jika edit, gambar opsional.
+            'filClassesImage' => $isUpdate ? 'nullable|image|mimes:jpeg,png,jpg' : 'required|image|mimes:jpeg,png,jpg',
+        ], [
+            'required' => ':attribute wajib diisi.',
+            'filClassesImage.required' => 'Gambar wajib diunggah untuk data baru.'
         ]);
-        //response error validation
+
         if ($valid->fails()) {
-            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Sesuai');
+            return redirect()->back()
+                ->withErrors($valid)
+                ->withInput()
+                ->with('error', 'Data Tidak Sesuai');
         }
-        if ($request->provinsi == 'Pilih') {
-            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Provinsi Wajib Isi');
-        }
-        if ($request->kabupaten == 'Pilih') {
-            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Kabupaten Wajib Isi');
-        }
-        if ($request->kecamatan == 'Pilih') {
-            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Kecamatan Wajib Isi');
-        }
-        if ($request->kelurahan == 'Pilih') {
-            return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Kelurahan Wajib Isi');
-        }
+
         $data = [
-            'alamat' => $request->loker_alamat,
-            'email' => $request->loker_email,
-            'nama' => $request->loker_nama,
-            'title' => $request->loker_title,
-            'provinsi' => $request->provinsi,
+            'alamat'    => $request->loker_alamat,
+            'email'     => $request->loker_email,
+            'nama'      => $request->loker_nama,
+            'title'     => $request->loker_title ?? null,
+            'provinsi'  => $request->provinsi,
             'kabupaten' => $request->kabupaten,
             'kecamatan' => $request->kecamatan,
             'kelurahan' => $request->kelurahan,
         ];
-        if ($request->filClassesImage) {
-            $namemeta_image = $request->file('filClassesImage')->getClientOriginalName();
-            $sizemeta_image = $request->file('filClassesImage')->getSize();
-            if ($sizemeta_image >= 1048576) {
-                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
-            }
-            $filename2 = time() . '-' . $namemeta_image;
+
+        if ($request->hasFile('filClassesImage')) {
             $file = $request->file('filClassesImage');
-            $file->move(public_path('image/loker'), $filename2);
+
+            // 1. Ambil ukuran file SEBELUM dipindahkan dari temp
+            $fileSize = $file->getSize();
+
+            // 2. Buat nama file baru
+            $filename = time() . '-' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+
+            // 3. Pindahkan file ke folder tujuan
+            $file->move(public_path('image/loker'), $filename);
+
+            // 4. Simpan metadata ke array
             $data['image'] = json_encode([
-                'url' => $filename2,
-                'size' => $sizemeta_image
+                'url'  => $filename,
+                'size' => $fileSize
             ]);
         }
-
         $p = PerusahaanModel::updateOrCreate(['id' => $request->loker_id], $data);
-        if ($p) {
-            return Redirect::back()->with('success', 'Data Tersimpan');
-        }
-        return Redirect::back()->with('info', 'Data Gagal Tersimpan');
-    }
 
+        if ($p) {
+            return redirect()->back()->with('success', 'Data Tersimpan');
+        }
+
+        return redirect()->back()->with('error', 'Data Gagal Tersimpan');
+    }
     /**
      * Display the specified resource.
      *

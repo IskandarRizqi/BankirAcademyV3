@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\ClassesController;
-use App\Http\Controllers\Admin\LokerApplicationController;
-use App\Http\Controllers\Admin\LokerController as AdminLokerController;
 use App\Http\Controllers\Front\BankPageController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\PagesController;
@@ -63,23 +61,10 @@ Route::get('/kelas/{slug}', [BankPageController::class, 'classPage'])
 // Class
 Route::get('/list-class', [ClassesController::class, 'listClass'])->name('frontend.classes.index');
 Route::post('/list-class', [ClassesController::class, 'findClass']);
-// Loker Apply
-Route::get('admin/apply', [LokerApplicationController::class, 'index'])
-    ->middleware('admin.panel')
-    ->name('apply.index');
-Route::get('admin/getdatacvpelamar', [LokerApplicationController::class, 'getdatacvpelamar'])
-    ->middleware('admin.panel')
-    ->name('admin.applications.cv');
-Route::post('admin/approvecvpelamar', [LokerApplicationController::class, 'approvecvpelamar'])
-    ->middleware('admin.panel')
-    ->name('admin.applications.approve');
 // Loker
 Route::resource('loker', BerandaLoker::class);
 Route::get('/loker/{id}/detail', [BerandaLoker::class, 'detail']);
 Route::post('/loker/apply', [BerandaLoker::class, 'apply']);
-Route::get('/admin/loker/getkabupaten/{id}', [AdminLokerController::class, 'getkabupaten'])->middleware('admin.panel');
-Route::get('/admin/loker/getkecamatan/{id}', [AdminLokerController::class, 'getkecamatan'])->middleware('admin.panel');
-Route::get('/admin/loker/getkelurahan/{id}', [AdminLokerController::class, 'getkelurahan'])->middleware('admin.panel');
 
 Route::get('/promo', [HomeController::class, 'showAllPromo']);
 Route::get('/class/{unique_id}/{title}', [HomeController::class, 'detail_class']);

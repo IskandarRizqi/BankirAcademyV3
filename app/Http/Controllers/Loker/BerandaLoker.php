@@ -102,7 +102,7 @@ class BerandaLoker extends Controller
         // Filter Kata Kunci / Search
         if ($request->filled('search') || $request->filled('cari_lowongan')) {
             $keyword = $request->search ?? $request->cari_lowongan;
-            $query->where('loker.title', 'like', '%'.$keyword.'%');
+            $query->where('loker.title', 'like', '%' . $keyword . '%');
         }
 
         // Filter Provinsi / Lokasi
@@ -146,7 +146,7 @@ class BerandaLoker extends Controller
                 ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
                 ->where(function ($query) use ($request) {
                     if ($request->search) {
-                        return $query->where('title', 'like', '%'.$request->search['value'].'%');
+                        return $query->where('title', 'like', '%' . $request->search['value'] . '%');
                     }
                     // if ($request->tanggal_akhir) {
                     //     $query->where('tanggal_akhir', 'like', '%' . $request->tanggal_akhir . '%');
@@ -190,10 +190,10 @@ class BerandaLoker extends Controller
                     return $row->status == 1 ? 'ACC' : 'Tidak ACC';
                 })
                 ->addColumn('aksi', function ($row) {
-                    $edit = "<span class='btn btn-warning btn-sm' onclick=editloker('".$row->id."')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z'></path><path d='M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z'></path></svg></span>";
-                    $hapus = "<span class='btn btn-danger btn-sm' onclick=deleteLoker('".$row->id."')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2zM9 4h6v2H9V4zm8 16H7V8h10v12z'></path></svg></span>";
+                    $edit = "<span class='btn btn-warning btn-sm' onclick=editloker('" . $row->id . "')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z'></path><path d='M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z'></path></svg></span>";
+                    $hapus = "<span class='btn btn-danger btn-sm' onclick=deleteLoker('" . $row->id . "')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2zM9 4h6v2H9V4zm8 16H7V8h10v12z'></path></svg></span>";
 
-                    return $edit.$hapus;
+                    return $edit . $hapus;
                 })
                 ->rawColumns(['aksi'])
                 ->make(true);
@@ -306,7 +306,7 @@ class BerandaLoker extends Controller
                 if ($value->lamaran) {
                     if ($value->lamaran->tanggal_akhir) {
                         $d = Carbon::parse($value->lamaran->tanggal_akhir);
-                        $value->tanggal_date = $d->day.' '.GlobalHelper::namabulan($d->month).' '.$d->year;
+                        $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
                     }
                 }
                 if (! in_array($value->loker_id, $lokerid)) {
@@ -363,15 +363,13 @@ class BerandaLoker extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         if (! $this->checkAuth()) {
             return Redirect::back()->with('info', 'Silahkan Login Dahulu')->withInput($request->all());
         }
-        // return $request->all();
+
         $valid = Validator::make($request->all(), [
             'loker_title' => 'required',
             'loker_gaji_min' => 'required',
-            // 'loker_gaji_max' => 'required',
             'loker_deskripsi' => 'required',
             'loker_jobdesk' => 'required',
             'loker_tanggal_awal' => 'required',
@@ -380,7 +378,7 @@ class BerandaLoker extends Controller
             'loker_type' => 'required',
             'perusahaan_id' => 'required',
         ]);
-        // response error validation
+
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Sesuai');
         }
@@ -388,12 +386,15 @@ class BerandaLoker extends Controller
         $val = [
             'id' => $request->loker_id,
         ];
+
+        // Jika perusahaan_id berupa string/integer ID biasa, tidak perlu json_decode
+        $perusahaanId = is_numeric($request->perusahaan_id)
+            ? $request->perusahaan_id
+            : (json_decode($request->perusahaan_id)->id ?? $request->perusahaan_id);
+
         $data = [
-            // 'alamat' => $request->loker_alamat,
-            // 'email' => $request->loker_email,
-            // 'nama' => $request->loker_nama,
             'title' => $request->loker_title,
-            'perusahaan_id' => json_decode($request->perusahaan_id)->id,
+            'perusahaan_id' => $perusahaanId,
             'gaji_min' => $request->loker_gaji_min,
             'gaji_max' => 0,
             'deskripsi' => $request->loker_deskripsi,
@@ -403,21 +404,19 @@ class BerandaLoker extends Controller
             'skill' => json_encode($request->loker_skill),
             'type' => json_encode($request->loker_type),
             'status' => $request->status ? $request->status : 0,
-            // 'provinsi' => $request->provinsi,
-            // 'kabupaten' => $request->kabupaten,
-            // 'kecamatan' => $request->kecamatan,
-            // 'kelurahan' => $request->kelurahan,
         ];
+
         if (! $request->loker_id) {
             $data['user_id'] = Auth::user()->id;
         }
+
         if ($request->filClassesImage) {
             $namemeta_image = $request->file('filClassesImage')->getClientOriginalName();
             $sizemeta_image = $request->file('filClassesImage')->getSize();
             if ($sizemeta_image >= 1048576) {
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
-            $filename2 = time().'-'.$namemeta_image;
+            $filename2 = time() . '-' . $namemeta_image;
             $file = $request->file('filClassesImage');
             $file->move(public_path('image/loker'), $filename2);
             $data['image'] = json_encode([
@@ -524,7 +523,7 @@ class BerandaLoker extends Controller
             'postalCode' => null,
             'name' => $name,
             'sameAs' => 'https://bankiracademy.com',
-            'logo' => env('APP_URL').'/'.$data['data']->picture,
+            'logo' => env('APP_URL') . '/' . $data['data']->picture,
         ];
         if ($data['data']->kecamatan != 'Pilih' && $data['data']->kecamatan != null) {
             $html['streetAddress'] = DB::table('kecamatan')
