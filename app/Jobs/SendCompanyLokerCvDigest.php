@@ -24,7 +24,6 @@ class SendCompanyLokerCvDigest implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 5;
-
     public int $timeout = 300;
 
     public function __construct(
@@ -59,61 +58,69 @@ class SendCompanyLokerCvDigest implements ShouldQueue
         }
 
         $applications = $this->pendingApplications();
+        
+        // Ambil data CV ATS spesifik berdasarkan user_id dan job_id (loker_id)
+        $userIds = $applications->pluck('user_id')->unique();
+        $lokerIds = $applications->pluck('loker_id')->unique();
+
         $cvs = LamaranModel::query()
-            ->whereIn('user_id', $applications->pluck('user_id')->unique())
-            ->where('is_cv_ats', true)
+            ->whereIn('user_id', $userIds)
+            ->whereIn('job_id', $lokerIds)
             ->with('user')
             ->get()
-            ->keyBy('user_id');
+            // Key by "user_id_job_id" untuk pencarian presisi per lamaran
+            ->keyBy(fn ($item) => $item->user_id . '_' . $item->job_id);
 
         $selected = [];
-        $selectedUserIds = [];
+        $attachments = [];
+        $candidateDisplayList = [];
+        $processedApplicationIds = [];
+        $candidateIds = [];
 
         foreach ($applications as $application) {
             $userId = (int) $application->user_id;
+            $lokerId = (int) $application->loker_id;
+            $cvKey = $userId . '_' . $lokerId;
 
-            if (in_array($userId, $selectedUserIds, true)) {
-                continue;
-            }
-
-            $cv = $cvs->get($userId);
+            // Cari CV spesifik untuk pasangan user dan posisi ini
+            $cv = $cvs->get($cvKey);
 
             if (! $cv) {
                 continue;
             }
 
-            $candidateApplications = $applications
-                ->where('user_id', $userId)
-                ->sortBy('created_at')
-                ->values();
-            $firstApplication = $candidateApplications->first();
-            $jobs = $candidateApplications
-                ->map(fn (LokerApply $item) => $item->loker?->title)
-                ->filter()
-                ->unique()
-                ->values()
-                ->implode(', ');
+            $jobTitle = $application->loker?->title ?: 'Lowongan tersedia';
+            $candidateName = $cv->nama_lengkap ?: ($cv->user?->name ?: 'Pelamar');
+            
+            // Format nama file spesifik per posisi agar penerima email tidak bingung
+            $safeJobTitle = Str::slug($jobTitle);
+            $safeCandidateName = Str::slug($candidateName);
+            $filename = "CV_{$safeCandidateName}_{$safeJobTitle}.pdf";
 
-            $selectedUserIds[] = $userId;
-            $selected[] = [
-                'user_id' => $userId,
-                'cv' => $cv,
-                'user' => $cv->user,
-                'candidate' => [
-                    'name' => $cv->nama_lengkap ?: ($cv->user?->name ?: 'Pelamar'),
-                    'email' => $cv->user?->email ?: '',
-                    'jobs' => $jobs ?: 'Lowongan tersedia',
-                    'applied_at' => $this->formatDate($firstApplication?->created_at),
-                ],
-                'application_ids' => $candidateApplications->pluck('id')->all(),
+            // Generate PDF untuk posisi spesifik ini
+            $attachments[] = [
+                'data' => $pdfService->make($cv, $cv->user)->output(),
+                'filename' => $filename,
             ];
 
-            if (count($selected) >= 5) {
+            // List metadata kandidat per lamaran posisi
+            $candidateDisplayList[] = [
+                'name' => $candidateName,
+                'email' => $cv->user?->email ?: '',
+                'jobs' => $jobTitle,
+                'applied_at' => $this->formatDate($application->created_at),
+            ];
+
+            $processedApplicationIds[] = $application->id;
+            $candidateIds[] = $userId;
+
+            // Batasi maksimal 5 item/CV terkirim per batch digest email
+            if (count($attachments) >= 5) {
                 break;
             }
         }
 
-        if ($selected === []) {
+        if (empty($attachments)) {
             $this->updateDailyLog([
                 'status' => 'skipped',
                 'attempted_at' => now(),
@@ -123,30 +130,18 @@ class SendCompanyLokerCvDigest implements ShouldQueue
             return;
         }
 
-        $attachments = [];
-        foreach ($selected as $item) {
-            $attachments[] = [
-                'data' => $pdfService->make($item['cv'], $item['user'])->output(),
-                'filename' => $pdfService->filename($item['cv']),
-            ];
-        }
-
-        $applicationIds = collect($selected)
-            ->flatMap(fn (array $item) => $item['application_ids'])
-            ->unique()
-            ->values()
-            ->all();
-        $candidateIds = collect($selected)->pluck('user_id')->values()->all();
+        $applicationIds = array_unique($processedApplicationIds);
+        $candidateIds = array_unique($candidateIds);
 
         $this->updateDailyLog([
-            'candidate_ids' => $candidateIds,
-            'application_ids' => $applicationIds,
+            'candidate_ids' => array_values($candidateIds),
+            'application_ids' => array_values($applicationIds),
             'attempted_at' => now(),
         ]);
 
         Mail::to($this->recipientEmail)->send(new LokerDailyCvDigestMail(
             companyName: $this->companyName,
-            candidates: collect($selected)->pluck('candidate')->all(),
+            candidates: $candidateDisplayList,
             pdfAttachments: $attachments,
             sendDate: Carbon::parse($this->sendDate)->format('d M Y'),
         ));

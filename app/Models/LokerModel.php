@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
 class LokerModel extends Model
@@ -70,6 +71,10 @@ class LokerModel extends Model
             }
         }
         return $a;
+    }
+    public function perusahaan(): BelongsTo
+    {
+        return $this->belongsTo(PerusahaanModel::class, 'perusahaan_id', 'id');
     }
 
     public function getKabupatenNameAttribute()

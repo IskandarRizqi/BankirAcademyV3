@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LamaranModel;
 use App\Services\CvAtsPdfService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
@@ -158,12 +159,14 @@ class CvAtsController extends Controller
         $request->validate([
             'nama_lengkap' => ['required', 'string', 'max:255'],
             'nama_panggilan' => ['required', 'string', 'max:100'],
-            'tmpttgllahir' => [
-                'required',
-                'string',
-                'max:100',
-                'regex:/^[\p{L}][\p{L}\s.\'-]*,\s\d{1,2}\s(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s\d{4}$/iu',
-            ],
+            // 'tmpttgllahir' => [
+            //     'required',
+            //     'string',
+            //     'max:100',
+            //     'regex:/^[\p{L}][\p{L}\s.\'-]*,\s\d{1,2}\s(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s\d{4}$/iu',
+            // ],
+            'tempat_lahir' => ['required', 'string', 'max:100'],
+            'tanggal_lahir' => ['required', 'date'],
             'agama' => ['required', 'in:' . implode(',', self::RELIGIONS)],
             'telpdomisili' => ['required', 'string', 'max:30', 'regex:/^[0-9]+$/'],
             'statusperkawinan' => ['required', 'in:' . implode(',', self::MARITAL_STATUSES)],
@@ -195,7 +198,10 @@ class CvAtsController extends Controller
             'in' => ':attribute yang dipilih tidak valid.',
             'digits' => ':attribute harus terdiri dari :digits angka.',
             'required_with' => ':attribute wajib diisi jika data pendidikan lainnya diisi.',
-            'tmpttgllahir.regex' => 'Gunakan format seperti: Jakarta, 24 november 2007.',
+            // 'tmpttgllahir.regex' => 'Gunakan format seperti: Jakarta, 24 november 2007.',
+            'tempat_lahir.required' => 'Tempat lahir wajib diisi.',
+            'tanggal_lahir.required' => 'Tanggal lahir wajib diisi.',
+            'tanggal_lahir.date' => 'Format tanggal lahir tidak valid.',
             'telpdomisili.regex' => 'No. Telepon / WhatsApp hanya boleh berisi angka.',
             'kodepos.digits' => 'Kode pos harus terdiri dari 5 angka.',
         ], [
@@ -227,10 +233,33 @@ class CvAtsController extends Controller
 
     private function cvPayload(Request $request): array
     {
+        $tempatLahir = trim($request->input('tempat_lahir'));
+        $tanggalLahir = $request->input('tanggal_lahir'); // Format YYYY-MM-DD dari input type="date"
+
+        // Format kembali ke string lama untuk backward compatibility
+        $bulanIndo = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+        $carbonDate = Carbon::parse($tanggalLahir);
+        $tanggalFormatIndo = $carbonDate->day . ' ' . strtolower($bulanIndo[$carbonDate->month]) . ' ' . $carbonDate->year;
+        $legacyTmptTglLahir = $tempatLahir . ', ' . $tanggalFormatIndo;
         return [
             'nama_lengkap' => trim($request->input('nama_lengkap')),
             'nama_panggilan' => trim($request->input('nama_panggilan')),
-            'tmpttgllahir' => trim($request->input('tmpttgllahir')),
+            'tempat_lahir' => $tempatLahir,
+            'tanggal_lahir' => $tanggalLahir,
+            'tmpttgllahir' => $legacyTmptTglLahir,
             'agama' => $request->input('agama'),
             'telpdomisili' => trim($request->input('telpdomisili')),
             'statusperkawinan' => $request->input('statusperkawinan'),

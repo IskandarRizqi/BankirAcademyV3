@@ -188,59 +188,24 @@ class LokerController extends Controller
                 ->with('info', 'Anda sudah melamar pada lowongan ini.');
         }
 
-        $jobApplicationCv = null;
-
-        DB::transaction(function () use ($request, $loker, $masterCv, &$jobApplicationCv) {
-            // 1. Duplikasi CV Master
+        // Gunakan Transaction untuk duplikasi CV dan simpan riwayat lamaran
+        DB::transaction(function () use ($request, $loker, $masterCv) {
+            // 1. Duplikasi CV Master khusus untuk lamaran ini
             $jobApplicationCv = $masterCv->replicate();
             $jobApplicationCv->job_id = $loker->id;
             $jobApplicationCv->is_cv_ats = null;
             $jobApplicationCv->save();
 
-            // 2. Simpan Riwayat
+            // 2. Simpan Riwayat dengan status 0 (Pending/Belum dikirim ke email perusahaan)
             LokerApply::create([
                 'loker_id' => $loker->id,
-                'user_id' => $request->user()->id,
-                'status' => 1,
+                'user_id'  => $request->user()->id,
+                'status'   => 0, // <--- 0 menandakan belum dikirim via daily digest
             ]);
         });
 
-        // 3. Kirim Email ke Perusahaan dengan Validasi Konfigurasi Mailer
-        $companyEmail = $loker->perusahaan->email ?? $loker->email ?? null;
-        $emailSent = false;
-        $emailErrorMsg = null;
-
-        if ($companyEmail) {
-            // Cek dulu apakah variabel .env mailer sudah lengkap
-            if (! ApplicationSubmittedMail::hasValidConfig()) {
-                Log::warning('Pengiriman email dibatalkan: Konfigurasi MAIL pada .env belum lengkap.');
-                $emailErrorMsg = 'Konfigurasi server email belum lengkap.';
-            } else {
-                try {
-                    Mail::to($companyEmail)->send(new ApplicationSubmittedMail($jobApplicationCv, $loker));
-                    $emailSent = true;
-                } catch (\Exception $e) {
-                    Log::error('Gagal mengirim email lamaran ke perusahaan: ' . $e->getMessage());
-                    $emailErrorMsg = 'Terjadi kendala pada layanan pengiriman email.';
-                }
-            }
-        } else {
-            Log::info("Lowongan ID {$loker->id} tidak memiliki email tujuan.");
-        }
-
-        // 4. Feedback ke Pengguna
-        if ($emailSent) {
-            return redirect()->route('membernonanggota.loker.history')
-                ->with('success', 'Lamaran Anda berhasil dikirim dan email notifikasi telah diteruskan ke perusahaan.');
-        }
-
-        // Jika lamaran database sukses tapi email gagal/tidak ada email
-        $warningText = $emailErrorMsg
-            ? " ($emailErrorMsg Notifikasi email ke perusahaan tidak dapat dikirimkan saat ini)."
-            : "";
-
         return redirect()->route('membernonanggota.loker.history')
-            ->with('success', 'CV berhasil disimpan ke sistem.' . $warningText);
+            ->with('success', 'Lamaran Anda berhasil dikirim dan akan diteruskan ke perusahaan pada jadwal pengiriman harian.');
     }
 
     public function history(Request $request)

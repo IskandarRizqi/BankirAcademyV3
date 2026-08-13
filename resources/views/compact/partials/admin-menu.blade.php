@@ -1,21 +1,21 @@
 @if ($isRoot)
     <div class="nav-section-label">Calon Bankir</div>
 
-    <a href="{{ route('users.index') }}"
-        class="nav-item-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+    <a href="{{ route('users.index') }}" class="nav-item-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
         <span class="nav-icon">{!! $icons['cpu'] !!}</span>
         <span>Bank, Sekolah & Peserta</span>
     </a>
 
-    <div class="menu {{ request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*') ? 'submenu-open' : '' }}">
+    <div
+        class="menu {{ request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*') ? 'submenu-open' : '' }}">
         <a href="javascript:void(0);"
             class="nav-item-link {{ request()->is('kategori-materi*', 'materi*', 'sub-materi*', 'ppt*', 'certificate-templates*') ? 'active' : '' }}"
             onclick="this.closest('.menu').classList.toggle('submenu-open')">
             <span class="nav-icon">{!! $icons['teacher'] !!}</span>
             <span>Pembelajaran</span>
-            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16"
-                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
         </a>
@@ -26,15 +26,14 @@
                 href="{{ route('materi.index') }}">Kompetensi</a>
             <a class="sub-link {{ request()->is('sub-materi*') ? 'active' : '' }}"
                 href="{{ route('sub-materi.index') }}">Materi</a>
-            <a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}"
-                href="{{ route('ppt.index') }}">PPT / Pre-post test</a>
+            <a class="sub-link {{ request()->is('ppt*') ? 'active' : '' }}" href="{{ route('ppt.index') }}">PPT /
+                Pre-post test</a>
             <a class="sub-link {{ request()->is('certificate-templates*') ? 'active' : '' }}"
                 href="{{ route('certificate-templates.index') }}">Template sertifikat</a>
         </div>
     </div>
 
-    <a href="{{ route('album.index') }}"
-        class="nav-item-link {{ request()->is('album*') ? 'active' : '' }}">
+    <a href="{{ route('album.index') }}" class="nav-item-link {{ request()->is('album*') ? 'active' : '' }}">
         <span class="nav-icon">{!! $icons['list'] !!}</span>
         <span>Album Pembelajaran</span>
     </a>
@@ -71,15 +70,16 @@
         <span>Order Kelas Manual</span>
     </a>
 
-    <div class="menu {{ request()->is('admin/loker*', 'admin/perusahaan*', 'admin/apply*', 'admin/getdatacvpelamar') ? 'submenu-open' : '' }}">
+    <div
+        class="menu {{ request()->is('admin/loker*', 'admin/perusahaan*', 'admin/apply*', 'admin/getdatacvpelamar') ? 'submenu-open' : '' }}">
         <a href="javascript:void(0);"
             class="nav-item-link {{ request()->is('admin/loker*', 'admin/perusahaan*', 'admin/apply*', 'admin/getdatacvpelamar') ? 'active' : '' }}"
             onclick="this.closest('.menu').classList.toggle('submenu-open')">
             <span class="nav-icon">{!! $icons['briefcase'] !!}</span>
             <span>Loker</span>
-            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16"
-                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
         </a>
@@ -89,9 +89,9 @@
             <a class="sub-link {{ request()->routeIs('admin.loker.*') ? 'active' : '' }}"
                 href="{{ route('admin.loker.index') }}">Form Loker</a>
             <a class="sub-link {{ request()->routeIs('apply.*') ? 'active' : '' }}"
-                href="{{ route('apply.index') }}">List Apply</a>
-            <a class="sub-link {{ request()->routeIs('admin.applications.cv') ? 'active' : '' }}"
-                href="{{ route('admin.applications.cv') }}">CV Apply</a>
+                href="{{ route('apply.index') }}">List Pelamar</a>
+            {{-- <a class="sub-link {{ request()->routeIs('admin.applications.cv') ? 'active' : '' }}"
+                href="{{ route('admin.applications.cv') }}">CV Apply</a> --}}
         </div>
     </div>
 

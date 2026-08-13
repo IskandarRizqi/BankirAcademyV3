@@ -20,6 +20,8 @@ class LamaranModel extends Model
         'nama_lengkap',
         'nama_panggilan',
         'tmpttgllahir',
+        'tempat_lahir',
+        'tanggal_lahir',
         'agama',
         'alamatdomisili',
         'telpdomisili',

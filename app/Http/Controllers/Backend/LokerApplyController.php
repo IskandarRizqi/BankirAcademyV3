@@ -19,8 +19,12 @@ class LokerApplyController extends Controller
     public function index()
     {
         $data = [];
-        $data['data'] = LokerApply::with('lamaran', 'user')->get();
-        // return $data;
+        // Eager load relasi lamaran, user, serta data wilayah pendukung
+        $data['data'] = LokerApply::with([
+            'lamaran.perusahaan',
+            'user'
+        ])->latest()->get();
+
         return view('backend.loker.list', $data);
     }
 

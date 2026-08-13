@@ -169,6 +169,9 @@ class BerandaLoker extends Controller
                 ->addColumn('e_tanggal_akhir', function ($row) {
                     return Carbon::parse($row->tanggal_akhir)->format('d-m-Y');
                 })
+                ->addColumn('e_perusahaan', function ($row) {
+                    return $row->perusahaan ? $row->perusahaan->nama : '-';
+                })
                 ->addColumn('e_gambar', function ($row) {
                     $img = '';
                     if (json_decode($row->image)) {
