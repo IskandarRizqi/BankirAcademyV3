@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('loker:send-daily-cv')
-            ->dailyAt('14:25')
+            ->dailyAt('14:15')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping(120)
             ->onOneServer();
