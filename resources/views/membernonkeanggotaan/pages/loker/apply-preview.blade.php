@@ -302,10 +302,12 @@
                     <i class="fas fa-external-link-alt" aria-hidden="true"></i>
                     Buka PDF
                 </a>
+
                 @if ($alreadyApplied)
-                    <span class="loker-apply-preview__submitted">
-                        <i class="fas fa-check-circle" aria-hidden="true"></i>
-                        Lamaran sudah dikirim
+                    <span class="loker-apply-preview__submitted loker-apply-preview__submitted--cooldown"
+                        title="Jeda lamaran 15 hari">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        Dapat melamar lagi: {{ $nextApplyDate->translatedFormat('d M Y') }}
                     </span>
                     <a href="{{ route('membernonanggota.loker.history') }}">
                         <i class="fas fa-history" aria-hidden="true"></i>

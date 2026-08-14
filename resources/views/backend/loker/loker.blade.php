@@ -217,7 +217,7 @@
                     {
                         data: 'e_perusahaan',
                         name: 'e_perusahaan'
-                    }, // Menampilkan Nama Perusahaan
+                    },
                     {
                         data: 'title',
                         name: 'Title'

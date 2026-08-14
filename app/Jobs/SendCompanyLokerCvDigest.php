@@ -66,6 +66,7 @@ class SendCompanyLokerCvDigest implements ShouldQueue
         $cvs = LamaranModel::query()
             ->whereIn('user_id', $userIds)
             ->whereIn('job_id', $lokerIds)
+            ->whereIn('status', [0])
             ->with('user')
             ->get()
             // Key by "user_id_job_id" untuk pencarian presisi per lamaran
@@ -75,6 +76,7 @@ class SendCompanyLokerCvDigest implements ShouldQueue
         $attachments = [];
         $candidateDisplayList = [];
         $processedApplicationIds = [];
+        $processedLamaranIds = [];
         $candidateIds = [];
 
         foreach ($applications as $application) {
@@ -112,6 +114,7 @@ class SendCompanyLokerCvDigest implements ShouldQueue
             ];
 
             $processedApplicationIds[] = $application->id;
+            $processedLamaranIds[] = $cv->id;
             $candidateIds[] = $userId;
 
             // Batasi maksimal 5 item/CV terkirim per batch digest email
@@ -131,6 +134,7 @@ class SendCompanyLokerCvDigest implements ShouldQueue
         }
 
         $applicationIds = array_unique($processedApplicationIds);
+        $lamaranIds = array_unique($processedLamaranIds);
         $candidateIds = array_unique($candidateIds);
 
         $this->updateDailyLog([
@@ -146,9 +150,18 @@ class SendCompanyLokerCvDigest implements ShouldQueue
             sendDate: Carbon::parse($this->sendDate)->format('d M Y'),
         ));
 
+        // Update status di LokerApply
         LokerApply::query()
             ->whereIn('id', $applicationIds)
             ->where('status', 0)
+            ->update([
+                'status' => 1,
+                'updated_at' => now(),
+            ]);
+
+        // Update status di LamaranModel
+        LamaranModel::query()
+            ->whereIn('id', $lamaranIds)
             ->update([
                 'status' => 1,
                 'updated_at' => now(),

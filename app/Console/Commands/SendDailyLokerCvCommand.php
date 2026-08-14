@@ -50,7 +50,7 @@ class SendDailyLokerCvCommand extends Command
                 }
 
                 return [
-                    'recipient_key' => $companyId ? 'company:'.$companyId : 'email:'.strtolower($email),
+                    'recipient_key' => $companyId ? 'company:' . $companyId : 'email:' . strtolower($email),
                     'perusahaan_id' => $companyId,
                     'email' => $email,
                     'company_name' => trim((string) ($row->company_name ?: $row->loker_company_name)) ?: 'Perusahaan mitra',

@@ -479,12 +479,12 @@
                 <section class="loker-detail-card loker-detail-company-card" aria-labelledby="loker-company-title">
                     <h2 id="loker-company-title">Tentang perusahaan</h2>
                     <p class="loker-detail-company-card__name">{{ $companyName }}</p>
-                    @if ($company?->email ?: $loker->email)
+                    {{-- @if ($company?->email ?: $loker->email)
                         <div class="loker-detail-company-card__item">
                             <i class="fas fa-envelope" aria-hidden="true"></i>
                             <span>{{ $company?->email ?: $loker->email }}</span>
                         </div>
-                    @endif
+                    @endif --}}
                     @if ($address)
                         <div class="loker-detail-company-card__item">
                             <i class="fas fa-location-arrow" aria-hidden="true"></i>

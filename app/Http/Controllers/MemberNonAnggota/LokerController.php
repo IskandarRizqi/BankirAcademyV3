@@ -135,6 +135,7 @@ class LokerController extends Controller
         $loker = $this->activeLokerQuery()
             ->where('loker.id', $id)
             ->firstOrFail();
+
         $cv = LamaranModel::query()
             ->where('user_id', $request->user()->id)
             ->where('is_cv_ats', true)
@@ -145,15 +146,45 @@ class LokerController extends Controller
                 ->with('info', 'Silakan buat CV ATS terlebih dahulu sebelum melamar.');
         }
 
-        $alreadyApplied = LokerApply::query()
+        // Ambil lamaran terakhir user untuk loker ini
+        $lastApply = LokerApply::query()
             ->where('user_id', $request->user()->id)
             ->where('loker_id', $loker->id)
-            ->exists();
+            ->latest('created_at')
+            ->first();
+
+        $alreadyApplied = false;
+        $nextApplyDate = null;
+
+        if ($lastApply) {
+            // Hitung selisih hari dari lamaran terakhir
+            $daysDiff = $lastApply->created_at->diffInDays(now());
+
+            // Jika belum melewati 15 hari, tandai bahwa user belum bisa melamar lagi
+            if ($daysDiff < 15) {
+                $alreadyApplied = true;
+                // Hitung tanggal kapan user boleh melamar kembali
+                $nextApplyDate = $lastApply->created_at->addDays(15);
+            }
+        }
+        // if ($lastApply) {
+        //     // Hitung selisih menit dari lamaran terakhir
+        //     $minutesDiff = $lastApply->created_at->diffInMinutes(now());
+
+        //     // Jika belum melewati 15 menit, tandai bahwa user belum bisa melamar lagi
+        //     if ($minutesDiff < 1) {
+        //         $alreadyApplied = true;
+        //         // Hitung waktu kapan user boleh melamar kembali
+        //         $nextApplyDate = $lastApply->created_at->addMinutes(1);
+        //     }
+        // }
+
 
         return view('membernonkeanggotaan.pages.loker.apply-preview', [
             'loker' => $loker,
             'cv' => $cv,
             'alreadyApplied' => $alreadyApplied,
+            'nextApplyDate' => $nextApplyDate, // <-- Variabel baru untuk tanggal bisa apply lagi
         ]);
     }
 
@@ -178,29 +209,36 @@ class LokerController extends Controller
                 ->with('info', 'Silakan buat CV ATS terlebih dahulu sebelum melamar.');
         }
 
-        $alreadyApplied = LokerApply::query()
+        // Pengecekan Keamanan Backend (Jeda 15 Hari)
+        $lastApply = LokerApply::query()
             ->where('user_id', $request->user()->id)
             ->where('loker_id', $loker->id)
-            ->exists();
+            ->latest('created_at')
+            ->first();
 
-        if ($alreadyApplied) {
+        if ($lastApply && $lastApply->created_at->diffInDays(now()) < 15) {
+            $nextDate = $lastApply->created_at->addDays(15)->translatedFormat('d F Y');
             return redirect()->route('membernonanggota.loker.history')
-                ->with('info', 'Anda sudah melamar pada lowongan ini.');
+                ->with('error', "Anda sudah melamar posisi ini. Anda baru dapat melamar kembali pada tanggal {$nextDate}.");
         }
+        // if ($lastApply && $lastApply->created_at->diffInMinutes(now()) < 1) {
+        //     $nextDate = $lastApply->created_at->addMinutes(1)->translatedFormat('d F Y, H:i');
 
-        // Gunakan Transaction untuk duplikasi CV dan simpan riwayat lamaran
+        //     return redirect()->route('membernonanggota.loker.history')
+        //         ->with('error', "Anda sudah melamar posisi ini. Anda baru dapat melamar kembali pada {$nextDate} WIB.");
+        // }
+
+        // Simpan Lamaran Baru
         DB::transaction(function () use ($request, $loker, $masterCv) {
-            // 1. Duplikasi CV Master khusus untuk lamaran ini
             $jobApplicationCv = $masterCv->replicate();
             $jobApplicationCv->job_id = $loker->id;
             $jobApplicationCv->is_cv_ats = null;
             $jobApplicationCv->save();
 
-            // 2. Simpan Riwayat dengan status 0 (Pending/Belum dikirim ke email perusahaan)
             LokerApply::create([
                 'loker_id' => $loker->id,
                 'user_id'  => $request->user()->id,
-                'status'   => 0, // <--- 0 menandakan belum dikirim via daily digest
+                'status'   => 0,
             ]);
         });
 
