@@ -722,6 +722,40 @@
             }
         }
 
+        .video-register-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            margin-top: 18px;
+            border: 0;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #111827;
+            font-size: 14px;
+            font-weight: 950;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, .2);
+            transition: transform .18s ease;
+        }
+
+        .video-register-button:hover {
+            color: #111827;
+            transform: translateY(-1px);
+        }
+
+        .video-register-button--disabled,
+        .video-register-button--disabled:hover {
+            color: #f9fafb;
+            background: #9ca3af;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: .85;
+            transform: none;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .event-detail-v2 * {
                 transition: none !important;
@@ -793,18 +827,23 @@
                                 <button type="submit" class="event-primary-cta">Minta Penawaran</button>
                             </form>
                         @else
-                            <button type="button" class="event-primary-cta js-event-order-button"
-                                @if ($canRegister) data-toggle="modal"
-						data-target="#eventRegistrationModal"
-						data-backdrop="static"
-						data-keyboard="false" @endif
-                                data-course-status="{{ $courseStatusClass }}"
-                                data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
-                                data-alert-title="{{ data_get($registrationAlert, 'title') }}"
-                                data-alert-text="{{ data_get($registrationAlert, 'text') }}"
-                                data-can-register="{{ $canRegister ? '1' : '0' }}">
-                                Daftar Kelas
-                            </button>
+                            @if ($transaksiAktif)
+                                <a href="#" class="video-register-button bg-warning text-dark font-weight-bold">
+                                    <i class="fas fa-clock me-2 mr-2"></i> Selesaikan Pembayaran
+                                </a>
+                            @else
+                                @if ($canRegister)
+                                    <button type="button" class="event-primary-cta js-event-order-button"
+                                        data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static"
+                                        data-keyboard="false" data-course-status="{{ $courseStatusClass }}"
+                                        data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
+                                        data-alert-title="{{ data_get($registrationAlert, 'title') }}"
+                                        data-alert-text="{{ data_get($registrationAlert, 'text') }}"
+                                        data-can-register="{{ $canRegister ? '1' : '0' }}">
+                                        Daftar Kelas
+                                    </button>
+                                @endif
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -923,21 +962,31 @@
                             <button type="submit" class="event-register-button">Minta Penawaran</button>
                         </form>
                     @else
-                        <button type="button" class="event-register-button js-event-order-button"
-                            @if ($canRegister) data-toggle="modal"
-					data-target="#eventRegistrationModal"
-					data-backdrop="static"
-					data-keyboard="false" @endif
-                            data-course-status="{{ $courseStatusClass }}"
-                            data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
-                            data-alert-title="{{ data_get($registrationAlert, 'title') }}"
-                            data-alert-text="{{ data_get($registrationAlert, 'text') }}"
-                            data-can-register="{{ $canRegister ? '1' : '0' }}">
-                            Daftar / Beli Kelas
-                        </button>
+                        @if ($transaksiAktif)
+                            <a href="#" class="video-register-button bg-warning text-dark font-weight-bold">
+                                <i class="fas fa-clock me-2 mr-2"></i> Selesaikan Pembayaran
+                            </a>
+                            <p class="small text-warning mt-2 mb-0">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Anda memiliki transaksi yang belum
+                                diselesaikan.
+                            </p>
+                        @else
+                            @if ($canRegister)
+                                <button type="button" class="event-register-button js-event-order-button"
+                                    data-toggle="modal" data-target="#eventRegistrationModal" data-backdrop="static"
+                                    data-keyboard="false" data-course-status="{{ $courseStatusClass }}"
+                                    data-alert-icon="{{ data_get($registrationAlert, 'icon') }}"
+                                    data-alert-title="{{ data_get($registrationAlert, 'title') }}"
+                                    data-alert-text="{{ data_get($registrationAlert, 'text') }}"
+                                    data-can-register="{{ $canRegister ? '1' : '0' }}">
+                                    Daftar / Beli Kelas
+                                </button>
+                            @endif
+                        @endif
+                        <p class="event-register-note">Pastikan data profil Anda sudah lengkap sebelum melakukan
+                            pembelian atau
+                            pendaftaran kelas.</p>
                     @endif
-                    <p class="event-register-note">Pastikan data profil Anda sudah lengkap sebelum melakukan pembelian atau
-                        pendaftaran kelas.</p>
                 </section>
 
                 <section class="event-panel">

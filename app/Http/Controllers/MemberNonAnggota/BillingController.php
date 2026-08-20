@@ -11,12 +11,11 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class BillingController extends Controller
 {
-    public function __construct(private PaymentExpiryService $paymentExpiryService)
-    {
-    }
+    public function __construct(private PaymentExpiryService $paymentExpiryService) {}
 
     public function databilling(Request $request)
     {
@@ -32,7 +31,7 @@ class BillingController extends Controller
         $billingSummary = $this->getBillingSummary($userId);
         $billingFilters = $this->resolveBillingFilters($request);
         $paymentHistories = $this->getPaymentHistories($userId, $billingFilters);
-
+        // return $paymentHistories;
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('membernonkeanggotaan.components.ui.billing-history-items', [
@@ -44,6 +43,34 @@ class BillingController extends Controller
         }
 
         return view('membernonkeanggotaan.pages.billing.billing', compact('billingSummary', 'billingFilters', 'paymentHistories'));
+    }
+    public function uploadBuktiTransfer(Request $request, $id)
+    {
+        $request->validate([
+            'link_payment' => 'required|image|mimes:jpeg,png,jpg|max:2048', // maks 2MB
+        ]);
+
+        $payment = DataPayment::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        if ($request->hasFile('link_payment')) {
+            // Hapus file lama jika ada
+            if ($payment->link_payment && Storage::disk('public')->exists($payment->link_payment)) {
+                Storage::disk('public')->delete($payment->link_payment);
+            }
+
+            // Simpan file baru
+            $path = $request->file('link_payment')->store('link_payment', 'public');
+
+            // Update database
+            $payment->update([
+                'link_payment' => $path,
+                'status' => 3
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Bukti transfer berhasil diunggah. Menunggu konfirmasi admin.');
     }
 
     private function redirectAfterPayment(Request $request, int $userId): ?RedirectResponse
@@ -245,7 +272,7 @@ class BillingController extends Controller
 
         return [
             'spent_amount' => $spentAmount,
-            'spent_amount_formatted' => 'Rp '.number_format($spentAmount, 0, ',', '.'),
+            'spent_amount_formatted' => 'Rp ' . number_format($spentAmount, 0, ',', '.'),
             'paid_count' => (clone $dataPayments)
                 ->where('status', DataPayment::STATUS_PAID)
                 ->notWaitingForIhtConfirmation()
@@ -307,6 +334,7 @@ class BillingController extends Controller
                 'materi:id,nama',
                 'subMateri:id,nama',
                 'classPayment:id,no_invoice',
+                'riwayatTransaksi:no_invoice,manual',
             ])
             ->where('user_id', $userId)
             ->when($filters['status'] === 'berhasil', function ($query) {
@@ -335,5 +363,4 @@ class BillingController extends Controller
             ->paginate(8)
             ->withQueryString();
     }
-
 }

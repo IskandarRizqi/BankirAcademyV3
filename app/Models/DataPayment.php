@@ -170,4 +170,8 @@ class DataPayment extends Model
     {
         return $this->hasOne(ClassPaymentModel::class, 'no_invoice', 'no_invoice');
     }
+    public function riwayatTransaksi()
+    {
+        return $this->belongsTo(RiwayatTransaksi::class, 'no_invoice', 'no_invoice');
+    }
 }

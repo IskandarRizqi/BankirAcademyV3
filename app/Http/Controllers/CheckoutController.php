@@ -261,113 +261,113 @@ class CheckoutController extends Controller
         return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
             $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
             if ($dataPayment->class_id) {
-            $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
-            if (!$order && $dataPayment->class_id) {
-                return ['status' => 404, 'message' => 'Class payment not found'];
-            }
-
-            if ($amount !== null && abs((float) $order->price_final - $amount) > 0.01) {
-                Log::warning('DOKU class payment amount mismatch', [
-                    'invoice' => $invoiceNumber,
-                    'expected' => $order->price_final,
-                    'received' => $amount,
-                ]);
-
-                return ['status' => 422, 'message' => 'Invalid payment amount'];
-            }
-            }
-
-           
- if ($dataPayment->class_id) {
-            if ((int) $order->status === 1) {
-                if ($dataPayment && (int) $dataPayment->status !== DataPayment::STATUS_PAID) {
-                    $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+                $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+                if (!$order && $dataPayment->class_id) {
+                    return ['status' => 404, 'message' => 'Class payment not found'];
                 }
 
-                return ['status' => 200, 'message' => 'Payment already processed'];
-            }
-
-            if (!$this->isSuccessfulDokuStatus($paymentStatus)) {
-                return ['status' => 200, 'message' => 'Payment status ignored'];
-            }
-
-            $class = ClassesModel::select('id', 'participant_limit')->whereKey($order->class_id)->lockForUpdate()->first();
-
-            if (!$class) {
-                return ['status' => 404, 'message' => 'Class not found'];
-            }
-
-            $participant = ClassParticipantModel::where('payment_id', $order->id)
-                ->where('user_id', $order->user_id)
-                ->lockForUpdate()
-                ->first();
-
-            if (!$participant) {
-                $remainingQuota = ClassParticipantModel::remainingQuotaForClass($order->class_id, (int) $class->participant_limit);
-
-                if ($remainingQuota !== null && (int) $order->jumlah > $remainingQuota) {
-                    Log::warning('DOKU class payment rejected because quota is full', [
+                if ($amount !== null && abs((float) $order->price_final - $amount) > 0.01) {
+                    Log::warning('DOKU class payment amount mismatch', [
                         'invoice' => $invoiceNumber,
-                        'class_id' => $order->class_id,
-                        'requested' => $order->jumlah,
-                        'remaining_quota' => $remainingQuota,
+                        'expected' => $order->price_final,
+                        'received' => $amount,
                     ]);
 
-                    return ['status' => 409, 'message' => 'Class quota is full'];
+                    return ['status' => 422, 'message' => 'Invalid payment amount'];
                 }
-
-                ClassParticipantModel::create([
-                    'class_id' => $order->class_id,
-                    'user_id' => $order->user_id,
-                    'payment_id' => $order->id,
-                    'certificate' => (float) $order->biaya_sertifikat > 0 ? 1 : 0,
-                    'jumlah' => $order->jumlah,
-                ]);
-            } else {
-                $participant->update([
-                    'class_id' => $order->class_id,
-                    'certificate' => (float) $order->biaya_sertifikat > 0 ? 1 : (int) $participant->certificate,
-                    'jumlah' => $order->jumlah,
-                ]);
             }
 
-            $order->update([
-                'status' => 1,
-            ]);
- }
+
+            if ($dataPayment->class_id) {
+                if ((int) $order->status === 1) {
+                    if ($dataPayment && (int) $dataPayment->status !== DataPayment::STATUS_PAID) {
+                        $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+                    }
+
+                    return ['status' => 200, 'message' => 'Payment already processed'];
+                }
+
+                if (!$this->isSuccessfulDokuStatus($paymentStatus)) {
+                    return ['status' => 200, 'message' => 'Payment status ignored'];
+                }
+
+                $class = ClassesModel::select('id', 'participant_limit')->whereKey($order->class_id)->lockForUpdate()->first();
+
+                if (!$class) {
+                    return ['status' => 404, 'message' => 'Class not found'];
+                }
+
+                $participant = ClassParticipantModel::where('payment_id', $order->id)
+                    ->where('user_id', $order->user_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$participant) {
+                    $remainingQuota = ClassParticipantModel::remainingQuotaForClass($order->class_id, (int) $class->participant_limit);
+
+                    if ($remainingQuota !== null && (int) $order->jumlah > $remainingQuota) {
+                        Log::warning('DOKU class payment rejected because quota is full', [
+                            'invoice' => $invoiceNumber,
+                            'class_id' => $order->class_id,
+                            'requested' => $order->jumlah,
+                            'remaining_quota' => $remainingQuota,
+                        ]);
+
+                        return ['status' => 409, 'message' => 'Class quota is full'];
+                    }
+
+                    ClassParticipantModel::create([
+                        'class_id' => $order->class_id,
+                        'user_id' => $order->user_id,
+                        'payment_id' => $order->id,
+                        'certificate' => (float) $order->biaya_sertifikat > 0 ? 1 : 0,
+                        'jumlah' => $order->jumlah,
+                    ]);
+                } else {
+                    $participant->update([
+                        'class_id' => $order->class_id,
+                        'certificate' => (float) $order->biaya_sertifikat > 0 ? 1 : (int) $participant->certificate,
+                        'jumlah' => $order->jumlah,
+                    ]);
+                }
+
+                $order->update([
+                    'status' => 1,
+                ]);
+            }
             if ($dataPayment) {
                 $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
             }
             if ($dataPayment->materi_id) {
                 DB::table('siswa_modul_aktif')->insertOrIgnore([
-            'user_id'    => $dataPayment->user_id,
-            'class_id'   => $dataPayment->materi_id,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+                    'user_id'    => $dataPayment->user_id,
+                    'class_id'   => $dataPayment->materi_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
 
-        RiwayatTransaksi::create([
-            'user_id'           => $dataPayment->user_id,
-            'class_id'          => $dataPayment->materi_id,
-            'nominal_transaksi' => $dataPayment->nominal,
-            'metode_pembayaran' => 'Virtual Akun',
-            'status'            => 'SUCCESS',
-            'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
-        ]);
+                RiwayatTransaksi::create([
+                    'user_id'           => $dataPayment->user_id,
+                    'class_id'          => $dataPayment->materi_id,
+                    'nominal_transaksi' => $dataPayment->nominal,
+                    'metode_pembayaran' => 'Virtual Akun',
+                    'status'            => 'SUCCESS',
+                    'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+                ]);
             }
             if ($dataPayment->submateri_id) {
-              DB::table('history_pelatihan')->insertOrIgnore([
-    'user_id' => $dataPayment->user_id,
-    'sub_materi_id'=> $dataPayment->submateri_id
-              ]);
-        RiwayatTransaksi::create([
-            'user_id'           => $dataPayment->user_id,
-            'class_id'          => $dataPayment->submateri_id,
-            'nominal_transaksi' => $dataPayment->nominal,
-            'metode_pembayaran' => 'Virtual Akun',
-            'status'            => 'SUCCESS',
-            'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
-        ]);
+                DB::table('history_pelatihan')->insertOrIgnore([
+                    'user_id' => $dataPayment->user_id,
+                    'sub_materi_id' => $dataPayment->submateri_id
+                ]);
+                RiwayatTransaksi::create([
+                    'user_id'           => $dataPayment->user_id,
+                    'class_id'          => $dataPayment->submateri_id,
+                    'nominal_transaksi' => $dataPayment->nominal,
+                    'metode_pembayaran' => 'Virtual Akun',
+                    'status'            => 'SUCCESS',
+                    'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+                ]);
             }
 
             return ['status' => 200, 'message' => 'Class payment processed'];
@@ -380,20 +380,20 @@ class CheckoutController extends Controller
             if ($dataPayment) {
                 $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
             }
-         
-         
-              DB::table('history_pelatihan')->insertOrIgnore([
-    'user_id' => $dataPayment->user_id,
-    'sub_materi_id'=> $dataPayment->submateri_id
-              ]);
-        RiwayatTransaksi::create([
-            'user_id'           => $dataPayment->user_id,
-            'class_id'          => $dataPayment->submateri_id,
-            'nominal_transaksi' => $dataPayment->nominal,
-            'metode_pembayaran' => 'Virtual Akun',
-            'status'            => 'SUCCESS',
-            'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
-        ]);
+
+
+            DB::table('history_pelatihan')->insertOrIgnore([
+                'user_id' => $dataPayment->user_id,
+                'sub_materi_id' => $dataPayment->submateri_id
+            ]);
+            RiwayatTransaksi::create([
+                'user_id'           => $dataPayment->user_id,
+                'class_id'          => $dataPayment->submateri_id,
+                'nominal_transaksi' => $dataPayment->nominal,
+                'metode_pembayaran' => 'Virtual Akun',
+                'status'            => 'SUCCESS',
+                'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+            ]);
 
             return ['status' => 200, 'message' => 'Class payment processed'];
         });

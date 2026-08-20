@@ -5,130 +5,145 @@
     $isIht = (int) data_get($class, 'iht') === 1;
     $pricing = data_get($class, 'pricing');
     $resolvedPricing = data_get($pricing, 'resolved', []);
-    $isFree = ! $isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
-    $isPriceComingSoon = ! $isIht && ! $pricing;
+    $isFree = !$isIht && $pricing && (int) data_get($pricing, 'gratis', 0) === 1;
+    $isPriceComingSoon = !$isIht && !$pricing;
     $price = (int) data_get($pricing, 'price', 0);
-    $finalPrice = (int) data_get($resolvedPricing, 'final_price', max(0, $price - (int) data_get($pricing, 'promo_price', 0)));
+    $finalPrice = (int) data_get(
+        $resolvedPricing,
+        'final_price',
+        max(0, $price - (int) data_get($pricing, 'promo_price', 0)),
+    );
     $priceLabel = $isIht
         ? 'Hubungi Tim Kami'
         : ($isFree
             ? 'Gratis'
             : ($isPriceComingSoon
-            ? 'Price Coming Soon'
-            : ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis')));
+                ? 'Price Coming Soon'
+                : ($finalPrice > 0
+                    ? 'Rp ' . number_format($finalPrice, 0, ',', '.')
+                    : 'Gratis')));
     $certificateFee = (int) data_get($sertif ?? null, 'nominal', 100000);
 @endphp
 
 @once
-<style>
-    .event-registration-modal .modal-content {
-        border: 0;
-        border-radius: 24px;
-        box-shadow: 0 28px 80px rgba(15, 23, 42, .28);
-        overflow: hidden;
-    }
-
-    .event-registration-modal__header {
-        background: linear-gradient(135deg, #111827, #312e81);
-        color: #ffffff;
-        border-bottom: 0;
-    }
-
-    .event-registration-modal__subtitle {
-        margin: 6px 0 0;
-        color: rgba(255, 255, 255, .68);
-        font-size: 13px;
-        line-height: 1.55;
-    }
-
-    .event-registration-modal__summary {
-        display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(220px, .6fr);
-        gap: 14px;
-        margin-bottom: 18px;
-    }
-
-    .event-registration-modal__card {
-        padding: 16px;
-        border: 1px solid #eef2f7;
-        border-radius: 18px;
-        background: #f9fafb;
-    }
-
-    .event-registration-modal__label {
-        display: block;
-        margin-bottom: 6px;
-        color: #6b7280;
-        font-size: 11px;
-        font-weight: 900;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-    }
-
-    .event-registration-modal__value {
-        display: block;
-        color: #111827;
-        font-size: 18px;
-        font-weight: 950;
-        line-height: 1.35;
-    }
-
-    .event-registration-modal__value--coming-soon {
-        font-size: 16px;
-    }
-
-    .event-registration-option {
-        display: block;
-        height: 100%;
-        cursor: pointer;
-    }
-
-    .event-registration-option input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .event-registration-option__box {
-        height: 100%;
-        padding: 14px;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        background: #ffffff;
-        transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
-    }
-
-    .event-registration-option input:checked + .event-registration-option__box {
-        border-color: #4f46e5;
-        box-shadow: 0 14px 28px rgba(79, 70, 229, .14);
-        transform: translateY(-1px);
-    }
-
-    .event-registration-participant {
-        border: 1px solid #eef2f7;
-        border-radius: 18px;
-        background: #ffffff;
-        overflow: hidden;
-    }
-
-    .event-registration-participant__header {
-        padding: 10px 14px;
-        background: #f8fafc;
-        border-bottom: 1px solid #eef2f7;
-        color: #4f46e5;
-        font-size: 12px;
-        font-weight: 950;
-    }
-
-    @media (max-width: 767.98px) {
-        .event-registration-modal__summary {
-            grid-template-columns: 1fr;
+    <style>
+        .event-registration-modal .modal-content {
+            border: 0;
+            border-radius: 24px;
+            box-shadow: 0 28px 80px rgba(15, 23, 42, .28);
+            overflow: hidden;
         }
-    }
-</style>
+
+        .event-registration-modal__header {
+            background: linear-gradient(135deg, #111827, #312e81);
+            color: #ffffff;
+            border-bottom: 0;
+        }
+
+        .event-registration-modal__subtitle {
+            margin: 6px 0 0;
+            color: rgba(255, 255, 255, .68);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .event-registration-modal__summary {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(220px, .6fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .event-registration-modal__card {
+            padding: 16px;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            background: #f9fafb;
+        }
+
+        .event-registration-modal__label {
+            display: block;
+            margin-bottom: 6px;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .event-registration-modal__value {
+            display: block;
+            color: #111827;
+            font-size: 18px;
+            font-weight: 950;
+            line-height: 1.35;
+        }
+
+        .event-registration-option {
+            display: block;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .event-registration-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .event-registration-option__box {
+            height: 100%;
+            padding: 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            background: #ffffff;
+            transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+        }
+
+        .event-registration-option input:checked+.event-registration-option__box {
+            border-color: #4f46e5;
+            box-shadow: 0 14px 28px rgba(79, 70, 229, .14);
+            transform: translateY(-1px);
+        }
+
+        .payment-methods-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .payment-methods-grid img {
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .event-registration-participant {
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        .event-registration-participant__header {
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-bottom: 1px solid #eef2f7;
+            color: #4f46e5;
+            font-size: 12px;
+            font-weight: 950;
+        }
+
+        @media (max-width: 767.98px) {
+            .event-registration-modal__summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 @endonce
 
-<div class="modal fade event-registration-modal" id="{{ $modalId }}" tabindex="-1" role="dialog" aria-labelledby="{{ $modalId }}Title" aria-hidden="true">
+<div class="modal fade event-registration-modal" id="{{ $modalId }}" tabindex="-1" role="dialog"
+    aria-labelledby="{{ $modalId }}Title" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <form action="{{ url('/payment-order-class') }}" method="POST" id="eventRegistrationForm">
@@ -139,7 +154,8 @@
                 <div class="modal-header event-registration-modal__header">
                     <div>
                         <h5 class="modal-title font-weight-bold" id="{{ $modalId }}Title">Daftar Kelas</h5>
-                        <p class="event-registration-modal__subtitle">Lengkapi data peserta untuk melanjutkan pendaftaran atau pembelian kelas.</p>
+                        <p class="event-registration-modal__subtitle">Lengkapi data peserta dan pilih metode pembayaran
+                            untuk melanjutkan.</p>
                     </div>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
@@ -153,25 +169,30 @@
                             <span class="event-registration-modal__value">{{ $classTitle }}</span>
                         </div>
                         <div class="event-registration-modal__card">
-                            <span class="event-registration-modal__label">Investasi</span>
-                            <span class="event-registration-modal__value {{ $isPriceComingSoon ? 'event-registration-modal__value--coming-soon' : '' }}">{{ $priceLabel }}</span>
+                            <span class="event-registration-modal__label">Harga</span>
+                            <span
+                                class="event-registration-modal__value {{ $isPriceComingSoon ? 'event-registration-modal__value--coming-soon' : '' }}">{{ $priceLabel }}</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-4 mb-3">
-                            <label for="eventRegistrationParticipantCount" class="font-weight-bold text-dark">Jumlah Peserta</label>
-                            <input type="number" min="1" value="1" class="form-control form-control-lg" id="eventRegistrationParticipantCount" name="jml_peserta" required>
+                            <label for="eventRegistrationParticipantCount" class="font-weight-bold text-dark">Jumlah
+                                Peserta</label>
+                            <input type="number" min="1" value="1" class="form-control form-control-lg"
+                                id="eventRegistrationParticipantCount" name="jml_peserta" required>
                         </div>
                         <div class="col-lg-8 mb-3">
                             <label class="font-weight-bold text-dark">Sertifikat</label>
                             <div class="row">
                                 <div class="col-md-6 mb-2 mb-md-0">
                                     <label class="event-registration-option mb-0">
-                                        <input type="radio" name="event_registration_certificate" value="1" checked>
+                                        <input type="radio" name="event_registration_certificate" value="1"
+                                            checked>
                                         <span class="event-registration-option__box d-block">
                                             <strong class="d-block text-success">Ya, butuh sertifikat</strong>
-                                            <small class="text-muted">+ Rp {{ number_format($certificateFee, 0, ',', '.') }} / peserta</small>
+                                            <small class="text-muted">+ Rp
+                                                {{ number_format($certificateFee, 0, ',', '.') }} / peserta</small>
                                         </span>
                                     </label>
                                 </div>
@@ -188,12 +209,73 @@
                         </div>
                     </div>
 
+                    <!-- Input Data Peserta -->
                     <div class="mt-2" id="eventRegistrationParticipants"></div>
+
+                    <!-- Opsi Pilih Metode Pembayaran (Hanya tampil jika kelas berbayar) -->
+                    @if (!$isFree && !$isIht && $finalPrice > 0)
+                        <div class="mt-4 pt-3 border-top">
+                            <label class="font-weight-bold text-dark d-block mb-3">Pilih Metode Pembayaran</label>
+                            <div class="row g-3">
+                                {{-- Option 1: Virtual Account / Automatic --}}
+                                <div class="col-md-6 mb-3">
+                                    <label class="event-registration-option mb-0">
+                                        <input type="radio" name="payment_method" value="gateway" checked>
+                                        <div class="event-registration-option__box">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <strong class="text-dark"><i
+                                                        class="fas fa-bolt text-warning me-1 mr-1"></i> Virtual Account
+                                                    / Gateway</strong>
+                                                <span class="badge bg-success text-white">Otomatis</span>
+                                            </div>
+                                            <p class="small text-muted mb-2">Pembayaran terverifikasi otomatis 24/7 via
+                                                VA Bank / QRIS / Retail.</p>
+                                            <div class="payment-methods-grid p-2 bg-light rounded">
+                                                <img src="{{ asset('frontend/demo/gateway/bri.png') }}" alt="BRI">
+                                                <img src="{{ asset('frontend/demo/gateway/bni.png') }}" alt="BNI">
+                                                <img src="{{ asset('frontend/demo/gateway/mandiri.png') }}"
+                                                    alt="Mandiri">
+                                                <img src="{{ asset('frontend/demo/gateway/permata.png') }}"
+                                                    alt="Permata">
+                                                <img src="{{ asset('frontend/demo/gateway/indomaret.png') }}"
+                                                    alt="Indomaret">
+                                                <img src="{{ asset('frontend/demo/gateway/alfamart.png') }}"
+                                                    alt="Alfamart">
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                {{-- Option 2: Transfer Manual --}}
+                                <div class="col-md-6 mb-3">
+                                    <label class="event-registration-option mb-0">
+                                        <input type="radio" name="payment_method" value="manual">
+                                        <div class="event-registration-option__box">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <strong class="text-dark"><i
+                                                        class="fas fa-university text-primary me-1 mr-1"></i> Transfer
+                                                    Bank Manual</strong>
+                                                <span class="badge bg-secondary text-white">Manual</span>
+                                            </div>
+                                            <p class="small text-muted mb-2">Transfer langsung ke rekening Bank BCA
+                                                kami & unduh invoice.</p>
+                                            <div class="p-2 border rounded bg-light">
+                                                <span class="small font-weight-bold text-dark d-block">BCA: 803 555
+                                                    9091</span>
+                                                <span class="small text-muted">a.n. PT. Bankir Academy Indonesia</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold js-event-registration-submit" data-loading-text="Memproses...">Lanjut ke Pembayaran</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold js-event-registration-submit"
+                        data-loading-text="Memproses...">Lanjut ke Pembayaran</button>
                 </div>
             </form>
         </div>
@@ -201,136 +283,146 @@
 </div>
 
 @once
-<script>
-    (function () {
-        function notifyRegistration(message) {
-            if (window.Swal) {
-                Swal.fire({ title: 'Pemberitahuan', text: message, icon: 'warning' });
-                return;
+    <script>
+        (function() {
+            function notifyRegistration(message) {
+                if (window.Swal) {
+                    Swal.fire({
+                        title: 'Pemberitahuan',
+                        text: message,
+                        icon: 'warning'
+                    });
+                    return;
+                }
+                alert(message);
             }
 
-            alert(message);
-        }
-
-        function participantTemplate(index) {
-            return '' +
-                '<div class="event-registration-participant mb-3">' +
-                '<div class="event-registration-participant__header">Peserta #' + index + '</div>' +
-                '<div class="p-3"><div class="row">' +
-                '<div class="col-lg-4 mb-2 mb-lg-0"><input type="text" class="form-control" name="nama[]" placeholder="Nama peserta" required></div>' +
-                '<div class="col-lg-4 mb-2 mb-lg-0"><input type="email" class="form-control" name="email[]" placeholder="Email peserta" required></div>' +
-                '<div class="col-lg-4"><input type="number" class="form-control" name="nomor_handphone[]" placeholder="Nomor HP peserta" required></div>' +
-                '</div></div>' +
-                '</div>';
-        }
-
-        function renderParticipants() {
-            var countInput = document.getElementById('eventRegistrationParticipantCount');
-            var container = document.getElementById('eventRegistrationParticipants');
-
-            if (!countInput || !container) {
-                return;
+            function participantTemplate(index) {
+                return '' +
+                    '<div class="event-registration-participant mb-3">' +
+                    '<div class="event-registration-participant__header">Peserta #' + index + '</div>' +
+                    '<div class="p-3"><div class="row">' +
+                    '<div class="col-lg-4 mb-2 mb-lg-0"><input type="text" class="form-control" name="nama[]" placeholder="Nama peserta" required></div>' +
+                    '<div class="col-lg-4 mb-2 mb-lg-0"><input type="email" class="form-control" name="email[]" placeholder="Email peserta" required></div>' +
+                    '<div class="col-lg-4"><input type="number" class="form-control" name="nomor_handphone[]" placeholder="Nomor HP peserta" required></div>' +
+                    '</div></div>' +
+                    '</div>';
             }
 
-            var count = parseInt(countInput.value, 10) || 0;
-            var html = '';
+            function renderParticipants() {
+                var countInput = document.getElementById('eventRegistrationParticipantCount');
+                var container = document.getElementById('eventRegistrationParticipants');
 
-            for (var i = 1; i <= count; i++) {
-                html += participantTemplate(i);
+                if (!countInput || !container) {
+                    return;
+                }
+
+                var count = parseInt(countInput.value, 10) || 0;
+                var html = '';
+
+                for (var i = 1; i <= count; i++) {
+                    html += participantTemplate(i);
+                }
+
+                container.innerHTML = html;
             }
 
-            container.innerHTML = html;
-        }
+            function validateParticipants() {
+                var participantInputs = document.querySelectorAll('#eventRegistrationParticipants input[required]');
+                var firstInvalidInput = null;
 
-        function validateParticipants() {
-            var participantInputs = document.querySelectorAll('#eventRegistrationParticipants input[required]');
-            var firstInvalidInput = null;
+                participantInputs.forEach(function(input) {
+                    if (input.value.trim() === '') {
+                        input.classList.add('is-invalid');
 
-            participantInputs.forEach(function (input) {
-                if (input.value.trim() === '') {
-                    input.classList.add('is-invalid');
-
-                    if (!firstInvalidInput) {
-                        firstInvalidInput = input;
+                        if (!firstInvalidInput) {
+                            firstInvalidInput = input;
+                        }
+                    } else {
+                        input.classList.remove('is-invalid');
                     }
-                } else {
-                    input.classList.remove('is-invalid');
+                });
+
+                if (firstInvalidInput) {
+                    firstInvalidInput.focus();
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var countInput = document.getElementById('eventRegistrationParticipantCount');
+                var modal = document.getElementById('{{ $modalId }}');
+                var form = document.getElementById('eventRegistrationForm');
+
+                if (countInput) {
+                    countInput.addEventListener('input', renderParticipants);
+                    renderParticipants();
+                }
+
+                if (form) {
+                    form.addEventListener('submit', function(event) {
+                        var certificate = form.querySelector(
+                            'input[name="event_registration_certificate"]:checked');
+                        var participantCount = parseInt(countInput ? countInput.value : 0, 10) || 0;
+                        var submitButton = form.querySelector('.js-event-registration-submit');
+
+                        if (form.dataset.submitted === '1') {
+                            event.preventDefault();
+                            return;
+                        }
+
+                        if (participantCount < 1) {
+                            event.preventDefault();
+                            notifyRegistration('Jumlah peserta minimal 1.');
+                            return;
+                        }
+
+                        if (!validateParticipants()) {
+                            event.preventDefault();
+                            notifyRegistration(
+                                'Mohon lengkapi semua data peserta sebelum melanjutkan ke pembayaran.'
+                            );
+                            return;
+                        }
+
+                        document.getElementById('eventRegistrationCertificateValue').value =
+                            certificate ? certificate.value : '0';
+                        form.dataset.submitted = '1';
+
+                        if (submitButton) {
+                            submitButton.disabled = true;
+                            submitButton.dataset.originalText = submitButton.textContent.trim();
+                            submitButton.textContent = submitButton.dataset.loadingText ||
+                                'Memproses...';
+                        }
+                    });
+                }
+
+                if (modal && form) {
+                    $('#' + modal.id).on('hidden.bs.modal', function() {
+                        form.reset();
+
+                        if (countInput) {
+                            countInput.value = 1;
+                        }
+
+                        document.getElementById('eventRegistrationCertificateValue').value = '1';
+                        delete form.dataset.submitted;
+                        var submitButton = form.querySelector('.js-event-registration-submit');
+
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.textContent = submitButton.dataset.originalText ||
+                                'Lanjut ke Pembayaran';
+                        }
+
+                        renderParticipants();
+                    });
                 }
             });
-
-            if (firstInvalidInput) {
-                firstInvalidInput.focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var countInput = document.getElementById('eventRegistrationParticipantCount');
-            var modal = document.getElementById('{{ $modalId }}');
-            var form = document.getElementById('eventRegistrationForm');
-
-            if (countInput) {
-                countInput.addEventListener('input', renderParticipants);
-                renderParticipants();
-            }
-
-            if (form) {
-                form.addEventListener('submit', function (event) {
-                    var certificate = form.querySelector('input[name="event_registration_certificate"]:checked');
-                    var participantCount = parseInt(countInput ? countInput.value : 0, 10) || 0;
-                    var submitButton = form.querySelector('.js-event-registration-submit');
-
-                    if (form.dataset.submitted === '1') {
-                        event.preventDefault();
-                        return;
-                    }
-
-                    if (participantCount < 1) {
-                        event.preventDefault();
-                        notifyRegistration('Jumlah peserta minimal 1.');
-                        return;
-                    }
-
-                    if (!validateParticipants()) {
-                        event.preventDefault();
-                        notifyRegistration('Mohon lengkapi semua data peserta sebelum melanjutkan ke pembayaran.');
-                        return;
-                    }
-
-                    document.getElementById('eventRegistrationCertificateValue').value = certificate ? certificate.value : '0';
-                    form.dataset.submitted = '1';
-
-                    if (submitButton) {
-                        submitButton.disabled = true;
-                        submitButton.dataset.originalText = submitButton.textContent.trim();
-                        submitButton.textContent = submitButton.dataset.loadingText || 'Memproses...';
-                    }
-                });
-            }
-
-            if (modal && form) {
-                $('#' + modal.id).on('hidden.bs.modal', function () {
-                    form.reset();
-
-                    if (countInput) {
-                        countInput.value = 1;
-                    }
-
-                    document.getElementById('eventRegistrationCertificateValue').value = '1';
-                    delete form.dataset.submitted;
-                    var submitButton = form.querySelector('.js-event-registration-submit');
-
-                    if (submitButton) {
-                        submitButton.disabled = false;
-                        submitButton.textContent = submitButton.dataset.originalText || 'Lanjut ke Pembayaran';
-                    }
-
-                    renderParticipants();
-                });
-            }
-        });
-    })();
-</script>
+        })
+        ();
+    </script>
 @endonce

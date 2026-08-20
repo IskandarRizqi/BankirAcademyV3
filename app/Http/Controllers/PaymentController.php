@@ -7,6 +7,7 @@ use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\DataPayment;
+use App\Models\RiwayatTransaksi;
 use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use App\Services\ClassPricingService;
@@ -54,7 +55,7 @@ class PaymentController extends Controller
 
         $qty = 1;
         $totalbayar = $membership['price'] * $qty;
-        $temporaryInvoice = 'BANKIR-PENDING-'.now()->format('YmdHisv').'-'.random_int(1000, 9999);
+        $temporaryInvoice = 'BANKIR-PENDING-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999);
 
         $datapayment = DataPayment::create([
             'no_invoice' => $temporaryInvoice,
@@ -69,7 +70,7 @@ class PaymentController extends Controller
             'tipe_membership' => $membershipType,
         ]);
 
-        $nomorinvoice = 'BANKIR-'.$datapayment->created_at->format('YmdHis').'-'.$datapayment->id;
+        $nomorinvoice = 'BANKIR-' . $datapayment->created_at->format('YmdHis') . '-' . $datapayment->id;
         $datapayment->update(['no_invoice' => $nomorinvoice]);
 
         $timestamp = now()->toIso8601ZuluString();
@@ -79,7 +80,7 @@ class PaymentController extends Controller
             'order' => [
                 'amount' => $totalbayar,
                 'invoice_number' => $nomorinvoice,
-                'callback_url' => url('/pembayaran?invoice_number='.urlencode($nomorinvoice)),
+                'callback_url' => url('/pembayaran?invoice_number=' . urlencode($nomorinvoice)),
                 'line_items' => [
                     [
                         'name' => $membership['label'],
@@ -106,11 +107,11 @@ class PaymentController extends Controller
         $jsonBody = json_encode($body);
         $digest = base64_encode(hash('sha256', $jsonBody, true));
 
-        $rawSignature = 'Client-Id:'.$clientId."\n".
-            'Request-Id:'.$requestId."\n".
-            'Request-Timestamp:'.$timestamp."\n".
-            "Request-Target:/checkout/v1/payment\n".
-            'Digest:'.$digest;
+        $rawSignature = 'Client-Id:' . $clientId . "\n" .
+            'Request-Id:' . $requestId . "\n" .
+            'Request-Timestamp:' . $timestamp . "\n" .
+            "Request-Target:/checkout/v1/payment\n" .
+            'Digest:' . $digest;
 
         $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
@@ -119,10 +120,10 @@ class PaymentController extends Controller
                 'Client-Id' => $clientId,
                 'Request-Id' => $requestId,
                 'Request-Timestamp' => $timestamp,
-                'Signature' => 'HMACSHA256='.$signature,
+                'Signature' => 'HMACSHA256=' . $signature,
                 'Digest' => $digest,
                 'Content-Type' => 'application/json',
-            ])->post($dokuUrl.'/checkout/v1/payment', $body);
+            ])->post($dokuUrl . '/checkout/v1/payment', $body);
         } catch (Throwable $exception) {
             Log::error('Gagal membuat pembayaran membership DOKU', [
                 'invoice' => $nomorinvoice,
@@ -155,7 +156,7 @@ class PaymentController extends Controller
 
         $datapayment->update([
             'status' => DataPayment::STATUS_CANCELED,
-            'keterangan' => Str::limit('Gagal membuat link pembayaran: '.$response->body(), 500),
+            'keterangan' => Str::limit('Gagal membuat link pembayaran: ' . $response->body(), 500),
         ]);
 
         return back()->with('error', 'Gagal membuat link pembayaran. Silakan coba lagi.');
@@ -190,6 +191,7 @@ class PaymentController extends Controller
             'class_id' => ['required', 'integer', 'exists:classes,id'],
             'jml_peserta' => ['required', 'integer', 'min:1'],
             'sertifikat_invoice' => ['required', 'in:0,1'],
+            'payment_method' => ['nullable', 'in:gateway,manual'], // Tambahan parameter skema pembayaran
             'nama' => ['required', 'array'],
             'nama.*' => ['required', 'string', 'max:255'],
             'email' => ['required', 'array'],
@@ -218,7 +220,7 @@ class PaymentController extends Controller
         $remainingQuota = ClassParticipantModel::remainingQuotaForClass($classId, (int) $class->participant_limit);
 
         if ($remainingQuota !== null && $jumlahPeserta > $remainingQuota) {
-            return back()->withInput()->with('error', 'Kuota kelas tidak mencukupi. Sisa kuota: '.$remainingQuota.' peserta.');
+            return back()->withInput()->with('error', 'Kuota kelas tidak mencukupi. Sisa kuota: ' . $remainingQuota . ' peserta.');
         }
 
         $pricing = app(ClassPricingService::class)->resolve($class, $user);
@@ -241,7 +243,6 @@ class PaymentController extends Controller
             $certificateFee = BiayaSertifikatModel::where('class_id', $classId)->first();
 
             if ($certificateFee) {
-                // Sertifikat kelas gratis selalu memakai nominal tetap per peserta.
                 $certificatePerParticipant = $isFreeClass
                     ? (float) $certificateFee->nominal
                     : ((int) $certificateFee->type > 0
@@ -255,8 +256,17 @@ class PaymentController extends Controller
         }
 
         $grandTotal = $classTotal + $certificateTotal;
-        $needsPaymentGateway = $grandTotal > 0;
-        $paymentStatus = $needsPaymentGateway ? DataPayment::STATUS_PENDING : DataPayment::STATUS_PAID;
+
+        // Tentukan opsi skema pembayaran
+        $selectedPaymentMethod = $validated['payment_method'] ?? 'gateway';
+
+        // Payment gateway hanya jika total > 0 DAN user memilih metode 'gateway'
+        $needsPaymentGateway = $grandTotal > 0 && $selectedPaymentMethod === 'gateway';
+        $paymentStatus = DataPayment::STATUS_PENDING; // Status default untuk manual/gateway yang belum lunas
+
+        if ($grandTotal <= 0) {
+            $paymentStatus = DataPayment::STATUS_PAID;
+        }
 
         $result = DB::transaction(function () use (
             $user,
@@ -268,7 +278,8 @@ class PaymentController extends Controller
             $grandTotal,
             $paymentStatus,
             $needsPaymentGateway,
-            $validated
+            $validated,
+            $selectedPaymentMethod
         ) {
             $class = ClassesModel::select('id', 'participant_limit')->whereKey($classId)->lockForUpdate()->first();
 
@@ -284,11 +295,11 @@ class PaymentController extends Controller
             if ($remainingQuota !== null && $jumlahPeserta > $remainingQuota) {
                 return [
                     'success' => false,
-                    'message' => 'Kuota kelas tidak mencukupi. Sisa kuota: '.$remainingQuota.' peserta.',
+                    'message' => 'Kuota kelas tidak mencukupi. Sisa kuota: ' . $remainingQuota . ' peserta.',
                 ];
             }
 
-            $temporaryInvoice = 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999);
+            $temporaryInvoice = 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999);
 
             $classPayment = ClassPaymentModel::create([
                 'status' => $paymentStatus === DataPayment::STATUS_PAID ? 1 : 0,
@@ -307,24 +318,29 @@ class PaymentController extends Controller
                 ]),
                 'biaya_sertifikat' => $certificateTotal,
                 'price_final' => $grandTotal,
-                'expired' => now()->endOfDay(),
+                'expired' => now()->addDay(),
                 'no_invoice' => $temporaryInvoice,
                 'jumlah' => $jumlahPeserta,
             ]);
 
+            $keterangan = $selectedPaymentMethod === 'manual'
+                ? 'Pembelian kelas (Transfer Manual)'
+                : 'Pembelian kelas';
+
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'class_id' => $classId,
                 'pembelian' => DataPayment::PURCHASE_CLASS,
+                'expired' => 1440,
                 'nominal' => $grandTotal,
                 'qty' => $jumlahPeserta,
                 'status' => $paymentStatus,
-                'keterangan' => 'Pembelian kelas',
+                'keterangan' => $keterangan,
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_CLASS,
             ]);
 
-            $invoiceNumber = 'BANKIR-'.$dataPayment->created_at->format('YmdHis').'-'.$dataPayment->id;
+            $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
             $classPayment->update(['no_invoice' => $invoiceNumber]);
 
@@ -361,6 +377,7 @@ class PaymentController extends Controller
             return back()->withInput()->with('error', $result['message']);
         }
 
+        // Opsi A: Jika bayar via Virtual Account / Payment Gateway
         if ($result['needsPaymentGateway']) {
             $paymentUrl = $this->createClassDokuPaymentUrl(
                 $result['dataPayment']->no_invoice,
@@ -385,7 +402,8 @@ class PaymentController extends Controller
             return redirect()->away($paymentUrl);
         }
 
-        return redirect('/pembayaran?invoice_number='.urlencode($result['dataPayment']->no_invoice));
+        // Opsi B: Jika bayar Manual atau Kelas Gratis (Langsung ke halaman konfirmasi/invoice)
+        return redirect('/pembayaran?invoice_number=' . urlencode($result['dataPayment']->no_invoice));
     }
 
     public function paymentordermaterial(Request $request)
@@ -408,7 +426,7 @@ class PaymentController extends Controller
             $validated
         ) {
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'materi_id' => $validated['class_id'],
                 'pembelian' => DataPayment::PURCHASE_CLASS,
@@ -419,7 +437,7 @@ class PaymentController extends Controller
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_CLASS,
             ]);
 
-            $invoiceNumber = 'BANKIR-'.$dataPayment->created_at->format('YmdHis').'-'.$dataPayment->id;
+            $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
 
             return [
@@ -481,7 +499,7 @@ class PaymentController extends Controller
             $validated
         ) {
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
+                'no_invoice' => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
                 'user_id' => $user->id,
                 'submateri_id' => $validated['class_id'],
                 'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
@@ -493,7 +511,7 @@ class PaymentController extends Controller
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_EBOOK,
             ]);
 
-            $invoiceNumber = 'BANKIR-'.$dataPayment->created_at->format('YmdHis').'-'.$dataPayment->id;
+            $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
 
             return [
@@ -538,61 +556,79 @@ class PaymentController extends Controller
             ]
         );
 
-        return redirect('/pembayaran?invoice_number='.urlencode($result['dataPayment']->no_invoice));
+        return redirect('/pembayaran?invoice_number=' . urlencode($result['dataPayment']->no_invoice));
     }
 
     public function paymentordervideo(Request $request)
     {
         $user = $request->user();
 
-        if (! $user) {
+        if (!$user) {
             abort(401);
         }
 
         $validated = $request->validate([
-            'class_id' => ['required', 'integer'],
-            'price' => ['required', 'string'],
-            'nama' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'class_id'        => ['required', 'integer'],
+            'price'           => ['required', 'numeric'],
+            'nama'            => ['required', 'string', 'max:255'],
+            'email'           => ['required', 'email', 'max:255'],
             'nomor_handphone' => ['required', 'string', 'max:30'],
         ]);
-        $currentPayment = DataPayment::where('user_id', $user->id)->where('submateri_id', $validated['class_id'])->where('status', 2)->first();
-        if ($currentPayment) {
+
+        // Cek jika transaksi pending sudah ada
+        $currentPayment = DataPayment::where('user_id', $user->id)
+            ->where('submateri_id', $validated['class_id'])
+            ->where('status', DataPayment::STATUS_PENDING)
+            ->first();
+
+        if ($currentPayment && $currentPayment->link_payment) {
             return redirect()->away($currentPayment->link_payment);
         }
+
         $needsPaymentGateway = $validated['price'] > 0;
         $paymentStatus = $needsPaymentGateway ? DataPayment::STATUS_PENDING : DataPayment::STATUS_PAID;
-        $result = DB::transaction(function () use (
-            $user,
-            $needsPaymentGateway,
-            $paymentStatus,
-            $validated
-        ) {
+
+        $result = DB::transaction(function () use ($user, $needsPaymentGateway, $paymentStatus, $validated) {
             $dataPayment = DataPayment::create([
-                'no_invoice' => 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
-                'user_id' => $user->id,
-                'submateri_id' => $validated['class_id'],
-                'pembelian' => DataPayment::PURCHASE_VIDEO,
-                'expired' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
-                'nominal' => $validated['price'],
-                'qty' => 1,
-                'status' => $paymentStatus,
-                'keterangan' => 'Pembelian Video Interaktif',
+                'no_invoice'     => 'BANKIR-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'user_id'        => $user->id,
+                'submateri_id'   => $validated['class_id'],
+                'pembelian'      => DataPayment::PURCHASE_VIDEO,
+                'expired'        => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
+                'nominal'        => $validated['price'],
+                'qty'            => 1,
+                'status'         => $paymentStatus,
+                'keterangan'     => 'Pembelian Video Interaktif',
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_VIDEO,
             ]);
 
-            $invoiceNumber = 'BANKIR-'.$dataPayment->created_at->format('YmdHis').'-'.$dataPayment->id;
+            $invoiceNumber = 'BANKIR-' . $dataPayment->created_at->format('YmdHis') . '-' . $dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
 
+            // Riwayat Transaksi VA Gateway (manual = 0)
+            RiwayatTransaksi::create([
+                'user_id'           => $dataPayment->user_id,
+                'class_id'          => $dataPayment->submateri_id,
+                'nominal_transaksi' => $dataPayment->nominal,
+                'metode_pembayaran' => 'Virtual Akun',
+                'no_invoice'        => $invoiceNumber,
+                'status'            => 'PENDING',
+                'manual'            => 0, // 0 = Virtual Account
+                'expired'           => now()->addMinutes(self::MEMBERSHIP_PAYMENT_DUE_MINUTES),
+                'keterangan'        => 'Pembelian video pelatihan melalui virtual akun.'
+            ]);
+
             return [
-                'success' => true,
+                'success'             => true,
                 'needsPaymentGateway' => $needsPaymentGateway,
-                'dataPayment' => $dataPayment,
+                'dataPayment'         => $dataPayment,
             ];
         });
-        if (! $result['success']) {
-            return back()->withInput()->with('error', $result['message']);
+
+        if (!$result['success']) {
+            return back()->withInput()->with('error', 'Gagal memproses transaksi.');
         }
+
         if ($result['needsPaymentGateway']) {
             $paymentUrl = $this->createClassDokuPaymentUrl(
                 $result['dataPayment']->no_invoice,
@@ -602,9 +638,9 @@ class PaymentController extends Controller
                 1
             );
 
-            if (! $paymentUrl) {
+            if (!$paymentUrl) {
                 $result['dataPayment']->update([
-                    'status' => DataPayment::STATUS_CANCELED,
+                    'status'     => DataPayment::STATUS_CANCELED,
                     'keterangan' => 'Gagal membuat link pembayaran kelas.',
                 ]);
 
@@ -615,9 +651,10 @@ class PaymentController extends Controller
 
             return redirect()->away($paymentUrl);
         }
+
         DB::table('history_pelatihan')->updateOrInsert(
             [
-                'user_id' => $user->id,
+                'user_id'       => $user->id,
                 'sub_materi_id' => $validated['class_id'],
             ],
             [
@@ -626,9 +663,114 @@ class PaymentController extends Controller
             ]
         );
 
-        return redirect('/pembayaran?invoice_number='.urlencode($result['dataPayment']->no_invoice));
+        return redirect('/pembayaran?invoice_number=' . urlencode($result['dataPayment']->no_invoice));
     }
 
+    /**
+     * Pembayaran Transfer Manual (manual = 1, expired = 1 jam)
+     */
+    public function paymentOrderVideoManual(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
+
+        $validated = $request->validate([
+            'class_id' => ['required', 'integer'],
+            'price'    => ['required', 'numeric'],
+        ]);
+
+        $expiredTime = now()->addDay(); // Expired 1 Jam
+
+        $dataPayment = DB::transaction(function () use ($user, $validated, $expiredTime) {
+            $payment = DataPayment::create([
+                'no_invoice'     => 'BANKIR-MNL-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'user_id'        => $user->id,
+                'submateri_id'   => $validated['class_id'],
+                'pembelian'      => DataPayment::PURCHASE_VIDEO,
+                'expired'        => 1440,
+                'nominal'        => $validated['price'],
+                'qty'            => 1,
+                'status'         => DataPayment::STATUS_PENDING,
+                'keterangan'     => 'Pembelian Video (Transfer Manual BCA)',
+                'tipe_pembelian' => DataPayment::PURCHASE_TYPE_VIDEO,
+            ]);
+
+            $invoiceNumber = 'BANKIR-MNL-' . $payment->created_at->format('YmdHis') . '-' . $payment->id;
+            $payment->update(['no_invoice' => $invoiceNumber]);
+
+            // Riwayat Transaksi Transfer Manual (manual = 1)
+            RiwayatTransaksi::create([
+                'user_id'           => $user->id,
+                'class_id'          => $validated['class_id'],
+                'nominal_transaksi' => $validated['price'],
+                'metode_pembayaran' => 'Transfer Manual BCA',
+                'no_invoice'        => $invoiceNumber,
+                'status'            => 'PENDING',
+                'manual'            => 1,            // 1 = Transfer Manual
+                'expired'           => $expiredTime, // Expired 1 Jam
+                'keterangan'        => 'Pembelian video pelatihan via Transfer Manual BCA.'
+            ]);
+
+            return $payment;
+        });
+
+        // Redirect menggunakan ID dari DataPayment ($dataPayment->id)
+        return redirect()->to('/materi/cetakinvoicepending/' . $dataPayment->id);
+    }
+    public function paymentOrderEbookManual(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
+
+        $validated = $request->validate([
+            'class_id' => ['required', 'integer'],
+            'price'    => ['required', 'numeric'],
+        ]);
+
+        $expiredTime = now()->addDay(); // Expired 1 Jam
+
+        $dataPayment = DB::transaction(function () use ($user, $validated, $expiredTime) {
+            $payment = DataPayment::create([
+                'no_invoice'     => 'BANKIR-MNL-' . now()->format('YmdHisv') . '-' . random_int(1000, 9999),
+                'user_id'        => $user->id,
+                'submateri_id'   => $validated['class_id'],
+                'pembelian'      => DataPayment::PURCHASE_EBOOK,
+                'expired'        => 1440,
+                'nominal'        => $validated['price'],
+                'qty'            => 1,
+                'status'         => DataPayment::STATUS_PENDING,
+                'keterangan'     => 'Pembelian Video (Transfer Manual BCA)',
+                'tipe_pembelian' => DataPayment::PURCHASE_TYPE_EBOOK,
+            ]);
+
+            $invoiceNumber = 'BANKIR-MNL-' . $payment->created_at->format('YmdHis') . '-' . $payment->id;
+            $payment->update(['no_invoice' => $invoiceNumber]);
+
+            // Riwayat Transaksi Transfer Manual (manual = 1)
+            RiwayatTransaksi::create([
+                'user_id'           => $user->id,
+                'class_id'          => $validated['class_id'],
+                'nominal_transaksi' => $validated['price'],
+                'metode_pembayaran' => 'Transfer Manual BCA',
+                'no_invoice'        => $invoiceNumber,
+                'status'            => 'PENDING',
+                'manual'            => 1,            // 1 = Transfer Manual
+                'expired'           => $expiredTime, // Expired 1 Jam
+                'keterangan'        => 'Pembelian video pelatihan via Transfer Manual BCA.'
+            ]);
+
+            return $payment;
+        });
+
+        // Redirect menggunakan ID dari DataPayment ($dataPayment->id)
+        return redirect()->to('/materi/cetakinvoicepending/' . $dataPayment->id);
+    }
     public function paymentIht(Request $request, DataPayment $payment)
     {
         $user = $request->user();
@@ -803,7 +945,7 @@ class PaymentController extends Controller
                 'invoice_number' => $invoiceNumber,
                 'callback_url' => $user->siswa
                     ? $callbackurl
-                    : url('/pembayaran?invoice_number='.urlencode($invoiceNumber)),
+                    : url('/pembayaran?invoice_number=' . urlencode($invoiceNumber)),
                 'line_items' => [
                     [
                         'name' => 'Pembayaran Kelas',
@@ -830,11 +972,11 @@ class PaymentController extends Controller
 
         $jsonBody = json_encode($body);
         $digest = base64_encode(hash('sha256', $jsonBody, true));
-        $rawSignature = 'Client-Id:'.$clientId."\n".
-            'Request-Id:'.$requestId."\n".
-            'Request-Timestamp:'.$timestamp."\n".
-            'Request-Target:/checkout/v1/payment'."\n".
-            'Digest:'.$digest;
+        $rawSignature = 'Client-Id:' . $clientId . "\n" .
+            'Request-Id:' . $requestId . "\n" .
+            'Request-Timestamp:' . $timestamp . "\n" .
+            'Request-Target:/checkout/v1/payment' . "\n" .
+            'Digest:' . $digest;
         $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
         try {
@@ -842,10 +984,10 @@ class PaymentController extends Controller
                 'Client-Id' => $clientId,
                 'Request-Id' => $requestId,
                 'Request-Timestamp' => $timestamp,
-                'Signature' => 'HMACSHA256='.$signature,
+                'Signature' => 'HMACSHA256=' . $signature,
                 'Digest' => $digest,
                 'Content-Type' => 'application/json',
-            ])->post($dokuUrl.'/checkout/v1/payment', $body);
+            ])->post($dokuUrl . '/checkout/v1/payment', $body);
         } catch (Throwable $exception) {
             Log::error('Gagal membuat pembayaran kelas DOKU', [
                 'invoice' => $invoiceNumber,
@@ -897,13 +1039,13 @@ class PaymentController extends Controller
         $requestId = Str::uuid()->toString();
         $quantity = max(1, (int) $payment->qty);
         $classTitle = data_get($payment->paymentClass, 'title');
-        $itemName = $this->sanitizeDokuText('Pembayaran Kelas IHT'.($classTitle ? ' - '.$classTitle : ''), 'Pembayaran Kelas IHT');
+        $itemName = $this->sanitizeDokuText('Pembayaran Kelas IHT' . ($classTitle ? ' - ' . $classTitle : ''), 'Pembayaran Kelas IHT');
         $customerName = $this->sanitizeDokuText($user->name, 'Customer Bankir Academy', 100);
         $body = [
             'order' => [
                 'amount' => $paymentAmount,
                 'invoice_number' => $payment->no_invoice,
-                'callback_url' => url('/pembayaran?invoice_number='.urlencode($payment->no_invoice)),
+                'callback_url' => url('/pembayaran?invoice_number=' . urlencode($payment->no_invoice)),
                 'line_items' => [
                     [
                         'name' => $itemName,
@@ -931,11 +1073,11 @@ class PaymentController extends Controller
 
         $jsonBody = json_encode($body);
         $digest = base64_encode(hash('sha256', $jsonBody, true));
-        $rawSignature = 'Client-Id:'.$clientId."\n".
-            'Request-Id:'.$requestId."\n".
-            'Request-Timestamp:'.$timestamp."\n".
-            'Request-Target:/checkout/v1/payment'."\n".
-            'Digest:'.$digest;
+        $rawSignature = 'Client-Id:' . $clientId . "\n" .
+            'Request-Id:' . $requestId . "\n" .
+            'Request-Timestamp:' . $timestamp . "\n" .
+            'Request-Target:/checkout/v1/payment' . "\n" .
+            'Digest:' . $digest;
         $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
         try {
@@ -943,10 +1085,10 @@ class PaymentController extends Controller
                 'Client-Id' => $clientId,
                 'Request-Id' => $requestId,
                 'Request-Timestamp' => $timestamp,
-                'Signature' => 'HMACSHA256='.$signature,
+                'Signature' => 'HMACSHA256=' . $signature,
                 'Digest' => $digest,
                 'Content-Type' => 'application/json',
-            ])->post($dokuUrl.'/checkout/v1/payment', $body);
+            ])->post($dokuUrl . '/checkout/v1/payment', $body);
         } catch (Throwable $exception) {
             Log::error('Gagal membuat pembayaran IHT DOKU', [
                 'invoice' => $payment->no_invoice,

@@ -15,7 +15,10 @@ class RiwayatTransaksi extends Model
 
     protected $fillable = [
         'user_id',
+        'no_invoice',
         'class_id',
+        'manual',
+        'expired',
         'nominal_transaksi',
         'metode_pembayaran',
         'status',
@@ -31,15 +34,17 @@ class RiwayatTransaksi extends Model
     {
         return $this->belongsTo(MateriModel::class, 'class_id');
     }
-     public function getActivitylogOptions(): LogOptions
+    public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly([ 'user_id',
-        'class_id',
-        'nominal_transaksi',
-        'metode_pembayaran',
-        'status',
-        'keterangan']) // Catat jika kolom ini berubah
+            ->logOnly([
+                'user_id',
+                'class_id',
+                'nominal_transaksi',
+                'metode_pembayaran',
+                'status',
+                'keterangan'
+            ]) // Catat jika kolom ini berubah
             ->logOnlyDirty(); // Hanya catat jika ada perubahan nyata
     }
 }

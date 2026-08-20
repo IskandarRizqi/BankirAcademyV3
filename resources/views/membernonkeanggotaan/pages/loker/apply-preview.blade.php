@@ -344,7 +344,7 @@
             </div>
             <h3 class="custom-modal__title" id="modal-title">Kirim Lamaran?</h3>
             <p class="custom-modal__description">
-                Apakah Anda yakin ingin mengirim CV ATS untuk posisi <strong>{{ $loker->title }}</strong>?
+                Apakah Anda yakin ingin melamar untuk posisi <strong>{{ $loker->title }}</strong>?
             </p>
             <div class="custom-modal__actions">
                 <button type="button" class="custom-modal__btn custom-modal__btn--cancel" onclick="closeApplyModal()">

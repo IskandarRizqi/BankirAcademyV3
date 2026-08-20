@@ -7,10 +7,13 @@ use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
+use App\Models\DataPayment;
 use App\Models\KodePromoModel;
 use App\Models\MasterRefferralModel;
 use App\Models\RefferralModel;
+use App\Models\RiwayatTransaksi;
 use App\Models\SertifikatPesertaModel;
+use App\Models\SubMateriModel;
 use App\Models\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +27,11 @@ class InvoiceController extends Controller
     {
         // return $r->all();
         // 1. Ambil data payment berdasarkan ID Invoice yang dikirim
-        $data['payment'] = ClassPaymentModel::where('id', $id)
+        $payment = DataPayment::where('id', $id)->first();
+        if (!$payment) {
+            return Redirect::back()->with('error', 'Payment Data Not Found');
+        }
+        $data['payment'] = ClassPaymentModel::where('no_invoice', $payment->no_invoice)
             ->where(function ($q) {
                 $role = Auth::user()->role;
                 if ($role == 2) {
@@ -156,6 +163,53 @@ class InvoiceController extends Controller
         }
 
         return $pdf->setPaper('a4', 'landscape')->stream('invoice.pdf');
+    }
+    public function invoicemateri(Request $request, $id)
+    {
+        // 1. Ambil data payment berdasarkan ID DataPayment
+        $payment = DataPayment::where('id', $id)
+            ->where(function ($q) {
+                if (Auth::user()->role == 2) {
+                    $q->where('user_id', Auth::user()->id);
+                }
+            })
+            ->first();
+
+        if (!$payment) {
+            return Redirect::back()->with('error', 'Payment Data Not Found');
+        }
+
+        // 2. Ambil data transaksi pendukung dari RiwayatTransaksi (status 'PENDING')
+        $riwayatTransaksi = RiwayatTransaksi::where('no_invoice', $payment->no_invoice)
+            ->where('user_id', $payment->user_id)
+            ->where('status', 'PENDING')
+            ->first();
+
+        // // 3. Ambil data Profile User
+        // $profile = UserProfileModel::where('user_id', $payment->user_id)->first();
+        //     return Redirect::back()->with('error', 'Please Fill Your Profile Info');
+        // }
+
+        // 4. Ambil detail item/materi (Ebook/Video)
+        // class_id / materi_id mengacu ke tabel MateriModel
+        $materiId = $payment->submateri_id;
+        $materi = SubMateriModel::find($materiId);
+
+        // 6. Susun data untuk dikirim ke View Blade PDF
+        $data = [
+            'payment'           => $payment,
+            'riwayat_transaksi' => $riwayatTransaksi,
+            'profile'           => Auth::user(),
+            'materi'            => $materi,
+            'nominal'           => $payment->nominal,
+            'title'             => 'Invoice Pending - ' . ($materi->nama ?? 'E-Book / Video'),
+        ];
+
+        // 7. Load PDF view
+        $pdfView = env('CUSTOM_INVOICE_PENDING', 'invoice/invoicemateripending');
+        $pdf = PDF::loadView($pdfView, $data);
+
+        return $pdf->setPaper('a4', 'portrait')->stream('invoice_pending_' . $payment->no_invoice . '.pdf');
     }
 
     public function multiInvoice(Request $request)

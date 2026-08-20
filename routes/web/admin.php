@@ -120,5 +120,4 @@ Route::middleware([IsAdminRoot::class])->group(function () {
             ->except(['show'])
             ->names('admin.sop');
     });
-
 });

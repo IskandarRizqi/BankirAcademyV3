@@ -243,7 +243,7 @@ class LokerController extends Controller
         });
 
         return redirect()->route('membernonanggota.loker.history')
-            ->with('success', 'Lamaran Anda berhasil dikirim dan akan diteruskan ke perusahaan pada jadwal pengiriman harian.');
+            ->with('success', 'Lamaran Anda berhasil dikirim');
     }
 
     public function history(Request $request)

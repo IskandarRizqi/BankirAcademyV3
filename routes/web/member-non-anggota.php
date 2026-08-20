@@ -41,7 +41,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/video/belajar/{sub_materi_id}', [EbookController::class, 'belajarVideo'])->name('video.belajar');
     Route::post('/payment/order-ebook', [PaymentController::class, 'paymentorderebook'])->name('payment.order.ebook');
     Route::post('/payment/order-video', [PaymentController::class, 'paymentordervideo'])->name('payment.order.video');
+    Route::post('/payment/order-video-manual', [PaymentController::class, 'paymentOrderVideoManual'])->name('payment.order.video.manual');
+    Route::post('/payment/order-ebook-manual', [PaymentController::class, 'paymentOrderEbookManual'])->name('payment.order.ebook.manual');
     Route::post('/detail-event/{unique_id}/order-iht', [DataEventKelasController::class, 'orderIht'])->name('membernonanggota.event.order-iht');
+    Route::post('/pembayaran/{id}/upload-bukti', [BillingController::class, 'uploadBuktiTransfer'])
+        ->name('pembayaran.upload-bukti');
     Route::get('/detail-event/{unique_id}/{title}', [DataEventKelasController::class, 'detailevent']);
     Route::get('/pembayaran', [BillingController::class, 'databilling']);
     Route::post('/pembayaran/{payment}/expire', [BillingController::class, 'expirePayment']);
@@ -51,6 +55,9 @@ Route::middleware('auth')->group(function () {
         ->name('membernonanggota.membership.continue-payment');
     Route::post('/pembayaran/iht/{payment}', [PaymentController::class, 'paymentIht'])->name('membernonanggota.payment-iht');
     Route::get('/classes/cetakinvoicepending/{id}', [MembershipController::class, 'cetakinvoicepending']);
+    Route::get('/materi/cetakinvoicepending/{id}', [InvoiceController::class, 'invoicemateri'])
+        ->middleware('auth')
+        ->name('invoice.pending');
     Route::get('/classes/getinvoice/{id}', [InvoiceController::class, 'getInvoice']);
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
     Route::get('/sertifikat-kelas', [SertifikatController::class, 'index'])

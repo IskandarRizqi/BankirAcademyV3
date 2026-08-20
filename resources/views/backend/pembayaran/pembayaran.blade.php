@@ -21,7 +21,7 @@
                         {{-- Input Filter Tanggal --}}
                         <div class="col-lg-5 col-md-6 mb-3 mb-lg-0">
                             <label class="font-weight-bold text-dark small mb-2"><i class="bx bx-calendar mr-1"></i> Rentang
-                                Tanggal Transaction</label>
+                                Tanggal Transaksi</label>
                             <div class="input-group">
                                 <input type="date" class="form-control border-right-0" value="{{ $param['date'][0] }}"
                                     name="param_date_start" style="border-radius: 10px 0 0 10px;">
@@ -92,7 +92,8 @@
                                 <th class="border-top-0 pl-4" style="width: 50px;">#</th>
                                 <th class="border-top-0">Status</th>
                                 <th class="border-top-0">No Invoice</th>
-                                <th class="border-top-0">Bukti Transfer</th>
+                                <th class="border-top-0">Skema / Metode</th>
+                                <th class="border-top-0">Bukti / Link Pembayaran</th>
                                 <th class="border-top-0">Total Harga</th>
                                 <th class="border-top-0">Tanggal Kelas</th>
                                 <th class="border-top-0">Modul Kelas</th>
@@ -104,61 +105,102 @@
                         </thead>
                         <tbody class="small text-dark">
                             @foreach ($pembayaran as $key => $p)
+                                @php
+                                    $linkPayment = $p->link_payment;
+
+                                    // Cek apakah link_payment berupa URL eksternal valid (http:// atau https://)
+                                    $isExternalUrl =
+                                        filter_var($linkPayment, FILTER_VALIDATE_URL) &&
+                                        (str_starts_with($linkPayment, 'http://') ||
+                                            str_starts_with($linkPayment, 'https://'));
+
+                                    // Cek keberadaan file bukti transfer (baik dari kolom bukti_transfer atau link_payment yang berupa path/file lokal)
+                                    $hasBuktiTransfer =
+                                        !empty($p->bukti_transfer) || (!empty($linkPayment) && !$isExternalUrl);
+
+                                    // Menentukan URL file lokal jika ada
+                                    $fileUrl = !empty($p->bukti_transfer)
+                                        ? asset('storage/' . $p->bukti_transfer)
+                                        : (!empty($linkPayment) && !$isExternalUrl
+                                            ? asset('storage/' . $linkPayment)
+                                            : null);
+                                @endphp
                                 <tr>
                                     <td class="pl-4 font-weight-bold align-middle">{{ $key + 1 }}</td>
 
                                     {{-- Status Badge --}}
                                     <td class="align-middle">
-                                        @if (!$p->file && $p->status == 0)
-                                            <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
-                                                    class="bx bx-x-circle mr-1"></i>Belum Lunas</span>
+                                        @if ($p->status == 1)
+                                            <span class="badge badge-soft-success px-2 py-1 font-weight-bold"><i
+                                                    class="bx bx-check-circle mr-1"></i>Lunas</span>
                                         @elseif ($p->file && $p->status == 0)
                                             <span class="badge badge-soft-warning px-2 py-1 font-weight-bold"><i
                                                     class="bx bx-time-five mr-1"></i>Diproses</span>
                                         @else
-                                            <span class="badge badge-soft-success px-2 py-1 font-weight-bold"><i
-                                                    class="bx bx-check-circle mr-1"></i>Lunas</span>
+                                            <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
+                                                    class="bx bx-x-circle mr-1"></i>Belum Lunas</span>
                                         @endif
                                     </td>
 
                                     <td class="align-middle font-weight-bold text-primary">{{ $p->no_invoice }}</td>
 
-                                    {{-- Preview Bukti --}}
+                                    {{-- Skema / Metode Pembayaran --}}
                                     <td class="align-middle">
-                                        @if ($p->file)
-                                            <a class="grid-item" href="/getBerkas?rf={{ $p->file }}" target="_blank"
-                                                data-lightbox="gallery-item">
-                                                <img src="/getBerkas?rf={{ $p->file }}"
-                                                    class="rounded border shadow-sm" width="60" height="40"
-                                                    style="object-fit: cover;">
-                                            </a>
+                                        {{-- Payment Gateway HANYA jika link_payment bernilai URL eksternal valid --}}
+                                        @if ($isExternalUrl)
+                                            <span class="badge badge-soft-primary"><i
+                                                    class="bx bx-credit-card mr-1"></i>Payment Gateway</span>
                                         @else
+                                            <span class="badge badge-soft-info"><i class="bx bx-transfer mr-1"></i>Transfer
+                                                Manual</span>
+                                        @endif
+                                    </td>
+
+                                    {{-- Preview Bukti Transfer ATAU Link Gateway --}}
+                                    <td class="align-middle">
+                                        @if ($isExternalUrl)
+                                            {{-- Tampilan jika link_payment adalah URL Payment Gateway --}}
+                                            <a href="{{ $linkPayment }}" target="_blank" rel="noopener"
+                                                class="btn btn-sm btn-outline-primary" style="border-radius: 6px;">
+                                                <i class="bx bx-link-external mr-1"></i> Link Payment
+                                            </a>
+                                        @elseif ($hasBuktiTransfer)
+                                            {{-- Tampilan jika berupa file bukti transfer lokal --}}
+                                            <a href="{{ $fileUrl }}" target="_blank" class="text-primary">Lihat
+                                                File</a>
+                                        @else
+                                            {{-- Tampilan jika tidak ada link maupun file --}}
                                             <span class="text-muted font-italic">- Tidak Ada -</span>
                                         @endif
                                     </td>
 
                                     <td class="align-middle font-weight-bold text-dark">
-                                        {{ numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY), $p->price_final, 'IDR') }}
+                                        {{ numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY), $p->nominal, 'IDR') }}
                                     </td>
 
                                     <td class="align-middle">
-                                        @if (Carbon\Carbon::parse($p->date_start)->format('d-m-Y') == Carbon\Carbon::parse($p->date_end)->format('d-m-Y'))
-                                            {{ Carbon\Carbon::parse($p->date_start)->format('d/m/Y') }}
+                                        @if (!empty($p->date_start))
+                                            @if (Carbon\Carbon::parse($p->date_start)->format('d-m-Y') == Carbon\Carbon::parse($p->date_end)->format('d-m-Y'))
+                                                {{ Carbon\Carbon::parse($p->date_start)->format('d/m/Y') }}
+                                            @else
+                                                {{ Carbon\Carbon::parse($p->date_start)->format('d/m/Y') }} <br>
+                                                <small class="text-muted">s/d
+                                                    {{ Carbon\Carbon::parse($p->date_end)->format('d/m/Y') }}</small>
+                                            @endif
                                         @else
-                                            {{ Carbon\Carbon::parse($p->date_start)->format('d/m/Y') }} <br>
-                                            <small class="text-muted">s/d
-                                                {{ Carbon\Carbon::parse($p->date_end)->format('d/m/Y') }}</small>
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
 
                                     <td class="align-middle text-truncate" style="max-width: 160px;"
-                                        title="{{ $p->title }}">
-                                        {{ $p->title }}
+                                        title="{{ $p->title ?? $p->pembelian }}">
+                                        {{ $p->title ?? $p->pembelian }}
                                     </td>
-                                    <td class="align-middle"><span
-                                            class="badge badge-light border text-secondary">{{ $p->category }}</span>
+                                    <td class="align-middle">
+                                        <span
+                                            class="badge badge-light border text-secondary">{{ $p->category ?? $p->tipe_pembelian }}</span>
                                     </td>
-                                    <td class="align-middle font-weight-bold">{{ $p->name }}</td>
+                                    <td class="align-middle font-weight-bold">{{ $p->name ?? '-' }}</td>
                                     <td class="align-middle text-center">
                                         @if ($p->sudah_cetak == 1)
                                             <span class="badge badge-soft-info"><i class="bx bx-check"></i> Sudah</span>
@@ -183,19 +225,12 @@
 
                                             {{-- Certificate Status --}}
                                             @if ($p->status == 1)
-                                                @if ($p->certificate == 1)
-                                                    <button class="btn btn-sm btn-light border-0 text-warning bs-tooltip"
-                                                        title="Unpublish Certificate"
-                                                        onclick="publichCertificate({{ $p->id }},{{ $p->certificate }})">
-                                                        <i class='bx bxs-file-doc font-size-16'></i>
-                                                    </button>
-                                                @else
-                                                    <button class="btn btn-sm btn-light border-0 text-success bs-tooltip"
-                                                        title="Publish Certificate"
-                                                        onclick="publichCertificate({{ $p->id }},{{ $p->certificate }})">
-                                                        <i class='bx bxs-file-doc font-size-16'></i>
-                                                    </button>
-                                                @endif
+                                                <button
+                                                    class="btn btn-sm btn-light border-0 {{ $p->certificate == 1 ? 'text-warning' : 'text-success' }} bs-tooltip"
+                                                    title="{{ $p->certificate == 1 ? 'Unpublish Certificate' : 'Publish Certificate' }}"
+                                                    onclick="publichCertificate({{ $p->id }},{{ $p->certificate ?? 0 }})">
+                                                    <i class='bx bxs-file-doc font-size-16'></i>
+                                                </button>
 
                                                 {{-- Batal Lunas --}}
                                                 <button class="btn btn-sm btn-light border-0 text-danger bs-tooltip"
@@ -212,12 +247,14 @@
                                                 </button>
                                             @endif
 
-                                            {{-- Edit Bukti --}}
-                                            <button class="btn btn-sm btn-light border-0 text-primary bs-tooltip"
-                                                title="Edit Bukti Transfer"
-                                                onclick="updatebukti('{{ json_encode($p) }}')">
-                                                <i class='bx bx-edit-alt font-size-16'></i>
-                                            </button>
+                                            {{-- Edit Bukti Transfer (Ditampilkan untuk SEMUA transaksi Transfer Manual / yang BUKAN Payment Gateway) --}}
+                                            @if (!$isExternalUrl)
+                                                <button class="btn btn-sm btn-light border-0 text-primary bs-tooltip"
+                                                    title="Edit Bukti Transfer"
+                                                    onclick="updatebukti('{{ json_encode($p) }}')">
+                                                    <i class='bx bx-edit-alt font-size-16'></i>
+                                                </button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -305,22 +342,11 @@
             }
         }
 
-        function viewimage(image) {
-            swal.fire({
-                imageUrl: '/image/' + image,
-                imageWidth: 400,
-                imageHeight: 200,
-                imageAlt: 'Bukti Pembayaran',
-                animation: false,
-                padding: '2em'
-            })
-        }
-
         function approved(id, status) {
             var s = {
                 title: 'Konfirmasi Status?',
                 text: "Tandai pembayaran ini sebagai Lunas!",
-                type: 'info',
+                icon: 'info', // 'type' diubah ke 'icon' untuk SweetAlert2
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Proses',
                 cancelButtonText: 'Batal',
@@ -330,15 +356,16 @@
                 s = {
                     title: 'Konfirmasi Batalkan Lunas?',
                     text: "Tandai pembayaran ini kembali menjadi Belum Lunas!",
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, Batalkan',
                     cancelButtonText: 'Batal',
                     padding: '2em'
                 }
             }
-            swal(s).then(function(result) {
-                if (result.value) {
+            // PERBAIKAN: Gunakan Swal.fire(s) bukan swal(s)
+            Swal.fire(s).then(function(result) {
+                if (result.isConfirmed || result.value) {
                     $('#formpembayaran').attr('action', '/admin/pembayaran/approved');
                     $('#id').val(id);
                     $('#status').val(status);
@@ -351,7 +378,7 @@
             var s = {
                 title: 'Publikasi Sertifikat?',
                 text: "Terbitkan sertifikat untuk user ini!",
-                type: 'info',
+                icon: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Terbitkan',
                 cancelButtonText: 'Batal',
@@ -361,15 +388,16 @@
                 s = {
                     title: 'Batalkan Sertifikat?',
                     text: "Sembunyikan sertifikat untuk user ini!",
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, Sembunyikan',
                     cancelButtonText: 'Batal',
                     padding: '2em'
                 }
             }
-            swal(s).then(function(result) {
-                if (result.value) {
+            // PERBAIKAN: Gunakan Swal.fire(s)
+            Swal.fire(s).then(function(result) {
+                if (result.isConfirmed || result.value) {
                     $('#formpembayaran').attr('action', '/admin/pembayaran/certificate');
                     $('#id').val(id);
                     $('#certificate').val(certificate);
@@ -382,14 +410,15 @@
             var s = {
                 title: 'Reset Status Cetak?',
                 text: "Ubah status cetak menjadi 0, user dapat memilih ulang opsi cetak.",
-                type: 'info',
+                icon: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Reset',
                 cancelButtonText: 'Batal',
                 padding: '2em'
             }
-            swal(s).then(function(result) {
-                if (result.value) {
+            // PERBAIKAN: Gunakan Swal.fire(s)
+            Swal.fire(s).then(function(result) {
+                if (result.isConfirmed || result.value) {
                     $('#formpembayaran').attr('action', '/admin/pembayaran/setsudahcetak');
                     $('#id').val(id);
                     $('#certificate').val(certificate);
