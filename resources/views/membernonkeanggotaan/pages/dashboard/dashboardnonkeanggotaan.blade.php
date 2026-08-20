@@ -1,34 +1,40 @@
 @extends('layouts.appmembernonanggota')
 @section('content')
-<style>
-	.dashboard-card {
-		background: #ffffff;
-		border: 1px solid #e5e7eb;
-		border-radius: 10px;
-		box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-	}
+    <style>
+        .member-dashboard-grid {
+            row-gap: 24px;
+        }
 
-	.dashboard-card-column {
-		display: flex;
-	}
+        .dashboard-card-column {
+            display: flex;
+        }
+    </style>
 
-	.member-dashboard-grid {
-		row-gap: 24px;
-	}
-</style>
+    <div class="row member-dashboard-grid" id="cancel-row">
+        {{-- Card 1: Membership Status (Sesuai Komponen Asli Anda) --}}
+        <div class="col-lg-6 col-12 layout-top-spacing layout-spacing dashboard-card-column">
+            @include('membernonkeanggotaan.components.ui.membership-status')
+        </div>
 
-<div class="row member-dashboard-grid" id="cancel-row">
-	<div class="col-lg-6 col-12 layout-top-spacing layout-spacing dashboard-card-column">
-		@include('membernonkeanggotaan.components.ui.learning-overview', ['overview' => $learningOverview ?? []])
-	</div>
-	<div class="col-lg-6 col-12 layout-top-spacing layout-spacing dashboard-card-column">
-		@include('membernonkeanggotaan.components.ui.membership-status')
-	</div>
-	<div class="col-lg-8 col-12 layout-top-spacing layout-spacing dashboard-card-column">
-		@include('membernonkeanggotaan.components.ui.learning-class-chart', ['chart' => $learningChart ?? []])
-	</div>
-	<div class="col-lg-4 col-12 layout-top-spacing layout-spacing dashboard-card-column">
-		@include('membernonkeanggotaan.components.ui.strength-weakness-analysis')
-	</div>
-</div>
+        {{-- Card 2: Ringkasan Akses Produk --}}
+        <div class="col-lg-6 col-12 layout-top-spacing layout-spacing dashboard-card-column">
+            @include('membernonkeanggotaan.components.ui.product-overview-card', [
+                'totalClasses' => $totalClasses,
+                'totalEbooks' => $totalEbooks,
+                'totalVideos' => $totalVideos,
+            ])
+        </div>
+
+        {{-- Card 3: Grafik Distribusi Status Pembayaran --}}
+        <div class="col-lg-5 col-12 layout-top-spacing layout-spacing dashboard-card-column">
+            @include('membernonkeanggotaan.components.ui.payment-chart-card', ['stats' => $paymentStats])
+        </div>
+
+        {{-- Card 4: Riwayat Transaksi Terbaru --}}
+        <div class="col-lg-7 col-12 layout-top-spacing layout-spacing dashboard-card-column">
+            @include('membernonkeanggotaan.components.ui.recent-payments-card', [
+                'payments' => $recentPayments,
+            ])
+        </div>
+    </div>
 @endsection

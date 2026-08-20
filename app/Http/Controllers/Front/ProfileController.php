@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use App\Helper\GlobalHelper;
 use App\Models\ClassContentModel;
 use App\Models\ClassParticipantModel;
+use App\Models\DataPayment;
 use App\Models\Dompet;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
@@ -41,9 +42,7 @@ use Illuminate\Support\Facades\Session;
 
 class ProfileController extends Controller
 {
-    public function __construct(private PaymentExpiryService $paymentExpiryService)
-    {
-    }
+    public function __construct(private PaymentExpiryService $paymentExpiryService) {}
 
     /**
      * Display a listing of the resource.
@@ -163,100 +162,57 @@ class ProfileController extends Controller
         return view('front.profile.profile', $data);
     }
 
-    public function indexv2($request)
+    public function indexv2(Request $request)
     {
-        $auth_id = Auth::user()->id;
-        $this->paymentExpiryService->syncForUser((int) $auth_id);
-        // $data['user'] = User::where('id', $auth_id)->first();
-        // $data['isperusahaan'] = GlobalHelper::isperusahaan();
-        // $data['pfl'] = UserProfileModel::select('user_profile.*', 'referral.code')
-        //     ->leftJoin('referral', 'referral.user_id', 'user_profile.user_id')
-        //     ->where('user_profile.user_id', $auth_id)
-        //     ->first();
-        // $data['billingkelasall'] = $this->getbillingkelas(100);
-        // $data['getkelasanda'] = $this->getkelasanda(100);
-        // $data['reff'] = RefferralPesertaModel::where('user_id', $auth_id)->first();
-        // $data['referralku'] = RefferralModel::select('referral.*', 'users.name')
-        //     ->join('users', 'users.id', 'referral.user_aplicator')
-        //     ->where('referral.user_aplicator', $auth_id)
-        //     ->get();
-        // $data['reffdisabled'] = RefferralModel::select()
-        //     ->where('referral.user_aplicator', $auth_id)
-        //     ->first();
-        // $data['cashback'] = GlobalHelper::currentSaldoKreditById($auth_id);
-        // $dompet = Dompet::where('user_id', $data['user']['id'])->first();
-        // $data['saldo'] = $dompet->saldo ?? 0;
-        // $data['saldoProses'] = GlobalHelper::countSaldoProsesById($auth_id);
-        // $data['saldoPenarikan'] = GlobalHelper::currentSaldoPenarikanById($auth_id);
-        // $data['withdraw'] = RefferralWithdrawModel::where('user_id', $auth_id)->get();
-        // $data['datalamaran'] = [];
-        // $data['lamaran'] = [];
-        // $data['loker'] = [];
-        // $data['lokerskill'] = [];
-        // $data['lokertype'] = [];
-        // if ($data['isperusahaan']) {
-        //     $data['member'] = MembershipModel::orderBy('urutan', 'asc')
-        //         ->where('is_active', 1)
-        //         ->where('urutan', '>=', 4)
-        //         ->limit(3)
-        //         ->get();
-        //     $data['loker'] = LokerModel::where('user_id', Auth::user()->id)->get();
-        //     foreach ($data['loker'] as $key => $v) {
-        //         foreach (json_decode($v->type) as $key => $tipes) {
-        //             if (!in_array($tipes, $data['lokertype'])) {
-        //                 array_push($data['lokertype'], $tipes);
-        //             }
-        //         }
-        //         foreach (json_decode($v->skill) as $key => $skills) {
-        //             if (!in_array($skills, $data['lokerskill'])) {
-        //                 array_push($data['lokerskill'], $skills);
-        //             }
-        //         }
-        //     }
-        // } else {
-        //     $data['member'] = MembershipModel::orderBy('urutan', 'asc')
-        //         ->where('is_active', 1)
-        //         ->where('urutan', '<', 4)
-        //         ->limit(3)
-        //         ->get();
-        //     $data['datalamaran'] = LamaranModel::where('user_id', $auth_id)->first();
-        //     $data['lamaran'] = LokerApply::with('lamaran')->where('user_id', $auth_id)->get();
-        //     $lokerid = []; // id loker yang pernah di apply
-        //     foreach ($data['lamaran'] as $key => $value) {
-        //         $value->tanggal_date = '';
-        //         if ($value->lamaran) {
-        //             if ($value->lamaran->tanggal_akhir) {
-        //                 $d = Carbon::parse($value->lamaran->tanggal_akhir);
-        //                 $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
-        //             }
-        //         }
-        //         if (!in_array($value->loker_id, $lokerid)) {
-        //             array_push($lokerid, $value->loker_id);
-        //         }
-        //     }
-        //     $limitloker = 10;
-        //     $data['loker'] = LokerModel::select()
-        //         ->whereDate('tanggal_awal', '<=', Carbon::now())
-        //         ->whereDate('tanggal_akhir', '>=', Carbon::now())
-        //         ->whereNotIn('id', $lokerid)
-        //         ->limit($limitloker)
-        //         ->get();
-        //     $data['kelas'] = ClassesModel::select()
-        //         // ->where('date_end', '>=', $now->format('Y-m-d'))
-        //         ->where('status', 1)
-        //         ->orderBy('date_end', 'desc')
-        //         ->take(4)
-        //         ->get();
-        // }
-        // $data['ismember'] = GlobalHelper::getaksesmembership();
-        // $data['historyMutasi'] = \App\Models\MutasiDompet::where('user_id', auth()->id())
-        //     ->orderBy('created_at', 'desc')
-        //     ->get();
-        // $data['ismember'] = false;
-        // return $data;
-        // return view('front.profilev2.index', $data);
-        // return Auth::user();
-        return view('membernonkeanggotaan.pages.dashboard.dashboardnonkeanggotaan');
+        $userId = Auth::id();
+
+        // 1. Sync data pembayaran expired
+        $this->paymentExpiryService->syncForUser((int) $userId);
+
+        // 2. Query transaksi user
+        $payments = DataPayment::where('user_id', $userId)->get();
+        $paidPayments = $payments->where('status', DataPayment::STATUS_PAID);
+
+        // 3. Statistik Akses Produk
+        $totalClasses = $paidPayments->filter(
+            fn($p) =>
+            (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_CLASS
+                || strtolower((string) $p->pembelian) === DataPayment::PURCHASE_CLASS
+        )->count();
+
+        $totalEbooks = $paidPayments->filter(
+            fn($p) =>
+            (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_EBOOK
+                || strtolower((string) $p->pembelian) === DataPayment::PURCHASE_EBOOK
+        )->count();
+
+        $totalVideos = $paidPayments->filter(
+            fn($p) =>
+            (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_VIDEO
+                || strtolower((string) $p->pembelian) === DataPayment::PURCHASE_VIDEO
+        )->count();
+
+        // 4. Statistik Status Pembayaran (1 = Lunas, 2 = Pending, 3 = Menunggu Konfirmasi, 99 = Batal)
+        $paymentStats = [
+            'lunas' => $paidPayments->count(),
+            'pending' => $payments->where('status', DataPayment::STATUS_PENDING)->count(),
+            'menunggu' => $payments->where('status', 3)->count(),
+            'batal' => $payments->where('status', DataPayment::STATUS_CANCELED)->count(),
+        ];
+
+        // 5. Riwayat Pembelian Terbaru (5 Transaksi)
+        $recentPayments = DataPayment::where('user_id', $userId)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('membernonkeanggotaan.pages.dashboard.dashboardnonkeanggotaan', compact(
+            'totalClasses',
+            'totalEbooks',
+            'totalVideos',
+            'paymentStats',
+            'recentPayments'
+        ));
     }
 
     public function getbillingkelas($type)

@@ -24,42 +24,64 @@ class PembayaranController extends Controller
 {
     public function index(Request $r)
     {
-        $data['param'] = [];
-        $data['param']['date'] = [Carbon::now()->submonth(3)->format('Y-m-d'), date('Y-m-d')];
-        $data['param']['status'] = [0, 1];
+        // 1. Inisialisasi parameter filter default
+        $startDate = $r->param_date_start ?? Carbon::now()->subMonths(3)->format('Y-m-d');
+        $endDate   = $r->param_date_end ?? Carbon::now()->format('Y-m-d');
 
-        if ($r->param_date_start) {
-            $data['param']['date'][0] = $r->param_date_start;
+        // Status default: [0, 1] (0: Belum Lunas, 1: Lunas)
+        $status    = $r->has('param_checked_lunas') ? (array) $r->param_checked_lunas : [0, 1];
+
+        $data['param'] = [
+            'date'   => [$startDate, $endDate],
+            'status' => array_map('intval', $status),
+        ];
+
+        // 2. Query DataPayment dengan filter dan relasi (Hapus relasi profile yang error)
+        $query = DataPayment::with([
+            'user',
+            'paymentClass',
+            'classPayment'
+        ]);
+
+        // Filter berdasarkan rentang tanggal
+        if (!empty($startDate) && !empty($endDate)) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($startDate)->startOfDay(),
+                Carbon::parse($endDate)->endOfDay()
+            ]);
         }
-        if ($r->param_date_end) {
-            $data['param']['date'][1] = $r->param_date_end;
+
+        // Filter berdasarkan status
+        if (!empty($status)) {
+            $query->whereIn('status', $status);
         }
 
-        if ($r->param_checked_lunas) {
-            $data['param']['status'] = $r->param_checked_lunas;
-        }
+        $pembayaran = $query->orderBy('created_at', 'desc')->get();
 
-        // $data['pembayaran'] = ClassPaymentModel::select(
-        //     'class_payment.*',
-        //     'user_profile.name',
-        //     'classes.title',
-        //     'classes.date_start',
-        //     'classes.date_start',
-        //     'classes.category',
-        //     'class_participant.certificate'
+        // 3. Mapping data agar atribut sesuai dengan Blade
+        $data['pembayaran'] = $pembayaran->map(function ($item) {
+            // Mengambil nama langsung dari relasi user
+            $item->name = $item->user->name ?? '-';
 
-        // )
-        //     ->leftJoin('user_profile', 'user_profile.user_id', 'class_payment.user_id')
-        //     ->leftJoin('classes', 'classes.id', 'class_payment.class_id')
-        //     ->leftJoin('class_participant', 'class_participant.payment_id', 'class_payment.id')
-        //     ->whereDate('class_payment.created_at', '>=', $data['param']['date'][0])
-        //     ->whereDate('class_payment.created_at', '<=', $data['param']['date'][1])
-        //     ->whereIn('class_payment.status', $data['param']['status'])
-        //     // ->orderBy('class_payment.status')
-        //     ->orderBy('class_payment.created_at', 'desc')
-        //     ->get();
-        // return $data;
-        $data['pembayaran'] = DataPayment::all();
+            // Ambil detail dari relasi kelas jika ada
+            if ($item->paymentClass) {
+                $item->title      = $item->paymentClass->title;
+                $item->date_start = $item->paymentClass->date_start;
+                $item->date_end   = $item->paymentClass->date_end;
+                $item->category   = $item->paymentClass->category;
+            }
+
+            // Ambil detail dari ClassPaymentModel jika ada
+            if ($item->classPayment) {
+                $item->certificate    = $item->classPayment->certificate ?? 0;
+                $item->sudah_cetak    = $item->classPayment->sudah_cetak ?? 0;
+                $item->bukti_transfer = $item->classPayment->bukti_transfer ?? null;
+                $item->file           = $item->classPayment->bukti_transfer ?? null;
+            }
+
+            return $item;
+        });
+
         return view('backend.pembayaran.pembayaran', $data);
     }
 
