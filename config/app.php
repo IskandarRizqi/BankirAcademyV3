@@ -57,6 +57,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL'),
+    'scraper_api_key' => env('SCRAPER_API_KEY'),
 
     'loker_non_membership_limit' => 10,
 

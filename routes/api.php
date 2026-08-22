@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\API\KelasController;
 use App\Http\Controllers\API\LokerController;
+use App\Http\Controllers\Api\ScraperIngestionController;
 use App\Http\Controllers\Backend\PembayaranController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\RecentRegistrationController;
 use App\Http\Middleware\AksesByIpAddress;
+use App\Http\Middleware\VerifyScraperApiKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +35,9 @@ Route::middleware([AksesByIpAddress::class])->group(function () {
 
 Route::get('/apiberanda', [HomeController::class, 'apiberanda']);
 Route::get('/tripay/create', [PembayaranController::class, 'tripaycreate']);
+Route::middleware([VerifyScraperApiKey::class, 'throttle:60,1'])->group(function () {
+    Route::post('/v1/scraper/loker-draft', [ScraperIngestionController::class, 'store']);
+});
 Route::get('/tripay/ppob', [PembayaranController::class, 'tripayppob']);
 Route::post('/c4/notifikasi', [CheckoutController::class, 'handleDokuTransactionNotification']);
 Route::post('/doku/notification', [CheckoutController::class, 'handleNotification']);

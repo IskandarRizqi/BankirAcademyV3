@@ -29,7 +29,7 @@ class PembayaranController extends Controller
         $endDate   = $r->param_date_end ?? Carbon::now()->format('Y-m-d');
 
         // Status default: [0, 1] (0: Belum Lunas, 1: Lunas)
-        $status    = $r->has('param_checked_lunas') ? (array) $r->param_checked_lunas : [0, 1];
+        $status    = $r->has('param_checked_lunas') ? (array) $r->param_checked_lunas : [0, 1, 2, 3];
 
         $data['param'] = [
             'date'   => [$startDate, $endDate],
@@ -38,7 +38,7 @@ class PembayaranController extends Controller
 
         // 2. Query DataPayment dengan filter dan relasi (Hapus relasi profile yang error)
         $query = DataPayment::with([
-            'user',
+            // 'user',
             'paymentClass',
             'classPayment'
         ]);
@@ -81,6 +81,7 @@ class PembayaranController extends Controller
 
             return $item;
         });
+        // return $data['pembayaran'];
 
         return view('backend.pembayaran.pembayaran', $data);
     }

@@ -266,7 +266,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Status</th>
-                                    <th>Nama Akun</th>
+                                    {{-- <th>Nama Akun</th> --}}
                                     <th>Nama Sertifikat</th>
                                     <th>No HP</th>
                                     <th>Instansi</th>
@@ -497,20 +497,32 @@
 
             if (data.length > 0) {
                 data.forEach(el => {
-                    let status = el.status ? '<span class="badge badge-success">Lunas</span>' :
-                        '<span class="badge badge-warning">Belum Lunas</span>';
-                    html += `
+                    try {
+                        if (el.nama_sertifikat && el.nama_sertifikat.startsWith('[')) {
+                            daftarNama = JSON.parse(el.nama_sertifikat);
+                        } else if (el.nama_sertifikat) {
+                            daftarNama = [el.nama_sertifikat]; // Jika bukan array, jadikan array tunggal
+                        } else {
+                            daftarNama = [el.user_name]; // Fallback ke nama akun jika data sertifikat kosong
+                        }
+                    } catch (e) {
+                        daftarNama = [el.nama_sertifikat];
+                    }
+                    daftarNama.forEach(namaIndividu => {
+                        let status = el.status ? '<span class="badge badge-success">Lunas</span>' :
+                            '<span class="badge badge-warning">Belum Lunas</span>';
+                        html += `
                     <tr>
                         <td>${status}</td>
-                        <td class="font-weight-bold">${el.account_name ?? '-'}</td>
-                        <td>${el.certificate_name ?? '-'}</td>
+                        <td>${namaIndividu ?? '-'}</td>
                         <td>${el.phone ?? '-'}</td>
-                        <td>${el.institution ?? '-'}</td>
+                        <td>${el.user_name ?? '-'}</td>
                         <td>Rp ${Number(el.price || 0).toLocaleString('id-ID')}</td>
-                        <td>${el.certificate_code ?? '-'}</td>
+                      <td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/${id_class}/${namaIndividu}/${el.user_name}" target="_blank">Show Certificate</a></td>
                     </tr>
                 `;
-                });
+                    });
+                })
             } else {
                 html = `<tr><td colspan="7" class="text-center text-muted py-3">Tidak ada data peserta.</td></tr>`;
             }

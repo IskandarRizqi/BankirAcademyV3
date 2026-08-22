@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LokerController as AdminLokerController;
 use App\Http\Controllers\Admin\LokerApplicationController;
 use App\Http\Controllers\Admin\ManualClassOrderController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\ScraperApiKeyController;
 use App\Http\Controllers\Admin\SopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\IsAdminRoot;
@@ -25,6 +26,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/classes/setadditional', [ClassesController::class, 'setadditional'])->middleware('admin.panel');
     Route::post('/admin/classes/setpricing', [ClassesController::class, 'setpricing'])->middleware('admin.panel');
     Route::post('/admin/classes/setcontent', [ClassesController::class, 'setcontent'])->middleware('admin.panel');
+    Route::get('/admin/classes/previewcertificate/{id}/{nama}/{instansi}', [ClassesController::class, 'previewcertificateAdmin']);
     Route::post('/admin/classes/setevent', [ClassesController::class, 'setevent'])->middleware('admin.panel');
     Route::post('/admin/classes/inputcertificatetemplate/{id}', [ClassesController::class, 'setcertificate'])->middleware('admin.panel');
     Route::get('/admin/classes/createevent/{id}', [ClassesController::class, 'createevent'])->middleware('admin.panel');
@@ -52,6 +54,10 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/pembayaran', [AdminPaymentController::class, 'index'])
         ->middleware('admin.panel')
         ->name('admin.payments.index');
+    Route::get('/docs/api/loker', [ScraperApiKeyController::class, 'index'])->name('scraper-keys.index');
+    Route::post('/scraper-keys', [ScraperApiKeyController::class, 'store'])->name('scraper-keys.store');
+    Route::patch('/scraper-keys/{apiKey}/toggle', [ScraperApiKeyController::class, 'toggleStatus'])->name('scraper-keys.toggle');
+    Route::delete('/scraper-keys/{apiKey}', [ScraperApiKeyController::class, 'destroy'])->name('scraper-keys.destroy');
     Route::post('/admin/pembayaran/approved', [AdminPaymentController::class, 'approved'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/certificate', [AdminPaymentController::class, 'publish_certificate'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/setsudahcetak', [AdminPaymentController::class, 'setsudahcetak'])->middleware('admin.panel');

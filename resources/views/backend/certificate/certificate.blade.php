@@ -49,7 +49,7 @@
 
         .title {
             font-size: 32px;
-            padding-bottom: 30px;
+            padding-bottom: 150px;
         }
 
         .diberikan,
@@ -66,12 +66,12 @@
 <body>
 
     <div class="container">
-        <p class="diberikan"><?= $certificate_code; ?><br>Diberikan Kepada:</p>
-        <h3 class="title"><?= $name; ?>
+        <p class="diberikan"><?= $certificate_code ?><br>Diberikan Kepada:</p>
+        <h3 class="title"><?= $name ?>
         </h3>
         <!-- <h4 class="pt">PT </h4> -->
         <div class="content">
-            <?= $contents ?>
+            {{-- <?= $contents ?> --}}
         </div>
 
     </div>

@@ -95,7 +95,7 @@
                                 <th class="border-top-0">Skema / Metode</th>
                                 <th class="border-top-0">Bukti / Link Pembayaran</th>
                                 <th class="border-top-0">Total Harga</th>
-                                <th class="border-top-0">Tanggal Kelas</th>
+                                {{-- <th class="border-top-0">Tanggal Kelas</th> --}}
                                 <th class="border-top-0">Modul Kelas</th>
                                 <th class="border-top-0">Kategori</th>
                                 <th class="border-top-0">Nama User</th>
@@ -178,7 +178,7 @@
                                         {{ numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY), $p->nominal, 'IDR') }}
                                     </td>
 
-                                    <td class="align-middle">
+                                    {{-- <td class="align-middle">
                                         @if (!empty($p->date_start))
                                             @if (Carbon\Carbon::parse($p->date_start)->format('d-m-Y') == Carbon\Carbon::parse($p->date_end)->format('d-m-Y'))
                                                 {{ Carbon\Carbon::parse($p->date_start)->format('d/m/Y') }}
@@ -190,7 +190,7 @@
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
-                                    </td>
+                                    </td> --}}
 
                                     <td class="align-middle text-truncate" style="max-width: 160px;"
                                         title="{{ $p->title ?? $p->pembelian }}">

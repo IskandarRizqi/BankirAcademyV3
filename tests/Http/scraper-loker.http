@@ -1,0 +1,77 @@
+### Variables
+@baseUrl = http://localhost:8000
+@contentType = application/json
+@apiKey = scr_live_XVPqeDh3qM5RAmciRbiUYzp07NPk5HpW
+
+###############################################################################
+# 1. SCRAPER SOCIAL MEDIA (INSTAGRAM)
+###############################################################################
+POST {{baseUrl}}/api/v1/scraper/loker-draft
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+X-Scraper-Api-Key: {{apiKey}}
+
+[{
+  "source_type": "social_media",
+  "platform": "Instagram",
+  "logo_url": "https://s3.bucket.com/logo.jpg",
+  "nama_perusahaan": "PT Teknologi Nusantara",
+  "email_perusahaan": "hrd@teknologi.com",
+  "alamat_raw": "Jl. Sudirman No 12",
+  "provinsi_raw": "DKI Jakarta",
+  "gaji_raw": "Rp 5.000.000 - Rp 8.000.000",
+  "gaji_min": 5000000,
+  "gaji_max": 8000000,
+  "posisi": "Backend Developer",
+  "ringkasan_ai": "Dibutuhkan laravel dev pengalaman 2 tahun...",
+  "jobdesk": "Membuat API, Maintenance database",
+  "kualifikasi_jobspek": "Minimal S1 Informatika",
+  "keahlian_skill": "Laravel, PostgreSQL, REST API",
+  "tipe_pekerjaan": "Fulltime",
+  "tanggal_posting": "2026-08-20 10:00:00",
+  "batas_pendaftaran": "2026-09-01",
+  "no_hp": "081234567890",
+  "website_form_url": "https://teknologi.com/career",
+  "instagram_dm": "@teknologi_official",
+  "cara_melamar": "Kirim email ke hrd@teknologi.com dengan subjek [BE Dev]",
+  "kategori_bidang": "IT & Software",
+  "sumber_url": "https://instagram.com/p/Cxxxxxxx"
+}]
+
+###
+###############################################################################
+# 2. SCRAPER JOB PLATFORM (JOBSTREET)
+###############################################################################
+POST {{baseUrl}}/api/v1/scraper/loker-draft
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+X-Scraper-Api-Key: {{apiKey}}
+
+[{
+  "source_type": "job_platform",
+  "platform": "JobStreet",
+  "posisi": "Frontend Engineer",
+  "nama_perusahaan": "PT Kreatif Digital",
+  "provinsi_raw": "Jawa Barat",
+  "gaji_raw": "Gaji Kompetitif",
+  "tanggal_posting": "2 days ago",
+  "tipe_pekerjaan": "Contract",
+  "kualifikasi_jobspek": "Menguasai Vue.js / React",
+  "deskripsi_pekerjaan": "Bertanggung jawab atas UI/UX platform web...",
+  "fasilitas": "BPJS, Tunjangan makan",
+  "sumber_url": "https://jobstreet.co.id/job/123456"
+}]
+
+
+###
+###############################################################################
+# 3. TEST VALIDASI GAGAL (KOSONGKAN FIELD REQUIRED)
+###############################################################################
+POST {{baseUrl}}/api/v1/scraper/loker-draft
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "source_type": "invalid_type",
+  "sumber_url": "not-an-url"
+}
