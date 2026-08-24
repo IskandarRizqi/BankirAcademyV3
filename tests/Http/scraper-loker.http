@@ -1,7 +1,7 @@
 ### Variables
 @baseUrl = http://localhost:8000
 @contentType = application/json
-@apiKey = scr_live_XVPqeDh3qM5RAmciRbiUYzp07NPk5HpW
+@apiKey = scr_live_gCk67Mh8z6FmA43htIcFYZnQzHsGHN5g
 
 ###############################################################################
 # 1. SCRAPER SOCIAL MEDIA (INSTAGRAM)

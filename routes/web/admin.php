@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\InstructorController as AdminInstructorController;
 use App\Http\Controllers\Admin\LokerController as AdminLokerController;
 use App\Http\Controllers\Admin\LokerApplicationController;
+use App\Http\Controllers\Admin\LokerDraftController;
 use App\Http\Controllers\Admin\ManualClassOrderController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\ScraperApiKeyController;
@@ -55,6 +56,9 @@ Route::middleware([IsAdminRoot::class])->group(function () {
         ->middleware('admin.panel')
         ->name('admin.payments.index');
     Route::get('/docs/api/loker', [ScraperApiKeyController::class, 'index'])->name('scraper-keys.index');
+    Route::get('/loker-drafts', [LokerDraftController::class, 'index'])->name('lokerdraft.index');
+    Route::post('/loker-drafts/import', [LokerDraftController::class, 'import'])->name('loker-draft.import');
+    Route::get('/loker-drafts/template', [LokerDraftController::class, 'downloadTemplate'])->name('loker-draft.download-template');
     Route::post('/scraper-keys', [ScraperApiKeyController::class, 'store'])->name('scraper-keys.store');
     Route::patch('/scraper-keys/{apiKey}/toggle', [ScraperApiKeyController::class, 'toggleStatus'])->name('scraper-keys.toggle');
     Route::delete('/scraper-keys/{apiKey}', [ScraperApiKeyController::class, 'destroy'])->name('scraper-keys.destroy');

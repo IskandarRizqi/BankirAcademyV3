@@ -32,6 +32,9 @@
     <script src="{{ asset('cbtemplate/assets/plugins/select2/custom-select2.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.21/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js untuk interaktivitas UI -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
 </head>
@@ -59,7 +62,7 @@
                 'icon' => 'cpu',
                 'url' => route('users.index'),
                 'active' => request()->routeIs('users.*'),
-                'can_see' => ! $isRoot && in_array($role, [4, 5]),
+                'can_see' => !$isRoot && in_array($role, [4, 5]),
                 'has_submenu' => false,
                 'section' => 'Calon Bankir',
             ],
@@ -122,7 +125,7 @@
                 'icon' => 'bar-chart-2',
                 'url' => '/manajemen/laporan-siswa',
                 'active' => request()->is('*manajemen/report*') || request()->is('*laporan-siswa*'),
-                'can_see' => ! $isRoot && in_array($role, [4, 5]),
+                'can_see' => !$isRoot && in_array($role, [4, 5]),
                 'has_submenu' => false,
                 'section' => 'Calon Bankir',
             ],
@@ -131,7 +134,7 @@
                 'icon' => 'zap',
                 'url' => route('beasiswa.approval.list'),
                 'active' => request()->routeIs('beasiswa.approval.list'),
-                'can_see' => ! $isRoot && in_array($role, [4, 5]),
+                'can_see' => !$isRoot && in_array($role, [4, 5]),
                 'has_submenu' => false,
                 'section' => 'Calon Bankir',
             ],
