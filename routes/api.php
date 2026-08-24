@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\API\KelasController;
 use App\Http\Controllers\API\LokerController;
-use App\Http\Controllers\Api\ScraperIngestionController;
+use App\Http\Controllers\API\ScraperIngestionController;
 use App\Http\Controllers\Backend\PembayaranController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
