@@ -1,7 +1,6 @@
 ### Variables
-@baseUrl = https://bankiracademy.co.id
+@baseUrl = http://localhost:8000
 @contentType = application/json
-@apiKey = scr_live_gCk67Mh8z6FmA43htIcFYZnQzHsGHN5g
 
 ###############################################################################
 # 1. SCRAPER SOCIAL MEDIA (INSTAGRAM)
@@ -36,6 +35,58 @@ X-Scraper-Api-Key: {{apiKey}}
   "cara_melamar": "Kirim email ke hrd@teknologi.com dengan subjek [BE Dev]",
   "kategori_bidang": "IT & Software",
   "sumber_url": "https://instagram.com/p/Cxxxxxxx"
+},
+{
+  "source_type": "social_media",
+  "platform": "Facebook",
+  "logo_url": "https://s3.bucket.com/logo.jpg",
+  "nama_perusahaan": "PT Teknologi Indonesia",
+  "email_perusahaan": "hrd@teknologi.com",
+  "alamat_raw": "Jl. Pahlawan No 12",
+  "provinsi_raw": "Jawa Barat",
+  "gaji_raw": "Rp 5.000.000 - Rp 8.000.000",
+  "gaji_min": 4000000,
+  "gaji_max": 7000000,
+  "posisi": "Frontend Developer",
+  "ringkasan_ai": "Dibutuhkan laravel dev pengalaman 2 tahun...",
+  "jobdesk": "Membuat API, Maintenance database",
+  "kualifikasi_jobspek": "Minimal S1 Informatika",
+  "keahlian_skill": "Laravel, PostgreSQL, REST API",
+  "tipe_pekerjaan": "Fulltime",
+  "tanggal_posting": "2026-08-20 10:00:00",
+  "batas_pendaftaran": "2026-09-01",
+  "no_hp": "081234567890",
+  "website_form_url": "https://teknologi.com/career",
+  "instagram_dm": "@teknologi_official",
+  "cara_melamar": "Kirim email ke hrd@teknologi.com dengan subjek [BE Dev]",
+  "kategori_bidang": "IT & Software",
+  "sumber_url": "https://instagram.com/p/Cxxxxxxx"
+},
+{
+  "source_type": "social_media",
+  "platform": "Instagram",
+  "logo_url": "https://s3.bucket.com/logo.jpg",
+  "nama_perusahaan": "PT Integrasi Nusantara",
+  "email_perusahaan": "hrd@teknologi.com",
+  "alamat_raw": "Jl. Sudirman No 12",
+  "provinsi_raw": "Jawa Tengah",
+  "gaji_raw": "Rp 5.000.000 - Rp 8.000.000",
+  "gaji_min": 5000000,
+  "gaji_max": 8000000,
+  "posisi": "Fullstack Developer",
+  "ringkasan_ai": "Dibutuhkan laravel dev pengalaman 2 tahun...",
+  "jobdesk": "Membuat API, Maintenance database",
+  "kualifikasi_jobspek": "Minimal S1 Informatika",
+  "keahlian_skill": "Laravel, PostgreSQL, REST API",
+  "tipe_pekerjaan": "Fulltime",
+  "tanggal_posting": "2026-08-20 10:00:00",
+  "batas_pendaftaran": "2026-09-01",
+  "no_hp": "081234567890",
+  "website_form_url": "https://teknologi.com/career",
+  "instagram_dm": "@teknologi_official",
+  "cara_melamar": "Kirim email ke hrd@teknologi.com dengan subjek [BE Dev]",
+  "kategori_bidang": "IT & Software",
+  "sumber_url": "https://instagram.com/p/Cxxxxxxx"
 }]
 
 ###
@@ -47,10 +98,11 @@ Content-Type: {{contentType}}
 Accept: {{contentType}}
 X-Scraper-Api-Key: {{apiKey}}
 
-[{
+[
+  {
   "source_type": "job_platform",
   "platform": "JobStreet",
-  "posisi": "Frontend Engineer",
+  "posisi": "Devops Engineer",
   "nama_perusahaan": "PT Kreatif Digital",
   "provinsi_raw": "Jawa Barat",
   "gaji_raw": "Gaji Kompetitif",
@@ -60,7 +112,50 @@ X-Scraper-Api-Key: {{apiKey}}
   "deskripsi_pekerjaan": "Bertanggung jawab atas UI/UX platform web...",
   "fasilitas": "BPJS, Tunjangan makan",
   "sumber_url": "https://jobstreet.co.id/job/123456"
-}]
+},
+  {
+  "source_type": "job_platform",
+  "platform": "Glints",
+  "posisi": "Network Engineer",
+  "nama_perusahaan": "PT Kreatif Solusindo",
+  "provinsi_raw": "Jawa Barat",
+  "gaji_raw": "Gaji Kompetitif",
+  "tanggal_posting": "5 days ago",
+  "tipe_pekerjaan": "Parttime",
+  "kualifikasi_jobspek": "Menguasai Vue.js / React",
+  "deskripsi_pekerjaan": "Bertanggung jawab atas UI/UX platform web...",
+  "fasilitas": "BPJS, Tunjangan makan",
+  "sumber_url": "https://jobstreet.co.id/job/123456"
+},
+  {
+  "source_type": "job_platform",
+  "platform": "JobStreet",
+  "posisi": "AI Engineer",
+  "nama_perusahaan": "PT Kreatif Digital",
+  "provinsi_raw": "Jawa Tengah",
+  "gaji_raw": "Gaji Kompetitif",
+  "tanggal_posting": "4 days ago",
+  "tipe_pekerjaan": "Contract",
+  "kualifikasi_jobspek": "Menguasai Vue.js / React",
+  "deskripsi_pekerjaan": "Bertanggung jawab atas UI/UX platform web...",
+  "fasilitas": "BPJS, Tunjangan makan",
+  "sumber_url": "https://jobstreet.co.id/job/123456"
+},
+  {
+  "source_type": "job_platform",
+  "platform": "Glints",
+  "posisi": "Data Engineer",
+  "nama_perusahaan": "PT Kreatif Digital",
+  "provinsi_raw": "Jawa Barat",
+  "gaji_raw": "Gaji Kompetitif",
+  "tanggal_posting": "4 days ago",
+  "tipe_pekerjaan": "Contract",
+  "kualifikasi_jobspek": "Menguasai Vue.js / React",
+  "deskripsi_pekerjaan": "Bertanggung jawab atas UI/UX platform web...",
+  "fasilitas": "BPJS, Tunjangan makan",
+  "sumber_url": "https://jobstreet.co.id/job/123456"
+}
+]
 
 
 ###
@@ -70,6 +165,7 @@ X-Scraper-Api-Key: {{apiKey}}
 POST {{baseUrl}}/api/v1/scraper/loker-draft
 Content-Type: {{contentType}}
 Accept: {{contentType}}
+X-Scraper-Api-Key: {{apiKey}}
 
 {
   "source_type": "invalid_type",

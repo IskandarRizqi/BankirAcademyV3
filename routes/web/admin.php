@@ -58,6 +58,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/docs/api/loker', [ScraperApiKeyController::class, 'index'])->name('scraper-keys.index');
     Route::get('/loker-drafts', [LokerDraftController::class, 'index'])->name('lokerdraft.index');
     Route::post('/loker-drafts/import', [LokerDraftController::class, 'import'])->name('loker-draft.import');
+    Route::delete('/loker-drafts/{id}', [LokerDraftController::class, 'destroy'])->name('lokerdraft.destroy');
+    Route::post('/loker-drafts/bulk-delete', [LokerDraftController::class, 'bulkDestroy'])->name('lokerdraft.bulk-destroy');
     Route::get('/loker-drafts/template', [LokerDraftController::class, 'downloadTemplate'])->name('loker-draft.download-template');
     Route::post('/scraper-keys', [ScraperApiKeyController::class, 'store'])->name('scraper-keys.store');
     Route::patch('/scraper-keys/{apiKey}/toggle', [ScraperApiKeyController::class, 'toggleStatus'])->name('scraper-keys.toggle');

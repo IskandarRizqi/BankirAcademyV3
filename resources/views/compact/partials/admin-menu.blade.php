@@ -88,6 +88,8 @@
                 href="{{ route('perusahaan.index') }}">Master Perusahaan</a>
             <a class="sub-link {{ request()->routeIs('admin.loker.*') ? 'active' : '' }}"
                 href="{{ route('admin.loker.index') }}">Form Loker</a>
+            <a class="sub-link {{ request()->routeIs('lokerdraft.*') ? 'active' : '' }}"
+                href="{{ route('lokerdraft.index') }}">Draft Loker</a>
             <a class="sub-link {{ request()->routeIs('apply.*') ? 'active' : '' }}"
                 href="{{ route('apply.index') }}">List Pelamar</a>
             {{-- <a class="sub-link {{ request()->routeIs('admin.applications.cv') ? 'active' : '' }}"
