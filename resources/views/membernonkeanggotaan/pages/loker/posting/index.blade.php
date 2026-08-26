@@ -5,6 +5,9 @@
 @section('content')
 @php
     $logo = data_get(json_decode((string) ($company->image ?? ''), true), 'url');
+    $logoUrl = filled($logo)
+        ? (\Illuminate\Support\Str::startsWith($logo, ['http://', 'https://', '/']) ? $logo : asset('image/loker/' . basename($logo)))
+        : null;
     $filters = $filters ?? [
         'q' => '',
         'periode_dari' => null,
@@ -560,7 +563,7 @@
                 <div class="posting-company-summary__identity">
                     <div class="posting-company-summary__logo">
                         @if($logo)
-                            <img src="{{ asset('image/loker/'.basename($logo)) }}" alt="Logo {{ $company->nama }}">
+                            <img src="{{ $logoUrl }}" alt="Logo {{ $company->nama }}">
                         @else
                             <i class="fas fa-building text-muted" aria-hidden="true"></i>
                         @endif

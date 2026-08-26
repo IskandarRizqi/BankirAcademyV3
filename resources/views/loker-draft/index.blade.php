@@ -2,642 +2,988 @@
 
 @section('content')
     <style>
-        [x-cloak] {
-            display: none !important;
+        .white-space-pre-line {
+            white-space: pre-line;
         }
 
-        .loker-detail-modal {
-            z-index: 1100;
-            padding: calc(var(--topbar-h) + 1rem) 1rem 1rem;
+        .draft-modal-dialog {
+            max-width: 1180px;
         }
 
-        .loker-detail-modal__panel {
-            max-height: calc(100vh - var(--topbar-h) - 2rem);
+        .draft-modal-content {
+            border: 0;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 1rem 3rem rgba(15, 23, 42, .18);
+        }
+
+        .draft-modal-header {
+            border: 0;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .draft-modal-header .close {
+            color: inherit;
+            opacity: .8;
+            text-shadow: none;
+        }
+
+        .draft-modal-header .close:hover {
+            opacity: 1;
+        }
+
+        .draft-modal-title {
+            font-size: 1.05rem;
+            letter-spacing: -.01em;
+        }
+
+        .draft-modal-subtitle {
+            display: block;
+            margin-top: .2rem;
+            font-size: .78rem;
+            opacity: .75;
+        }
+
+        .draft-modal-body {
+            background: #f8fafc;
+        }
+
+        .draft-edit-form {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .draft-edit-form .draft-modal-body {
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        .draft-form-section {
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fff;
+            border: 1px solid #e8edf3;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .03);
+        }
+
+        .draft-form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .draft-section-title {
+            display: flex;
+            align-items: center;
+            padding-bottom: .75rem;
+            margin-bottom: 1rem;
+            color: #1e293b;
+            font-size: .86rem;
+            font-weight: 700;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .draft-section-title i {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            margin-right: .55rem;
+            color: #4f46e5;
+            background: #eef2ff;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .draft-form-section .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .draft-form-section .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .draft-form-section label {
+            color: #334155;
+            margin-bottom: .4rem;
+        }
+
+        .draft-form-section .form-control {
+            min-height: 42px;
+            border-color: #dbe3ec;
+            border-radius: 9px;
+            box-shadow: none;
+        }
+
+        .draft-form-section textarea.form-control {
+            min-height: auto;
+        }
+
+        .draft-form-section .form-control:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 .2rem rgba(99, 102, 241, .12);
+        }
+
+        .draft-modal-footer {
+            flex-shrink: 0;
+            padding: 1rem 1.5rem;
+            border: 0;
+        }
+
+        .draft-modal-footer .btn {
+            min-width: 130px;
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .draft-detail-card {
+            border: 1px solid #e8edf3;
+            border-radius: 12px;
+        }
+
+        .draft-detail-card .card-body {
+            padding: 1.1rem;
+        }
+
+        .draft-detail-label {
+            display: block;
+            margin-bottom: .2rem;
+            color: #94a3b8;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 575.98px) {
+            .draft-modal-dialog {
+                margin: .5rem;
+            }
+
+            .draft-modal-header,
+            .draft-modal-footer {
+                padding: 1rem;
+            }
+
+            .draft-modal-footer {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
+            .draft-modal-footer .btn {
+                width: 100%;
+                margin: .2rem 0;
+            }
+
+            .draft-form-section {
+                padding: 1rem;
+            }
         }
     </style>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="{
-        activeTab: 'social_media',
-        showImportModal: false,
-        showDetailModal: false,
-        selectedDraft: null,
-        selectedIds: [],
-        searchTerm: '',
-    
-        openDetail(item) {
-            this.selectedDraft = item;
-            this.showDetailModal = true;
-        },
-    
-        toggleAll(event, type, items) {
-            if (event.target.checked) {
-                let filtered = items.filter(i => i.source_type === type).map(i => i.id);
-                this.selectedIds = [...new Set([...this.selectedIds, ...filtered])];
-            } else {
-                let filteredIds = items.filter(i => i.source_type === type).map(i => i.id);
-                this.selectedIds = this.selectedIds.filter(id => !filteredIds.includes(id));
-            }
-        },
-    
-        isAllSelected(type, items) {
-            let filtered = items.filter(i => i.source_type === type);
-            if (filtered.length === 0) return false;
-            return filtered.every(i => this.selectedIds.includes(i.id));
-        },
-    
-        // Logic Live Search Client-Side
-        matchSearch(item) {
-            if (!this.searchTerm.trim()) return true;
-            let term = this.searchTerm.toLowerCase();
-            let posisi = (item.posisi || '').toLowerCase();
-            let perusahaan = (item.nama_perusahaan || '').toLowerCase();
-            let lokasi = (item.provinsi_raw || item.alamat_raw || '').toLowerCase();
-    
-            return posisi.includes(term) || perusahaan.includes(term) || lokasi.includes(term);
-        }
-    }">
+    @php
+        $companyConflict = session('company_conflict');
+    @endphp
 
-        <!-- Header Page -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div class="container-fluid py-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Review Draft Lowongan Kerja</h1>
-                <p class="text-sm text-gray-500">Kelola dan verifikasi data hasil scraping dari sosial media & job platform.
-                </p>
+                <h4 class="font-weight-bold text-dark mb-1">Review Draft Lowongan Kerja</h4>
+                <p class="text-muted small mb-0">Kelola data hasil scraping dari sosial media dan job platform sebelum
+                    dipublikasikan.</p>
             </div>
-            <div class="flex items-center gap-3">
-                <form action="{{ route('lokerdraft.bulk-destroy') }}" method="POST" x-show="selectedIds.length > 0" x-cloak
-                    x-transition onsubmit="return confirm('Apakah Anda yakin ingin menghapus data yang dipilih?')">
+            <div class="d-flex flex-wrap align-items-center mt-3 mt-md-0">
+                <form action="{{ route('lokerdraft.bulk-destroy') }}" method="POST" id="bulk-delete-form" class="d-none mr-2">
                     @csrf
-                    <template x-for="id in selectedIds" :key="id">
-                        <input type="hidden" name="ids[]" :value="id">
-                    </template>
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition shadow-sm">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Hapus Terpilih (<span x-text="selectedIds.length"></span>)
+                    <div id="bulk-delete-inputs"></div>
+                    <button type="submit" class="btn btn-danger font-weight-bold">
+                        <i class="bx bx-trash mr-1"></i> Hapus Terpilih (<span id="selected-count">0</span>)
                     </button>
                 </form>
-
-                <button @click="showImportModal = true"
-                    class="inline-flex items-center px-4 py-2 border border-emerald-600 text-emerald-700 bg-white hover:bg-emerald-50 rounded-lg text-sm font-medium transition shadow-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    Import Excel
+                <button type="button" class="btn btn-outline-success font-weight-bold" data-toggle="modal"
+                    data-target="#importDraftModal">
+                    <i class="bx bx-upload mr-1"></i> Import Excel
                 </button>
             </div>
         </div>
 
-        <!-- Alert Notification -->
         @if (session('success'))
-            <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r text-sm">
-                {{ session('success') }}
+            <div class="alert alert-success border-0 shadow-sm">{{ session('success') }}</div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger border-0 shadow-sm">{{ session('error') }}</div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger border-0 shadow-sm">
+                <strong>Data belum dapat disimpan:</strong>
+                <ul class="mb-0 mt-2 pl-3 small">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
 
-        <!-- Section Live Search & Filter -->
-        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6">
-            <form method="GET" action="{{ route('lokerdraft.index') }}"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Live Search Field -->
-                <div class="relative">
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Live Search Instant</label>
-                    <div class="relative">
-                        <input type="text" x-model="searchTerm" placeholder="Cari langsung posisi/PT..."
-                            class="w-full text-sm border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 pl-9 pr-8 py-2 border">
-                        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        <button type="button" x-show="searchTerm.length > 0" @click="searchTerm = ''"
-                            class="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-600 text-xs font-bold">
-                            &times;
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Server Filter Platform -->
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Filter Platform</label>
-                    <select name="platform"
-                        class="w-full text-sm border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 border">
-                        <option value="">Semua Platform</option>
-                        @foreach ($platforms as $plat)
-                            <option value="{{ $plat }}" {{ request('platform') == $plat ? 'selected' : '' }}>
-                                {{ $plat }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Server Filter Gaji -->
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Minimal Gaji (Rp)</label>
-                    <input type="number" name="gaji_min" value="{{ request('gaji_min') }}" placeholder="Contoh: 3000000"
-                        class="w-full text-sm border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 border">
-                </div>
-
-                <div class="flex items-end gap-2">
-                    <button type="submit"
-                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition">
-                        Terapkan Filter
-                    </button>
-                    @if (request()->anyFilled(['platform', 'gaji_min']))
-                        <a href="{{ route('lokerdraft.index') }}"
-                            class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm px-3 py-2 rounded-lg transition text-center">
-                            Reset
-                        </a>
-                    @endif
-                </div>
-            </form>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <div class="border-b border-gray-200 mb-6">
-            <nav class="-mb-px flex space-x-8">
-                <button @click="activeTab = 'social_media'"
-                    :class="activeTab === 'social_media' ? 'border-indigo-500 text-indigo-600' :
-                        'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2">
-                    <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                    </svg>
-                    Social Media
-                    <span class="ml-2 bg-indigo-100 text-indigo-600 py-0.5 px-2.5 rounded-full text-xs font-semibold">
-                        {{ $drafts->where('source_type', 'social_media')->count() }}
-                    </span>
-                </button>
-
-                <button @click="activeTab = 'job_platform'"
-                    :class="activeTab === 'job_platform' ? 'border-indigo-500 text-indigo-600' :
-                        'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    Job Platform
-                    <span class="ml-2 bg-blue-100 text-blue-600 py-0.5 px-2.5 rounded-full text-xs font-semibold">
-                        {{ $drafts->where('source_type', 'job_platform')->count() }}
-                    </span>
-                </button>
-            </nav>
-        </div>
-
-        <!-- TAB 1: SOCIAL MEDIA VIEW (Grid Card Layout) -->
-        <div x-show="activeTab === 'social_media'" class="space-y-4">
-            @if ($drafts->where('source_type', 'social_media')->count() > 0)
-                <div class="flex items-center gap-2 bg-white p-3 rounded-lg border border-gray-200">
-                    <input type="checkbox" :checked="isAllSelected('social_media', {{ json_encode($drafts) }})"
-                        @change="toggleAll($event, 'social_media', {{ json_encode($drafts) }})"
-                        class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
-                    <span class="text-sm font-medium text-gray-700">Pilih Semua Social Media</span>
-                </div>
-            @endif
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($drafts->where('source_type', 'social_media') as $item)
-                    <div x-show="matchSearch({{ json_encode($item) }})"
-                        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition relative flex flex-col justify-between">
-                        <div class="p-5">
-                            <div class="flex items-start justify-between gap-3 mb-4">
-                                <div class="flex items-center gap-3">
-                                    <input type="checkbox" value="{{ $item->id }}" x-model="selectedIds"
-                                        class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
-
-                                    <img src="{{ $item->logo_url }}" alt="Logo"
-                                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($item->nama_perusahaan ?? 'Loker') }}&background=0D8ABC&color=fff';"
-                                        class="w-10 h-10 rounded-full object-cover border">
-
-                                    <div>
-                                        <h3 class="font-bold text-gray-900 line-clamp-1">{{ $item->posisi }}</h3>
-                                        <p class="text-xs text-gray-500 line-clamp-1">
-                                            {{ $item->nama_perusahaan ?? 'Perusahaan Tidak Diketahui' }}</p>
-                                    </div>
-                                </div>
-                                <span
-                                    class="px-2.5 py-1 text-xs font-semibold rounded-full bg-pink-50 text-pink-700 border border-pink-200">
-                                    {{ $item->platform }}
-                                </span>
-                            </div>
-
-                            @if ($item->ringkasan_ai)
-                                <div
-                                    class="bg-indigo-50/60 p-3 rounded-lg border border-indigo-100 text-xs text-indigo-900 mb-4">
-                                    <span class="font-bold text-indigo-600 block mb-1">✨ Ringkasan AI:</span>
-                                    <p class="line-clamp-2">{{ $item->ringkasan_ai }}</p>
-                                </div>
-                            @endif
-
-                            <div class="space-y-2 text-xs text-gray-600 mb-4">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span>{{ $item->provinsi_raw ?? ($item->alamat_raw ?? 'Lokasi tidak terdaftar') }}</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span
-                                        class="font-semibold text-emerald-600">{{ $item->gaji_raw ?? 'Tidak Ditampilkan' }}</span>
-                                </div>
-                            </div>
-
-                            <div class="pt-3 border-t flex justify-between items-center text-xs">
-                                <a href="{{ $item->sumber_url }}" target="_blank"
-                                    class="text-indigo-600 hover:underline inline-flex items-center">
-                                    Sumber Post
-                                    <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
-                                </a>
-                                <span
-                                    class="text-gray-400">{{ $item->tanggal_posting ? $item->tanggal_posting->diffForHumans() : '-' }}</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-gray-50 px-5 py-3 border-t border-gray-100 flex gap-2 items-center">
-                            <button @click="openDetail({{ json_encode($item) }})"
-                                class="flex-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs rounded transition text-center">
-                                Detail Loker
-                            </button>
-                            <form action="{{ route('lokerdraft.destroy', $item->id) }}" method="POST"
-                                onsubmit="return confirm('Yakin hapus draft ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="px-3 py-1.5 bg-white border border-red-200 hover:bg-red-50 text-red-600 font-medium text-xs rounded transition">
-                                    Hapus
-                                </button>
-                            </form>
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-danger text-white p-3 mr-3"><i
+                                class="bx bx-share-alt font-size-24"></i></div>
+                        <div>
+                            <div class="text-muted small">Social Media</div>
+                            <div class="h4 font-weight-bold mb-0">{{ $sourceCounts->get('social_media', 0) }}</div>
                         </div>
                     </div>
-                @empty
-                    <div class="col-span-full py-12 text-center text-gray-500 bg-white rounded-xl border border-dashed">
-                        Tidak ada data draft dari Social Media.
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-primary text-white p-3 mr-3"><i
+                                class="bx bx-briefcase-alt-2 font-size-24"></i></div>
+                        <div>
+                            <div class="text-muted small">Job Platform</div>
+                            <div class="h4 font-weight-bold mb-0">{{ $sourceCounts->get('job_platform', 0) }}</div>
+                        </div>
                     </div>
-                @endforelse
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-warning text-white p-3 mr-3"><i
+                                class="bx bx-time-five font-size-24"></i></div>
+                        <div>
+                            <div class="text-muted small">Total Draft Pending</div>
+                            <div class="h4 font-weight-bold mb-0">{{ $sourceCounts->sum() }}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- TAB 2: JOB PLATFORM VIEW (Table Layout) -->
-        <div x-show="activeTab === 'job_platform'"
-            class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-gray-600">
-                    <thead class="bg-gray-50 text-xs text-gray-700 uppercase border-b">
-                        <tr>
-                            <th class="px-4 py-3 w-10">
-                                <input type="checkbox"
-                                    :checked="isAllSelected('job_platform', {{ json_encode($drafts) }})"
-                                    @change="toggleAll($event, 'job_platform', {{ json_encode($drafts) }})"
-                                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
-                            </th>
-                            <th class="px-6 py-3">Posisi & Perusahaan</th>
-                            <th class="px-6 py-3">Platform</th>
-                            <th class="px-6 py-3">Lokasi</th>
-                            <th class="px-6 py-3">Gaji Estimasi</th>
-                            <th class="px-6 py-3">Tipe</th>
-                            <th class="px-6 py-3">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @forelse($drafts->where('source_type', 'job_platform') as $item)
-                            <tr x-show="matchSearch({{ json_encode($item) }})" class="hover:bg-gray-50/50">
-                                <td class="px-4 py-4">
-                                    <input type="checkbox" value="{{ $item->id }}" x-model="selectedIds"
-                                        class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="font-bold text-gray-900">{{ $item->posisi }}</div>
-                                    <div class="text-xs text-gray-500">{{ $item->nama_perusahaan ?? '-' }}</div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $item->platform }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-xs">{{ $item->provinsi_raw ?? '-' }}</td>
-                                <td class="px-6 py-4 text-xs font-semibold text-emerald-600">
-                                    {{ $item->gaji_raw ?? 'Kompetitif' }}</td>
-                                <td class="px-6 py-4 text-xs">
-                                    <span
-                                        class="bg-gray-100 text-gray-800 px-2 py-0.5 rounded border">{{ $item->tipe_pekerjaan ?? 'Fulltime' }}</span>
-                                </td>
-                                <td class="px-6 py-4 text-xs">
-                                    <div class="flex items-center space-x-3">
-                                        <a href="{{ $item->sumber_url }}" target="_blank"
-                                            class="text-blue-600 hover:underline">Link</a>
-                                        <button @click="openDetail({{ json_encode($item) }})"
-                                            class="text-indigo-600 font-semibold hover:underline">Detail</button>
-                                        <form action="{{ route('lokerdraft.destroy', $item->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin hapus draft ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="text-red-600 hover:underline font-semibold">Hapus</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-end">
+                    <div class="col-md-3 form-group mb-3 mb-md-0">
+                        <label for="filter-source" class="font-weight-bold small text-dark">Sumber Data</label>
+                        <select id="filter-source" class="form-control">
+                            <option value="">Semua Sumber</option>
+                            <option value="social_media">Social Media</option>
+                            <option value="job_platform">Job Platform</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 form-group mb-3 mb-md-0">
+                        <label for="filter-platform" class="font-weight-bold small text-dark">Platform</label>
+                        <select id="filter-platform" class="form-control">
+                            <option value="">Semua Platform</option>
+                            @foreach ($platforms as $platform)
+                                <option value="{{ $platform }}">{{ $platform }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 form-group mb-3 mb-md-0">
+                        <label for="filter-gaji-min" class="font-weight-bold small text-dark">Minimal Gaji</label>
+                        <input type="number" id="filter-gaji-min" class="form-control" placeholder="Contoh: 3000000"
+                            min="0">
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <button type="button" class="btn btn-primary font-weight-bold mr-1" id="apply-draft-filter">
+                            <i class="bx bx-filter-alt mr-1"></i> Terapkan
+                        </button>
+                        <button type="button" class="btn btn-light font-weight-bold" id="reset-draft-filter">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 p-4 d-flex flex-wrap align-items-center justify-content-between">
+                <div>
+                    <h5 class="font-weight-bold text-dark mb-1">Daftar Draft Loker</h5>
+                    <p class="text-muted small mb-0">Gunakan pencarian DataTables untuk mencari posisi, perusahaan, lokasi,
+                        atau platform.</p>
+                </div>
+                <span class="badge badge-light border px-3 py-2 mt-2 mt-md-0">Status: Pending</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table id="loker-draft-table" class="table table-hover align-middle mb-0" style="width: 100%;">
+                        <thead class="thead-light">
                             <tr>
-                                <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                    Tidak ada data draft dari Job Platform.
-                                </td>
+                                <th class="text-center" style="width: 45px;"><input type="checkbox" id="select-all-drafts">
+                                </th>
+                                <th style="width: 45px;">No</th>
+                                <th>Sumber</th>
+                                <th>Posisi & Perusahaan</th>
+                                <th>Lokasi</th>
+                                <th>Gaji</th>
+                                <th>Tipe</th>
+                                {{-- <th>Posting</th> --}}
+                                <th class="text-center">Aksi</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- MODAL IMPORT EXCEL -->
-        <div x-show="showImportModal" x-cloak
-            class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4" aria-labelledby="modal-title"
-            role="dialog" aria-modal="true">
-            <div x-show="showImportModal" x-transition.opacity @click="showImportModal = false"
-                class="fixed inset-0 bg-gray-500/75 transition-opacity"></div>
-
-            <div
-                class="relative bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all w-full max-w-lg z-10">
-                <form action="{{ route('loker-draft.import') }}" method="POST" enctype="multipart/form-data"
-                    x-data="{ importType: 'social_media' }">
+    <!-- Modal Import -->
+    <div class="modal fade" id="importDraftModal" tabindex="-1" role="dialog" aria-labelledby="importDraftModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered draft-modal-dialog" role="document">
+            <div class="modal-content draft-modal-content">
+                <div class="modal-header bg-success text-white draft-modal-header">
+                    <div>
+                        <h5 class="modal-title draft-modal-title font-weight-bold" id="importDraftModalLabel"><i
+                                class="bx bx-upload mr-1"></i> Import Data Draft Loker</h5>
+                        <span class="draft-modal-subtitle">Pilih sumber data dan unggah file sesuai template.</span>
+                    </div>
+                    <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <form action="{{ route('loker-draft.import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="bg-white px-6 pt-5 pb-4 sm:p-6">
-                        <div class="sm:flex sm:items-start">
-                            <div
-                                class="mx-auto flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-emerald-100 sm:mx-0">
-                                <svg class="h-6 w-6 text-emerald-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-lg font-bold text-gray-900" id="modal-title">Import Data Draft Loker</h3>
-                                <p class="text-xs text-gray-500 mt-1">Pilih jenis skema sumber data sebelum mengunggah
-                                    file.</p>
-
-                                <div class="mt-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Sumber Data</label>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <label
-                                            class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-                                            :class="importType === 'social_media' ? 'border-indigo-500 bg-indigo-50/30' :
-                                                'border-gray-200'">
-                                            <input type="radio" name="source_type" value="social_media"
-                                                x-model="importType" class="text-indigo-600 focus:ring-indigo-500">
-                                            <span class="ml-2 text-xs font-semibold text-gray-700">Social Media</span>
-                                        </label>
-                                        <label
-                                            class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-                                            :class="importType === 'job_platform' ? 'border-blue-500 bg-blue-50/30' :
-                                                'border-gray-200'">
-                                            <input type="radio" name="source_type" value="job_platform"
-                                                x-model="importType" class="text-blue-600 focus:ring-blue-500">
-                                            <span class="ml-2 text-xs font-semibold text-gray-700">Job Platform</span>
-                                        </label>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Tipe Sumber Data</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="source-social" name="source_type" value="social_media"
+                                            class="custom-control-input" checked>
+                                        <label class="custom-control-label" for="source-social">Social Media</label>
                                     </div>
                                 </div>
-                                <div class="mt-4" x-show="importType === 'job_platform'" x-cloak>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Platform</label>
-                                    <select name="platform"
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="JobStreet">JobStreet</option>
-                                        <option value="Glints">Glints</option>
-                                    </select>
-                                </div>
-
-                                <div class="mt-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilih File (.xlsx,
-                                        .csv)</label>
-                                    <input type="file" name="file_excel" required accept=".xlsx, .xls, .csv"
-                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 border border-gray-300 rounded-lg p-1">
+                                <div class="col-md-6">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="source-job" name="source_type" value="job_platform"
+                                            class="custom-control-input">
+                                        <label class="custom-control-label" for="source-job">Job Platform</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group d-none" id="import-platform-wrapper">
+                            <label for="import-platform" class="font-weight-bold">Platform</label>
+                            <select name="platform" id="import-platform" class="form-control">
+                                <option value="JobStreet">JobStreet</option>
+                                <option value="Glints">Glints</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="file-excel" class="font-weight-bold">File Excel/CSV</label>
+                            <input type="file" name="file_excel" id="file-excel" class="form-control-file"
+                                accept=".xlsx,.xls,.csv" required>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t">
-                        <button type="submit"
-                            class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 sm:ml-3 sm:w-auto sm:text-sm">
-                            Upload & Import
-                        </button>
-                        <button type="button" @click="showImportModal = false"
-                            class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Batal
-                        </button>
+                    <div class="modal-footer bg-light draft-modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-success font-weight-bold">Upload & Import</button>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- MODAL DETAIL LOKER DRAFT -->
-        <div x-show="showDetailModal" x-cloak
-            class="loker-detail-modal fixed inset-0 flex items-center justify-center overflow-y-auto"
-            aria-labelledby="modal-title" role="dialog" aria-modal="true">
-
-            <!-- Backdrop Dark Overlay -->
-            <div x-show="showDetailModal" x-transition.opacity @click="showDetailModal = false"
-                class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"></div>
-
-            <!-- Modal Container Body (Diubah ke max-w-5xl & my-auto agar center sempurna) -->
-            <div x-show="showDetailModal" x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
-                x-transition:leave-end="opacity-0 scale-95"
-                class="loker-detail-modal__panel relative bg-white rounded-2xl text-left shadow-2xl transform transition-all w-full max-w-5xl flex flex-col z-10 overflow-hidden">
-
-                <template x-if="selectedDraft">
-                    <div class="flex flex-col h-full overflow-hidden">
-
-                        <!-- Header Modal Detail (Sticky Top) -->
-                        <div
-                            class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center shrink-0">
-                            <div class="flex items-center gap-3">
-                                <img :src="selectedDraft.logo_url"
-                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Loker&background=0D8ABC&color=fff';"
-                                    class="w-11 h-11 rounded-full border border-gray-200 object-cover shadow-sm">
-                                <div>
-                                    <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-tight"
-                                        x-text="selectedDraft.posisi"></h3>
-                                    <p class="text-xs text-gray-500 mt-0.5"
-                                        x-text="selectedDraft.nama_perusahaan ?? 'Perusahaan Tidak Diketahui'"></p>
-                                </div>
-                            </div>
-                            <button @click="showDetailModal = false"
-                                class="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-200 transition">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <!-- Body Content Detail (Scrollable Internal) -->
-                        <div class="p-6 overflow-y-auto space-y-6 text-sm text-gray-700 flex-1">
-
-                            <!-- Grid Info Utama (Diubah ke 3-4 kolom untuk memanfaatkan area lebar) -->
-                            <div
-                                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                                <div>
-                                    <span
-                                        class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">Platform</span>
-                                    <span class="font-medium text-gray-900" x-text="selectedDraft.platform"></span>
-                                </div>
-                                <div>
-                                    <span class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">Tipe
-                                        Pekerjaan</span>
-                                    <span class="font-medium text-gray-900"
-                                        x-text="selectedDraft.tipe_pekerjaan ?? 'Fulltime'"></span>
-                                </div>
-                                <div>
-                                    <span
-                                        class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">Estimasi
-                                        Gaji</span>
-                                    <span class="font-semibold text-emerald-600"
-                                        x-text="selectedDraft.gaji_raw ?? 'Kompetitif'"></span>
-                                </div>
-                                <div>
-                                    <span
-                                        class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">Provinsi/Lokasi</span>
-                                    <span class="font-medium text-gray-900"
-                                        x-text="selectedDraft.provinsi_raw ?? selectedDraft.alamat_raw ?? '-'"></span>
-                                </div>
-                                <div>
-                                    <span
-                                        class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">Kategori</span>
-                                    <span class="font-medium text-gray-900"
-                                        x-text="selectedDraft.kategori_bidang ?? '-'"></span>
-                                </div>
-                                <div>
-                                    <span class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">Batas
-                                        Pendaftaran</span>
-                                    <span class="font-medium text-red-600"
-                                        x-text="selectedDraft.batas_pendaftaran ?? '-'"></span>
-                                </div>
-                            </div>
-
-                            <!-- Ringkasan AI -->
-                            <template x-if="selectedDraft.ringkasan_ai">
-                                <div>
-                                    <h4
-                                        class="font-bold text-indigo-700 mb-1.5 flex items-center gap-1.5 text-xs uppercase tracking-wider">
-                                        <span>✨</span> Ringkasan AI
-                                    </h4>
-                                    <p class="bg-indigo-50/60 border border-indigo-100 p-3.5 rounded-xl text-xs text-indigo-950 leading-relaxed"
-                                        x-text="selectedDraft.ringkasan_ai"></p>
-                                </div>
-                            </template>
-
-                            <!-- Informasi Kontak & Pendaftaran (Diubah ke 3 kolom) -->
-                            <div>
-                                <h4 class="font-bold text-gray-900 mb-2 text-xs uppercase tracking-wider">Informasi Kontak
-                                    & Aplikasi</h4>
-                                <div
-                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 bg-white p-3.5 rounded-xl border border-gray-200 text-xs">
-                                    <div class="flex items-center gap-2" x-show="selectedDraft.email_perusahaan">
-                                        <span class="font-semibold text-gray-400">Email:</span>
-                                        <span class="text-gray-800 font-medium truncate"
-                                            x-text="selectedDraft.email_perusahaan"></span>
-                                    </div>
-                                    <div class="flex items-center gap-2" x-show="selectedDraft.no_hp">
-                                        <span class="font-semibold text-gray-400">No HP/WA:</span>
-                                        <span class="text-gray-800 font-medium" x-text="selectedDraft.no_hp"></span>
-                                    </div>
-                                    <div class="flex items-center gap-2" x-show="selectedDraft.instagram_dm">
-                                        <span class="font-semibold text-gray-400">Instagram:</span>
-                                        <span class="text-gray-800 font-medium"
-                                            x-text="selectedDraft.instagram_dm"></span>
-                                    </div>
-                                    <div class="flex items-center gap-2 col-span-1 sm:col-span-2 md:col-span-3"
-                                        x-show="selectedDraft.website_form_url">
-                                        <span class="font-semibold text-gray-400">Form URL:</span>
-                                        <a :href="selectedDraft.website_form_url" target="_blank"
-                                            class="text-indigo-600 hover:underline truncate"
-                                            x-text="selectedDraft.website_form_url"></a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Jobdesk & Kualifikasi Berdampingan jika di Layar Lebar -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Jobdesk -->
-                                <div x-show="selectedDraft.jobdesk || selectedDraft.deskripsi_pekerjaan">
-                                    <h4 class="font-bold text-gray-900 mb-1.5 text-xs uppercase tracking-wider">Tugas &
-                                        Tanggung Jawab</h4>
-                                    <div class="whitespace-pre-line text-xs bg-gray-50 border border-gray-100 p-3.5 rounded-xl text-gray-600 leading-relaxed h-full"
-                                        x-text="selectedDraft.jobdesk ?? selectedDraft.deskripsi_pekerjaan"></div>
-                                </div>
-
-                                <!-- Kualifikasi & Skill -->
-                                <div x-show="selectedDraft.kualifikasi_jobspek || selectedDraft.keahlian_skill">
-                                    <h4 class="font-bold text-gray-900 mb-1.5 text-xs uppercase tracking-wider">Kualifikasi
-                                        & Keahlian</h4>
-                                    <div
-                                        class="whitespace-pre-line text-xs bg-gray-50 border border-gray-100 p-3.5 rounded-xl text-gray-600 leading-relaxed space-y-2 h-full">
-                                        <p x-show="selectedDraft.kualifikasi_jobspek"><strong
-                                                class="text-gray-800">Kualifikasi:</strong> <span
-                                                x-text="selectedDraft.kualifikasi_jobspek"></span></p>
-                                        <p x-show="selectedDraft.keahlian_skill"><strong class="text-gray-800">Skill
-                                                Dibutuhkan:</strong> <span x-text="selectedDraft.keahlian_skill"></span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Cara Melamar & Fasilitas -->
-                            <div x-show="selectedDraft.cara_melamar || selectedDraft.fasilitas">
-                                <h4 class="font-bold text-gray-900 mb-1.5 text-xs uppercase tracking-wider">Cara Melamar &
-                                    Fasilitas</h4>
-                                <div
-                                    class="whitespace-pre-line text-xs bg-gray-50 border border-gray-100 p-3.5 rounded-xl text-gray-600 leading-relaxed space-y-2">
-                                    <p x-show="selectedDraft.cara_melamar"><strong class="text-gray-800">Cara
-                                            Melamar:</strong> <span x-text="selectedDraft.cara_melamar"></span></p>
-                                    <p x-show="selectedDraft.fasilitas"><strong
-                                            class="text-gray-800">Fasilitas/Benefit:</strong> <span
-                                            x-text="selectedDraft.fasilitas"></span></p>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Footer Modal Detail (Sticky Bottom) -->
-                        <div
-                            class="bg-gray-50 px-6 py-3.5 border-t border-gray-200 flex justify-between items-center shrink-0">
-                            <a :href="selectedDraft.sumber_url" target="_blank"
-                                class="text-xs text-indigo-600 font-bold hover:underline inline-flex items-center gap-1">
-                                Buka Tautan Asli Post
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                            </a>
-                            <button type="button" @click="showDetailModal = false"
-                                class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-lg transition">
-                                Tutup
-                            </button>
-                        </div>
-
+    <!-- Modal Detail -->
+    <div class="modal fade" id="draftDetailModal" tabindex="-1" role="dialog" aria-labelledby="draftDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable draft-modal-dialog"
+            role="document">
+            <div class="modal-content draft-modal-content">
+                <div class="modal-header bg-primary text-white draft-modal-header">
+                    <div>
+                        <h5 class="modal-title draft-modal-title font-weight-bold mb-1" id="draft-detail-title">Detail
+                            Draft Loker</h5>
+                        <span class="draft-modal-subtitle" id="draft-detail-company"></span>
                     </div>
-                </template>
+                    <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body draft-modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card draft-detail-card bg-light mb-3">
+                                <div class="card-body">
+                                    <div class="row small">
+                                        <div class="col-md-4 mb-3"><span class="draft-detail-label">Platform</span><strong
+                                                id="draft-detail-platform">-</strong></div>
+                                        <div class="col-md-4 mb-3"><span class="draft-detail-label">Tipe
+                                                Pekerjaan</span><strong id="draft-detail-type">-</strong></div>
+                                        <div class="col-md-4 mb-3"><span class="draft-detail-label">Gaji</span><strong
+                                                class="text-success" id="draft-detail-salary">-</strong></div>
+                                        <div class="col-md-4"><span class="draft-detail-label">Lokasi</span><strong
+                                                id="draft-detail-location">-</strong></div>
+                                        <div class="col-md-4"><span class="draft-detail-label">Batas
+                                                Pendaftaran</span><strong id="draft-detail-deadline">-</strong></div>
+                                        <div class="col-md-4"><span class="draft-detail-label">Kategori</span><strong
+                                                id="draft-detail-category">-</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <h6 class="font-weight-bold">Deskripsi</h6>
+                                    <div id="draft-detail-description" class="small text-muted white-space-pre-line">-
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h6 class="font-weight-bold">Jobdesk</h6>
+                                    <div id="draft-detail-jobdesk" class="small text-muted white-space-pre-line">-</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h6 class="font-weight-bold">Kualifikasi</h6>
+                                    <div id="draft-detail-qualification" class="small text-muted white-space-pre-line">-
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h6 class="font-weight-bold">Skill</h6>
+                                    <div id="draft-detail-skill" class="small text-muted white-space-pre-line">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card draft-detail-card mb-3">
+                                <div class="card-body small">
+                                    <h6 class="font-weight-bold">Kontak & Lamaran</h6>
+                                    <p class="mb-2"><strong>Email:</strong> <span id="draft-detail-email">-</span></p>
+                                    <p class="mb-2"><strong>Telepon:</strong> <span id="draft-detail-phone">-</span></p>
+                                    <p class="mb-2"><strong>Instagram:</strong> <span
+                                            id="draft-detail-instagram">-</span></p>
+                                    <p class="mb-0"><strong>URL:</strong> <a id="draft-detail-url" href="#"
+                                            target="_blank" rel="noopener">Buka sumber</a></p>
+                                </div>
+                            </div>
+                            <div class="card draft-detail-card border-0 bg-light">
+                                <div class="card-body small">
+                                    <h6 class="font-weight-bold">Fasilitas</h6>
+                                    <div id="draft-detail-benefit" class="white-space-pre-line text-muted">-</div>
+                                    <h6 class="font-weight-bold mt-3">Cara Melamar</h6>
+                                    <div id="draft-detail-apply" class="white-space-pre-line text-muted">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light draft-modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Tutup</button>
+                </div>
             </div>
         </div>
-
     </div>
+
+    <!-- Modal Edit & Normalisasi -->
+    <div class="modal fade" id="draftEditModal" tabindex="-1" role="dialog" aria-labelledby="draftEditModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable draft-modal-dialog"
+            role="document">
+            <div class="modal-content draft-modal-content">
+                <form method="POST" id="draft-edit-form" class="draft-edit-form">
+                    <div class="modal-header bg-warning draft-modal-header">
+                        <div>
+                            <h5 class="modal-title draft-modal-title font-weight-bold" id="draftEditModalLabel"><i
+                                    class="bx bx-edit-alt mr-1"></i> Edit & Normalisasi Draft</h5>
+                            <span class="draft-modal-subtitle">Lengkapi data sebelum dipindahkan ke data loker dan
+                                perusahaan.</span>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="publish_after_save" id="publish-after-save" value="0">
+                    <div class="modal-body draft-modal-body">
+                        <section class="draft-form-section">
+                            <h6 class="draft-section-title"><i class="bx bx-buildings"></i>Data Perusahaan & Lokasi</h6>
+                            <div class="row">
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Nama Perusahaan
+                                        <span class="text-danger">*</span></label><input name="nama_perusahaan"
+                                        id="edit-nama-perusahaan" class="form-control" required></div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Email
+                                        Perusahaan</label><input type="email" name="email_perusahaan"
+                                        id="edit-email-perusahaan" class="form-control"></div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Nomor HP /
+                                        WhatsApp</label><input name="no_hp" id="edit-no-hp" class="form-control"></div>
+                                {{-- <div class="col-md-6 form-group"><label class="font-weight-bold small">Instagram / Kontak
+                                        DM</label><input name="instagram_dm" id="edit-instagram-dm" class="form-control">
+                                </div> --}}
+                                <div class="col-12 form-group"><label class="font-weight-bold small">Alamat
+                                        Lengkap</label>
+                                    <textarea name="alamat_raw" id="edit-alamat" class="form-control" rows="2"></textarea>
+                                </div>
+                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Provinsi <span
+                                            class="text-danger">*</span></label><select name="provinsi_id"
+                                        id="edit-provinsi" class="form-control" required>
+                                        <option value="">Pilih Provinsi</option>
+                                        @foreach ($provinces as $province)
+                                            <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                        @endforeach
+                                    </select></div>
+                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Kabupaten / Kota
+                                        <span class="text-danger">*</span></label><select name="kabupaten_id"
+                                        id="edit-kabupaten" class="form-control" required>
+                                        <option value="">Pilih Kabupaten</option>
+                                    </select></div>
+                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Kecamatan <span
+                                            class="text-danger">*</span></label><select name="kecamatan_id"
+                                        id="edit-kecamatan" class="form-control" required>
+                                        <option value="">Pilih Kecamatan</option>
+                                    </select></div>
+                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Kelurahan / Desa
+                                        <span class="text-danger">*</span></label><select name="kelurahan_id"
+                                        id="edit-kelurahan" class="form-control" required>
+                                        <option value="">Pilih Kelurahan</option>
+                                    </select></div>
+                            </div>
+                        </section>
+
+                        <section class="draft-form-section">
+                            <h6 class="draft-section-title"><i class="bx bx-briefcase"></i>Data Lowongan</h6>
+                            <div class="row">
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Posisi <span
+                                            class="text-danger">*</span></label><input name="posisi" id="edit-posisi"
+                                        class="form-control" required></div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Kategori
+                                        Bidang</label><input name="kategori_bidang" id="edit-kategori"
+                                        class="form-control"></div>
+                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Tipe
+                                        Pekerjaan</label><input name="tipe_pekerjaan" id="edit-tipe" class="form-control"
+                                        placeholder="Fulltime"></div>
+                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Gaji
+                                        Minimum</label><input type="number" min="0" name="gaji_min"
+                                        id="edit-gaji-min" class="form-control"></div>
+                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Gaji
+                                        Maksimum</label><input type="number" min="0" name="gaji_max"
+                                        id="edit-gaji-max" class="form-control"></div>
+                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Tanggal
+                                        Posting</label><input type="date" name="tanggal_posting"
+                                        id="edit-tanggal-posting" class="form-control"></div>
+                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Batas Pendaftaran
+                                        <span class="text-danger">*</span></label><input type="date"
+                                        name="batas_pendaftaran" id="edit-batas-pendaftaran" class="form-control"
+                                        required></div>
+                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Skill</label><input
+                                        name="keahlian_skill" id="edit-skill" class="form-control"
+                                        placeholder="Pisahkan dengan koma"></div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Deskripsi
+                                        Pekerjaan</label>
+                                    <textarea name="deskripsi_pekerjaan" id="edit-deskripsi" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Jobdesk</label>
+                                    <textarea name="jobdesk" id="edit-jobdesk" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Kualifikasi</label>
+                                    <textarea name="kualifikasi_jobspek" id="edit-kualifikasi" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Fasilitas /
+                                        Benefit</label>
+                                    <textarea name="fasilitas" id="edit-fasilitas" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Cara
+                                        Melamar</label>
+                                    <textarea name="cara_melamar" id="edit-cara-melamar" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-md-6 form-group"><label class="font-weight-bold small">URL Form
+                                        Lamaran</label><input type="url" name="website_form_url"
+                                        id="edit-website-url" class="form-control"></div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer bg-light draft-modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary font-weight-bold" data-save-draft><i
+                                class="bx bx-save mr-1"></i> Simpan Draft</button>
+                        <button type="button" class="btn btn-success font-weight-bold" data-publish-draft><i
+                                class="bx bx-check mr-1"></i> Simpan & Publish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if ($companyConflict)
+        <!-- Modal Konflik Nama Perusahaan -->
+        <div class="modal fade" id="companyConflictModal" tabindex="-1" role="dialog"
+            aria-labelledby="companyConflictModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable draft-modal-dialog" role="document">
+                <div class="modal-content draft-modal-content">
+                    <div class="modal-header bg-warning draft-modal-header">
+                        <div>
+                            <h5 class="modal-title draft-modal-title font-weight-bold" id="companyConflictModalLabel"><i
+                                    class="bx bx-error-circle mr-1"></i> Perusahaan dengan Nama Sama</h5>
+                            <span class="draft-modal-subtitle">Konfirmasi cara menangani data perusahaan yang
+                                terdeteksi.</span>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <form action="{{ route('lokerdraft.publish', $companyConflict['draft_id']) }}" method="POST"
+                        id="company-conflict-form">
+                        @csrf
+                        <input type="hidden" name="company_action" id="conflict-company-action" value="use_existing">
+                        <div class="modal-body draft-modal-body">
+                            <p class="small text-muted">Sudah ada perusahaan dengan nama
+                                <strong>{{ $companyConflict['draft_name'] }}</strong>. Pilih tindakan berikut.
+                            </p>
+                            <div class="custom-control custom-radio mb-3">
+                                <input type="radio" id="use-existing-company" name="conflict_choice"
+                                    value="use_existing" class="custom-control-input" checked>
+                                <label class="custom-control-label font-weight-bold" for="use-existing-company">Gunakan
+                                    perusahaan lama</label>
+                                <small class="d-block text-muted ml-4">Data perusahaan lama akan diperbarui dengan hasil
+                                    normalisasi draft.</small>
+                            </div>
+                            <div class="ml-4 mb-3">
+                                @foreach ($companyConflict['companies'] as $company)
+                                    <div class="custom-control custom-radio mb-2">
+                                        <input type="radio" id="company-{{ $company['id'] }}" name="company_id"
+                                            value="{{ $company['id'] }}" class="custom-control-input"
+                                            {{ $loop->first ? 'checked' : '' }}>
+                                        <label class="custom-control-label small" for="company-{{ $company['id'] }}">
+                                            <strong>{{ $company['nama'] }}</strong><br><span
+                                                class="text-muted">{{ $company['email'] ?: 'Email belum diisi' }}</span>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="custom-control custom-radio mb-2">
+                                <input type="radio" id="create-new-company" name="conflict_choice" value="create_new"
+                                    class="custom-control-input">
+                                <label class="custom-control-label font-weight-bold" for="create-new-company">Buat
+                                    perusahaan baru</label>
+                            </div>
+                            <input type="text" name="company_name" id="conflict-company-name"
+                                class="form-control ml-4 w-75" placeholder="Nama perusahaan baru" disabled>
+                        </div>
+                        <div class="modal-footer bg-light draft-modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary font-weight-bold">Konfirmasi & Publish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+@endsection
+
+@section('custom-js')
+    <script>
+        (function() {
+            const selectedDraftIds = new Set();
+            const draftRows = new Map();
+            const draftTable = createDataTable('#loker-draft-table', {
+                processing: true,
+                serverSide: true,
+                order: [
+                    [1, 'desc']
+                ],
+                ajax: {
+                    url: '{{ route('lokerdraft.index') }}',
+                    data: function(data) {
+                        data.source_type = document.getElementById('filter-source').value;
+                        data.platform = document.getElementById('filter-platform').value;
+                        data.gaji_min = document.getElementById('filter-gaji-min').value;
+                    }
+                },
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center',
+                        render: function(data) {
+                            return '<input type="checkbox" data-draft-checkbox value="' + data + '">';
+                        }
+                    },
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'id',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'source_badge',
+                        name: 'source_type',
+                        orderable: false
+                    },
+                    {
+                        data: 'position_company',
+                        name: 'posisi',
+                        orderable: false
+                    },
+                    {
+                        data: 'location_display',
+                        name: 'provinsi_raw',
+                        orderable: false
+                    },
+                    {
+                        data: 'salary_display',
+                        name: 'gaji_min',
+                        orderable: false
+                    },
+                    {
+                        data: 'type_display',
+                        name: 'tipe_pekerjaan',
+                        orderable: false
+                    },
+                    // { data: 'posting_display', name: 'tanggal_posting' },
+                    {
+                        data: 'actions',
+                        name: 'id',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center'
+                    }
+                ],
+                createdRow: function(row, data) {
+                    draftRows.set(String(data.id), data);
+                }
+            });
+
+            function syncSelection() {
+                document.querySelectorAll('[data-draft-checkbox]').forEach(function(checkbox) {
+                    checkbox.checked = selectedDraftIds.has(String(checkbox.value));
+                });
+                document.getElementById('selected-count').textContent = selectedDraftIds.size;
+                document.getElementById('bulk-delete-form').classList.toggle('d-none', selectedDraftIds.size === 0);
+                const pageCheckboxes = Array.from(document.querySelectorAll('[data-draft-checkbox]'));
+                document.getElementById('select-all-drafts').checked = pageCheckboxes.length > 0 && pageCheckboxes
+                    .every(function(checkbox) {
+                        return checkbox.checked;
+                    });
+            }
+
+            $('#loker-draft-table').on('draw.dt', syncSelection);
+            document.addEventListener('change', function(event) {
+                if (event.target.matches('[data-draft-checkbox]')) {
+                    const id = String(event.target.value);
+                    event.target.checked ? selectedDraftIds.add(id) : selectedDraftIds.delete(id);
+                    syncSelection();
+                }
+            });
+
+            document.getElementById('select-all-drafts').addEventListener('change', function() {
+                document.querySelectorAll('[data-draft-checkbox]').forEach(function(checkbox) {
+                    const id = String(checkbox.value);
+                    if (document.getElementById('select-all-drafts').checked) selectedDraftIds.add(id);
+                    else selectedDraftIds.delete(id);
+                });
+                syncSelection();
+            });
+
+            document.getElementById('apply-draft-filter').addEventListener('click', function() {
+                draftTable.ajax.reload(null, true);
+            });
+
+            document.getElementById('reset-draft-filter').addEventListener('click', function() {
+                document.getElementById('filter-source').value = '';
+                document.getElementById('filter-platform').value = '';
+                document.getElementById('filter-gaji-min').value = '';
+                draftTable.ajax.reload(null, true);
+            });
+
+            document.getElementById('bulk-delete-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const form = this;
+                const inputs = document.getElementById('bulk-delete-inputs');
+                inputs.innerHTML = '';
+                selectedDraftIds.forEach(function(id) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = id;
+                    inputs.appendChild(input);
+                });
+                Swal.fire({
+                    title: 'Hapus draft terpilih?',
+                    text: selectedDraftIds.size + ' draft akan dihapus.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    cancelButtonText: 'Batal'
+                }).then(function(result) {
+                    if (result.isConfirmed) form.submit();
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                const actionButton = event.target.closest('[data-draft-action]');
+                if (actionButton) {
+                    const draft = draftRows.get(String(actionButton.dataset.draftId));
+                    if (!draft) return;
+                    actionButton.dataset.draftAction === 'edit' ? openEditModal(draft) : openDetailModal(draft);
+                }
+
+                const deleteButton = event.target.closest('[data-delete-draft]');
+                if (deleteButton) {
+                    const form = deleteButton.closest('form');
+                    Swal.fire({
+                        title: 'Hapus draft ini?',
+                        text: 'Data yang dihapus tidak dapat dikembalikan.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, hapus',
+                        cancelButtonText: 'Batal'
+                    }).then(function(result) {
+                        if (result.isConfirmed) form.submit();
+                    });
+                }
+            });
+
+            function setText(id, value) {
+                document.getElementById(id).textContent = value || '-';
+            }
+
+            function setHref(id, value) {
+                const link = document.getElementById(id);
+                link.href = value || '#';
+                link.classList.toggle('disabled', !value);
+            }
+
+            function openDetailModal(draft) {
+                setText('draft-detail-title', draft.posisi);
+                setText('draft-detail-company', draft.nama_perusahaan || 'Perusahaan belum diisi');
+                setText('draft-detail-platform', draft.platform);
+                setText('draft-detail-type', draft.tipe_pekerjaan || 'Fulltime');
+                setText('draft-detail-salary', draft.gaji_raw || 'Kompetitif');
+                setText('draft-detail-location', draft.provinsi_raw || draft.alamat_raw);
+                setText('draft-detail-deadline', draft.batas_pendaftaran);
+                setText('draft-detail-category', draft.kategori_bidang);
+                setText('draft-detail-description', draft.deskripsi_pekerjaan || draft.ringkasan_ai);
+                setText('draft-detail-jobdesk', draft.jobdesk);
+                setText('draft-detail-qualification', draft.kualifikasi_jobspek);
+                setText('draft-detail-skill', draft.keahlian_skill);
+                setText('draft-detail-email', draft.email_perusahaan);
+                setText('draft-detail-phone', draft.no_hp);
+                setText('draft-detail-instagram', draft.instagram_dm);
+                setText('draft-detail-benefit', draft.fasilitas);
+                setText('draft-detail-apply', draft.cara_melamar);
+                setHref('draft-detail-url', draft.sumber_url || draft.website_form_url);
+                $('#draftDetailModal').modal('show');
+            }
+
+            function dateOnly(value) {
+                const match = String(value || '').match(/^\d{4}-\d{2}-\d{2}/);
+                return match ? match[0] : '';
+            }
+
+            function setValue(id, value) {
+                document.getElementById(id).value = value || '';
+            }
+
+            async function loadLocationOptions(url, selectId, placeholder, selected) {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">' + placeholder + '</option>';
+                if (!url) return;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Gagal mengambil data wilayah.');
+                const items = await response.json();
+                items.forEach(function(item) {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.name;
+                    select.appendChild(option);
+                });
+                select.value = selected || '';
+            }
+
+            async function populateLocations(draft) {
+                setValue('edit-provinsi', draft.provinsi_id);
+                setValue('edit-kabupaten', '');
+                setValue('edit-kecamatan', '');
+                setValue('edit-kelurahan', '');
+                await loadLocationOptions(draft.provinsi_id ? '{{ url('/admin/loker/getkabupaten') }}/' + draft
+                    .provinsi_id : '', 'edit-kabupaten', 'Pilih Kabupaten', draft.kabupaten_id);
+                await loadLocationOptions(draft.kabupaten_id ? '{{ url('/admin/loker/getkecamatan') }}/' + draft
+                    .kabupaten_id : '', 'edit-kecamatan', 'Pilih Kecamatan', draft.kecamatan_id);
+                await loadLocationOptions(draft.kecamatan_id ? '{{ url('/admin/loker/getkelurahan') }}/' + draft
+                    .kecamatan_id : '', 'edit-kelurahan', 'Pilih Kelurahan', draft.kelurahan_id);
+            }
+
+            async function openEditModal(draft) {
+                setValue('edit-nama-perusahaan', draft.nama_perusahaan);
+                setValue('edit-email-perusahaan', draft.email_perusahaan);
+                setValue('edit-no-hp', draft.no_hp);
+                // setValue('edit-instagram-dm', draft.instagram_dm);
+                setValue('edit-alamat', draft.alamat_raw);
+                setValue('edit-posisi', draft.posisi);
+                setValue('edit-kategori', draft.kategori_bidang);
+                setValue('edit-tipe', draft.tipe_pekerjaan);
+                setValue('edit-gaji-min', draft.gaji_min);
+                setValue('edit-gaji-max', draft.gaji_max);
+                setValue('edit-tanggal-posting', dateOnly(draft.tanggal_posting));
+                setValue('edit-batas-pendaftaran', dateOnly(draft.batas_pendaftaran));
+                setValue('edit-skill', draft.keahlian_skill);
+                setValue('edit-deskripsi', draft.deskripsi_pekerjaan);
+                setValue('edit-jobdesk', draft.jobdesk);
+                setValue('edit-kualifikasi', draft.kualifikasi_jobspek);
+                setValue('edit-fasilitas', draft.fasilitas);
+                setValue('edit-cara-melamar', draft.cara_melamar);
+                setValue('edit-website-url', draft.website_form_url);
+                document.getElementById('draft-edit-form').action = '{{ url('/loker-drafts') }}/' + draft.id;
+                document.getElementById('publish-after-save').value = '0';
+                try {
+                    await populateLocations(draft);
+                    $('#draftEditModal').modal('show');
+                } catch (error) {
+                    Swal.fire('Gagal', error.message, 'error');
+                }
+            }
+
+            document.getElementById('edit-provinsi').addEventListener('change', function() {
+                loadLocationOptions(this.value ? '{{ url('/admin/loker/getkabupaten') }}/' + this.value : '',
+                    'edit-kabupaten', 'Pilih Kabupaten', '');
+                document.getElementById('edit-kecamatan').innerHTML =
+                    '<option value="">Pilih Kecamatan</option>';
+                document.getElementById('edit-kelurahan').innerHTML =
+                    '<option value="">Pilih Kelurahan</option>';
+            });
+            document.getElementById('edit-kabupaten').addEventListener('change', function() {
+                loadLocationOptions(this.value ? '{{ url('/admin/loker/getkecamatan') }}/' + this.value : '',
+                    'edit-kecamatan', 'Pilih Kecamatan', '');
+                document.getElementById('edit-kelurahan').innerHTML =
+                    '<option value="">Pilih Kelurahan</option>';
+            });
+            document.getElementById('edit-kecamatan').addEventListener('change', function() {
+                loadLocationOptions(this.value ? '{{ url('/admin/loker/getkelurahan') }}/' + this.value : '',
+                    'edit-kelurahan', 'Pilih Kelurahan', '');
+            });
+
+            document.querySelector('[data-save-draft]').addEventListener('click', function() {
+                document.getElementById('publish-after-save').value = '0';
+                document.getElementById('draft-edit-form').submit();
+            });
+            document.querySelector('[data-publish-draft]').addEventListener('click', function() {
+                document.getElementById('publish-after-save').value = '1';
+                document.getElementById('draft-edit-form').submit();
+            });
+
+            document.querySelectorAll('input[name="source_type"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    document.getElementById('import-platform-wrapper').classList.toggle('d-none', this
+                        .value !== 'job_platform');
+                });
+            });
+
+            @if ($companyConflict)
+                $('#companyConflictModal').modal('show');
+                document.querySelectorAll('input[name="conflict_choice"]').forEach(function(radio) {
+                    radio.addEventListener('change', function() {
+                        const createNew = this.value === 'create_new';
+                        document.getElementById('conflict-company-action').value = this.value;
+                        document.getElementById('conflict-company-name').disabled = !createNew;
+                        document.getElementById('conflict-company-name').required = createNew;
+                    });
+                });
+            @endif
+        })();
+    </script>
 @endsection

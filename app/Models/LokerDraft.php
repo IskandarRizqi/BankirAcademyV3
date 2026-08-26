@@ -34,6 +34,10 @@ class LokerDraft extends Model
         'website_form_url',
         'alamat_raw',
         'provinsi_raw',
+        'provinsi_id',
+        'kabupaten_id',
+        'kecamatan_id',
+        'kelurahan_id',
         'posisi',
         'deskripsi_pekerjaan',
         'jobdesk',
@@ -51,6 +55,8 @@ class LokerDraft extends Model
         'batas_pendaftaran',
         'status_draft',
         'approved_by',
+        'published_loker_id',
+        'published_perusahaan_id',
     ];
 
     /**
@@ -64,6 +70,12 @@ class LokerDraft extends Model
         'tanggal_posting' => 'datetime',
         'batas_pendaftaran' => 'date',
         'approved_by' => 'integer',
+        'provinsi_id' => 'integer',
+        'kabupaten_id' => 'integer',
+        'kecamatan_id' => 'integer',
+        'kelurahan_id' => 'integer',
+        'published_loker_id' => 'integer',
+        'published_perusahaan_id' => 'integer',
     ];
 
     /**

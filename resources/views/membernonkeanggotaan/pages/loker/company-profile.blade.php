@@ -11,6 +11,9 @@
         'villages' => collect(),
     ];
     $logo = data_get(json_decode((string) ($company->image ?? ''), true), 'url');
+    $logoUrl = filled($logo)
+        ? (\Illuminate\Support\Str::startsWith($logo, ['http://', 'https://', '/']) ? $logo : asset('image/loker/' . basename($logo)))
+        : null;
 @endphp
 
 <style>
@@ -404,7 +407,7 @@
                         <div class="company-logo-upload">
                             <div class="company-logo-preview">
                                 @if($logo)
-                                    <img src="{{ asset('image/loker/'.basename($logo)) }}" alt="Logo {{ $company->nama }}" id="company-logo-preview">
+                                    <img src="{{ $logoUrl }}" alt="Logo {{ $company->nama }}" id="company-logo-preview">
                                 @else
                                     <span class="company-logo-placeholder" id="company-logo-placeholder"><i class="fas fa-image" aria-hidden="true"></i></span>
                                     <img src="" alt="Preview logo perusahaan" id="company-logo-preview" hidden>

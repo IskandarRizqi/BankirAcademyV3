@@ -36,6 +36,9 @@ class RouteArchitectureTest extends TestCase
             'admin.loker.index',
             'apply.index',
             'admin.applications.cv',
+            'lokerdraft.index',
+            'lokerdraft.update',
+            'lokerdraft.publish',
         ] as $name) {
             $this->assertNotNull(Route::getRoutes()->getByName($name), $name.' route is missing');
         }
@@ -46,6 +49,16 @@ class RouteArchitectureTest extends TestCase
         $this->assertTrue(View::exists('layouts.compact'));
         $this->assertTrue(View::exists('compact.index'));
         $this->assertTrue(View::exists('compact.materi-siswa'));
+    }
+
+    public function test_loker_draft_page_uses_bootstrap_datatables_without_alpine_markup(): void
+    {
+        $view = file_get_contents(resource_path('views/loker-draft/index.blade.php'));
+
+        $this->assertStringContainsString('loker-draft-table', $view);
+        $this->assertStringContainsString('createDataTable', $view);
+        $this->assertStringNotContainsString('x-data', $view);
+        $this->assertStringNotContainsString('x-model', $view);
     }
 
     public function test_backend_template_runtime_is_archived(): void

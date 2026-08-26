@@ -36,7 +36,8 @@
                                     <td class="text-center text-muted fw-semibold">{{ $key + 1 }}</td>
                                     <td>
                                         @if ($l->image)
-                                            <img src="{{ asset('image/loker/' . (json_decode($l->image)->url ?? '')) }}"
+                                            @php($companyLogo = json_decode($l->image)->url ?? '')
+                                            <img src="{{ \Illuminate\Support\Str::startsWith($companyLogo, ['http://', 'https://', '/']) ? $companyLogo : asset('image/loker/' . $companyLogo) }}"
                                                 alt="Logo" class="rounded-3 border object-fit-cover"
                                                 style="width: 48px; height: 48px;">
                                         @else
