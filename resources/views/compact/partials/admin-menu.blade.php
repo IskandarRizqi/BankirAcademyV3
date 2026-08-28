@@ -69,6 +69,11 @@
         <span class="nav-icon">{!! $icons['list'] !!}</span>
         <span>Order Kelas Manual</span>
     </a>
+    <a href="{{ route('articles.index') }}"
+        class="nav-item-link {{ request()->routeIs('admin.manual-class-orders.*') ? 'active' : '' }}">
+        <span class="nav-icon">{!! $icons['list'] !!}</span>
+        <span>Generate Artikel</span>
+    </a>
 
     <div
         class="menu {{ request()->is('admin/loker*', 'admin/perusahaan*', 'admin/apply*', 'admin/getdatacvpelamar') ? 'submenu-open' : '' }}">

@@ -171,3 +171,13 @@ X-Scraper-Api-Key: {{apiKey}}
   "source_type": "invalid_type",
   "sumber_url": "not-an-url"
 }
+
+POST {{baseUrl}}/api/articles/store-n8n
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "keyword": "Test Keyword",
+  "title": "Judul Artikel Test",
+  "content": "<p>Ini isi artikel test</p>"
+}

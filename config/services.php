@@ -44,6 +44,9 @@ return [
         'token' => env('FONNTE_API_TOKEN'),
         'url' => env('FONNTE_BASE_URL', 'https://api.fonnte.com'),
     ],
+    'n8n' => [
+        'webhook_url' => env('N8N_WEBHOOK_URL'),
+    ],
 
 
 ];

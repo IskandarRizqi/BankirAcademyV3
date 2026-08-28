@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ManualClassOrderController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\ScraperApiKeyController;
 use App\Http\Controllers\Admin\SopController;
+use App\Http\Controllers\ArticleGeneratorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +71,19 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::post('/admin/pembayaran/certificate', [AdminPaymentController::class, 'publish_certificate'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/setsudahcetak', [AdminPaymentController::class, 'setsudahcetak'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/updatebukti', [AdminPaymentController::class, 'update_bukti'])->middleware('admin.panel');
+    Route::get('/articles/generate', [ArticleGeneratorController::class, 'index'])->name('articles.index');
+    Route::post('/articles/generate', [ArticleGeneratorController::class, 'generate'])->name('articles.generate');
+    Route::put('/articles/publish/{article}', [ArticleGeneratorController::class, 'publish'])->name('articles.publish');
+    Route::get('/articles/{slug}', [ArticleGeneratorController::class, 'show'])->name('articles.show');
+    Route::get('/articles/{article}/edit', [ArticleGeneratorController::class, 'edit'])->name('articles.edit');
+    Route::put('/articles/{article}', [ArticleGeneratorController::class, 'update'])->name('articles.update');
+    Route::delete('/articles/{article}', [ArticleGeneratorController::class, 'destroy'])->name('articles.destroy');
+    Route::get('/articles/{article}/export-html', [ArticleGeneratorController::class, 'exportHtml'])->name('articles.exportHtml');
+    Route::get('/articles/{article}/export-pdf', [ArticleGeneratorController::class, 'exportPdf'])->name('articles.exportPdf');
+
+    // Export semua artikel ke CSV/Excel
+    Route::get('/articles-export/csv', [ArticleGeneratorController::class, 'exportCsv'])->name('articles.exportCsv');
+
 
     Route::get('/admin/order-kelas-manual', [ManualClassOrderController::class, 'index'])
         ->middleware('admin.panel')
