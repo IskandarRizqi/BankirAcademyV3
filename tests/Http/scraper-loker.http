@@ -171,7 +171,10 @@ X-Scraper-Api-Key: {{apiKey}}
   "source_type": "invalid_type",
   "sumber_url": "not-an-url"
 }
-
+###
+###############################################################################
+# 3. TEST VALIDASI GAGAL (KOSONGKAN FIELD REQUIRED)
+###############################################################################
 POST {{baseUrl}}/api/articles/store-n8n
 Content-Type: {{contentType}}
 Accept: {{contentType}}

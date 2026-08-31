@@ -29,6 +29,7 @@
         </a>
         <nav aria-label="Navigasi utama" class="desktop-nav">
             <a class="nav-link active" href="{{ route('frontend.home') }}">Beranda</a>
+            <a class="nav-link" href="{{ route('frontend.articles.index') }}">Artikel</a>
             <div class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.home') }}#layanan">Layanan <span
                         class="chevron">▼</span></a>
@@ -122,6 +123,9 @@
 <div class="mobile-panel" id="mobilePanel">
     <div class="mobile-group">
         <a class="mobile-main" href="{{ route('frontend.home') }}"><span>Beranda</span></a>
+    </div>
+    <div class="mobile-group">
+        <a class="mobile-main" href="{{ route('frontend.articles.index') }}"><span>Artikel</span></a>
     </div>
     <div class="mobile-group">
         <button class="mobile-main" type="button">

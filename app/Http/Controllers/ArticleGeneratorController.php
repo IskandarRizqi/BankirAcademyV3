@@ -45,6 +45,25 @@ class ArticleGeneratorController extends Controller
         }
     }
 
+    public function publicIndex()
+    {
+        $articles = Article::where('status', 1)
+            ->latest()
+            ->paginate(9);
+
+        return view('frontend.pages.article.index', compact('articles'));
+    }
+
+    public function publicShow($slug)
+    {
+        $article = Article::where('status', 1)
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return response($article->content)
+            ->header('Content-Type', 'text/html; charset=UTF-8');
+    }
+
     public function show($slug)
     {
         $article = Article::where('slug', $slug)->first();

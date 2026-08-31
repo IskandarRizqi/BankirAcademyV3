@@ -244,7 +244,7 @@
     })
     function viewimage(image) {
         console.log(image)
-        swal.fire({
+         Swal.fire.fire({
             imageUrl: '/Image/' + image,
             imageWidth: 400,
             imageHeight: 200,

@@ -992,6 +992,36 @@ h1,h2,h3,h4{
 .desktop-nav{gap:4px}
 }
 
+/* Articles */
+.articles-page{padding:144px 0 96px;background:linear-gradient(180deg,#F8F7FF 0%,#FAFAFF 42%,#FFFFFF 100%)}
+.articles-page .section-head{max-width:780px;margin-bottom:42px}
+.articles-page .section-head h1{margin:14px 0 15px;font-size:clamp(34px,4vw,52px);line-height:1.12}
+.article-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.article-card{display:flex;flex-direction:column;min-height:300px;padding:26px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);transition:.22s ease}
+.article-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.article-card-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;color:var(--muted);font-size:12px}
+.article-card h2{margin-bottom:13px;font-size:22px;line-height:1.28}
+.article-card p{margin-bottom:24px;color:var(--muted);font-size:14px;line-height:1.65}
+.article-card-link{display:inline-flex;align-items:center;gap:8px;margin-top:auto;color:var(--primary);font-size:13px;font-weight:800}
+.article-card-link:hover{color:var(--primary-dark)}
+.article-pagination{display:flex;justify-content:center;margin-top:42px}
+.article-pagination nav{width:100%}
+.article-pagination nav>div:first-child{display:none}
+.article-pagination nav>div:last-child{display:flex;justify-content:center}
+.article-pagination nav svg{width:18px;height:18px}
+.article-pagination nav a,.article-pagination nav span{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;padding:0 12px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:13px}
+.article-pagination nav a:first-child,.article-pagination nav span:first-child{border-radius:10px 0 0 10px}
+.article-pagination nav a:last-child,.article-pagination nav span:last-child{border-radius:0 10px 10px 0}
+.article-pagination nav span[aria-current="page"]{background:var(--primary);border-color:var(--primary);color:#fff}
+.article-empty{padding:52px 28px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg)}
+.article-empty p{margin-bottom:0;color:var(--muted)}
+@media(max-width:760px){
+ .articles-page{padding:122px 0 70px}
+ .article-grid{grid-template-columns:1fr}
+ .article-card{min-height:0}
+ .article-card-meta{margin-bottom:18px}
+}
+
 /* Shared utility classes used by reusable Blade components. */
 .logo-symbol{position:absolute}
 .brand-copy-muted{color:#aaa5cf}

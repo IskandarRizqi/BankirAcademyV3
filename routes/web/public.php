@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ClassesController;
+use App\Http\Controllers\ArticleGeneratorController;
 use App\Http\Controllers\Front\BankPageController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\PagesController;
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('frontend.home');
+Route::get('/artikel', [ArticleGeneratorController::class, 'publicIndex'])
+    ->name('frontend.articles.index');
+Route::get('/artikel/{slug}', [ArticleGeneratorController::class, 'publicShow'])
+    ->name('frontend.articles.show');
 Route::get('/pages/page/{id}', [PagesController::class, 'showKelas']);
 Route::get('/pages/about', [PagesController::class, 'showAbout']);
 Route::redirect('/pages/contact', '/kontak-kami', 301);
