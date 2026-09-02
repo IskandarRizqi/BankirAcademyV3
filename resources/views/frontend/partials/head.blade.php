@@ -23,6 +23,7 @@
     @if ($includeMarketingStyles ?? false)
         <link rel="stylesheet" href="{{ asset('frontend/css/bankir-academy.css') }}">
     @endif
+
     @if ($includeAuthStyles ?? false)
         <link rel="stylesheet" href="{{ asset('frontend/css/auth.css') }}">
     @endif

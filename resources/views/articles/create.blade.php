@@ -148,7 +148,7 @@
                                     <td class="text-center pr-4">
                                         <div class="btn-group" role="group">
                                             <!-- Lihat Hasil -->
-                                            <a href="{{ route('articles.show', $article->slug) }}" target="_blank"
+                                            <a href="{{ route('articles.publicShow', $article->slug) }}" target="_blank"
                                                 class="btn btn-sm btn-info text-white font-weight-bold px-2 shadow-sm"
                                                 style="border-top-left-radius: 6px; border-bottom-left-radius: 6px;"
                                                 title="Lihat Artikel">

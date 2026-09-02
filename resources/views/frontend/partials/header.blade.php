@@ -29,7 +29,6 @@
         </a>
         <nav aria-label="Navigasi utama" class="desktop-nav">
             <a class="nav-link active" href="{{ route('frontend.home') }}">Beranda</a>
-            <a class="nav-link" href="{{ route('frontend.articles.index') }}">Artikel</a>
             <div class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.home') }}#layanan">Layanan <span
                         class="chevron">▼</span></a>

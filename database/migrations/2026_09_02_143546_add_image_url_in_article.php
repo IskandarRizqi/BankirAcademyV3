@@ -14,10 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('articles', function (Blueprint $table) {
-            // Cek jika kolom 'slug' BELUM ada, barulah buat kolomnya
-            if (!Schema::hasColumn('articles', 'slug')) {
-                $table->string('slug')->unique()->after('title')->nullable();
-            }
+            $table->string('image_url')->nullable();
         });
     }
 
@@ -29,10 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('articles', function (Blueprint $table) {
-            // Cek jika kolom 'slug' ADA, barulah hapus kolomnya
-            if (Schema::hasColumn('articles', 'slug')) {
-                $table->dropColumn('slug');
-            }
+            $table->dropColumn('image_url');
         });
     }
 };

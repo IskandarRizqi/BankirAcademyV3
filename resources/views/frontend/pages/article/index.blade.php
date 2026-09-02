@@ -22,6 +22,12 @@
                 <div class="article-grid">
                     @foreach ($articles as $article)
                         <article class="article-card">
+                            @if ($article->image_url)
+                                <div class="article-card-image">
+                                    <img src="{{ asset($article->image_url) }}" alt="{{ $article->title }}" loading="lazy">
+                                </div>
+                            @endif
+
                             <div class="article-card-meta">
                                 <span class="tag">{{ $article->keyword }}</span>
                                 <time datetime="{{ optional($article->created_at)->toDateString() }}">

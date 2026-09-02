@@ -353,6 +353,7 @@
 
     <!-- GLOBAL SCRIPTS -->
     <script src="{{ asset('cbtemplate/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('cbtemplate/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/js/app.js') }}"></script>
     <script src="{{ asset('cbtemplate/assets/js/custom.js') }}"></script>

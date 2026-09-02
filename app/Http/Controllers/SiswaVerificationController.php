@@ -36,7 +36,7 @@ class SiswaVerificationController extends Controller
         // 3. Cek jika sudah pernah diverifikasi
         if ($user->email_verified_at !== null) {
             return view('compact.siswa.verified_status', [
-                'status' => 'already', 
+                'status' => 'already',
                 'message' => 'Email ini sudah diverifikasi sebelumnya.'
             ]);
         }
@@ -51,7 +51,7 @@ class SiswaVerificationController extends Controller
         $this->sendWhatsappNotification($user, $profile);
 
         return view('compact.siswa.verified_status', [
-            'status' => 'success', 
+            'status' => 'success',
             'message' => 'Email pribadi Anda berhasil diverifikasi! Detail akun telah dikirimkan ke WhatsApp Anda.'
         ]);
     }
@@ -102,36 +102,36 @@ class SiswaVerificationController extends Controller
         }
     }
     public function resend(Request $request)
-{
-    $user = auth()->user();
-    $profile = SiswaProfile::where('user_id', $user->id)->first();
+    {
+        $user = auth()->user();
+        $profile = SiswaProfile::where('user_id', $user->id)->first();
 
-    if (!$profile || empty($profile->email)) {
-        return back()->with('error', 'Email pribadi tidak ditemukan pada profil Anda.');
+        if (!$profile || empty($profile->email)) {
+            return back()->with('error', 'Email pribadi tidak ditemukan pada profil Anda.');
+        }
+
+        if ($user->is_active == 1) {
+            return back()->with('info', 'Akun Anda sudah aktif dan terverifikasi.');
+        }
+
+        // Generate Signed URL aman 24 jam
+        $verificationUrl = URL::temporarySignedRoute(
+            'siswa.verifikasi.email',
+            now()->addHours(24),
+            [
+                'id'   => $profile->id,
+                'hash' => sha1($profile->email)
+            ]
+        );
+
+        try {
+            // Kirim Email Verifikasi
+            Mail::to($profile->email)->send(new VerifikasiEmailSiswaMail($user, $verificationUrl));
+
+            return back()->with('success', 'Link verifikasi baru telah berhasil dikirim ke email: ' . $profile->email);
+        } catch (\Exception $e) {
+            Log::error('Gagal kirim ulang email verifikasi: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengirim email verifikasi. Silakan coba lagi nanti.');
+        }
     }
-
-    if ($user->is_active == 1) {
-        return back()->with('info', 'Akun Anda sudah aktif dan terverifikasi.');
-    }
-
-    // Generate Signed URL aman 24 jam
-    $verificationUrl = URL::temporarySignedRoute(
-        'siswa.verifikasi.email',
-        now()->addHours(24),
-        [
-            'id'   => $profile->id,
-            'hash' => sha1($profile->email)
-        ]
-    );
-
-    try {
-        // Kirim Email Verifikasi
-        Mail::to($profile->email)->send(new VerifikasiEmailSiswaMail($user, $verificationUrl));
-
-        return back()->with('success', 'Link verifikasi baru telah berhasil dikirim ke email: ' . $profile->email);
-    } catch (\Exception $e) {
-        Log::error('Gagal kirim ulang email verifikasi: ' . $e->getMessage());
-        return back()->with('error', 'Gagal mengirim email verifikasi. Silakan coba lagi nanti.');
-    }
-}
 }

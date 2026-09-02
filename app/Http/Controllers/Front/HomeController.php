@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\BannerModel;
 use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
@@ -366,6 +367,10 @@ class HomeController extends Controller
         foreach ($data['loker'] as $key => $vv) {
             $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
         }
+        $data['articles'] = Article::where('status', 1)
+            ->latest()
+            ->paginate(9);
+
         $data['testimoni'] = ClassParticipantModel::select('class_participant.*', 'user_profile.name', 'user_profile.picture')
             ->join('user_profile', 'user_profile.user_id', 'class_participant.user_id')
             ->where('class_participant.review_active', 1)

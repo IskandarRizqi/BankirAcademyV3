@@ -1,13 +1,57 @@
 @extends('layouts.appfrontend')
 
 @section('content')
-@include('frontend.pages.homepage.sections.hero')
-@include('frontend.pages.homepage.sections.trust-strip')
-@include('frontend.pages.homepage.sections.services')
-@include('frontend.pages.homepage.sections.talent-solutions')
-@include('frontend.pages.homepage.sections.innovation-lab')
-@include('frontend.pages.homepage.sections.foundations')
-@include('frontend.pages.homepage.sections.courses')
-@include('frontend.pages.homepage.sections.faq')
-@include('frontend.pages.homepage.sections.cta')
+    @include('frontend.pages.homepage.sections.hero')
+    @include('frontend.pages.homepage.sections.trust-strip')
+    @include('frontend.pages.homepage.sections.services')
+    <section class="articles-page">
+        <div class="container">
+            <div class="section-head left">
+                <span class="eyebrow">Wawasan Bankir Academy</span>
+                <h1>Artikel untuk Menambah <span class="gradient-text">Wawasan</span></h1>
+                <p>Temukan insight dan informasi terbaru untuk mendukung pembelajaran serta perkembangan karier di ekosistem
+                    perbankan.</p>
+            </div>
+
+            @if ($data['articles']->count())
+                <div class="article-grid">
+                    @foreach ($data['articles'] as $article)
+                        <article class="article-card">
+                            @if ($article->image_url)
+                                <div class="article-card-image">
+                                    <img src="{{ asset($article->image_url) }}" alt="{{ $article->title }}" loading="lazy">
+                                </div>
+                            @endif
+                            <div class="article-card-meta">
+                                <span class="tag">{{ $article->keyword }}</span>
+                                <time datetime="{{ optional($article->created_at)->toDateString() }}">
+                                    {{ optional($article->created_at)->format('d M Y') ?? '-' }}
+                                </time>
+                            </div>
+                            <h2>{{ $article->title }}</h2>
+                            {{-- <p>{{ \Illuminate\Support\Str::limit(trim(strip_tags($article->content)), 180) }}</p> --}}
+                            <a class="article-card-link" href="{{ route('frontend.articles.show', $article->slug) }}">
+                                Baca artikel <span class="icon-arrow">-&gt;</span>
+                            </a>
+                        </article>
+                    @endforeach
+                </div>
+
+                <div class="article-pagination">
+                    {{ $data['articles']->links() }}
+                </div>
+            @else
+                <div class="article-empty">
+                    <h2>Belum ada artikel</h2>
+                    <p>Artikel yang sudah dipublikasikan akan tampil di halaman ini.</p>
+                </div>
+            @endif
+        </div>
+    </section>
+    @include('frontend.pages.homepage.sections.talent-solutions')
+    @include('frontend.pages.homepage.sections.innovation-lab')
+    @include('frontend.pages.homepage.sections.foundations')
+    @include('frontend.pages.homepage.sections.courses')
+    @include('frontend.pages.homepage.sections.faq')
+    @include('frontend.pages.homepage.sections.cta')
 @endsection

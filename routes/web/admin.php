@@ -74,7 +74,8 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/articles/generate', [ArticleGeneratorController::class, 'index'])->name('articles.index');
     Route::post('/articles/generate', [ArticleGeneratorController::class, 'generate'])->name('articles.generate');
     Route::put('/articles/publish/{article}', [ArticleGeneratorController::class, 'publish'])->name('articles.publish');
-    Route::get('/articles/{slug}', [ArticleGeneratorController::class, 'show'])->name('articles.show');
+    Route::get('/articles/{slug}', [ArticleGeneratorController::class, 'publicShow'])->name('articles.publicShow');
+    // Route::get('/articles/{slug}', [ArticleGeneratorController::class, 'show'])->name('articles.show');
     Route::get('/articles/{article}/edit', [ArticleGeneratorController::class, 'edit'])->name('articles.edit');
     Route::put('/articles/{article}', [ArticleGeneratorController::class, 'update'])->name('articles.update');
     Route::delete('/articles/{article}', [ArticleGeneratorController::class, 'destroy'])->name('articles.destroy');

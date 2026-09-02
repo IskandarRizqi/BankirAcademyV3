@@ -1,0 +1,2975 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="utf-8" />
+        <title>Dokumentasi Skema Calon Bankir</title>
+        <style>
+            @page {
+                margin: 16mm 15mm 15mm 15mm;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                font-family:
+                    DejaVu Sans,
+                    sans-serif;
+                color: #172033;
+                font-size: 10px;
+                line-height: 1.48;
+                margin: 0;
+            }
+            h1,
+            h2,
+            h3,
+            h4,
+            p {
+                margin-top: 0;
+            }
+            h1 {
+                color: #143b72;
+                font-size: 28px;
+                line-height: 1.16;
+                margin-bottom: 10px;
+            }
+            h2 {
+                color: #143b72;
+                font-size: 18px;
+                border-bottom: 2px solid #d9e5f4;
+                padding-bottom: 6px;
+                margin-bottom: 12px;
+            }
+            h3 {
+                color: #19599e;
+                font-size: 13px;
+                margin: 14px 0 6px;
+            }
+            h4 {
+                color: #19599e;
+                font-size: 11px;
+                margin: 10px 0 4px;
+            }
+            p {
+                margin-bottom: 7px;
+            }
+            ul,
+            ol {
+                margin: 5px 0 9px 18px;
+                padding: 0;
+            }
+            li {
+                margin-bottom: 3px;
+            }
+            code {
+                font-family:
+                    DejaVu Sans Mono,
+                    monospace;
+                color: #8c2b14;
+                background: #fff3ec;
+                padding: 1px 3px;
+            }
+            .cover {
+                background: #f4f8fd;
+                border: 1px solid #d6e3f2;
+                padding: 19mm 17mm;
+                position: relative;
+            }
+            .cover-band {
+                height: 9px;
+                background: #1976d2;
+                margin: -19mm -17mm 22mm;
+            }
+            .eyebrow {
+                color: #1976d2;
+                font-size: 11px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+            .cover h1 {
+                font-size: 31px;
+                max-width: 145mm;
+            }
+            .cover-lead {
+                color: #53657c;
+                font-size: 14px;
+                max-width: 135mm;
+                margin-bottom: 17mm;
+            }
+            .meta-box {
+                border-left: 4px solid #1976d2;
+                background: #fff;
+                padding: 12px 14px;
+                width: 125mm;
+            }
+            .meta-box strong {
+                color: #143b72;
+            }
+            .cover-note {
+                position: absolute;
+                bottom: 13mm;
+                left: 17mm;
+                color: #65758a;
+                font-size: 9px;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .section-tag {
+                color: #1976d2;
+                font-size: 8px;
+                font-weight: bold;
+                letter-spacing: 0.8px;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+            }
+            .callout {
+                background: #eef6ff;
+                border-left: 4px solid #2684d9;
+                padding: 8px 10px;
+                margin: 9px 0;
+            }
+            .warn {
+                background: #fff7e6;
+                border-left-color: #e4a11b;
+            }
+            .success {
+                background: #edf9f1;
+                border-left-color: #31a354;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 7px 0 10px;
+            }
+            th {
+                background: #143b72;
+                color: #fff;
+                font-weight: bold;
+                text-align: left;
+            }
+            th,
+            td {
+                border: 1px solid #d8e0eb;
+                padding: 6px 7px;
+                vertical-align: top;
+            }
+            tr:nth-child(even) td {
+                background: #f8fbfe;
+            }
+            .role-card {
+                width: 24%;
+                display: inline-block;
+                vertical-align: top;
+                margin-right: 1%;
+                min-height: 88px;
+                padding: 9px;
+                border: 1px solid #d5e1ef;
+                border-top: 4px solid #1976d2;
+                background: #fff;
+            }
+            .role-card:last-child {
+                margin-right: 0;
+            }
+            .role-card b {
+                color: #143b72;
+                display: block;
+                margin-bottom: 4px;
+            }
+            .muted {
+                color: #65758a;
+            }
+            .small {
+                font-size: 8.5px;
+            }
+            .figure {
+                border: 1px solid #d8e0eb;
+                background: #f8fbfe;
+                padding: 7px;
+                margin: 8px 0 5px;
+            }
+            .caption {
+                color: #65758a;
+                font-size: 8.5px;
+                font-style: italic;
+                margin-bottom: 8px;
+            }
+            .two-col {
+                width: 100%;
+            }
+            .two-col td {
+                width: 50%;
+                border: 0;
+                padding: 0 8px 0 0;
+            }
+            .two-col td + td {
+                padding: 0 0 0 8px;
+            }
+            .step {
+                width: 100%;
+                border-left: 3px solid #8ab8e5;
+                margin: 6px 0;
+                padding: 5px 8px;
+                background: #f8fbfe;
+            }
+            .step b {
+                color: #143b72;
+            }
+            .check {
+                color: #168342;
+                font-weight: bold;
+            }
+            .no {
+                color: #bb3b29;
+                font-weight: bold;
+            }
+            .footer-note {
+                color: #718198;
+                border-top: 1px solid #d8e0eb;
+                padding-top: 6px;
+                margin-top: 15px;
+                font-size: 8px;
+            }
+            .mono-box {
+                background: #202b3d;
+                color: #eaf2fb;
+                padding: 9px 11px;
+                font-family:
+                    DejaVu Sans Mono,
+                    monospace;
+                font-size: 8.5px;
+                line-height: 1.55;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            .field-required {
+                color: #bb3b29;
+                font-weight: bold;
+            }
+            .field-optional {
+                color: #65758a;
+                font-weight: bold;
+            }
+            .field-auto {
+                color: #168342;
+                font-weight: bold;
+            }
+            .field-table {
+                font-size: 8.6px;
+            }
+            .field-table th,
+            .field-table td {
+                padding: 5px 6px;
+            }
+            .field-table td:first-child {
+                width: 26%;
+            }
+            .field-table td:nth-child(2) {
+                width: 16%;
+                white-space: nowrap;
+            }
+        </style>
+    </head>
+    <body>
+        <section class="cover">
+            <div class="cover-band"></div>
+            <div class="eyebrow">Bankir Academy V3</div>
+            <h1>Dokumentasi Skema Sistem Calon Bankir</h1>
+            <p class="cover-lead">
+                Panduan peran, hak akses, pembuatan pengguna, dan penggunaan
+                menu untuk ekosistem Bank, Merchant/Sekolah, dan Peserta/Siswa.
+            </p>
+            <div class="meta-box">
+                <p><strong>Ruang lingkup</strong><br />Skema 01 Calon Bankir</p>
+                <p>
+                    <strong>Versi dokumentasi</strong><br />1.1 | 31 Agustus
+                    2026
+                </p>
+                <p>
+                    <strong>Basis dokumentasi</strong><br />Route, middleware,
+                    controller, dan Blade aktif pada project Bankir Academy V3.
+                </p>
+            </div>
+            <div
+                class="figure"
+                style="margin-top: 16mm; border: 0; background: transparent"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="175"
+                    viewBox="0 0 650 175"
+                >
+                    <rect
+                        x="1"
+                        y="1"
+                        width="648"
+                        height="173"
+                        rx="14"
+                        fill="#ffffff"
+                        stroke="#d5e1ef"
+                    />
+                    <rect
+                        x="26"
+                        y="25"
+                        width="150"
+                        height="68"
+                        rx="9"
+                        fill="#143b72"
+                    />
+                    <text
+                        x="101"
+                        y="53"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="15"
+                        font-weight="bold"
+                    >
+                        BANK
+                    </text>
+                    <text
+                        x="101"
+                        y="76"
+                        text-anchor="middle"
+                        fill="#d9edff"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                    >
+                        Role 4
+                    </text>
+                    <path d="M176 59 H239" stroke="#1976d2" stroke-width="3" />
+                    <path
+                        d="m230 51 10 8-10 8"
+                        fill="none"
+                        stroke="#1976d2"
+                        stroke-width="3"
+                    />
+                    <rect
+                        x="240"
+                        y="25"
+                        width="170"
+                        height="68"
+                        rx="9"
+                        fill="#2f78b7"
+                    />
+                    <text
+                        x="325"
+                        y="53"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="15"
+                        font-weight="bold"
+                    >
+                        MERCHANT / SEKOLAH
+                    </text>
+                    <text
+                        x="325"
+                        y="76"
+                        text-anchor="middle"
+                        fill="#e6f3ff"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                    >
+                        Role 5
+                    </text>
+                    <path d="M410 59 H473" stroke="#1976d2" stroke-width="3" />
+                    <path
+                        d="m464 51 10 8-10 8"
+                        fill="none"
+                        stroke="#1976d2"
+                        stroke-width="3"
+                    />
+                    <rect
+                        x="474"
+                        y="25"
+                        width="150"
+                        height="68"
+                        rx="9"
+                        fill="#36a269"
+                    />
+                    <text
+                        x="549"
+                        y="53"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="15"
+                        font-weight="bold"
+                    >
+                        PESERTA
+                    </text>
+                    <text
+                        x="549"
+                        y="76"
+                        text-anchor="middle"
+                        fill="#e8fff0"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                    >
+                        Role 6
+                    </text>
+                    <text
+                        x="325"
+                        y="130"
+                        text-anchor="middle"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                    >
+                        Pembinaan - pendaftaran - pembelajaran - monitoring
+                    </text>
+                </svg>
+            </div>
+            <p class="cover-note">
+                Dokumen operasional. Jangan memasukkan password atau data
+                pribadi produksi ke dalam screenshot dokumentasi.
+            </p>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">01 | Konsep Sistem</div>
+            <h2>Gambaran Umum Skema Calon Bankir</h2>
+            <p>
+                Skema calon bankir membentuk rantai pengelolaan berjenjang. Bank
+                menjadi entitas pembina, Merchant/Sekolah menjadi lembaga asal,
+                dan Peserta/Siswa menjadi pengguna yang mengikuti modul
+                pembelajaran.
+            </p>
+            <div class="callout">
+                <strong>Prinsip utama:</strong> semakin tinggi kewenangan
+                pengelola, semakin luas cakupan data yang dapat dilihat. Relasi
+                data dibentuk oleh <code>bank_id</code> dan
+                <code>sekolah_id</code>.
+            </div>
+            <div class="role-card">
+                <b>Root / Administrator</b
+                ><span class="small"
+                    >Mengelola seluruh Bank, Merchant/Sekolah, Peserta, konten,
+                    dan operasional platform.</span
+                >
+            </div>
+            <div class="role-card">
+                <b>Bank - role 4</b
+                ><span class="small"
+                    >Melihat entitas binaan sendiri, membuat Merchant/Sekolah
+                    dan Peserta, serta memonitor hasil belajar.</span
+                >
+            </div>
+            <div class="role-card">
+                <b>Merchant/Sekolah - role 5</b
+                ><span class="small"
+                    >Mengelola Peserta yang terhubung ke lembaganya dan
+                    memonitor progres pembelajaran.</span
+                >
+            </div>
+            <div class="role-card">
+                <b>Peserta/Siswa - role 6</b
+                ><span class="small"
+                    >Mengikuti modul, mengerjakan test bila berhak, melihat
+                    history, lowongan, CV, dan sertifikat.</span
+                >
+            </div>
+            <h3>Alur bisnis tingkat tinggi</h3>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="225"
+                    viewBox="0 0 650 225"
+                >
+                    <rect width="650" height="225" fill="#f8fbfe" />
+                    <rect
+                        x="25"
+                        y="22"
+                        width="140"
+                        height="54"
+                        rx="8"
+                        fill="#143b72"
+                    />
+                    <text
+                        x="95"
+                        y="46"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                        font-weight="bold"
+                    >
+                        1. ROOT
+                    </text>
+                    <text
+                        x="95"
+                        y="64"
+                        text-anchor="middle"
+                        fill="#d9edff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Tetapkan struktur
+                    </text>
+                    <rect
+                        x="190"
+                        y="22"
+                        width="140"
+                        height="54"
+                        rx="8"
+                        fill="#2f78b7"
+                    />
+                    <text
+                        x="260"
+                        y="46"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                        font-weight="bold"
+                    >
+                        2. BANK
+                    </text>
+                    <text
+                        x="260"
+                        y="64"
+                        text-anchor="middle"
+                        fill="#e6f3ff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Bina lembaga
+                    </text>
+                    <rect
+                        x="355"
+                        y="22"
+                        width="140"
+                        height="54"
+                        rx="8"
+                        fill="#5597c7"
+                    />
+                    <text
+                        x="425"
+                        y="46"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                        font-weight="bold"
+                    >
+                        3. SEKOLAH
+                    </text>
+                    <text
+                        x="425"
+                        y="64"
+                        text-anchor="middle"
+                        fill="#eff8ff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Daftarkan peserta
+                    </text>
+                    <rect
+                        x="520"
+                        y="22"
+                        width="105"
+                        height="54"
+                        rx="8"
+                        fill="#36a269"
+                    />
+                    <text
+                        x="572"
+                        y="46"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                        font-weight="bold"
+                    >
+                        4. SISWA
+                    </text>
+                    <text
+                        x="572"
+                        y="64"
+                        text-anchor="middle"
+                        fill="#e8fff0"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Belajar
+                    </text>
+                    <path
+                        d="M165 49h25M330 49h25M495 49h25"
+                        stroke="#1976d2"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="m181 43 8 6-8 6m165-12 8 6-8 6m165-12 8 6-8 6"
+                        fill="none"
+                        stroke="#1976d2"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M572 76v54H260V93"
+                        stroke="#8ab8e5"
+                        stroke-width="2"
+                        fill="none"
+                    />
+                    <path
+                        d="m254 101 6-8 6 8"
+                        fill="none"
+                        stroke="#8ab8e5"
+                        stroke-width="2"
+                    />
+                    <rect
+                        x="188"
+                        y="130"
+                        width="205"
+                        height="55"
+                        rx="8"
+                        fill="#fff"
+                        stroke="#c6d8ea"
+                    />
+                    <text
+                        x="290"
+                        y="153"
+                        text-anchor="middle"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        MONITORING
+                    </text>
+                    <text
+                        x="290"
+                        y="171"
+                        text-anchor="middle"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Bank / Sekolah melihat progres
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 1. Relasi pengelolaan pada Skema 01 Calon Bankir.
+            </div>
+            <h3>Catatan istilah</h3>
+            <ul>
+                <li>
+                    Pada kode sistem, role 5 disebut
+                    <strong>Sekolah</strong> pada model User, tetapi beberapa
+                    tampilan menggunakan label <strong>Merchant</strong>.
+                    Dokumentasi memakai istilah Merchant/Sekolah.
+                </li>
+                <li>
+                    Pada kode sistem, role 6 disebut <strong>Siswa</strong>;
+                    pada menu dan tabel pengguna sering ditampilkan sebagai
+                    Peserta.
+                </li>
+                <li>
+                    Akun <code>cb@bankir.academy</code> memiliki pengecualian
+                    sebagai Root walaupun nilai role pada database adalah 4.
+                </li>
+            </ul>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">02 | Role dan Hak Akses</div>
+            <h2>Perbedaan Role</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Fungsi</th>
+                        <th>Cakupan data</th>
+                        <th>Dapat membuat</th>
+                        <th>Pembatasan penting</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Root</strong><br /><code>0</code> atau akun
+                            khusus
+                        </td>
+                        <td>Administrator penuh skema dan platform.</td>
+                        <td>Seluruh Bank, Merchant/Sekolah, dan Peserta.</td>
+                        <td>Bank, Merchant/Sekolah, Peserta.</td>
+                        <td>Menu admin hanya dapat dibuka Root yang valid.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bank</strong><br /><code>4</code></td>
+                        <td>Pengelola dan pembina Merchant/Sekolah.</td>
+                        <td>
+                            Merchant/Sekolah dan Peserta yang terhubung ke Bank
+                            tersebut.
+                        </td>
+                        <td>Merchant/Sekolah dan Peserta.</td>
+                        <td>
+                            Tidak dapat melihat data Bank lain; harus memiliki
+                            masa aktif membership untuk akses terkait peserta.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Merchant/Sekolah</strong><br /><code
+                                >5</code
+                            >
+                        </td>
+                        <td>Pengelola peserta dari lembaga sendiri.</td>
+                        <td>
+                            Peserta dengan <code>sekolah_id</code> miliknya.
+                        </td>
+                        <td>Peserta.</td>
+                        <td>
+                            Tidak dapat membuat Bank/Merchant; fitur approval
+                            ditolak oleh controller walaupun dapat tampil di
+                            sidebar.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Peserta/Siswa</strong><br /><code>6</code>
+                        </td>
+                        <td>Pengguna pembelajaran dan karier.</td>
+                        <td>
+                            Profil, modul, test, history, CV, lowongan,
+                            sertifikat milik sendiri.
+                        </td>
+                        <td>Tidak membuat pengguna lain.</td>
+                        <td>
+                            Route pembelajaran dan karier memerlukan akun
+                            aktif/terverifikasi.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Matriks menu aktif</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Root</th>
+                        <th>Bank</th>
+                        <th>Merchant/Sekolah</th>
+                        <th>Peserta/Siswa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dashboard</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                    </tr>
+                    <tr>
+                        <td>Pengguna / Bank, Sekolah & Peserta</td>
+                        <td class="check">Semua</td>
+                        <td class="check">Cakupan sendiri</td>
+                        <td class="check">Peserta sendiri</td>
+                        <td class="no">Tidak</td>
+                    </tr>
+                    <tr>
+                        <td>Rekap Modul / Monitoring Peserta</td>
+                        <td class="check">Semua</td>
+                        <td class="check">Bank sendiri</td>
+                        <td class="check">Sekolah sendiri</td>
+                        <td class="no">Tidak</td>
+                    </tr>
+                    <tr>
+                        <td>Approval Beasiswa</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                        <td class="no">Controller menolak</td>
+                        <td class="no">Tidak</td>
+                    </tr>
+                    <tr>
+                        <td>Kompetensi</td>
+                        <td class="no">Admin konten terpisah</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="check">Ya</td>
+                    </tr>
+                    <tr>
+                        <td>Pelatihan Umum</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="check">Ya</td>
+                    </tr>
+                    <tr>
+                        <td>History Pelatihan</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="check">Ya</td>
+                    </tr>
+                    <tr>
+                        <td>Lowongan Kerja, CV ATS, Sertifikat</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="no">Tidak</td>
+                        <td class="check">Ya</td>
+                    </tr>
+                    <tr>
+                        <td>Profil Saya dan Keluar</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                        <td class="check">Ya</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="callout warn">
+                <strong>Perhatian administrator:</strong> tampilan menu bukan
+                satu-satunya pengaman. Hak akses final ditentukan middleware
+                route dan pemeriksaan controller. Contoh: menu Approval bisa
+                terlihat bagi role 5, tetapi method approval hanya mengizinkan
+                Root dan Bank.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">03 | Dashboard Pengelola</div>
+            <h2>Dashboard Root, Bank, dan Merchant/Sekolah</h2>
+            <p>
+                Dashboard menyesuaikan role pengguna. Root melihat ringkasan
+                ekosistem, Bank melihat distribusi lembaga binaan, sedangkan
+                Merchant/Sekolah melihat peserta lembaganya.
+            </p>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="335"
+                    viewBox="0 0 650 335"
+                >
+                    <rect width="650" height="335" fill="#eef3f9" />
+                    <rect x="0" y="0" width="142" height="335" fill="#143b72" />
+                    <text
+                        x="18"
+                        y="28"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="13"
+                        font-weight="bold"
+                    >
+                        Bankir Academy
+                    </text>
+                    <text
+                        x="18"
+                        y="65"
+                        fill="#bddcff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        MENU UTAMA
+                    </text>
+                    <rect
+                        x="11"
+                        y="76"
+                        width="120"
+                        height="26"
+                        rx="5"
+                        fill="#245891"
+                    />
+                    <text
+                        x="24"
+                        y="93"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Dashboard
+                    </text>
+                    <text
+                        x="24"
+                        y="128"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Calon Bankir
+                    </text>
+                    <text
+                        x="24"
+                        y="157"
+                        fill="#d7e9ff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Pengguna
+                    </text>
+                    <text
+                        x="24"
+                        y="182"
+                        fill="#d7e9ff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Rekap Modul
+                    </text>
+                    <text
+                        x="24"
+                        y="207"
+                        fill="#d7e9ff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Approval
+                    </text>
+                    <text
+                        x="24"
+                        y="252"
+                        fill="#bddcff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        PROFIL
+                    </text>
+                    <text
+                        x="24"
+                        y="280"
+                        fill="#d7e9ff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Profil Saya
+                    </text>
+                    <text
+                        x="24"
+                        y="305"
+                        fill="#d7e9ff"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Keluar
+                    </text>
+                    <rect x="142" y="0" width="508" height="45" fill="#fff" />
+                    <text
+                        x="164"
+                        y="28"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                    >
+                        Selamat datang kembali, Administrator
+                    </text>
+                    <text
+                        x="164"
+                        y="74"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="17"
+                        font-weight="bold"
+                    >
+                        Dashboard Performa Bank
+                    </text>
+                    <text
+                        x="164"
+                        y="94"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Ringkasan entitas binaan dan peserta terkoneksi.
+                    </text>
+                    <rect
+                        x="164"
+                        y="113"
+                        width="146"
+                        height="69"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="178"
+                        y="136"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        MERCHANT BINAAN
+                    </text>
+                    <text
+                        x="178"
+                        y="163"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="22"
+                        font-weight="bold"
+                    >
+                        12
+                    </text>
+                    <rect
+                        x="326"
+                        y="113"
+                        width="146"
+                        height="69"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="340"
+                        y="136"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        PESERTA TERKONEKSI
+                    </text>
+                    <text
+                        x="340"
+                        y="163"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="22"
+                        font-weight="bold"
+                    >
+                        248
+                    </text>
+                    <rect
+                        x="488"
+                        y="113"
+                        width="135"
+                        height="69"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="502"
+                        y="136"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        STATUS AKUN
+                    </text>
+                    <text
+                        x="502"
+                        y="163"
+                        fill="#2e9d5d"
+                        font-family="DejaVu Sans"
+                        font-size="13"
+                        font-weight="bold"
+                    >
+                        AKTIF
+                    </text>
+                    <rect
+                        x="164"
+                        y="204"
+                        width="459"
+                        height="96"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="180"
+                        y="228"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        Monitoring Distribusi Peserta per Merchant
+                    </text>
+                    <line
+                        x1="180"
+                        y1="244"
+                        x2="605"
+                        y2="244"
+                        stroke="#d8e0eb"
+                    />
+                    <text
+                        x="180"
+                        y="263"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        SMK Bankir 01
+                    </text>
+                    <text
+                        x="535"
+                        y="263"
+                        fill="#1976d2"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        85 Peserta
+                    </text>
+                    <text
+                        x="180"
+                        y="283"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        SMK Bankir 02
+                    </text>
+                    <text
+                        x="535"
+                        y="283"
+                        fill="#1976d2"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        64 Peserta
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 2. Ilustrasi tampilan dashboard dan sidebar pengelola
+                berdasarkan layout compact aktif.
+            </div>
+            <h3>Cara menggunakan Dashboard</h3>
+            <ol>
+                <li>
+                    Login menggunakan akun sesuai role. Setelah login, sistem
+                    mengarahkan role 4/5/6 ke dashboard compact.
+                </li>
+                <li>
+                    Gunakan kartu ringkasan untuk membaca jumlah
+                    Merchant/Sekolah, Peserta, beasiswa, atau kredit sesuai
+                    role.
+                </li>
+                <li>
+                    Gunakan tabel ringkasan untuk menemukan lembaga atau peserta
+                    yang perlu ditindaklanjuti.
+                </li>
+                <li>
+                    Pilih menu Pengguna, Rekap Modul, atau Approval untuk
+                    tindakan operasional.
+                </li>
+            </ol>
+            <div class="callout">
+                <strong>Role Bank:</strong> statistik dan daftar hanya mengambil
+                peserta dengan relasi <code>bank_id</code> milik akun Bank.
+                <strong>Role Sekolah:</strong> data dibatasi berdasarkan
+                <code>sekolah_id</code>.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">04 | Administrasi Pengguna</div>
+            <h2>Menu Pengguna</h2>
+            <p>
+                Menu ini dipakai Root, Bank, dan Merchant/Sekolah untuk membuat
+                serta mengelola akun dalam cakupan masing-masing.
+            </p>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="300"
+                    viewBox="0 0 650 300"
+                >
+                    <rect width="650" height="300" fill="#eef3f9" />
+                    <rect
+                        x="20"
+                        y="18"
+                        width="610"
+                        height="264"
+                        rx="9"
+                        fill="#fff"
+                        stroke="#d6e3f2"
+                    />
+                    <text
+                        x="45"
+                        y="52"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="18"
+                        font-weight="bold"
+                    >
+                        Daftar Pengguna
+                    </text>
+                    <text
+                        x="45"
+                        y="72"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Kelola data pengguna, hak akses, dan akun peserta.
+                    </text>
+                    <rect
+                        x="455"
+                        y="35"
+                        width="78"
+                        height="28"
+                        rx="14"
+                        fill="#eaf6ff"
+                        stroke="#4b9bd1"
+                    />
+                    <text
+                        x="494"
+                        y="53"
+                        text-anchor="middle"
+                        fill="#1976d2"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Template Excel
+                    </text>
+                    <rect
+                        x="542"
+                        y="35"
+                        width="69"
+                        height="28"
+                        rx="14"
+                        fill="#1976d2"
+                    />
+                    <text
+                        x="576"
+                        y="53"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        + Tambah
+                    </text>
+                    <line x1="42" y1="91" x2="608" y2="91" stroke="#d8e0eb" />
+                    <text
+                        x="48"
+                        y="113"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Nama Pengguna
+                    </text>
+                    <text
+                        x="250"
+                        y="113"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Email
+                    </text>
+                    <text
+                        x="430"
+                        y="113"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Role
+                    </text>
+                    <text
+                        x="565"
+                        y="113"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Aksi
+                    </text>
+                    <line x1="42" y1="123" x2="608" y2="123" stroke="#d8e0eb" />
+                    <text
+                        x="48"
+                        y="148"
+                        fill="#172033"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Bank Mitra A
+                    </text>
+                    <text
+                        x="250"
+                        y="148"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        bank.a@example.test
+                    </text>
+                    <rect
+                        x="425"
+                        y="135"
+                        width="53"
+                        height="19"
+                        rx="9"
+                        fill="#e5f6eb"
+                    />
+                    <text
+                        x="451"
+                        y="149"
+                        text-anchor="middle"
+                        fill="#258048"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Bank
+                    </text>
+                    <text
+                        x="570"
+                        y="149"
+                        fill="#1976d2"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                    >
+                        ...
+                    </text>
+                    <line x1="42" y1="166" x2="608" y2="166" stroke="#eef2f7" />
+                    <text
+                        x="48"
+                        y="191"
+                        fill="#172033"
+                        font-family="DejaVu Sans"
+                        font-size="10"
+                    >
+                        Peserta Contoh
+                    </text>
+                    <text
+                        x="250"
+                        y="191"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        1234567890@gmail.com
+                    </text>
+                    <rect
+                        x="425"
+                        y="178"
+                        width="60"
+                        height="19"
+                        rx="9"
+                        fill="#edf1f5"
+                    />
+                    <text
+                        x="455"
+                        y="192"
+                        text-anchor="middle"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Peserta
+                    </text>
+                    <text
+                        x="570"
+                        y="192"
+                        fill="#1976d2"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                    >
+                        ...
+                    </text>
+                    <rect
+                        x="42"
+                        y="223"
+                        width="215"
+                        height="37"
+                        rx="6"
+                        fill="#eef6ff"
+                    />
+                    <text
+                        x="53"
+                        y="246"
+                        fill="#19599e"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Lihat | Edit | Hapus | Kirim akun WA
+                    </text>
+                    <rect
+                        x="275"
+                        y="223"
+                        width="333"
+                        height="37"
+                        rx="6"
+                        fill="#fff7e6"
+                    />
+                    <text
+                        x="288"
+                        y="246"
+                        fill="#97670f"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Kirim akun WA hanya muncul untuk peserta
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 3. Ilustrasi halaman Daftar Pengguna.
+            </div>
+            <h3>Operasi yang tersedia</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aksi</th>
+                        <th>Kegunaan</th>
+                        <th>Catatan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tambah Pengguna</td>
+                        <td>
+                            Membuat akun Bank, Merchant/Sekolah, atau Peserta.
+                        </td>
+                        <td>Role yang muncul bergantung pada role pembuat.</td>
+                    </tr>
+                    <tr>
+                        <td>Lihat Profile</td>
+                        <td>
+                            Melihat email, membership, NISN, afiliasi, dan
+                            profil siswa.
+                        </td>
+                        <td>
+                            Data yang terlihat tetap mengikuti daftar hasil
+                            filter.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Edit</td>
+                        <td>
+                            Memperbarui identitas, relasi, membership, atau
+                            profil siswa.
+                        </td>
+                        <td>
+                            Password boleh dikosongkan untuk mempertahankan
+                            password non-siswa.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Hapus Pengguna</td>
+                        <td>Menghapus akun dan profil siswa terkait.</td>
+                        <td>
+                            Konfirmasi SweetAlert diperlukan; tindakan bersifat
+                            permanen.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kirim Akun ke WA</td>
+                        <td>Mengirim email/password peserta dengan Fonnte.</td>
+                        <td>Nomor telepon dan NISN harus tersedia.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">05 | Menambahkan Pengguna</div>
+            <h2>Prosedur Menambahkan Akun</h2>
+            <h3>A. Menambahkan Bank oleh Root</h3>
+            <ol>
+                <li>
+                    Buka <strong>Bank, Sekolah & Peserta</strong> pada sidebar
+                    Root.
+                </li>
+                <li>Klik <strong>Tambah Pengguna</strong>.</li>
+                <li>Pilih role <strong>Bank</strong>.</li>
+                <li>
+                    Isi nama, email login, password minimal 8 karakter,
+                    membership bila ada, dan masa aktif member.
+                </li>
+                <li>
+                    Klik <strong>Simpan</strong>. Akun Bank kemudian dapat login
+                    dan mengelola struktur bawahnya.
+                </li>
+            </ol>
+            <h3>B. Menambahkan Merchant/Sekolah</h3>
+            <ol>
+                <li>
+                    Root atau Bank membuka menu Pengguna lalu klik
+                    <strong>Tambah Pengguna</strong>.
+                </li>
+                <li>
+                    Pilih role <strong>Merchant</strong>. Pada model sistem,
+                    role ini adalah Sekolah dengan nilai 5.
+                </li>
+                <li>
+                    Root wajib memilih Bank pengampu. Jika dibuat oleh Bank,
+                    relasi Bank terisi otomatis.
+                </li>
+                <li>
+                    Isi nama, email, dan password. Klik <strong>Simpan</strong>.
+                </li>
+            </ol>
+            <h3>C. Menambahkan Peserta/Siswa</h3>
+            <ol>
+                <li>
+                    Root, Bank, atau Merchant/Sekolah membuka menu Pengguna.
+                </li>
+                <li>
+                    Pilih role <strong>Peserta</strong>. Form email dan password
+                    manual akan disembunyikan.
+                </li>
+                <li>
+                    Root memilih Bank dan Merchant/Sekolah. Bank memilih
+                    Merchant/Sekolah. Merchant/Sekolah otomatis menggunakan
+                    relasinya sendiri.
+                </li>
+                <li>
+                    Isi NISN, data profil, status beasiswa, nomor WhatsApp,
+                    angkatan, dan alamat.
+                </li>
+                <li>
+                    Sistem membuat akun login otomatis dari NISN, membuat profil
+                    siswa, dan mengirim verifikasi ke email pribadi bila diisi.
+                </li>
+            </ol>
+            <div class="mono-box">
+                Email login = [NISN]@gmail.com Password = [NISN]Bankir!
+            </div>
+            <div class="callout warn">
+                <strong>Validasi penting:</strong> NISN tidak boleh duplikat.
+                Kuota total siswa dan kuota beasiswa mengikuti membership Bank.
+                Jika kuota penuh, penyimpanan dibatalkan.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">06 | Import Peserta</div>
+            <h2>Menambahkan Peserta melalui Excel</h2>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="245"
+                    viewBox="0 0 650 245"
+                >
+                    <rect width="650" height="245" fill="#eef3f9" />
+                    <rect
+                        x="155"
+                        y="16"
+                        width="340"
+                        height="213"
+                        rx="10"
+                        fill="#fff"
+                        stroke="#d6e3f2"
+                    />
+                    <text
+                        x="180"
+                        y="48"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="16"
+                        font-weight="bold"
+                    >
+                        Import Data Peserta
+                    </text>
+                    <rect
+                        x="180"
+                        y="64"
+                        width="290"
+                        height="48"
+                        rx="6"
+                        fill="#eef6ff"
+                    />
+                    <text
+                        x="195"
+                        y="84"
+                        fill="#19599e"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                        font-weight="bold"
+                    >
+                        Informasi sistem
+                    </text>
+                    <text
+                        x="195"
+                        y="101"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="8"
+                    >
+                        Email dan password dibuat otomatis dari NISN.
+                    </text>
+                    <text
+                        x="180"
+                        y="135"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Pilih Bank tujuan *
+                    </text>
+                    <rect
+                        x="180"
+                        y="142"
+                        width="290"
+                        height="25"
+                        rx="4"
+                        fill="#fff"
+                        stroke="#b9c9da"
+                    />
+                    <text
+                        x="191"
+                        y="159"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Bank Mitra A
+                    </text>
+                    <text
+                        x="180"
+                        y="188"
+                        fill="#53657c"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        File Excel (.xlsx / .xls)
+                    </text>
+                    <rect
+                        x="180"
+                        y="195"
+                        width="190"
+                        height="24"
+                        rx="4"
+                        fill="#fff"
+                        stroke="#b9c9da"
+                    />
+                    <text
+                        x="190"
+                        y="211"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="8"
+                    >
+                        template_peserta.xlsx
+                    </text>
+                    <rect
+                        x="383"
+                        y="195"
+                        width="87"
+                        height="24"
+                        rx="12"
+                        fill="#36a269"
+                    />
+                    <text
+                        x="426"
+                        y="211"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Proses Import
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 4. Ilustrasi modal Import Data Peserta.
+            </div>
+            <h3>Langkah penggunaan</h3>
+            <ol>
+                <li>
+                    Klik <strong>Template Excel</strong> untuk mengunduh format
+                    resmi.
+                </li>
+                <li>
+                    Isi data sesuai nama kolom template. Jangan mengubah header
+                    dan jangan menghapus kolom wajib.
+                </li>
+                <li>Klik <strong>Import Peserta</strong>.</li>
+                <li>
+                    Root memilih Bank dan Merchant/Sekolah tujuan. Bank memilih
+                    Merchant/Sekolah tujuan. Merchant/Sekolah mengimpor ke
+                    relasinya sendiri.
+                </li>
+                <li>
+                    Pilih file dengan format <code>xlsx</code>,
+                    <code>xls</code>, atau <code>csv</code>, lalu klik
+                    <strong>Proses Import</strong>.
+                </li>
+            </ol>
+            <h3>Validasi dan perilaku transaksi</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aturan</th>
+                        <th>Perilaku sistem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Email peserta</td>
+                        <td>
+                            Dibentuk otomatis menjadi
+                            <code>NISN@gmail.com</code>; tidak diambil dari file
+                            sebagai email login.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Password peserta</td>
+                        <td>
+                            Dibentuk otomatis menjadi <code>NISNBankir!</code>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Duplikasi NISN</td>
+                        <td>
+                            Baris bermasalah dilaporkan dan transaksi import
+                            dibatalkan.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kuota siswa/beasiswa</td>
+                        <td>
+                            Jika kuota terlampaui, seluruh batch dibatalkan agar
+                            tidak tersimpan sebagian.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ukuran file</td>
+                        <td>Maksimal 10 MB pada import pengguna.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="callout success">
+                <strong>Praktik aman:</strong> setelah import berhasil, pilih
+                peserta pada tabel dan gunakan
+                <strong>Kirim Massal Ke WA</strong>. Periksa kembali nomor
+                WhatsApp sebelum mengirim kredensial.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">07 | Menu Peserta</div>
+            <h2>Dashboard Peserta dan Kompetensi</h2>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="330"
+                    viewBox="0 0 650 330"
+                >
+                    <rect width="650" height="330" fill="#eef3f9" />
+                    <rect x="0" y="0" width="145" height="330" fill="#143b72" />
+                    <text
+                        x="18"
+                        y="29"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="13"
+                        font-weight="bold"
+                    >
+                        Bankir Academy
+                    </text>
+                    <text
+                        x="18"
+                        y="66"
+                        fill="#bddcff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        PEMBELAJARAN PESERTA
+                    </text>
+                    <rect
+                        x="10"
+                        y="78"
+                        width="125"
+                        height="26"
+                        rx="5"
+                        fill="#245891"
+                    />
+                    <text
+                        x="24"
+                        y="95"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Kompetensi
+                    </text>
+                    <text
+                        x="24"
+                        y="130"
+                        fill="#d7e9ff"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Pelatihan Umum
+                    </text>
+                    <text
+                        x="24"
+                        y="155"
+                        fill="#d7e9ff"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        History Pelatihan
+                    </text>
+                    <text
+                        x="18"
+                        y="196"
+                        fill="#bddcff"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        KARIER PESERTA
+                    </text>
+                    <text
+                        x="24"
+                        y="222"
+                        fill="#d7e9ff"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Lowongan Kerja
+                    </text>
+                    <text
+                        x="24"
+                        y="247"
+                        fill="#d7e9ff"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Buat CV ATS
+                    </text>
+                    <text
+                        x="24"
+                        y="289"
+                        fill="#d7e9ff"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Sertifikat
+                    </text>
+                    <rect x="145" y="0" width="505" height="45" fill="#fff" />
+                    <text
+                        x="167"
+                        y="28"
+                        fill="#53657c"
+                        font-family="Deja Vu Sans"
+                        font-size="10"
+                    >
+                        Selamat datang kembali, Peserta Contoh
+                    </text>
+                    <text
+                        x="167"
+                        y="76"
+                        fill="#143b72"
+                        font-family="Deja Vu Sans"
+                        font-size="17"
+                        font-weight="bold"
+                    >
+                        Dashboard Pelatihan Anda
+                    </text>
+                    <text
+                        x="167"
+                        y="96"
+                        fill="#718198"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Pantau perkembangan belajar dan bab materi yang telah
+                        dibuka.
+                    </text>
+                    <rect
+                        x="167"
+                        y="116"
+                        width="140"
+                        height="62"
+                        rx="8"
+                        fill="#36a269"
+                    />
+                    <text
+                        x="181"
+                        y="137"
+                        fill="#dff9e7"
+                        font-family="Deja Vu Sans"
+                        font-size="8"
+                    >
+                        KREDIT PESERTA
+                    </text>
+                    <text
+                        x="181"
+                        y="163"
+                        fill="#fff"
+                        font-family="Deja Vu Sans"
+                        font-size="18"
+                        font-weight="bold"
+                    >
+                        Rp 250.000
+                    </text>
+                    <rect
+                        x="321"
+                        y="116"
+                        width="140"
+                        height="62"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="335"
+                        y="137"
+                        fill="#718198"
+                        font-family="Deja Vu Sans"
+                        font-size="8"
+                    >
+                        BAB DIIKUTI
+                    </text>
+                    <text
+                        x="335"
+                        y="163"
+                        fill="#143b72"
+                        font-family="Deja Vu Sans"
+                        font-size="18"
+                        font-weight="bold"
+                    >
+                        8
+                    </text>
+                    <rect
+                        x="475"
+                        y="116"
+                        width="148"
+                        height="62"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="489"
+                        y="137"
+                        fill="#718198"
+                        font-family="Deja Vu Sans"
+                        font-size="8"
+                    >
+                        STATUS AKUN
+                    </text>
+                    <text
+                        x="489"
+                        y="163"
+                        fill="#2e9d5d"
+                        font-family="Deja Vu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        BEASISWA
+                    </text>
+                    <rect
+                        x="167"
+                        y="201"
+                        width="456"
+                        height="104"
+                        rx="8"
+                        fill="#fff"
+                    />
+                    <text
+                        x="183"
+                        y="226"
+                        fill="#143b72"
+                        font-family="Deja Vu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        Aktivitas Belajar
+                    </text>
+                    <line
+                        x1="183"
+                        y1="239"
+                        x2="607"
+                        y2="239"
+                        stroke="#d8e0eb"
+                    />
+                    <text
+                        x="183"
+                        y="263"
+                        fill="#53657c"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Bab 1: Fundamental Perbankan
+                    </text>
+                    <text
+                        x="520"
+                        y="263"
+                        fill="#1976d2"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Gas Belajar
+                    </text>
+                    <text
+                        x="183"
+                        y="286"
+                        fill="#53657c"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Bab 2: Layanan Nasabah
+                    </text>
+                    <text
+                        x="520"
+                        y="286"
+                        fill="#1976d2"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Gas Belajar
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 5. Ilustrasi sidebar dan dashboard Peserta/Siswa role 6.
+            </div>
+            <h3>Kompetensi</h3>
+            <ol>
+                <li>
+                    Buka menu <strong>Kompetensi</strong> untuk melihat kategori
+                    dan modul yang tersedia.
+                </li>
+                <li>Gunakan pencarian judul atau filter kategori.</li>
+                <li>
+                    Klik <strong>Mulai Belajar</strong> untuk modul baru atau
+                    <strong>Masuk Kelas</strong> untuk modul yang sudah diikuti.
+                </li>
+                <li>
+                    Materi dapat terdiri dari video YouTube, dokumen PDF/Google
+                    Drive, dan test.
+                </li>
+                <li>
+                    Materi dibuka berurutan. Selesaikan bab/item sebelumnya
+                    sebelum berpindah ke materi berikutnya.
+                </li>
+            </ol>
+            <div class="callout warn">
+                <strong>Beasiswa dan akses:</strong> Peserta beasiswa dapat
+                memperoleh tipe materi beasiswa dan mengakses pre/post-test
+                sesuai status. Peserta reguler tidak diperkenankan mengakses
+                pre/post-test pada alur ini.
+            </div>
+            <h3>Pelatihan Umum</h3>
+            <p>
+                Menu ini menampilkan materi umum. Peserta dapat memilih materi
+                gratis atau melanjutkan pembayaran untuk materi berbayar.
+                Setelah akses tercatat, materi dibuka melalui halaman belajar.
+            </p>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">08 | Monitoring dan Beasiswa</div>
+            <h2>Rekap Modul, Monitoring, dan Approval</h2>
+            <h3>Rekap Modul / Monitoring Peserta</h3>
+            <p>
+                Menu ini digunakan pengelola untuk melihat peserta yang telah
+                memiliki modul aktif, statistik peserta, kategori program, dan
+                akses laporan test.
+            </p>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="230"
+                    viewBox="0 0 650 230"
+                >
+                    <rect width="650" height="230" fill="#f8fbfe" />
+                    <rect
+                        x="18"
+                        y="16"
+                        width="614"
+                        height="198"
+                        rx="8"
+                        fill="#fff"
+                        stroke="#d6e3f2"
+                    />
+                    <text
+                        x="40"
+                        y="45"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="16"
+                        font-weight="bold"
+                    >
+                        Monitor Pelatihan
+                    </text>
+                    <text
+                        x="40"
+                        y="64"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Akses manajemen data untuk Role: BANK
+                    </text>
+                    <rect
+                        x="40"
+                        y="82"
+                        width="125"
+                        height="47"
+                        rx="6"
+                        fill="#eef6ff"
+                    />
+                    <text
+                        x="53"
+                        y="101"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="8"
+                    >
+                        PESERTA BELAJAR
+                    </text>
+                    <text
+                        x="53"
+                        y="120"
+                        fill="#143b72"
+                        font-family="Deja Vu Sans"
+                        font-size="18"
+                        font-weight="bold"
+                    >
+                        248
+                    </text>
+                    <rect
+                        x="177"
+                        y="82"
+                        width="125"
+                        height="47"
+                        rx="6"
+                        fill="#edf9f1"
+                    />
+                    <text
+                        x="190"
+                        y="101"
+                        fill="#718198"
+                        font-family="Deja Vu Sans"
+                        font-size="8"
+                    >
+                        MODUL TERPILIH
+                    </text>
+                    <text
+                        x="190"
+                        y="120"
+                        fill="#258048"
+                        font-family="Deja Vu Sans"
+                        font-size="18"
+                        font-weight="bold"
+                    >
+                        14
+                    </text>
+                    <rect
+                        x="40"
+                        y="148"
+                        width="550"
+                        height="43"
+                        rx="5"
+                        fill="#f8fbfe"
+                        stroke="#e0e7ef"
+                    />
+                    <text
+                        x="53"
+                        y="166"
+                        fill="#53657c"
+                        font-family="Deja Vu Sans"
+                        font-size="9"
+                    >
+                        Peserta Contoh | Jalur Beasiswa | Fundamental Perbankan
+                    </text>
+                    <rect
+                        x="459"
+                        y="155"
+                        width="116"
+                        height="23"
+                        rx="11"
+                        fill="#1976d2"
+                    />
+                    <text
+                        x="517"
+                        y="170"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="Deja Vu Sans"
+                        font-size="8"
+                    >
+                        Lihat Nilai Kuis
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 6. Ilustrasi halaman Monitor Pelatihan.
+            </div>
+            <ul>
+                <li>Root mengelompokkan data berdasarkan Bank.</li>
+                <li>Bank mengelompokkan data berdasarkan Merchant/Sekolah.</li>
+                <li>Merchant/Sekolah hanya melihat peserta pada lembaganya.</li>
+                <li>
+                    Tombol <strong>Lihat Nilai Kuis</strong> aktif untuk peserta
+                    beasiswa yang memiliki data test.
+                </li>
+            </ul>
+            <h3>Approval Beasiswa</h3>
+            <ol>
+                <li>Root atau Bank membuka menu <strong>Approval</strong>.</li>
+                <li>
+                    Periksa NISN, nama peserta, Merchant/Sekolah, email asli,
+                    dan status Pending Approval.
+                </li>
+                <li>
+                    Klik <strong>Approve</strong> untuk mengubah status menjadi
+                    penerima beasiswa aktif.
+                </li>
+                <li>
+                    Klik <strong>Reject</strong> untuk mengubah status menjadi
+                    non-beasiswa.
+                </li>
+            </ol>
+            <div class="callout warn">
+                <strong>Kuota:</strong> Approve akan gagal jika kuota beasiswa
+                pada membership Bank sudah penuh. Role 5 tidak boleh memproses
+                approval secara backend, meskipun label menu dapat terlihat dari
+                layout.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">09 | Menu Karier dan Hasil</div>
+            <h2>History, Lowongan, CV ATS, dan Sertifikat</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Cara penggunaan</th>
+                        <th>Hasil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>History Pelatihan</strong></td>
+                        <td>
+                            Buka menu untuk melihat bab yang pernah dimulai,
+                            modul aktif, dan riwayat transaksi. Klik aktivitas
+                            untuk melanjutkan belajar.
+                        </td>
+                        <td>Riwayat belajar dan modul yang sedang diikuti.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lowongan Kerja</strong></td>
+                        <td>
+                            Cari lowongan, buka detail, dan periksa persyaratan.
+                            Alur apply aktif bergantung pada route dan status
+                            akses akun.
+                        </td>
+                        <td>
+                            Daftar peluang kerja yang relevan untuk peserta.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Buat CV ATS</strong></td>
+                        <td>
+                            Isi identitas, pendidikan, pengalaman, dan
+                            pelatihan. Simpan, edit bila perlu, lalu klik cetak
+                            PDF.
+                        </td>
+                        <td>
+                            Data CV pada route role 6 yang aktif disimpan sebagai
+                            data lamaran milik akun dan dapat diedit/cetak PDF.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sertifikat</strong></td>
+                        <td>
+                            Buka daftar sertifikat. Sertifikat tersedia setelah
+                            syarat kelulusan terpenuhi; pilih sertifikat untuk
+                            melihat atau mengunduh.
+                        </td>
+                        <td>File sertifikat PDF.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profil Saya</strong></td>
+                        <td>
+                            Buka dropdown nama pengguna, pilih Profil Saya, lalu
+                            periksa identitas, status akun, afiliasi, dan data
+                            siswa.
+                        </td>
+                        <td>Informasi akun dan status membership/beasiswa.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="figure">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="650"
+                    height="230"
+                    viewBox="0 0 650 230"
+                >
+                    <rect width="650" height="230" fill="#eef3f9" />
+                    <rect
+                        x="28"
+                        y="18"
+                        width="594"
+                        height="195"
+                        rx="9"
+                        fill="#fff"
+                        stroke="#d6e3f2"
+                    />
+                    <text
+                        x="52"
+                        y="49"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="16"
+                        font-weight="bold"
+                    >
+                        Profil dan Hasil Belajar
+                    </text>
+                    <rect
+                        x="52"
+                        y="68"
+                        width="175"
+                        height="115"
+                        rx="8"
+                        fill="#f8fbfe"
+                        stroke="#e0e7ef"
+                    />
+                    <circle cx="139" cy="101" r="22" fill="#8ab8e5" />
+                    <text
+                        x="139"
+                        y="106"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-family="DejaVu Sans"
+                        font-size="15"
+                        font-weight="bold"
+                    >
+                        P
+                    </text>
+                    <text
+                        x="139"
+                        y="143"
+                        text-anchor="middle"
+                        fill="#143b72"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        Peserta Contoh
+                    </text>
+                    <text
+                        x="139"
+                        y="160"
+                        text-anchor="middle"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        Akun Beasiswa
+                    </text>
+                    <rect
+                        x="252"
+                        y="68"
+                        width="346"
+                        height="51"
+                        rx="7"
+                        fill="#edf9f1"
+                    />
+                    <text
+                        x="270"
+                        y="90"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        STATUS SERTIFIKAT
+                    </text>
+                    <text
+                        x="270"
+                        y="108"
+                        fill="#258048"
+                        font-family="DejaVu Sans"
+                        font-size="12"
+                        font-weight="bold"
+                    >
+                        Tersedia setelah lulus
+                    </text>
+                    <rect
+                        x="252"
+                        y="132"
+                        width="166"
+                        height="51"
+                        rx="7"
+                        fill="#eef6ff"
+                    />
+                    <text
+                        x="270"
+                        y="154"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        CV ATS
+                    </text>
+                    <text
+                        x="270"
+                        y="172"
+                        fill="#1976d2"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        Buat / Edit / Cetak
+                    </text>
+                    <rect
+                        x="432"
+                        y="132"
+                        width="166"
+                        height="51"
+                        rx="7"
+                        fill="#fff7e6"
+                    />
+                    <text
+                        x="450"
+                        y="154"
+                        fill="#718198"
+                        font-family="DejaVu Sans"
+                        font-size="9"
+                    >
+                        KARIER
+                    </text>
+                    <text
+                        x="450"
+                        y="172"
+                        fill="#97670f"
+                        font-family="DejaVu Sans"
+                        font-size="11"
+                        font-weight="bold"
+                    >
+                        Cari Lowongan
+                    </text>
+                </svg>
+            </div>
+            <div class="caption">
+                Gambar 7. Ilustrasi hubungan menu profil, hasil belajar, CV, dan
+                karier.
+            </div>
+            <div class="callout">
+                <strong>Urutan yang disarankan peserta:</strong> lengkapi profil
+                -> ikuti Kompetensi/Pelatihan Umum -> selesaikan modul dan test
+                -> cek History -> cetak Sertifikat -> buat CV ATS -> gunakan
+                Lowongan Kerja.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">10 | Aktivasi dan Troubleshooting</div>
+            <h2>Aktivasi Akun dan Pemecahan Masalah</h2>
+            <h3>Aktivasi email Peserta/Siswa</h3>
+            <ol>
+                <li>
+                    Saat peserta dibuat dengan email pribadi, sistem mengirim
+                    tautan verifikasi yang berlaku 24 jam.
+                </li>
+                <li>
+                    Peserta membuka tautan tersebut dan kembali ke halaman
+                    aplikasi.
+                </li>
+                <li>
+                    Jika belum aktif, peserta diarahkan ke halaman peringatan
+                    akun belum aktif.
+                </li>
+                <li>
+                    Klik <strong>Kirim Ulang Email Verifikasi</strong> bila
+                    tautan tidak diterima.
+                </li>
+            </ol>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Masalah</th>
+                        <th>Penyebab umum</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Role tidak muncul saat tambah pengguna</td>
+                        <td>
+                            Role pembuat tidak memiliki kewenangan atau daftar
+                            tidak dibuka dari menu yang benar.
+                        </td>
+                        <td>
+                            Gunakan akun Root untuk Bank/Merchant; gunakan Bank
+                            atau Sekolah untuk Peserta.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sekolah tidak ada di pilihan</td>
+                        <td>
+                            Belum terhubung ke Bank atau filter Bank belum
+                            dipilih.
+                        </td>
+                        <td>
+                            Periksa relasi Bank, pilih Bank terlebih dahulu,
+                            lalu ulangi pilihan Merchant/Sekolah.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Import gagal</td>
+                        <td>
+                            Header/template salah, NISN duplikat, file terlalu
+                            besar, atau kuota habis.
+                        </td>
+                        <td>
+                            Unduh template terbaru, perbaiki data, lalu import
+                            ulang.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Materi peserta kosong</td>
+                        <td>
+                            Masa aktif membership Bank berakhir atau modul belum
+                            aktif.
+                        </td>
+                        <td>Periksa masa aktif Bank dan status modul.</td>
+                    </tr>
+                    <tr>
+                        <td>Peserta tidak dapat membuka test</td>
+                        <td>
+                            Status non-beasiswa, belum membeli/mengikuti modul,
+                            atau materi sebelumnya belum selesai.
+                        </td>
+                        <td>
+                            Periksa status beasiswa, akses modul, dan urutan
+                            penyelesaian materi.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tombol Lihat Nilai tidak tersedia</td>
+                        <td>
+                            Peserta belum memiliki data test atau bukan jalur
+                            beasiswa.
+                        </td>
+                        <td>
+                            Pastikan peserta menyelesaikan test sesuai hak
+                            akses.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Approval ditolak</td>
+                        <td>
+                            Role bukan Root/Bank atau kuota beasiswa sudah
+                            penuh.
+                        </td>
+                        <td>Gunakan Root/Bank dan periksa kuota membership.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Checklist administrator</h3>
+            <ul>
+                <li>
+                    Pastikan email login unik dan password tidak dibagikan di
+                    ruang publik.
+                </li>
+                <li>
+                    Pastikan Bank memiliki membership dan masa aktif yang benar.
+                </li>
+                <li>Pastikan Merchant/Sekolah terhubung ke Bank yang tepat.</li>
+                <li>
+                    Pastikan Peserta memiliki NISN, relasi sekolah, nomor
+                    WhatsApp, dan email pribadi.
+                </li>
+                <li>
+                    Gunakan data dummy saat mengambil screenshot dokumentasi.
+                </li>
+            </ul>
+            <div class="footer-note">
+                Sumber teknis utama:
+                <code>resources/views/layouts/compact.blade.php</code>,
+                <code
+                    >resources/views/compact/partials/admin-menu.blade.php</code
+                >, <code>resources/views/compact/pengguna.blade.php</code>,
+                <code>routes/web/compact.php</code>,
+                <code>routes/web/member-non-anggota.php</code>, middleware
+                role/membership/verification, dan controller terkait.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">11 | Kamus Input</div>
+            <h2>Katalog Input dan Aturan Pengisian</h2>
+            <p>
+                Bagian ini adalah acuan field per menu. Nama di kolom
+                <strong>Field sistem</strong> mengikuti atribut <code>name</code>
+                pada form atau key request yang dibaca controller. Dengan
+                demikian, nama field dapat dipakai saat membuat SOP, template
+                Excel, atau melakukan pengecekan data.
+            </p>
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Penanda</th>
+                        <th>Makna</th>
+                        <th>Aturan dokumentasi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="field-required">[Wajib]</td>
+                        <td>Harus dikirim</td>
+                        <td>Validasi backend menggunakan <code>required</code> atau <code>required_if</code>.</td>
+                    </tr>
+                    <tr>
+                        <td class="field-optional">[Opsional]</td>
+                        <td>Boleh kosong</td>
+                        <td>Disimpan jika diisi; nilai default dapat berbeda per controller.</td>
+                    </tr>
+                    <tr>
+                        <td class="field-auto">[Otomatis]</td>
+                        <td>Dibuat sistem</td>
+                        <td>Pengguna tidak perlu mengisi; jangan meminta data ini pada form manual.</td>
+                    </tr>
+                    <tr>
+                        <td>[Bersyarat]</td>
+                        <td>Tergantung konteks</td>
+                        <td>Wajib hanya pada role, target, jenis materi, atau proses tertentu.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="callout warn">
+                <strong>Batas akurasi:</strong> label [Wajib] di bawah merujuk
+                validasi controller yang ditemukan. Beberapa form lama hanya
+                memberi atribut <code>required</code> di browser tanpa validasi
+                server yang setara; kondisi tersebut ditulis sebagai
+                <strong>[Wajib UI]</strong>.
+            </div>
+            <h3>Urutan pengelolaan yang direkomendasikan</h3>
+            <ol>
+                <li>Root membuat Paket Membership jika Bank akan memiliki kuota.</li>
+                <li>Root membuat akun Bank, lalu membuat akun Merchant/Sekolah dengan relasi Bank.</li>
+                <li>Bank atau Merchant/Sekolah membuat/import Peserta dengan relasi sekolah yang benar.</li>
+                <li>Root menyiapkan Bidang, Kompetensi, Materi, item media, test, dan template sertifikat.</li>
+                <li>Peserta aktif mengikuti materi, mengerjakan test, dan melihat hasil atau sertifikat.</li>
+            </ol>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">12 | Field Administrasi</div>
+            <h2>Pengguna, Import, Membership, dan Approval</h2>
+            <h3>Menu Pengguna: Tambah/Edit Bank atau Merchant/Sekolah</h3>
+            <table class="field-table">
+                <thead><tr><th>Field sistem</th><th>Status</th><th>Tipe dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>name</code></td><td class="field-required">[Wajib]</td><td>Teks maksimal 255 karakter; nama akun.</td></tr>
+                    <tr><td><code>role</code></td><td class="field-required">[Wajib]</td><td>Integer role; pilih <code>4</code> Bank atau <code>5</code> Merchant/Sekolah.</td></tr>
+                    <tr><td><code>email</code></td><td class="field-required">[Wajib]</td><td>Email login untuk role 4/5, unik; tidak boleh <code>cb@bankir.academy</code>.</td></tr>
+                    <tr><td><code>password</code></td><td class="field-required">[Wajib] / [Opsional edit]</td><td>Minimal 8 karakter saat tambah; boleh kosong saat edit agar password lama dipertahankan.</td></tr>
+                    <tr><td><code>membership_id</code></td><td class="field-optional">[Opsional]</td><td>ID Paket Membership; dipakai terutama pada akun Bank.</td></tr>
+                    <tr><td><code>masa_aktif_member</code></td><td>[Bersyarat]</td><td>Wajib untuk role 4; tanggal berakhir membership.</td></tr>
+                    <tr><td><code>bank_id</code></td><td>[Bersyarat]</td><td>Wajib Root saat membuat role 5; saat dibuat Bank/Sekolah dapat terisi otomatis.</td></tr>
+                    <tr><td><code>sekolah_id</code></td><td>[Bersyarat]</td><td>Wajib saat membuat role 6 oleh Root/Bank; role 5 memakai sekolah milik akun.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Pengguna: Tambah/Edit Peserta/Siswa</h3>
+            <table class="field-table">
+                <thead><tr><th>Field sistem</th><th>Status</th><th>Tipe dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>name</code></td><td class="field-required">[Wajib]</td><td>Nama siswa, teks maksimal 255 karakter.</td></tr>
+                    <tr><td><code>role</code></td><td class="field-required">[Wajib]</td><td>Harus bernilai <code>6</code>.</td></tr>
+                    <tr><td><code>nisn</code></td><td class="field-required">[Wajib]</td><td>Teks maksimal 20 karakter; unik. Menjadi dasar kredensial.</td></tr>
+                    <tr><td><code>bank_id</code></td><td>[Bersyarat]</td><td>Wajib dipilih Root; Bank dan Sekolah memperoleh relasi otomatis.</td></tr>
+                    <tr><td><code>sekolah_id</code></td><td>[Bersyarat]</td><td>Wajib dipilih Root/Bank; Sekolah otomatis memakai akun sendiri.</td></tr>
+                    <tr><td><code>email_pribadi</code></td><td class="field-optional">[Opsional]</td><td>Email pribadi siswa; jika diisi, verifikasi email dikirim dan berlaku 24 jam.</td></tr>
+                    <tr><td><code>kelas</code></td><td class="field-optional">[Opsional]</td><td>Teks maksimal 50 karakter.</td></tr>
+                    <tr><td><code>jenis_kelamin</code></td><td class="field-optional">[Opsional]</td><td>Pilihan <code>L</code> atau <code>P</code>.</td></tr>
+                    <tr><td><code>no_telp</code></td><td class="field-optional">[Opsional]</td><td>Nomor telepon/WhatsApp, maksimal 20 karakter.</td></tr>
+                    <tr><td><code>angkatan</code></td><td class="field-optional">[Opsional]</td><td>Angka tahun angkatan.</td></tr>
+                    <tr><td><code>beasiswa</code></td><td class="field-optional">[Opsional]</td><td><code>0</code> reguler, <code>1</code> aktif, <code>2</code> pending. Status dapat dinormalisasi sesuai role pembuat.</td></tr>
+                    <tr><td><code>alamat</code></td><td class="field-optional">[Opsional]</td><td>Alamat rumah siswa.</td></tr>
+                    <tr><td>Kredensial login</td><td class="field-auto">[Otomatis]</td><td>Email: <code>[NISN]@gmail.com</code>; password awal: <code>[NISN]Bankir!</code>.</td></tr>
+                </tbody>
+            </table>
+            <div class="callout warn">
+                <strong>Kuota:</strong> pembuatan siswa memeriksa limit peserta
+                dan limit beasiswa pada membership Bank. NISN duplikat ditolak.
+                Saat Sekolah mengajukan status beasiswa, statusnya menjadi
+                Pending (<code>2</code>) dan perlu approval Root/Bank.
+            </div>
+            <h3>Menu Import Peserta</h3>
+            <table class="field-table">
+                <thead><tr><th>Input</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>import_bank_id</code></td><td>[Bersyarat]</td><td>Wajib Root; pilih Bank tujuan yang valid.</td></tr>
+                    <tr><td><code>import_sekolah_id</code></td><td>[Bersyarat]</td><td>Wajib Root/Bank; Sekolah mengimpor ke relasi sekolah sendiri.</td></tr>
+                    <tr><td><code>file_excel</code></td><td class="field-required">[Wajib]</td><td><code>xlsx</code>, <code>xls</code>, atau <code>csv</code>; maksimal 10 MB.</td></tr>
+                    <tr><td>Kolom <code>Nama</code></td><td>[Bersyarat]</td><td>Nama siswa; baris tanpa nama dilewati oleh importer.</td></tr>
+                    <tr><td>Kolom <code>NISN</code></td><td>[Bersyarat]</td><td>Identitas wajib; baris tanpa NISN dilewati dan NISN duplikat menjadi error.</td></tr>
+                    <tr><td><code>Kelas</code>, <code>Angkatan</code>, <code>Jenis Kelamin</code></td><td class="field-optional">[Opsional]</td><td>Data profil siswa.</td></tr>
+                    <tr><td><code>No Telepon</code>, <code>Alamat</code>, <code>Email</code></td><td class="field-optional">[Opsional]</td><td>Disimpan sebagai nomor, alamat, dan email pribadi profil.</td></tr>
+                    <tr><td>Sheet <code>Non Beasiswa</code> / <code>Beasiswa</code></td><td>[Bersyarat]</td><td>Sheet Beasiswa menjadi aktif untuk Root/Bank dan Pending untuk Sekolah.</td></tr>
+                </tbody>
+            </table>
+            <p class="small muted">Nama header Excel mengikuti template: <code>Nama</code>, <code>NISN</code>, <code>Kelas</code>, <code>Angkatan</code>, <code>Jenis Kelamin</code>, <code>No Telepon</code>, <code>Alamat</code>, <code>Email</code>.</p>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">13 | Field Pembelajaran</div>
+            <h2>Konten Pembelajaran dan Sertifikat</h2>
+            <h3>Menu Bidang</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>nama</code></td><td class="field-required">[Wajib]</td><td>Nama Bidang/Kategori; disimpan melalui <code>updateOrCreate</code>.</td></tr>
+                    <tr><td><code>id</code></td><td class="field-auto">[Otomatis]</td><td>Kosong saat tambah; diisi saat edit.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Kompetensi</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id_kategori</code></td><td class="field-required">[Wajib]</td><td>Pilih Bidang yang sudah tersedia.</td></tr>
+                    <tr><td><code>urutan</code></td><td class="field-required">[Wajib]</td><td>Angka minimal 0; menentukan urutan kompetensi.</td></tr>
+                    <tr><td><code>nama</code></td><td class="field-required">[Wajib]</td><td>Nama Kompetensi.</td></tr>
+                    <tr><td><code>harga</code></td><td class="field-required">[Wajib]</td><td>Angka minimal 0; harga dasar kompetensi.</td></tr>
+                    <tr><td><code>keterangan</code></td><td class="field-optional">[Opsional]</td><td>Deskripsi tambahan.</td></tr>
+                    <tr><td><code>icon</code></td><td class="field-optional">[Opsional]</td><td>Nama class icon; default <code>fas fa-graduation-cap</code>.</td></tr>
+                    <tr><td><code>jumlah_peserta</code></td><td class="field-optional">[Opsional]</td><td>Integer minimal 0; default 0.</td></tr>
+                    <tr><td><code>photo_id</code></td><td class="field-optional">[Opsional]</td><td>ID foto dari Album; jika dipilih menjadi banner kompetensi.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Materi/Submateri</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id_materi</code>, <code>nama</code>, <code>urutan</code></td><td class="field-required">[Wajib]</td><td>Pilih Kompetensi, isi nama materi, dan urutan angka.</td></tr>
+                    <tr><td><code>upcoming</code></td><td class="field-required">[Wajib]</td><td><code>0</code> aktif atau <code>1</code> materi mendatang.</td></tr>
+                    <tr><td><code>tipe_beasiswa</code></td><td class="field-required">[Wajib]</td><td><code>0</code> semua, <code>1</code> beasiswa, <code>2</code> non-beasiswa.</td></tr>
+                    <tr><td><code>masa_aktif</code>, <code>harga</code>, <code>diskon</code></td><td class="field-required">[Wajib]</td><td>Masa aktif, harga, dan persentase diskon; harga final dihitung sistem.</td></tr>
+                    <tr><td><code>keterangan</code></td><td class="field-optional">[Opsional]</td><td>Deskripsi/catatan materi.</td></tr>
+                    <tr><td><code>thumbnail</code></td><td>[Bersyarat]</td><td>Wajib bila Kompetensi induk bernama <code>Umum</code>; diisi melalui picker/upload foto.</td></tr>
+                    <tr><td><code>judul_item[]</code></td><td class="field-required">[Wajib]</td><td>Array minimal satu item; judul setiap video/PDF.</td></tr>
+                    <tr><td><code>link_item[]</code></td><td class="field-required">[Wajib]</td><td>Array minimal satu item; URL/path media.</td></tr>
+                    <tr><td><code>tipe_link_item[]</code></td><td class="field-required">[Wajib]</td><td>Array pasangan item; <code>0</code> atau <code>1</code> sesuai tipe link.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu PPT / Pre-post test</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>judul</code>, <code>id_materi</code>, <code>tipe_prepost</code></td><td class="field-required">[Wajib]</td><td>Judul, Kompetensi, dan tipe <code>0</code> Pre atau <code>1</code> Post.</td></tr>
+                    <tr><td><code>id_submateri</code></td><td>[Bersyarat]</td><td>Wajib bila Kompetensi yang dipilih adalah <code>Umum</code>.</td></tr>
+                    <tr><td><code>soal</code></td><td class="field-required">[Wajib]</td><td>Array minimal satu soal.</td></tr>
+                    <tr><td><code>soal.*.pertanyaan</code></td><td class="field-required">[Wajib]</td><td>Teks pertanyaan.</td></tr>
+                    <tr><td><code>soal.*.tipe_pertanyaan</code></td><td>[Bersyarat]</td><td><code>1</code> pilihan ganda atau <code>2</code> essay; pada UI saat ini tipe dapat tersembunyi.</td></tr>
+                    <tr><td><code>soal.*.opsi.A-E</code></td><td class="field-optional">[Opsional]</td><td>Opsi pilihan ganda; jawaban benar memakai nilai <code>A</code> sampai <code>E</code>.</td></tr>
+                    <tr><td><code>soal.*.jawaban</code></td><td class="field-optional">[Opsional]</td><td>Key jawaban pilihan ganda; validasi backend menerima A-E.</td></tr>
+                    <tr><td><code>soal.*.essay</code></td><td>[Bersyarat]</td><td>Wajib bila tipe pertanyaan adalah essay.</td></tr>
+                    <tr><td><code>soal.*.keterangan</code></td><td class="field-optional">[Opsional]</td><td>Catatan soal.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Template Sertifikat</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>target_type</code></td><td class="field-required">[Wajib]</td><td><code>materi</code> atau <code>sub_materi</code>.</td></tr>
+                    <tr><td><code>materi_id</code> / <code>sub_materi_id</code></td><td>[Bersyarat]</td><td>Target yang sesuai dengan <code>target_type</code>.</td></tr>
+                    <tr><td><code>coordinate_x</code>, <code>coordinate_y</code>, <code>font_size</code></td><td class="field-required">[Wajib]</td><td>Integer posisi dan ukuran nama peserta.</td></tr>
+                    <tr><td><code>serial_y</code>, <code>serial_font_size</code>, <code>label_y</code>, <code>label_font_size</code></td><td class="field-optional">[Opsional]</td><td>Integer posisi/ukuran nomor dan label; default 330, 18, 390, 16.</td></tr>
+                    <tr><td><code>background_image</code></td><td class="field-optional">[Opsional]</td><td>Gambar JPG/PNG maksimal 3 MB; wajib disiapkan agar PDF sertifikat dapat dibuat.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">14 | Field Operasional</div>
+            <h2>Album, Monitoring, Profil, dan Pembayaran</h2>
+            <h3>Menu Album Pembelajaran</h3>
+            <table class="field-table">
+                <thead><tr><th>Operasi</th><th>Status</th><th>Input dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td>Upload baru</td><td class="field-required">[Wajib]</td><td><code>images[]</code> array gambar JPG/PNG/WEBP; title dibuat dari nama file.</td></tr>
+                    <tr><td>Edit metadata</td><td class="field-required">[Wajib]</td><td><code>title</code> teks maksimal 255 karakter; <code>image</code> opsional, maksimal 2 MB.</td></tr>
+                    <tr><td>Filter album</td><td class="field-optional">[Opsional]</td><td><code>search</code>, <code>date_from</code>, <code>date_to</code>, <code>size</code>, dan <code>trashed_only</code>.</td></tr>
+                    <tr><td>Bulk hapus/restore</td><td class="field-required">[Wajib]</td><td><code>ids[]</code> array ID foto yang valid.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Monitoring Peserta / Rekap Modul</h3>
+            <table class="field-table">
+                <thead><tr><th>Input</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td>Filter daftar</td><td class="field-optional">[Opsional]</td><td>Filter tampilan mengikuti daftar peserta dan relasi Bank/Sekolah; tidak mengubah data.</td></tr>
+                    <tr><td>Peserta dan Kompetensi</td><td class="field-required">[Wajib pilihan]</td><td>Pilih record yang akan dilihat; laporan menampilkan progres dan nilai test.</td></tr>
+                    <tr><td>Aksi Lihat Nilai</td><td class="field-auto">[Otomatis]</td><td>Tersedia bila data test peserta ada dan hak akses terpenuhi.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Approval Beasiswa</h3>
+            <table class="field-table">
+                <thead><tr><th>Input</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td class="field-auto">[Otomatis]</td><td>ID profil siswa dari baris Pending Approval.</td></tr>
+                    <tr><td><code>action</code></td><td class="field-required">[Wajib pilihan]</td><td><code>approve</code> menjadikan beasiswa aktif; <code>reject</code> menjadikan reguler.</td></tr>
+                    <tr><td>Kuota beasiswa</td><td class="field-auto">[Otomatis]</td><td>Approve ditolak jika limit beasiswa Bank sudah penuh.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Profil Saya</h3>
+            <table class="field-table">
+                <thead><tr><th>Data</th><th>Status</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td>Nama dan email akun</td><td class="field-auto">[Otomatis]</td><td>Dibaca dari akun login.</td></tr>
+                    <tr><td>Role, Bank, Sekolah</td><td class="field-auto">[Otomatis]</td><td>Dibaca dari relasi akses akun.</td></tr>
+                    <tr><td>NISN, kelas, jenis kelamin, telepon, alamat</td><td class="field-auto">[Otomatis]</td><td>Ditampilkan untuk profil role 6 dari SiswaProfile.</td></tr>
+                    <tr><td>Status membership dan saldo</td><td class="field-auto">[Otomatis]</td><td>Status dan saldo ditampilkan dari data akun/profil siswa.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Pembayaran dan Billing</h3>
+            <table class="field-table">
+                <thead><tr><th>Proses</th><th>Status</th><th>Input dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td>Order membership</td><td class="field-required">[Wajib]</td><td><code>membership_tipe</code>: tipe perusahaan atau perorangan; harga dan invoice dibuat sistem.</td></tr>
+                    <tr><td>Order kelas</td><td class="field-required">[Wajib]</td><td><code>class_id</code>, <code>jml_peserta</code> minimal 1, <code>sertifikat_invoice</code> 0/1.</td></tr>
+                    <tr><td>Data peserta order kelas</td><td class="field-required">[Wajib]</td><td>Array <code>nama[]</code>, <code>email[]</code>, <code>nomor_handphone[]</code>; jumlah tiap array harus sama dengan <code>jml_peserta</code>.</td></tr>
+                    <tr><td>Metode pembayaran</td><td class="field-optional">[Opsional]</td><td><code>payment_method</code>: <code>gateway</code> atau <code>manual</code>.</td></tr>
+                    <tr><td>Upload bukti transfer</td><td class="field-required">[Wajib]</td><td><code>link_payment</code> gambar JPG/PNG maksimal 2 MB; status menjadi menunggu konfirmasi.</td></tr>
+                    <tr><td>Filter Billing</td><td class="field-optional">[Opsional]</td><td><code>status</code>, <code>start_date</code>, <code>end_date</code>.</td></tr>
+                </tbody>
+            </table>
+            <div class="callout">
+                <strong>Catatan role:</strong> route pembayaran membership dan
+                material memerlukan login. Akses aktual dan harga ditentukan
+                oleh status membership, tipe peserta, kuota, serta konfigurasi
+                gateway DOKU/Tripay yang aktif.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">15 | Field Karier</div>
+            <h2>Lowongan, CV, dan Data Pelamar</h2>
+            <h3>Menu CV role 6 yang aktif</h3>
+            <p>
+                Route role 6 yang terpasang menggunakan <code>LamaranController</code>
+                dan form <code>compact/lamaran/form.blade.php</code>. Ini berbeda
+                dari CV ATS pada area Member Non-Anggota yang memakai controller
+                lain dan tidak termasuk cakupan empat role dokumen ini.
+            </p>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>nama_lengkap</code></td><td class="field-required">[Wajib]</td><td>Nama lengkap, maksimal 255 karakter.</td></tr>
+                    <tr><td><code>nama_panggilan</code></td><td class="field-required">[Wajib]</td><td>Nama panggilan, maksimal 100 karakter.</td></tr>
+                    <tr><td><code>tmpttgllahir</code></td><td class="field-required">[Wajib]</td><td>Teks tempat dan tanggal lahir, maksimal 255 karakter.</td></tr>
+                    <tr><td><code>agama</code></td><td class="field-required">[Wajib]</td><td>Pilihan agama dari form.</td></tr>
+                    <tr><td><code>alamatdomisili</code></td><td class="field-required">[Wajib]</td><td>Alamat domisili.</td></tr>
+                    <tr><td><code>telpdomisili</code></td><td class="field-required">[Wajib]</td><td>Nomor telepon/WhatsApp maksimal 20 karakter.</td></tr>
+                    <tr><td><code>kodepos</code></td><td class="field-required">[Wajib]</td><td>Kode pos maksimal 10 karakter.</td></tr>
+                    <tr><td><code>statusperkawinan</code></td><td class="field-required">[Wajib]</td><td>Status perkawinan.</td></tr>
+                    <tr><td><code>pengalamanspesifik</code></td><td class="field-optional">[Opsional]</td><td>Ringkasan pengalaman/keahlian pada form lama.</td></tr>
+                    <tr><td>Pendidikan</td><td class="field-optional">[Opsional]</td><td><code>sd*</code>, <code>smp*</code>, <code>sma*</code>, <code>akademi*</code>, <code>perguruan*</code>, <code>pascasarjana*</code>; nama, jurusan/fakultas, tahun, gelar.</td></tr>
+                    <tr><td>Pengalaman kerja</td><td class="field-optional">[Opsional]</td><td>Array <code>pekerjaanperusahaan[]</code>, <code>pekerjaanjabatan[]</code>, <code>pekerjaantahun[]</code>, <code>pekerjaantanggungjawab[]</code>, serta prestasi/penghargaan bila tersedia.</td></tr>
+                    <tr><td>Pelatihan</td><td class="field-optional">[Opsional]</td><td>Array <code>pelatihannama[]</code>, <code>pelatihanpenyelanggara[]</code>, <code>pelatihantahun[]</code>, <code>pelatihanlokasi[]</code>.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Lowongan Kerja Peserta</h3>
+            <table class="field-table">
+                <thead><tr><th>Input</th><th>Status</th><th>Keterangan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>q</code></td><td class="field-optional">[Opsional]</td><td>Pencarian judul/nama lowongan/perusahaan.</td></tr>
+                    <tr><td><code>type</code>, <code>skill</code></td><td class="field-optional">[Opsional]</td><td>Filter tipe pekerjaan dan keahlian.</td></tr>
+                    <tr><td><code>provinsi</code>, <code>kabupaten</code></td><td class="field-optional">[Opsional]</td><td>Filter lokasi.</td></tr>
+                    <tr><td>Detail lowongan</td><td class="field-auto">[Otomatis]</td><td>Judul, perusahaan, gaji, deskripsi, jobdesk, periode, skill, dan tipe dibaca dari database.</td></tr>
+                    <tr><td>CV saat apply</td><td>[Bersyarat]</td><td>Peserta harus memiliki data CV; route apply yang aktif harus tersedia untuk status akun terkait.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Loker Root: Master Perusahaan dan Form Loker</h3>
+            <table class="field-table">
+                <thead><tr><th>Menu</th><th>Field</th><th>Status dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td>Master Perusahaan</td><td><code>loker_nama</code>, <code>loker_email</code>, <code>loker_alamat</code></td><td class="field-required">[Wajib]; email harus valid.</td></tr>
+                    <tr><td>Master Perusahaan</td><td><code>provinsi</code>, <code>kabupaten</code>, <code>kecamatan</code>, <code>kelurahan</code></td><td class="field-required">[Wajib]; wilayah bertingkat.</td></tr>
+                    <tr><td>Master Perusahaan</td><td><code>loker_title</code></td><td class="field-optional">[Opsional]; judul tambahan.</td></tr>
+                    <tr><td>Master Perusahaan</td><td><code>filClassesImage</code></td><td>[Wajib tambah] / [Opsional edit]; gambar JPG/PNG.</td></tr>
+                    <tr><td>Form Loker</td><td><code>loker_title</code>, <code>loker_gaji_min</code>, <code>loker_deskripsi</code>, <code>loker_jobdesk</code></td><td class="field-required">[Wajib].</td></tr>
+                    <tr><td>Form Loker</td><td><code>loker_tanggal_awal</code>, <code>loker_tanggal_akhir</code></td><td class="field-required">[Wajib]; periode lowongan.</td></tr>
+                    <tr><td>Form Loker</td><td><code>loker_skill</code>, <code>loker_type</code>, <code>perusahaan_id</code></td><td class="field-required">[Wajib]; skill/type dapat berupa pilihan jamak.</td></tr>
+                    <tr><td>Form Loker</td><td><code>status</code>, <code>filClassesImage</code></td><td class="field-optional">[Opsional]; status default 0 dan gambar maksimal 1 MB bila diunggah.</td></tr>
+                </tbody>
+            </table>
+            <div class="callout warn">
+                <strong>Draft Loker:</strong> import menggunakan
+                <code>source_type</code> wajib (<code>social_media</code> atau
+                <code>job_platform</code>), <code>platform</code> wajib untuk
+                <code>job_platform</code> dan pilihannya JobStreet/Glints, serta
+                <code>file_excel</code> wajib. Saat publish, nama perusahaan,
+                email, alamat, wilayah, posisi, dan batas pendaftaran harus
+                lengkap.
+            </div>
+        </section>
+
+        <section class="page-break">
+            <div class="section-tag">16 | Menu Root Tambahan</div>
+            <h2>Kelas, Instruktur, SOP, Artikel, dan Log Sistem</h2>
+            <h3>Menu Paket Membership</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>nama</code></td><td class="field-required">[Wajib]</td><td>Nama paket maksimal 255 karakter.</td></tr>
+                    <tr><td><code>harga</code>, <code>diskon</code></td><td class="field-required">[Wajib]</td><td>Angka; harga minimal 0 dan diskon 0-100 persen.</td></tr>
+                    <tr><td><code>limit_siswa</code>, <code>limit_beasiswa</code></td><td class="field-required">[Wajib]</td><td>Integer minimal 0.</td></tr>
+                    <tr><td><code>limit_video</code>, <code>saldo_siswa</code></td><td class="field-required">[Wajib]</td><td>Limit materi integer; saldo angka minimal 0.</td></tr>
+                    <tr><td><code>masa_hingga</code></td><td class="field-required">[Wajib]</td><td>Tanggal berakhir paket.</td></tr>
+                    <tr><td><code>gambar</code></td><td>[Wajib tambah] / [Opsional edit]</td><td>JPG/PNG/WEBP maksimal 2 MB.</td></tr>
+                    <tr><td><code>harga_final</code></td><td class="field-auto">[Otomatis]</td><td>Harga dikurangi diskon persentase.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Instruktur</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>nama</code>, <code>title</code>, <code>desc</code></td><td class="field-required">[Wajib]</td><td>Nama maksimal 255 karakter, jabatan, dan deskripsi.</td></tr>
+                    <tr><td><code>picture</code></td><td>[Wajib tambah] / [Opsional edit]</td><td>Foto instruktur; maksimal 1 MB.</td></tr>
+                    <tr><td><code>id</code></td><td class="field-auto">[Otomatis]</td><td>ID record saat edit.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Daftar Kelas</h3>
+            <table class="field-table">
+                <thead><tr><th>Kelompok field</th><th>Status</th><th>Field sistem dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td>Identitas</td><td class="field-required">[Wajib UI]</td><td><code>txtClassesTitle</code>, <code>slcClassesCategory</code>, <code>slcClassesLevel</code>, <code>txaClassesContent</code>.</td></tr>
+                    <tr><td>Jadwal</td><td class="field-required">[Wajib UI]</td><td><code>datClassesDateStart</code>, <code>datClassesDateEnd</code>; event dapat memakai array tanggal.</td></tr>
+                    <tr><td>Instruktur/tag</td><td class="field-required">[Wajib UI]</td><td><code>txtClassesInstructor</code>, <code>slcClassesTags[]</code>, <code>subCategory[]</code>.</td></tr>
+                    <tr><td>Gambar</td><td class="field-required">[Wajib tambah]</td><td><code>filClassesImage</code> dan <code>filClassesImageMobile</code>; masing-masing maksimal 1 MB.</td></tr>
+                    <tr><td>Peserta dan poin</td><td class="field-optional">[Opsional UI]</td><td><code>numClassesLimit</code>, <code>numClassesPoin</code>; limit dan poin.</td></tr>
+                    <tr><td>Pelaksanaan</td><td class="field-optional">[Opsional]</td><td><code>type</code>, <code>jam_acara</code>, <code>lokasi</code>, <code>iht</code>.</td></tr>
+                    <tr><td>SEO</td><td class="field-optional">[Opsional]</td><td><code>meta_title</code>, <code>meta_description</code>, <code>meta_image</code>, <code>meta_name[]</code>, <code>meta_content[]</code>.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Order Kelas Manual</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>class_id</code></td><td class="field-required">[Wajib]</td><td>Pilih kelas IHT yang aktif.</td></tr>
+                    <tr><td><code>user_id</code></td><td class="field-required">[Wajib]</td><td>Pilih pengguna eligible yang ditampilkan sistem.</td></tr>
+                    <tr><td><code>nominal</code></td><td class="field-required">[Wajib]</td><td>Nominal angka minimal 0; format Rupiah dinormalisasi.</td></tr>
+                    <tr><td>Invoice, payment, peserta</td><td class="field-auto">[Otomatis]</td><td>Invoice, status paid, payment record, dan peserta kelas dibuat sistem.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu SOP</h3>
+            <table class="field-table">
+                <thead><tr><th>Field</th><th>Status</th><th>Aturan</th></tr></thead>
+                <tbody>
+                    <tr><td><code>judul</code></td><td class="field-required">[Wajib]</td><td>Unik, teks maksimal 255 karakter.</td></tr>
+                    <tr><td><code>status</code></td><td class="field-required">[Wajib]</td><td>Pilih status yang disediakan model SOP.</td></tr>
+                    <tr><td><code>deskripsi</code></td><td class="field-optional">[Opsional]</td><td>Maksimal 1000 karakter.</td></tr>
+                    <tr><td><code>documents[n][type]</code></td><td class="field-optional">[Opsional]</td><td><code>file</code> atau <code>link</code>.</td></tr>
+                    <tr><td><code>documents[n][nama_file]</code></td><td class="field-optional">[Opsional]</td><td>Nama dokumen maksimal 255 karakter.</td></tr>
+                    <tr><td><code>documents[n][link_google_drive]</code></td><td>[Bersyarat]</td><td>Link saat type link; maksimal 2048 karakter.</td></tr>
+                    <tr><td><code>documents[n][file]</code></td><td>[Bersyarat]</td><td>File PDF/DOC/DOCX/XLS/XLSX/PPT/PPTX maksimal 100 MB.</td></tr>
+                </tbody>
+            </table>
+            <h3>Menu Generate Artikel dan Registrasi Promosi</h3>
+            <table class="field-table">
+                <thead><tr><th>Menu</th><th>Field</th><th>Status dan aturan</th></tr></thead>
+                <tbody>
+                    <tr><td>Generate Artikel</td><td><code>keyword</code></td><td class="field-required">[Wajib], teks maksimal 255 karakter; dikirim ke n8n.</td></tr>
+                    <tr><td>Artikel dari n8n</td><td><code>keyword</code>, <code>title</code>, <code>content</code>, <code>slug</code></td><td class="field-required">[Wajib] pada endpoint internal penyimpanan.</td></tr>
+                    <tr><td>Registrasi Promosi</td><td><code>name</code>, <code>city</code>, <code>program</code>, <code>is_active</code></td><td class="field-required">[Wajib].</td></tr>
+                    <tr><td>Registrasi Promosi</td><td><code>avatar_url</code></td><td class="field-optional">[Opsional], harus URL valid.</td></tr>
+                    <tr><td>Log Aktivitas Sistem</td><td>-</td><td>Tidak ada input penyimpanan manual; halaman hanya membaca log.</td></tr>
+                </tbody>
+            </table>
+            <div class="footer-note">
+                Lampiran field ini disusun dari controller dan Blade aktif pada
+                saat dokumentasi dibuat. Jika label UI berubah, pertahankan
+                pemetaan ke field sistem agar integrasi dan template tetap
+                konsisten.
+            </div>
+        </section>
+    </body>
+</html>

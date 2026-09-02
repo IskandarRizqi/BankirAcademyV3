@@ -56,12 +56,20 @@ class ArticleGeneratorController extends Controller
 
     public function publicShow($slug)
     {
+        // 1. Ambil artikel utama yang sedang dibuka
         $article = Article::where('status', 1)
             ->where('slug', $slug)
             ->firstOrFail();
 
-        return response($article->content)
-            ->header('Content-Type', 'text/html; charset=UTF-8');
+        // 2. Ambil artikel terkait (misal: 4 artikel acak/terbaru, selain artikel yang sedang dibuka)
+        $relatedArticles = Article::where('status', 1)
+            ->where('id', '!=', $article->id) // Hindari artikel yang sedang dibaca muncul di sidebar
+            ->latest()                        // Atau gunakan ->inRandomOrder() jika ingin acak
+            ->take(4)                         // Ambil 4 artikel saja
+            ->get();
+
+        // 3. Kirim variabel $article dan $relatedArticles ke view
+        return view('articles.show', compact('article', 'relatedArticles'));
     }
 
     public function show($slug)
@@ -81,7 +89,10 @@ class ArticleGeneratorController extends Controller
             'keyword' => 'required|string',
             'title'   => 'required|string',
             'content' => 'required',
-            'slug' => 'required'
+            'meta_description' => 'required',
+            'meta_keywords' => 'required',
+            'slug' => 'required',
+            'image_url' => 'required'
         ]);
         // $cleanContent = Purify::clean($request->input('content'));
 
@@ -89,7 +100,10 @@ class ArticleGeneratorController extends Controller
             'keyword' => $validated['keyword'],
             'title'   => $validated['title'],
             'content' => $validated['content'],
-            'slug' => $validated['slug']
+            'meta_description' => $validated['meta_description'],
+            'meta_keywords' => $validated['meta_keywords'],
+            'slug' => $validated['slug'],
+            'image_url' => $validated['image_url']
         ]);
 
         return response()->json([
@@ -103,12 +117,22 @@ class ArticleGeneratorController extends Controller
         return view('articles.edit', compact('article'));
     }
 
+    public function publish(Article $article)
+    {
+        $article->update(['status' => 1]);
+
+        return back()->with('success', 'Artikel berhasil dipublikasikan!');
+    }
+
     public function update(Request $request, Article $article)
     {
         $validated = $request->validate([
-            'keyword' => 'required|string|max:255',
-            'title'   => 'required|string|max:255',
-            'content' => 'required',
+            'keyword'          => 'required|string|max:255',
+            'title'            => 'required|string|max:255',
+            'slug'             => 'required|string|max:255|unique:articles,slug,' . $article->id,
+            'meta_description' => 'nullable|string',
+            'meta_keywords'    => 'nullable|string',
+            'content'          => 'required|string',
         ]);
 
         $article->update($validated);
@@ -121,11 +145,6 @@ class ArticleGeneratorController extends Controller
         $article->delete();
 
         return back()->with('success', 'Artikel berhasil dihapus!');
-    }
-    public function publish(Article $article)
-    {
-        $article->update(['status' => 1]);
-        return back()->with('success', 'Artikel berhasil di-publish!');
     }
     public function exportHtml(Article $article)
     {
