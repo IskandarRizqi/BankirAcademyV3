@@ -300,7 +300,8 @@
             });
 
             var documentIndex = 1;
-            var sopModal = new bootstrap.Modal(document.getElementById('sopModal'));
+            var modalEl = document.getElementById('sopModal');
+            var sopModal = new bootstrap.Modal(modalEl);
 
             function toggleDocumentInput(row) {
                 var type = row.find('[data-document-type]').val();
@@ -310,6 +311,8 @@
 
                 linkInput.toggleClass('d-none', !isLink);
                 fileInput.toggleClass('d-none', isLink);
+
+                // Gunakan prop disabled agar input tersembunyi tidak divalidasi/dikirim
                 linkInput.find('input').prop('disabled', !isLink);
                 fileInput.find('input').prop('disabled', isLink);
             }
@@ -340,7 +343,7 @@
                     </div>
                     <div class="col-md-5 d-none" data-document-file>
                         <label class="form-label text-muted" style="font-size: 11px;">File Dokumen</label>
-                        <input type="file" name="documents[0][file]" class="form-control form-control-sm" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                        <input type="file" name="documents[0][file]" class="form-control form-control-sm" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" disabled>
                     </div>
                     <div class="col-md-1 text-end">
                         <button type="button" class="btn btn-outline-danger btn-sm w-100" data-remove-document title="Hapus">
@@ -351,6 +354,16 @@
             `);
                 documentIndex = 1;
             }
+
+            // Pastikan modal di-reset dengan benar setiap kali tertutup
+            $(modalEl).on('hidden.bs.modal', function() {
+                resetForm();
+            });
+
+            // Handler manual untuk tombol Batal & Close
+            $('[data-bs-dismiss="modal"]').on('click', function() {
+                sopModal.hide();
+            });
 
             // Open Modal - Create Mode
             $('#btn-create-sop').on('click', function() {
@@ -430,7 +443,7 @@
                 var form = button.closest('form');
                 var isDocument = button.is('[data-delete-document]');
 
-                swal({
+                Swal.fire({
                     title: isDocument ? 'Hapus dokumen ini?' : 'Hapus SOP ini?',
                     text: isDocument ? 'File akan dihapus permanen dari server.' :
                         'Seluruh dokumen dalam SOP ini juga akan dihapus.',

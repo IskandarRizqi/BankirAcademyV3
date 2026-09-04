@@ -10,7 +10,8 @@
                 </a>
             </div>
 
-            <form action="{{ route('articles.update', $article->id) }}" method="POST">
+            <!-- WAJIB: Tambahkan enctype="multipart/form-data" -->
+            <form action="{{ route('articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -44,8 +45,41 @@
                         </div>
                     </div>
 
-                    <!-- Kolom Kanan: Metadata & Parameter SEO -->
+                    <!-- Kolom Kanan: Metadata, Gambar, & Parameter SEO -->
                     <div class="col-lg-4">
+                        <!-- Card Featured Image -->
+                        <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+                            <div class="card-header bg-white border-bottom py-3">
+                                <h6 class="font-weight-bold text-dark mb-0">
+                                    <i class="fas fa-image text-primary mr-1"></i> Gambar Artikel
+                                </h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="form-group mb-0 text-center">
+                                    <!-- Container Preview Gambar -->
+                                    <div class="mb-3 p-2 border rounded bg-light">
+                                        <img id="imagePreview" src="{{ $article->image_url }}" alt="Preview Gambar"
+                                            class="img-fluid rounded shadow-sm"
+                                            style="max-height: 200px; width: 100%; object-fit: cover;">
+                                    </div>
+
+                                    <label for="image"
+                                        class="text-secondary small font-weight-bold d-block text-left">Ganti Gambar
+                                        (Opsional)</label>
+                                    <input type="file" name="image" id="image"
+                                        class="form-control-file @error('image') is-invalid @enderror" accept="image/*"
+                                        onchange="previewImage(event)">
+                                    <small class="text-muted d-block text-left mt-1">Format: JPG, PNG, WEBP (Max: 2MB). Jika
+                                        diunggah, gambar akan disimpan di Storage lokal.</small>
+
+                                    @error('image')
+                                        <small class="text-danger mt-1 d-block text-left">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card SEO & Pengaturan -->
                         <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
                             <div class="card-header bg-white border-bottom py-3">
                                 <h6 class="font-weight-bold text-dark mb-0">
@@ -117,7 +151,7 @@
 
     <!-- FontAwesome & TinyMCE Plugin Integration -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             tinymce.init({
@@ -134,10 +168,23 @@
                     'alignright alignjustify | bullist numlist outdent indent | ' +
                     'removeformat | image link code | help',
                 content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px; line-height:1.6 }',
-                // Pastikan kode HTML tidak di-strip style dasar dari inline editor
                 valid_elements: '*[*]',
                 extended_valid_elements: '*[*]'
             });
         });
+
+        // Script JS Preview Image Live
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('imagePreview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 @endsection

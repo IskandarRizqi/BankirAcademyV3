@@ -105,11 +105,10 @@
                     <i class="fas fa-list text-primary mr-2"></i> Daftar Artikel Tersimpan
                 </h5>
                 <div>
-                    <!-- Tombol Export CSV All Articles -->
-                    {{-- <a href="{{ route('articles.exportCsv') }}"
-                        class="btn btn-sm btn-success font-weight-bold mr-2 shadow-sm" style="border-radius: 6px;">
-                        <i class="fas fa-file-excel mr-1"></i> Export CSV / Excel
-                    </a> --}}
+                    <a href="{{ route('articles.exportAllPdf') }}"
+                        class="btn btn-sm btn-danger font-weight-bold shadow-sm mr-2">
+                        <i class="fas fa-file-pdf mr-1"></i> Export All PDF
+                    </a>
                     <span class="badge badge-pill badge-light border text-muted px-3 py-2 font-weight-bold">
                         {{ $articles->count() }} Data Tersedia
                     </span>
@@ -118,7 +117,8 @@
 
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped align-middle mb-0" style="background-color: white;">
+                    <table id="zero-config" class="table table-hover table-striped align-middle mb-0"
+                        style="background-color: white;">
                         <thead class="bg-light text-secondary small font-weight-bold">
                             <tr>
                                 <th width="5%" class="pl-4">No</th>
@@ -148,25 +148,17 @@
                                     <td class="text-center pr-4">
                                         <div class="btn-group" role="group">
                                             <!-- Lihat Hasil -->
-                                            <a href="{{ route('articles.publicShow', $article->slug) }}" target="_blank"
+                                            <a href="{{ route('articles.show', $article->slug) }}" target="_blank"
                                                 class="btn btn-sm btn-info text-white font-weight-bold px-2 shadow-sm"
                                                 style="border-top-left-radius: 6px; border-bottom-left-radius: 6px;"
                                                 title="Lihat Artikel">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-
-                                            <!-- Export HTML Single Article -->
-                                            <a href="{{ route('articles.exportHtml', $article->id) }}"
-                                                class="btn btn-sm btn-dark text-white font-weight-bold px-2 shadow-sm"
-                                                title="Download File HTML">
-                                                <i class="fas fa-download"></i> HTML
-                                            </a>
-                                            {{-- <a href="{{ route('articles.exportPdf', $article->id) }}"
+                                            <a href="{{ route('articles.exportPdf', $article->id) }}"
                                                 class="btn btn-sm btn-danger text-white font-weight-bold px-2 shadow-sm"
-                                                title="Download File PDF">
-                                                <i class="fas fa-file-pdf"></i> PDF
-                                            </a> --}}
-
+                                                title="Export PDF">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
                                             <!-- Edit Artikel -->
                                             <a href="{{ route('articles.edit', $article->id) }}"
                                                 class="btn btn-sm btn-warning text-white font-weight-bold px-2 shadow-sm"
@@ -174,16 +166,30 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
-                                            @if (!$article->status)
-                                                <form action="{{ route('articles.publish', $article) }}" method="POST"
+                                            @if ($article->status)
+                                                <!-- Tombol Unpublish (Artikel Sedang Publish) -->
+                                                <form action="{{ route('articles.unpublish', $article) }}" method="POST"
                                                     class="d-inline"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin mempublish artikel ini?')">
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin membatal-publikasikan (unpublish) artikel ini?')">
                                                     @csrf
                                                     @method('PUT')
                                                     <button type="submit"
-                                                        class="btn btn-sm btn-secondary font-weight-bold px-2 shadow-sm"
+                                                        class="btn btn-sm btn-outline-warning font-weight-bold px-2 shadow-sm"
+                                                        title="Unpublish Artikel">
+                                                        <i class="fas fa-eye-slash mr-1"></i> Unpublish
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <!-- Tombol Publish (Artikel Masih Draft/Unpublish) -->
+                                                <form action="{{ route('articles.publish', $article) }}" method="POST"
+                                                    class="d-inline"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin mempublikasikan artikel ini?')">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-success font-weight-bold px-2 shadow-sm"
                                                         title="Publish Artikel">
-                                                        Publish
+                                                        <i class="fas fa-globe mr-1"></i> Publish
                                                     </button>
                                                 </form>
                                             @endif
@@ -221,3 +227,8 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        createDataTable('#zero-config')
+    </script>
+@endpush

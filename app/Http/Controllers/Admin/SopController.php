@@ -106,7 +106,7 @@ class SopController extends Controller
                 if ($oldDirectory !== $newDirectory) {
                     $sop->dokumenFiles()->whereNotNull('path')->each(function (DokumenFileSopModel $document) use ($oldDirectory, $newDirectory) {
                         $document->update([
-                            'path' => Str::replaceFirst($oldDirectory.'/', $newDirectory.'/', $document->path),
+                            'path' => Str::replaceFirst($oldDirectory . '/', $newDirectory . '/', $document->path),
                         ]);
                     });
                 }
@@ -167,17 +167,31 @@ class SopController extends Controller
     {
         $document = DokumenFileSopModel::findOrFail($id);
 
+        // 1. Redirect jika berupa link Google Drive
         if ($document->link_google_drive) {
             return redirect()->away($document->link_google_drive);
         }
 
-        $path = public_path($document->path);
+        // 2. Normalisasi path file lokal
+        $relativePath = ltrim($document->path, '/');
+        $fullPath = public_path($relativePath);
 
-        if (! File::exists($path)) {
-            throw (new ModelNotFoundException)->setModel(DokumenFileSopModel::class, [$id]);
+        // 3. Cek keberadaan file di folder public/
+        if (! File::exists($fullPath)) {
+            abort(404, "File tidak ditemukan di path: " . $fullPath);
         }
 
-        return response()->download($path, $document->nama_file);
+        // 4. Ambil ekstensi asli dari path (misal: pdf, docx, xlsx)
+        $extension = File::extension($fullPath);
+
+        // 5. Pastikan nama_file memiliki ekstensi
+        $downloadName = $document->nama_file;
+        if (! Str::endsWith(strtolower($downloadName), '.' . strtolower($extension))) {
+            $downloadName .= '.' . $extension;
+        }
+
+        // 6. Return response download
+        return response()->download($fullPath, $downloadName);
     }
 
     private function viewData(?SopModel $sop = null): array
@@ -206,8 +220,8 @@ class SopController extends Controller
             'documents.*.file' => [
                 'nullable',
                 'file',
-                'max:'.self::MAX_FILE_SIZE_KB,
-                'mimes:'.self::ALLOWED_EXTENSIONS,
+                'max:' . self::MAX_FILE_SIZE_KB,
+                'mimes:' . self::ALLOWED_EXTENSIONS,
             ],
         ];
     }
@@ -247,12 +261,12 @@ class SopController extends Controller
                 File::makeDirectory($absoluteDirectory, 0755, true);
             }
 
-            $filename = Str::uuid().'.'.strtolower($file->extension());
+            $filename = Str::uuid() . '.' . strtolower($file->extension());
             $originalName = Str::limit($file->getClientOriginalName(), 255, '');
             $fileSize = $file->getSize();
             $mimeType = $file->getMimeType();
             $file->move($absoluteDirectory, $filename);
-            $relativePath = $directory.'/'.$filename;
+            $relativePath = $directory . '/' . $filename;
             $storedPaths[] = $relativePath;
 
             $sop->dokumenFiles()->create([
@@ -309,7 +323,7 @@ class SopController extends Controller
     {
         $slug = Str::slug($judul);
 
-        return 'image/sop/'.($slug !== '' ? $slug : 'sop');
+        return 'image/sop/' . ($slug !== '' ? $slug : 'sop');
     }
 
     private function removeFiles(array $relativePaths): void

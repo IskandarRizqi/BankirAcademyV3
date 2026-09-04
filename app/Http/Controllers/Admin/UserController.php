@@ -194,59 +194,59 @@ class UserController extends Controller
         }
 
         // 4. Mulai Transaksi Database
-       DB::beginTransaction();
-    try {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $emailSiswa,
-            'role' => $request->role,
-            'password' => Hash::make($passwordSiswa),
-            'membership_id' => $request->role == 4 ? $request->membership_id : null,
-            'masa_aktif_member' => $request->role == 4 ? $request->masa_aktif_member : null,
-            'bank_id' => $bankId,
-            'sekolah_id' => $sekolahId,
-        ]);
-
-        if ((int)$request->role === 6) {
-            $siswaProfile = \App\Models\SiswaProfile::create([
-                'user_id' => $user->id,
-                'no_telp' => $request->no_telp,
-                'angkatan' => $request->angkatan,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'nisn' => trim($request->nisn),
-                'kelas' => $request->kelas,
-                'beasiswa' => $beasiswaStatus,
-                'alamat' => $request->alamat,
-                'email' => $request->email_pribadi,
-                'saldo' => $beasiswaStatus ? $saldoAwalSiswa : 0,
-                'email_verified_at' => null // Tambahkan field status verifikasi di tabel siswa_profiles
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $emailSiswa,
+                'role' => $request->role,
+                'password' => Hash::make($passwordSiswa),
+                'membership_id' => $request->role == 4 ? $request->membership_id : null,
+                'masa_aktif_member' => $request->role == 4 ? $request->masa_aktif_member : null,
+                'bank_id' => $bankId,
+                'sekolah_id' => $sekolahId,
             ]);
 
-            // --- FITUR VERIFIKASI EMAIL SISWA ---
-            if ($request->filled('email_pribadi')) {
-                // Generate Signed URL aman yang berlaku selama 24 jam
-                $verificationUrl = URL::temporarySignedRoute(
-                    'siswa.verifikasi.email',
-                    now()->addHours(24),
-                    [
-                        'id' => $siswaProfile->id,
-                        'hash' => sha1($siswaProfile->email)
-                    ]
-                );
+            if ((int)$request->role === 6) {
+                $siswaProfile = \App\Models\SiswaProfile::create([
+                    'user_id' => $user->id,
+                    'no_telp' => $request->no_telp,
+                    'angkatan' => $request->angkatan,
+                    'jenis_kelamin' => $request->jenis_kelamin,
+                    'nisn' => trim($request->nisn),
+                    'kelas' => $request->kelas,
+                    'beasiswa' => $beasiswaStatus,
+                    'alamat' => $request->alamat,
+                    'email' => $request->email_pribadi,
+                    'saldo' => $beasiswaStatus ? $saldoAwalSiswa : 0,
+                    'email_verified_at' => null // Tambahkan field status verifikasi di tabel siswa_profiles
+                ]);
 
-                // Kirim Email Verifikasi
-                Mail::to($request->email_pribadi)->send(new VerifikasiEmailSiswaMail($user, $verificationUrl));
+                // --- FITUR VERIFIKASI EMAIL SISWA ---
+                if ($request->filled('email_pribadi')) {
+                    // Generate Signed URL aman yang berlaku selama 24 jam
+                    $verificationUrl = URL::temporarySignedRoute(
+                        'siswa.verifikasi.email',
+                        now()->addHours(24),
+                        [
+                            'id' => $siswaProfile->id,
+                            'hash' => sha1($siswaProfile->email)
+                        ]
+                    );
+
+                    // Kirim Email Verifikasi
+                    Mail::to($request->email_pribadi)->send(new VerifikasiEmailSiswaMail($user, $verificationUrl));
+                }
             }
+
+            // $this->sendWhatsappNotification($user, $passwordSiswa, $request->no_telp);
+
+            DB::commit();
+            return redirect()->route('users.index')->with('success', 'Pengguna siswa berhasil ditambahkan. Email verifikasi telah dikirim.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors(['role' => 'Terjadi kesalahan sistem: ' . $e->getMessage()]);
         }
-
-        // $this->sendWhatsappNotification($user, $passwordSiswa, $request->no_telp);
-
-        DB::commit();
-        return redirect()->route('users.index')->with('success', 'Pengguna siswa berhasil ditambahkan. Email verifikasi telah dikirim.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->withInput()->withErrors(['role' => 'Terjadi kesalahan sistem: ' . $e->getMessage()]);
-    }
     }
     public function downloadTemplate()
     {

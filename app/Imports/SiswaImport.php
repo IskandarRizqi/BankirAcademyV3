@@ -14,7 +14,7 @@ class SiswaImport implements WithMultipleSheets
 {
     protected $bankId;
     protected $sekolahId;
-    
+
     // Properti untuk menyimpan instance sheet
     public $sheetInstances = [];
 
@@ -40,7 +40,7 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
     private $isBeasiswa; // Menandakan apakah ini sheet Beasiswa
     private $bankId;
     private $sekolahId;
-    
+
     public $successCount = 0;
     public $errors = [];
 
@@ -76,7 +76,7 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
         $beasiswaStatus = 0; // Default untuk sheet Non Beasiswa
 
         if ($this->isBeasiswa) {
-            if ($authEmail === 'cb@bankir.academy' || $authRole === 4) {
+            if ($authEmail === 'cb@bankir.academy' || $authRole === 4 || $authRole === 0) {
                 $beasiswaStatus = 1; // Langsung Aktif jika Root atau Bank yang import
             } else if ($authRole === 5) {
                 $beasiswaStatus = 2; // Set Pending jika Sekolah yang import
@@ -88,7 +88,7 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
         $limitBeasiswa = null;
 
         if ($targetBank && $targetBank->membership_id) {
-            $membership = $targetBank->membership; 
+            $membership = $targetBank->membership;
             if ($membership) {
                 $limitSiswa = !is_null($membership->limit_siswa) ? (int)$membership->limit_siswa : null;
                 $limitBeasiswa = !is_null($membership->limit_beasiswa) ? (int)$membership->limit_beasiswa : null;
@@ -96,17 +96,17 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
         }
 
         $currentSiswaCount = User::where('role', 6)->where('sekolah_id', $finalSekolahId)->count();
-        
+
         // Menghitung kuota beasiswa aktif (status 1)
         $currentBeasiswaCount = SiswaProfile::where('beasiswa', 1)
-            ->whereHas('user', function($query) use ($finalSekolahId) {
+            ->whereHas('user', function ($query) use ($finalSekolahId) {
                 $query->where('sekolah_id', $finalSekolahId);
             })->count();
 
         $sheetName = $this->isBeasiswa ? 'Beasiswa' : 'Non Beasiswa';
 
         foreach ($rows as $index => $row) {
-            $rowNumber = $index + 2; 
+            $rowNumber = $index + 2;
 
             if (empty($row['nisn']) || empty($row['nama'])) {
                 continue;
@@ -115,27 +115,27 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
             // Cek Kuota Siswa Umum
             if (!is_null($limitSiswa) && $currentSiswaCount >= $limitSiswa) {
                 $this->errors[] = "Gagal import file! Kuota maksimal siswa untuk sekolah ini ({$limitSiswa} siswa) sudah penuh. Tidak ada data yang disimpan.";
-                break; 
+                break;
             }
 
             // Cek Kuota Siswa Beasiswa (Hanya divalidasi jika status beasiswanya langsung aktif / 1)
             if ($beasiswaStatus === 1 && !is_null($limitBeasiswa) && $currentBeasiswaCount >= $limitBeasiswa) {
                 $this->errors[] = "Gagal import file! Kuota beasiswa untuk sekolah ini ({$limitBeasiswa} siswa) sudah penuh. Tidak ada data yang disimpan.";
-                break; 
+                break;
             }
 
             $nisn = trim($row['nisn']);
-            $loginEmail = $nisn . '@gmail.com'; 
+            $loginEmail = $nisn . '@gmail.com';
 
             // Cek Duplikat NISN
             $existingUser = User::where('email', $loginEmail)->first();
             if ($existingUser) {
                 $this->errors[] = "Sheet {$sheetName} (Baris {$rowNumber}): NISN {$nisn} sudah terdaftar. Proses import dibatalkan seluruhnya.";
-                continue; 
+                continue;
             }
 
             $passwordSiswa = $nisn . 'Bankir!';
-            
+
             // Simpan user baru
             $user = User::create([
                 'name' => $row['nama'],
@@ -155,8 +155,8 @@ class SiswaSheetImport implements ToCollection, WithHeadingRow
                 'kelas' => $row['kelas'] ?? null,
                 'angkatan' => $row['angkatan'] ?? null,
                 'beasiswa' => $beasiswaStatus, // <--- Menggunakan variable status baru
-                'alamat' => $row['alamat'] ?? null, 
-                'email' => $row['email'] ?? null,   
+                'alamat' => $row['alamat'] ?? null,
+                'email' => $row['email'] ?? null,
             ]);
 
             $this->successCount++;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
 use App\Models\DokumenFileSopModel;
+use Illuminate\Support\Str;
 use App\Models\SopModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -54,30 +55,42 @@ class SopController extends Controller
     {
         $document = DokumenFileSopModel::with('sop')->findOrFail($id);
 
+        // 1. Cek status SOP
         abort_if($document->sop?->status === SopModel::STATUS_UPCOMING, 404);
 
+        // 2. Handling Google Drive
         if (filled($document->link_google_drive)) {
             abort_unless($this->isGoogleDriveLink($document->link_google_drive), 404);
 
             return redirect()->away($document->link_google_drive);
         }
 
+        // 3. Sanitisasi & Normalisasi Path
         $relativePath = ltrim(str_replace('\\', '/', (string) $document->path), '/');
         abort_if($relativePath === '' || str_contains($relativePath, "\0"), 404);
 
-        $path = public_path($relativePath);
-        $publicDirectory = realpath(public_path());
-        $realPath = realpath($path);
+        // 4. Resolusi Real Path & Keamanan Directory Traversal
+        $publicDirectory = rtrim(realpath(public_path()), DIRECTORY_SEPARATOR);
+        $realPath = realpath(public_path($relativePath));
 
+        // Pastikan file ada DAN path-nya benar-benar di dalam folder public
         abort_unless(
-            File::exists($path)
-                && $realPath !== false
-                && $publicDirectory !== false
-                && str_starts_with($realPath, $publicDirectory.DIRECTORY_SEPARATOR),
+            $realPath !== false
+                && File::exists($realPath)
+                && str_starts_with($realPath, $publicDirectory . DIRECTORY_SEPARATOR),
             404
         );
 
-        return response()->download($realPath, $document->nama_file);
+        // 5. Autokoreksi Ekstensi File pada Parameter Nama Download
+        $extension = File::extension($realPath);
+        $downloadName = $document->nama_file;
+
+        if ($extension && ! Str::endsWith(strtolower($downloadName), '.' . strtolower($extension))) {
+            $downloadName .= '.' . $extension;
+        }
+
+        // 6. Return response download
+        return response()->download($realPath, $downloadName);
     }
 
     private function sopQuery(string $search = '')
@@ -85,7 +98,7 @@ class SopController extends Controller
         return SopModel::query()
             ->select(['id', 'judul', 'deskripsi', 'status', 'updated_at'])
             ->withCount('dokumenFiles')
-            ->when($search !== '', fn ($query) => $query->where('judul', 'like', "%{$search}%"))
+            ->when($search !== '', fn($query) => $query->where('judul', 'like', "%{$search}%"))
             ->orderByDesc('updated_at')
             ->orderByDesc('id');
     }
