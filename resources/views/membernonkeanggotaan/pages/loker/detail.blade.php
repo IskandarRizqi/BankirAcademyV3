@@ -28,7 +28,7 @@
         };
 
         $company = $loker->perusahaan;
-        $companyName = $loker->nama ?: optional($company)->nama ?: 'Perusahaan mitra';
+        $companyName = optional($company)->nama ?: 'Perusahaan mitra';
         $imageUrl = $decodeImage($loker->image) ?: $decodeImage(optional($company)->image);
         $types = $decodeList($loker->type);
         $skills = $decodeList($loker->skill);
