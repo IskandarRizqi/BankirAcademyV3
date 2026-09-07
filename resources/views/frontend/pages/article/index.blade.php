@@ -18,13 +18,27 @@
                     perbankan.</p>
             </div>
 
+            <!-- Form Pencarian -->
+            <div class="article-search" style="margin-bottom: 2rem;">
+                <form action="{{ url('/artikel') }}" method="GET" style="display: flex; gap: 10px; max-width: 400px;">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari judul, kata kunci, atau isi..."
+                        style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <button type="submit"
+                        style="padding: 10px 20px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        Cari
+                    </button>
+                </form>
+            </div>
+
             @if ($articles->count())
                 <div class="article-grid">
                     @foreach ($articles as $article)
                         <article class="article-card">
                             @if ($article->image_url)
                                 <div class="article-card-image">
-                                    <img src="{{ asset($article->image_url) }}" alt="{{ $article->title }}" loading="lazy">
+                                    <img src="{{ asset($article->image_url) }}" style="margin-bottom: 20px"
+                                        alt="{{ $article->title }}" loading="lazy">
                                 </div>
                             @endif
 
@@ -35,7 +49,6 @@
                                 </time>
                             </div>
                             <h2>{{ $article->title }}</h2>
-                            {{-- <p>{{ \Illuminate\Support\Str::limit(trim(strip_tags($article->content)), 180) }}</p> --}}
                             <a class="article-card-link" href="{{ route('frontend.articles.show', $article->slug) }}">
                                 Baca artikel <span class="icon-arrow">-&gt;</span>
                             </a>
@@ -43,13 +56,22 @@
                     @endforeach
                 </div>
 
-                <div class="article-pagination">
+                {{-- <div class="article-pagination">
                     {{ $articles->links() }}
-                </div>
+                </div> --}}
             @else
                 <div class="article-empty">
-                    <h2>Belum ada artikel</h2>
-                    <p>Artikel yang sudah dipublikasikan akan tampil di halaman ini.</p>
+                    @if (request('search'))
+                        <h2>Artikel tidak ditemukan</h2>
+                        <p>Tidak ada artikel yang cocok dengan kata kunci "<strong>{{ request('search') }}</strong>".
+                            Silakan coba kata kunci lain.</p>
+                        <a href="{{ url('/artikel') }}"
+                            style="display: inline-block; margin-top: 10px; color: #0056b3;">&larr; Kembali ke semua
+                            artikel</a>
+                    @else
+                        <h2>Belum ada artikel</h2>
+                        <p>Artikel yang sudah dipublikasikan akan tampil di halaman ini.</p>
+                    @endif
                 </div>
             @endif
         </div>

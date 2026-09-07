@@ -175,7 +175,7 @@ X-Scraper-Api-Key: {{apiKey}}
 ###############################################################################
 # 3. TEST VALIDASI GAGAL (KOSONGKAN FIELD REQUIRED)
 ###############################################################################
-POST {{baseUrl}}/api/articles/store-n8n
+GET {{baseUrl}}/api/articles
 Content-Type: {{contentType}}
 Accept: {{contentType}}
 

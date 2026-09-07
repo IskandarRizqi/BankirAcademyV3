@@ -381,8 +381,8 @@
                     </div>
 
                     <div class="company-form-field">
-                        <label for="company-district">Kecamatan <span class="text-danger">*</span></label>
-                        <select id="company-district" name="kecamatan" class="company-form-control" required {{ old('kabupaten', $company->kabupaten ?? '') ? '' : 'disabled' }}>
+                        <label for="company-district">Kecamatan <span class="text-muted">(opsional)</span></label>
+                        <select id="company-district" name="kecamatan" class="company-form-control" {{ old('kabupaten', $company->kabupaten ?? '') ? '' : 'disabled' }}>
                             <option value="">Pilih kecamatan</option>
                             @foreach($selectedLocations['districts'] as $district)
                                 <option value="{{ $district->id }}" @selected((string) old('kecamatan', $company->kecamatan ?? '') === (string) $district->id)>{{ $district->name }}</option>
@@ -392,8 +392,8 @@
                     </div>
 
                     <div class="company-form-field">
-                        <label for="company-village">Kelurahan <span class="text-danger">*</span></label>
-                        <select id="company-village" name="kelurahan" class="company-form-control" required {{ old('kecamatan', $company->kecamatan ?? '') ? '' : 'disabled' }}>
+                        <label for="company-village">Kelurahan <span class="text-muted">(opsional)</span></label>
+                        <select id="company-village" name="kelurahan" class="company-form-control" {{ old('kecamatan', $company->kecamatan ?? '') ? '' : 'disabled' }}>
                             <option value="">Pilih kelurahan</option>
                             @foreach($selectedLocations['villages'] as $village)
                                 <option value="{{ $village->id }}" @selected((string) old('kelurahan', $company->kelurahan ?? '') === (string) $village->id)>{{ $village->name }}</option>

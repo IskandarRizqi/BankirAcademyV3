@@ -32,7 +32,7 @@
                 <div>
                     <div class="footer-title">Kenali</div>
                     <nav class="footer-links">
-                        <a class="active" href="{{ route('frontend.home') }}#beranda">Tentang Kami</a>
+                        <a href="{{ route('frontend.home') }}#beranda">Tentang Kami</a>
                         <a href="{{ route('frontend.curriculum') }}">Kurikulum</a>
                     </nav>
                 </div>
@@ -49,10 +49,10 @@
                 <div>
                     <div class="footer-title">Tautan</div>
                     <nav class="footer-links">
-                        <a class="active" href="{{ route('frontend.home') }}#kelas-online">Promo</a>
+                        <a href="{{ route('frontend.home') }}#kelas-online">Promo</a>
                         <a href="{{ route('frontend.articles.index') }}">Artikel</a>
                         <a href="{{ route('frontend.talent.job-connect') }}">Pusat Lowongan Kerja</a>
-                        <a class="active" href="{{ route('frontend.classes.index') }}">Kelas Online</a>
+                        <a href="{{ route('frontend.classes.index') }}">Kelas Online</a>
                         <a href="{{ route('login.new') }}">Login</a>
                     </nav>
                 </div>

@@ -52,8 +52,8 @@ class PerusahaanController extends Controller
             'loker_nama'      => 'required',
             'provinsi'        => 'required',
             'kabupaten'       => 'required',
-            'kecamatan'       => 'required',
-            'kelurahan'       => 'required',
+            'kecamatan'       => 'nullable',
+            'kelurahan'       => 'nullable',
             // Jika buat baru (loker_id kosong), gambar wajib diisi. Jika edit, gambar opsional.
             'filClassesImage' => $isUpdate ? 'nullable|image|mimes:jpeg,png,jpg' : 'required|image|mimes:jpeg,png,jpg',
         ], [

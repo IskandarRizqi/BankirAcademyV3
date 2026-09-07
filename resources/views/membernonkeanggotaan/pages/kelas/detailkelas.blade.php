@@ -50,8 +50,8 @@
             ->implode(', ');
         $today = now()->startOfDay();
         $courseStatus =
-            $endDate && $today->greaterThan(\Carbon\Carbon::parse($endDate)->endOfDay()) ? 'Selesai' : 'Kelas Anda';
-        $courseStatusClass = $courseStatus === 'Selesai' ? 'completed' : 'owned';
+            $endDate && $today->greaterThan(\Carbon\Carbon::parse($endDate)->endOfDay()) ? 'Completed' : 'Kelas Anda';
+        $courseStatusClass = $courseStatus === 'Completed' ? 'completed' : 'owned';
     @endphp
 
     @once
@@ -824,11 +824,11 @@
                     </div>
 
                     <!-- <div class="member-owned-class-detail__ownership">
-                            <div>
-                                <span class="member-owned-class-detail__owner-label">Status akses</span>
-                                <span class="member-owned-class-detail__owner-value">Kelas Aktif</span>
-                            </div>
-                        </div> -->
+                                            <div>
+                                                <span class="member-owned-class-detail__owner-label">Status akses</span>
+                                                <span class="member-owned-class-detail__owner-value">Kelas Aktif</span>
+                                            </div>
+                                        </div> -->
                 </div>
             </div>
         </section>

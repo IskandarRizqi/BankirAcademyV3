@@ -173,7 +173,8 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="kecamatan" class="form-label fw-semibold">Kecamatan</label>
+                                <label for="kecamatan" class="form-label fw-semibold">Kecamatan <span
+                                        class="text-muted">(opsional)</span></label>
                                 <select name="kecamatan" id="kecamatan" class="form-select select2-modal">
                                     <option value="">Pilih Kecamatan</option>
                                 </select>
@@ -183,7 +184,8 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="kelurahan" class="form-label fw-semibold">Kelurahan / Desa</label>
+                                <label for="kelurahan" class="form-label fw-semibold">Kelurahan / Desa <span
+                                        class="text-muted">(opsional)</span></label>
                                 <select name="kelurahan" id="kelurahan" class="form-select select2-modal">
                                     <option value="">Pilih Kelurahan</option>
                                 </select>

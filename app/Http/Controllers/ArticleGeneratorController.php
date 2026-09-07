@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Stevebauman\Purify\Facades\Purify;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleGeneratorController extends Controller
@@ -23,6 +24,19 @@ class ArticleGeneratorController extends Controller
         $articles = Article::latest()->get();
 
         return view('articles.create', compact('articles', 'stats'));
+    }
+    public function apiIndex(): JsonResponse
+    {
+        // Mengambil artikel dengan status 1 dan mengurutkannya dari yang terbaru
+        $articles = Article::where('status', 1)
+            ->latest()
+            ->paginate(10); // Bisa diganti ->get() jika tidak ingin memakai pagination
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data artikel berhasil diambil',
+            'data'    => $articles
+        ], 200);
     }
 
     public function generate(Request $request)
@@ -46,11 +60,23 @@ class ArticleGeneratorController extends Controller
         }
     }
 
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
+        // Menangkap input pencarian
+        $search = $request->input('search');
+
         $articles = Article::where('status', 1)
+            ->when($search, function ($query, $search) {
+                // Gunakan closure agar orWhere tidak merusak kondisi status = 1
+                return $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('content', 'like', "%{$search}%")
+                        ->orWhere('keyword', 'like', "%{$search}%");
+                });
+            })
             ->latest()
-            ->paginate(9);
+            ->paginate(5)
+            ->withQueryString(); // Mempertahankan parameter URL (search) pada link pagination
 
         return view('frontend.pages.article.index', compact('articles'));
     }

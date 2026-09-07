@@ -371,7 +371,7 @@
 					</div>
 					<h3 class="empty-state__title">Belum ada kelas berjalan</h3>
 					<p class="empty-state__text">Anda belum memiliki kelas yang sedang berlangsung saat ini.</p>
-					<a href="/kelas" class="empty-state__btn">
+					<a href="/event-kelas" class="empty-state__btn">
 						<i class="fas fa-plus"></i>
 						Temukan Kelas
 					</a>

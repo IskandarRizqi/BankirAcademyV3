@@ -247,8 +247,8 @@ class LokerDraftController extends Controller
             'alamat_raw' => ['required', 'string'],
             'provinsi_id' => ['required', 'integer', Rule::exists('provinsi', 'id')],
             'kabupaten_id' => ['required', 'integer', Rule::exists('kota', 'id')->where(fn($query) => $query->where('provinsi_id', $data['provinsi_id'] ?? null))],
-            'kecamatan_id' => ['required', 'integer', Rule::exists('kecamatan', 'id')->where(fn($query) => $query->where('kota_id', $data['kabupaten_id'] ?? null))],
-            'kelurahan_id' => ['required', 'integer', Rule::exists('kelurahan', 'id')->where(fn($query) => $query->where('kecamatan_id', $data['kecamatan_id'] ?? null))],
+            'kecamatan_id' => ['nullable', 'integer', Rule::exists('kecamatan', 'id')->where(fn($query) => $query->where('kota_id', $data['kabupaten_id'] ?? null))],
+            'kelurahan_id' => ['nullable', 'integer', Rule::exists('kelurahan', 'id')->where(fn($query) => $query->where('kecamatan_id', $data['kecamatan_id'] ?? null))],
             'batas_pendaftaran' => ['required', 'date'],
         ]);
     }

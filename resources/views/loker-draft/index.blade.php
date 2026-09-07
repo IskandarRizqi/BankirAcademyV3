@@ -102,6 +102,21 @@
             font-size: 1rem;
         }
 
+        .draft-section-title .badge {
+            margin-left: auto;
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .draft-section-note {
+            margin-top: -.55rem;
+            margin-bottom: 1rem;
+            color: #64748b;
+            font-size: .78rem;
+        }
+
         .draft-form-section .form-group {
             margin-bottom: 1rem;
         }
@@ -501,101 +516,220 @@
                     </div>
                     @csrf
                     @method('PATCH')
+                    <input type="hidden" name="draft_id" id="draft-id" value="{{ old('draft_id') }}">
                     <input type="hidden" name="publish_after_save" id="publish-after-save" value="0">
                     <div class="modal-body draft-modal-body">
-                        <section class="draft-form-section">
-                            <h6 class="draft-section-title"><i class="bx bx-buildings"></i>Data Perusahaan & Lokasi</h6>
+                        <section class="draft-form-section border-left border-danger">
+                            <h6 class="draft-section-title"><i class="bx bx-check-circle"></i>Data Wajib <span
+                                    class="badge badge-danger">Wajib untuk Publish</span></h6>
+                            <p class="draft-section-note">Nama perusahaan dan posisi wajib untuk menyimpan draft. Lengkapi seluruh bagian ini sebelum memilih Simpan & Publish.</p>
                             <div class="row">
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Nama Perusahaan
-                                        <span class="text-danger">*</span></label><input name="nama_perusahaan"
-                                        id="edit-nama-perusahaan" class="form-control" required></div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Email
-                                        Perusahaan</label><input type="email" name="email_perusahaan"
-                                        id="edit-email-perusahaan" class="form-control"></div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Nomor HP /
-                                        WhatsApp</label><input name="no_hp" id="edit-no-hp" class="form-control"></div>
-                                {{-- <div class="col-md-6 form-group"><label class="font-weight-bold small">Instagram / Kontak
-                                        DM</label><input name="instagram_dm" id="edit-instagram-dm" class="form-control">
-                                </div> --}}
-                                <div class="col-12 form-group"><label class="font-weight-bold small">Alamat
-                                        Lengkap</label>
-                                    <textarea name="alamat_raw" id="edit-alamat" class="form-control" rows="2"></textarea>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Nama Perusahaan <span
+                                            class="text-danger">*</span></label>
+                                    <input name="nama_perusahaan" id="edit-nama-perusahaan"
+                                        class="form-control @error('nama_perusahaan') is-invalid @enderror" required>
+                                    @error('nama_perusahaan')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Provinsi <span
-                                            class="text-danger">*</span></label><select name="provinsi_id"
-                                        id="edit-provinsi" class="form-control" required>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Email Perusahaan <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" name="email_perusahaan" id="edit-email-perusahaan"
+                                        class="form-control @error('email_perusahaan') is-invalid @enderror">
+                                    @error('email_perusahaan')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-12 form-group">
+                                    <label class="font-weight-bold small">Alamat Lengkap <span
+                                            class="text-danger">*</span></label>
+                                    <textarea name="alamat_raw" id="edit-alamat" class="form-control @error('alamat_raw') is-invalid @enderror"
+                                        rows="2"></textarea>
+                                    @error('alamat_raw')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-3 form-group">
+                                    <label class="font-weight-bold small">Provinsi <span
+                                            class="text-danger">*</span></label>
+                                    <select name="provinsi_id" id="edit-provinsi"
+                                        class="form-control @error('provinsi_id') is-invalid @enderror" required>
                                         <option value="">Pilih Provinsi</option>
                                         @foreach ($provinces as $province)
                                             <option value="{{ $province->id }}">{{ $province->name }}</option>
                                         @endforeach
-                                    </select></div>
-                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Kabupaten / Kota
-                                        <span class="text-danger">*</span></label><select name="kabupaten_id"
-                                        id="edit-kabupaten" class="form-control" required>
+                                    </select>
+                                    @error('provinsi_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label class="font-weight-bold small">Kabupaten / Kota <span
+                                            class="text-danger">*</span></label>
+                                    <select name="kabupaten_id" id="edit-kabupaten"
+                                        class="form-control @error('kabupaten_id') is-invalid @enderror" required>
                                         <option value="">Pilih Kabupaten</option>
-                                    </select></div>
-                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Kecamatan <span
-                                            class="text-danger">*</span></label><select name="kecamatan_id"
-                                        id="edit-kecamatan" class="form-control" required>
-                                        <option value="">Pilih Kecamatan</option>
-                                    </select></div>
-                                <div class="col-md-3 form-group"><label class="font-weight-bold small">Kelurahan / Desa
-                                        <span class="text-danger">*</span></label><select name="kelurahan_id"
-                                        id="edit-kelurahan" class="form-control" required>
-                                        <option value="">Pilih Kelurahan</option>
-                                    </select></div>
+                                    </select>
+                                    @error('kabupaten_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Posisi <span
+                                            class="text-danger">*</span></label>
+                                    <input name="posisi" id="edit-posisi"
+                                        class="form-control @error('posisi') is-invalid @enderror" required>
+                                    @error('posisi')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label class="font-weight-bold small">Batas Pendaftaran <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" name="batas_pendaftaran" id="edit-batas-pendaftaran"
+                                        class="form-control @error('batas_pendaftaran') is-invalid @enderror" required>
+                                    @error('batas_pendaftaran')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </section>
 
-                        <section class="draft-form-section">
-                            <h6 class="draft-section-title"><i class="bx bx-briefcase"></i>Data Lowongan</h6>
+                        <section class="draft-form-section border-left border-secondary">
+                            <h6 class="draft-section-title"><i class="bx bx-plus-circle"></i>Data Opsional <span
+                                    class="badge badge-secondary">Opsional</span></h6>
+                            <p class="draft-section-note">Data berikut dapat dilengkapi sekarang atau diperbarui nanti sebelum lowongan dipublikasikan.</p>
                             <div class="row">
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Posisi <span
-                                            class="text-danger">*</span></label><input name="posisi" id="edit-posisi"
-                                        class="form-control" required></div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Kategori
-                                        Bidang</label><input name="kategori_bidang" id="edit-kategori"
-                                        class="form-control"></div>
-                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Tipe
-                                        Pekerjaan</label><input name="tipe_pekerjaan" id="edit-tipe" class="form-control"
-                                        placeholder="Fulltime"></div>
-                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Gaji
-                                        Minimum</label><input type="number" min="0" name="gaji_min"
-                                        id="edit-gaji-min" class="form-control"></div>
-                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Gaji
-                                        Maksimum</label><input type="number" min="0" name="gaji_max"
-                                        id="edit-gaji-max" class="form-control"></div>
-                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Tanggal
-                                        Posting</label><input type="date" name="tanggal_posting"
-                                        id="edit-tanggal-posting" class="form-control"></div>
-                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Batas Pendaftaran
-                                        <span class="text-danger">*</span></label><input type="date"
-                                        name="batas_pendaftaran" id="edit-batas-pendaftaran" class="form-control"
-                                        required></div>
-                                <div class="col-md-4 form-group"><label class="font-weight-bold small">Skill</label><input
-                                        name="keahlian_skill" id="edit-skill" class="form-control"
-                                        placeholder="Pisahkan dengan koma"></div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Deskripsi
-                                        Pekerjaan</label>
-                                    <textarea name="deskripsi_pekerjaan" id="edit-deskripsi" class="form-control" rows="4"></textarea>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Nomor HP / WhatsApp</label>
+                                    <input name="no_hp" id="edit-no-hp"
+                                        class="form-control @error('no_hp') is-invalid @enderror">
+                                    @error('no_hp')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Jobdesk</label>
-                                    <textarea name="jobdesk" id="edit-jobdesk" class="form-control" rows="4"></textarea>
+                                <div class="col-md-3 form-group">
+                                    <label class="font-weight-bold small">Kecamatan</label>
+                                    <select name="kecamatan_id" id="edit-kecamatan"
+                                        class="form-control @error('kecamatan_id') is-invalid @enderror">
+                                        <option value="">Pilih Kecamatan</option>
+                                    </select>
+                                    @error('kecamatan_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Kualifikasi</label>
-                                    <textarea name="kualifikasi_jobspek" id="edit-kualifikasi" class="form-control" rows="4"></textarea>
+                                <div class="col-md-3 form-group">
+                                    <label class="font-weight-bold small">Kelurahan / Desa</label>
+                                    <select name="kelurahan_id" id="edit-kelurahan"
+                                        class="form-control @error('kelurahan_id') is-invalid @enderror">
+                                        <option value="">Pilih Kelurahan</option>
+                                    </select>
+                                    @error('kelurahan_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Fasilitas /
-                                        Benefit</label>
-                                    <textarea name="fasilitas" id="edit-fasilitas" class="form-control" rows="4"></textarea>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Kategori Bidang</label>
+                                    <input name="kategori_bidang" id="edit-kategori"
+                                        class="form-control @error('kategori_bidang') is-invalid @enderror">
+                                    @error('kategori_bidang')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">Cara
-                                        Melamar</label>
-                                    <textarea name="cara_melamar" id="edit-cara-melamar" class="form-control" rows="4"></textarea>
+                                <div class="col-md-4 form-group">
+                                    <label class="font-weight-bold small">Tipe Pekerjaan</label>
+                                    <input name="tipe_pekerjaan" id="edit-tipe"
+                                        class="form-control @error('tipe_pekerjaan') is-invalid @enderror"
+                                        placeholder="Fulltime">
+                                    @error('tipe_pekerjaan')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-6 form-group"><label class="font-weight-bold small">URL Form
-                                        Lamaran</label><input type="url" name="website_form_url"
-                                        id="edit-website-url" class="form-control"></div>
+                                <div class="col-md-4 form-group">
+                                    <label class="font-weight-bold small">Gaji Minimum</label>
+                                    <input type="number" min="0" name="gaji_min" id="edit-gaji-min"
+                                        class="form-control @error('gaji_min') is-invalid @enderror">
+                                    @error('gaji_min')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label class="font-weight-bold small">Gaji Maksimum</label>
+                                    <input type="number" min="0" name="gaji_max" id="edit-gaji-max"
+                                        class="form-control @error('gaji_max') is-invalid @enderror">
+                                    @error('gaji_max')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label class="font-weight-bold small">Tanggal Posting</label>
+                                    <input type="date" name="tanggal_posting" id="edit-tanggal-posting"
+                                        class="form-control @error('tanggal_posting') is-invalid @enderror">
+                                    @error('tanggal_posting')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label class="font-weight-bold small">Skill</label>
+                                    <input name="keahlian_skill" id="edit-skill"
+                                        class="form-control @error('keahlian_skill') is-invalid @enderror"
+                                        placeholder="Pisahkan dengan koma">
+                                    @error('keahlian_skill')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Deskripsi Pekerjaan</label>
+                                    <textarea name="deskripsi_pekerjaan" id="edit-deskripsi"
+                                        class="form-control @error('deskripsi_pekerjaan') is-invalid @enderror" rows="4"></textarea>
+                                    @error('deskripsi_pekerjaan')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Jobdesk</label>
+                                    <textarea name="jobdesk" id="edit-jobdesk" class="form-control @error('jobdesk') is-invalid @enderror"
+                                        rows="4"></textarea>
+                                    @error('jobdesk')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Kualifikasi</label>
+                                    <textarea name="kualifikasi_jobspek" id="edit-kualifikasi"
+                                        class="form-control @error('kualifikasi_jobspek') is-invalid @enderror" rows="4"></textarea>
+                                    @error('kualifikasi_jobspek')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Fasilitas / Benefit</label>
+                                    <textarea name="fasilitas" id="edit-fasilitas" class="form-control @error('fasilitas') is-invalid @enderror"
+                                        rows="4"></textarea>
+                                    @error('fasilitas')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">Cara Melamar</label>
+                                    <textarea name="cara_melamar" id="edit-cara-melamar"
+                                        class="form-control @error('cara_melamar') is-invalid @enderror" rows="4"></textarea>
+                                    @error('cara_melamar')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold small">URL Form Lamaran</label>
+                                    <input type="url" name="website_form_url" id="edit-website-url"
+                                        class="form-control @error('website_form_url') is-invalid @enderror">
+                                    @error('website_form_url')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </section>
                     </div>
@@ -676,10 +810,54 @@
 @endsection
 
 @section('custom-js')
+    @php
+        $restoredDraftData = old('draft_id')
+            ? [
+                'id' => old('draft_id'),
+                'nama_perusahaan' => old('nama_perusahaan'),
+                'email_perusahaan' => old('email_perusahaan'),
+                'no_hp' => old('no_hp'),
+                'alamat_raw' => old('alamat_raw'),
+                'provinsi_id' => old('provinsi_id'),
+                'kabupaten_id' => old('kabupaten_id'),
+                'kecamatan_id' => old('kecamatan_id'),
+                'kelurahan_id' => old('kelurahan_id'),
+                'posisi' => old('posisi'),
+                'kategori_bidang' => old('kategori_bidang'),
+                'tipe_pekerjaan' => old('tipe_pekerjaan'),
+                'gaji_min' => old('gaji_min'),
+                'gaji_max' => old('gaji_max'),
+                'tanggal_posting' => old('tanggal_posting'),
+                'batas_pendaftaran' => old('batas_pendaftaran'),
+                'keahlian_skill' => old('keahlian_skill'),
+                'deskripsi_pekerjaan' => old('deskripsi_pekerjaan'),
+                'jobdesk' => old('jobdesk'),
+                'kualifikasi_jobspek' => old('kualifikasi_jobspek'),
+                'fasilitas' => old('fasilitas'),
+                'cara_melamar' => old('cara_melamar'),
+                'website_form_url' => old('website_form_url'),
+                'publish_after_save' => old('publish_after_save'),
+            ]
+            : null;
+    @endphp
+
     <script>
         (function() {
+            // Safely inject the pre-compiled PHP variable
+            const restoredDraft = @json($restoredDraftData);
+
             const selectedDraftIds = new Set();
             const draftRows = new Map();
+            const editForm = document.getElementById('draft-edit-form');
+            const publishRequiredFields = [
+                editForm.elements.email_perusahaan,
+                editForm.elements.alamat_raw,
+            ];
+            const publishOnlyFields = [
+                editForm.elements.provinsi_id,
+                editForm.elements.kabupaten_id,
+                editForm.elements.batas_pendaftaran,
+            ];
             const draftTable = createDataTable('#loker-draft-table', {
                 processing: true,
                 serverSide: true,
@@ -876,7 +1054,47 @@
             }
 
             function setValue(id, value) {
-                document.getElementById(id).value = value || '';
+                document.getElementById(id).value = value === null || value === undefined ? '' : value;
+            }
+
+            function setPublishRequirements(isPublish) {
+                publishRequiredFields.concat(publishOnlyFields).forEach(function(field) {
+                    field.required = isPublish;
+                });
+            }
+
+            function validateDraftConstraints() {
+                const minSalary = parseFloat(document.getElementById('edit-gaji-min').value);
+                const maxSalaryField = document.getElementById('edit-gaji-max');
+                const maxSalary = parseFloat(maxSalaryField.value);
+                const postingDate = document.getElementById('edit-tanggal-posting').value;
+                const deadlineField = document.getElementById('edit-batas-pendaftaran');
+                const deadline = deadlineField.value;
+
+                maxSalaryField.setCustomValidity('');
+                deadlineField.setCustomValidity('');
+
+                if (!Number.isNaN(minSalary) && !Number.isNaN(maxSalary) && maxSalary < minSalary) {
+                    maxSalaryField.setCustomValidity('Gaji maksimum tidak boleh lebih kecil dari gaji minimum.');
+                }
+
+                if (postingDate && deadline && deadline < postingDate) {
+                    deadlineField.setCustomValidity('Batas pendaftaran tidak boleh sebelum tanggal posting.');
+                }
+
+                return editForm.checkValidity();
+            }
+
+            function submitDraft(shouldPublish) {
+                setPublishRequirements(shouldPublish);
+                document.getElementById('publish-after-save').value = shouldPublish ? '1' : '0';
+
+                if (!validateDraftConstraints()) {
+                    editForm.reportValidity();
+                    return;
+                }
+
+                HTMLFormElement.prototype.submit.call(editForm);
             }
 
             async function loadLocationOptions(url, selectId, placeholder, selected) {
@@ -928,8 +1146,10 @@
                 setValue('edit-fasilitas', draft.fasilitas);
                 setValue('edit-cara-melamar', draft.cara_melamar);
                 setValue('edit-website-url', draft.website_form_url);
-                document.getElementById('draft-edit-form').action = '{{ url('/loker-drafts') }}/' + draft.id;
-                document.getElementById('publish-after-save').value = '0';
+                editForm.action = '{{ url('/loker-drafts') }}/' + draft.id;
+                setValue('draft-id', draft.id);
+                document.getElementById('publish-after-save').value = draft.publish_after_save === '1' || draft
+                    .publish_after_save === 1 ? '1' : '0';
                 try {
                     await populateLocations(draft);
                     $('#draftEditModal').modal('show');
@@ -958,12 +1178,15 @@
             });
 
             document.querySelector('[data-save-draft]').addEventListener('click', function() {
-                document.getElementById('publish-after-save').value = '0';
-                document.getElementById('draft-edit-form').submit();
+                submitDraft(false);
             });
             document.querySelector('[data-publish-draft]').addEventListener('click', function() {
-                document.getElementById('publish-after-save').value = '1';
-                document.getElementById('draft-edit-form').submit();
+                submitDraft(true);
+            });
+
+            ['edit-gaji-min', 'edit-gaji-max', 'edit-tanggal-posting', 'edit-batas-pendaftaran'].forEach(function(id) {
+                document.getElementById(id).addEventListener('input', validateDraftConstraints);
+                document.getElementById(id).addEventListener('change', validateDraftConstraints);
             });
 
             document.querySelectorAll('input[name="source_type"]').forEach(function(radio) {
@@ -983,6 +1206,10 @@
                         document.getElementById('conflict-company-name').required = createNew;
                     });
                 });
+            @endif
+
+            @if (old('draft_id') && !$companyConflict)
+                openEditModal(restoredDraft);
             @endif
         })();
     </script>

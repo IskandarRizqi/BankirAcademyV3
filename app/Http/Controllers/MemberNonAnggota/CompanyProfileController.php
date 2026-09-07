@@ -52,8 +52,8 @@ class CompanyProfileController extends Controller
                     'alamat' => $validated['alamat'],
                     'provinsi' => $validated['provinsi'],
                     'kabupaten' => $validated['kabupaten'],
-                    'kecamatan' => $validated['kecamatan'],
-                    'kelurahan' => $validated['kelurahan'],
+                    'kecamatan' => $validated['kecamatan'] ?? null,
+                    'kelurahan' => $validated['kelurahan'] ?? null,
                 ];
 
                 if ($request->hasFile('image')) {
@@ -114,12 +114,12 @@ class CompanyProfileController extends Controller
                 Rule::exists('kota', 'id')->where(fn ($query) => $query->where('provinsi_id', $provinceId)),
             ],
             'kecamatan' => [
-                'required',
+                'nullable',
                 'integer',
                 Rule::exists('kecamatan', 'id')->where(fn ($query) => $query->where('kota_id', $cityId)),
             ],
             'kelurahan' => [
-                'required',
+                'nullable',
                 'integer',
                 Rule::exists('kelurahan', 'id')->where(fn ($query) => $query->where('kecamatan_id', $districtId)),
             ],

@@ -44,8 +44,6 @@ class PerusahaanModel extends Model
             $this->alamat,
             $this->provinsi,
             $this->kabupaten,
-            $this->kecamatan,
-            $this->kelurahan,
             $this->image,
         ])->every(fn ($value) => filled($value));
     }

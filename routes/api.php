@@ -40,6 +40,7 @@ Route::middleware([VerifyScraperApiKey::class, 'throttle:60,1'])->group(function
     Route::post('/v1/scraper/loker-draft', [ScraperIngestionController::class, 'store']);
 });
 Route::post('/articles/store-n8n', [ArticleGeneratorController::class, 'storeFromN8n']);
+Route::get('/articles', [ArticleGeneratorController::class, 'apiIndex']);
 Route::get('/tripay/ppob', [PembayaranController::class, 'tripayppob']);
 Route::post('/c4/notifikasi', [CheckoutController::class, 'handleDokuTransactionNotification']);
 Route::post('/doku/notification', [CheckoutController::class, 'handleNotification']);
