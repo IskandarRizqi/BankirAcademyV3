@@ -68,11 +68,8 @@
         $classPaymentId = data_get($payment, 'classPayment.id');
 
         // DETEKSI GATEWAY / VA vs MANUAL:
-        // Jika link_payment diawali 'http://' atau 'https://', maka itu tautan pembayaran VA/Gateway.
         $rawLinkPayment = (string) $payment->link_payment;
         $isUrlPayment = \Illuminate\Support\Str::startsWith($rawLinkPayment, ['http://', 'https://']);
-
-        // Transaksi manual jika: flag manual = 1 OR BUKAN URL payment (link_payment null, empty, atau berupa path file bukti)
         $isManualPayment = (int) data_get($payment, 'riwayatTransaksi.manual', 0) === 1 || !$isUrlPayment;
 
         $invoiceUrl = $isMembership
@@ -91,6 +88,25 @@
 
         $paymentUrl = $isUrlPayment ? $payment->link_payment : null;
         $hasUploadedProof = !$isUrlPayment && !empty($payment->link_payment);
+
+        // Routing & Icon CTA Produk Terbeli
+        $accessUrl = null;
+        $accessLabel = 'Akses Produk';
+        $accessIcon = 'fa-graduation-cap';
+
+        if ($isClass) {
+            $accessUrl = url('/kelas-event?tab=active');
+            $accessLabel = 'Lihat Kelas';
+            $accessIcon = 'fa-graduation-cap';
+        } elseif ($isEbook) {
+            $accessUrl = url('/kelas-event?tab=ebook');
+            $accessLabel = 'Baca E-Book';
+            $accessIcon = 'fa-book-open';
+        } elseif ($isVideo) {
+            $accessUrl = url('/kelas-event?tab=video');
+            $accessLabel = 'Tonton Video';
+            $accessIcon = 'fa-play-circle';
+        }
     @endphp
 
     <article class="billing-history-card">
@@ -142,6 +158,35 @@
                 </div>
 
                 <div class="billing-history-card__actions">
+                    {{-- 1. CTA AKSES PRODUK --}}
+                    @if ($accessUrl)
+                        @if ($isPaid)
+                            {{-- Aktif jika SUDAH LUNAS --}}
+                            <a href="{{ $accessUrl }}"
+                                class="billing-history-action billing-history-action--access">
+                                <i class="fas {{ $accessIcon }}" aria-hidden="true"></i>
+                                {{ $accessLabel }}
+                            </a>
+                        @else
+                            {{-- Disabled jika PENDING / UNPAID (Pemicu SweetAlert) --}}
+                            <button type="button"
+                                class="billing-history-action billing-history-action--access mr-4 is-disabled"
+                                onclick="Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Pembayaran Belum Selesai',
+                                    text: 'Silakan selesaikan pembayaran terlebih dahulu untuk mengakses {{ strtolower($typeLabel) }} ini.',
+                                    confirmButtonText: 'Mengerti',
+                                    confirmButtonColor: '#3085d6'
+                                });"
+                                title="Selesaikan pembayaran untuk membuka akses"
+                                style="opacity: 0.6; cursor: not-allowed;">
+                                <i class="fas {{ $accessIcon }}" aria-hidden="true"></i>
+                                {{ $accessLabel }}
+                            </button>
+                        @endif
+                    @endif
+
+                    {{-- 2. TOMBOL AKSI PEMBAYARAN & INVOICE --}}
                     @if ($isPaid && $invoiceUrl)
                         <a href="{{ $invoiceUrl }}" target="_blank" rel="noopener"
                             class="billing-history-action billing-history-action--invoice">

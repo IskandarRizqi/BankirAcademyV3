@@ -48,7 +48,7 @@
             'has_submenu' => false,
         ],
         [
-            'label' => 'Pembelajaran anda',
+            'label' => 'Pembelajaran Anda',
             'icon' => 'kelas',
             'url' => '/kelas-event',
             'active' => request()->is('kelas-event'),
@@ -158,7 +158,7 @@
             [
                 'label' => 'Konsultasi',
                 'icon' => 'konsultasi',
-                'url' => '#',
+                'url' => '/comingsoon',
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
@@ -166,7 +166,7 @@
             [
                 'label' => 'Komunitas',
                 'icon' => 'komunitas',
-                'url' => '#',
+                'url' => '/comingsoon',
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
@@ -174,7 +174,7 @@
             [
                 'label' => 'Program afiliasi',
                 'icon' => 'afiliasi',
-                'url' => '#',
+                'url' => '/comingsoon',
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
@@ -182,7 +182,7 @@
             [
                 'label' => 'Member point',
                 'icon' => 'point',
-                'url' => '#',
+                'url' => '/comingsoon',
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,

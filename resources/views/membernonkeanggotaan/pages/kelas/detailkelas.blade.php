@@ -51,6 +51,8 @@
         $today = now()->startOfDay();
         $courseStatus =
             $endDate && $today->greaterThan(\Carbon\Carbon::parse($endDate)->endOfDay()) ? 'Completed' : 'Kelas Anda';
+        $eventStatus =
+            $endDate && $today->greaterThan(\Carbon\Carbon::parse($endDate)->endOfDay()) ? 'Completed' : 'Kelas Aktif';
         $courseStatusClass = $courseStatus === 'Completed' ? 'completed' : 'owned';
     @endphp
 
@@ -824,11 +826,11 @@
                     </div>
 
                     <!-- <div class="member-owned-class-detail__ownership">
-                                            <div>
-                                                <span class="member-owned-class-detail__owner-label">Status akses</span>
-                                                <span class="member-owned-class-detail__owner-value">Kelas Aktif</span>
-                                            </div>
-                                        </div> -->
+                                                                                <div>
+                                                                                    <span class="member-owned-class-detail__owner-label">Status akses</span>
+                                                                                    <span class="member-owned-class-detail__owner-value">Kelas Aktif</span>
+                                                                                </div>
+                                                                            </div> -->
                 </div>
             </div>
         </section>
@@ -1009,7 +1011,7 @@
             <aside class="member-owned-class-detail__sidebar" aria-label="Status kelas">
                 <section class="member-owned-class-detail__access-card">
                     <span class="member-owned-class-detail__owner-label">Akses pembelajaran</span>
-                    <h2 class="member-owned-class-detail__access-title">Kelas Aktif</h2>
+                    <h2 class="member-owned-class-detail__access-title">{{ $eventStatus }}</h2>
                     <p class="member-owned-class-detail__access-text">Anda sudah membeli kelas ini. Tidak ada proses
                         pendaftaran atau pembelian ulang yang diperlukan.</p>
                 </section>

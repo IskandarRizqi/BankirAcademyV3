@@ -96,7 +96,7 @@ class SopController extends Controller
     private function sopQuery(string $search = '')
     {
         return SopModel::query()
-            ->select(['id', 'judul', 'deskripsi', 'status', 'updated_at'])
+            ->select(['id', 'judul', 'deskripsi', 'banner', 'status', 'updated_at'])
             ->withCount('dokumenFiles')
             ->when($search !== '', fn($query) => $query->where('judul', 'like', "%{$search}%"))
             ->orderByDesc('updated_at')

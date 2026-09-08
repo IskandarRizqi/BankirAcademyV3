@@ -224,6 +224,13 @@
         object-fit: contain;
     }
 
+    .sop-card__banner {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     .sop-card__upcoming-badge {
         position: absolute;
         top: 12px;

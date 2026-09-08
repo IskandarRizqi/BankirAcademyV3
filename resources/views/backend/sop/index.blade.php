@@ -1,6 +1,30 @@
 @extends('layouts.compact')
 
 @section('content')
+    <style>
+        .sop-photo-option {
+            display: block;
+            height: 100%;
+            padding: .35rem;
+            border: 1px solid #dee2e6;
+            border-radius: .5rem;
+            cursor: pointer;
+            transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+        }
+
+        .sop-photo-option:hover,
+        .sop-photo-option.selected {
+            border-color: #0d6efd;
+            background-color: #f0f6ff;
+            box-shadow: 0 0 0 .15rem rgba(13, 110, 253, .1);
+        }
+
+        .sop-photo-option img {
+            width: 100%;
+            height: 78px;
+            object-fit: cover;
+        }
+    </style>
     <div class="col-12">
         <!-- Header Section -->
         <div class="card border-0 shadow-sm mb-4 rounded-3">
@@ -49,10 +73,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th width="5%" class="text-center">No</th>
-                                <th width="20%">Judul SOP</th>
-                                <th width="25%">Deskripsi</th>
+                                <th width="15%">Judul SOP</th>
+                                <th width="15%">Banner</th>
+                                <th width="20%">Deskripsi</th>
                                 <th width="10%">Status</th>
-                                <th width="25%">Dokumen</th>
+                                <th width="20%">Dokumen</th>
                                 <th width="10%">Diperbarui</th>
                                 <th width="5%" class="text-end dt-no-sorting">Aksi</th>
                             </tr>
@@ -63,6 +88,17 @@
                                     <td class="text-center fw-medium text-muted">{{ $loop->iteration }}</td>
                                     <td>
                                         <span class="fw-semibold text-dark">{{ $item->judul }}</span>
+                                    </td>
+                                    <td>
+                                        @php
+                                            $bannerExists = filled($item->banner)
+                                                && \Illuminate\Support\Facades\Storage::disk('public')->exists($item->banner);
+                                            $bannerUrl = $bannerExists
+                                                ? '/storage/' . ltrim(str_replace('\\', '/', $item->banner), '/')
+                                                : asset('bankir-academy-icon.png');
+                                        @endphp
+                                        <img src="{{ $bannerUrl }}" alt="Banner {{ $item->judul }}" class="rounded border"
+                                            style="width: 110px; height: 60px; object-fit: cover;">
                                     </td>
                                     <td>
                                         <div class="text-truncate text-muted small" style="max-width: 250px;"
@@ -128,6 +164,7 @@
                                             <button type="button" class="btn btn-sm btn-outline-warning btn-edit-sop"
                                                 data-id="{{ $item->id }}" data-judul="{{ $item->judul }}"
                                                 data-status="{{ $item->status }}" data-deskripsi="{{ $item->deskripsi }}"
+                                                data-banner="{{ $item->banner }}"
                                                 data-action="{{ route('admin.sop.update', $item->id) }}"
                                                 data-documents='@json($item->dokumenFiles)' title="Edit SOP">
                                                 <i class="bx bx-edit"></i>
@@ -185,6 +222,50 @@
                                 <textarea name="deskripsi" id="sop-deskripsi" class="form-control" rows="3" maxlength="1000"
                                     placeholder="Tuliskan ringkasan singkat tentang SOP ini"></textarea>
                                 <div class="form-text text-muted" style="font-size: 11px;">Maksimal 1.000 karakter.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <label class="form-label fw-medium small mb-0">Banner SOP dari Album Pembelajaran</label>
+                                    <a href="{{ route('album.index') }}" target="_blank" rel="noopener noreferrer"
+                                        class="btn btn-outline-secondary btn-sm rounded-2">
+                                        <i class="bx bx-images me-1"></i> Kelola Album
+                                    </a>
+                                </div>
+                                <div class="row g-2 border rounded p-2 bg-light" id="sop-photo-grid"
+                                    style="max-height: 240px; overflow-y: auto;">
+                                    @forelse ($photos as $photo)
+                                        @php
+                                            $photoUrl = '/storage/' . ltrim(str_replace('\\', '/', $photo->path), '/');
+                                        @endphp
+                                        <div class="col-6 col-md-3">
+                                            <label class="sop-photo-option text-center mb-0">
+                                                <input type="radio" name="photo_id" value="{{ $photo->id }}"
+                                                    class="d-none sop-photo-radio" data-path="{{ $photo->path }}">
+                                                <img src="{{ $photoUrl }}" alt="{{ $photo->title ?: 'Gambar' }}"
+                                                    class="rounded">
+                                                <small class="d-block text-truncate mt-1 text-muted"
+                                                    title="{{ $photo->title ?: 'Gambar' }}">
+                                                    {{ $photo->title ?: 'Gambar' }}
+                                                </small>
+                                            </label>
+                                        </div>
+                                    @empty
+                                        <div class="col-12 text-center text-muted py-3">
+                                            Belum ada gambar di album pembelajaran.
+                                        </div>
+                                    @endforelse
+                                </div>
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input type="checkbox" name="clear_banner" value="1"
+                                        class="custom-control-input" id="sop-clear-banner">
+                                    <label class="custom-control-label small text-muted" for="sop-clear-banner">
+                                        Gunakan banner default
+                                    </label>
+                                </div>
+                                <div class="form-text text-muted" style="font-size: 11px;">
+                                    Jika tidak memilih gambar, banner default akan digunakan pada halaman member.
+                                </div>
                             </div>
 
                             <!-- Saved documents section (Visible on edit mode) -->
@@ -322,6 +403,9 @@
                 $('#method-container').html('');
                 $('#existing-documents-wrapper').addClass('d-none');
                 $('#existing-documents-list').empty();
+                $('#sop-clear-banner').prop('checked', false);
+                $('#sop-photo-grid .sop-photo-radio').prop('checked', false);
+                $('#sop-photo-grid .sop-photo-option').removeClass('selected');
 
                 // Reset dynamic document rows to single empty row
                 $('#sop-documents').html(`
@@ -382,6 +466,7 @@
                 var judul = btn.data('judul');
                 var status = btn.data('status');
                 var deskripsi = btn.data('deskripsi');
+                var banner = btn.attr('data-banner') || '';
                 var action = btn.data('action');
                 var documents = btn.data('documents');
 
@@ -393,6 +478,12 @@
                 $('#sop-judul').val(judul);
                 $('#sop-status').val(status);
                 $('#sop-deskripsi').val(deskripsi);
+
+                $('#sop-photo-grid .sop-photo-radio').each(function() {
+                    if ($(this).attr('data-path') === banner) {
+                        $(this).prop('checked', true).trigger('change');
+                    }
+                });
 
                 if (documents && documents.length > 0) {
                     var docHtml = '';
@@ -417,6 +508,21 @@
             // Dynamic File Link Toggle
             $('#sop-documents').on('change', '[data-document-type]', function() {
                 toggleDocumentInput($(this).closest('[data-document-row]'));
+            });
+
+            $('#sop-photo-grid').on('change', '.sop-photo-radio', function() {
+                $('#sop-photo-grid .sop-photo-option').removeClass('selected');
+                $(this).closest('.sop-photo-option').addClass('selected');
+                $('#sop-clear-banner').prop('checked', false);
+            });
+
+            $('#sop-clear-banner').on('change', function() {
+                if (!this.checked) {
+                    return;
+                }
+
+                $('#sop-photo-grid .sop-photo-radio').prop('checked', false);
+                $('#sop-photo-grid .sop-photo-option').removeClass('selected');
             });
 
             // Add New Document Row

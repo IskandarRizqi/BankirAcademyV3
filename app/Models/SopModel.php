@@ -19,6 +19,7 @@ class SopModel extends Model
     protected $fillable = [
         'judul',
         'deskripsi',
+        'banner',
         'status',
     ];
 

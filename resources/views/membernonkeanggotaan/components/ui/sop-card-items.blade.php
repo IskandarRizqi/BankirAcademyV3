@@ -1,12 +1,19 @@
 @foreach($sops as $sop)
     @php
         $isUpcoming = $sop->status === \App\Models\SopModel::STATUS_UPCOMING;
+        $hasBanner = filled($sop->banner)
+            && \Illuminate\Support\Facades\Storage::disk('public')->exists($sop->banner);
+        $bannerUrl = '/storage/' . ltrim(str_replace('\\', '/', (string) $sop->banner), '/');
     @endphp
     <article class="sop-card {{ $isUpcoming ? 'sop-card--upcoming' : '' }}">
         <div class="sop-card__media" aria-hidden="true">
-            <span class="sop-card__media-icon">
-                <img src="{{ asset('bankir-academy-icon.png') }}" alt="">
-            </span>
+            @if ($hasBanner)
+                <img src="{{ $bannerUrl }}" alt="" class="sop-card__banner">
+            @else
+                <span class="sop-card__media-icon">
+                    <img src="{{ asset('bankir-academy-icon.png') }}" alt="">
+                </span>
+            @endif
             @if($isUpcoming)
                 <span class="sop-card__upcoming-badge">Upcoming</span>
             @endif

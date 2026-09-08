@@ -47,7 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/pembayaran/{id}/upload-bukti', [BillingController::class, 'uploadBuktiTransfer'])
         ->name('pembayaran.upload-bukti');
     Route::get('/detail-event/{unique_id}/{title}', [DataEventKelasController::class, 'detailevent']);
-    Route::get('/pembayaran', [BillingController::class, 'databilling']);
+    Route::get('/pembayaran', [BillingController::class, 'databilling'])->name('databilling');
+    Route::get('/pembayaran/summary', [BillingController::class, 'getSummaryAjax'])->name('databilling.summary');
     Route::post('/pembayaran/{payment}/expire', [BillingController::class, 'expirePayment']);
     Route::post('/membership/cancel', [BillingController::class, 'cancelMembership'])
         ->name('membernonanggota.membership.cancel');
@@ -60,6 +61,9 @@ Route::middleware('auth')->group(function () {
         ->name('invoice.pending');
     Route::get('/classes/getinvoice/{id}', [InvoiceController::class, 'getInvoice']);
     Route::get('/kelas-event', [ListDaftarKelasController::class, 'kelasanda']);
+    Route::get('/comingsoon', function () {
+        return view('membernonkeanggotaan.pages.comingsoon.index');
+    });
     Route::get('/sertifikat-kelas', [SertifikatController::class, 'index'])
         ->name('membernonanggota.certificates.index');
     Route::prefix('member/cv-ats')

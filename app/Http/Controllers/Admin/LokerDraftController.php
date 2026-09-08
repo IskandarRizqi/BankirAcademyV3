@@ -30,6 +30,16 @@ class LokerDraftController extends Controller
                 $query->where('platform', $request->platform);
             }
 
+            if ($request->email_status === 'has_email') {
+                $query->whereNotNull('email_perusahaan')
+                    ->whereRaw("TRIM(email_perusahaan) <> ''");
+            } elseif ($request->email_status === 'no_email') {
+                $query->where(function ($q) {
+                    $q->whereNull('email_perusahaan')
+                        ->orWhereRaw("TRIM(email_perusahaan) = ''");
+                });
+            }
+
             if ($request->filled('gaji_min')) {
                 $query->where('gaji_min', '>=', $request->gaji_min);
             }

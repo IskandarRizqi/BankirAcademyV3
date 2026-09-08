@@ -308,6 +308,14 @@
                         </select>
                     </div>
                     <div class="col-md-3 form-group mb-3 mb-md-0">
+                        <label for="filter-email" class="font-weight-bold small text-dark">Email Perusahaan</label>
+                        <select id="filter-email" class="form-control">
+                            <option value="">Semua Data</option>
+                            <option value="has_email">Sudah Ada Email</option>
+                            <option value="no_email">Belum Ada Email</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 form-group mb-3 d-none mb-md-0">
                         <label for="filter-gaji-min" class="font-weight-bold small text-dark">Minimal Gaji</label>
                         <input type="number" id="filter-gaji-min" class="form-control" placeholder="Contoh: 3000000"
                             min="0">
@@ -336,7 +344,8 @@
                     <table id="loker-draft-table" class="table table-hover align-middle mb-0" style="width: 100%;">
                         <thead class="thead-light">
                             <tr>
-                                <th class="text-center" style="width: 45px;"><input type="checkbox" id="select-all-drafts">
+                                <th class="text-center" style="width: 45px;"><input type="checkbox"
+                                        id="select-all-drafts">
                                 </th>
                                 <th style="width: 45px;">No</th>
                                 <th>Sumber</th>
@@ -522,7 +531,8 @@
                         <section class="draft-form-section border-left border-danger">
                             <h6 class="draft-section-title"><i class="bx bx-check-circle"></i>Data Wajib <span
                                     class="badge badge-danger">Wajib untuk Publish</span></h6>
-                            <p class="draft-section-note">Nama perusahaan dan posisi wajib untuk menyimpan draft. Lengkapi seluruh bagian ini sebelum memilih Simpan & Publish.</p>
+                            <p class="draft-section-note">Nama perusahaan dan posisi wajib untuk menyimpan draft. Lengkapi
+                                seluruh bagian ini sebelum memilih Simpan & Publish.</p>
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label class="font-weight-bold small">Nama Perusahaan <span
@@ -601,7 +611,8 @@
                         <section class="draft-form-section border-left border-secondary">
                             <h6 class="draft-section-title"><i class="bx bx-plus-circle"></i>Data Opsional <span
                                     class="badge badge-secondary">Opsional</span></h6>
-                            <p class="draft-section-note">Data berikut dapat dilengkapi sekarang atau diperbarui nanti sebelum lowongan dipublikasikan.</p>
+                            <p class="draft-section-note">Data berikut dapat dilengkapi sekarang atau diperbarui nanti
+                                sebelum lowongan dipublikasikan.</p>
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label class="font-weight-bold small">Nomor HP / WhatsApp</label>
@@ -869,6 +880,7 @@
                     data: function(data) {
                         data.source_type = document.getElementById('filter-source').value;
                         data.platform = document.getElementById('filter-platform').value;
+                        data.email_status = document.getElementById('filter-email').value;
                         data.gaji_min = document.getElementById('filter-gaji-min').value;
                     }
                 },
@@ -964,6 +976,7 @@
             document.getElementById('reset-draft-filter').addEventListener('click', function() {
                 document.getElementById('filter-source').value = '';
                 document.getElementById('filter-platform').value = '';
+                document.getElementById('filter-email').value = '';
                 document.getElementById('filter-gaji-min').value = '';
                 draftTable.ajax.reload(null, true);
             });

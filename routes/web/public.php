@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ClassesController;
 use App\Http\Controllers\ArticleGeneratorController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Front\BankPageController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\PagesController;
@@ -27,6 +28,7 @@ Route::get('/pages/page/{id}', [PagesController::class, 'showKelas']);
 Route::get('/pages/about', [PagesController::class, 'showAbout']);
 Route::redirect('/pages/contact', '/kontak-kami', 301);
 Route::get('/pages/blog', [PagesController::class, 'showListBlog']);
+Route::post('/kontak/kirim', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/pages/blog/{id}/{slug}', [PagesController::class, 'showBlog']);
 // Legacy marketing URLs remain available while the new template uses canonical URLs below.
 Route::redirect('/pages/Banking-Solution', '/layanan/banking-solution', 301);

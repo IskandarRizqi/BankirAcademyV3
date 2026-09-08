@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DokumenFileSopModel;
+use App\Models\Photo;
 use App\Models\SopModel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -56,6 +57,7 @@ class SopController extends Controller
                 $sop = SopModel::create([
                     'judul' => $validated['judul'],
                     'deskripsi' => $validated['deskripsi'] ?? null,
+                    'banner' => $this->bannerPath($request),
                     'status' => $validated['status'],
                 ]);
 
@@ -100,6 +102,7 @@ class SopController extends Controller
                 $sop->update([
                     'judul' => $validated['judul'],
                     'deskripsi' => $validated['deskripsi'] ?? null,
+                    'banner' => $this->bannerPath($request, $sop->banner),
                     'status' => $validated['status'],
                 ]);
 
@@ -198,6 +201,7 @@ class SopController extends Controller
     {
         return [
             'sops' => SopModel::with('dokumenFiles')->latest('id')->get(),
+            'photos' => Photo::latest('id')->get(['id', 'title', 'path']),
             'sop' => $sop,
         ];
     }
@@ -212,6 +216,12 @@ class SopController extends Controller
                 Rule::unique('sop', 'judul')->ignore($sop?->id),
             ],
             'deskripsi' => ['nullable', 'string', 'max:1000'],
+            'photo_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('photos', 'id')->where(fn ($query) => $query->whereNull('deleted_at')),
+            ],
+            'clear_banner' => ['nullable', 'boolean'],
             'status' => ['required', Rule::in(SopModel::statuses())],
             'documents' => ['nullable', 'array'],
             'documents.*.type' => ['nullable', Rule::in(['file', 'link'])],
@@ -226,6 +236,19 @@ class SopController extends Controller
         ];
     }
 
+    private function bannerPath(Request $request, ?string $currentBanner = null): ?string
+    {
+        if ($request->boolean('clear_banner')) {
+            return null;
+        }
+
+        if (! $request->filled('photo_id')) {
+            return $currentBanner;
+        }
+
+        return Photo::whereNull('deleted_at')->findOrFail($request->input('photo_id'))->path;
+    }
+
     private function storeDocuments(SopModel $sop, Request $request, array &$storedPaths): void
     {
         $documents = $request->input('documents', []);
@@ -236,20 +259,27 @@ class SopController extends Controller
 
         foreach ($documents as $index => $document) {
             $type = $document['type'] ?? 'link';
+            $link = trim((string) ($document['link_google_drive'] ?? ''));
+            $name = trim((string) ($document['nama_file'] ?? ''));
+            $file = $request->file("documents.{$index}.file");
+
+            // Modal selalu menyediakan satu baris kosong untuk dokumen baru.
+            if ($name === '' && $link === '' && ! $file) {
+                continue;
+            }
 
             if ($type === 'link') {
                 $sop->dokumenFiles()->create([
-                    'nama_file' => Str::limit($document['nama_file'] ?: 'Dokumen Google Drive', 255, ''),
+                    'nama_file' => Str::limit($name ?: 'Dokumen Google Drive', 255, ''),
                     'path' => '',
                     'ukuran' => 0,
                     'mime_type' => 'text/uri-list',
-                    'link_google_drive' => $document['link_google_drive'],
+                    'link_google_drive' => $link,
                 ]);
 
                 continue;
             }
 
-            $file = $request->file("documents.{$index}.file");
             if (! $file) {
                 continue;
             }

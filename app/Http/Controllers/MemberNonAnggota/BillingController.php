@@ -41,8 +41,22 @@ class BillingController extends Controller
                 'next_page_url' => $paymentHistories->nextPageUrl(),
             ]);
         }
+        view()->share('billingSummary', $billingSummary);
 
         return view('membernonkeanggotaan.pages.billing.billing', compact('billingSummary', 'billingFilters', 'paymentHistories'));
+    }
+    public function getSummaryAjax(Request $request)
+    {
+        $userId = (int) $request->user()->id;
+        $this->paymentExpiryService->syncForUser($userId);
+
+        $summary = $this->getBillingSummary($userId);
+
+        return response()->json([
+            'paid_count'    => data_get($summary, 'paid_count', 0),
+            'pending_count' => data_get($summary, 'pending_count', 0),
+            'failed_count'  => data_get($summary, 'failed_count', 0),
+        ]);
     }
     public function uploadBuktiTransfer(Request $request, $id)
     {
