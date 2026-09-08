@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Stevebauman\Purify\Facades\Purify;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
@@ -192,6 +193,38 @@ class ArticleGeneratorController extends Controller
         $article->update($validated);
 
         return redirect()->route('articles.index')->with('success', 'Artikel berhasil diperbarui!');
+    }
+    public function upload(Request $request)
+    {
+        // 1. Validasi request
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp', // maks 5MB
+        ]);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            // 2. Buat nama file acak sepanjang 40 karakter (contoh: fLxLfGU12qjjntZSfsONadLzN4KBBzsurYPGBDdU.jpg)
+            $extension = $file->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $extension;
+
+            // 3. Simpan file ke storage/app/public/articles/
+            $file->storeAs('public/articles', $filename);
+
+            // 4. Return path relatif sesuai format yang Anda minta
+            $imageUrl = '/storage/articles/' . $filename;
+
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Image uploaded successfully',
+                'image_url' => $imageUrl,
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No image provided',
+        ], 400);
     }
     public function exportPdf(Article $article)
     {

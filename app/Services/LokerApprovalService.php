@@ -67,7 +67,7 @@ class LokerApprovalService
                 'image' => $company->image,
                 'skill' => json_encode($this->listValue($draft->keahlian_skill)),
                 'type' => json_encode($this->listValue($draft->tipe_pekerjaan)),
-                'status' => 0,
+                'status' => 1,
                 'nama' => $draft->posisi,
                 'email' => $draft->email_perusahaan,
                 'alamat' => $draft->alamat_raw,

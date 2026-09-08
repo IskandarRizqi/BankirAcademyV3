@@ -511,86 +511,86 @@
         <div class="ebook-detail-v2">
             {{-- HERO SECTION --}}
             <!-- <section class="ebook-hero-v2" aria-labelledby="ebook-title">
-                                                                            <div class="ebook-hero-v2__inner">
-                                                                                <div class="ebook-hero-v2__content">
-                                                                                    <div>
-                                                                                        <a href="javascript:history.back()" class="ebook-back-link">
-                                                                                            <i class="fas fa-arrow-left me-1"></i> Kembali
-                                                                                        </a>
+                                                                                <div class="ebook-hero-v2__inner">
+                                                                                    <div class="ebook-hero-v2__content">
+                                                                                        <div>
+                                                                                            <a href="javascript:history.back()" class="ebook-back-link">
+                                                                                                <i class="fas fa-arrow-left me-1"></i> Kembali
+                                                                                            </a>
 
-                                                                                        <div class="ebook-eyebrow-row">
-                                                                                            <span class="ebook-pill"><i class="fas fa-file-pdf me-1"></i> E-Book PDF</span>
-                                                                                            @if ($sudahAkses)
+                                                                                            <div class="ebook-eyebrow-row">
+                                                                                                <span class="ebook-pill"><i class="fas fa-file-pdf me-1"></i> E-Book PDF</span>
+                                                                                                @if ($sudahAkses)
     <span class="ebook-pill ebook-pill--owned"><i class="fas fa-check-circle me-1"></i> Sudah Dimiliki</span>
 @else
     <span class="ebook-pill"><i class="fas fa-lock me-1"></i> Akses Terbatas</span>
     @endif
+                                                                                            </div>
+
+                                                                                            <h1 class="ebook-title-v2" id="ebook-title">{{ $subMateri->nama }}</h1>
                                                                                         </div>
 
-                                                                                        <h1 class="ebook-title-v2" id="ebook-title">{{ $subMateri->nama }}</h1>
+                                                                                        <div class="ebook-hero-stats" aria-label="Ringkasan Ebook">
+                                                                                            <div class="ebook-stat-card">
+                                                                                                <span class="ebook-stat-card__label">Tipe File</span>
+                                                                                                <span class="ebook-stat-card__value">PDF Document</span>
+                                                                                            </div>
+                                                                                            <div class="ebook-stat-card">
+                                                                                                <span class="ebook-stat-card__label">Masa Aktif</span>
+                                                                                                <span class="ebook-stat-card__value">{{ $subMateri->masa_aktif ? $subMateri->masa_aktif . ' Hari' : 'Selamanya' }}</span>
+                                                                                            </div>
+                                                                                            <div class="ebook-stat-card">
+                                                                                                <span class="ebook-stat-card__label">Akses</span>
+                                                                                                <span class="ebook-stat-card__value">Online Reader</span>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
 
-                                                                                    <div class="ebook-hero-stats" aria-label="Ringkasan Ebook">
-                                                                                        <div class="ebook-stat-card">
-                                                                                            <span class="ebook-stat-card__label">Tipe File</span>
-                                                                                            <span class="ebook-stat-card__value">PDF Document</span>
+                                                                                    {{-- Visual Cover & Action Strip --}}
+                                                                                    <div class="ebook-hero-visual">
+                                                                                        <div class="ebook-cover-card">
+                                                                                            <img src="{{ $coverImage }}" alt="{{ $subMateri->nama }}" onerror="this.src='{{ asset('cbtemplate/assets/img/90x90.jpg') }}'">
+                                                                                            <span class="ebook-cover-card__shade" aria-hidden="true"></span>
                                                                                         </div>
-                                                                                        <div class="ebook-stat-card">
-                                                                                            <span class="ebook-stat-card__label">Masa Aktif</span>
-                                                                                            <span class="ebook-stat-card__value">{{ $subMateri->masa_aktif ? $subMateri->masa_aktif . ' Hari' : 'Selamanya' }}</span>
-                                                                                        </div>
-                                                                                        <div class="ebook-stat-card">
-                                                                                            <span class="ebook-stat-card__label">Akses</span>
-                                                                                            <span class="ebook-stat-card__value">Online Reader</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
 
-                                                                                {{-- Visual Cover & Action Strip --}}
-                                                                                <div class="ebook-hero-visual">
-                                                                                    <div class="ebook-cover-card">
-                                                                                        <img src="{{ $coverImage }}" alt="{{ $subMateri->nama }}" onerror="this.src='{{ asset('cbtemplate/assets/img/90x90.jpg') }}'">
-                                                                                        <span class="ebook-cover-card__shade" aria-hidden="true"></span>
-                                                                                    </div>
-
-                                                                                    <div class="ebook-price-strip">
-                                                                                        <div>
-                                                                                            <span class="ebook-price-label">Investasi</span>
-                                                                                            <span class="ebook-price-value">
-                                                                                                @if ($hargaFinal > 0)
+                                                                                        <div class="ebook-price-strip">
+                                                                                            <div>
+                                                                                                <span class="ebook-price-label">Investasi</span>
+                                                                                                <span class="ebook-price-value">
+                                                                                                    @if ($hargaFinal > 0)
     Rp {{ number_format($hargaFinal, 0, ',', '.') }}
 @else
     Gratis
     @endif
-                                                                                            </span>
-                                                                                            @if ($hargaFinal > 0 && $harga > $hargaFinal)
+                                                                                                </span>
+                                                                                                @if ($hargaFinal > 0 && $harga > $hargaFinal)
     <span class="ebook-price-original">Rp {{ number_format($harga, 0, ',', '.') }}</span>
     @endif
-                                                                                        </div>
+                                                                                            </div>
 
-                                                                                        {{-- Action Buttons --}}
-                                                                                        @if ($sudahAkses)
-                                                                                            <a href="{{ route('ebook.belajar', $subMateri->id) }}" class="ebook-primary-cta">
-                                                                                                <i class="fas fa-book-open me-2"></i> Baca Ebook
-                                                                                            </a>
+                                                                                            {{-- Action Buttons --}}
+                                                                                            @if ($sudahAkses)
+                                                                                                <a href="{{ route('ebook.belajar', $subMateri->id) }}" class="ebook-primary-cta">
+                                                                                                    <i class="fas fa-book-open me-2"></i> Baca Ebook
+                                                                                                </a>
 @else
     @if ($hargaFinal > 0)
     <a href="{{ route('ebook.belajar', $subMateri->id) }}" class="ebook-primary-cta">
-                                                                                                    Beli Ebook <i class="fas fa-arrow-right ms-2"></i>
-                                                                                                </a>
+                                                                                                        Beli Ebook <i class="fas fa-arrow-right ms-2"></i>
+                                                                                                    </a>
 @else
     <form action="{{ route('ebook.claim', $subMateri->id) }}" method="POST" class="m-0">
-                                                                                                    @csrf
-                                                                                                    <button type="submit" class="ebook-primary-cta">
-                                                                                                        <i class="fas fa-download me-2"></i> Klaim Gratis
-                                                                                                    </button>
-                                                                                                </form>
+                                                                                                        @csrf
+                                                                                                        <button type="submit" class="ebook-primary-cta">
+                                                                                                            <i class="fas fa-download me-2"></i> Klaim Gratis
+                                                                                                        </button>
+                                                                                                    </form>
     @endif
-                                                                                        @endif
+                                                                                            @endif
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </section> -->
+                                                                            </section> -->
 
             {{-- MAIN CONTENT & SIDEBAR --}}
             <div class="ebook-body-layout">
@@ -601,7 +601,7 @@
                         <div class="ebook-panel__body">
 
                             <!-- <span class="ebook-section-kicker">Preview Content</span>
-                                                                                        <h2 class="ebook-section-title">Pratinjau Ebook</h2> -->
+                                                                                            <h2 class="ebook-section-title">Pratinjau Ebook</h2> -->
                             <div class="ebook-cover-card">
                                 @if ($coverImage)
                                     <img src="{{ $coverImage }}" alt="{{ $subMateri->nama }}">
@@ -681,11 +681,11 @@
                                 </button>
                             @else
                                 <!-- <form action="{{ route('ebook.claim', $subMateri->id) }}" method="POST" class="m-0">
-                                                                                                @csrf
-                                                                                                <button type="submit" class="ebook-register-button">
-                                                                                                    <i class="fas fa-download me-2"></i> Dapatkan Akses Gratis
-                                                                                                </button>
-                                                                                            </form> -->
+                                                                                                    @csrf
+                                                                                                    <button type="submit" class="ebook-register-button">
+                                                                                                        <i class="fas fa-download me-2"></i> Dapatkan Akses Gratis
+                                                                                                    </button>
+                                                                                                </form> -->
                                 <a href="{{ route('ebook.belajar', $subMateri->id) }}" class="ebook-register-button">
                                     Dapatkan Akses Gratis
                                 </a>
