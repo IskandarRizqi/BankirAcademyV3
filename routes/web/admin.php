@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ScraperApiKeyController;
 use App\Http\Controllers\Admin\SopController;
 use App\Http\Controllers\ArticleGeneratorController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KeywordController;
 use App\Http\Middleware\IsAdminRoot;
 use Illuminate\Support\Facades\Route;
 
@@ -58,6 +59,9 @@ Route::middleware([IsAdminRoot::class])->group(function () {
         ->name('admin.payments.index');
     Route::get('/docs/api/loker', [ScraperApiKeyController::class, 'index'])->name('scraper-keys.index');
     Route::get('/loker-drafts', [LokerDraftController::class, 'index'])->name('lokerdraft.index');
+    Route::patch('/loker-drafts/job-platform/toggle', [LokerDraftController::class, 'toggleJobPlatform'])
+        ->name('lokerdraft.job-platform.toggle');
+    Route::resource('keywords', KeywordController::class)->except(['create', 'show', 'edit']);
     Route::post('/loker-drafts/import', [LokerDraftController::class, 'import'])->name('loker-draft.import');
     Route::patch('/loker-drafts/{id}', [LokerDraftController::class, 'update'])->name('lokerdraft.update');
     Route::post('/loker-drafts/{id}/publish', [LokerDraftController::class, 'publish'])->name('lokerdraft.publish');

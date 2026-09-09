@@ -1,5 +1,5 @@
 ### Variables
-@baseUrl = https://bankiracademy.co.id
+@baseUrl = http://127.0.0.1:8000
 @contentType = application/json
 
 ###############################################################################
@@ -175,7 +175,7 @@ X-Scraper-Api-Key: {{apiKey}}
 ###############################################################################
 # 3. TEST VALIDASI GAGAL (KOSONGKAN FIELD REQUIRED)
 ###############################################################################
-GET {{baseUrl}}/api/loker
+GET {{baseUrl}}/api/getloker
 Content-Type: {{contentType}}
 Accept: {{contentType}}
 

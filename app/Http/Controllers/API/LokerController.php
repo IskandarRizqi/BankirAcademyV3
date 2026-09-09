@@ -62,7 +62,7 @@ class LokerController extends Controller
 
         return response()->json($data);
     }
-    public function get_data(Request $request)
+    public function  get_data(Request $request)
     {
         $query = LokerModel::where('status', 1);
 

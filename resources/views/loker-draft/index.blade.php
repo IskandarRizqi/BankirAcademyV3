@@ -215,6 +215,16 @@
                     dipublikasikan.</p>
             </div>
             <div class="d-flex flex-wrap align-items-center mt-3 mt-md-0">
+                <form action="{{ route('lokerdraft.job-platform.toggle') }}" method="POST" class="mr-2 mb-2 mb-md-0">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit"
+                        class="btn {{ $jobPlatformEnabled ? 'btn-outline-danger' : 'btn-outline-success' }} font-weight-bold"
+                        title="{{ $jobPlatformEnabled ? 'Hentikan penyimpanan data Job Platform' : 'Buka penyimpanan data Job Platform' }}">
+                        <i class="bx {{ $jobPlatformEnabled ? 'bx-stop-circle' : 'bx-play-circle' }} mr-1"></i>
+                        {{ $jobPlatformEnabled ? 'Stop Job Platform' : 'Start Job Platform' }}
+                    </button>
+                </form>
                 <form action="{{ route('lokerdraft.bulk-destroy') }}" method="POST" id="bulk-delete-form" class="d-none mr-2">
                     @csrf
                     <div id="bulk-delete-inputs"></div>
@@ -222,7 +232,7 @@
                         <i class="bx bx-trash mr-1"></i> Hapus Terpilih (<span id="selected-count">0</span>)
                     </button>
                 </form>
-                <button type="button" class="btn btn-outline-success font-weight-bold" data-toggle="modal"
+                <button type="button" class="btn btn-outline-success font-weight-bold mb-2 mb-md-0" data-toggle="modal"
                     data-target="#importDraftModal">
                     <i class="bx bx-upload mr-1"></i> Import Excel
                 </button>
@@ -337,7 +347,12 @@
                     <p class="text-muted small mb-0">Gunakan pencarian DataTables untuk mencari posisi, perusahaan, lokasi,
                         atau platform.</p>
                 </div>
-                <span class="badge badge-light border px-3 py-2 mt-2 mt-md-0">Status: Pending</span>
+                <div class="d-flex align-items-center mt-2 mt-md-0">
+                    <span class="badge {{ $jobPlatformEnabled ? 'badge-success' : 'badge-danger' }} px-3 py-2 mr-2">
+                        Job Platform: {{ $jobPlatformEnabled ? 'Aktif' : 'Stop' }}
+                    </span>
+                    <span class="badge badge-light border px-3 py-2">Status: Pending</span>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">

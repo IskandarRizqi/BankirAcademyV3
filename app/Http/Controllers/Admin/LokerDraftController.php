@@ -8,6 +8,7 @@ use App\Imports\LokerDraftJobPlatformImport;
 use App\Imports\LokerDraftSocialMediaImport;
 use App\Models\LokerDraft;
 use App\Models\PerusahaanModel;
+use App\Models\ScraperIngestionControl;
 use App\Services\LokerApprovalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -107,8 +108,22 @@ class LokerDraftController extends Controller
         $provinces = DB::table('provinsi')->orderBy('name')->get(['id', 'name']);
         $sourceCounts = LokerDraft::pending()->select('source_type', DB::raw('count(*) as total'))
             ->groupBy('source_type')->pluck('total', 'source_type');
+        $jobPlatformEnabled = ScraperIngestionControl::isEnabled('job_platform');
 
-        return view('loker-draft.index', compact('platforms', 'provinces', 'sourceCounts'));
+        return view('loker-draft.index', compact('platforms', 'provinces', 'sourceCounts', 'jobPlatformEnabled'));
+    }
+
+    public function toggleJobPlatform()
+    {
+        $control = ScraperIngestionControl::firstOrCreate(
+            ['source_type' => 'job_platform'],
+            ['is_active' => true]
+        );
+        $control->update(['is_active' => ! $control->is_active]);
+
+        $status = $control->is_active ? 'dibuka' : 'dihentikan';
+
+        return redirect()->back()->with('success', "Penyimpanan data Job Platform berhasil {$status}.");
     }
 
     public function import(Request $request)

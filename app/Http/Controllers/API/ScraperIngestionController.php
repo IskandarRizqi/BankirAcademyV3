@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\LokerDraft;
+use App\Models\ScraperIngestionControl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -35,9 +36,17 @@ class ScraperIngestionController extends Controller
 
         $createdIds = [];
         $skippedCount = 0;
+        $blockedCount = 0;
         $currentYear = (int) date('Y');
+        $jobPlatformEnabled = ScraperIngestionControl::isEnabled('job_platform');
 
         foreach ($items as $data) {
+            if ($data['source_type'] === 'job_platform' && ! $jobPlatformEnabled) {
+                $skippedCount++;
+                $blockedCount++;
+                continue;
+            }
+
             // Normalisasi Tanggal Posting & Batas Pendaftaran
             if (!empty($data['tanggal_posting'])) {
                 $data['tanggal_posting'] = date('Y-m-d H:i:s', strtotime($data['tanggal_posting']));
@@ -63,7 +72,9 @@ class ScraperIngestionController extends Controller
             'success' => true,
             'message' => count($createdIds) . ' data draft loker berhasil disimpan.',
             'skipped_count' => $skippedCount,
+            'blocked_count' => $blockedCount,
+            'job_platform_enabled' => $jobPlatformEnabled,
             'draft_ids' => $createdIds
-        ], 201);
+        ], count($createdIds) > 0 ? 201 : 200);
     }
 }

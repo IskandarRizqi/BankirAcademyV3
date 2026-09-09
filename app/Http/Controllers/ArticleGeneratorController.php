@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Keyword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -119,33 +120,67 @@ class ArticleGeneratorController extends Controller
 
         return view('articles.show', compact('article', 'relatedArticles'));
     }
-    public function storeFromN8n(Request $request)
+    public function getNextKeyword()
     {
-        $validated = $request->validate([
-            'keyword' => 'required|string',
-            'title'   => 'required|string',
-            'content' => 'required',
-            'meta_description' => 'required',
-            'meta_keywords' => 'required',
-            'slug' => 'required',
-            'image_url' => 'required'
-        ]);
-        // $cleanContent = Purify::clean($request->input('content'));
+        // Ambil 1 keyword terlama yang masih pending
+        $keyword = Keyword::where('status', 'pending')
+            ->orderBy('created_at', 'asc')
+            ->first();
 
-        $article = Article::create([
-            'keyword' => $validated['keyword'],
-            'title'   => $validated['title'],
-            'content' => $validated['content'],
-            'meta_description' => $validated['meta_description'],
-            'meta_keywords' => $validated['meta_keywords'],
-            'slug' => $validated['slug'],
-            'image_url' => $validated['image_url']
+        if (!$keyword) {
+            return response()->json([
+                'status'  => 'empty',
+                'message' => 'Tidak ada keyword pending yang tersedia.'
+            ], 404);
+        }
+
+        // Tandai keyword sedang diproses
+        $keyword->update([
+            'status' => 'processing'
         ]);
 
         return response()->json([
             'status'  => 'success',
+            'data'    => [
+                'id'      => $keyword->id,
+                'keyword' => $keyword->keyword
+            ]
+        ], 200);
+    }
+    public function storeFromN8n(Request $request)
+    {
+        $validated = $request->validate([
+            'keyword_id'       => 'nullable|exists:keywords,id',
+            'keyword'          => 'required|string',
+            'title'            => 'required|string',
+            'content'          => 'required',
+            'meta_description' => 'required',
+            'meta_keywords'    => 'required',
+            'slug'             => 'required',
+            'image_url'        => 'required'
+        ]);
+
+        $article = Article::create([
+            'keyword'          => $validated['keyword'],
+            'title'            => $validated['title'],
+            'content'          => $validated['content'],
+            'meta_description' => $validated['meta_description'],
+            'meta_keywords'    => $validated['meta_keywords'],
+            'slug'             => $validated['slug'],
+            'image_url'        => $validated['image_url']
+        ]);
+
+        // Jika request membawa keyword_id, perbarui status keyword jadi completed
+        if (!empty($validated['keyword_id'])) {
+            Keyword::where('id', $validated['keyword_id'])->update([
+                'status'  => 'completed',
+                'used_at' => now()
+            ]);
+        }
+
+        return response()->json([
+            'status'  => 'success',
             'message' => 'Artikel berhasil disimpan ke Database Laravel',
-            'data'    => $article
         ], 201);
     }
     public function edit(Article $article)
