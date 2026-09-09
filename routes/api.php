@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/getloker', [LokerController::class, 'get_data']);
 Route::middleware([AksesByIpAddress::class])->group(function () {
     Route::get('/loker', [LokerController::class, 'index']);
     Route::get('/kelas', [KelasController::class, 'index']);

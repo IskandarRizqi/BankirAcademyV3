@@ -62,4 +62,21 @@ class LokerController extends Controller
 
         return response()->json($data);
     }
+    public function get_data(Request $request)
+    {
+        $query = LokerModel::where('status', 1);
+
+        // Filter pencarian opsional
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $loker = $query->latest()->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar lowongan kerja berhasil diambil',
+            'data'    => $loker
+        ], 200);
+    }
 }
