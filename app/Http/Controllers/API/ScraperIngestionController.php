@@ -34,6 +34,8 @@ class ScraperIngestionController extends Controller
         }
 
         $createdIds = [];
+        $skippedCount = 0;
+        $currentYear = (int) date('Y');
 
         foreach ($items as $data) {
             // Normalisasi Tanggal Posting & Batas Pendaftaran
@@ -41,7 +43,16 @@ class ScraperIngestionController extends Controller
                 $data['tanggal_posting'] = date('Y-m-d H:i:s', strtotime($data['tanggal_posting']));
             }
             if (!empty($data['batas_pendaftaran'])) {
-                $data['batas_pendaftaran'] = date('Y-m-d', strtotime($data['batas_pendaftaran']));
+                $deadlineTime = strtotime($data['batas_pendaftaran']);
+                $deadlineYear = (int) date('Y', $deadlineTime);
+
+                // Lewati data jika batas pendaftaran bukan tahun ini
+                if ($deadlineYear !== $currentYear) {
+                    $skippedCount++;
+                    continue;
+                }
+
+                $data['batas_pendaftaran'] = date('Y-m-d', $deadlineTime);
             }
 
             $draft = LokerDraft::create($data);
@@ -51,6 +62,7 @@ class ScraperIngestionController extends Controller
         return response()->json([
             'success' => true,
             'message' => count($createdIds) . ' data draft loker berhasil disimpan.',
+            'skipped_count' => $skippedCount,
             'draft_ids' => $createdIds
         ], 201);
     }
