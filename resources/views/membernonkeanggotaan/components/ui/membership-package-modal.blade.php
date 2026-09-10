@@ -502,7 +502,7 @@ $tipemembership = 1;
 								<li class="membership-package-card__note">Biaya Video Pembelajaran (On-Demand Video Course) <br> <strong>diskon s.d. 50%</strong></li>
 							</ul>
 						</div>
-						<form action="/payment-membership" method="post">
+                        <form action="{{ route('payment.membership') }}" method="post">
 							<input type="hidden" name="nominal" value="{{$nominal}}">
 							<input type="hidden" name="user_id" value="{{ $userid }}">
 							<input type="hidden" name="status_membership" value="{{$statuspaymentmembership}}">
@@ -512,7 +512,14 @@ $tipemembership = 1;
 							<input type="hidden" name="pembelian_tipe" value="{{$pembeliantipe}}">
 							<input type="hidden" name="membership_tipe" value="{{$tipemembership}}">
 							@csrf
-							<button type="submit" class="membership-package-card__action">Berlangganan sekarang</button>
+                            <div class="row no-gutters mt-auto">
+                                <div class="col-12 mb-2">
+                                    <button type="submit" name="payment_method" value="gateway" class="membership-package-card__action">Bayar via Virtual Account DOKU</button>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" name="payment_method" value="manual" class="membership-package-card__action membership-package-card__action--manual">Transfer Manual</button>
+                                </div>
+                            </div>
 						</form>
 					</article>
 				</div>

@@ -1,8 +1,9 @@
 @php
 $user = auth()->user();
 $membershipStatusValue = (int) optional(optional($user)->profile)->status_membership;
-$isPendingMember = $membershipStatusValue === 2;
+$membershipPayment = $membershipPayment ?? null;
 $isMember = $membershipStatusValue === 1;
+$isPendingMember = !$isMember && ($membershipStatusValue === 2 || ($membershipPayment && in_array((int) $membershipPayment->status, [2, 3, 98], true)));
 $membershipStatus = $isMember ? 'Member Aktif' : 'Belum Member';
 $membershipDescription = $isMember
 ? 'Akun Anda sudah memiliki akses membership. Lanjutkan pembelajaran dan manfaatkan fasilitas yang tersedia.'
@@ -10,7 +11,7 @@ $membershipDescription = $isMember
 @endphp
 
 @if($isPendingMember)
-	@include('membernonkeanggotaan.components.ui.membership-pending')
+	@include('membernonkeanggotaan.components.ui.membership-pending', ['membershipPayment' => $membershipPayment])
 @elseif($isMember)
 	@include('membernonkeanggotaan.components.ui.membership-active')
 @else

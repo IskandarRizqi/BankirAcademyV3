@@ -2,43 +2,38 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\BannerModel;
+use App\Models\ClassContentModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassPaymentModel;
 use App\Models\CorporateModel;
+use App\Models\DataPayment;
 use App\Models\DataRekeningModel;
 use App\Models\InstructorModel;
 use App\Models\InstructorReviewModel;
 use App\Models\KodePromoModel;
-use App\Models\MasterRefferralModel;
-use App\Models\RefferralModel;
-use App\Models\RefferralPesertaModel;
-use App\Models\User;
-use App\Models\UserProfileModel;
-use App\Services\PaymentExpiryService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
-use App\Helper\GlobalHelper;
-use App\Models\ClassContentModel;
-use App\Models\ClassParticipantModel;
-use App\Models\DataPayment;
-use App\Models\Dompet;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\MembershipModel;
 use App\Models\PrepotesModel;
+use App\Models\RefferralModel;
+use App\Models\RefferralPesertaModel;
 use App\Models\RefferralWithdrawModel;
 use App\Models\SertifikatPesertaModel;
+use App\Models\User;
+use App\Models\UserProfileModel;
+use App\Services\PaymentExpiryService;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -47,7 +42,7 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $r)
     {
@@ -158,6 +153,7 @@ class ProfileController extends Controller
         $data['lokertype'] = LokerModel::select('type')->distinct('type')->pluck('type')->toArray();
         $data['ismember'] = GlobalHelper::getaksesmembership();
         $data['member'] = MembershipModel::get();
+
         // return $data;
         return view('front.profile.profile', $data);
     }
@@ -175,20 +171,17 @@ class ProfileController extends Controller
 
         // 3. Statistik Akses Produk
         $totalClasses = $paidPayments->filter(
-            fn($p) =>
-            (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_CLASS
+            fn ($p) => (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_CLASS
                 || strtolower((string) $p->pembelian) === DataPayment::PURCHASE_CLASS
         )->count();
 
         $totalEbooks = $paidPayments->filter(
-            fn($p) =>
-            (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_EBOOK
+            fn ($p) => (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_EBOOK
                 || strtolower((string) $p->pembelian) === DataPayment::PURCHASE_EBOOK
         )->count();
 
         $totalVideos = $paidPayments->filter(
-            fn($p) =>
-            (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_VIDEO
+            fn ($p) => (int) $p->tipe_pembelian === DataPayment::PURCHASE_TYPE_VIDEO
                 || strtolower((string) $p->pembelian) === DataPayment::PURCHASE_VIDEO
         )->count();
 
@@ -196,8 +189,8 @@ class ProfileController extends Controller
         $paymentStats = [
             'lunas' => $paidPayments->count(),
             'pending' => $payments->where('status', DataPayment::STATUS_PENDING)->count(),
-            'menunggu' => $payments->where('status', 3)->count(),
-            'batal' => $payments->where('status', DataPayment::STATUS_CANCELED)->count(),
+            'menunggu' => $payments->where('status', DataPayment::STATUS_WAITING_CONFIRMATION)->count(),
+            'batal' => $payments->whereIn('status', [DataPayment::STATUS_CANCELED, DataPayment::STATUS_REJECTED])->count(),
         ];
 
         // 5. Riwayat Pembelian Terbaru (5 Transaksi)
@@ -206,12 +199,23 @@ class ProfileController extends Controller
             ->take(5)
             ->get();
 
+        $membershipPayment = DataPayment::where('user_id', $userId)
+            ->where('tipe_pembelian', DataPayment::PURCHASE_TYPE_MEMBERSHIP)
+            ->whereIn('status', [
+                DataPayment::STATUS_PENDING,
+                DataPayment::STATUS_WAITING_CONFIRMATION,
+                DataPayment::STATUS_REJECTED,
+            ])
+            ->latest('id')
+            ->first();
+
         return view('membernonkeanggotaan.pages.dashboard.dashboardnonkeanggotaan', compact(
             'totalClasses',
             'totalEbooks',
             'totalVideos',
             'paymentStats',
-            'recentPayments'
+            'recentPayments',
+            'membershipPayment'
         ));
     }
 
@@ -250,7 +254,7 @@ class ProfileController extends Controller
             ->orderBy('class_payment.updated_at', 'desc')
             ->get();
         foreach ($data['billingkelasall'] as $key => $value) {
-            if (!$value->file && $value->status == 0) {
+            if (! $value->file && $value->status == 0) {
                 $status = 'Menunggu Pembayaran';
             }
             if ($value->file && $value->status == 0) {
@@ -268,7 +272,7 @@ class ProfileController extends Controller
         return response()->json([
             'status' => 1,
             'msg' => 'Data Success',
-            'data' => $data
+            'data' => $data,
         ], 200);
     }
 
@@ -320,18 +324,19 @@ class ProfileController extends Controller
                 $v->narasumber = null;
             }
         }
+
         // return $data['sertifikat'];
         return response()->json([
             'status' => 1,
             'msg' => 'Data Success',
-            'data' => $data
+            'data' => $data,
         ], 200);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -343,9 +348,9 @@ class ProfileController extends Controller
         $pesan = 'Simpan data gagal';
         // $c = CorporateModel::where('nama', $data->nama_lengkap)->first();
         $c = CorporateModel::updateOrCreate([
-            'nama' => $data->nama_lengkap
+            'nama' => $data->nama_lengkap,
         ], [
-            'jenis' => $data->jenis_corporate
+            'jenis' => $data->jenis_corporate,
         ]);
         $insert = [
             'jenis_corporate' => $data->jenis_corporate,
@@ -365,14 +370,14 @@ class ProfileController extends Controller
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
 
-            $filename = time() . '-' . $name;
+            $filename = time().'-'.$name;
             $file = $data->file('picture');
             $file->move(public_path('Image/Member'), $filename);
             // $d['picture'] = json_encode(['url' => $filename, 'size' => $size]);
-            $insert['picture'] = 'Image/Member/' . $filename;
+            $insert['picture'] = 'Image/Member/'.$filename;
         }
         $p = UserProfileModel::updateOrCreate([
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
         ], $insert);
         if ($p) {
             User::where('id', Auth::user()->id)->update(['corporate' => json_encode($insert)]);
@@ -385,6 +390,7 @@ class ProfileController extends Controller
             // ]);
             $pesan = 'Simpan data berhasil';
         }
+
         return $pesan;
     }
 
@@ -393,6 +399,7 @@ class ProfileController extends Controller
         // return $request->all();
         if ($request->iscorporate) {
             $pesan = $this->saveCorporate($request);
+
             return Redirect::back()->with('success', $pesan);
         }
 
@@ -453,17 +460,17 @@ class ProfileController extends Controller
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
 
-            $filename = time() . '-' . $name;
+            $filename = time().'-'.$name;
             $file = $request->file('picture');
             $file->move(public_path('Image/Member'), $filename);
             // $d['picture'] = json_encode(['url' => $filename, 'size' => $size]);
-            $d['picture'] = 'Image/Member/' . $filename;
+            $d['picture'] = 'Image/Member/'.$filename;
         }
 
         // if ($request->company) {
         // }
         User::where('id', Auth::user()->id)->update([
-            'corporate' => 'perorangan'
+            'corporate' => 'perorangan',
         ]);
 
         UserProfileModel::updateOrCreate([
@@ -487,14 +494,15 @@ class ProfileController extends Controller
             return response()->json([
                 'status' => 1,
                 'msg' => 'Data Tersimpan',
-                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
+                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first(),
             ], 200);
         }
+
         return response()->json(
             [
                 'status' => 0,
                 'msg' => 'Data Tidak Tersimpan',
-                'data' => []
+                'data' => [],
             ],
             400
         );
@@ -518,15 +526,15 @@ class ProfileController extends Controller
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
 
-            $filename = time() . '-' . $name;
+            $filename = time().'-'.$name;
             $file = $r->file('gambar');
             $file->move(public_path('Image/Member'), $filename);
             // $d['profile_gambar'] = json_encode(['url' => $filename, 'size' => $size]);
-            $ins['picture'] = 'Image/Member/' . $filename;
+            $ins['picture'] = 'Image/Member/'.$filename;
         }
         if ($r->kode_referral) {
             $reff = RefferralPesertaModel::where('code', $r->kode_referral)->first();
-            if (!$reff) {
+            if (! $reff) {
                 // return response()->json(
                 //     [
                 //         'status' => 0,
@@ -562,19 +570,21 @@ class ProfileController extends Controller
                 'simpanreff' => $simpanreff,
                 'status' => 1,
                 'msg' => 'Data Tersimpan',
-                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
+                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first(),
             ], 200);
         }
+
         return response()->json(
             [
                 'simpanreff' => $simpanreff,
                 'status' => 0,
                 'msg' => 'Data Tidak Tersimpan',
-                'data' => []
+                'data' => [],
             ],
             400
         );
     }
+
     public function rekeningprofile(Request $r)
     {
         $ins = [
@@ -589,14 +599,15 @@ class ProfileController extends Controller
             return response()->json([
                 'status' => 1,
                 'msg' => 'Data Tersimpan',
-                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first()
+                'data' => UserProfileModel::where('user_id', Auth::user()->id)->first(),
             ], 200);
         }
+
         return response()->json(
             [
                 'status' => 0,
                 'msg' => 'Data Tidak Tersimpan',
-                'data' => []
+                'data' => [],
             ],
             400
         );
@@ -606,7 +617,7 @@ class ProfileController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -617,7 +628,7 @@ class ProfileController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -627,9 +638,8 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -640,7 +650,7 @@ class ProfileController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -655,9 +665,10 @@ class ProfileController extends Controller
             ->where('instructor_review.instructor_id', $id)
             ->where('instructor_review.status', 1)
             ->get();
+
         return view('front.profile.instructor', [
             'data' => $p,
-            'review' => $review
+            'review' => $review,
         ]);
     }
 
@@ -670,6 +681,7 @@ class ProfileController extends Controller
                 'review_msg' => $request->comment,
                 'review_val' => $request->nilai,
             ]);
+
             return Redirect::back()->with('success', 'Update Review Berhasil');
         }
         $r = InstructorReviewModel::create([
@@ -679,9 +691,10 @@ class ProfileController extends Controller
             'review_val' => $request->nilai,
             'status' => 0,
         ]);
-        if (!$r) {
+        if (! $r) {
             return view('front.profile.instructor')->with('error', 'Review Gagal Tersimpan');
         }
+
         return Redirect::back()->with('success', 'Review Berhasil Disimpan');
     }
 
@@ -692,38 +705,46 @@ class ProfileController extends Controller
             $status = 1;
         }
         $i = InstructorReviewModel::where('id', $request->id_review)->update([
-            'status' => $status
+            'status' => $status,
         ]);
-        if (!$i) {
+        if (! $i) {
             return Redirect::back()->with('error', 'Review Gagal Disimpan');
         }
+
         return Redirect::back()->with('success', 'Review Berhasil Disimpan');
     }
+
     public function review_instructor(Request $request)
     {
         $auth = Auth::user();
         $validasi = InstructorReviewModel::where('users_id', $auth->id)->where('instructor_id', $request->id_instructor)->get();
+
         return $validasi;
     }
+
     public function setKodePromo(Request $request)
     {
         $bp = BannerModel::where('jenis', 2)->where('kode', $request->kode)->where('mulai', '<', Carbon::now())->where('selesai', '>=', Carbon::now())->get();
-        $kp = KodePromoModel::where('kode', $request->kode)->where('class_title', 'like', '%"' . urldecode($request->id) . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
+        $kp = KodePromoModel::where('kode', $request->kode)->where('class_title', 'like', '%"'.urldecode($request->id).'"%')->where('tgl_selesai', '>=', Carbon::now())->get();
         // $kp = KodePromoModel::where('kode', $kode_promo)->where('class_title', 'like', '%"' . $title_kelas . '"%')->where('tgl_selesai', '>=', Carbon::now())->get();
         if (count($kp) > 0) {
             ClassPaymentModel::where('id', $request->idpayment)->update([
                 'kode_promo' => $request->kode,
             ]);
+
             return response()->json(['message' => 'Kode Promo Benar', 'status' => true]);
         }
         if (count($bp) > 0) {
             ClassPaymentModel::where('id', $request->idpayment)->update([
                 'kode_promo' => $request->kode,
             ]);
+
             return response()->json(['message' => 'Kode Benar', 'status' => true]);
         }
+
         return response()->json(['message' => 'Kupon Tidak Tersedia', 'status' => false]);
     }
+
     public function updatemember(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -746,17 +767,19 @@ class ProfileController extends Controller
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
 
-            $filename = $request->user_id . '-' . time() . '-' . preg_replace('/[^A-Za-z0-9\-]/', '-', $name) . '.' . $ext;
+            $filename = $request->user_id.'-'.time().'-'.preg_replace('/[^A-Za-z0-9\-]/', '-', $name).'.'.$ext;
             $file = $request->file('image_bukti_pembayaran');
             $file->move(public_path('Image/Member'), $filename);
-            $inp['image_bukti_pembayaran'] = 'Image/Member/' . $filename;
+            $inp['image_bukti_pembayaran'] = 'Image/Member/'.$filename;
         }
         $u = UserProfileModel::where('user_id', $request->user_id)->update($inp);
         if ($u) {
             return Redirect::back()->with('success', 'Update Akun Berhasil, Sedang Diproses Mohon Ditunggu');
         }
+
         return Redirect::back()->with('error', 'Update Akun Gagal Disimpan');
     }
+
     public function updaterekening(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -769,7 +792,7 @@ class ProfileController extends Controller
         }
 
         $u = DataRekeningModel::updateOrCreate([
-            'user_id' => $request->user_id
+            'user_id' => $request->user_id,
         ], [
             'nama_bank' => $request->nama_bank,
             'no_rekening' => $request->no_rekening,
@@ -777,8 +800,10 @@ class ProfileController extends Controller
         if ($u) {
             return Redirect::back()->with('success', 'Update Rekening Berhasil Disimpan');
         }
+
         return Redirect::back()->with('error', 'Update Rekening Gagal Disimpan');
     }
+
     public function datalamaran(Request $request)
     {
         $data = [];
@@ -793,16 +818,19 @@ class ProfileController extends Controller
         }
         // return $data;
         if ($request->cetak) {
-            if (!$data['data']) {
+            if (! $data['data']) {
                 return Redirect::back()->with('error', 'Data CV Tidak Tersedia');
             }
             $pdf = Pdf::loadView('front.loker.cetaklamaran', $data);
+
             return $pdf->stream();
             // return view('front.loker.cetaklamaran', $data);
         }
+
         return view('front.loker.datalamaran', $data);
     }
-    function simpanlamaran(Request $request)
+
+    public function simpanlamaran(Request $request)
     {
         // return $request->all();
         $validator = Validator::make($request->all(), [
@@ -835,7 +863,7 @@ class ProfileController extends Controller
         }
         // return $request->all();
         $dl = LamaranModel::updateOrCreate([
-            'id' => $request->id
+            'id' => $request->id,
         ], [
             'user_id' => Auth::user()->id,
             'nama_lengkap' => $request->nama_lengkap,
@@ -901,8 +929,10 @@ class ProfileController extends Controller
         if ($dl) {
             return Redirect::to('profile')->with('success', 'Data Tersimpan');
         }
+
         return Redirect::back()->withErrors($validator)->withInput($request->all());
     }
+
     public function simpancv(Request $request)
     {
         // return response()->json([
@@ -952,7 +982,7 @@ class ProfileController extends Controller
             'namakakeksuami' => $request->cvnenekistri ? $request->cvnenekistri : null,
             'namasuamiistricucu' => $request->cvistricucukandung ? $request->cvistricucukandung : null,
             'namasuamiistrisaudara' => $request->cvsaudaraistri ? $request->cvsaudaraistri : null,
-            // 
+            //
             'sdtahun' => $request->cvsdtahun ? $request->cvsdtahun : null,
             'sdnama' => $request->cvsdinstitusi ? $request->cvsdinstitusi : null,
             'sdfakultas' => $request->cvsdfakultas ? $request->cvsdfakultas : null,
@@ -1024,6 +1054,7 @@ class ProfileController extends Controller
                 'data' => $request->all(),
             ]);
         }
+
         return response()->json([
             'status' => false,
             'message' => 'Data Tidak Sesuai',

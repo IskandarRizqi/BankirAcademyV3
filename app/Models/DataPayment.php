@@ -13,12 +13,18 @@ class DataPayment extends Model
 
     public const STATUS_PENDING = 2;
 
+    public const STATUS_WAITING_CONFIRMATION = 3;
+
+    public const STATUS_REJECTED = 98;
+
     public const STATUS_CANCELED = 99;
 
     public const PURCHASE_MEMBERSHIP = 'membership';
 
     public const PURCHASE_CLASS = 'kelas';
+
     public const PURCHASE_EBOOK = 'ebook';
+
     public const PURCHASE_VIDEO = 'video';
 
     public const PURCHASE_TYPE_MEMBERSHIP = 1;
@@ -33,7 +39,9 @@ class DataPayment extends Model
     ];
 
     public const PURCHASE_TYPE_CLASS = 2;
+
     public const PURCHASE_TYPE_EBOOK = 3;
+
     public const PURCHASE_TYPE_VIDEO = 4;
 
     protected $table = 'datapayment';
@@ -51,6 +59,8 @@ class DataPayment extends Model
         'status',
         'keterangan',
         'link_payment',
+        'payment_method',
+        'rejection_reason',
         'tipe_pembelian',
         'tipe_membership',
         'is_konfirmasi',
@@ -170,6 +180,7 @@ class DataPayment extends Model
     {
         return $this->hasOne(ClassPaymentModel::class, 'no_invoice', 'no_invoice');
     }
+
     public function riwayatTransaksi()
     {
         return $this->belongsTo(RiwayatTransaksi::class, 'no_invoice', 'no_invoice');

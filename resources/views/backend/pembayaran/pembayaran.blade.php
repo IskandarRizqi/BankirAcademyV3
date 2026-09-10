@@ -53,6 +53,13 @@
                                     <label class="custom-control-label small text-secondary font-weight-bold"
                                         for="checkLunas">Lunas</label>
                                 </div>
+                                <div class="custom-control custom-checkbox ml-4">
+                                    <input type="checkbox" class="custom-control-input" id="checkDitolak"
+                                        name="param_checked_lunas[]" value="98"
+                                        {{ in_array(98, $param['status']) ? 'checked' : '' }}>
+                                    <label class="custom-control-label small text-secondary font-weight-bold"
+                                        for="checkDitolak">Ditolak</label>
+                                </div>
                             </div>
                         </div>
 
@@ -124,6 +131,8 @@
                                         : (!empty($linkPayment) && !$isExternalUrl
                                             ? asset('storage/' . $linkPayment)
                                             : null);
+                                    $isManualPayment = $p->payment_method === 'manual' || !$isExternalUrl;
+                                    $isMembership = (int) $p->tipe_pembelian === \App\Models\DataPayment::PURCHASE_TYPE_MEMBERSHIP;
                                 @endphp
                                 <tr>
                                     <td class="pl-4 font-weight-bold align-middle">{{ $key + 1 }}</td>
@@ -133,9 +142,15 @@
                                         @if ($p->status == 1)
                                             <span class="badge badge-soft-success px-2 py-1 font-weight-bold"><i
                                                     class="bx bx-check-circle mr-1"></i>Lunas</span>
-                                        @elseif ($p->file && $p->status == 0)
+                                        @elseif ($p->status == \App\Models\DataPayment::STATUS_WAITING_CONFIRMATION)
+                                             <span class="badge badge-soft-warning px-2 py-1 font-weight-bold"><i
+                                                     class="bx bx-time-five mr-1"></i>Menunggu Konfirmasi</span>
+                                        @elseif ($p->status == \App\Models\DataPayment::STATUS_REJECTED)
+                                            <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
+                                                    class="bx bx-error-circle mr-1"></i>Ditolak</span>
+                                        @elseif ($p->status == \App\Models\DataPayment::STATUS_PENDING)
                                             <span class="badge badge-soft-warning px-2 py-1 font-weight-bold"><i
-                                                    class="bx bx-time-five mr-1"></i>Diproses</span>
+                                                    class="bx bx-time-five mr-1"></i>Pending</span>
                                         @else
                                             <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
                                                     class="bx bx-x-circle mr-1"></i>Belum Lunas</span>
@@ -147,7 +162,7 @@
                                     {{-- Skema / Metode Pembayaran --}}
                                     <td class="align-middle">
                                         {{-- Payment Gateway HANYA jika link_payment bernilai URL eksternal valid --}}
-                                        @if ($isExternalUrl)
+                                        @if (!$isManualPayment)
                                             <span class="badge badge-soft-primary"><i
                                                     class="bx bx-credit-card mr-1"></i>Payment Gateway</span>
                                         @else
@@ -238,7 +253,7 @@
                                                     onclick="approved('{{ $p->no_invoice }}',{{ $p->status }})">
                                                     <i class='bx bx-x-circle font-size-16'></i>
                                                 </button>
-                                            @else
+                                            @elseif (!$isManualPayment)
                                                 {{-- Set Lunas --}}
                                                 <button class="btn btn-sm btn-light border-0 text-success bs-tooltip"
                                                     title="Set Lunas"
@@ -248,11 +263,24 @@
                                             @endif
 
                                             {{-- Edit Bukti Transfer (Ditampilkan untuk SEMUA transaksi Transfer Manual / yang BUKAN Payment Gateway) --}}
-                                            @if (!$isExternalUrl)
+                                            @if ($isManualPayment && $p->file)
                                                 <button class="btn btn-sm btn-light border-0 text-primary bs-tooltip"
                                                     title="Edit Bukti Transfer"
                                                     onclick="updatebukti('{{ json_encode($p) }}')">
                                                     <i class='bx bx-edit-alt font-size-16'></i>
+                                                </button>
+                                            @endif
+
+                                            @if ($isManualPayment && $p->status == \App\Models\DataPayment::STATUS_WAITING_CONFIRMATION)
+                                                <button class="btn btn-sm btn-light border-0 text-success bs-tooltip"
+                                                    title="Setujui pembayaran"
+                                                    onclick="approved('{{ $p->no_invoice }}',{{ $p->status }})">
+                                                    <i class='bx bx-check-circle font-size-16'></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-light border-0 text-danger bs-tooltip"
+                                                    title="Tolak bukti pembayaran"
+                                                    onclick="rejectPayment('{{ $p->no_invoice }}')">
+                                                    <i class='bx bx-x-circle font-size-16'></i>
                                                 </button>
                                             @endif
                                         </div>
@@ -267,6 +295,29 @@
                         <input type="text" name="id" id="id" hidden>
                         <input type="text" name="certificate" id="certificate" hidden>
                         <input type="text" name="status" id="status" hidden>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="rejectPaymentModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                    <form action="/admin/pembayaran/reject" method="POST">
+                        @csrf
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title font-weight-bold">Tolak Bukti Pembayaran</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="rejectPaymentId">
+                            <label for="rejectionReason" class="font-weight-bold small">Alasan penolakan</label>
+                            <textarea class="form-control" name="rejection_reason" id="rejectionReason" rows="4" maxlength="1000" required placeholder="Contoh: Bukti transfer tidak terbaca atau nominal tidak sesuai."></textarea>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Tolak Pembayaran</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -340,6 +391,12 @@
             } else {
                 $('#output').attr('src', '');
             }
+        }
+
+        function rejectPayment(invoice) {
+            $('#rejectPaymentId').val(invoice);
+            $('#rejectionReason').val('');
+            $('#rejectPaymentModal').modal('show');
         }
 
         function approved(id, status) {

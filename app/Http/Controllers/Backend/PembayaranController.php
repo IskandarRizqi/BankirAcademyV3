@@ -6,18 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\DataPayment;
-use App\Models\Dompet;
-use App\Models\MasterRefferralModel;
-use App\Models\MutasiDompet;
-use App\Models\RefferralModel;
 use App\Models\RiwayatTransaksi;
 use App\Models\UserProfileModel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use App\Services\MembershipPaymentService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 
 class PembayaranController extends Controller
@@ -26,33 +23,34 @@ class PembayaranController extends Controller
     {
         // 1. Inisialisasi parameter filter default
         $startDate = $r->param_date_start ?? Carbon::now()->subMonths(3)->format('Y-m-d');
-        $endDate   = $r->param_date_end ?? Carbon::now()->format('Y-m-d');
+        $endDate = $r->param_date_end ?? Carbon::now()->format('Y-m-d');
 
         // Status default: [0, 1] (0: Belum Lunas, 1: Lunas)
-        $status    = $r->has('param_checked_lunas') ? (array) $r->param_checked_lunas : [0, 1, 2, 3];
+        $status = $r->has('param_checked_lunas') ? (array) $r->param_checked_lunas : [0, 1, 2, 3, 98, 99];
 
         $data['param'] = [
-            'date'   => [$startDate, $endDate],
+            'date' => [$startDate, $endDate],
             'status' => array_map('intval', $status),
         ];
 
         // 2. Query DataPayment dengan filter dan relasi (Hapus relasi profile yang error)
         $query = DataPayment::with([
-            // 'user',
+            'user',
             'paymentClass',
-            'classPayment'
+            'classPayment',
+            'riwayatTransaksi',
         ]);
 
         // Filter berdasarkan rentang tanggal
-        if (!empty($startDate) && !empty($endDate)) {
+        if (! empty($startDate) && ! empty($endDate)) {
             $query->whereBetween('created_at', [
                 Carbon::parse($startDate)->startOfDay(),
-                Carbon::parse($endDate)->endOfDay()
+                Carbon::parse($endDate)->endOfDay(),
             ]);
         }
 
         // Filter berdasarkan status
-        if (!empty($status)) {
+        if (! empty($status)) {
             $query->whereIn('status', $status);
         }
 
@@ -65,18 +63,29 @@ class PembayaranController extends Controller
 
             // Ambil detail dari relasi kelas jika ada
             if ($item->paymentClass) {
-                $item->title      = $item->paymentClass->title;
+                $item->title = $item->paymentClass->title;
                 $item->date_start = $item->paymentClass->date_start;
-                $item->date_end   = $item->paymentClass->date_end;
-                $item->category   = $item->paymentClass->category;
+                $item->date_end = $item->paymentClass->date_end;
+                $item->category = $item->paymentClass->category;
             }
 
             // Ambil detail dari ClassPaymentModel jika ada
             if ($item->classPayment) {
-                $item->certificate    = $item->classPayment->certificate ?? 0;
-                $item->sudah_cetak    = $item->classPayment->sudah_cetak ?? 0;
+                $item->certificate = $item->classPayment->certificate ?? 0;
+                $item->sudah_cetak = $item->classPayment->sudah_cetak ?? 0;
                 $item->bukti_transfer = $item->classPayment->bukti_transfer ?? null;
-                $item->file           = $item->classPayment->bukti_transfer ?? null;
+                $item->file = $item->classPayment->file ?? $item->classPayment->bukti_transfer ?? null;
+            }
+
+            if (! $item->file && $item->link_payment && ! filter_var($item->link_payment, FILTER_VALIDATE_URL)) {
+                $item->file = $item->link_payment;
+            }
+
+            if ((int) $item->tipe_pembelian === DataPayment::PURCHASE_TYPE_MEMBERSHIP) {
+                $item->title = $item->tipe_membership === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
+                    ? 'Membership Perorangan'
+                    : 'Membership Perusahaan';
+                $item->category = 'Membership';
             }
 
             return $item;
@@ -93,8 +102,10 @@ class PembayaranController extends Controller
         if ($cs) {
             return Redirect::back()->with(['success' => 'Pembayaran Berhasil']);
         }
+
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $cs]);
     }
+
     public function setsudahcetak(Request $request)
     {
         $certificate = $request->certificate == 1 ? 0 : 1;
@@ -102,19 +113,35 @@ class PembayaranController extends Controller
         if ($cs) {
             return Redirect::back()->with(['success' => 'Set Status Cetak Berhasil']);
         }
+
         return Redirect::back()->with(['error' => 'Set Status Cetak Gagal', 'msg' => $cs]);
     }
+
     public function approved(Request $request)
     {
+        $payments = DataPayment::where('no_invoice', $request->id)->first();
+        if (! $payments) {
+            return Redirect::back()->with(['error' => 'Data Pembayaran Tidak Ditemukan']);
+        }
+
+        if ((int) $payments->tipe_pembelian === DataPayment::PURCHASE_TYPE_MEMBERSHIP) {
+            if ((int) $request->status === DataPayment::STATUS_PAID) {
+                return $this->cancelMembershipPayment($payments);
+            }
+
+            return $this->approveMembershipPayment($payments);
+        }
+
         // 1. Tentukan status (0 = Batal, 1 = Sukses)
         $status = $request->status == 1 ? 99 : 1;
-        $msg = $request->status ? 'Pembatalan Berhasil' : 'Pembayaran Berhasil';
+        $msg = (int) $request->status === DataPayment::STATUS_PAID
+            ? 'Pembatalan Berhasil'
+            : 'Pembayaran Berhasil';
 
         // Ambil data pembayaran berdasarkan no_invoice sebelum di-update
-        $payments = DataPayment::where('no_invoice', $request->id)->first();
         // return $payments;
         $transaksi = RiwayatTransaksi::where('no_invoice', $request->id)->first();
-        if (!$payments) {
+        if (! $payments) {
             return Redirect::back()->with(['error' => 'Data Pembayaran Tidak Ditemukan']);
         }
 
@@ -138,13 +165,13 @@ class PembayaranController extends Controller
             } else {
                 DB::table('history_pelatihan')->insertOrIgnore([
                     'user_id' => $payments['user_id'],
-                    'sub_materi_id' => $payments['submateri_id']
+                    'sub_materi_id' => $payments['submateri_id'],
                 ]);
             }
         }
         if ($payments->class_id) {
             $classStatus = $request->status == 1 ? 0 : 1;
-            ClassPaymentModel::where('no_invoice', $request->id)->update(['status' =>  $classStatus]);
+            ClassPaymentModel::where('no_invoice', $request->id)->update(['status' => $classStatus]);
         }
 
         if ($isUpdated) {
@@ -153,6 +180,81 @@ class PembayaranController extends Controller
 
         return Redirect::back()->with(['error' => 'Pembayaran Gagal', 'msg' => $isUpdated]);
     }
+
+    public function reject(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => ['required', 'string'],
+            'rejection_reason' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $payment = DataPayment::where('no_invoice', $validated['id'])->first();
+        if (! $payment) {
+            return Redirect::back()->with('error', 'Data Pembayaran Tidak Ditemukan');
+        }
+
+        $isManual = $payment->payment_method === 'manual'
+            || ($payment->payment_method === null && ! filter_var($payment->link_payment, FILTER_VALIDATE_URL));
+
+        if (! $isManual || (int) $payment->status !== DataPayment::STATUS_WAITING_CONFIRMATION) {
+            return Redirect::back()->with('error', 'Pembayaran ini belum dapat ditolak.');
+        }
+
+        DB::transaction(function () use ($payment, $validated) {
+            $lockedPayment = DataPayment::whereKey($payment->id)->lockForUpdate()->first();
+            if (! $lockedPayment || (int) $lockedPayment->status !== DataPayment::STATUS_WAITING_CONFIRMATION) {
+                return;
+            }
+
+            $lockedPayment->update([
+                'status' => DataPayment::STATUS_REJECTED,
+                'rejection_reason' => $validated['rejection_reason'],
+            ]);
+
+            RiwayatTransaksi::where('no_invoice', $lockedPayment->no_invoice)
+                ->update(['status' => 'FAILED', 'keterangan' => $validated['rejection_reason']]);
+
+            if ((int) $lockedPayment->tipe_pembelian === DataPayment::PURCHASE_TYPE_MEMBERSHIP) {
+                UserProfileModel::where('user_id', $lockedPayment->user_id)
+                    ->where('status_membership', DataPayment::STATUS_PENDING)
+                    ->update(['status_membership' => 0]);
+            }
+        });
+
+        return Redirect::back()->with('success', 'Bukti pembayaran berhasil ditolak.');
+    }
+
+    private function approveMembershipPayment(DataPayment $payment)
+    {
+        $isManual = $payment->payment_method === 'manual'
+            || ($payment->payment_method === null && ! filter_var($payment->link_payment, FILTER_VALIDATE_URL));
+
+        if (! $isManual || (int) $payment->status !== DataPayment::STATUS_WAITING_CONFIRMATION || blank($payment->link_payment)) {
+            return Redirect::back()->with('error', 'Membership hanya dapat disetujui setelah bukti transfer diunggah.');
+        }
+
+        DB::transaction(function () use ($payment) {
+            $lockedPayment = DataPayment::whereKey($payment->id)->lockForUpdate()->firstOrFail();
+            app(MembershipPaymentService::class)->activate($lockedPayment);
+        });
+
+        return Redirect::back()->with('success', 'Pembayaran membership disetujui dan membership user diaktifkan.');
+    }
+
+    private function cancelMembershipPayment(DataPayment $payment)
+    {
+        DB::transaction(function () use ($payment) {
+            $lockedPayment = DataPayment::whereKey($payment->id)->lockForUpdate()->firstOrFail();
+            $lockedPayment->update(['status' => DataPayment::STATUS_CANCELED]);
+
+            UserProfileModel::where('user_id', $lockedPayment->user_id)
+                ->where('status_membership', DataPayment::STATUS_PAID)
+                ->update(['status_membership' => 0]);
+        });
+
+        return Redirect::back()->with('success', 'Membership berhasil dibatalkan.');
+    }
+
     public function update_bukti(Request $request)
     {
         if ($request->foto) {
@@ -160,15 +262,18 @@ class PembayaranController extends Controller
             if (($size / 1024) > 100) {
                 return Redirect::back()->with('error', 'Size Maximum 100kb');
             }
-            $gambar = $request->foto->store('order/' . Auth::user()->email . '/' . time());
+            $gambar = $request->foto->store('order/'.Auth::user()->email.'/'.time());
 
             ClassPaymentModel::where('id', $request->idpembayaran)->update([
-                'file' => $gambar
+                'file' => $gambar,
             ]);
+
             return Redirect::back()->with('success', 'Update Berhasil');
         }
     }
+
     protected $privateKey = 'kiBIA-pMNd6-DbD2T-6Z7Sf-YvTrK';
+
     // api key : uQoS9OhaPOZF90d55su5eObbHUbuYBuoXq6fjhu0
     public function tripaycreate(Request $request)
     {
@@ -184,7 +289,7 @@ class PembayaranController extends Controller
             ]);
         }
 
-        if ('payment_status' !== (string) $request->server('HTTP_X_CALLBACK_EVENT')) {
+        if ((string) $request->server('HTTP_X_CALLBACK_EVENT') !== 'payment_status') {
             return Response::json([
                 'success' => false,
                 'message' => 'Unrecognized callback event, no action was taken',
@@ -193,7 +298,7 @@ class PembayaranController extends Controller
 
         $data = json_decode($json);
 
-        if (JSON_ERROR_NONE !== json_last_error()) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             return Response::json([
                 'success' => false,
                 'message' => 'Invalid data sent by tripay',
@@ -203,6 +308,7 @@ class PembayaranController extends Controller
         $invoiceId = $data->merchant_ref;
         $tripayReference = $data->reference;
         $status = strtoupper((string) $data->status);
+
         return Response::json(['success' => $data ? true : false, 'message' => $data]);
 
         // if ($data->is_closed_payment === 1) {
@@ -241,12 +347,13 @@ class PembayaranController extends Controller
         //     return Response::json(['success' => true]);
         // }
     }
+
     public function tripayppob(Request $request)
     {
         $secret = '3gbDwrtTuAku95lExw3nvTUXPVqPBv1z';
         $incomingSecret = $request->server('HTTP_X_CALLBACK_SECRET') ?: '';
 
-        if (!hash_equals($secret, $incomingSecret)) {
+        if (! hash_equals($secret, $incomingSecret)) {
             throw new Exception('Invalid Secret');
         }
 
@@ -270,7 +377,7 @@ class PembayaranController extends Controller
                 $status = 'failed';
                 break;
             default:
-                $status = "pending";
+                $status = 'pending';
                 break;
         }
 

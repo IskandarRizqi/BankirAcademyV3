@@ -13,7 +13,9 @@
     <div class="row member-dashboard-grid" id="cancel-row">
         {{-- Card 1: Membership Status (Sesuai Komponen Asli Anda) --}}
         <div class="col-lg-6 col-12 layout-top-spacing layout-spacing dashboard-card-column">
-            @include('membernonkeanggotaan.components.ui.membership-status')
+            @include('membernonkeanggotaan.components.ui.membership-status', [
+                'membershipPayment' => $membershipPayment ?? null,
+            ])
         </div>
 
         {{-- Card 2: Ringkasan Akses Produk --}}

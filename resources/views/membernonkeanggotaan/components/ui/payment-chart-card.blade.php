@@ -78,7 +78,7 @@
                     {{ $stats['menunggu'] }},
                     {{ $stats['batal'] }}
                 ],
-                labels: ['Lunas', 'Pending', 'Konfirmasi Admin', 'Batal'],
+                 labels: ['Lunas', 'Pending', 'Konfirmasi Admin', 'Batal/Ditolak'],
                 colors: ['#10B981', '#F59E0B', '#4F46E5', '#EF4444'],
                 legend: {
                     position: 'bottom',

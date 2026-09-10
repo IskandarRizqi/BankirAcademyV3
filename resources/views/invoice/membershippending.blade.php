@@ -1,13 +1,19 @@
 @php
-    $membershipPayment = \App\Models\DataPayment::where('user_id', Auth::id())
-        ->where('tipe_pembelian', \App\Models\DataPayment::PURCHASE_TYPE_MEMBERSHIP)
-        ->latest('id')
-        ->first();
+    $membershipPayment = $payment ?? null;
+    $isPaidInvoice = $isPaidInvoice ?? false;
 
     $invoiceNumber = $membershipPayment->no_invoice ?? '-';
     $invoiceDate = optional($membershipPayment?->created_at)->format('d-m-Y') ?? Carbon\Carbon::now()->format('d-m-Y');
-    $grandTotal = (float) ($membershipPayment->nominal ?? 3000000);
-    $formattedGrandTotal = substr(numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY), $grandTotal, 'IDR'), 0, -3);
+    $grandTotal = (float) ($membershipPayment->nominal ?? 0);
+    $membershipLabel =
+        (int) ($membershipPayment->tipe_membership ?? 0) === \App\Models\DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
+            ? 'Membership Perorangan'
+            : 'Membership Perusahaan';
+    $formattedGrandTotal = substr(
+        numfmt_format_currency(numfmt_create('id_ID', \NumberFormatter::CURRENCY), $grandTotal, 'IDR'),
+        0,
+        -3,
+    );
     $terbilangGrandTotal = Terbilang::make($grandTotal, '', 'Rp. ');
 @endphp
 
@@ -18,7 +24,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Membership</title>
+    <title>{{ $isPaidInvoice ? 'Invoice Membership Lunas' : 'Invoice Membership Pending' }}</title>
     <style>
         body {
             font-size: 12px;
@@ -263,7 +269,7 @@
             margin-bottom: 20px;
         }
 
-        .invoice table::after {
+        .invoice table.is-paid::after {
             content: "";
             background: url('lunas-watermark-03.png');
             top: 280px;
@@ -497,8 +503,8 @@
                             <div class="email"><a href="mailto:">{{ Auth::user()->email }}</a></div>
                             <small>({{ $profile->phone_region ?? '-' }}){{ $profile->phone ?? '-' }}</small>
                             <br>
-                            @if(!empty($profile->description))
-                            <small>{{ \Illuminate\Support\Str::limit($profile->description, 100) }}</small>
+                            @if (!empty($profile->description))
+                                <small>{{ \Illuminate\Support\Str::limit($profile->description, 100) }}</small>
                             @endif
                         </div>
                     </div>
@@ -512,7 +518,7 @@
                     </div>
                 </div>
                 <br><br><br><br><br><br><br>
-                <table>
+                <table class="{{ $isPaidInvoice ? 'is-paid' : '' }}">
                     <thead>
                         <tr>
                             <th width='5%' class="text-left">NO.</th>
@@ -527,7 +533,7 @@
                             <td>1</td>
                             <th class="text-left"
                                 style="word-wrap: break-word; overflow: wrap; white-space: unset !important; max-width: 300px;">
-                                Membership Bankir Academy
+                                {{ $membershipLabel }}
                             </th>
                             <td class="unit">{{ $formattedGrandTotal }}</td>
                             <td class="unit">1</td>
@@ -542,6 +548,9 @@
                 </div>
                 <div class="notices">
                     <div>Informasi:</div>
+                    @if ($isPaidInvoice)
+                        <div class="notice">Status Pembayaran : LUNAS</div>
+                    @endif
                     <div class="notice">
                         Bank : BCA || No.Rekening : 8035559091 || Atas Nama
                         : PT. Bankir Academy Indonesia

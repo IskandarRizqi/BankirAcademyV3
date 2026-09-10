@@ -7,6 +7,7 @@
 		'semua' => 'Semua',
 		'berhasil' => 'Lunas',
 		'menunggu' => 'Menunggu',
+		'ditolak' => 'Ditolak',
 		'dibatalkan' => 'Batal/Dibatalkan',
 	];
 @endphp

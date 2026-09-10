@@ -105,6 +105,9 @@
                     <i class="fas fa-list text-primary mr-2"></i> Daftar Artikel Tersimpan
                 </h5>
                 <div>
+                    <a href="/keywords" class="btn btn-sm btn-success font-weight-bold shadow-sm mr-2">
+                        <i class="fas fa-key mr-1"></i> Data Keyword
+                    </a>
                     <a href="{{ route('articles.exportAllPdf') }}"
                         class="btn btn-sm btn-danger font-weight-bold shadow-sm mr-2">
                         <i class="fas fa-file-pdf mr-1"></i> Export All PDF

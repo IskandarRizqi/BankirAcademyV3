@@ -635,13 +635,16 @@
                     element.classList.remove('is-success', 'is-danger', 'is-warning');
 
                     if (element.dataset.status !== pendingStatus && element.dataset.status != 3) {
-                        element.textContent = element.dataset.status === '1' ? 'Lunas' : 'Batal/Dibatalkan';
+                        element.textContent = element.dataset.status === '1'
+                            ? 'Lunas'
+                            : (element.dataset.status === '98' ? 'Bukti Ditolak' : 'Batal/Dibatalkan');
                         element.classList.add(element.dataset.status === '1' ? 'is-success' : 'is-danger');
                         return;
                     }
                     if (element.dataset.status == 3) {
-
                         element.textContent = 'Menunggu Konfirmasi';
+                        element.classList.add('is-warning');
+                        return;
                     }
 
                     const expiresAt = new Date(element.dataset.expiresAt).getTime();

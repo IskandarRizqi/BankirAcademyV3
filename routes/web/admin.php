@@ -3,8 +3,8 @@
 use App\Http\Controllers\Admin\ClassesController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\InstructorController as AdminInstructorController;
-use App\Http\Controllers\Admin\LokerController as AdminLokerController;
 use App\Http\Controllers\Admin\LokerApplicationController;
+use App\Http\Controllers\Admin\LokerController as AdminLokerController;
 use App\Http\Controllers\Admin\LokerDraftController;
 use App\Http\Controllers\Admin\ManualClassOrderController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
@@ -72,6 +72,7 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::patch('/scraper-keys/{apiKey}/toggle', [ScraperApiKeyController::class, 'toggleStatus'])->name('scraper-keys.toggle');
     Route::delete('/scraper-keys/{apiKey}', [ScraperApiKeyController::class, 'destroy'])->name('scraper-keys.destroy');
     Route::post('/admin/pembayaran/approved', [AdminPaymentController::class, 'approved'])->middleware('admin.panel');
+    Route::post('/admin/pembayaran/reject', [AdminPaymentController::class, 'reject'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/certificate', [AdminPaymentController::class, 'publish_certificate'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/setsudahcetak', [AdminPaymentController::class, 'setsudahcetak'])->middleware('admin.panel');
     Route::post('/admin/pembayaran/updatebukti', [AdminPaymentController::class, 'update_bukti'])->middleware('admin.panel');
@@ -102,7 +103,6 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::delete('/admin/order-kelas-manual/{id}', [ManualClassOrderController::class, 'destroy'])
         ->middleware('admin.panel')
         ->name('admin.manual-class-orders.destroy');
-
 
     Route::get('/admin/loker', [AdminLokerController::class, 'index_admin'])
         ->middleware('admin.panel')

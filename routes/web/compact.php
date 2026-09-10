@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\ClassesController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Backend\PrepotestController;
 use App\Http\Controllers\Backend\WithdrawController;
 use App\Http\Controllers\Beasiswa\CertificateController;
@@ -121,6 +121,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/pelatihan/belajar/{materi_id}/{sub_materi_id?}', [SiswaMateriController::class, 'belajar'])->name('siswa.materi.belajar');
     });
 
-    Route::post('/payment-membership', [PaymentController::class, 'paymentmembership']);
+    Route::post('/payment-membership', [PaymentController::class, 'paymentmembership'])->name('payment.membership');
     Route::post('/payment-order-class', [PaymentController::class, 'paymentorderclass']);
 });

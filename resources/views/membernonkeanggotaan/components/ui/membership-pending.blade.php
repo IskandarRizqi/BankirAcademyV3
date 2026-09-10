@@ -1,3 +1,13 @@
+@php
+    $membershipPayment = $membershipPayment ?? null;
+    $membershipPaymentStatus = (int) data_get($membershipPayment, 'status', 2);
+    $isManualPayment = data_get($membershipPayment, 'payment_method') === 'manual'
+        || ($membershipPayment && !filter_var($membershipPayment->link_payment, FILTER_VALIDATE_URL));
+    $isRejectedPayment = $membershipPaymentStatus === \App\Models\DataPayment::STATUS_REJECTED;
+    $hasProof = $membershipPayment && $membershipPayment->link_payment
+        && !filter_var($membershipPayment->link_payment, FILTER_VALIDATE_URL);
+@endphp
+
 @once
 <style>
 	.membership-pending-card {
@@ -87,14 +97,52 @@
 	}
 
 	.membership-pending-card__actions {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		display: flex;
+		flex-direction: column;
 		gap: 10px;
 	}
 
 	.membership-pending-card__actions form {
 		margin: 0;
 		width: 100%;
+	}
+
+	.membership-pending-card__upload {
+		padding: 12px;
+		border: 1px solid #e5e7eb;
+		border-radius: 10px;
+		background: #f9fafb;
+	}
+
+	.membership-pending-card__upload label {
+		display: block;
+		margin-bottom: 6px;
+		color: #4b5563;
+		font-size: 12px;
+		font-weight: 800;
+	}
+
+	.membership-pending-card__upload input {
+		width: 100%;
+		font-size: 12px;
+	}
+
+	.membership-pending-card__reason {
+		padding: 10px 12px;
+		border-radius: 8px;
+		background: #fef2f2;
+		color: #991b1b;
+		font-size: 12px;
+		line-height: 1.5;
+	}
+
+	.membership-pending-card__bank {
+		padding: 10px 12px;
+		border-radius: 8px;
+		background: #fffbeb;
+		color: #92400e;
+		font-size: 12px;
+		line-height: 1.5;
 	}
 
 	.membership-pending-card__actions .membership-pending-card__cancel {
@@ -126,9 +174,6 @@
 			width: 100%;
 		}
 
-		.membership-pending-card__actions {
-			grid-template-columns: 1fr;
-		}
 	}
 </style>
 @endonce
@@ -148,17 +193,43 @@
 			</span>
 		</div>
 
-		<p class="membership-pending-card__description mt-3">Pembayaran membership Anda sedang diproses oleh sistem. Status membership akan diperbarui secara otomatis setelah pembayaran berhasil.</p>
+		@if ($isRejectedPayment)
+			<p class="membership-pending-card__description mt-3">Bukti transfer membership Anda ditolak oleh admin. Periksa alasan penolakan, lalu upload bukti yang benar.</p>
+			@if (filled(data_get($membershipPayment, 'rejection_reason')))
+				<div class="membership-pending-card__reason mt-3"><strong>Alasan:</strong> {{ $membershipPayment->rejection_reason }}</div>
+			@endif
+		@elseif ($isManualPayment && $membershipPaymentStatus === \App\Models\DataPayment::STATUS_WAITING_CONFIRMATION)
+			<p class="membership-pending-card__description mt-3">Bukti transfer membership Anda sudah diterima dan sedang diverifikasi admin.</p>
+		@elseif ($isManualPayment)
+			<p class="membership-pending-card__description mt-3">Silakan transfer sesuai nominal ke rekening resmi kami, lalu upload bukti transfer untuk diproses admin.</p>
+		@else
+			<p class="membership-pending-card__description mt-3">Pembayaran membership Anda sedang diproses oleh sistem. Status membership akan diperbarui secara otomatis setelah pembayaran berhasil.</p>
+		@endif
+		@if ($isManualPayment)
+			<div class="membership-pending-card__bank mt-3"><strong>Bank BCA</strong><br>803 555 9091<br>a.n. PT. Bankir Academy Indonesia</div>
+		@endif
 	</div>
 
 	<div class="membership-pending-card__actions">
-		<form method="POST" action="{{ route('membernonanggota.membership.continue-payment') }}">
-			@csrf
-			<button type="submit" class="membership-pending-card__cancel membership-pending-card__continue">Lanjutkan Pembayaran</button>
-		</form>
+		@if ($isManualPayment && $membershipPayment)
+			<form method="POST" action="{{ route('pembayaran.upload-bukti', $membershipPayment->id) }}" enctype="multipart/form-data" class="membership-pending-card__upload">
+				@csrf
+				<label for="membership-proof">{{ $isRejectedPayment || $hasProof ? 'Upload Ulang Bukti Transfer' : 'Upload Bukti Transfer' }}</label>
+				<input id="membership-proof" type="file" name="link_payment" accept="image/jpeg,image/png" required>
+				<button type="submit" class="membership-pending-card__cancel membership-pending-card__continue mt-2">{{ $isRejectedPayment || $hasProof ? 'Kirim Bukti Baru' : 'Kirim Bukti Transfer' }}</button>
+			</form>
+		@elseif ($membershipPayment && filled($membershipPayment->link_payment))
+			<form method="POST" action="{{ route('membernonanggota.membership.continue-payment') }}">
+				@csrf
+				<button type="submit" class="membership-pending-card__cancel membership-pending-card__continue">Lanjutkan Pembayaran</button>
+			</form>
+		@endif
 
 		<form method="POST" action="{{ route('membernonanggota.membership.cancel') }}" class="js-cancel-membership-form">
 			@csrf
+			@if ($membershipPayment)
+				<input type="hidden" name="payment_id" value="{{ $membershipPayment->id }}">
+			@endif
 			<button type="submit" class="membership-pending-card__cancel">Batal Order Membership</button>
 		</form>
 	</div>

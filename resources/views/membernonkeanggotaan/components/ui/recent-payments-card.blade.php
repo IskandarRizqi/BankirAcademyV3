@@ -133,9 +133,12 @@
                     @elseif($payment->status == 2)
                         <span
                             class="recent-payments-card__status-badge recent-payments-card__status-badge--2">Pending</span>
-                    @elseif($payment->status == 3)
+                    @elseif($payment->status == \App\Models\DataPayment::STATUS_WAITING_CONFIRMATION)
                         <span
                             class="recent-payments-card__status-badge recent-payments-card__status-badge--3">Konfirmasi</span>
+                    @elseif($payment->status == \App\Models\DataPayment::STATUS_REJECTED)
+                        <span
+                            class="recent-payments-card__status-badge recent-payments-card__status-badge--99">Ditolak</span>
                     @else
                         <span
                             class="recent-payments-card__status-badge recent-payments-card__status-badge--99">Batal</span>

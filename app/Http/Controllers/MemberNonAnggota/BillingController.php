@@ -45,6 +45,7 @@ class BillingController extends Controller
 
         return view('membernonkeanggotaan.pages.billing.billing', compact('billingSummary', 'billingFilters', 'paymentHistories'));
     }
+
     public function getSummaryAjax(Request $request)
     {
         $userId = (int) $request->user()->id;
@@ -53,11 +54,12 @@ class BillingController extends Controller
         $summary = $this->getBillingSummary($userId);
 
         return response()->json([
-            'paid_count'    => data_get($summary, 'paid_count', 0),
+            'paid_count' => data_get($summary, 'paid_count', 0),
             'pending_count' => data_get($summary, 'pending_count', 0),
-            'failed_count'  => data_get($summary, 'failed_count', 0),
+            'failed_count' => data_get($summary, 'failed_count', 0),
         ]);
     }
+
     public function uploadBuktiTransfer(Request $request, $id)
     {
         $request->validate([
@@ -67,6 +69,16 @@ class BillingController extends Controller
         $payment = DataPayment::where('id', $id)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
+
+        $isManual = $payment->payment_method === 'manual'
+            || ($payment->payment_method === null && ! filter_var($payment->link_payment, FILTER_VALIDATE_URL));
+
+        abort_unless($isManual, 422, 'Transaksi ini menggunakan pembayaran gateway.');
+        abort_unless(in_array((int) $payment->status, [
+            DataPayment::STATUS_PENDING,
+            DataPayment::STATUS_WAITING_CONFIRMATION,
+            DataPayment::STATUS_REJECTED,
+        ], true), 422, 'Transaksi tidak dapat menerima bukti transfer.');
 
         if ($request->hasFile('link_payment')) {
             // Hapus file lama jika ada
@@ -80,7 +92,8 @@ class BillingController extends Controller
             // Update database
             $payment->update([
                 'link_payment' => $path,
-                'status' => 3
+                'status' => DataPayment::STATUS_WAITING_CONFIRMATION,
+                'rejection_reason' => null,
             ]);
         }
 
@@ -94,7 +107,7 @@ class BillingController extends Controller
             ?? $request->query('order.invoice_number')
             ?? data_get($request->query('order'), 'invoice_number');
 
-        if (!filled($invoiceNumber)) {
+        if (! filled($invoiceNumber)) {
             return null;
         }
 
@@ -110,13 +123,13 @@ class BillingController extends Controller
 
         $paymentContext = $payment ? $this->paymentContext($payment) : null;
 
-        if (!$payment || !$paymentContext) {
+        if (! $payment || ! $paymentContext) {
             return null;
         }
 
         if ((int) $payment->status === DataPayment::STATUS_PAID) {
             $message = $paymentContext['type'] === 'membership'
-                ? 'Pembayaran membership ' . $this->membershipTypeLabel($payment) . ' berhasil. Masa aktif membership Anda telah diperbarui.'
+                ? 'Pembayaran membership '.$this->membershipTypeLabel($payment).' berhasil. Masa aktif membership Anda telah diperbarui.'
                 : $this->confirmedPaymentMessage($paymentContext);
 
             return redirect('/pembayaran')->with(
@@ -128,7 +141,14 @@ class BillingController extends Controller
         if ((int) $payment->status === DataPayment::STATUS_CANCELED) {
             return redirect('/pembayaran')->with(
                 'error',
-                'Pembayaran ' . $paymentContext['label'] . ' gagal atau dibatalkan. Silakan buat order baru untuk mencoba lagi.'
+                'Pembayaran '.$paymentContext['label'].' gagal atau dibatalkan. Silakan buat order baru untuk mencoba lagi.'
+            );
+        }
+
+        if ((int) $payment->status === DataPayment::STATUS_REJECTED) {
+            return redirect('/pembayaran')->with(
+                'error',
+                'Bukti pembayaran ditolak. Silakan upload ulang bukti transfer.'
             );
         }
 
@@ -233,19 +253,24 @@ class BillingController extends Controller
             $pendingMemberships = DataPayment::query()
                 ->where('user_id', $userId)
                 ->where('tipe_pembelian', DataPayment::PURCHASE_TYPE_MEMBERSHIP)
-                ->where('status', DataPayment::STATUS_PENDING)
+                ->whereIn('status', [
+                    DataPayment::STATUS_PENDING,
+                    DataPayment::STATUS_WAITING_CONFIRMATION,
+                    DataPayment::STATUS_REJECTED,
+                ])
                 ->lockForUpdate()
                 ->get();
 
             $pendingMemberships->each(function (DataPayment $payment) {
                 $payment->update([
                     'status' => DataPayment::STATUS_CANCELED,
-                    'keterangan' => trim(($payment->keterangan ? $payment->keterangan . ' ' : '') . 'Order membership dibatalkan oleh pengguna.'),
+                    'keterangan' => trim(($payment->keterangan ? $payment->keterangan.' ' : '').'Order membership dibatalkan oleh pengguna.'),
                 ]);
             });
 
             UserProfileModel::query()
                 ->where('user_id', $userId)
+                ->where('status_membership', DataPayment::STATUS_PENDING)
                 ->lockForUpdate()
                 ->update(['status_membership' => 0]);
         });
@@ -259,6 +284,10 @@ class BillingController extends Controller
             ->where('user_id', (int) $request->user()->id)
             ->where('tipe_pembelian', DataPayment::PURCHASE_TYPE_MEMBERSHIP)
             ->where('status', DataPayment::STATUS_PENDING)
+            ->where(function ($query) {
+                $query->whereNull('payment_method')
+                    ->orWhere('payment_method', 'gateway');
+            })
             ->whereNotNull('link_payment')
             ->latest('id')
             ->first();
@@ -286,7 +315,7 @@ class BillingController extends Controller
 
         return [
             'spent_amount' => $spentAmount,
-            'spent_amount_formatted' => 'Rp ' . number_format($spentAmount, 0, ',', '.'),
+            'spent_amount_formatted' => 'Rp '.number_format($spentAmount, 0, ',', '.'),
             'paid_count' => (clone $dataPayments)
                 ->where('status', DataPayment::STATUS_PAID)
                 ->notWaitingForIhtConfirmation()
@@ -295,6 +324,7 @@ class BillingController extends Controller
             'pending_count' => (clone $dataPayments)
                 ->where(function ($query) {
                     $query->where('status', DataPayment::STATUS_PENDING)
+                        ->orWhere('status', DataPayment::STATUS_WAITING_CONFIRMATION)
                         ->orWhere(function ($query) {
                             $query->waitingForIhtConfirmation();
                         });
@@ -304,7 +334,7 @@ class BillingController extends Controller
                     $query->whereNull('expired')->orWhere('expired', '>=', $now);
                 })->count(),
             'failed_count' => (clone $dataPayments)
-                ->where('status', DataPayment::STATUS_CANCELED)
+                ->whereIn('status', [DataPayment::STATUS_CANCELED, DataPayment::STATUS_REJECTED])
                 ->notWaitingForIhtConfirmation()
                 ->count()
                 + (clone $legacyPayments)->where('status', 0)->whereNotNull('expired')->where('expired', '<', $now)->count(),
@@ -314,7 +344,7 @@ class BillingController extends Controller
     private function resolveBillingFilters(Request $request): array
     {
         $status = $request->query('status', 'semua');
-        $allowedStatuses = ['semua', 'berhasil', 'menunggu', 'dibatalkan', 'batal'];
+        $allowedStatuses = ['semua', 'berhasil', 'menunggu', 'ditolak', 'dibatalkan', 'batal'];
 
         if (! in_array($status, $allowedStatuses, true)) {
             $status = 'semua';
@@ -358,6 +388,7 @@ class BillingController extends Controller
             ->when($filters['status'] === 'menunggu', function ($query) {
                 $query->where(function ($query) {
                     $query->where('status', DataPayment::STATUS_PENDING)
+                        ->orWhere('status', DataPayment::STATUS_WAITING_CONFIRMATION)
                         ->orWhere(function ($query) {
                             $query->waitingForIhtConfirmation();
                         });
@@ -366,6 +397,9 @@ class BillingController extends Controller
             ->when($filters['status'] === 'dibatalkan', function ($query) {
                 $query->where('status', DataPayment::STATUS_CANCELED)
                     ->notWaitingForIhtConfirmation();
+            })
+            ->when($filters['status'] === 'ditolak', function ($query) {
+                $query->where('status', DataPayment::STATUS_REJECTED);
             })
             ->when($filters['start_date'], function ($query, $startDate) {
                 $query->whereDate('created_at', '>=', $startDate);

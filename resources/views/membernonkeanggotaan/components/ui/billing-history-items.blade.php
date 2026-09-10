@@ -70,24 +70,35 @@
         // DETEKSI GATEWAY / VA vs MANUAL:
         $rawLinkPayment = (string) $payment->link_payment;
         $isUrlPayment = \Illuminate\Support\Str::startsWith($rawLinkPayment, ['http://', 'https://']);
-        $isManualPayment = (int) data_get($payment, 'riwayatTransaksi.manual', 0) === 1 || !$isUrlPayment;
+        $isManualPayment = data_get($payment, 'payment_method') === 'manual'
+            || (int) data_get($payment, 'riwayatTransaksi.manual', 0) === 1
+            || (!$isUrlPayment && data_get($payment, 'payment_method') !== 'gateway');
 
         $invoiceUrl = $isMembership
-            ? url('/classes/cetakinvoicepending/' . $payment->id)
+            ? url('/classes/getmembershipinvoice/' . $payment->id)
             : ($classPaymentId
                 ? url('/classes/getinvoice/' . $payment->id)
                 : null);
 
         // URL Invoice Pending
         $pendingInvoiceUrl =
-            $isEbook || $isVideo
+            $isMembership
+                ? url('/classes/cetakinvoicepending/' . $payment->id)
+                : ($isEbook || $isVideo
                 ? url('/materi/cetakinvoicepending/' . $payment->id)
                 : ($isClass
                     ? url('/classes/getinvoice/' . $payment->id)
-                    : null);
+                    : null));
 
         $paymentUrl = $isUrlPayment ? $payment->link_payment : null;
-        $hasUploadedProof = !$isUrlPayment && !empty($payment->link_payment);
+        $hasUploadedProof = $isManualPayment && !$isUrlPayment && !empty($payment->link_payment);
+        $isRejected = $displayStatus === \App\Models\DataPayment::STATUS_REJECTED;
+        $isWaitingConfirmation = $displayStatus === \App\Models\DataPayment::STATUS_WAITING_CONFIRMATION;
+        $canUploadProof = $isManualPayment && in_array($displayStatus, [
+            \App\Models\DataPayment::STATUS_PENDING,
+            \App\Models\DataPayment::STATUS_WAITING_CONFIRMATION,
+            \App\Models\DataPayment::STATUS_REJECTED,
+        ], true);
 
         // Routing & Icon CTA Produk Terbeli
         $accessUrl = null;
@@ -141,7 +152,10 @@
                         <strong class="billing-history-countdown" data-expires-at="{{ $expiredAt }}"
                             data-expire-url="{{ url('/pembayaran/' . $payment->id . '/expire') }}"
                             data-payment-id="{{ $payment->id }}" data-status="{{ $displayStatus }}"
-                            data-pending-label="{{ $pendingLabel }}">-</strong>
+                            data-pending-label="{{ $isRejected ? 'Bukti Ditolak' : ($isWaitingConfirmation ? 'Menunggu Konfirmasi' : $pendingLabel) }}">-</strong>
+                        @if ($isRejected && filled($payment->rejection_reason))
+                            <small class="text-danger d-block mt-1">{{ $payment->rejection_reason }}</small>
+                        @endif
                     </div>
 
                     <div class="billing-history-card__order-date">
@@ -193,7 +207,7 @@
                             <i class="fas fa-file-invoice" aria-hidden="true"></i>
                             Cetak Invoice
                         </a>
-                    @elseif(!$isExpired && $isManualPayment && !$isPaid && ($displayStatus == 3 || $displayStatus == 2))
+                    @elseif($canUploadProof && !$isPaid && (!$isExpired || $isRejected || $isWaitingConfirmation))
                         {{-- Tombol Cetak Invoice Pending --}}
                         @if ($pendingInvoiceUrl)
                             <a href="{{ $pendingInvoiceUrl }}" target="_blank" rel="noopener"
@@ -208,7 +222,7 @@
                             data-toggle="modal" data-target="#modalUploadBukti{{ $payment->id }}"
                             data-bs-toggle="modal" data-bs-target="#modalUploadBukti{{ $payment->id }}">
                             <i class="fas {{ $hasUploadedProof ? 'fa-edit' : 'fa-upload' }}" aria-hidden="true"></i>
-                            {{ $hasUploadedProof ? 'Ubah Bukti Transfer' : 'Bayar Sekarang' }}
+                            {{ $isRejected ? 'Upload Ulang Bukti' : ($hasUploadedProof ? 'Ubah Bukti Transfer' : 'Bayar Sekarang') }}
                         </button>
 
                         {{-- Modal Form Upload --}}

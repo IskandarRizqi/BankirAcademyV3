@@ -337,7 +337,7 @@ $tipemembership = 2;
 						<div class="membership-individual-card__divider"></div>
 						@if($card['featured'])
 						<!-- <button type="button" class="membership-individual-card__action">Berlangganan sekarang</button> -->
-						<form action="/payment-membership" method="post">
+                        <form action="{{ route('payment.membership') }}" method="post">
 							<input type="hidden" name="nominal" value="{{$nominal}}">
 							<input type="hidden" name="user_id" value="{{ $userid }}">
 							<input type="hidden" name="status_membership" value="{{$statuspaymentmembership}}">
@@ -347,7 +347,14 @@ $tipemembership = 2;
 							<input type="hidden" name="pembelian_tipe" value="{{$pembeliantipe}}">
 							<input type="hidden" name="membership_tipe" value="{{$tipemembership}}">
 							@csrf
-							<button type="submit" class="membership-package-card__action">Berlangganan sekarang</button>
+                            <div class="row no-gutters mt-auto">
+                                <div class="col-12 mb-2">
+                                    <button type="submit" name="payment_method" value="gateway" class="membership-package-card__action">Bayar via Virtual Account DOKU</button>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" name="payment_method" value="manual" class="membership-package-card__action membership-individual-card__action--manual">Transfer Manual</button>
+                                </div>
+                            </div>
 						</form>
 						@else
 						<button type="button" class="membership-individual-card__action" disabled>Paket Saat Ini</button>

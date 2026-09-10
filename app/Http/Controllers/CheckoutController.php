@@ -2,27 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
-use App\Models\ClassPricingModel;
-use App\Models\CorporateRegistration;
 use App\Models\DataPayment;
-use App\Models\DepositUsed;
-use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\RiwayatTransaksi;
-use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Services\MembershipPaymentService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
-
 
 class CheckoutController extends Controller
 {
@@ -30,7 +22,7 @@ class CheckoutController extends Controller
     {
         $invoiceNumber = $this->extractDokuInvoiceNumber($request);
 
-        if (!$invoiceNumber) {
+        if (! $invoiceNumber) {
             return response()->json(['message' => 'Invalid webhook payload'], 400);
         }
 
@@ -40,11 +32,11 @@ class CheckoutController extends Controller
 
         $notification = $this->resolveDokuNotificationData($request, $invoiceNumber);
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json(['message' => 'Unable to verify payment status'], 500);
         }
 
-        if (!$notification['payment_status']) {
+        if (! $notification['payment_status']) {
             return response()->json(['message' => 'Invalid webhook payload'], 400);
         }
 
@@ -100,17 +92,17 @@ class CheckoutController extends Controller
     {
         $invoiceNumber = $this->extractDokuInvoiceNumber($request);
 
-        if (!$invoiceNumber) {
+        if (! $invoiceNumber) {
             return response()->json(['message' => 'Invalid webhook payload'], 400);
         }
 
         $notification = $this->resolveDokuNotificationData($request, $invoiceNumber);
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json(['message' => 'Unable to verify payment status'], 500);
         }
 
-        if (!$notification['payment_status']) {
+        if (! $notification['payment_status']) {
             return response()->json(['message' => 'Invalid webhook payload'], 400);
         }
 
@@ -145,7 +137,7 @@ class CheckoutController extends Controller
 
         $statusResponse = $this->getDokuOrderStatus($invoiceNumber);
 
-        if (!$statusResponse) {
+        if (! $statusResponse) {
             return null;
         }
 
@@ -170,7 +162,7 @@ class CheckoutController extends Controller
         return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
             $payment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
 
-            if (!$payment) {
+            if (! $payment) {
                 return ['status' => 404, 'message' => 'Payment not found'];
             }
 
@@ -201,12 +193,16 @@ class CheckoutController extends Controller
                 return ['status' => 200, 'message' => 'Payment already processed'];
             }
 
-            if (!$this->isSuccessfulDokuStatus($paymentStatus)) {
+            if (! $this->isSuccessfulDokuStatus($paymentStatus)) {
                 if ($this->isFailedDokuStatus($paymentStatus) && (int) $payment->status === DataPayment::STATUS_PENDING) {
                     $payment->update([
                         'status' => DataPayment::STATUS_CANCELED,
-                        'keterangan' => 'Pembayaran tidak berhasil: ' . $paymentStatus,
+                        'keterangan' => 'Pembayaran tidak berhasil: '.$paymentStatus,
                     ]);
+
+                    UserProfileModel::where('user_id', $payment->user_id)
+                        ->where('status_membership', DataPayment::STATUS_PENDING)
+                        ->update(['status_membership' => 0]);
                 }
 
                 return ['status' => 200, 'message' => 'Payment status ignored'];
@@ -214,30 +210,12 @@ class CheckoutController extends Controller
 
             $profile = UserProfileModel::where('user_id', $payment->user_id)->lockForUpdate()->first();
 
-            if (!$profile) {
+            if (! $profile) {
                 return ['status' => 404, 'message' => 'User profile not found'];
             }
 
-            try {
-                $activeUntil = $profile->masa_aktif_membership ? Carbon::parse($profile->masa_aktif_membership) : null;
-            } catch (\Throwable $exception) {
-                $activeUntil = null;
-            }
-
-            $now = Carbon::now();
-            $baseDate = $activeUntil && $activeUntil->greaterThan($now) ? $activeUntil : $now;
-            $profileData = [
-                'status_membership' => DataPayment::STATUS_PAID,
-                'masa_aktif_membership' => $baseDate->copy()->addYear()->format('Y-m-d'),
-                'tipe_membership' => $this->resolveMembershipType($payment),
-            ];
-
-            if (!$profile->tanggal_bergabung_membership) {
-                $profileData['tanggal_bergabung_membership'] = $now->format('Y-m-d');
-            }
-
-            $profile->update($profileData);
-            $payment->update(['status' => DataPayment::STATUS_PAID]);
+            $payment->update(['tipe_membership' => $this->resolveMembershipType($payment)]);
+            app(MembershipPaymentService::class)->activate($payment);
 
             return ['status' => 200, 'message' => 'Membership payment processed'];
         });
@@ -262,7 +240,7 @@ class CheckoutController extends Controller
             $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
             if ($dataPayment->class_id) {
                 $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
-                if (!$order && $dataPayment->class_id) {
+                if (! $order && $dataPayment->class_id) {
                     return ['status' => 404, 'message' => 'Class payment not found'];
                 }
 
@@ -277,7 +255,6 @@ class CheckoutController extends Controller
                 }
             }
 
-
             if ($dataPayment->class_id) {
                 if ((int) $order->status === 1) {
                     if ($dataPayment && (int) $dataPayment->status !== DataPayment::STATUS_PAID) {
@@ -287,13 +264,13 @@ class CheckoutController extends Controller
                     return ['status' => 200, 'message' => 'Payment already processed'];
                 }
 
-                if (!$this->isSuccessfulDokuStatus($paymentStatus)) {
+                if (! $this->isSuccessfulDokuStatus($paymentStatus)) {
                     return ['status' => 200, 'message' => 'Payment status ignored'];
                 }
 
                 $class = ClassesModel::select('id', 'participant_limit')->whereKey($order->class_id)->lockForUpdate()->first();
 
-                if (!$class) {
+                if (! $class) {
                     return ['status' => 404, 'message' => 'Class not found'];
                 }
 
@@ -302,7 +279,7 @@ class CheckoutController extends Controller
                     ->lockForUpdate()
                     ->first();
 
-                if (!$participant) {
+                if (! $participant) {
                     $remainingQuota = ClassParticipantModel::remainingQuotaForClass($order->class_id, (int) $class->participant_limit);
 
                     if ($remainingQuota !== null && (int) $order->jumlah > $remainingQuota) {
@@ -340,59 +317,59 @@ class CheckoutController extends Controller
             }
             if ($dataPayment->materi_id) {
                 DB::table('siswa_modul_aktif')->insertOrIgnore([
-                    'user_id'    => $dataPayment->user_id,
-                    'class_id'   => $dataPayment->materi_id,
+                    'user_id' => $dataPayment->user_id,
+                    'class_id' => $dataPayment->materi_id,
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
 
                 RiwayatTransaksi::create([
-                    'user_id'           => $dataPayment->user_id,
-                    'class_id'          => $dataPayment->materi_id,
+                    'user_id' => $dataPayment->user_id,
+                    'class_id' => $dataPayment->materi_id,
                     'nominal_transaksi' => $dataPayment->nominal,
                     'metode_pembayaran' => 'Virtual Akun',
-                    'status'            => 'SUCCESS',
-                    'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+                    'status' => 'SUCCESS',
+                    'keterangan' => 'Pembelian materi pelatihan melalui virtual akun.',
                 ]);
             }
             if ($dataPayment->submateri_id) {
                 DB::table('history_pelatihan')->insertOrIgnore([
                     'user_id' => $dataPayment->user_id,
-                    'sub_materi_id' => $dataPayment->submateri_id
+                    'sub_materi_id' => $dataPayment->submateri_id,
                 ]);
                 RiwayatTransaksi::create([
-                    'user_id'           => $dataPayment->user_id,
-                    'class_id'          => $dataPayment->submateri_id,
+                    'user_id' => $dataPayment->user_id,
+                    'class_id' => $dataPayment->submateri_id,
                     'nominal_transaksi' => $dataPayment->nominal,
                     'metode_pembayaran' => 'Virtual Akun',
-                    'status'            => 'SUCCESS',
-                    'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+                    'status' => 'SUCCESS',
+                    'keterangan' => 'Pembelian materi pelatihan melalui virtual akun.',
                 ]);
             }
 
             return ['status' => 200, 'message' => 'Class payment processed'];
         });
     }
+
     private function processEbookPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array
     {
-        return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
+        return DB::transaction(function () use ($invoiceNumber) {
             $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
             if ($dataPayment) {
                 $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
             }
 
-
             DB::table('history_pelatihan')->insertOrIgnore([
                 'user_id' => $dataPayment->user_id,
-                'sub_materi_id' => $dataPayment->submateri_id
+                'sub_materi_id' => $dataPayment->submateri_id,
             ]);
             RiwayatTransaksi::create([
-                'user_id'           => $dataPayment->user_id,
-                'class_id'          => $dataPayment->submateri_id,
+                'user_id' => $dataPayment->user_id,
+                'class_id' => $dataPayment->submateri_id,
                 'nominal_transaksi' => $dataPayment->nominal,
                 'metode_pembayaran' => 'Virtual Akun',
-                'status'            => 'SUCCESS',
-                'keterangan'        => 'Pembelian materi pelatihan melalui virtual akun.'
+                'status' => 'SUCCESS',
+                'keterangan' => 'Pembelian materi pelatihan melalui virtual akun.',
             ]);
 
             return ['status' => 200, 'message' => 'Class payment processed'];
@@ -416,23 +393,23 @@ class CheckoutController extends Controller
         $timestamp = $request->header('Request-Timestamp');
         $signature = $request->header('Signature');
 
-        if (!$clientId || !$secretKey || !$headerClientId || !$requestId || !$timestamp || !$signature) {
+        if (! $clientId || ! $secretKey || ! $headerClientId || ! $requestId || ! $timestamp || ! $signature) {
             return false;
         }
 
-        if (!hash_equals((string) $clientId, (string) $headerClientId)) {
+        if (! hash_equals((string) $clientId, (string) $headerClientId)) {
             return false;
         }
 
         $requestTarget = parse_url($request->getRequestUri(), PHP_URL_PATH) ?: '/api/doku/membership/notification';
         $digest = base64_encode(hash('sha256', $request->getContent(), true));
-        $rawSignature = 'Client-Id:' . $headerClientId . "\n" .
-            'Request-Id:' . $requestId . "\n" .
-            'Request-Timestamp:' . $timestamp . "\n" .
-            'Request-Target:' . $requestTarget . "\n" .
-            'Digest:' . $digest;
+        $rawSignature = 'Client-Id:'.$headerClientId."\n".
+            'Request-Id:'.$requestId."\n".
+            'Request-Timestamp:'.$timestamp."\n".
+            'Request-Target:'.$requestTarget."\n".
+            'Digest:'.$digest;
 
-        $expectedSignature = 'HMACSHA256=' . base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+        $expectedSignature = 'HMACSHA256='.base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
         return hash_equals($expectedSignature, (string) $signature);
     }
@@ -443,18 +420,18 @@ class CheckoutController extends Controller
         $secretKey = env('DOKU_SECRET_KEY');
         $dokuUrl = rtrim((string) env('DOKU_URL'), '/');
 
-        if (!$clientId || !$secretKey || !$dokuUrl) {
+        if (! $clientId || ! $secretKey || ! $dokuUrl) {
             return null;
         }
 
         $requestId = Str::uuid()->toString();
         $timestamp = now()->toIso8601ZuluString();
-        $requestTarget = '/orders/v1/status/' . rawurlencode($invoiceNumber);
-        $rawSignature = 'Client-Id:' . $clientId . "\n" .
-            'Request-Id:' . $requestId . "\n" .
-            'Request-Timestamp:' . $timestamp . "\n" .
-            'Request-Target:' . $requestTarget;
-        $signature = 'HMACSHA256=' . base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+        $requestTarget = '/orders/v1/status/'.rawurlencode($invoiceNumber);
+        $rawSignature = 'Client-Id:'.$clientId."\n".
+            'Request-Id:'.$requestId."\n".
+            'Request-Timestamp:'.$timestamp."\n".
+            'Request-Target:'.$requestTarget;
+        $signature = 'HMACSHA256='.base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
 
         try {
             $response = Http::timeout(15)->withHeaders([
@@ -463,7 +440,7 @@ class CheckoutController extends Controller
                 'Request-Timestamp' => $timestamp,
                 'Signature' => $signature,
                 'Content-Type' => 'application/json',
-            ])->get($dokuUrl . $requestTarget);
+            ])->get($dokuUrl.$requestTarget);
         } catch (\Throwable $exception) {
             Log::error('Gagal check status DOKU', [
                 'invoice' => $invoiceNumber,
@@ -473,7 +450,7 @@ class CheckoutController extends Controller
             return null;
         }
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             Log::warning('Check status DOKU gagal', [
                 'invoice' => $invoiceNumber,
                 'status' => $response->status(),
@@ -596,17 +573,17 @@ class CheckoutController extends Controller
 
         Log::info('NOTIFIKASI MASUK DI DOMAIN B', ['invoice' => $invoiceNumber]);
 
-        if (!$invoiceNumber) {
+        if (! $invoiceNumber) {
             return response()->json(['message' => 'Invalid data'], 400);
         }
 
         $notification = $this->resolveDokuNotificationData($request, $invoiceNumber);
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json(['message' => 'Unable to verify payment status'], 500);
         }
 
-        if (!$notification['payment_status']) {
+        if (! $notification['payment_status']) {
             return response()->json(['message' => 'Invalid webhook payload'], 400);
         }
 

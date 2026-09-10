@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
         ->name('membernonanggota.membership.continue-payment');
     Route::post('/pembayaran/iht/{payment}', [PaymentController::class, 'paymentIht'])->name('membernonanggota.payment-iht');
     Route::get('/classes/cetakinvoicepending/{id}', [MembershipController::class, 'cetakinvoicepending']);
+    Route::get('/classes/getmembershipinvoice/{id}', [MembershipController::class, 'cetakinvoice'])
+        ->name('invoice.membership');
     Route::get('/materi/cetakinvoicepending/{id}', [InvoiceController::class, 'invoicemateri'])
         ->middleware('auth')
         ->name('invoice.pending');
