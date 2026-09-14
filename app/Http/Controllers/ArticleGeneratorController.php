@@ -77,7 +77,7 @@ class ArticleGeneratorController extends Controller
                 });
             })
             ->latest()
-            ->paginate(5)
+            ->paginate(6)
             ->withQueryString(); // Mempertahankan parameter URL (search) pada link pagination
 
         return view('frontend.pages.article.index', compact('articles'));

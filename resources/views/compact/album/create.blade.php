@@ -151,24 +151,24 @@
                 <li class="nav-item">
                     <button class="nav-link active border border-0 shadow rounded-pill px-4" id="tabMain"
                         onclick="switchTab('main')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-images me-1" viewBox="0 0 16 16">
                             <path
                                 d="M4.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-7zM3 3.5A1.5 1.5 0 0 1 4.5 2h7A1.5 1.5 0 0 1 13 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 12.5v-9z" />
                             <path
                                 d="M10.5 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-7 7 2.146-2.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0L10.5 12H3.5z" />
-                        </svg>
+                        </svg> --}}
                         Semua Foto
                     </button>
                 </li>
                 <li class="nav-item ms-2">
                     <button class="nav-link border border-0 shadow rounded-pill px-4 mx-4" id="tabTrash"
                         onclick="switchTab('trash')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash3 me-1" viewBox="0 0 16 16">
                             <path
                                 d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92H4.885a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                        </svg>
+                        </svg> --}}
                         Tempat Sampah
                     </button>
                 </li>
@@ -442,12 +442,12 @@
                         <p class="text-white-50 small mb-2" style="font-size: 10px;">${photo.formatted_date}</p>
                         <div class="d-flex gap-2">
                             ${currentTab === 'trash' ? `
-                                                                                                                                                                        <button type="button" class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-medium" onclick="restoreSinglePhoto(${photo.id})">Pulihkan</button>
-                                                                                                                                                                        <button type="button" class="btn btn-sm btn-danger rounded-pill px-3 py-1 fw-medium" onclick="forceDeleteSinglePhoto(${photo.id})">Permanen</button>
-                                                                                                                                                                    ` : `
-                                                                                                                                                                        <button type="button" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-medium" onclick="editPhoto(${photo.id})">Edit</button>
-                                                                                                                                                                        <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 py-1 fw-medium" onclick="deleteSinglePhoto(${photo.id})">Ke Sampah</button>
-                                                                                                                                                                    `}
+                                                                                                                                                                                <button type="button" class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-medium" onclick="restoreSinglePhoto(${photo.id})">Pulihkan</button>
+                                                                                                                                                                                <button type="button" class="btn btn-sm btn-danger rounded-pill px-3 py-1 fw-medium" onclick="forceDeleteSinglePhoto(${photo.id})">Permanen</button>
+                                                                                                                                                                            ` : `
+                                                                                                                                                                                <button type="button" class="btn btn-sm btn-light rounded-pill px-3 py-1 fw-medium" onclick="editPhoto(${photo.id})">Edit</button>
+                                                                                                                                                                                <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 py-1 fw-medium" onclick="deleteSinglePhoto(${photo.id})">Ke Sampah</button>
+                                                                                                                                                                            `}
                         </div>
                     </div>
                 </div>
@@ -492,12 +492,12 @@
                     </td>
                     <td class="text-end">
                         ${currentTab === 'trash' ? `
-                                                                                                                                                                    <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 me-1" onclick="restoreSinglePhoto(${photo.id})">Pulihkan</button>
-                                                                                                                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="forceDeleteSinglePhoto(${photo.id})">Hapus Permanen</button>
-                                                                                                                                                                ` : `
-                                                                                                                                                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" onclick="editPhoto(${photo.id})">Edit</button>
-                                                                                                                                                                    <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="deleteSinglePhoto(${photo.id})">Ke Sampah</button>
-                                                                                                                                                                `}
+                                                                                                                                                                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 me-1" onclick="restoreSinglePhoto(${photo.id})">Pulihkan</button>
+                                                                                                                                                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="forceDeleteSinglePhoto(${photo.id})">Hapus Permanen</button>
+                                                                                                                                                                        ` : `
+                                                                                                                                                                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" onclick="editPhoto(${photo.id})">Edit</button>
+                                                                                                                                                                            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="deleteSinglePhoto(${photo.id})">Ke Sampah</button>
+                                                                                                                                                                        `}
                     </td>
                 </tr>`;
                     }).join('');

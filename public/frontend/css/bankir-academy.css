@@ -2317,45 +2317,83 @@ h4 {
     justify-content: center;
     margin-top: 42px;
 }
+
 .article-pagination nav {
-    width: 100%;
-}
-.article-pagination nav > div:first-child {
-    display: none;
-}
-.article-pagination nav > div:last-child {
     display: flex;
     justify-content: center;
 }
-.article-pagination nav svg {
-    width: 18px;
-    height: 18px;
+
+/* Sembunyikan teks info pagination bawaan Tailwind (Showing X to Y) */
+.article-pagination nav > div:first-child {
+    display: none;
 }
+
+/* Flex wrapper untuk tombol angka dan panah */
+.article-pagination nav > div:last-child > span {
+    display: inline-flex;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Base style tombol angka & panah */
 .article-pagination nav a,
-.article-pagination nav span {
+.article-pagination nav span[aria-current="page"],
+.article-pagination nav span[aria-disabled="true"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 40px;
     height: 40px;
     padding: 0 12px;
-    border: 1px solid var(--line);
-    background: #fff;
-    color: var(--text);
+    border: 1px solid var(--line, #e5e7eb);
+    margin-left: -1px; /* Mencegah border ganda antar item */
+    background: #ffffff;
+    color: var(--text, #374151);
     font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
-.article-pagination nav a:first-child,
-.article-pagination nav span:first-child {
-    border-radius: 10px 0 0 10px;
+
+/* Merapikan border radius tombol paling kiri dan kanan */
+.article-pagination nav > div:last-child > span > :first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin-left: 0;
 }
-.article-pagination nav a:last-child,
-.article-pagination nav span:last-child {
-    border-radius: 0 10px 10px 0;
+
+.article-pagination nav > div:last-child > span > :last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
+
+/* State Hover */
+.article-pagination nav a:hover {
+    background: var(--bg-hover, #f9fafb);
+    color: var(--primary, #0056b3);
+    z-index: 1;
+}
+
+/* State Halaman Aktif */
 .article-pagination nav span[aria-current="page"] {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
+    background: var(--primary, #0056b3);
+    border-color: var(--primary, #0056b3);
+    color: #ffffff;
+    z-index: 2;
+}
+
+/* State Disabled (Panah mati) */
+.article-pagination nav span[aria-disabled="true"] {
+    color: #9ca3af;
+    background: #f3f4f6;
+    cursor: not-allowed;
+}
+
+/* Ukuran Icon Panah SVG */
+.article-pagination nav svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
 }
 .article-empty {
     padding: 52px 28px;

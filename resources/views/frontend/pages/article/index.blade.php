@@ -37,8 +37,8 @@
                         <article class="article-card">
                             @if ($article->image_url)
                                 <div class="article-card-image">
-                                    <img src="{{ asset($article->image_url) }}" style="margin-bottom: 20px"
-                                        alt="{{ $article->title }}" loading="lazy">
+                                    {{-- <img src="{{ asset($article->image_url) }}" style="margin-bottom: 20px"
+                                        alt="{{ $article->title }}" loading="lazy"> --}}
                                 </div>
                             @endif
 
@@ -56,9 +56,9 @@
                     @endforeach
                 </div>
 
-                {{-- <div class="article-pagination">
+                <div class="article-pagination">
                     {{ $articles->links() }}
-                </div> --}}
+                </div>
             @else
                 <div class="article-empty">
                     @if (request('search'))
