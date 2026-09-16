@@ -85,19 +85,30 @@ class ArticleGeneratorController extends Controller
 
     public function publicShow($slug)
     {
-        // 1. Ambil artikel utama yang sedang dibuka
         $article = Article::where('status', 1)
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // 2. Ambil artikel terkait (misal: 4 artikel acak/terbaru, selain artikel yang sedang dibuka)
+        // Prioritaskan artikel lain dengan keyword yang sama
         $relatedArticles = Article::where('status', 1)
-            ->where('id', '!=', $article->id) // Hindari artikel yang sedang dibaca muncul di sidebar
-            ->latest()                        // Atau gunakan ->inRandomOrder() jika ingin acak
-            ->take(4)                         // Ambil 4 artikel saja
+            ->where('id', '!=', $article->id)
+            ->where('keyword', $article->keyword)
+            ->latest()
+            ->take(4)
             ->get();
 
-        // 3. Kirim variabel $article dan $relatedArticles ke view
+        // Jika artikel dengan keyword sama kurang dari 4, ambil artikel acak/terbaru lainnya
+        if ($relatedArticles->count() < 4) {
+            $additional = Article::where('status', 1)
+                ->where('id', '!=', $article->id)
+                ->whereNotIn('id', $relatedArticles->pluck('id'))
+                ->latest()
+                ->take(4 - $relatedArticles->count())
+                ->get();
+
+            $relatedArticles = $relatedArticles->merge($additional);
+        }
+
         return view('articles.show', compact('article', 'relatedArticles'));
     }
 
@@ -122,28 +133,42 @@ class ArticleGeneratorController extends Controller
     }
     public function getNextKeyword()
     {
-        // Ambil 1 keyword terlama yang masih pending
-        $keyword = Keyword::where('status', 'pending')
-            ->orderBy('created_at', 'asc')
+        // Ambil keyword yang artikelnya belum mencapai 5,
+        // diurutkan dari yang belum pernah dipakai / paling lama tidak dipakai
+        $keyword = Keyword::where('articles_count', '<', 5)
+            ->where(function ($query) {
+                // Hindari mengambil keyword yang baru saja digunakan hari ini jika ada keyword lain
+                $query->whereNull('last_used_at')
+                    ->orWhere('last_used_at', '<', now()->subHours(12));
+            })
+            ->inRandomOrder() // Acak dari kandidat yang tersedia
             ->first();
+
+        // Fallback jika semua keyword baru saja digunakan < 12 jam lalu
+        if (!$keyword) {
+            $keyword = Keyword::where('articles_count', '<', 5)
+                ->inRandomOrder()
+                ->first();
+        }
 
         if (!$keyword) {
             return response()->json([
                 'status'  => 'empty',
-                'message' => 'Tidak ada keyword pending yang tersedia.'
+                'message' => 'Semua keyword sudah mencapai batas maksimal 5 artikel.'
             ], 404);
         }
 
-        // Tandai keyword sedang diproses
+        // Update last_used_at agar tidak terpilih langsung di eksekusi berikutnya
         $keyword->update([
-            'status' => 'processing'
+            'last_used_at' => now()
         ]);
 
         return response()->json([
             'status'  => 'success',
             'data'    => [
-                'id'      => $keyword->id,
-                'keyword' => $keyword->keyword
+                'id'             => $keyword->id,
+                'keyword'        => $keyword->keyword,
+                'articles_count' => $keyword->articles_count
             ]
         ], 200);
     }
@@ -170,12 +195,18 @@ class ArticleGeneratorController extends Controller
             'image_url'        => $validated['image_url']
         ]);
 
-        // Jika request membawa keyword_id, perbarui status keyword jadi completed
+        // Update counter keyword
         if (!empty($validated['keyword_id'])) {
-            Keyword::where('id', $validated['keyword_id'])->update([
-                'status'  => 'completed',
-                'used_at' => now()
-            ]);
+            $kw = Keyword::find($validated['keyword_id']);
+            if ($kw) {
+                $newCount = $kw->articles_count + 1;
+
+                $kw->update([
+                    'articles_count' => $newCount,
+                    'status'         => ($newCount >= 5) ? 'completed' : 'processing',
+                    'used_at'        => now()
+                ]);
+            }
         }
 
         return response()->json([
