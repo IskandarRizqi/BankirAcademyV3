@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Stevebauman\Purify\Facades\Purify;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleGeneratorController extends Controller
@@ -115,9 +116,8 @@ class ArticleGeneratorController extends Controller
     public function show($slug)
     {
         $article = Article::where('slug', $slug)->firstOrFail();
-        $relatedArticles = Article::where('status', 1)
-            ->where('id', '!=', $article->id) // Hindari artikel yang sedang dibaca muncul di sidebar
-            ->latest()                        // Atau gunakan ->inRandomOrder() jika ingin acak
+        $relatedArticles = Article::where('status', 0)
+            ->where('id', '!=', $article->id) // Hindari artikel yang sedang dibaca muncul di sidebar 
             ->take(4)                         // Ambil 4 artikel saja
             ->get();
         $user = auth()->user();
@@ -175,14 +175,14 @@ class ArticleGeneratorController extends Controller
     public function storeFromN8n(Request $request)
     {
         $validated = $request->validate([
-            'keyword_id'       => 'nullable|exists:keywords,id',
+            'keyword_id'       => 'nullable',
             'keyword'          => 'required|string',
             'title'            => 'required|string',
             'content'          => 'required',
             'meta_description' => 'required',
             'meta_keywords'    => 'required',
             'slug'             => 'required',
-            'image_url'        => 'required'
+            'image_url'        => 'nullable'
         ]);
 
         $article = Article::create([
@@ -192,7 +192,7 @@ class ArticleGeneratorController extends Controller
             'meta_description' => $validated['meta_description'],
             'meta_keywords'    => $validated['meta_keywords'],
             'slug'             => $validated['slug'],
-            'image_url'        => $validated['image_url']
+            'image_base64'        => $validated['image_url']
         ]);
 
         // Update counter keyword

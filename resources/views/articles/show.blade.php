@@ -2,29 +2,25 @@
 
 @section('content')
     <style>
-        /* Mengatasi masalah mepet navbar */
         .article-wrapper {
             padding-top: 120px;
-            /* Jarak dari navbar */
             padding-bottom: 60px;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: #2d3748;
         }
 
-        /* Layout Grid 2 Kolom (Artikel Utama + Sidebar) */
         .article-grid {
             display: grid;
             grid-template-columns: 1fr 320px;
-            /* Kolom utama luwes, sidebar fixed 320px */
             gap: 40px;
             align-items: start;
         }
 
-        /* Styling Artikel Utama */
         .article-content {
             line-height: 1.8;
         }
 
+        /* Styling untuk Tag Standard Img */
         .article-content .featured-image {
             width: 100%;
             max-height: 420px;
@@ -32,6 +28,7 @@
             border-radius: 12px;
             margin-bottom: 28px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: block;
         }
 
         .article-content h1 {
@@ -59,19 +56,6 @@
             margin-bottom: 20px;
         }
 
-        .article-content ul {
-            margin-top: 12px;
-            margin-bottom: 24px;
-            padding-left: 24px;
-        }
-
-        .article-content li {
-            font-size: 1.05rem;
-            color: #4a5568;
-            margin-bottom: 12px;
-        }
-
-        /* Styling Sidebar Artikel Terkait */
         .related-sidebar {
             background-color: #f7fafc;
             border: 1px solid #e2e8f0;
@@ -79,7 +63,6 @@
             padding: 24px;
             position: sticky;
             top: 90px;
-            /* Agar melayang saat di-scroll jika navbar fixed */
         }
 
         .related-sidebar h3 {
@@ -109,7 +92,7 @@
             transform: translateY(-2px);
         }
 
-        .related-item img {
+        .related-item .related-image {
             width: 80px;
             height: 60px;
             object-fit: cover;
@@ -128,16 +111,9 @@
             overflow: hidden;
         }
 
-        .related-item:hover .related-item-title {
-            color: #3182ce;
-            /* Warna hover biru */
-        }
-
-        /* Responsif untuk tablet dan HP */
         @media (max-width: 992px) {
             .article-grid {
                 grid-template-columns: 1fr;
-                /* Berubah jadi 1 kolom di layar kecil */
             }
 
             .related-sidebar {
@@ -155,8 +131,8 @@
                 font-size: 1.75rem;
             }
 
-            .article-content h2 {
-                font-size: 1.25rem;
+            .article-content .featured-image {
+                max-height: 250px;
             }
         }
     </style>
@@ -164,26 +140,41 @@
     <div class="container article-wrapper">
         <div class="article-grid">
 
-            {{-- Kolom Kiri: Artikel Utama --}}
+            {{-- Artikel Utama --}}
             <div class="article-content">
-                @if (!empty($article->image_url))
-                    <img src="{{ $article->image_url }}" alt="{{ $article->title }}" class="featured-image">
+                @php
+                    $mainImg = !empty($article->image_base64)
+                        ? $article->image_base64
+                        : (!empty($article->image_url)
+                            ? $article->image_url
+                            : null);
+                @endphp
+
+                @if ($mainImg)
+                    <img src="{{ $mainImg }}" alt="{{ $article->title }}" class="featured-image"
+                        referrerpolicy="no-referrer" />
                 @endif
 
                 {!! $article->content !!}
             </div>
 
-            {{-- Kolom Kanan: Artikel Terkait --}}
+            {{-- Sidebar Artikel Terkait --}}
             <aside class="related-sidebar">
                 <h3>Artikel Terkait</h3>
                 <div class="related-list">
                     @forelse ($relatedArticles as $related)
                         <a href="{{ route('articles.publicShow', $related->slug) }}" class="related-item">
-                            @if (!empty($related->image_url))
-                                <img src="{{ $related->image_url }}" alt="{{ $related->title }}">
-                            @else
-                                <img src="https://via.placeholder.com/80x60?text=No+Image" alt="{{ $related->title }}">
-                            @endif
+                            @php
+                                $sideImg = !empty($related->image_base64)
+                                    ? $related->image_base64
+                                    : (!empty($related->image_url)
+                                        ? $related->image_url
+                                        : 'https://via.placeholder.com/80x60?text=No+Image');
+                            @endphp
+
+                            <img src="{{ $sideImg }}" alt="{{ $related->title }}" class="related-image"
+                                referrerpolicy="no-referrer" />
+
                             <div class="related-item-title">{{ $related->title }}</div>
                         </a>
                     @empty

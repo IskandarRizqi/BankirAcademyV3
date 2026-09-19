@@ -35,15 +35,26 @@
                 <div class="article-grid">
                     @foreach ($articles as $article)
                         <article class="article-card">
-                            @if ($article->image_url)
-                                <div class="article-card-image">
-                                    {{-- <img src="{{ asset($article->image_url) }}" style="margin-bottom: 20px"
-                                        alt="{{ $article->title }}" loading="lazy"> --}}
-                                </div>
-                            @endif
+                            {{-- @if ($article->image_url) --}}
+                            <div class="article-card-image">
+                                @php
+                                    $mainImg = !empty($article->image_base64)
+                                        ? $article->image_base64
+                                        : (!empty($article->image_url)
+                                            ? $article->image_url
+                                            : null);
+                                @endphp
+
+                                @if ($mainImg)
+                                    <img src="{{ $mainImg }}" alt="{{ $article->title }}" class="featured-image"
+                                        referrerpolicy="no-referrer" />
+                                @endif
+
+                            </div>
+                            {{-- @endif --}}
 
                             <div class="article-card-meta">
-                                <span class="tag">{{ $article->keyword }}</span>
+                                <span class="tag" style="margin-top: 20px;">{{ $article->keyword }}</span>
                                 <time datetime="{{ optional($article->created_at)->toDateString() }}">
                                     {{ optional($article->created_at)->format('d M Y') ?? '-' }}
                                 </time>
