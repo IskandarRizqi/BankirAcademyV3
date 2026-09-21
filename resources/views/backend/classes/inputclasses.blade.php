@@ -56,7 +56,7 @@
 							</div>
 							<div class="col-lg-6">
 								<div class="form-group">
-									<label for="datClassesDateStart">Class Date</label>
+									<label for="datClassesDateStart">Tanggal Pendaftaran</label>
 									<small class="inputerrormessage text-danger" input-target="datClassesDateStart"
 										style="display: none;"></small>
 									<small class="inputerrormessage text-danger" input-target="datClassesDateEnd"
@@ -70,6 +70,13 @@
 										<input type="date" class="form-control" name="datClassesDateEnd"
 											id="datClassesDateEnd" placeholder="Date End" aria-label="Date End">
 									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="class_date">Tanggal Pelaksanaan</label>
+									<input type="date" class="form-control" name="class_date" id="class_date"
+										placeholder="Tanggal Pelaksanaan" aria-label="Tanggal Pelaksanaan">
 								</div>
 							</div>
 							<div class="col-lg-6">

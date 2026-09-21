@@ -27,6 +27,7 @@ class ClassesModel extends Model
         'participant_limit',
         'date_start',
         'date_end',
+        'class_date',
         'tipe',
         'level',
         'jenis',

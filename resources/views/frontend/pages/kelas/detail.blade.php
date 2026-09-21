@@ -68,7 +68,7 @@
         </div>
     </section>
 
-    <nav class="sticky-nav">
+    {{-- <nav class="sticky-nav">
         <div class="container sticky-links">
             <a href="#ringkasan">Ringkasan</a>
             <a href="#hasil-belajar">Hasil Belajar</a>
@@ -77,21 +77,20 @@
             <a href="#pendaftaran">Pendaftaran</a>
             <a href="#faq">FAQ</a>
         </div>
-    </nav>
+    </nav> --}}
 
     <!-- Section Ringkasan & Tentang Kelas -->
-    <section class="section" id="ringkasan">
+    {{-- <section class="section" id="ringkasan">
         <div class="container overview-grid">
             <article class="content-card">
                 <span class="eyebrow">Tentang Kelas</span>
                 <h2>Pembelajaran Praktis dan Terarah</h2>
 
-                {{-- Memuat deskripsi lengkap dari database (HTML support) --}}
                 <div class="class-description">
                     {!! $class->content !!}
                 </div>
 
-                {{-- Menampilkan Tag / Topik Kelas jika ada --}}
+            
                 @if (!empty($class->tags))
                     @php $tags = is_array($class->tags) ? $class->tags : json_decode($class->tags, true); @endphp
                     @if ($tags)
@@ -136,10 +135,10 @@
                 </div>
             </aside>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Section Kurikulum (Dinamis dari content_list accessor) -->
-    <section class="section section-soft" id="kurikulum">
+    {{-- <section class="section section-soft" id="kurikulum">
         <div class="container">
             @include('frontend.components.section-head', [
                 'eyebrow' => 'Kurikulum Kelas',
@@ -166,10 +165,10 @@
                 @endforelse
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Section Metode Belajar -->
-    <section class="section" id="metode">
+    {{-- <section class="section" id="metode">
         <div class="container">
             @include('frontend.components.section-head', [
                 'eyebrow' => 'Pengalaman Belajar',
@@ -196,7 +195,7 @@
                 </article>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Section Pendaftaran & Pricing -->
     <section class="section section-soft" id="pendaftaran">

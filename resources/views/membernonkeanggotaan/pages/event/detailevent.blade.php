@@ -20,6 +20,7 @@
             ][(int) data_get($class, 'kategori')] ?? 'Kelas';
         $startDate = data_get($class, 'date_start');
         $endDate = data_get($class, 'date_end');
+        $classDate = data_get($class, 'class_date');
         $isIht = (int) data_get($class, 'iht') === 1;
         $courseTime = data_get($class, 'jam_acara');
         $courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
@@ -74,6 +75,7 @@
                 ($withYear ? ' ' . $date->format('Y') : '');
         };
         $formattedDate = 'Fleksibel';
+        $formattedClassDate = $classDate ? $formatCourseDate($classDate) : 'Belum ditentukan';
         $courseStatus = 'Upcoming';
         $courseStatusClass = 'upcoming';
         $today = now()->startOfDay();
@@ -789,6 +791,10 @@
                             <span class="event-stat-card__value">{{ $formattedDate }}</span>
                         </div>
                         <div class="event-stat-card">
+                            <span class="event-stat-card__label">Pelaksanaan</span>
+                            <span class="event-stat-card__value">{{ $formattedClassDate }}</span>
+                        </div>
+                        <div class="event-stat-card">
                             <span class="event-stat-card__label">Waktu</span>
                             <span class="event-stat-card__value">{{ $courseTimeLabel }}</span>
                         </div>
@@ -876,6 +882,10 @@
                                 <span
                                     class="event-highlight-card__label">{{ $isIht ? 'Pendaftaran' : 'Batas Pendaftaran' }}</span>
                                 <span class="event-highlight-card__value">{{ $formattedDate }}</span>
+                            </div>
+                            <div class="event-highlight-card">
+                                <span class="event-highlight-card__label">Tanggal Pelaksanaan</span>
+                                <span class="event-highlight-card__value">{{ $formattedClassDate }}</span>
                             </div>
                             <div class="event-highlight-card">
                                 <span class="event-highlight-card__label">Jam</span>

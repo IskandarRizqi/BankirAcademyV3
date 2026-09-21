@@ -18,6 +18,8 @@
                 1 => 'Offline',
             ][(int) data_get($class, 'kategori')] ?? 'Kelas';
         $isIht = (int) data_get($class, 'iht') === 1;
+        $classDate = data_get($class, 'class_date');
+        $classDateLabel = $classDate ? \Carbon\Carbon::parse($classDate)->format('d/m/Y') : 'Belum ditentukan';
         $endDate = data_get($class, 'date_end');
         $courseTime = data_get($class, 'jam_acara');
         $courseTimeLabel = $courseTime ? \Carbon\Carbon::parse($courseTime)->format('H:i') . ' WIB' : 'Menyesuaikan';
@@ -803,6 +805,10 @@
                         <div class="member-owned-class-detail__stat">
                             <span class="member-owned-class-detail__stat-label">Peserta terdaftar</span>
                             <span class="member-owned-class-detail__stat-value">{{ $participantCount }} orang</span>
+                        </div>
+                        <div class="member-owned-class-detail__stat">
+                            <span class="member-owned-class-detail__stat-label">Tanggal pelaksanaan</span>
+                            <span class="member-owned-class-detail__stat-value">{{ $classDateLabel }}</span>
                         </div>
                         <div class="member-owned-class-detail__stat">
                             <span class="member-owned-class-detail__stat-label">Waktu</span>

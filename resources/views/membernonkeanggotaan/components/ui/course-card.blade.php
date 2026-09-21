@@ -17,6 +17,7 @@ $mediaIcon = $mode === 'Offline' ? 'fa-users' : 'fa-video';
 $mediaTooltip = $mode === 'Offline' ? 'Tatap muka di lokasi penyelenggara' : 'Online melalui Zoom';
 $startDate = data_get($course, 'date_start');
 $endDate = data_get($course, 'date_end');
+$classDate = data_get($course, 'class_date');
 $isIht = (int) data_get($course, 'iht') === 1;
 $courseTime = data_get($course, 'jam_acara');
 $participantLimit = data_get($course, 'participant_limit');
@@ -61,6 +62,7 @@ $date = \Carbon\Carbon::parse($date);
 return $date->format('j') . ' ' . $shortMonths[(int) $date->format('n')] . ($withYear ? ' ' . $date->format('Y') : '');
 };
 $registrationDate = 'Fleksibel';
+$classDateLabel = $classDate ? $formatCourseDate($classDate) : 'Belum ditentukan';
 $courseStatus = 'Upcoming';
 $courseStatusClass = 'upcoming';
 
@@ -490,6 +492,10 @@ $registrationDate = 'Hubungi Tim Kami';
 				<span class="member-course-card__meta-value">
 					{{ $registrationDate }}
 				</span>
+			</div>
+			<div class="member-course-card__meta-item">
+				<span class="member-course-card__meta-label">Pelaksanaan</span>
+				<span class="member-course-card__meta-value">{{ $classDateLabel }}</span>
 			</div>
 			<div class="member-course-card__meta-item">
 				<span class="member-course-card__meta-label">Waktu</span>

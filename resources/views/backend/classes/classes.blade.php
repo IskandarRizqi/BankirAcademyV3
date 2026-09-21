@@ -54,7 +54,8 @@
                         <thead class="thead-light">
                             <tr>
                                 <th width="5%">Status</th>
-                                <th>Tanggal</th>
+                                <th>Pendaftaran</th>
+                                <th>Pelaksanaan</th>
                                 <th>Tipe</th>
                                 <th>Jam</th>
                                 <th width="20%">Kelas</th>
@@ -94,6 +95,17 @@
                                             </div>
                                         @else
                                             <span class="badge badge-light text-muted">Akan Datang</span>
+                                        @endif
+                                    </td>
+
+                                    {{-- Class Date --}}
+                                    <td>
+                                        @if ($v->class_date)
+                                            <span class="small font-weight-bold">
+                                                {{ Carbon\Carbon::parse($v->class_date)->format('d/m/Y') }}
+                                            </span>
+                                        @else
+                                            <span class="badge badge-light text-muted">Belum Set</span>
                                         @endif
                                     </td>
 
