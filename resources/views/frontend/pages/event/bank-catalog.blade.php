@@ -59,7 +59,7 @@
             </div>
         </div>
     </section>
-    <div class="class-summary">
+    {{-- <div class="class-summary">
         <div class="container summary-grid">
             <div class="summary-item"><span class="summary-icon">12</span><span><strong>Contoh Kelas</strong><span>Berbagai
                         bidang kompetensi</span></span></div>
@@ -70,7 +70,7 @@
             <div class="summary-item"><span class="summary-icon">✓</span><span><strong>Evaluasi</strong><span>Kuis, praktik,
                         dan action plan</span></span></div>
         </div>
-    </div>
+    </div> --}}
     <section class="section" id="katalog">
         <div class="container">
             @include('frontend.components.section-head', [

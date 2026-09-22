@@ -21,10 +21,10 @@
                 </div>
 
                 <span class="eyebrow">{{ $class->category ?? 'Kelas Online' }}</span>
-                <h1>{{ $class->title }}</h1>
+                <h1 style="font-size: 38px">{{ $class->title }}</h1>
                 <p class="hero-copy">{{ $class->contents ?? strip_tags($class->content) }}</p>
 
-                <div class="hero-meta">
+                {{-- <div class="hero-meta">
                     @if ($class->level)
                         <span>Level {{ $class->level }}</span>
                     @endif
@@ -34,36 +34,18 @@
                     @if (!empty($class->content_list))
                         <span>{{ count($class->content_list) }} Modul</span>
                     @endif
-                </div>
+                </div> --}}
 
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="#pendaftaran">Mulai Belajar →</a>
+                    <a class="btn btn-primary"
+                        href="{{ auth()->check() ? url('/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title)) : route('login.new') }}">Mulai
+                        Belajar →</a>
                     <a class="btn btn-outline" href="{{ route('frontend.classes.index') }}">Kembali ke Katalog</a>
                 </div>
             </div>
 
             <div class="preview-card">
-                @php
-                    $coverBg = !empty($class->image)
-                        ? 'background-image: url(' .
-                            asset('storage/' . $class->image) .
-                            '); background-size: cover; background-position: center;'
-                        : '';
-                @endphp
-                <div class="preview-cover theme-purple" style="{{ $coverBg }}">
-                    <span class="preview-label">{{ $class->category ?? 'Umum' }}</span>
-                    <h2>{{ $class->title }}</h2>
-                    <div class="preview-bottom">
-                        <div class="preview-stat">
-                            <strong>{{ $class->level ?? 'Semua Level' }}</strong>
-                            <span>Tingkat pembelajaran</span>
-                        </div>
-                        <div class="preview-stat">
-                            <strong>{{ !empty($class->content_list) ? count($class->content_list) : 0 }} Modul</strong>
-                            <span>Kurikulum terstruktur</span>
-                        </div>
-                    </div>
-                </div>
+                <img class="class-banner-image" src="{{ asset($class->image) }}" alt="Banner {{ $class->title }}">
             </div>
         </div>
     </section>
@@ -226,7 +208,8 @@
                     <li>Sertifikat sesuai persyaratan program</li>
                 </ul>
 
-                <a class="btn btn-secondary" href="{{ route('frontend.support.contact') }}">
+                <a class="btn btn-secondary"
+                    href="{{ auth()->check() ? url('/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title)) : route('login.new') }}">
                     {{ $finalPrice > 0 ? 'Daftar Sekarang' : 'Ikuti Kelas Gratis' }}
                 </a>
             </article>
@@ -284,27 +267,12 @@
                 'description' => 'Pilih topik berikut untuk memperluas kompetensi secara bertahap.',
             ])
 
-            <div class="related-grid">
-                @foreach ($relatedClasses as $related)
-                    <article class="related">
-                        @php
-                            $relBg = !empty($related->image)
-                                ? 'background-image: url(' .
-                                    asset('storage/' . $related->image) .
-                                    '); background-size: cover;'
-                                : '';
-                        @endphp
-                        <div class="related-cover theme-teal" style="{{ $relBg }}">
-                            <h3>{{ $related->title }}</h3>
-                        </div>
-                        {{-- <div class="related-body">
-                            <p>{{ $related->contents ?? strip_tags($related->content) }}</p>
-                            <a href="{{ route('frontend.class.static', ['slug' => $related->slug ?? $related->id]) }}">
-                                Lihat kelas →
-                            </a>
-                        </div> --}}
-                    </article>
-                @endforeach
+            <div class="course-grid related-grid">
+                @forelse ($relatedClasses as $related)
+                    @include('frontend.components.course-card', ['item' => $related])
+                @empty
+                    <p class="text-muted">Belum ada kelas terkait.</p>
+                @endforelse
             </div>
         </div>
     </section>

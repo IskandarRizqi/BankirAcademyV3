@@ -1,14 +1,77 @@
 @php
     $loginUrl = Auth::check() ? \App\Support\AuthRedirector::pathFor(Auth::user()) : url('/authentikasi/login');
 @endphp
-<!-- Logo SVG reusable -->
-<svg class="logo-symbol" height="0" width="0">
-    <symbol id="logo-ba" viewbox="0 0 64 64">
+
+<!-- CSS Perbaikan Layout Icon & Dropdown -->
+<style>
+    /* Sembunyikan SVG Sprite Sheet agar tidak merusak layout */
+    .logo-symbol {
+        display: none !important;
+    }
+
+    /* Penataan Flexbox pada Dropdown Link */
+    .desktop-nav .drop-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 12px;
+        text-decoration: none;
+        color: inherit;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+
+    .desktop-nav .drop-link:hover {
+        background-color: #f4f5f7;
+    }
+
+    /* Penataan Icon agar Presisi dan Tidak Terdistorsi */
+    .desktop-nav .drop-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        /* Mencegah icon mengecil jika teks panjang */
+        border-radius: 8px;
+        background-color: #f0f2f5;
+        color: #5142c1;
+        font-size: 16px;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    /* Penataan Konten Teks di Samping Icon */
+    .desktop-nav .drop-link>span:not(.drop-icon) {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .desktop-nav .drop-link strong {
+        display: block;
+        font-size: 14px;
+        color: #1a1a1a;
+        line-height: 1.3;
+    }
+
+    .desktop-nav .drop-link span span {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+    }
+</style>
+
+<!-- Logo SVG reusable (Disembunyikan dengan benar) -->
+<svg class="logo-symbol">
+    <symbol id="logo-ba" viewBox="0 0 64 64">
         <defs>
-            <lineargradient id="logoGradient" x1="0" x2="1" y1="0" y2="1">
+            <linearGradient id="logoGradient" x1="0" x2="1" y1="0" y2="1">
                 <stop offset="0%" stop-color="#7668E5"></stop>
                 <stop offset="100%" stop-color="#5142C1"></stop>
-            </lineargradient>
+            </linearGradient>
         </defs>
         <rect fill="url(#logoGradient)" height="64" rx="17" width="64"></rect>
         <path
@@ -27,85 +90,109 @@
                 <small>Learning · Talent · Banking Solutions</small>
             </span>
         </a>
+
         <nav aria-label="Navigasi utama" class="desktop-nav">
             <a class="nav-link active" href="{{ route('frontend.home') }}">Beranda</a>
+
             <div class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.home') }}#layanan">Layanan <span
                         class="chevron">▼</span></a>
                 <div class="dropdown wide">
                     <a class="drop-link" href="{{ route('frontend.service.banking-solution') }}">
                         <span class="drop-icon">▦</span>
-                        <span><strong>Banking Solution</strong><span>Solusi terapan untuk kebutuhan operasional dan
-                                pengembangan
-                                bank.</span></span>
+                        <span>
+                            <strong>Banking Solution</strong>
+                            <span>Solusi terapan untuk kebutuhan operasional dan pengembangan bank.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.service.capacity-building') }}">
                         <span class="drop-icon">↗</span>
-                        <span><strong>Capacity Building</strong><span>Program peningkatan kompetensi berbasis kebutuhan
-                                organisasi.</span></span>
+                        <span>
+                            <strong>Capacity Building</strong>
+                            <span>Program peningkatan kompetensi berbasis kebutuhan organisasi.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.service.banking-talent') }}">
                         <span class="drop-icon">◇</span>
-                        <span><strong>Banking Talent Solution</strong><span>Pengembangan dan pemetaan talenta sektor
-                                perbankan.</span></span>
+                        <span>
+                            <strong>Banking Talent Solution</strong>
+                            <span>Pengembangan dan pemetaan talenta sektor perbankan.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.service.lms') }}">
                         <span class="drop-icon">▶</span>
-                        <span><strong>Learning Management System</strong><span>Pembelajaran digital, asesmen, dan
-                                pelaporan
-                                terintegrasi.</span></span>
+                        <span>
+                            <strong>Learning Management System</strong>
+                            <span>Pembelajaran digital, asesmen, dan pelaporan terintegrasi.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.service.innovation') }}">
                         <span class="drop-icon">✦</span>
-                        <span><strong>Inovasi Program</strong><span>Riset, analisis produk, automasi, dan pengembangan
-                                AI
-                                terapan.</span></span>
+                        <span>
+                            <strong>Inovasi Program</strong>
+                            <span>Riset, analisis produk, automasi, dan pengembangan AI terapan.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.service.csr') }}">
                         <span class="drop-icon">♡</span>
-                        <span><strong>Program CSR</strong><span>Edukasi industri perbankan bagi pelajar dan calon
-                                bankir.</span></span>
+                        <span>
+                            <strong>Program CSR</strong>
+                            <span>Edukasi industri perbankan bagi pelajar dan calon bankir.</span>
+                        </span>
                     </a>
                 </div>
             </div>
+
             <div class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.home') }}#talent-solutions">Talent Solutions <span
                         class="chevron">▼</span></a>
                 <div class="dropdown">
                     <a class="drop-link" href="{{ route('frontend.talent.headhunting') }}">
                         <span class="drop-icon">⌕</span>
-                        <span><strong>Headhunting</strong><span>Pencarian kandidat sesuai kriteria dan kebutuhan
-                                organisasi.</span></span>
+                        <span>
+                            <strong>Headhunting</strong>
+                            <span>Pencarian kandidat sesuai kriteria dan kebutuhan organisasi.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.talent.outsourcing') }}">
                         <span class="drop-icon">◎</span>
-                        <span><strong>Outsourcing</strong><span>Dukungan tenaga kerja berbasis ruang lingkup yang
-                                disepakati.</span></span>
+                        <span>
+                            <strong>Outsourcing</strong>
+                            <span>Dukungan tenaga kerja berbasis ruang lingkup yang disepakati.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.talent.job-connect') }}">
                         <span class="drop-icon">⇄</span>
-                        <span><strong>Job Connect</strong><span>Menghubungkan kandidat dan peluang kerja yang
-                                relevan.</span></span>
+                        <span>
+                            <strong>Job Connect</strong>
+                            <span>Menghubungkan kandidat dan peluang kerja yang relevan.</span>
+                        </span>
                     </a>
                 </div>
             </div>
+
             <div class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.home') }}#foundations">Foundations <span
                         class="chevron">▼</span></a>
                 <div class="dropdown">
                     <a class="drop-link" href="{{ route('frontend.foundation.education') }}">
                         <span class="drop-icon">🎓</span>
-                        <span><strong>Bakti Pendidikan</strong><span>Literasi, pengenalan karier, dan pembelajaran
-                                industri.</span></span>
+                        <span>
+                            <strong>Bakti Pendidikan</strong>
+                            <span>Literasi, pengenalan karier, dan pembelajaran industri.</span>
+                        </span>
                     </a>
                     <a class="drop-link" href="{{ route('frontend.foundation.umkm') }}">
                         <span class="drop-icon">⌂</span>
-                        <span><strong>Bakti UMKM</strong><span>Penguatan kapasitas usaha dan literasi pengelolaan
-                                bisnis.</span></span>
+                        <span>
+                            <strong>Bakti UMKM</strong>
+                            <span>Penguatan kapasitas usaha dan literasi pengelolaan bisnis.</span>
+                        </span>
                     </a>
                 </div>
             </div>
         </nav>
+
         <div class="header-action">
             <a class="btn btn-outline btn-sm" href="{{ route('frontend.support.contact') }}">Konsultasi</a>
             <a href="{{ $loginUrl }}" class="btn btn-primary btn-sm">
@@ -159,15 +246,6 @@
         </div>
     </div>
 
-    {{-- @auth
-        <!-- Tampil di menu mobile jika pengguna SUDAH login -->
-        <a class="btn btn-primary mobile-login" href="{{ url('/home') }}">Login</a>
-    @endauth
-
-    @guest
-        <!-- Tampil di menu mobile jika pengguna BELUM login -->
-        <a class="btn btn-primary mobile-login" href="{{ route('login.new') }}">Login</a>
-    @endguest --}}
     <a href="{{ $loginUrl }}" class="btn btn-primary mobile-login">
         <span>Login</span>
     </a>

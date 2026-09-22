@@ -297,6 +297,12 @@
             backdrop-filter: blur(14px);
         }
 
+        .event-stat-card--location,
+        .event-highlight-card--location {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
         .event-stat-card__label {
             display: block;
             margin-bottom: 7px;
@@ -803,7 +809,7 @@
                             <span
                                 class="event-stat-card__value">{{ $participantLimit ? $participantLimit . ' peserta' : 'Terbatas' }}</span>
                         </div>
-                        <div class="event-stat-card">
+                        <div class="event-stat-card event-stat-card--location">
                             <span class="event-stat-card__label">Lokasi</span>
                             <span class="event-stat-card__value">{{ $locationLabel }}</span>
                         </div>
@@ -895,7 +901,7 @@
                                 <span class="event-highlight-card__label">Metode</span>
                                 <span class="event-highlight-card__value">{{ $mode }}</span>
                             </div>
-                            <div class="event-highlight-card">
+                            <div class="event-highlight-card event-highlight-card--location">
                                 <span class="event-highlight-card__label">Lokasi / Media</span>
                                 <span class="event-highlight-card__value">{{ $locationLabel }}</span>
                             </div>
