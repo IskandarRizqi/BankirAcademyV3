@@ -14,6 +14,7 @@
             'active' => request()->is('dash-beranda'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Beranda',
         ],
         [
             'label' => 'Event',
@@ -22,6 +23,7 @@
             'active' => request()->is('event-kelas'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Eksplorasi',
         ],
         [
             'label' => 'Ebook',
@@ -30,6 +32,7 @@
             'active' => request()->is('ebook'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Eksplorasi',
         ],
         [
             'label' => 'Video',
@@ -38,6 +41,7 @@
             'active' => request()->is('video'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Eksplorasi',
         ],
         [
             'label' => 'Pembelian',
@@ -46,6 +50,7 @@
             'active' => request()->is('pembayaran'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Transaksi',
         ],
         [
             'label' => 'Pembelajaran Anda',
@@ -54,6 +59,7 @@
             'active' => request()->is('kelas-event'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Pembelajaran',
         ],
         [
             'label' => 'Sertifikat',
@@ -62,6 +68,7 @@
             'active' => request()->is('sertifikat-kelas*'),
             'can_see' => true,
             'has_submenu' => false,
+            'section' => 'Pembelajaran',
         ],
         [
             'label' => 'Loker',
@@ -70,6 +77,7 @@
             'active' => request()->routeIs('membernonanggota.loker.index', 'membernonanggota.loker.show'),
             'can_see' => (int) $role === 2,
             'has_submenu' => false,
+            'section' => 'Karier',
         ],
     ];
 
@@ -82,6 +90,7 @@
                 'active' => request()->routeIs('membernonanggota.sop.*'),
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Bonus Aplikasi',
@@ -90,6 +99,7 @@
                 'active' => request()->routeIs('membernonanggota.bonus-aplikasi.*'),
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Pasang loker',
@@ -98,6 +108,7 @@
                 'active' => request()->routeIs('membernonanggota.loker.manage.*'),
                 'can_see' => true,
                 'has_submenu' => true,
+                'section' => 'Fitur Membership',
                 'submenu_id' => 'member-company-loker-submenu',
                 'submenu_items' => [
                     [
@@ -128,6 +139,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Konsultasi',
@@ -136,6 +148,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Komunitas & Program Afiliasi',
@@ -144,6 +157,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
         ],
         \App\Models\DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => [
@@ -154,6 +168,7 @@
                 'active' => request()->routeIs('membernonanggota.cv-ats.*'),
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Karier',
             ],
             [
                 'label' => 'Konsultasi',
@@ -162,6 +177,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Komunitas',
@@ -170,6 +186,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Program afiliasi',
@@ -178,6 +195,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
             [
                 'label' => 'Member point',
@@ -186,6 +204,7 @@
                 'active' => false,
                 'can_see' => true,
                 'has_submenu' => false,
+                'section' => 'Fitur Membership',
             ],
         ],
         default => [],
@@ -225,8 +244,13 @@
     <nav class="sidebar-nav">
         <div class="nav-section-label">Menu Utama</div>
 
+        @php $currentMenuSection = null; @endphp
         @foreach ($menus as $menu)
             @if ($menu['can_see'])
+                @if (!empty($menu['section']) && $currentMenuSection !== $menu['section'])
+                    <div class="nav-section-label">{{ $menu['section'] }}</div>
+                    @php $currentMenuSection = $menu['section']; @endphp
+                @endif
                 @if (!empty($menu['has_submenu']) && isset($menu['submenu_items']))
                     <div class="menu {{ $menu['active'] ? 'submenu-open' : '' }}">
                         <a href="javascript:void(0);" class="nav-item-link {{ $menu['active'] ? 'active' : '' }}"

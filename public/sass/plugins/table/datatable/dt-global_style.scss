@@ -195,14 +195,24 @@ div.dataTables_wrapper div {
     label {
       position: relative;
       margin-bottom: 0;
+      display: inline-flex;
+      align-items: center;
     }
 
     svg {
       position: absolute;
-      top: 5px;
+      top: 50%;
       right: 9px;
       width: 20px;
+      height: 20px;
+      transform: translateY(-50%);
+      pointer-events: none;
       color: $m-color_5;
+    }
+
+    svg + input {
+      margin-left: 0;
+      padding-right: 2.25rem;
     }
   }
 }

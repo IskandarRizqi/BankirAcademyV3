@@ -43,6 +43,10 @@ table.dataTable {
   }
 }
 
+.dt--top-section {
+  margin: 20px 21px;
+}
+
 div.dataTables_wrapper div {
   &.dataTables_length {
     label {
@@ -68,12 +72,30 @@ div.dataTables_wrapper div {
       text-align: left;
       color: $m-color_6;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      position: relative;
     }
 
     input {
       margin-left: 0.5em;
       display: inline-block;
       width: auto;
+    }
+
+    svg {
+      position: absolute;
+      top: 50%;
+      right: 9px;
+      width: 20px;
+      height: 20px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    svg + input {
+      margin-left: 0;
+      padding-right: 2.25rem;
     }
   }
 }
@@ -240,6 +262,10 @@ div {
 }
 
 @media screen and (max-width: 767px) {
+  .dt--top-section {
+    margin: 16px;
+  }
+
   div.dataTables_wrapper div {
     &.dataTables_length, &.dataTables_filter, &.dataTables_info, &.dataTables_paginate {
       text-align: center;
