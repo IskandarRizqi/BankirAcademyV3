@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use PDF;
 
 class ClassesController extends Controller
@@ -160,6 +161,7 @@ class ClassesController extends Controller
 
         ClassesModel::create([
             'title' => $r->txtClassesTitle,
+            'slug' => $this->uniqueSlug($r->txtClassesTitle),
             'instructor' => json_encode($instructor),
             'category' => $r->slcClassesCategory,
             'tags' => json_encode($tags),
@@ -229,6 +231,7 @@ class ClassesController extends Controller
 
     public function update(Request $r, $id)
     {
+        $class = ClassesModel::findOrFail($id);
         $status = 0;
         if (AdminPanel::canAccess(Auth::user())) {
             $status = 1;
@@ -238,6 +241,8 @@ class ClassesController extends Controller
         $subCategory = $this->normalizeSelectValues($r->subCategory);
         $tobeins = [
             'title' => $r->txtClassesTitle,
+            // Keep published URLs stable when an administrator edits the title.
+            'slug' => $class->slug ?: $this->uniqueSlug($r->txtClassesTitle, $class->id),
             'instructor' => json_encode($instructor),
             'category' => $r->slcClassesCategory,
             'tags' => json_encode($tags),
@@ -333,7 +338,7 @@ class ClassesController extends Controller
             $tobeins['image_mobile'] = ('/image/classes/' . $filenameMobile);
         }
 
-        ClassesModel::where('id', $id)->update($tobeins);
+        $class->update($tobeins);
 
         return Redirect::back()->with('success', 'Class Updated');
         // return redirect('/admin/classes')->with('success', 'Class Updated');
@@ -349,6 +354,23 @@ class ClassesController extends Controller
         return array_values(array_unique(array_filter($values, function ($item) {
             return $item !== null && $item !== '';
         })));
+    }
+
+    private function uniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($title) ?: 'kelas';
+        $slug = $baseSlug;
+        $suffix = 2;
+
+        while (ClassesModel::query()
+            ->where('slug', $slug)
+            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+            ->exists()) {
+            $slug = $baseSlug.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 
     public function destroy($id)

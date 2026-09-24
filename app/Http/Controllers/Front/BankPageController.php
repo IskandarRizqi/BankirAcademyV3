@@ -19,7 +19,7 @@ class BankPageController
     {
         $now = Carbon::now();
         // Mengambil data kelas dinamis berdasarkan slug
-        $class = ClassesModel::where('id', $slug)
+        $class = ClassesModel::where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();
         $currentYear  = $now->year;

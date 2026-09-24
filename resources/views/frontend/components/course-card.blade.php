@@ -43,7 +43,7 @@
 
         <div class="course-actions">
             <span class="course-status">{{ $priceText }}</span>
-            <a class="text-link" href="{{ route('frontend.class.detail', $item->id) }}">
+            <a class="text-link" href="{{ route('frontend.class.detail', $item->slug) }}">
                 Lihat detail →
             </a>
         </div>

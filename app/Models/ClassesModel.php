@@ -16,6 +16,7 @@ class ClassesModel extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'instructor',
         'category',
         'sub_category',
