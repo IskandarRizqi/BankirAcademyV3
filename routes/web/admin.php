@@ -125,6 +125,9 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/perusahaan', [CompanyController::class, 'index'])
         ->middleware('admin.panel')
         ->name('perusahaan.index');
+    Route::get('/posting', function () {
+        return view('backend.posting.index');
+    });
     Route::post('/admin/perusahaan', [CompanyController::class, 'store'])
         ->middleware('admin.panel')
         ->name('perusahaan.store');

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\AksesByIpAddress;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Tests\TestCase;
@@ -41,6 +42,21 @@ class RouteArchitectureTest extends TestCase
             'lokerdraft.publish',
         ] as $name) {
             $this->assertNotNull(Route::getRoutes()->getByName($name), $name.' route is missing');
+        }
+    }
+
+    public function test_public_catalog_routes_do_not_require_login_or_ip_whitelist(): void
+    {
+        foreach ([
+            'api.v1.public.classes.index',
+            'api.v1.public.ebooks.index',
+            'api.v1.public.interactive-videos.index',
+        ] as $name) {
+            $route = Route::getRoutes()->getByName($name);
+
+            $this->assertNotNull($route, $name.' route is missing');
+            $this->assertNotContains('auth', $route->gatherMiddleware(), $name.' must be public');
+            $this->assertNotContains(AksesByIpAddress::class, $route->gatherMiddleware(), $name.' must not require IP whitelist');
         }
     }
 

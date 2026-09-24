@@ -6,6 +6,7 @@ use App\Services\ClassPricingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 
 class ClassesModel extends Model
@@ -63,6 +64,11 @@ class ClassesModel extends Model
     public function classEvents(): HasMany
     {
         return $this->hasMany(ClassEventModel::class, 'class_id');
+    }
+
+    public function pricingData(): HasOne
+    {
+        return $this->hasOne(ClassPricingModel::class, 'class_id');
     }
 
     public function getContentsAttribute()

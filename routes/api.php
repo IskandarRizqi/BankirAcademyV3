@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\KelasController;
 use App\Http\Controllers\API\LokerController;
+use App\Http\Controllers\API\PublicCatalogController;
 use App\Http\Controllers\API\ScraperIngestionController;
 use App\Http\Controllers\ArticleGeneratorController;
 use App\Http\Controllers\Backend\PembayaranController;
@@ -29,11 +30,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/getloker', [LokerController::class, 'get_data']);
+Route::prefix('v1/public')->name('api.v1.public.')->group(function () {
+    Route::get('/classes', [PublicCatalogController::class, 'classes'])->name('classes.index');
+    Route::get('/ebooks', [PublicCatalogController::class, 'ebooks'])->name('ebooks.index');
+    Route::get('/interactive-videos', [PublicCatalogController::class, 'interactiveVideos'])->name('interactive-videos.index');
+});
+
 Route::middleware([AksesByIpAddress::class])->group(function () {
     Route::get('/loker', [LokerController::class, 'index']);
     Route::get('/kelas', [KelasController::class, 'index']);
 });
-
 
 Route::get('/apiberanda', [HomeController::class, 'apiberanda']);
 Route::get('/tripay/create', [PembayaranController::class, 'tripaycreate']);
