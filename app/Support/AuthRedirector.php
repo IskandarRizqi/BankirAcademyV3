@@ -7,6 +7,15 @@ use App\Providers\RouteServiceProvider;
 
 class AuthRedirector
 {
+    public static function safePath(?string $path): ?string
+    {
+        if (! is_string($path) || $path === '' || $path[0] !== '/' || str_starts_with($path, '//')) {
+            return null;
+        }
+
+        return $path;
+    }
+
     public static function pathFor(?User $user): string
     {
         // \Log::info($user);

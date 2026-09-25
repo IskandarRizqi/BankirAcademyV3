@@ -51,7 +51,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        return redirect(AuthRedirector::pathFor($user));
+        return redirect()->intended(AuthRedirector::pathFor($user));
     }
 
     public function redirectTo()

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\InstructorModel;
 use App\Models\User;
 use App\Models\UserProfileModel;
+use App\Support\AuthRedirector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -17,6 +18,11 @@ class SocialiteController extends Controller
     {
         $ins = $request->has('ins');
         session(['ins' => $ins]);
+
+        if ($redirect = AuthRedirector::safePath($request->query('redirect'))) {
+            $request->session()->put('url.intended', $redirect);
+        }
+
         return Socialite::driver($provider)->redirect();
     }
 
@@ -36,7 +42,7 @@ class SocialiteController extends Controller
         $user = $this->findOrCreateUser($socialUser, $provider, $ins);
         Auth::login($user, true);
 
-        return redirect('/dash-beranda');
+        return redirect()->intended(AuthRedirector::pathFor($user));
     }
 
     protected function findOrCreateUser($socialUser, $provider, $ins)

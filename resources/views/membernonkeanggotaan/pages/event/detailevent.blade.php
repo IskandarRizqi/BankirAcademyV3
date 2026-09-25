@@ -1078,6 +1078,22 @@
                     alert(alertText);
                 });
             });
+
+            var query = new URLSearchParams(window.location.search);
+            var shouldOpenCheckout = query.get('checkout') === '1';
+            var checkoutButton = document.querySelector('.js-event-order-button[data-can-register="1"]');
+
+            if (shouldOpenCheckout && checkoutButton) {
+                query.delete('checkout');
+                var cleanQuery = query.toString();
+                var cleanUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '') +
+                    window.location.hash;
+                window.history.replaceState({}, document.title, cleanUrl);
+
+                window.setTimeout(function() {
+                    checkoutButton.click();
+                }, 150);
+            }
         });
     </script>
 @endsection

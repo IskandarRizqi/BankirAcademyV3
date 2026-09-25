@@ -931,8 +931,12 @@ class HomeController extends Controller
         return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
     }
 
-    public function getlayoutauth()
+    public function getlayoutauth(Request $request)
     {
+        if ($redirect = \App\Support\AuthRedirector::safePath($request->query('redirect'))) {
+            $request->session()->put('url.intended', $redirect);
+        }
+
         return view('auth.login');
     }
 }

@@ -25,7 +25,7 @@ class BankPageController
         $currentYear  = $now->year;
         // Mengambil 3 kelas terkait (selain kelas yang sedang dibuka)
         $relatedClasses = ClassesModel::where('status', 1)
-            ->where('id', '!=', $class->id)
+            ->where('id', '!=', $class->id) 
             ->whereYear('date_start', $currentYear)
             ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
             ->where('status', 1)->where('iht', 0)

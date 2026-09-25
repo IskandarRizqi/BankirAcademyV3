@@ -175,7 +175,7 @@ X-Scraper-Api-Key: {{apiKey}}
 ###############################################################################
 # 3. TEST VALIDASI GAGAL (KOSONGKAN FIELD REQUIRED)
 ###############################################################################
-GET {{baseUrl}}/api/getloker
+GET {{baseUrl}}/api/v1/public/interactive-videos
 Content-Type: {{contentType}}
 Accept: {{contentType}}
 

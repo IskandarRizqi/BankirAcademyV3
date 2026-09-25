@@ -106,6 +106,15 @@
                     </div>
                 @endforelse
             </div>
+            <style>
+                #classGrid.catalog-cards {
+                    gap: 16px;
+                }
+
+                #classGrid.catalog-cards .course-card {
+                    max-width: none;
+                }
+            </style>
         </div>
     </section>
     <section class="section section-soft">

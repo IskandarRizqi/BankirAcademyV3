@@ -9,6 +9,12 @@
 @endsection
 
 @section('content')
+    @php
+        $eventDetailUrl =
+            '/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title) . '?checkout=1';
+        $loginUrl = route('login.new', ['redirect' => $eventDetailUrl]);
+    @endphp
+
     <section class="detail-hero">
         <div class="container detail-grid">
             <div>
@@ -37,8 +43,7 @@
                 </div> --}}
 
                 <div class="hero-actions">
-                    <a class="btn btn-primary"
-                        href="{{ auth()->check() ? url('/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title)) : route('login.new') }}">Mulai
+                    <a class="btn btn-primary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">Mulai
                         Belajar →</a>
                     <a class="btn btn-outline" href="{{ route('frontend.classes.index') }}">Kembali ke Katalog</a>
                 </div>
@@ -208,9 +213,8 @@
                     <li>Sertifikat sesuai persyaratan program</li>
                 </ul>
 
-                <a class="btn btn-secondary"
-                    href="{{ auth()->check() ? url('/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title)) : route('login.new') }}">
-                    {{ $finalPrice > 0 ? 'Daftar Sekarang' : 'Ikuti Kelas Gratis' }}
+                <a class="btn btn-secondary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">
+                    {{ $finalPrice > 0 ? 'Ikuti Kelas' : 'Ikuti Kelas Gratis' }}
                 </a>
             </article>
 

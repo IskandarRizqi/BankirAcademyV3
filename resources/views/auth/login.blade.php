@@ -4,6 +4,13 @@
 @section('page-description', 'Masuk ke akun Bankir Academy untuk melanjutkan pembelajaran dan mengakses layanan.')
 
 @section('content')
+    @php
+        $loginRedirect = request()->query('redirect') ?: session('url.intended');
+        $googleLoginUrl = route('social.redirect', ['provider' => 'google']);
+        if ($loginRedirect) {
+            $googleLoginUrl .= '?' . http_build_query(['redirect' => $loginRedirect]);
+        }
+    @endphp
     <main class="auth-page">
         <div class="auth-orb auth-orb-primary" aria-hidden="true"></div>
         <div class="auth-orb auth-orb-secondary" aria-hidden="true"></div>
@@ -68,7 +75,7 @@
                     <div class="login-actions">
                         <button class="auth-button auth-button-primary" type="submit">Masuk</button>
                         <div class="auth-divider"><span>atau</span></div>
-                        <a class="auth-button auth-button-google" href="{{ url('/auth/google') }}">
+                        <a class="auth-button auth-button-google" href="{{ $googleLoginUrl }}">
                             <span class="google-mark" aria-hidden="true">G</span>
                             Login dengan Google
                         </a>
