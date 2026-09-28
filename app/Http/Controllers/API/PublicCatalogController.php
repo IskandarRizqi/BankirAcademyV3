@@ -28,6 +28,7 @@ class PublicCatalogController extends Controller
                 'image',
                 'image_mobile',
                 'content',
+                'instructor',
                 'date_start',
                 'date_end',
                 'class_date',
@@ -53,7 +54,9 @@ class PublicCatalogController extends Controller
                 },
                 'pricingData',
             ])
-            ->where('status', 1);
+            ->where('status', 1)
+            ->whereDate('date_start', '<=', today())
+            ->whereDate('date_end', '>=', today());
 
         if (! empty($filters['q'])) {
             $search = $filters['q'];
@@ -144,7 +147,7 @@ class PublicCatalogController extends Controller
             ->with([
                 'materi:id,nama,banner,icon',
                 'items' => function ($query) use ($itemType) {
-                    $query->select(['id', 'id_sub_materi', 'judul_item', 'tipe_link_item'])
+                    $query->select(['id', 'id_sub_materi', 'judul_item', 'link_item', 'tipe_link_item'])
                         ->where('tipe_link_item', $itemType)
                         ->orderBy('id');
                 },

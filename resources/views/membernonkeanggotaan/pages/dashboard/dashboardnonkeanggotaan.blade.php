@@ -39,4 +39,6 @@
             ])
         </div>
     </div>
+
+    @include('membernonkeanggotaan.components.ui.membership-profile-modal')
 @endsection

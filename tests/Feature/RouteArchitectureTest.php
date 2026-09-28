@@ -40,6 +40,11 @@ class RouteArchitectureTest extends TestCase
             'lokerdraft.index',
             'lokerdraft.update',
             'lokerdraft.publish',
+            'membernonanggota.membership-profile.update',
+            'membernonanggota.membership-profile.edit',
+            'membernonanggota.membership-profile.locations.cities',
+            'membernonanggota.membership-profile.locations.districts',
+            'membernonanggota.membership-profile.locations.villages',
         ] as $name) {
             $this->assertNotNull(Route::getRoutes()->getByName($name), $name.' route is missing');
         }

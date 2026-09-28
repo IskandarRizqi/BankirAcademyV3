@@ -26,6 +26,15 @@
             'section' => 'Eksplorasi',
         ],
         [
+            'label' => 'Update Profile',
+            'icon' => 'profile',
+            'url' => route('membernonanggota.membership-profile.edit'),
+            'active' => request()->routeIs('membernonanggota.membership-profile.*'),
+            'can_see' => true,
+            'has_submenu' => false,
+            'section' => 'Akun',
+        ],
+        [
             'label' => 'Ebook',
             'icon' => 'ebook',
             'url' => '/ebook',
@@ -214,6 +223,7 @@
 
     $icons = [
         'dashboard' => '<i class="fas fa-chart-line"></i>',
+        'profile' => '<i class="fas fa-user-edit"></i>',
         'event' => '<i class="fas fa-chalkboard"></i>',
         'ebook' => '<i class="fas fa-book-reader"></i>',
         'video' => '<i class="fas fa-video"></i>',

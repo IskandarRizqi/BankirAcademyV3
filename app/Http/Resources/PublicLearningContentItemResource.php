@@ -11,6 +11,7 @@ class PublicLearningContentItemResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->judul_item,
+            'link_item' => $this->link_item,
             'type' => (int) $this->tipe_link_item === 1 ? 'pdf' : 'video',
         ];
     }

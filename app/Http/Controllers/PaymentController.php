@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MembershipProfileRequest;
 use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Throwable;
@@ -45,6 +47,31 @@ class PaymentController extends Controller
 
         if (! $profile) {
             return back()->with('error', 'Profil pengguna tidak ditemukan.');
+        }
+
+        $profileData = $profile->only([
+            'name',
+            'phone',
+            'gender',
+            'tanggal_lahir',
+            'alamat',
+            'provinsi_id',
+            'kota_id',
+            'kecamatan_id',
+            'kelurahan_id',
+        ]);
+        $profileData['phone'] = (string) $profileData['phone'];
+        $profileData['membership_tipe'] = $membershipType;
+        $profileValidator = Validator::make(
+            $profileData,
+            MembershipProfileRequest::profileRules($profileData)
+        );
+
+        if ($profileValidator->fails()) {
+            return back()
+                ->withInput()
+                ->with('open_membership_profile', $membershipType)
+                ->with('error', 'Lengkapi profile Anda sebelum memilih metode pembayaran.');
         }
 
         $qty = 1;

@@ -14,6 +14,8 @@ use App\Http\Controllers\MemberNonAnggota\EbookController;
 use App\Http\Controllers\MemberNonAnggota\ListDaftarKelasController;
 use App\Http\Controllers\MemberNonAnggota\LokerController;
 use App\Http\Controllers\MemberNonAnggota\LokerPostingController;
+use App\Http\Controllers\MemberNonAnggota\MembershipProfileController;
+use App\Http\Controllers\MemberNonAnggota\ProfileLocationController;
 use App\Http\Controllers\MemberNonAnggota\SertifikatController;
 use App\Http\Controllers\MemberNonAnggota\SopController;
 use App\Http\Controllers\PaymentController;
@@ -43,6 +45,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/order-video', [PaymentController::class, 'paymentordervideo'])->name('payment.order.video');
     Route::post('/payment/order-video-manual', [PaymentController::class, 'paymentOrderVideoManual'])->name('payment.order.video.manual');
     Route::post('/payment/order-ebook-manual', [PaymentController::class, 'paymentOrderEbookManual'])->name('payment.order.ebook.manual');
+    Route::get('/member/profile/membership', [MembershipProfileController::class, 'edit'])
+        ->name('membernonanggota.membership-profile.edit');
+    Route::post('/member/profile/membership', [MembershipProfileController::class, 'update'])
+        ->name('membernonanggota.membership-profile.update');
+    Route::get('/member/profile/locations/cities', [ProfileLocationController::class, 'cities'])
+        ->name('membernonanggota.membership-profile.locations.cities');
+    Route::get('/member/profile/locations/districts', [ProfileLocationController::class, 'districts'])
+        ->name('membernonanggota.membership-profile.locations.districts');
+    Route::get('/member/profile/locations/villages', [ProfileLocationController::class, 'villages'])
+        ->name('membernonanggota.membership-profile.locations.villages');
     Route::post('/detail-event/{unique_id}/order-iht', [DataEventKelasController::class, 'orderIht'])->name('membernonanggota.event.order-iht');
     Route::post('/pembayaran/{id}/upload-bukti', [BillingController::class, 'uploadBuktiTransfer'])
         ->name('pembayaran.upload-bukti');

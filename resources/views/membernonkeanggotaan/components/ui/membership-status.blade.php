@@ -3,6 +3,7 @@ $user = auth()->user();
 $membershipStatusValue = (int) optional(optional($user)->profile)->status_membership;
 $membershipPayment = $membershipPayment ?? null;
 $isMember = $membershipStatusValue === 1;
+$isMembershipProfileComplete = optional(optional($user)->profile)->hasCompleteMembershipProfile() ?? false;
 $isPendingMember = !$isMember && ($membershipStatusValue === 2 || ($membershipPayment && in_array((int) $membershipPayment->status, [2, 3, 98], true)));
 $membershipStatus = $isMember ? 'Member Aktif' : 'Belum Member';
 $membershipDescription = $isMember
@@ -176,8 +177,8 @@ $membershipDescription = $isMember
 
 	@if(!$isMember)
 	<div class="membership-status-card__actions">
-		<button type="button" class="membership-status-card__button membership-status-card__button--secondary" data-toggle="modal" data-target="#membershipPackageModal" data-member-type="perusahaan">Member Perusahaan</button>
-		<button type="button" class="membership-status-card__button" data-toggle="modal" data-target="#membershipIndividualModal" data-member-type="perorangan">Member Perorangan</button>
+		<button type="button" class="membership-status-card__button membership-status-card__button--secondary" data-toggle="modal" data-target="{{ $isMembershipProfileComplete ? '#membershipPackageModal' : '#membershipProfileModal' }}" data-member-type="1">Member Perusahaan</button>
+		<button type="button" class="membership-status-card__button" data-toggle="modal" data-target="{{ $isMembershipProfileComplete ? '#membershipIndividualModal' : '#membershipProfileModal' }}" data-member-type="2">Member Perorangan</button>
 	</div>
 	@endif
 </section>

@@ -32,6 +32,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
@@ -209,13 +210,30 @@ class ProfileController extends Controller
             ->latest('id')
             ->first();
 
+        $membershipProfile = UserProfileModel::where('user_id', $userId)->first();
+        $membershipProvinces = DB::table('provinsi')->select(['id', 'name'])->orderBy('name')->get();
+        $membershipLocations = [
+            'cities' => $membershipProfile?->provinsi_id
+                ? DB::table('kota')->where('provinsi_id', $membershipProfile->provinsi_id)->orderBy('name')->get()
+                : collect(),
+            'districts' => $membershipProfile?->kota_id
+                ? DB::table('kecamatan')->where('kota_id', $membershipProfile->kota_id)->orderBy('name')->get()
+                : collect(),
+            'villages' => $membershipProfile?->kecamatan_id
+                ? DB::table('kelurahan')->where('kecamatan_id', $membershipProfile->kecamatan_id)->orderBy('name')->get()
+                : collect(),
+        ];
+
         return view('membernonkeanggotaan.pages.dashboard.dashboardnonkeanggotaan', compact(
             'totalClasses',
             'totalEbooks',
             'totalVideos',
             'paymentStats',
             'recentPayments',
-            'membershipPayment'
+            'membershipPayment',
+            'membershipProfile',
+            'membershipProvinces',
+            'membershipLocations'
         ));
     }
 

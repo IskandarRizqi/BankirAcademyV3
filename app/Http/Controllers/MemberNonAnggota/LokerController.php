@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\MemberNonAnggota;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ApplicationSubmittedMail;
 use App\Models\DataPayment;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\User;
+use App\Models\UserProfileModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class LokerController extends Controller
 {
@@ -35,7 +33,7 @@ class LokerController extends Controller
         $lokers = $isMember
             ? $query->paginate(self::PAGE_SIZE)->withQueryString()
             : $query->limit(max(0, $limit))->get();
-        $lokerSkeletonCount = !$isMember && $limit > 0 && $lokers->count() === $limit
+        $lokerSkeletonCount = ! $isMember && $limit > 0 && $lokers->count() === $limit
             ? (3 - ($lokers->count() % 3)) % 3
             : 0;
 
@@ -49,6 +47,20 @@ class LokerController extends Controller
             ]);
         }
 
+        $membershipProfile = UserProfileModel::where('user_id', $request->user()->id)->first();
+        $membershipProvinces = DB::table('provinsi')->select(['id', 'name'])->orderBy('name')->get();
+        $membershipLocations = [
+            'cities' => $membershipProfile?->provinsi_id
+                ? DB::table('kota')->where('provinsi_id', $membershipProfile->provinsi_id)->orderBy('name')->get()
+                : collect(),
+            'districts' => $membershipProfile?->kota_id
+                ? DB::table('kecamatan')->where('kota_id', $membershipProfile->kota_id)->orderBy('name')->get()
+                : collect(),
+            'villages' => $membershipProfile?->kecamatan_id
+                ? DB::table('kelurahan')->where('kecamatan_id', $membershipProfile->kecamatan_id)->orderBy('name')->get()
+                : collect(),
+        ];
+
         return view('membernonkeanggotaan.pages.loker.index', [
             'lokers' => $lokers,
             'filters' => $filters,
@@ -59,6 +71,9 @@ class LokerController extends Controller
             'isMember' => $isMember,
             'nonMembershipLimit' => $limit,
             'lokerSkeletonCount' => $lokerSkeletonCount,
+            'membershipProfile' => $membershipProfile,
+            'membershipProvinces' => $membershipProvinces,
+            'membershipLocations' => $membershipLocations,
         ]);
     }
 
@@ -77,14 +92,14 @@ class LokerController extends Controller
         $cities = DB::table('kota')
             ->where('provinsi_id', $provinceId)
             ->when($search !== '', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%');
             })
             ->orderBy('name')
             ->paginate(20);
 
         return response()->json([
             'results' => $cities->getCollection()
-                ->map(fn($city) => [
+                ->map(fn ($city) => [
                     'id' => $city->id,
                     'text' => $city->name,
                 ])
@@ -179,7 +194,6 @@ class LokerController extends Controller
         //     }
         // }
 
-
         return view('membernonkeanggotaan.pages.loker.apply-preview', [
             'loker' => $loker,
             'cv' => $cv,
@@ -218,6 +232,7 @@ class LokerController extends Controller
 
         if ($lastApply && $lastApply->created_at->diffInDays(now()) < 15) {
             $nextDate = $lastApply->created_at->addDays(15)->translatedFormat('d F Y');
+
             return redirect()->route('membernonanggota.loker.history')
                 ->with('error', "Anda sudah melamar posisi ini. Anda baru dapat melamar kembali pada tanggal {$nextDate}.");
         }
@@ -237,8 +252,8 @@ class LokerController extends Controller
 
             LokerApply::create([
                 'loker_id' => $loker->id,
-                'user_id'  => $request->user()->id,
-                'status'   => 0,
+                'user_id' => $request->user()->id,
+                'status' => 0,
             ]);
         });
 
@@ -284,9 +299,9 @@ class LokerController extends Controller
     {
         if ($filters['q'] !== '') {
             $query->where(function (Builder $searchQuery) use ($filters) {
-                $searchQuery->where('loker.title', 'like', '%' . $filters['q'] . '%')
-                    ->orWhere('loker.nama', 'like', '%' . $filters['q'] . '%')
-                    ->orWhere('perusahaan_models.nama', 'like', '%' . $filters['q'] . '%');
+                $searchQuery->where('loker.title', 'like', '%'.$filters['q'].'%')
+                    ->orWhere('loker.nama', 'like', '%'.$filters['q'].'%')
+                    ->orWhere('perusahaan_models.nama', 'like', '%'.$filters['q'].'%');
             });
         }
 
@@ -383,7 +398,7 @@ class LokerController extends Controller
         }
 
         return DB::table('kota')
-            ->when($provinceId !== '', fn($query) => $query->where('provinsi_id', $provinceId))
+            ->when($provinceId !== '', fn ($query) => $query->where('provinsi_id', $provinceId))
             ->where('id', $cityId)
             ->value('name');
     }
@@ -396,11 +411,11 @@ class LokerController extends Controller
 
                 return is_array($decoded) ? $decoded : Arr::wrap($value);
             })
-            ->filter(fn($value) => $value !== null && $value !== '')
-            ->map(fn($value) => (string) $value)
+            ->filter(fn ($value) => $value !== null && $value !== '')
+            ->map(fn ($value) => (string) $value)
             ->unique()
             ->sort()
-            ->mapWithKeys(fn($value) => [$value => $this->formatOptionLabel($value)])
+            ->mapWithKeys(fn ($value) => [$value => $this->formatOptionLabel($value)])
             ->all();
     }
 

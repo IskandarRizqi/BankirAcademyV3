@@ -11,6 +11,10 @@ class PublicClassResource extends JsonResource
     public function toArray($request): array
     {
         $pricing = $this->pricingData;
+        $instructorNames = collect($this->instructor_list ?? [])
+            ->pluck('name')
+            ->filter()
+            ->values();
 
         return [
             'id' => $this->id,
@@ -30,6 +34,8 @@ class PublicClassResource extends JsonResource
             'date_start' => $this->date_start,
             'date_end' => $this->date_end,
             'class_date' => $this->class_date,
+            'instructor_name' => $instructorNames->implode(', ') ?: null,
+            'price' => $pricing ? (float) $pricing->price : 0,
             'pricing' => $this->pricing($pricing),
             'events' => PublicClassEventResource::collection($this->whenLoaded('classEvents')),
         ];
