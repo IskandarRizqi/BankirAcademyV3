@@ -155,7 +155,7 @@
                 <form method="POST" action="{{ route('membernonanggota.membership-profile.update') }}">
                     @csrf
                     <input type="hidden" name="membership_tipe" id="membership-profile-type"
-                        value="{{ old('membership_tipe', '') }}">
+                        value="{{ old('membership_tipe', session('open_membership_profile', '')) }}">
 
                     <div class="membership-profile-form">
                         <div class="membership-profile-form__field">
@@ -301,8 +301,17 @@
             const city = document.getElementById('membership-profile-city');
             const district = document.getElementById('membership-profile-district');
             const village = document.getElementById('membership-profile-village');
+            const membershipType = document.getElementById('membership-profile-type');
 
             if (!modal) return;
+
+            document.querySelectorAll('[data-member-type]').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    if (membershipType) {
+                        membershipType.value = this.dataset.memberType || '';
+                    }
+                });
+            });
 
             // Reset dropdown pilihan & kembalikan ke status disabled
             function resetSelect(select, defaultText) {

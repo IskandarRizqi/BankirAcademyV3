@@ -597,11 +597,11 @@
                 </div>
                 <div class="loker-membership-cta__actions">
                     <button type="button" class="loker-membership-cta__button loker-membership-cta__button--secondary"
-                        data-toggle="modal" data-target="{{ optional($membershipProfile ?? null)->hasCompleteMembershipProfile() ? '#membershipPackageModal' : '#membershipProfileModal' }}" data-member-type="1">
+                        data-toggle="modal" data-target="{{ optional($membershipProfile ?? null)->canUpgradeToMembership() ? '#membershipPackageModal' : '#membershipProfileModal' }}" data-member-type="1">
                         Member perusahaan
                     </button>
                     <button type="button" class="loker-membership-cta__button" data-toggle="modal"
-                        data-target="{{ optional($membershipProfile ?? null)->hasCompleteMembershipProfile() ? '#membershipIndividualModal' : '#membershipProfileModal' }}" data-member-type="2">
+                        data-target="{{ optional($membershipProfile ?? null)->canUpgradeToMembership() ? '#membershipIndividualModal' : '#membershipProfileModal' }}" data-member-type="2">
                         Member perorangan
                     </button>
                 </div>
@@ -610,6 +610,7 @@
             @include('membernonkeanggotaan.components.ui.membership-profile-modal')
             @include('membernonkeanggotaan.components.ui.membership-package-modal')
             @include('membernonkeanggotaan.components.ui.membership-individual-modal')
+            @include('membernonkeanggotaan.components.ui.membership-phone-verification-modal')
         @endif
     </div>
 @endsection

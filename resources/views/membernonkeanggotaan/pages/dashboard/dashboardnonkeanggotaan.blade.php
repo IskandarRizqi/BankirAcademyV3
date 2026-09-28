@@ -41,4 +41,5 @@
     </div>
 
     @include('membernonkeanggotaan.components.ui.membership-profile-modal')
+    @include('membernonkeanggotaan.components.ui.membership-phone-verification-modal')
 @endsection

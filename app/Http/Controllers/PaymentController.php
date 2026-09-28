@@ -74,6 +74,13 @@ class PaymentController extends Controller
                 ->with('error', 'Lengkapi profile Anda sebelum memilih metode pembayaran.');
         }
 
+        if (! $profile->isPhoneVerified()) {
+            return back()
+                ->with('open_phone_verification', true)
+                ->with('phone_verification_membership_type', $membershipType)
+                ->with('error', 'Verifikasi nomor handphone melalui OTP sebelum melanjutkan upgrade membership.');
+        }
+
         $qty = 1;
         $totalbayar = $membership['price'] * $qty;
         $isManual = $paymentMethod === 'manual';

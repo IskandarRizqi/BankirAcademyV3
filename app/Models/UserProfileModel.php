@@ -17,6 +17,9 @@ class UserProfileModel extends Model
         'name',
         'phone_region',
         'phone',
+        'otp',
+        'status_nomor',
+        'otp_expires_at',
         'alamat',
         'provinsi_id',
         'kota_id',
@@ -44,7 +47,34 @@ class UserProfileModel extends Model
         'kecamatan_id' => 'integer',
         'kelurahan_id' => 'integer',
         'tipe_membership' => 'integer',
+        'status_nomor' => 'boolean',
+        'otp_expires_at' => 'datetime',
     ];
+
+    public static function normalizePhone(?string $phone): string
+    {
+        $digits = preg_replace('/\D+/', '', (string) $phone);
+
+        if (str_starts_with($digits, '62')) {
+            return $digits;
+        }
+
+        if (str_starts_with($digits, '0')) {
+            return '62'.substr($digits, 1);
+        }
+
+        return $digits === '' ? '' : '62'.$digits;
+    }
+
+    public function isPhoneVerified(): bool
+    {
+        return (bool) $this->status_nomor;
+    }
+
+    public function canUpgradeToMembership(): bool
+    {
+        return $this->hasCompleteMembershipProfile() && $this->isPhoneVerified();
+    }
 
     public function hasCompleteMembershipProfile(): bool
     {

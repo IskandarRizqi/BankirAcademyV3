@@ -364,6 +364,8 @@ class ProfileController extends Controller
     public function saveCorporate($data)
     {
         $pesan = 'Simpan data gagal';
+        $existingProfile = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        $phone = UserProfileModel::normalizePhone($data->nomor_handphone);
         // $c = CorporateModel::where('nama', $data->nama_lengkap)->first();
         $c = CorporateModel::updateOrCreate([
             'nama' => $data->nama_lengkap,
@@ -375,11 +377,16 @@ class ProfileController extends Controller
             'id_corporate' => $c->id,
             'name' => $c->nama,
             'phone_region' => 62,
-            'phone' => $data->nomor_handphone,
+            'phone' => $phone,
             'tanggal_lahir' => $data->tanggal_lahir,
             'gender' => 0,
             'description' => $data->alamat,
         ];
+        if (UserProfileModel::normalizePhone($existingProfile?->phone) !== $phone) {
+            $insert['status_nomor'] = false;
+            $insert['otp'] = null;
+            $insert['otp_expires_at'] = null;
+        }
         if ($data->picture) {
             $name = $data->file('picture')->getClientOriginalName(); // Name File
             $size = $data->file('picture')->getSize(); // Size File
@@ -460,15 +467,22 @@ class ProfileController extends Controller
         //     'gender' => 1,
         // ];
 
+        $existingProfile = UserProfileModel::where('user_id', Auth::user()->id)->first();
         $d = [
             'name' => $request->nama_lengkap,
-            'phone' => $request->nomor_handphone,
+            'phone' => UserProfileModel::normalizePhone($request->nomor_handphone),
             'rekening' => $request->rekening,
             'tanggal_lahir' => $request->tanggal_lahir,
             'gender' => $request->jenis_kelamin,
             'description' => $request->alamat,
             'instansi' => 'perorangan',
         ];
+
+        if (UserProfileModel::normalizePhone($existingProfile?->phone) !== $d['phone']) {
+            $d['status_nomor'] = false;
+            $d['otp'] = null;
+            $d['otp_expires_at'] = null;
+        }
 
         if ($request->picture) {
             $name = $request->file('picture')->getClientOriginalName(); // Name File
@@ -529,13 +543,21 @@ class ProfileController extends Controller
     public function settingprofile(Request $r)
     {
         $simpanreff = 1;
+        $existingProfile = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        $phone = UserProfileModel::normalizePhone($r->no_hp);
         $ins = [
             'name' => $r->name,
-            'phone' => $r->no_hp,
+            'phone' => $phone,
             'jenis_kelamin' => $r->jenis_kelamin,
             'tanggal_lahir' => $r->tgl_lahir,
             'description' => $r->alamat,
         ];
+
+        if (UserProfileModel::normalizePhone($existingProfile?->phone) !== $phone) {
+            $ins['status_nomor'] = false;
+            $ins['otp'] = null;
+            $ins['otp_expires_at'] = null;
+        }
         if ($r->gambar && $r->gambar != 'undefined') {
             $name = $r->file('gambar')->getClientOriginalName(); // Name File
             $size = $r->file('gambar')->getSize(); // Size File

@@ -3,7 +3,7 @@ $user = auth()->user();
 $membershipStatusValue = (int) optional(optional($user)->profile)->status_membership;
 $membershipPayment = $membershipPayment ?? null;
 $isMember = $membershipStatusValue === 1;
-$isMembershipProfileComplete = optional(optional($user)->profile)->hasCompleteMembershipProfile() ?? false;
+$isMembershipProfileComplete = optional(optional($user)->profile)->canUpgradeToMembership() ?? false;
 $isPendingMember = !$isMember && ($membershipStatusValue === 2 || ($membershipPayment && in_array((int) $membershipPayment->status, [2, 3, 98], true)));
 $membershipStatus = $isMember ? 'Member Aktif' : 'Belum Member';
 $membershipDescription = $isMember

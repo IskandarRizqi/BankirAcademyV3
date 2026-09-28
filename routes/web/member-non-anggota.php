@@ -49,6 +49,12 @@ Route::middleware('auth')->group(function () {
         ->name('membernonanggota.membership-profile.edit');
     Route::post('/member/profile/membership', [MembershipProfileController::class, 'update'])
         ->name('membernonanggota.membership-profile.update');
+    Route::post('/member/profile/phone/send-otp', [MembershipProfileController::class, 'resendOtp'])
+        ->middleware('throttle:5,10')
+        ->name('membernonanggota.membership-phone.send');
+    Route::post('/member/profile/phone/verify-otp', [MembershipProfileController::class, 'verifyOtp'])
+        ->middleware('throttle:10,10')
+        ->name('membernonanggota.membership-phone.verify');
     Route::get('/member/profile/locations/cities', [ProfileLocationController::class, 'cities'])
         ->name('membernonanggota.membership-profile.locations.cities');
     Route::get('/member/profile/locations/districts', [ProfileLocationController::class, 'districts'])

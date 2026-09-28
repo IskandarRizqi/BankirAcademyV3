@@ -11,6 +11,11 @@ class FonnteService
         string $target,
         string $message
     ): Response {
+        $url = rtrim((string) config('services.fonnte.url'), '/');
+        if (! str_ends_with($url, '/send')) {
+            $url .= '/send';
+        }
+
         return Http::asForm()
             ->withHeaders([
                 'Authorization' => config('services.fonnte.token'),
@@ -18,7 +23,7 @@ class FonnteService
             ->timeout(30)
             ->retry(3, 1000)
             ->post(
-                config('services.fonnte.url') . '/send',
+                $url,
                 [
                     'target' => $target,
                     'message' => $message,
