@@ -10,9 +10,9 @@
 |
 */
 
-require __DIR__.'/web/admin.php';
-require __DIR__.'/web/compact.php';
-require __DIR__.'/web/transactions.php';
-require __DIR__.'/web/auth.php';
-require __DIR__.'/web/public.php';
-require __DIR__.'/web/member-non-anggota.php';
+require __DIR__ . '/web/admin.php';
+require __DIR__ . '/web/compact.php';
+require __DIR__ . '/web/transactions.php';
+require __DIR__ . '/web/auth.php';
+require __DIR__ . '/web/public.php';
+require __DIR__ . '/web/member-non-anggota.php';

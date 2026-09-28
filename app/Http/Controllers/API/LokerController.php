@@ -64,14 +64,14 @@ class LokerController extends Controller
     }
     public function  get_data(Request $request)
     {
-        $query = LokerModel::where('status', 1);
+        $query = LokerModel::where('status', 1)->whereDate('tanggal_awal', now());
 
         // Filter pencarian opsional
         if ($request->has('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $loker = $query->latest()->paginate(10);
+        $loker = $query->get();
 
         return response()->json([
             'success' => true,
