@@ -839,7 +839,7 @@
                                 <button type="submit" class="event-primary-cta">Minta Penawaran</button>
                             </form>
                         @else
-                            @if ($transaksiAktif)
+                            @if ($transaksiAktif && $courseStatusClass !== 'upcoming')
                                 <a href="#" class="video-register-button bg-warning text-dark font-weight-bold">
                                     <i class="fas fa-clock me-2 mr-2"></i> Selesaikan Pembayaran
                                 </a>
@@ -978,7 +978,7 @@
                             <button type="submit" class="event-register-button">Minta Penawaran</button>
                         </form>
                     @else
-                        @if ($transaksiAktif)
+                        @if ($transaksiAktif && $courseStatusClass !== 'upcoming')
                             <a href="#" class="video-register-button bg-warning text-dark font-weight-bold">
                                 <i class="fas fa-clock me-2 mr-2"></i> Selesaikan Pembayaran
                             </a>

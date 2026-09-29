@@ -512,6 +512,10 @@
                     </div>
                 </div>
                 <br><br><br><br><br><br><br>
+                @php
+                    $pricingSnapshot = json_decode((string) ($payment->additional_discount ?? ''), true) ?: [];
+                    $participantDiscountTotal = (float) ($pricingSnapshot['participant_discount_total'] ?? 0);
+                @endphp
                 <table>
                     <thead>
                         <tr>
@@ -545,7 +549,7 @@
                                 @endif
                             <td class="unit">
                                 {{substr(numfmt_format_currency(numfmt_create('id_ID',
-                                    \NumberFormatter::CURRENCY),0,"IDR"),0,-3) }}
+                                    \NumberFormatter::CURRENCY),$participantDiscountTotal,"IDR"),0,-3) }}
                             </td>
 
 

@@ -515,6 +515,10 @@
                     </thead>
                     <tbody>
                         @foreach ($payment as $key => $p)
+                        @php
+                            $pricingSnapshot = json_decode((string) ($p->additional_discount ?? ''), true) ?: [];
+                            $participantDiscountTotal = (float) ($pricingSnapshot['participant_discount_total'] ?? 0);
+                        @endphp
                         <tr>
                             <td>{{$key+1}}</td>
                             <th class="text-left"
@@ -555,7 +559,8 @@
                                 \NumberFormatter::CURRENCY),$p->referral,"IDR"),0,-3)}}
                             </td>
                             <td class="unit">
-                                Rp. 0
+                                {{substr(numfmt_format_currency(numfmt_create('id_ID',
+                                \NumberFormatter::CURRENCY),$participantDiscountTotal,"IDR"),0,-3) }}
                             </td>
                             <td class="unit">
                                 {{$p->jumlah}}

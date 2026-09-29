@@ -39,6 +39,12 @@ class ClassPricingModel extends Model
         return $this->hasMany(ClassPricingMembershipDiscount::class, 'class_id', 'class_id');
     }
 
+    public function participantDiscounts(): HasMany
+    {
+        return $this->hasMany(ClassPricingParticipantDiscount::class, 'class_id', 'class_id')
+            ->orderBy('minimum_participants');
+    }
+
     public function isFree(): bool
     {
         return (int) $this->gratis === 1;

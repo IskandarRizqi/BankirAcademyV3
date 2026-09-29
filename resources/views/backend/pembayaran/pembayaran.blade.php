@@ -1,28 +1,273 @@
 @extends('layouts.compact')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <style>
+        .payment-page {
+            --payment-primary: #4f46e5;
+            --payment-ink: #172033;
+            --payment-muted: #748096;
+            --payment-line: #e9edf5;
+            color: var(--payment-ink);
+        }
+
+        .payment-page__heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .payment-page__eyebrow {
+            margin-bottom: 7px;
+            color: var(--payment-primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .payment-page__title {
+            margin-bottom: 5px;
+            color: var(--payment-ink);
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .payment-page__description {
+            max-width: 650px;
+            margin-bottom: 0;
+            color: var(--payment-muted);
+            font-size: 13px;
+        }
+
+        .payment-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 9px 13px;
+            color: #4338ca;
+            background: #eef0ff;
+            border: 1px solid #dfe2ff;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .payment-filter-card,
+        .payment-table-card {
+            border: 1px solid var(--payment-line) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 24px rgba(31, 41, 72, .06) !important;
+        }
+
+        .payment-filter-card__header,
+        .payment-table-card__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .payment-filter-card__header {
+            margin-bottom: 20px;
+        }
+
+        .payment-section-title {
+            margin: 0;
+            color: var(--payment-ink);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .payment-section-subtitle {
+            margin: 4px 0 0;
+            color: var(--payment-muted);
+            font-size: 12px;
+        }
+
+        .payment-filter-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4b556b;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .02em;
+        }
+
+        .payment-date-inputs .form-control,
+        .payment-date-inputs .input-group-text {
+            height: 42px;
+            border-color: var(--payment-line);
+            font-size: 12px;
+        }
+
+        .payment-date-inputs .input-group-text {
+            color: #8a94a6;
+            background: #f8f9fc;
+        }
+
+        .payment-status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .payment-status-option {
+            position: relative;
+            min-width: 0;
+        }
+
+        .payment-status-option input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+
+        .payment-status-option label {
+            display: flex;
+            align-items: center;
+            min-height: 37px;
+            margin: 0;
+            padding: 7px 9px;
+            overflow: hidden;
+            color: #667085;
+            background: #fff;
+            border: 1px solid var(--payment-line);
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-overflow: ellipsis;
+            transition: color .15s ease, background .15s ease, border-color .15s ease;
+            white-space: nowrap;
+        }
+
+        .payment-status-option label::before {
+            width: 7px;
+            height: 7px;
+            margin-right: 7px;
+            flex: 0 0 7px;
+            background: #c7cedb;
+            border-radius: 50%;
+            content: '';
+        }
+
+        .payment-status-option input:checked + label {
+            color: #4338ca;
+            background: #f2f3ff;
+            border-color: #aeb4ff;
+        }
+
+        .payment-status-option input:checked + label::before {
+            background: var(--payment-primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, .12);
+        }
+
+        .payment-status-option input:focus-visible + label {
+            outline: 2px solid rgba(79, 70, 229, .35);
+            outline-offset: 2px;
+        }
+
+        .payment-filter-actions {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(74px, .65fr);
+            gap: 8px;
+        }
+
+        .payment-filter-actions .btn {
+            height: 42px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .payment-table-card__header {
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--payment-line);
+        }
+
+        .payment-table-card__meta {
+            color: var(--payment-muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        #tblPembayaran {
+            min-width: 1180px;
+        }
+
+        #tblPembayaran thead th {
+            padding-top: 13px;
+            padding-bottom: 13px;
+            color: #8a94a6;
+            background: #fafbfe;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            white-space: nowrap;
+        }
+
+        #tblPembayaran tbody td {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-color: #f0f2f7;
+            vertical-align: middle;
+        }
+
+        #tblPembayaran tbody tr:hover {
+            background: #fafbff;
+        }
+
+        @media (max-width: 767.98px) {
+            .payment-page__heading {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .payment-page__title {
+                font-size: 22px;
+            }
+
+            .payment-status-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+    <div class="container-fluid py-4 payment-page">
 
         {{-- Header Halaman --}}
-        <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="payment-page__heading">
             <div>
-                <h4 class="font-weight-bold text-dark mb-1">Kelola Pembayaran</h4>
-                <p class="text-muted small mb-0">Pantau transaksi masuk, verifikasi bukti transfer, dan kelola sertifikat
+                <div class="payment-page__eyebrow">Administrasi Keuangan</div>
+                <h1 class="payment-page__title">Kelola Pembayaran</h1>
+                <p class="payment-page__description">Pantau transaksi masuk, verifikasi bukti transfer, dan kelola sertifikat
                     siswa.</p>
             </div>
+            <div class="payment-count"><i class="bx bx-receipt"></i>{{ number_format($pembayaran->count()) }} transaksi</div>
         </div>
 
         {{-- Filter Card --}}
-        <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px;">
+        <div class="card payment-filter-card mb-4">
             <div class="card-body p-4">
+                <div class="payment-filter-card__header">
+                    <div>
+                        <h2 class="payment-section-title">Filter transaksi</h2>
+                        <p class="payment-section-subtitle">Pilih periode dan status yang ingin ditampilkan.</p>
+                    </div>
+                    <i class="bx bx-slider-alt text-muted font-size-20"></i>
+                </div>
                 <form action="/admin/pembayaran" method="get">
                     <div class="row align-items-end">
 
                         {{-- Input Filter Tanggal --}}
-                        <div class="col-lg-5 col-md-6 mb-3 mb-lg-0">
-                            <label class="font-weight-bold text-dark small mb-2"><i class="bx bx-calendar mr-1"></i> Rentang
-                                Tanggal Transaksi</label>
-                            <div class="input-group">
+                        <div class="col-xl-4 col-lg-5 mb-3 mb-xl-0">
+                            <label class="payment-filter-label"><i class="bx bx-calendar mr-1"></i> Rentang tanggal transaksi</label>
+                            <div class="input-group payment-date-inputs">
                                 <input type="date" class="form-control border-right-0" value="{{ $param['date'][0] }}"
                                     name="param_date_start" style="border-radius: 10px 0 0 10px;">
                                 <div class="input-group-append">
@@ -35,52 +280,58 @@
                         </div>
 
                         {{-- Filter Checkbox Status --}}
-                        <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
-                            <label class="font-weight-bold text-dark small mb-2 d-block"><i
-                                    class="bx bx-filter-alt mr-1"></i> Filter Status Payment</label>
-                            <div class="d-flex align-items-center pt-1">
-                                <div class="custom-control custom-checkbox mr-4">
-                                    <input type="checkbox" class="custom-control-input" id="checkBelumLunas"
+                        <div class="col-xl-6 col-lg-7 mb-3 mb-xl-0">
+                            <label class="payment-filter-label"><i class="bx bx-filter-alt mr-1"></i> Status pembayaran</label>
+                            <div class="payment-status-grid">
+                                <div class="payment-status-option">
+                                    <input type="checkbox" id="checkBelumLunas"
                                         name="param_checked_lunas[]" value="0"
                                         {{ in_array(0, $param['status']) ? 'checked' : '' }}>
-                                    <label class="custom-control-label small text-secondary font-weight-bold"
-                                        for="checkBelumLunas">Belum Lunas</label>
+                                    <label for="checkBelumLunas">Belum Lunas</label>
                                 </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="checkLunas"
+                                <div class="payment-status-option">
+                                    <input type="checkbox" id="checkLunas"
                                         name="param_checked_lunas[]" value="1"
                                         {{ in_array(1, $param['status']) ? 'checked' : '' }}>
-                                    <label class="custom-control-label small text-secondary font-weight-bold"
-                                        for="checkLunas">Lunas</label>
+                                    <label for="checkLunas">Lunas</label>
                                 </div>
-                                <div class="custom-control custom-checkbox ml-4">
-                                    <input type="checkbox" class="custom-control-input" id="checkDitolak"
+                                <div class="payment-status-option">
+                                    <input type="checkbox" id="checkPending"
+                                        name="param_checked_lunas[]" value="2"
+                                        {{ in_array(2, $param['status']) ? 'checked' : '' }}>
+                                    <label for="checkPending">Pending</label>
+                                </div>
+                                <div class="payment-status-option">
+                                    <input type="checkbox" id="checkMenungguKonfirmasi"
+                                        name="param_checked_lunas[]" value="3"
+                                        {{ in_array(3, $param['status']) ? 'checked' : '' }}>
+                                    <label for="checkMenungguKonfirmasi">Menunggu Konfirmasi</label>
+                                </div>
+                                <div class="payment-status-option">
+                                    <input type="checkbox" id="checkDitolak"
                                         name="param_checked_lunas[]" value="98"
                                         {{ in_array(98, $param['status']) ? 'checked' : '' }}>
-                                    <label class="custom-control-label small text-secondary font-weight-bold"
-                                        for="checkDitolak">Ditolak</label>
+                                    <label for="checkDitolak">Ditolak</label>
+                                </div>
+                                <div class="payment-status-option">
+                                    <input type="checkbox" id="checkDibatalkan"
+                                        name="param_checked_lunas[]" value="99"
+                                        {{ in_array(99, $param['status']) ? 'checked' : '' }}>
+                                    <label for="checkDibatalkan">Dibatalkan</label>
                                 </div>
                             </div>
                         </div>
 
                         {{-- Tombol Submit / Reset --}}
-                        <div class="col-lg-3 col-md-12">
-                            <div class="row no-gutters">
-                                <div class="col-8 pr-1">
-                                    <button
-                                        class="btn btn-primary btn-block font-weight-bold d-flex align-items-center justify-content-center"
-                                        type="submit"
-                                        style="border-radius: 10px; background: #4f46e5; border: none; height: 42px;">
-                                        <i class="bx bx-search mr-1 font-size-18"></i> Cari
-                                    </button>
-                                </div>
-                                <div class="col-4 pl-1">
-                                    <a href="/admin/pembayaran"
-                                        class="btn btn-light btn-block font-weight-bold text-muted d-flex align-items-center justify-content-center"
-                                        style="border-radius: 10px; height: 42px;">
-                                        Reset
-                                    </a>
-                                </div>
+                        <div class="col-xl-2 col-lg-12">
+                            <div class="payment-filter-actions">
+                                <button class="btn btn-primary d-flex align-items-center justify-content-center" type="submit"
+                                    style="background: #4f46e5; border: none;">
+                                    <i class="bx bx-search mr-1 font-size-18"></i> Cari
+                                </button>
+                                <a href="/admin/pembayaran" class="btn btn-light text-muted d-flex align-items-center justify-content-center">
+                                    Reset
+                                </a>
                             </div>
                         </div>
 
@@ -90,7 +341,14 @@
         </div>
 
         {{-- Tabel Data Pembayaran --}}
-        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 16px;">
+        <div class="card payment-table-card overflow-hidden">
+            <div class="payment-table-card__header">
+                <div>
+                    <h2 class="payment-section-title">Daftar pembayaran</h2>
+                    <p class="payment-section-subtitle">Transaksi terbaru sesuai filter yang dipilih.</p>
+                </div>
+                <span class="payment-table-card__meta">{{ number_format($pembayaran->count()) }} data</span>
+            </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table id="tblPembayaran" class="table table-hover align-middle mb-0" style="width:100%;">
@@ -146,11 +404,17 @@
                                              <span class="badge badge-soft-warning px-2 py-1 font-weight-bold"><i
                                                      class="bx bx-time-five mr-1"></i>Menunggu Konfirmasi</span>
                                         @elseif ($p->status == \App\Models\DataPayment::STATUS_REJECTED)
+                                             <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
+                                                     class="bx bx-error-circle mr-1"></i>Ditolak</span>
+                                        @elseif ($p->status == \App\Models\DataPayment::STATUS_CANCELED)
                                             <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
-                                                    class="bx bx-error-circle mr-1"></i>Ditolak</span>
+                                                    class="bx bx-x-circle mr-1"></i>Dibatalkan</span>
                                         @elseif ($p->status == \App\Models\DataPayment::STATUS_PENDING)
                                             <span class="badge badge-soft-warning px-2 py-1 font-weight-bold"><i
                                                     class="bx bx-time-five mr-1"></i>Pending</span>
+                                        @elseif ($p->status == 0)
+                                            <span class="badge badge-soft-secondary px-2 py-1 font-weight-bold"><i
+                                                    class="bx bx-minus-circle mr-1"></i>Belum Lunas</span>
                                         @else
                                             <span class="badge badge-soft-danger px-2 py-1 font-weight-bold"><i
                                                     class="bx bx-x-circle mr-1"></i>Belum Lunas</span>

@@ -262,7 +262,8 @@ class InvoiceController extends Controller
                 // Deklarasi referral
                 $value->referral = 0;
                 $value->reff_nominal = 0;
-                $n = ($value['price_final'] * $value['jumlah']) - $kode;
+                // price_final sudah merupakan total order seluruh peserta.
+                $n = $value['price_final'] - $kode;
                 if ($value->gratis == 1) {
                     $n = 0;
                 }

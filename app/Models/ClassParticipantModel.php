@@ -20,9 +20,19 @@ class ClassParticipantModel extends Model
 		'jumlah',
 	];
 
+	public function classPayment()
+	{
+		return $this->belongsTo(ClassPaymentModel::class, 'payment_id');
+	}
+
 	public static function totalRegisteredForClass(int $classId): int
 	{
-		return (int) static::where('class_id', $classId)->sum('jumlah');
+		return (int) static::query()
+			->where('class_id', $classId)
+			->whereHas('classPayment', function ($query) {
+				$query->where('status', 1);
+			})
+			->sum('jumlah');
 	}
 
 	public static function remainingQuotaForClass(int $classId, ?int $participantLimit): ?int

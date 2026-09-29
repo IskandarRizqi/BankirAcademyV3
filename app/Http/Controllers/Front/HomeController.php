@@ -324,14 +324,16 @@ class HomeController extends Controller
         // untuk event
 
 
-        $currentMonth = $now->month;
-        $currentYear  = $now->year;
-
+        $currentYear = $now->year;
         $data['kelas'] = ClassesModel::query()
-            ->whereYear('date_start', $currentYear)
-            ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
-            ->where('status', 1)->where('iht', 0)
-            ->orderBy('date_end', 'asc')
+            ->where('status', 1)
+            ->where('iht', 0)
+            ->whereNotNull('date_start')
+            ->where(function ($query) use ($now) {
+                $query->whereDate('date_end', '>', $now->format('Y-m-d'))
+                    ->orWhereNull('date_end');
+            })
+            ->orderBy('date_start', 'asc')
             ->take(4)
             ->get();
         $data['iht'] = ClassesModel::query()

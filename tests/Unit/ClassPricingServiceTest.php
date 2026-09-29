@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\ClassesModel;
+use App\Models\ClassPricingParticipantDiscount;
 use App\Models\ClassPricingMembershipDiscount;
 use App\Models\ClassPricingModel;
 use App\Services\ClassPricingService;
@@ -89,6 +90,22 @@ class ClassPricingServiceTest extends TestCase
         $this->assertNull($result['membership_type']);
     }
 
+    public function test_participant_discount_uses_the_highest_matching_tier_per_participant(): void
+    {
+        $class = $this->class();
+        $pricing = $this->pricing(100000, 0, [], [
+            ['minimum_participants' => 2, 'discount_amount' => 50000],
+            ['minimum_participants' => 5, 'discount_amount' => 75000],
+        ]);
+
+        $result = $this->service->resolvePricing($class, $pricing, null, 5);
+
+        $this->assertSame(75000.0, $result['participant_discount']);
+        $this->assertSame(375000.0, $result['participant_discount_total']);
+        $this->assertSame(5, $result['participant_discount_threshold']);
+        $this->assertSame(25000.0, $result['final_price']);
+    }
+
     private function class(array $attributes = []): ClassesModel
     {
         return new ClassesModel(array_merge([
@@ -98,7 +115,12 @@ class ClassPricingServiceTest extends TestCase
         ], $attributes));
     }
 
-    private function pricing(float $price, float $generalPercent, array $discounts): ClassPricingModel
+    private function pricing(
+        float $price,
+        float $generalPercent,
+        array $discounts,
+        array $participantDiscounts = []
+    ): ClassPricingModel
     {
         $pricing = new ClassPricingModel([
             'class_id' => 1,
@@ -115,6 +137,13 @@ class ClassPricingServiceTest extends TestCase
             new Collection(array_map(
                 fn (array $discount) => new ClassPricingMembershipDiscount($discount),
                 $discounts
+            ))
+        );
+        $pricing->setRelation(
+            'participantDiscounts',
+            new Collection(array_map(
+                fn (array $discount) => new ClassPricingParticipantDiscount($discount),
+                $participantDiscounts
             ))
         );
 

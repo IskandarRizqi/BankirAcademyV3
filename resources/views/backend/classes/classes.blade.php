@@ -448,6 +448,14 @@
                 if ($('#discount_type').val() === 'nominal') {
                     $('#discount_value').val(normalizeRupiah($('#discount_value').val()));
                 }
+
+                $('.participant-discount-amount').each(function() {
+                    $(this).val(normalizeRupiah($(this).val()));
+                });
+            });
+
+            $(document).on('input', '.participant-discount-amount', function() {
+                $(this).val(formatRupiah($(this).val()));
             });
         });
 
@@ -494,6 +502,56 @@
             $('#discount-preview').text(
                 'Harga setelah diskon: Rp ' + Math.max(0, price - discount).toLocaleString('id-ID')
             );
+        }
+
+        function updateParticipantDiscountEmptyState() {
+            $('#participantDiscountEmpty').toggle($('#participantDiscountRows tr').length === 0);
+        }
+
+        function addParticipantDiscountRow(minimumParticipants, discountAmount) {
+            var minimum = minimumParticipants || '';
+            var amount = discountAmount || '';
+            var row = $('<tr>');
+            row.append($('<td>').append($('<input>', {
+                type: 'number',
+                name: 'participant_discount_minimum[]',
+                class: 'form-control',
+                min: 1,
+                step: 1,
+                required: true,
+                value: minimum,
+                placeholder: 'Contoh: 2'
+            })));
+            row.append($('<td>').append($('<div>', {
+                class: 'input-group'
+            }).append($('<div>', {
+                class: 'input-group-prepend'
+            }).append($('<span>', {
+                class: 'input-group-text',
+                text: 'Rp'
+            }))).append($('<input>', {
+                type: 'text',
+                name: 'participant_discount_amount[]',
+                class: 'form-control participant-discount-amount',
+                inputmode: 'numeric',
+                required: true,
+                value: formatRupiah(amount),
+                placeholder: 'Contoh: 50.000'
+            }))));
+            row.append($('<td>', {
+                class: 'text-center'
+            }).append($('<button>', {
+                type: 'button',
+                class: 'btn btn-sm btn-outline-danger',
+                title: 'Hapus kondisi',
+                html: '<i class="bx bx-trash"></i>',
+                click: function() {
+                    row.remove();
+                    updateParticipantDiscountEmptyState();
+                }
+            })));
+            $('#participantDiscountRows').append(row);
+            updateParticipantDiscountEmptyState();
         }
 
         function biayasertifikat(id, tipe, nominal) {
@@ -596,6 +654,8 @@
             $('#company_iht_discount').val(0);
             $('#iht-discount-only').val(0);
             $('#bolClassGratis').prop('checked', false);
+            $('#participantDiscountRows').empty();
+            updateParticipantDiscountEmptyState();
 
             const isIht = Number(c.iht) === 1;
             const classType = isIht ? 'iht' : (Number(c.kategori) === 1 ? 'offline' : 'online');
@@ -627,6 +687,10 @@
                 $('#company_offline_discount').val(getDiscount('company', 'company_offline'));
                 $('#company_iht_discount').val(getDiscount('company', 'company_iht'));
                 $('#iht-discount-only').val(getDiscount('company', 'company_iht'));
+
+                (c.pricing.participant_discounts || []).forEach(function(discount) {
+                    addParticipantDiscountRow(discount.minimum_participants, discount.discount_amount);
+                });
             }
 
             $('#discount_type').trigger('change');

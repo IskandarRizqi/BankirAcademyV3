@@ -10,8 +10,11 @@
 
 @section('content')
     @php
+        $isUpcoming = $class->date_start
+            && now()->startOfDay()->lt(\Carbon\Carbon::parse($class->date_start)->startOfDay());
         $eventDetailUrl =
-            '/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title) . '?checkout=1';
+            '/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title) .
+            ($isUpcoming ? '' : '?checkout=1');
         $loginUrl = route('login.new', ['redirect' => $eventDetailUrl]);
     @endphp
 
@@ -27,8 +30,15 @@
                 </div>
 
                 <span class="eyebrow">{{ $class->category ?? 'Kelas Online' }}</span>
+                @if ($isUpcoming)
+                    <span class="eyebrow text-warning ml-2">Upcoming</span>
+                @endif
                 <h1 style="font-size: 38px">{{ $class->title }}</h1>
                 <p class="hero-copy">{{ $class->contents ?? strip_tags($class->content) }}</p>
+                @if ($isUpcoming)
+                    <p class="text-warning font-weight-bold mb-0">Pendaftaran belum dibuka. Kelas ini akan tersedia mulai
+                        {{ \Carbon\Carbon::parse($class->date_start)->translatedFormat('d F Y') }}.</p>
+                @endif
 
                 {{-- <div class="hero-meta">
                     @if ($class->level)
@@ -43,8 +53,9 @@
                 </div> --}}
 
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">Mulai
-                        Belajar →</a>
+                    <a class="btn btn-primary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">
+                        {{ $isUpcoming ? 'Lihat Jadwal Kelas' : 'Mulai Belajar →' }}
+                    </a>
                     <a class="btn btn-outline" href="{{ route('frontend.classes.index') }}">Kembali ke Katalog</a>
                 </div>
             </div>
@@ -198,12 +209,16 @@
                     if ($resolved) {
                         $finalPrice = is_array($resolved) ? $resolved['final_price'] ?? 0 : $resolved->final_price ?? 0;
                     }
+                    $isFree = $finalPrice <= 0;
                 @endphp
 
                 <div class="my-3">
                     <h3 class="text-primary fw-bold" style="font-size: 1.8rem;">
-                        {{ $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis' }}
+                        {{ $isUpcoming && !$isFree ? 'Upcoming' : ($finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis') }}
                     </h3>
+                    @if ($isUpcoming && $isFree)
+                        <span class="badge badge-success">Kelas gratis</span>
+                    @endif
                 </div>
 
                 <ul class="check-list">
@@ -214,7 +229,7 @@
                 </ul>
 
                 <a class="btn btn-secondary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">
-                    {{ $finalPrice > 0 ? 'Ikuti Kelas' : 'Ikuti Kelas Gratis' }}
+                    {{ $isUpcoming ? 'Lihat Informasi Upcoming' : ($finalPrice > 0 ? 'Ikuti Kelas' : 'Ikuti Kelas Gratis') }}
                 </a>
             </article>
 

@@ -82,7 +82,8 @@ class OrderController extends Controller
             // Deklarasi referral
             $v->reff = 0;
             $v->reff_nominal = 0;
-            $n = ($v->price_final * $v->jumlah) - $kode;
+            // price_final sudah merupakan total order seluruh peserta.
+            $n = $v->price_final - $kode;
             $v->totalAkhir = $n;
             // Cek referral Tersedia
             $reff = RefferralModel::where('user_aplicator', $data['profile']->user_id)->first();
@@ -200,7 +201,8 @@ class OrderController extends Controller
         // Deklarasi referral
         $data['payment']['reff'] = 0;
         $data['payment']['reff_nominal'] = 0;
-        $n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+        // price_final sudah merupakan total order seluruh peserta.
+        $n = $data['payment']['price_final'] - $kode;
         $data['payment']['totalAkhir'] = $n;
         // Cek referral Tersedia
         $available = 0;
@@ -299,7 +301,8 @@ class OrderController extends Controller
         // Deklarasi referral
         $data['payment']['reff'] = 0;
         $data['payment']['reff_nominal'] = 0;
-        $n = ($data['payment']['price_final'] * $data['payment']['jumlah']) - $kode;
+        // price_final sudah merupakan total order seluruh peserta.
+        $n = $data['payment']['price_final'] - $kode;
         $data['payment']['totalAkhir'] = $n;
         // Cek referral Tersedia
         $available = 0;
@@ -374,6 +377,9 @@ class OrderController extends Controller
             return response()->json(['msg' => 'Kelas Sudah Penuh', 'rc' => '07']);
             // Redirect::back()->with('error', 'Kelas Sudah Penuh');
         }
+        if ($class->date_start && now()->startOfDay()->lt(\Carbon\Carbon::parse($class->date_start)->startOfDay())) {
+            return response()->json(['msg' => 'Kelas masih upcoming dan belum dapat didaftarkan', 'rc' => '07']);
+        }
         if (! $auth) {
             return response()->json(['msg' => 'Silahkan login terlebih dahulu', 'rc' => '07']);
             // Redirect::back()->with('error', 'Belum Login');
@@ -407,16 +413,23 @@ class OrderController extends Controller
             $no_invoice = uniqid();
         } while (in_array($no_invoice, $numbers));
         $pricingService = app(ClassPricingService::class);
-        $resolvedPricing = $pricingService->resolve($class, Auth::user());
-
-        $price = $resolvedPricing['final_price'];
-        $price_final = 0;
-
         $jmlpeserta = 1;
         // Perbaikan kondisi: pastikan nominal di atas 0
         if ($request->jml_peserta != null && $request->jml_peserta > 0) {
             $jmlpeserta = $request->jml_peserta;
         }
+
+        $participantNames = collect((array) $request->input('nama', []))
+            ->filter(fn ($name) => trim((string) $name) !== '')
+            ->count();
+        if ($participantNames > 0) {
+            $jmlpeserta = $participantNames;
+        }
+
+        $resolvedPricing = $pricingService->resolve($class, Auth::user(), (int) $jmlpeserta);
+
+        $price = $resolvedPricing['final_price'];
+        $price_final = 0;
 
         $price_final = $price * $jmlpeserta;
 
@@ -455,6 +468,10 @@ class OrderController extends Controller
                     'base_price' => $resolvedPricing['base_price'],
                     'general_discount' => $resolvedPricing['general_discount'],
                     'membership_discount' => $resolvedPricing['membership_discount'],
+                    'participant_discount' => $resolvedPricing['participant_discount'],
+                    'participant_discount_total' => $resolvedPricing['participant_discount_total'],
+                    'participant_discount_threshold' => $resolvedPricing['participant_discount_threshold'],
+                    'participant_count' => $jmlpeserta,
                     'total_discount' => $resolvedPricing['total_discount'],
                     'discount_percent' => $resolvedPricing['discount_percent'],
                     'membership_type' => $resolvedPricing['membership_type'],
@@ -492,6 +509,10 @@ class OrderController extends Controller
                     'base_price' => $resolvedPricing['base_price'],
                     'general_discount' => $resolvedPricing['general_discount'],
                     'membership_discount' => $resolvedPricing['membership_discount'],
+                    'participant_discount' => $resolvedPricing['participant_discount'],
+                    'participant_discount_total' => $resolvedPricing['participant_discount_total'],
+                    'participant_discount_threshold' => $resolvedPricing['participant_discount_threshold'],
+                    'participant_count' => $jmlpeserta,
                     'total_discount' => $resolvedPricing['total_discount'],
                     'discount_percent' => $resolvedPricing['discount_percent'],
                     'membership_type' => $resolvedPricing['membership_type'],

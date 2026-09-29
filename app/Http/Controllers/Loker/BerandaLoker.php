@@ -14,8 +14,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 use Yajra\DataTables\Facades\DataTables;
 
 class BerandaLoker extends Controller
@@ -430,10 +433,92 @@ class BerandaLoker extends Controller
 
         $l = LokerModel::updateOrCreate($val, $data);
         if ($l) {
+            $webhookResult = $this->sendApprovedLokerToN8n($l);
+
+            if ($webhookResult === false) {
+                return Redirect::back()
+                    ->with('success', 'Data Tersimpan')
+                    ->with('warning', 'Data loker tersimpan, tetapi gagal dikirim ke n8n.');
+            }
+
             return Redirect::back()->with('success', 'Data Tersimpan');
         }
 
         return Redirect::back()->with('info', 'Data Gagal Tersimpan');
+    }
+
+    /**
+     * Send an approved vacancy at most once. The timestamp is claimed before
+     * the request so repeated saves or concurrent approvals cannot duplicate it.
+     */
+    private function sendApprovedLokerToN8n(LokerModel $loker): ?bool
+    {
+        if ((int) $loker->status !== 1 || $loker->n8n_webhook_sent_at !== null) {
+            return null;
+        }
+
+        $webhookUrl = config('services.n8n.webhook_url_loker');
+        if (! filled($webhookUrl)) {
+            Log::warning('Webhook n8n loker belum dikonfigurasi.', [
+                'loker_id' => $loker->id,
+            ]);
+
+            return false;
+        }
+
+        $claimed = LokerModel::query()
+            ->whereKey($loker->id)
+            ->where('status', 1)
+            ->whereNull('n8n_webhook_sent_at')
+            ->update(['n8n_webhook_sent_at' => now()]);
+
+        if ($claimed !== 1) {
+            return null;
+        }
+
+        $loker->refresh();
+        $loker->load('perusahaan');
+
+        $payload = [
+            'event' => 'loker.approved',
+            'id' => $loker->id,
+            'title' => $loker->title,
+            'gaji_min' => $loker->gaji_min,
+            'gaji_max' => $loker->gaji_max,
+            'deskripsi' => $loker->deskripsi,
+            'jobdesk' => $loker->jobdesk,
+            'tanggal_awal' => $loker->tanggal_awal,
+            'tanggal_akhir' => $loker->tanggal_akhir,
+            'skill' => json_decode((string) $loker->skill, true) ?: [],
+            'type' => json_decode((string) $loker->type, true) ?: [],
+            'status' => (int) $loker->status,
+            'perusahaan' => $loker->perusahaan?->toArray(),
+        ];
+
+        try {
+            $response = Http::timeout(90)->post($webhookUrl, $payload);
+
+            if ($response->successful()) {
+                return true;
+            }
+
+            Log::warning('Webhook n8n loker mengembalikan response gagal.', [
+                'loker_id' => $loker->id,
+                'status' => $response->status(),
+            ]);
+        } catch (Throwable $exception) {
+            Log::error('Webhook n8n loker gagal dikirim.', [
+                'loker_id' => $loker->id,
+                'message' => $exception->getMessage(),
+            ]);
+        }
+
+        // A failed request must remain retryable on the next save/retry.
+        LokerModel::whereKey($loker->id)->update([
+            'n8n_webhook_sent_at' => null,
+        ]);
+
+        return false;
     }
 
     /**

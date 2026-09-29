@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
 use App\Models\ClassPaymentModel;
 use App\Models\DataPayment;
@@ -25,8 +26,18 @@ class PembayaranController extends Controller
         $startDate = $r->param_date_start ?? Carbon::now()->subMonths(3)->format('Y-m-d');
         $endDate = $r->param_date_end ?? Carbon::now()->format('Y-m-d');
 
-        // Status default: [0, 1] (0: Belum Lunas, 1: Lunas)
-        $status = $r->has('param_checked_lunas') ? (array) $r->param_checked_lunas : [0, 1, 2, 3, 98, 99];
+        // Status pembayaran: 0 Belum Lunas, 1 Lunas, 2 Pending, 3 Menunggu Konfirmasi, 98 Ditolak, 99 Dibatalkan.
+        $allStatuses = [
+            0,
+            DataPayment::STATUS_PAID,
+            DataPayment::STATUS_PENDING,
+            DataPayment::STATUS_WAITING_CONFIRMATION,
+            DataPayment::STATUS_REJECTED,
+            DataPayment::STATUS_CANCELED,
+        ];
+        $status = $r->has('param_checked_lunas')
+            ? (array) $r->param_checked_lunas
+            : $allStatuses;
 
         $data['param'] = [
             'date' => [$startDate, $endDate],
@@ -145,8 +156,56 @@ class PembayaranController extends Controller
             return Redirect::back()->with(['error' => 'Data Pembayaran Tidak Ditemukan']);
         }
 
-        // Eksekusi update status pembayaran
-        $isUpdated = DataPayment::where('no_invoice', $request->id)->update(['status' => $status]);
+        // Pending class payments do not reserve quota. Check quota atomically when approving one.
+        if ($payments->class_id && (int) $request->status !== DataPayment::STATUS_PAID) {
+            $approval = DB::transaction(function () use ($payments) {
+                $lockedPayment = DataPayment::whereKey($payments->id)->lockForUpdate()->first();
+                $classPayment = ClassPaymentModel::where('no_invoice', $payments->no_invoice)->lockForUpdate()->first();
+
+                if (! $lockedPayment || ! $classPayment) {
+                    return ['success' => false, 'message' => 'Data pembayaran kelas tidak ditemukan.'];
+                }
+
+                if ((int) $classPayment->status === 1) {
+                    return ['success' => true];
+                }
+
+                $class = ClassesModel::select('id', 'participant_limit')
+                    ->whereKey($classPayment->class_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $class) {
+                    return ['success' => false, 'message' => 'Kelas tidak ditemukan.'];
+                }
+
+                $remainingQuota = ClassParticipantModel::remainingQuotaForClass(
+                    $classPayment->class_id,
+                    (int) $class->participant_limit
+                );
+
+                if ($remainingQuota !== null && (int) $classPayment->jumlah > $remainingQuota) {
+                    return [
+                        'success' => false,
+                        'message' => 'Kuota kelas tidak mencukupi. Sisa kuota: '.$remainingQuota.' peserta.',
+                    ];
+                }
+
+                $lockedPayment->update(['status' => DataPayment::STATUS_PAID]);
+                $classPayment->update(['status' => 1]);
+
+                return ['success' => true];
+            });
+
+            if (! $approval['success']) {
+                return Redirect::back()->with(['error' => $approval['message']]);
+            }
+
+            $isUpdated = true;
+        } else {
+            // Eksekusi update status pembayaran
+            $isUpdated = DataPayment::where('no_invoice', $request->id)->update(['status' => $status]);
+        }
 
         if ($transaksi) {
             $transactionStatus = $request->status == 1 ? 'FAILED' : 'SUCCESS';

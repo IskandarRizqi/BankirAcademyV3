@@ -250,21 +250,25 @@ class PaymentController extends Controller
             'nomor_handphone.*' => ['required', 'string', 'max:30'],
         ]);
 
-        $jumlahPeserta = (int) $validated['jml_peserta'];
+        $jumlahPeserta = count($validated['nama']);
 
         if (
-            count($validated['nama']) !== $jumlahPeserta ||
             count($validated['email']) !== $jumlahPeserta ||
-            count($validated['nomor_handphone']) !== $jumlahPeserta
+            count($validated['nomor_handphone']) !== $jumlahPeserta ||
+            (int) $validated['jml_peserta'] !== $jumlahPeserta
         ) {
             return back()->withInput()->with('error', 'Jumlah data peserta tidak sesuai dengan jumlah peserta.');
         }
 
         $classId = (int) $validated['class_id'];
-        $class = ClassesModel::select('id', 'participant_limit', 'kategori', 'iht')->whereKey($classId)->first();
+        $class = ClassesModel::select('id', 'participant_limit', 'kategori', 'iht', 'date_start')->whereKey($classId)->first();
 
         if (! $class) {
             return back()->withInput()->with('error', 'Kelas tidak ditemukan.');
+        }
+
+        if ($class->date_start && now()->startOfDay()->lt(\Carbon\Carbon::parse($class->date_start)->startOfDay())) {
+            return back()->withInput()->with('error', 'Kelas masih upcoming dan belum dapat didaftarkan.');
         }
 
         $remainingQuota = ClassParticipantModel::remainingQuotaForClass($classId, (int) $class->participant_limit);
@@ -273,7 +277,7 @@ class PaymentController extends Controller
             return back()->withInput()->with('error', 'Kuota kelas tidak mencukupi. Sisa kuota: '.$remainingQuota.' peserta.');
         }
 
-        $pricing = app(ClassPricingService::class)->resolve($class, $user);
+        $pricing = app(ClassPricingService::class)->resolve($class, $user, $jumlahPeserta);
 
         if (! $pricing['regular_purchase_allowed']) {
             return back()->withInput()->with('error', 'Kelas IHT hanya dapat diproses melalui order manual admin.');
@@ -361,6 +365,10 @@ class PaymentController extends Controller
                     'base_price' => $pricing['base_price'],
                     'general_discount' => $pricing['general_discount'],
                     'membership_discount' => $pricing['membership_discount'],
+                    'participant_discount' => $pricing['participant_discount'],
+                    'participant_discount_total' => $pricing['participant_discount_total'],
+                    'participant_discount_threshold' => $pricing['participant_discount_threshold'],
+                    'participant_count' => $jumlahPeserta,
                     'total_discount' => $pricing['total_discount'],
                     'discount_percent' => $pricing['discount_percent'],
                     'membership_type' => $pricing['membership_type'],

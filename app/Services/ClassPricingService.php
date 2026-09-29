@@ -29,19 +29,20 @@ class ClassPricingService
 
     public const DISCOUNT_COMPANY_IHT = 'company_iht';
 
-    public function resolve(ClassesModel $class, ?User $user = null): array
+    public function resolve(ClassesModel $class, ?User $user = null, ?int $participantCount = null): array
     {
         $pricing = ClassPricingModel::query()
             ->where('class_id', $class->id)
             ->first();
 
-        return $this->resolvePricing($class, $pricing, $this->activeMembershipType($user));
+        return $this->resolvePricing($class, $pricing, $this->activeMembershipType($user), $participantCount);
     }
 
     public function resolvePricing(
         ClassesModel $class,
         ?ClassPricingModel $pricing,
-        ?string $membershipType = null
+        ?string $membershipType = null,
+        ?int $participantCount = null
     ): array {
         $basePrice = max(0, (float) ($pricing?->price ?? 0));
         $isIht = (int) $class->iht === 1;
@@ -51,6 +52,14 @@ class ClassPricingService
                 $pricing->load('membershipDiscounts');
             } else {
                 $pricing->setRelation('membershipDiscounts', new Collection);
+            }
+        }
+
+        if ($pricing && ! $pricing->relationLoaded('participantDiscounts')) {
+            if (Schema::hasTable('class_pricing_participant_discounts')) {
+                $pricing->load('participantDiscounts');
+            } else {
+                $pricing->setRelation('participantDiscounts', new Collection);
             }
         }
 
@@ -108,6 +117,12 @@ class ClassPricingService
         }
 
         $totalDiscount = min($basePrice, max(0, $generalDiscount + $membershipDiscount));
+        $participantDiscount = $this->participantDiscountAmount($pricing, $participantCount, $basePrice);
+        $totalDiscount = min($basePrice, $totalDiscount + $participantDiscount);
+
+        if (! $source && $participantDiscount > 0) {
+            $source = 'participant';
+        }
 
         return $this->result(
             $basePrice,
@@ -116,7 +131,10 @@ class ClassPricingService
             $membershipType,
             $source,
             $isIht,
-            ! $isIht
+            ! $isIht,
+            $participantDiscount,
+            $participantCount,
+            $this->participantDiscountThreshold($pricing, $participantCount)
         );
     }
 
@@ -201,6 +219,39 @@ class ClassPricingService
         return $basePrice * $percent / 100;
     }
 
+    private function participantDiscountAmount(
+        ClassPricingModel $pricing,
+        ?int $participantCount,
+        float $basePrice
+    ): float {
+        if (! $participantCount || $participantCount < 1) {
+            return 0;
+        }
+
+        $discount = $pricing->participantDiscounts
+            ->filter(fn ($item) => (int) $item->minimum_participants <= $participantCount)
+            ->sortByDesc('minimum_participants')
+            ->first();
+
+        return $discount
+            ? min($basePrice, max(0, (float) $discount->discount_amount))
+            : 0;
+    }
+
+    private function participantDiscountThreshold(
+        ClassPricingModel $pricing,
+        ?int $participantCount
+    ): ?int {
+        if (! $participantCount || $participantCount < 1) {
+            return null;
+        }
+
+        return $pricing->participantDiscounts
+            ->filter(fn ($item) => (int) $item->minimum_participants <= $participantCount)
+            ->sortByDesc('minimum_participants')
+            ->value('minimum_participants');
+    }
+
     private function result(
         float $basePrice,
         float $totalDiscount,
@@ -208,14 +259,23 @@ class ClassPricingService
         ?string $membershipType,
         ?string $source,
         bool $isIht,
-        bool $regularPurchaseAllowed
+        bool $regularPurchaseAllowed,
+        float $participantDiscount = 0,
+        ?int $participantCount = null,
+        ?int $participantDiscountThreshold = null
     ): array {
         $totalDiscount = min($basePrice, max(0, $totalDiscount));
 
         return [
             'base_price' => $basePrice,
-            'general_discount' => max(0, $totalDiscount - $membershipDiscount),
+            'general_discount' => max(0, $totalDiscount - $membershipDiscount - $participantDiscount),
             'membership_discount' => min($totalDiscount, max(0, $membershipDiscount)),
+            'participant_discount' => min($totalDiscount, max(0, $participantDiscount)),
+            'participant_discount_total' => $participantCount
+                ? min($basePrice * $participantCount, max(0, $participantDiscount) * $participantCount)
+                : 0,
+            'participant_count' => $participantCount,
+            'participant_discount_threshold' => $participantDiscountThreshold,
             'total_discount' => $totalDiscount,
             'discount_percent' => $basePrice > 0 ? ($totalDiscount / $basePrice) * 100 : 0,
             'final_price' => max(0, $basePrice - $totalDiscount),

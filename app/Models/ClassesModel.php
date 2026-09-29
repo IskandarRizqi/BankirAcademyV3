@@ -165,6 +165,7 @@ class ClassesModel extends Model
         if (array_key_exists('id', $this->attributes)) {
             return DB::table('class_payment')
                 ->where('class_payment.class_id', $this->attributes['id'])
+                ->where('class_payment.status', 1)
                 ->sum('jumlah');
         }
     }

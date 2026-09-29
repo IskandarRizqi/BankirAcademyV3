@@ -33,10 +33,16 @@ class LokerModel extends Model
         'kelurahan',
         'perusahaan_id',
         'perusahaan_user',
+        'n8n_webhook_sent_at',
+    ];
+
+    protected $casts = [
+        'n8n_webhook_sent_at' => 'datetime',
     ];
 
     protected $hidden = [
         'user_id',
+        'n8n_webhook_sent_at',
     ];
 
     protected $appends = [

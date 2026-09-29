@@ -10,6 +10,7 @@ use App\Models\ClassContentModel;
 use App\Models\ClassesModel;
 use App\Models\ClassEventModel;
 use App\Models\ClassParticipantModel;
+use App\Models\ClassPricingParticipantDiscount;
 use App\Models\ClassPricingMembershipDiscount;
 use App\Models\ClassPricingModel;
 use App\Models\InstructorModel;
@@ -364,9 +365,10 @@ class ClassesController extends Controller
 
         while (ClassesModel::query()
             ->where('slug', $slug)
-            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
-            ->exists()) {
-            $slug = $baseSlug.'-'.$suffix;
+            ->when($ignoreId, fn($query) => $query->whereKeyNot($ignoreId))
+            ->exists()
+        ) {
+            $slug = $baseSlug . '-' . $suffix;
             $suffix++;
         }
 
@@ -443,6 +445,12 @@ class ClassesController extends Controller
         $discountValue = $r->filled('discount_value')
             ? $this->normalizeDiscountValue($r->input('discount_value'), $discountType)
             : (float) ($r->input('numClassPromoPrctg') ?? 0);
+
+        $participantAmounts = array_map(
+            fn($value) => $this->normalizeDiscountValue($value, 'nominal'),
+            (array) $r->input('participant_discount_amount', [])
+        );
+        $r->merge(['participant_discount_amount' => $participantAmounts]);
         $isIht = (int) $class->iht === 1;
         $isFree = $r->boolean('bolClassGratis');
 
@@ -456,7 +464,29 @@ class ClassesController extends Controller
             'company_offline_discount' => ['nullable', 'numeric', 'min:0', 'max:50'],
             'company_iht_discount' => ['nullable', 'numeric', 'min:0', 'max:50'],
             'company_iht_discount_iht' => ['nullable', 'numeric', 'min:0', 'max:50'],
+            'participant_discount_minimum' => ['nullable', 'array'],
+            'participant_discount_minimum.*' => ['required', 'integer', 'min:1', 'distinct'],
+            'participant_discount_amount' => ['nullable', 'array'],
+            'participant_discount_amount.*' => ['required', 'numeric', 'min:0'],
         ]);
+
+        $participantMinimums = $validated['participant_discount_minimum'] ?? [];
+        $participantAmounts = $validated['participant_discount_amount'] ?? [];
+        if (count($participantMinimums) !== count($participantAmounts)) {
+            return Redirect::back()
+                ->withInput()
+                ->withErrors(['participant_discount_amount' => 'Setiap kondisi harus memiliki nominal diskon.']);
+        }
+
+        $participantDiscounts = collect($participantMinimums)
+            ->map(function ($minimum, $index) use ($validated) {
+                return [
+                    'minimum_participants' => (int) $minimum,
+                    'discount_amount' => (float) ($validated['participant_discount_amount'][$index] ?? 0),
+                ];
+            })
+            ->values()
+            ->all();
 
         if ($isIht) {
             $discountType = 'percent';
@@ -498,7 +528,8 @@ class ClassesController extends Controller
             $isFree,
             $individualDiscount,
             $companyCategory,
-            $companyDiscount
+            $companyDiscount,
+            $participantDiscounts
         ) {
             ClassPricingModel::updateOrCreate(
                 ['class_id' => $class->id],
@@ -516,6 +547,15 @@ class ClassesController extends Controller
             );
 
             ClassPricingMembershipDiscount::where('class_id', $class->id)->delete();
+            ClassPricingParticipantDiscount::where('class_id', $class->id)->delete();
+
+            foreach ($participantDiscounts as $participantDiscount) {
+                ClassPricingParticipantDiscount::create([
+                    'class_id' => $class->id,
+                    'minimum_participants' => $participantDiscount['minimum_participants'],
+                    'discount_amount' => $participantDiscount['discount_amount'],
+                ]);
+            }
 
             if (! $isIht) {
                 ClassPricingMembershipDiscount::create([
@@ -1065,7 +1105,7 @@ class ClassesController extends Controller
         $currentYear = $now->year;
         $data['kelas'] = ClassesModel::query()
             ->whereYear('date_start', $currentYear)
-            ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
+            ->where('date_end', '>', $now->format('Y-m-d'))
             ->where('status', 1)->where('iht', 0)
             ->orderBy('date_end', 'asc')
             ->take($limit)

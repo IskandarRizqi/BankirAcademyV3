@@ -38,6 +38,11 @@
         display: block;
         width: 100%;
     }
+
+    .participant-discount-table th,
+    .participant-discount-table td {
+        vertical-align: middle;
+    }
 </style>
 <div class="modal fade modalwithselect2" id="classPricingModal" role="dialog" aria-labelledby="classPricingModalLabel"
     aria-hidden="true">
@@ -152,6 +157,39 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="border rounded p-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <label class="font-weight-bold mb-1">
+                                    Diskon Berdasarkan Jumlah Peserta
+                                    <button type="button"
+                                        class="btn btn-link btn-sm p-0 ml-1 pricing-help"
+                                        data-help-title="Aturan Diskon Peserta"
+                                        data-help-content="Nominal diskon berlaku untuk setiap peserta. Sistem memakai tier jumlah peserta terbesar yang terpenuhi."
+                                        aria-label="Baca aturan diskon peserta">?</button>
+                                </label>
+                                <small class="form-text text-muted">Contoh: minimal 2 peserta mendapat diskon Rp50.000 per peserta.</small>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addParticipantDiscountRow()">
+                                <i class="bx bx-plus mr-1"></i> Tambah Kondisi
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm participant-discount-table mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Minimal Jumlah Peserta</th>
+                                        <th>Diskon per Peserta</th>
+                                        <th width="10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="participantDiscountRows"></tbody>
+                            </table>
+                        </div>
+                        <div id="participantDiscountEmpty" class="text-center text-muted small py-2">Belum ada kondisi diskon peserta.</div>
+                    </div>
+
                     <div id="iht-pricing-fields" class="alert alert-info" style="display: none;">
                         <strong>Kelas IHT</strong>
                         <p class="mb-2">Kelas IHT diproses melalui order manual admin.</p>

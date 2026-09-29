@@ -20,17 +20,28 @@
     }
 
     $priceText = $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis';
+    $isFree = $finalPrice <= 0;
+    $isUpcoming = $item->date_start
+        && now()->startOfDay()->lt(\Carbon\Carbon::parse($item->date_start)->startOfDay());
     $instructorNames = collect($item->instructor_list ?? [])
         ->pluck('name')
         ->filter()
         ->values();
 @endphp
 
-<article class="course-card">
+<article class="course-card {{ $isUpcoming && $isFree ? 'course-card--free-upcoming' : '' }}">
     <div class="course-cover-wrapper">
         <div class="course-cover"
             style="background-image: url('{{ $coverImage }}'); background-size: cover;  background-position: center;">
-            <div class="category-badge">{{ $item->category ?: 'Kelas pilihan' }}</div>
+            <div class="course-card-badges">
+                <div class="category-badge">{{ $item->category ?: 'Kelas pilihan' }}</div>
+                @if ($isUpcoming)
+                    <div class="status-badge status-badge--upcoming">Upcoming</div>
+                @endif
+                @if ($isUpcoming && $isFree)
+                    <div class="status-badge status-badge--free-upcoming">Gratis</div>
+                @endif
+            </div>
         </div>
     </div>
 
@@ -52,7 +63,9 @@
         </div>
 
         <div class="course-actions">
-            <span class="course-price">{{ $priceText }}</span>
+            <span class="course-price {{ $isUpcoming && $isFree ? 'course-price--free-upcoming' : '' }}">
+                {{ $isUpcoming && !$isFree ? 'Segera dibuka' : $priceText }}
+            </span>
             <a class="btn-detail" href="{{ route('frontend.class.detail', $item->slug) }}" aria-label="Lihat detail {{ $item->title }}">
                 Lihat detail
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
@@ -87,6 +100,10 @@
         box-shadow: 0 18px 36px rgba(52, 42, 120, 0.16);
     }
 
+    .course-card--free-upcoming {
+        box-shadow: 0 12px 32px rgba(42, 168, 118, 0.18);
+    }
+
     .course-cover-wrapper {
         position: relative;
         overflow: hidden;
@@ -107,6 +124,30 @@
         padding: 4px 10px;
         border-radius: 20px;
         text-transform: uppercase;
+    }
+
+    .course-card-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .status-badge--upcoming {
+        background: #fff3cd;
+        color: #946200;
+    }
+
+    .status-badge--free-upcoming {
+        background: #d9f8e9;
+        color: #14734d;
     }
 
     .course-body {
@@ -180,6 +221,10 @@
         font-size: 15px;
         font-weight: 800;
         white-space: nowrap;
+    }
+
+    .course-price--free-upcoming {
+        color: #14734d;
     }
 
     .btn-detail {

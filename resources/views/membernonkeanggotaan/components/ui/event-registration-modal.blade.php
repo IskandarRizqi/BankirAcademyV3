@@ -23,6 +23,12 @@
                     ? 'Rp ' . number_format($finalPrice, 0, ',', '.')
                     : 'Gratis')));
     $certificateFee = (int) data_get($sertif ?? null, 'nominal', 100000);
+    $participantDiscountTiers = collect(data_get($pricing, 'participant_discounts', []))
+        ->map(fn ($discount) => [
+            'minimum_participants' => (int) data_get($discount, 'minimum_participants'),
+            'discount_amount' => (float) data_get($discount, 'discount_amount'),
+        ])
+        ->values();
 @endphp
 
 @once
@@ -49,7 +55,7 @@
 
         .event-registration-modal__summary {
             display: grid;
-            grid-template-columns: minmax(0, 1.4fr) minmax(220px, .6fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
             margin-bottom: 18px;
         }
@@ -173,6 +179,10 @@
                             <span
                                 class="event-registration-modal__value {{ $isPriceComingSoon ? 'event-registration-modal__value--coming-soon' : '' }}">{{ $priceLabel }}</span>
                         </div>
+                        <div class="event-registration-modal__card" id="eventRegistrationDiscountSummary" style="display: none;">
+                            <span class="event-registration-modal__label">Diskon Peserta</span>
+                            <span class="event-registration-modal__value text-success" id="eventRegistrationDiscountValue">-</span>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -181,6 +191,7 @@
                                 Peserta</label>
                             <input type="number" min="1" value="1" class="form-control form-control-lg"
                                 id="eventRegistrationParticipantCount" name="jml_peserta" required>
+                            <small class="form-text text-success font-weight-bold" id="eventRegistrationTotalSummary"></small>
                         </div>
                         <div class="col-lg-8 mb-3">
                             <label class="font-weight-bold text-dark">Sertifikat</label>
@@ -325,6 +336,42 @@
                 }
 
                 container.innerHTML = html;
+                updateDiscountSummary();
+            }
+
+            var participantDiscountTiers = @json($participantDiscountTiers);
+            var baseParticipantPrice = {{ $finalPrice }};
+
+            function formatCurrency(value) {
+                return 'Rp ' + Math.max(0, value).toLocaleString('id-ID');
+            }
+
+            function updateDiscountSummary() {
+                var countInput = document.getElementById('eventRegistrationParticipantCount');
+                var discountSummary = document.getElementById('eventRegistrationDiscountSummary');
+                var discountValue = document.getElementById('eventRegistrationDiscountValue');
+                var totalSummary = document.getElementById('eventRegistrationTotalSummary');
+                var count = parseInt(countInput ? countInput.value : 0, 10) || 0;
+                var tier = participantDiscountTiers
+                    .filter(function(item) {
+                        return item.minimum_participants <= count;
+                    })
+                    .sort(function(a, b) {
+                        return b.minimum_participants - a.minimum_participants;
+                    })[0];
+
+                if (!tier || count < 1 || baseParticipantPrice <= 0) {
+                    if (discountSummary) discountSummary.style.display = 'none';
+                    if (totalSummary) totalSummary.textContent = '';
+                    return;
+                }
+
+                var discountPerParticipant = Math.min(baseParticipantPrice, tier.discount_amount);
+                var totalDiscount = discountPerParticipant * count;
+                var classTotal = Math.max(0, baseParticipantPrice - discountPerParticipant) * count;
+                if (discountSummary) discountSummary.style.display = '';
+                if (discountValue) discountValue.textContent = formatCurrency(discountPerParticipant) + ' / peserta';
+                if (totalSummary) totalSummary.textContent = 'Estimasi harga kelas: ' + formatCurrency(classTotal) + ' (hemat ' + formatCurrency(totalDiscount) + ')';
             }
 
             function validateParticipants() {
@@ -358,6 +405,7 @@
 
                 if (countInput) {
                     countInput.addEventListener('input', renderParticipants);
+                    countInput.addEventListener('change', updateDiscountSummary);
                     renderParticipants();
                 }
 

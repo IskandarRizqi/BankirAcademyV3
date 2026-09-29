@@ -279,20 +279,20 @@ class CheckoutController extends Controller
                     ->lockForUpdate()
                     ->first();
 
+                $remainingQuota = ClassParticipantModel::remainingQuotaForClass($order->class_id, (int) $class->participant_limit);
+
+                if ($remainingQuota !== null && (int) $order->jumlah > $remainingQuota) {
+                    Log::warning('DOKU class payment rejected because quota is full', [
+                        'invoice' => $invoiceNumber,
+                        'class_id' => $order->class_id,
+                        'requested' => $order->jumlah,
+                        'remaining_quota' => $remainingQuota,
+                    ]);
+
+                    return ['status' => 409, 'message' => 'Class quota is full'];
+                }
+
                 if (! $participant) {
-                    $remainingQuota = ClassParticipantModel::remainingQuotaForClass($order->class_id, (int) $class->participant_limit);
-
-                    if ($remainingQuota !== null && (int) $order->jumlah > $remainingQuota) {
-                        Log::warning('DOKU class payment rejected because quota is full', [
-                            'invoice' => $invoiceNumber,
-                            'class_id' => $order->class_id,
-                            'requested' => $order->jumlah,
-                            'remaining_quota' => $remainingQuota,
-                        ]);
-
-                        return ['status' => 409, 'message' => 'Class quota is full'];
-                    }
-
                     ClassParticipantModel::create([
                         'class_id' => $order->class_id,
                         'user_id' => $order->user_id,
