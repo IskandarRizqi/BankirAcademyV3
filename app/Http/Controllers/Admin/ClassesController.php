@@ -985,136 +985,27 @@ class ClassesController extends Controller
 
     public function listClass(Request $request)
     {
-        $limit = 6;
-        $filters = [
-            'category' => array_values(array_filter((array) $request->input('category', []))),
-            'level' => array_values(array_filter((array) $request->input('level', []))),
-            'instructor' => array_values(array_filter((array) $request->input('instructor', []))),
-        ];
         $now = Carbon::now();
-        // $data['sebelumnya'] = $request->sebelumnya ?? '';
-        // $data['titlekelas'] = $request->titlekelas ?? '';
-        // $data['judul'] = 'Kelas';
+        $search = trim((string) $request->query('q', ''));
 
-        // Ambil data filter jenis & tipe (karena dari AJAX dikirim sebagai array/string)
-        // $jeniss = [];
-        // if ($request->jenis) {
-        // 	$jeniss = is_string($request->jenis) ? json_decode($request->jenis, true) : $request->jenis;
-        // }
-        // $data['jeniss'] = $jeniss ?? [];
-
-        // $tipe = [];
-        // if ($request->type) {
-        // 	$tipe = is_string($request->type) ? json_decode($request->type, true) : $request->type;
-        // }
-        // $data['tipe'] = $tipe ?? [];
-
-        // // --- PROSES QUERY DATABASE DENGAN FILTER ---
-        // $query = ClassesModel::where('status', 1);
-
-        // // 1. Filter Waktu (Kelas Berlangsung vs Kelas Sebelumnya)
-        // if ($request->sebelumnya) {
-        // 	$query->where('date_start', '<', Carbon::now()->startOfDay());
-        // } else {
-        // 	$query->where('date_start', '>=', Carbon::now()->startOfDay());
-        // }
-
-        // // 2. Filter Pencarian Judul Kelas (Search)
-        // $query->when($request->titlekelas, function ($sql) use ($request) {
-        // 	return $sql->where('title', 'like', '%' . $request->titlekelas . '%');
-        // });
-
-        // // 3. Filter Kategori Select Option
-        // $query->when($request->kategori, function ($sql) use ($request) {
-        // 	// Sesuaikan nama kolom database Anda (misal: 'category' atau 'category_id')
-        // 	return $sql->where('category', 'like', '%' . $request->kategori . '%');
-        // });
-
-        // // 4. Filter Instructor Select Option
-        // $query->when($request->instructor, function ($sql) use ($request) {
-        // 	return $sql->where('instructor', 'like', '%' . $request->instructor . '%');
-        // });
-
-        // // 5. Filter Checkbox Jenis (Looping LIKE atau WhereIn)
-        // if (!empty($data['jeniss'])) {
-        // 	$query->where(function ($sql) use ($data) {
-        // 		foreach ($data['jeniss'] as $v_jenis) {
-        // 			if ($v_jenis) {
-        // 				$sql->orWhere('jenis', 'like', '%' . $v_jenis . '%');
-        // 			}
-        // 		}
-        // 	});
-        // }
-
-        // // 6. Filter Checkbox Tipe
-        // if (!empty($data['tipe'])) {
-        // 	$query->where(function ($sql) use ($data) {
-        // 		foreach ($data['tipe'] as $v_tipe) {
-        // 			if ($v_tipe) {
-        // 				$sql->orWhere('tipe', 'like', '%' . $v_tipe . '%');
-        // 			}
-        // 		}
-        // 	});
-        // }
-
-        // // Eksekusi penomoran halaman (Pagination)
-        // $data['class'] = $query->orderBy('date_start', 'asc')
-        // 	->paginate(9)
-        // 	->toArray();
-
-        // // Jika request datang dari AJAX JQuery, langsung kembalikan data JSON kelas saja
-        // if ($request->ajax()) {
-        // 	return response()->json($data['class']);
-        // }
-
-        // // Jika diakses pertama kali lewat browser (bukan AJAX), load semua data layout pendukung
-        // $query = ClassesModel::where('status', 1)
-        //     ->when(count($filters['category']) > 0, function ($sql) use ($filters) {
-        //         $sql->whereIn('category', $filters['category']);
-        //     })
-        //     ->when(count($filters['level']) > 0, function ($sql) use ($filters) {
-        //         $sql->whereIn('level', $filters['level']);
-        //     })
-        //     ->when(count($filters['instructor']) > 0, function ($sql) use ($filters) {
-        //         $sql->where(function ($query) use ($filters) {
-        //             foreach ($filters['instructor'] as $instructorId) {
-        //                 $query->orWhereJsonContains('instructor', (string) $instructorId);
-
-        //                 if (is_numeric($instructorId)) {
-        //                     $query->orWhereJsonContains('instructor', (int) $instructorId);
-        //                 }
-        //             }
-        //         });
-        //     });
-
-        // $data['class'] = $query->orderBy('date_start', 'DESC')
-        //     ->paginate($limit)
-        //     ->withQueryString();
-        // $data['banner'] = $this->bannerClass($data['judul']);
-        // $data['pencarian'] = $this->pencarian();
-        // $data['selectedFilters'] = $filters;
-
-        // if ($request->ajax()) {
-        //     return response()->json([
-        //         'html' => view('frontend.partials.class-items', $data)->render(),
-        //         'next_page_url' => $data['class']->nextPageUrl(),
-        //         'has_more_pages' => $data['class']->hasMorePages(),
-        //     ]);
-        // }
-        $currentMonth = $now->month;
-        $currentYear = $now->year;
         $data['kelas'] = ClassesModel::query()
-            ->whereYear('date_start', $currentYear)
-            ->where('date_end', '>', $now->format('Y-m-d'))
-            ->where('status', 1)->where('iht', 0)
-            ->orderBy('date_end', 'asc')
-            ->take($limit)
-            ->get();
+            ->with('pricingData')
+            ->landingVisible($now)
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('category', 'like', "%{$search}%")
+                        ->orWhere('content', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('date_start')
+            ->orderBy('id')
+            ->paginate(9)
+            ->withQueryString();
 
-        // return $data['kelas'];
+        $data['search'] = $search;
 
         return view('frontend.pages.event.bank-catalog', compact('data'));
-        //  return view('front.kelas.listclass', $data);
     }
 
     public function findClass(Request $request)

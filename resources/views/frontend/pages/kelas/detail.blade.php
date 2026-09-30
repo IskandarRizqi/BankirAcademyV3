@@ -12,6 +12,14 @@
     @php
         $isUpcoming = $class->date_start
             && now()->startOfDay()->lt(\Carbon\Carbon::parse($class->date_start)->startOfDay());
+        $registrationStart = $class->date_start ? \Carbon\Carbon::parse($class->date_start) : null;
+        $registrationEnd = $class->date_end ? \Carbon\Carbon::parse($class->date_end) : null;
+        $registrationLabel = $registrationStart && $registrationEnd
+            ? $registrationStart->translatedFormat('d M Y') . ' - ' . $registrationEnd->translatedFormat('d M Y')
+            : ($registrationStart ? $registrationStart->translatedFormat('d M Y') : 'Belum ditentukan');
+        $classDateLabel = $class->class_date
+            ? \Carbon\Carbon::parse($class->class_date)->translatedFormat('d M Y')
+            : 'Belum ditentukan';
         $eventDetailUrl =
             '/detail-event/' . $class->unique_id . '/' . \Illuminate\Support\Str::slug($class->title) .
             ($isUpcoming ? '' : '?checkout=1');
@@ -35,6 +43,10 @@
                 @endif
                 <h1 style="font-size: 38px">{{ $class->title }}</h1>
                 <p class="hero-copy">{{ $class->contents ?? strip_tags($class->content) }}</p>
+                <div class="hero-meta" aria-label="Jadwal kelas">
+                    <span><strong>Pendaftaran:</strong> {{ $registrationLabel }}</span>
+                    <span><strong>Pelaksanaan:</strong> {{ $classDateLabel }}</span>
+                </div>
                 @if ($isUpcoming)
                     <p class="text-warning font-weight-bold mb-0">Pendaftaran belum dibuka. Kelas ini akan tersedia mulai
                         {{ \Carbon\Carbon::parse($class->date_start)->translatedFormat('d F Y') }}.</p>
@@ -204,12 +216,13 @@
                 <p>Akses pembelajaran mandiri dengan materi terstruktur dan evaluasi sesuai ketentuan kelas.</p>
 
                 @php
-                    $resolved = $class->pricing->resolved ?? null;
+                    $pricing = $class->pricing;
+                    $resolved = $pricing?->resolved;
                     $finalPrice = 0;
                     if ($resolved) {
                         $finalPrice = is_array($resolved) ? $resolved['final_price'] ?? 0 : $resolved->final_price ?? 0;
                     }
-                    $isFree = $finalPrice <= 0;
+                    $isFree = $pricing && (int) ($pricing->gratis ?? 0) === 1;
                 @endphp
 
                 <div class="my-3">

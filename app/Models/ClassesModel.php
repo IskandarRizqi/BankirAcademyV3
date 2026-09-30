@@ -71,6 +71,26 @@ class ClassesModel extends Model
         return $this->hasOne(ClassPricingModel::class, 'class_id');
     }
 
+    public function scopeLandingVisible($query, $today = null)
+    {
+        $date = ($today ?: now())->toDateString();
+
+        return $query
+            ->where('status', 1)
+            ->where('iht', 0)
+            ->whereNotNull('date_start')
+            ->where(function ($query) use ($date) {
+                $query->whereDate('date_end', '>=', $date)
+                    ->orWhereNull('date_end');
+            })
+            ->where(function ($query) use ($date) {
+                $query->whereDate('date_start', '<=', $date)
+                    ->orWhereHas('pricingData', function ($pricingQuery) {
+                        $pricingQuery->where('gratis', 1);
+                    });
+            });
+    }
+
     public function getContentsAttribute()
     {
         if (array_key_exists('content', $this->attributes)) {
@@ -119,9 +139,11 @@ class ClassesModel extends Model
     public function getPricingAttribute()
     {
         if (array_key_exists('id', $this->attributes)) {
-            $pricing = ClassPricingModel::query()
-                ->where('class_id', $this->attributes['id'])
-                ->first();
+            $pricing = $this->relationLoaded('pricingData')
+                ? $this->getRelation('pricingData')
+                : ClassPricingModel::query()
+                    ->where('class_id', $this->attributes['id'])
+                    ->first();
 
             if ($pricing) {
                 $pricingService = app(ClassPricingService::class);

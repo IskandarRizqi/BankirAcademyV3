@@ -8,7 +8,8 @@
     $meta = array_filter([$item->level ?? null, $item->tipe ?? null, $item->kategori ?? null]);
 
     // AMAN: Mendapatkan final_price baik bentuknya Array maupun Object
-    $resolved = $item->pricing->resolved ?? null;
+    $pricing = $item->pricing;
+    $resolved = $pricing?->resolved;
     $finalPrice = 0;
 
     if ($resolved) {
@@ -19,8 +20,10 @@
         }
     }
 
-    $priceText = $finalPrice > 0 ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Gratis';
-    $isFree = $finalPrice <= 0;
+    $isFree = $pricing && (int) ($pricing->gratis ?? 0) === 1;
+    $priceText = $isFree
+        ? 'Gratis'
+        : ($pricing ? 'Rp ' . number_format($finalPrice, 0, ',', '.') : 'Price Coming Soon');
     $isUpcoming = $item->date_start
         && now()->startOfDay()->lt(\Carbon\Carbon::parse($item->date_start)->startOfDay());
     $instructorNames = collect($item->instructor_list ?? [])

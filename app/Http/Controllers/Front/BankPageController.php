@@ -21,14 +21,13 @@ class BankPageController
         // Mengambil data kelas dinamis berdasarkan slug
         $class = ClassesModel::where('slug', $slug)
             ->where('status', 1)
+            ->with('pricingData')
             ->firstOrFail();
-        $currentYear  = $now->year;
         // Mengambil 3 kelas terkait (selain kelas yang sedang dibuka)
-        $relatedClasses = ClassesModel::where('status', 1)
+        $relatedClasses = ClassesModel::query()
+            ->landingVisible($now)
             ->where('id', '!=', $class->id) 
-            ->whereYear('date_start', $currentYear)
-            ->where('date_end', '>', $now->format('Y-m-d'))->where('date_start', '<=', $now->format('Y-m-d'))
-            ->where('status', 1)->where('iht', 0)
+            ->with('pricingData')
             ->orderBy('date_end', 'asc')
             ->take(3)
             ->get();

@@ -80,6 +80,7 @@
         $courseStatusClass = 'upcoming';
         $today = now()->startOfDay();
         $registrationStart = $startDate ? \Carbon\Carbon::parse($startDate)->startOfDay() : null;
+        $registrationDisplayEnd = $endDate ? \Carbon\Carbon::parse($endDate)->endOfDay() : null;
         $registrationEnd = $endDate
             ? ($isIht
                 ? \Carbon\Carbon::parse($endDate)->endOfDay()
@@ -90,12 +91,10 @@
 
         if ($startDate && $endDate) {
             $start = $registrationStart->copy();
-            $end = $registrationEnd->copy();
-            $formattedDate = $isIht
-                ? ($start->isSameMonth($end) && $start->isSameYear($end)
-                    ? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($end)
-                    : $formatCourseDate($start, !$start->isSameYear($end)) . ' - ' . $formatCourseDate($end))
-                : $formatCourseDate($end);
+            $displayEnd = $registrationDisplayEnd;
+            $formattedDate = $start->isSameMonth($displayEnd) && $start->isSameYear($displayEnd)
+                ? $formatCourseDate($start, false) . ' - ' . $formatCourseDate($displayEnd)
+                : $formatCourseDate($start, !$start->isSameYear($displayEnd)) . ' - ' . $formatCourseDate($displayEnd);
         } elseif ($startDate) {
             $formattedDate = $formatCourseDate($startDate);
         }
@@ -793,7 +792,7 @@
 
                     <div class="event-hero-stats" aria-label="Ringkasan kelas">
                         <div class="event-stat-card">
-                            <span class="event-stat-card__label">{{ $isIht ? 'Pendaftaran' : 'Batas Pendaftaran' }}</span>
+                            <span class="event-stat-card__label">{{ $isIht ? 'Pendaftaran' : 'Periode Pendaftaran' }}</span>
                             <span class="event-stat-card__value">{{ $formattedDate }}</span>
                         </div>
                         <div class="event-stat-card">
@@ -886,7 +885,7 @@
                         <div class="event-highlight-grid">
                             <div class="event-highlight-card">
                                 <span
-                                    class="event-highlight-card__label">{{ $isIht ? 'Pendaftaran' : 'Batas Pendaftaran' }}</span>
+                                    class="event-highlight-card__label">{{ $isIht ? 'Pendaftaran' : 'Periode Pendaftaran' }}</span>
                                 <span class="event-highlight-card__value">{{ $formattedDate }}</span>
                             </div>
                             <div class="event-highlight-card">

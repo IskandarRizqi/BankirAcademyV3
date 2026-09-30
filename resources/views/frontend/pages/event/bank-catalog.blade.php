@@ -79,22 +79,14 @@
                 'description' =>
                     'Gunakan pencarian dan kategori untuk menemukan topik yang relevan. Contoh kelas dapat dikembangkan menjadi kelas institusi atau learning path khusus.',
             ])
-            {{-- <div class="catalog-tools"><label class="class-search"><span>⌕</span><input id="classSearch"
-                        placeholder="Cari judul, topik, atau kompetensi..." type="search" /></label><select
-                    aria-label="Urutkan kelas" class="class-sort" id="classSort">
-                    <option value="default">Urutkan: Rekomendasi</option>
-                    <option value="az">Judul A–Z</option>
-                    <option value="za">Judul Z–A</option>
-                </select></div>
-            <div class="class-filters"><button class="class-filter active" data-filter="all">Semua Kelas</button><button
-                    class="class-filter" data-filter="perbankan">Dasar Perbankan</button><button class="class-filter"
-                    data-filter="kredit">Kredit</button><button class="class-filter"
-                    data-filter="risiko">Risiko</button><button class="class-filter"
-                    data-filter="kepatuhan">Kepatuhan</button><button class="class-filter"
-                    data-filter="pemasaran">Pemasaran</button><button class="class-filter" data-filter="digital">Digital
-                    &amp; TI</button><button class="class-filter" data-filter="karier">Karier</button><button
-                    class="class-filter" data-filter="leadership">Leadership</button><button class="class-filter"
-                    data-filter="umkm">UMKM</button></div> --}}
+            <form class="catalog-tools" method="GET" action="{{ route('frontend.classes.index') }}">
+                <label class="class-search" for="classSearch">
+                    <span aria-hidden="true">⌕</span>
+                    <input id="classSearch" name="q" value="{{ $data['search'] ?? '' }}"
+                        placeholder="Cari judul, topik, atau kompetensi..." type="search" />
+                </label>
+                <button class="btn btn-primary" type="submit">Cari Kelas</button>
+            </form>
             <div class="catalog-cards" id="classGrid">
                 @forelse ($data['kelas'] ?? [] as $item)
                     @include('frontend.components.course-card', [
@@ -106,6 +98,11 @@
                     </div>
                 @endforelse
             </div>
+            @if ($data['kelas']->hasPages())
+                <div class="article-pagination">
+                    {{ $data['kelas']->links() }}
+                </div>
+            @endif
             <style>
                 #classGrid.catalog-cards {
                     gap: 16px;
@@ -113,6 +110,41 @@
 
                 #classGrid.catalog-cards .course-card {
                     max-width: none;
+                }
+
+                .catalog-pagination {
+                    display: flex;
+                    justify-content: center;
+                    margin-top: 32px;
+                }
+
+                .catalog-pagination .pagination {
+                    display: flex;
+                    gap: 6px;
+                    padding: 0;
+                    margin: 0;
+                    list-style: none;
+                }
+
+                .catalog-pagination .page-link {
+                    min-width: 38px;
+                    padding: 9px 12px;
+                    border: 1px solid var(--line);
+                    border-radius: 10px;
+                    color: var(--primary);
+                    background: #fff;
+                    text-align: center;
+                }
+
+                .catalog-pagination .page-item.active .page-link {
+                    border-color: var(--primary);
+                    color: #fff;
+                    background: var(--primary);
+                }
+
+                .catalog-pagination .page-item.disabled .page-link {
+                    color: var(--muted);
+                    background: #f7f7fb;
                 }
             </style>
         </div>
@@ -161,41 +193,4 @@
             </div>
         </div>
     </section>
-    <script>
-        const classSearch = document.getElementById('classSearch');
-        const classSort = document.getElementById('classSort');
-        const classGrid = document.getElementById('classGrid');
-        const classCards = [...document.querySelectorAll('.catalog-card')];
-        const classFilters = [...document.querySelectorAll('.class-filter')];
-        const emptyState = document.getElementById('emptyState');
-        let activeClassFilter = 'all';
-
-        function updateClasses() {
-            const query = (classSearch?.value || '').toLowerCase().trim();
-            let visible = 0;
-            classCards.forEach(card => {
-                const matchesFilter = activeClassFilter === 'all' || card.dataset.category === activeClassFilter;
-                const matchesSearch = !query || card.dataset.title.includes(query);
-                const show = matchesFilter && matchesSearch;
-                card.classList.toggle('hidden', !show);
-                if (show) visible++;
-            });
-            emptyState?.classList.toggle('show', visible === 0);
-        }
-        classFilters.forEach(button => button.addEventListener('click', () => {
-            activeClassFilter = button.dataset.filter;
-            classFilters.forEach(item => item.classList.remove('active'));
-            button.classList.add('active');
-            updateClasses();
-        }));
-        classSearch?.addEventListener('input', updateClasses);
-        classSort?.addEventListener('change', () => {
-            const cards = [...classCards];
-            if (classSort.value === 'az') cards.sort((a, b) => a.querySelector('h3').textContent.localeCompare(b
-                .querySelector('h3').textContent));
-            if (classSort.value === 'za') cards.sort((a, b) => b.querySelector('h3').textContent.localeCompare(a
-                .querySelector('h3').textContent));
-            cards.forEach(card => classGrid.appendChild(card));
-        });
-    </script>
 @endsection

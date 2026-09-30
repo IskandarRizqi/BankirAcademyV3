@@ -269,14 +269,12 @@ class HomeController extends Controller
             $data['carisearch'] = $request->carisearch;
         }
         if ($request->ajax()) {
-            $data['kelas'] = ClassesModel::where('date_end', '>=', $now->format('Y-m-d'))
-                ->where('status', 1)
-                ->where(function ($query) use ($data) {
-                    if ($data['carisearch'] !== 'null') {
-                        $query->where('category', $data['carisearch']);
-                    }
+            $data['kelas'] = ClassesModel::query()
+                ->with('pricingData')
+                ->landingVisible($now)
+                ->when($data['carisearch'] && $data['carisearch'] !== 'null', function ($query) use ($data) {
+                    $query->where('category', $data['carisearch']);
                 })
-                ->orWhereNull('date_start')
                 ->orderBy('date_end', 'asc')
                 ->paginate(12)
                 ->toArray();
@@ -326,13 +324,8 @@ class HomeController extends Controller
 
         $currentYear = $now->year;
         $data['kelas'] = ClassesModel::query()
-            ->where('status', 1)
-            ->where('iht', 0)
-            ->whereNotNull('date_start')
-            ->where(function ($query) use ($now) {
-                $query->whereDate('date_end', '>', $now->format('Y-m-d'))
-                    ->orWhereNull('date_end');
-            })
+            ->with('pricingData')
+            ->landingVisible($now)
             ->orderBy('date_start', 'asc')
             ->take(4)
             ->get();
