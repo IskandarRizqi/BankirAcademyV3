@@ -77,14 +77,12 @@
             aria-label="Tutup pesan bantuan">&times;</button>
         <div class="assistant-welcome-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L13.6 8.4L20 10L13.6 11.6L12 18L10.4 11.6L4 10L10.4 8.4L12 2Z"
-                    fill="currentColor" />
-                <path d="M19 16L19.7 18.3L22 19L19.7 19.7L19 22L18.3 19.7L16 19L18.3 18.3L19 16Z"
-                    fill="currentColor" />
+                <path d="M12 2L13.6 8.4L20 10L13.6 11.6L12 18L10.4 11.6L4 10L10.4 8.4L12 2Z" fill="currentColor" />
+                <path d="M19 16L19.7 18.3L22 19L19.7 19.7L19 22L18.3 19.7L16 19L18.3 18.3L19 16Z" fill="currentColor" />
             </svg>
         </div>
         <div class="assistant-welcome-content">
-            <strong>Halo, saya AI Assistant Bankir Academy</strong>
+            <strong>Halo, saya Aca Bankir Academy</strong>
             <p>Butuh bantuan memahami sistem, kelas, atau layanan kami? Klik tombol WhatsApp di bawah, ya.</p>
         </div>
     </div>

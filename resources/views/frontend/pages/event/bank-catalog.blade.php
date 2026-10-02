@@ -87,7 +87,7 @@
                 </label>
                 <button class="btn btn-primary" type="submit">Cari Kelas</button>
             </form>
-            <div class="catalog-cards" id="classGrid">
+            <div class="course-grid" id="classGrid">  
                 @forelse ($data['kelas'] ?? [] as $item)
                     @include('frontend.components.course-card', [
                         'item' => $item,
@@ -104,14 +104,6 @@
                 </div>
             @endif
             <style>
-                #classGrid.catalog-cards {
-                    gap: 16px;
-                }
-
-                #classGrid.catalog-cards .course-card {
-                    max-width: none;
-                }
-
                 .catalog-pagination {
                     display: flex;
                     justify-content: center;

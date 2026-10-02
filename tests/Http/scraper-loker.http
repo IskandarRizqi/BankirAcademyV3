@@ -1,6 +1,126 @@
 ### Variables
-@baseUrl = http://127.0.0.1:8000
+@baseUrl = http://192.168.1.11:8000
 @contentType = application/json
+@loginEmail = 23656@gmail.com
+@loginPassword = 23656Bankir!
+
+###############################################################################
+# AUTHENTICATION API
+# Login tidak mensyaratkan email_verified_at. Untuk menguji siswa yang belum
+# verifikasi, isi loginEmail/loginPassword dengan akun siswa tersebut.
+###############################################################################
+# @name login
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "email": "{{loginEmail}}",
+  "password": "{{loginPassword}}",
+  "device_name": "rest-client"
+}
+
+> {% client.global.set("authToken", response.body.data.token); %}
+
+###
+# Memastikan seluruh data user dan relasinya dapat diambil menggunakan token.
+GET {{baseUrl}}/api/v1/auth/me
+Authorization: Bearer {{authToken}}
+Accept: {{contentType}}
+
+###
+# PEMBAYARAN MANUAL
+# Ganti ID produk sesuai data di database. Nominal dihitung server dari produk.
+###############################################################################
+@subMateriId = 1
+@classId = 1
+
+# Buat order manual ebook.
+# @name create_manual_ebook
+POST {{baseUrl}}/api/v1/payments/ebook/manual
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "submateri_id": {{subMateriId}}
+}
+
+> {% client.global.set("manualPaymentId", response.body.data.payment.id); %}
+
+###
+# Buat order manual video.
+POST {{baseUrl}}/api/v1/payments/video/manual
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "submateri_id": {{subMateriId}}
+}
+
+###
+# Buat order manual kelas. Format participants juga dapat diganti dengan field
+# array nama, email, dan nomor_handphone seperti form web lama.
+# @name create_manual_class
+POST {{baseUrl}}/api/v1/payments/class/manual
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "class_id": {{classId}},
+  "sertifikat_invoice": 0,
+  "participants": [
+    {
+      "name": "Peserta API",
+      "email": "peserta-api@example.com",
+      "phone": "081234567890"
+    }
+  ]
+}
+
+###
+# Daftar billing beserta summary pembayaran.
+GET {{baseUrl}}/api/v1/payments?per_page=15
+Authorization: Bearer {{authToken}}
+Accept: {{contentType}}
+
+###
+# Upload bukti transfer. REST Client akan membaca file lokal berikut.
+# @manualPaymentId diisi otomatis oleh response create_manual_ebook.
+POST {{baseUrl}}/api/v1/payments/{{manualPaymentId}}/proof
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=manualPaymentBoundary
+Accept: {{contentType}}
+
+--manualPaymentBoundary
+Content-Disposition: form-data; name="link_payment"; filename="bukti-transfer.jpg"
+Content-Type: image/jpeg
+
+< C:\path\ke\bukti-transfer.jpg
+--manualPaymentBoundary--
+
+###
+# Logout hanya menghapus token yang sedang digunakan.
+POST {{baseUrl}}/api/v1/auth/logout
+Authorization: Bearer {{authToken}}
+Accept: {{contentType}}
+
+###
+# Login gagal jika email/password tidak sesuai.
+# @name login_invalid
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+  "email": "23656@gmail.com",
+  "password": "23656Bankir!",
+  "device_name": "rest-client"
+}
+
+###
 
 ###############################################################################
 # 1. SCRAPER SOCIAL MEDIA (INSTAGRAM)

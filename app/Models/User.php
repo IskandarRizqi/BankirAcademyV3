@@ -95,6 +95,11 @@ class User extends Authenticatable
         return null;
     }
 
+    public function userProfile(): HasOne
+    {
+        return $this->hasOne(UserProfileModel::class, 'user_id');
+    }
+
     public function bank()
     {
         return $this->belongsTo(User::class, 'bank_id');
@@ -118,6 +123,11 @@ class User extends Authenticatable
     public function perusahaan(): HasOne
     {
         return $this->hasOne(PerusahaanModel::class, 'user_id');
+    }
+
+    public function rekeningData(): HasOne
+    {
+        return $this->hasOne(DataRekeningModel::class, 'user_id');
     }
 
     public function getRekeningAttribute()

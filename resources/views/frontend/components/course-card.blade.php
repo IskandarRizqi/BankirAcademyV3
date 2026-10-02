@@ -36,15 +36,15 @@
     <div class="course-cover-wrapper">
         <div class="course-cover"
             style="background-image: url('{{ $coverImage }}'); background-size: cover;  background-position: center;">
-            <div class="course-card-badges">
-                <div class="category-badge">{{ $item->category ?: 'Kelas pilihan' }}</div>
-                @if ($isUpcoming)
-                    <div class="status-badge status-badge--upcoming">Upcoming</div>
-                @endif
-                @if ($isUpcoming && $isFree)
-                    <div class="status-badge status-badge--free-upcoming">Gratis</div>
-                @endif
-            </div>
+        </div>
+        <div class="course-card-badges">
+            <div class="category-badge">{{ $item->category ?: 'Kelas pilihan' }}</div>
+            @if ($isUpcoming)
+                <div class="status-badge status-badge--upcoming">Upcoming</div>
+            @endif
+            @if ($isUpcoming && $isFree)
+                <div class="status-badge status-badge--free-upcoming">Gratis</div>
+            @endif
         </div>
     </div>
 
@@ -114,9 +114,7 @@
 
     .course-cover {
         height: 180px;
-        display: flex;
-        align-items: flex-end;
-        padding: 16px;
+        background-repeat: no-repeat;
     }
 
     .category-badge {
@@ -133,6 +131,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+        padding: 14px 20px 0;
     }
 
     .status-badge {
