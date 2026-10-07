@@ -109,6 +109,27 @@ class PublicCatalogController extends Controller
         ]);
     }
 
+    public function classDetail(string $slug)
+    {
+        $class = ClassesModel::query()
+            ->with(['classEvents', 'pricingData'])
+            ->where('status', 1)
+            ->where('slug', $slug)
+            ->first();
+
+        if (! $class) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kelas tidak ditemukan.',
+            ], 404);
+        }
+
+        return (new PublicClassResource($class))->additional([
+            'success' => true,
+            'message' => 'Detail kelas berhasil diambil.',
+        ]);
+    }
+
     public function ebooks(PublicCatalogRequest $request)
     {
         return $this->digitalContentResponse($request, 1, PublicEbookResource::class, 'Daftar ebook berhasil diambil.');

@@ -54,8 +54,13 @@ class RouteArchitectureTest extends TestCase
     {
         foreach ([
             'api.v1.public.classes.index',
+            'api.v1.public.classes.show',
             'api.v1.public.ebooks.index',
             'api.v1.public.interactive-videos.index',
+            'api.v1.public.articles.index',
+            'api.v1.public.articles.show',
+            'api.v1.public.jobs.index',
+            'api.v1.public.jobs.show',
         ] as $name) {
             $route = Route::getRoutes()->getByName($name);
 
@@ -63,6 +68,30 @@ class RouteArchitectureTest extends TestCase
             $this->assertNotContains('auth', $route->gatherMiddleware(), $name.' must be public');
             $this->assertNotContains(AksesByIpAddress::class, $route->gatherMiddleware(), $name.' must not require IP whitelist');
         }
+    }
+
+    public function test_mobile_dashboard_and_payments_use_mobile_access_boundary(): void
+    {
+        foreach ([
+            'api.v1.auth.dashboard',
+            'api.v1.navigation.index',
+            'api.v1.participant.profile',
+            'api.v1.payments.index',
+            'api.v1.learning.catalog',
+            'api.v1.profile.membership.show',
+            'api.v1.member.jobs.index',
+            'api.v1.company.profile.show',
+        ] as $name) {
+            $route = Route::getRoutes()->getByName($name);
+
+            $this->assertNotNull($route, $name.' route is missing');
+            $this->assertContains('mobile.access', $route->middleware(), $name.' must use mobile access policy');
+        }
+
+        $this->assertContains('mobile.role:6', Route::getRoutes()->getByName('api.v1.learning.catalog')->middleware());
+        $this->assertContains('mobile.role:6', Route::getRoutes()->getByName('api.v1.participant.profile')->middleware());
+        $this->assertContains('mobile.role:2', Route::getRoutes()->getByName('api.v1.member.jobs.index')->middleware());
+        $this->assertContains('mobile.membership:company', Route::getRoutes()->getByName('api.v1.company.profile.show')->middleware());
     }
 
     public function test_compact_layout_and_dashboard_views_remain_available(): void

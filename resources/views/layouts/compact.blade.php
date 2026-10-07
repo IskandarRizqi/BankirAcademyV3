@@ -46,6 +46,7 @@
         $role = $user ? $user->role : null;
         $email = $user ? $user->email : null;
         $isRoot = \App\Support\AdminPanel::canAccess($user);
+        $roleMenus = \App\Support\RoleMenu::forRole((int) $role);
 
         $menus = [
             [
@@ -67,60 +68,6 @@
                 'section' => 'Calon Bankir',
             ],
             [
-                'label' => 'Kompetensi',
-                'icon' => 'graduate',
-                'url' => '/pelatihan',
-                'active' => request()->routeIs('siswa.materi.*') && !request()->is('*report*'),
-                'can_see' => $role == 6,
-                'has_submenu' => false,
-                'section' => 'Pembelajaran Peserta',
-            ],
-            [
-                'label' => 'Pelatihan Umum',
-                'icon' => 'teacher',
-                'url' => '/materi-umum',
-                'active' => request()->routeIs('siswa.umum.index*') && !request()->is('*report*'),
-                'can_see' => $role == 6,
-                'has_submenu' => false,
-                'section' => 'Pembelajaran Peserta',
-            ],
-            [
-                'label' => 'History Pelatihan',
-                'icon' => 'history',
-                'url' => '/materi-umum/history',
-                'active' => request()->routeIs('siswa.umum.history*'),
-                'can_see' => $role == 6,
-                'has_submenu' => false,
-                'section' => 'Pembelajaran Peserta',
-            ],
-            [
-                'label' => 'Lowongan Kerja',
-                'icon' => 'bar-chart-2',
-                'url' => '/lowongan',
-                'active' => request()->routeIs('lowongan*'),
-                'can_see' => $role == 6,
-                'has_submenu' => false,
-                'section' => 'Karier Peserta',
-            ],
-            [
-                'label' => 'Buat CV ATS',
-                'icon' => 'zap',
-                'url' => '/cvats',
-                'active' => request()->routeIs('cvats*'),
-                'can_see' => $role == 6,
-                'has_submenu' => false,
-                'section' => 'Karier Peserta',
-            ],
-            [
-                'label' => 'Sertifikat',
-                'icon' => 'sertificate',
-                'url' => '/sertifikat',
-                'active' => request()->routeIs('sertifikat*'),
-                'can_see' => $role == 6,
-                'has_submenu' => false,
-                'section' => 'Pembelajaran Peserta',
-            ],
-            [
                 'label' => 'Rekap Modul',
                 'icon' => 'bar-chart-2',
                 'url' => '/manajemen/laporan-siswa',
@@ -139,6 +86,10 @@
                 'section' => 'Calon Bankir',
             ],
         ];
+
+        if ((int) $role === 6) {
+            $menus = $roleMenus;
+        }
 
         $icons = [
             'home' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"

@@ -2,10 +2,21 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\GoogleAccountLinkingException;
+use App\Exceptions\GoogleEmailNotVerifiedException;
+use App\Exceptions\GoogleProviderException;
+use App\Exceptions\GoogleTokenException;
 use App\Http\Controllers\Controller;
+use App\Models\SiswaProfile;
 use App\Models\User;
+use App\Models\UserProfileModel;
+use App\Services\GoogleIdTokenVerifier;
+use App\Support\MobileAccess;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -19,6 +30,8 @@ class AuthController extends Controller
         5 => 'Sekolah',
         6 => 'Siswa',
     ];
+
+    public function __construct(private GoogleIdTokenVerifier $googleIdTokenVerifier) {}
 
     public function login(Request $request): JsonResponse
     {
@@ -41,8 +54,7 @@ class AuthController extends Controller
             ->where('email', $credentials['email'])
             ->first();
 
-        // Email verification is not required for mobile API login. The app can
-        // use requires_verification in the response to guide an unverified student.
+        // Mobile access follows the website and does not require email verification.
         if (! $user || ! $user->password || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json([
                 'success' => false,
@@ -50,8 +62,224 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $accessToken = $user->createToken($credentials['device_name'] ?? 'mobile-app', ['mobile']);
+        if (MobileAccess::isBlocked($user)) {
+            return $this->websiteOnlyAccountResponse();
+        }
 
+        $this->ensureMembershipProfile($user);
+        $user->load('userProfile.membership');
+        $accessToken = $this->issueToken($user, $credentials['device_name'] ?? 'mobile-app');
+        $this->auditLogin($request, $user, 'password');
+
+        return $this->tokenResponse($user, $accessToken);
+    }
+
+    /**
+     * Legacy endpoint kept for older mobile clients.
+     */
+    public function sendVerificationNotification(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'code' => 'email_verification_disabled',
+            'message' => 'Verifikasi email sedang dinonaktifkan sementara untuk aplikasi.',
+        ], Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * Verify an account from an existing signed link.
+     */
+    public function verifyEmail(Request $request, int $id, string $hash): JsonResponse
+    {
+        if (! $request->hasValidSignature()) {
+            return $this->invalidVerificationResponse('Link verifikasi tidak valid atau telah kedaluwarsa.');
+        }
+
+        $profile = SiswaProfile::query()->with('user')->find($id);
+        $user = $profile?->user;
+
+        if (! $profile?->email || ! $user || ! hash_equals(sha1($profile->email), $hash)) {
+            return $this->invalidVerificationResponse('Token verifikasi tidak sesuai dengan akun.');
+        }
+
+        if ($user->email_verified_at !== null) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Email sudah diverifikasi sebelumnya.',
+                'data' => [
+                    'profile_id' => $profile->id,
+                    'user_id' => $user->id,
+                    'verified' => true,
+                    'email_verified_at' => $user->email_verified_at->toISOString(),
+                ],
+            ]);
+        }
+
+        $user->forceFill([
+            'email_verified_at' => now(),
+            'is_active' => 1,
+        ])->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Email berhasil diverifikasi. Silakan login kembali di aplikasi.',
+            'data' => [
+                'profile_id' => $profile->id,
+                'user_id' => $user->id,
+                'verified' => true,
+                'email_verified_at' => $user->email_verified_at->toISOString(),
+            ],
+        ]);
+    }
+
+    public function google(Request $request): JsonResponse
+    {
+        $credentials = $request->validate([
+            'id_token' => ['required', 'string', 'max:10000'],
+            'device_name' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        try {
+            $identity = $this->googleIdTokenVerifier->verify($credentials['id_token']);
+        } catch (GoogleEmailNotVerifiedException $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_FORBIDDEN);
+        } catch (GoogleTokenException $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_UNAUTHORIZED);
+        } catch (GoogleProviderException $exception) {
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Login Google sedang tidak tersedia. Silakan coba lagi nanti.',
+            ], Response::HTTP_SERVICE_UNAVAILABLE);
+        }
+
+        if (MobileAccess::isBlockedEmail($identity['email'])) {
+            return $this->websiteOnlyAccountResponse();
+        }
+
+        $existingGoogleUser = User::query()
+            ->where('google_id', $identity['sub'])
+            ->first();
+        $existingEmailUser = User::query()
+            ->whereRaw('LOWER(email) = ?', [strtolower($identity['email'])])
+            ->first();
+
+        if (MobileAccess::isBlocked($existingGoogleUser) || MobileAccess::isBlocked($existingEmailUser)) {
+            return $this->websiteOnlyAccountResponse();
+        }
+
+        try {
+            $user = DB::transaction(function () use ($identity): User {
+                return $this->findOrCreateGoogleUser($identity);
+            });
+        } catch (GoogleAccountLinkingException $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_CONFLICT);
+        } catch (QueryException $exception) {
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun Google tidak dapat diproses saat ini. Silakan coba lagi.',
+            ], Response::HTTP_CONFLICT);
+        }
+
+        if (MobileAccess::isBlocked($user)) {
+            return $this->websiteOnlyAccountResponse();
+        }
+
+        $this->ensureMembershipProfile($user);
+        $user->load('userProfile.membership');
+        $accessToken = $this->issueToken($user, $credentials['device_name'] ?? 'bankir-app');
+        $this->auditLogin($request, $user, 'google');
+
+        return $this->tokenResponse($user, $accessToken);
+    }
+
+    private function findOrCreateGoogleUser(array $identity): User
+    {
+        $user = User::query()
+            ->where('google_id', $identity['sub'])
+            ->lockForUpdate()
+            ->first();
+
+        if ($user) {
+            return $this->loadApiUser($user);
+        }
+
+        $userByEmail = User::query()
+            ->whereRaw('LOWER(email) = ?', [strtolower($identity['email'])])
+            ->lockForUpdate()
+            ->first();
+
+        if ($userByEmail) {
+            if ($userByEmail->google_id && ! hash_equals((string) $userByEmail->google_id, $identity['sub'])) {
+                throw new GoogleAccountLinkingException('Email Google sudah terhubung ke akun Google lain.');
+            }
+
+            $userByEmail->forceFill(['google_id' => $identity['sub']])->save();
+
+            return $this->loadApiUser($userByEmail);
+        }
+
+        $user = User::create([
+            'name' => $identity['name'],
+            'email' => $identity['email'],
+            'google_id' => $identity['sub'],
+            'email_verified_at' => now(),
+            'role' => 2,
+            'is_active' => 1,
+        ]);
+
+        return $this->loadApiUser($user);
+    }
+
+    private function loadApiUser(User $user): User
+    {
+        return $user->load([
+            'userProfile.membership',
+            'siswa',
+            'membership',
+            'perusahaan',
+            'rekeningData',
+            'bank',
+            'sekolah',
+        ]);
+    }
+
+    private function ensureMembershipProfile(User $user): UserProfileModel
+    {
+        return UserProfileModel::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'name' => $user->name ?: 'Pengguna Bankir Academy',
+                'phone' => '0',
+                'gender' => 0,
+                'existing_user' => 0,
+            ]
+        );
+    }
+
+    private function issueToken(User $user, string $deviceName)
+    {
+        return $user->createToken($deviceName, ['mobile']);
+    }
+
+    private function tokenResponse(User $user, $accessToken): JsonResponse
+    {
         return response()->json([
             'success' => true,
             'message' => 'Login berhasil.',
@@ -62,6 +290,39 @@ class AuthController extends Controller
                 'user' => $this->userData($user),
             ],
         ]);
+    }
+
+    private function websiteOnlyAccountResponse(): JsonResponse
+    {
+        return response()->json([
+            'success' => false,
+            'code' => 'website_only_account',
+            'message' => 'Akun ini hanya dapat digunakan melalui website.',
+        ], Response::HTTP_FORBIDDEN);
+    }
+
+    private function invalidVerificationResponse(string $message): JsonResponse
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'code' => 'invalid_verification_link',
+        ], Response::HTTP_FORBIDDEN);
+    }
+
+    private function auditLogin(Request $request, User $user, string $provider): void
+    {
+        activity()
+            ->causedBy($user)
+            ->performedOn($user)
+            ->event('login')
+            ->withProperties([
+                'channel' => 'api',
+                'provider' => $provider,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ])
+            ->log('Login API berhasil.');
     }
 
     public function me(Request $request): JsonResponse
@@ -119,7 +380,7 @@ class AuthController extends Controller
             'activated_at' => optional($user->activated_at)->toISOString(),
             'created_at' => optional($user->created_at)->toISOString(),
             'updated_at' => optional($user->updated_at)->toISOString(),
-            'requires_verification' => $roleId === 6 && ! (bool) $user->is_active,
+            'requires_verification' => false,
             'profile' => $this->profileData($user->userProfile),
             'student_profile' => $user->siswa?->only([
                 'id',

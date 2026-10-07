@@ -353,11 +353,31 @@ class CheckoutController extends Controller
 
     private function processEbookPayment(string $invoiceNumber, string $paymentStatus, ?float $amount): array
     {
-        return DB::transaction(function () use ($invoiceNumber) {
+        return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
             $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
-            if ($dataPayment) {
-                $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
+            if (! $dataPayment) {
+                return ['status' => 404, 'message' => 'Payment not found'];
             }
+
+            if ($amount !== null && abs((float) $dataPayment->nominal - $amount) > 0.01) {
+                Log::warning('DOKU material payment amount mismatch', [
+                    'invoice' => $invoiceNumber,
+                    'expected' => $dataPayment->nominal,
+                    'received' => $amount,
+                ]);
+
+                return ['status' => 422, 'message' => 'Invalid payment amount'];
+            }
+
+            if ((int) $dataPayment->status === DataPayment::STATUS_PAID) {
+                return ['status' => 200, 'message' => 'Payment already processed'];
+            }
+
+            if (! $this->isSuccessfulDokuStatus($paymentStatus)) {
+                return ['status' => 200, 'message' => 'Payment status ignored'];
+            }
+
+            $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
 
             DB::table('history_pelatihan')->insertOrIgnore([
                 'user_id' => $dataPayment->user_id,

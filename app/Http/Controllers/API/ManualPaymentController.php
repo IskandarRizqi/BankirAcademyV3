@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MembershipProfileRequest;
 use App\Models\BiayaSertifikatModel;
 use App\Models\ClassesModel;
 use App\Models\ClassParticipantModel;
@@ -11,13 +12,21 @@ use App\Models\DataPayment;
 use App\Models\RiwayatTransaksi;
 use App\Models\SertifikatPesertaModel;
 use App\Models\SubMateriModel;
+use App\Models\UserProfileModel;
 use App\Services\ClassPricingService;
 use App\Services\PaymentExpiryService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use PDF;
+use Throwable;
 
 class ManualPaymentController extends Controller
 {
@@ -28,6 +37,249 @@ class ManualPaymentController extends Controller
         private ClassPricingService $classPricingService
     ) {}
 
+    public function storeMembership(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'membership_tipe' => ['required', 'integer', Rule::in(DataPayment::MEMBERSHIP_TYPES)],
+            'payment_method' => ['required', Rule::in(['gateway', 'manual'])],
+        ]);
+        $user = $request->user();
+        $membershipType = (int) $validated['membership_tipe'];
+        $paymentMethod = $validated['payment_method'];
+        $membership = $this->membershipConfiguration($membershipType);
+        $profile = UserProfileModel::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'name' => $user->name ?: 'Pengguna Bankir Academy',
+                'phone' => '0',
+                'gender' => 0,
+                'existing_user' => 0,
+            ]
+        );
+
+        $profileData = $profile->only([
+            'name', 'phone', 'gender', 'tanggal_lahir', 'alamat',
+            'provinsi_id', 'kota_id', 'kecamatan_id', 'kelurahan_id',
+        ]);
+        $profileData['phone'] = (string) $profileData['phone'];
+        $profileData['membership_tipe'] = $membershipType;
+        $profileValidator = Validator::make($profileData, MembershipProfileRequest::profileRules($profileData));
+
+        if ($profileValidator->fails()) {
+            return $this->errorResponse('Lengkapi profil pengguna sebelum membuat order membership.', 422);
+        }
+
+        if (! $profile->isPhoneVerified()) {
+            return $this->errorResponse('Nomor handphone harus diverifikasi melalui OTP.', 422);
+        }
+
+        $this->paymentExpiryService->syncForUser((int) $user->id);
+        $existingPayment = DataPayment::query()
+            ->where('user_id', $user->id)
+            ->where('tipe_pembelian', DataPayment::PURCHASE_TYPE_MEMBERSHIP)
+            ->where('tipe_membership', $membershipType)
+            ->whereIn('status', [
+                DataPayment::STATUS_PENDING,
+                DataPayment::STATUS_WAITING_CONFIRMATION,
+                DataPayment::STATUS_REJECTED,
+            ])
+            ->latest('id')
+            ->first();
+
+        if ($existingPayment) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Order membership yang sama masih tersedia.',
+                'data' => ['payment' => $this->paymentData($existingPayment)],
+            ]);
+        }
+
+        $payment = DataPayment::create([
+            'no_invoice' => 'BANKIR-PENDING-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
+            'user_id' => $user->id,
+            'pembelian' => DataPayment::PURCHASE_MEMBERSHIP,
+            'nominal' => $membership['price'],
+            'expired' => $paymentMethod === 'manual' ? self::PAYMENT_DUE_MINUTES : 60,
+            'qty' => 1,
+            'status' => DataPayment::STATUS_PENDING,
+            'keterangan' => $membership['description'],
+            'tipe_pembelian' => DataPayment::PURCHASE_TYPE_MEMBERSHIP,
+            'tipe_membership' => $membershipType,
+            'payment_method' => $paymentMethod,
+        ]);
+        $invoiceNumber = 'BANKIR-'.$payment->created_at->format('YmdHis').'-'.$payment->id;
+        $payment->update(['no_invoice' => $invoiceNumber]);
+        $profile->update(['status_membership' => DataPayment::STATUS_PENDING]);
+
+        if ($paymentMethod === 'manual') {
+            return $this->membershipPaymentResponse($payment, 'Order membership berhasil dibuat. Silakan transfer dan upload bukti pembayaran.', 201);
+        }
+
+        $paymentUrl = $this->createMembershipGatewayPayment($payment, $user, $membership, $membershipType);
+
+        if (! $paymentUrl) {
+            $payment->update([
+                'status' => DataPayment::STATUS_CANCELED,
+                'keterangan' => 'Gagal membuat link pembayaran.',
+            ]);
+            $profile->update(['status_membership' => 0]);
+
+            return $this->errorResponse('Gagal membuat link pembayaran. Silakan coba lagi.', 422);
+        }
+
+        $payment->update(['link_payment' => $paymentUrl]);
+
+        return $this->membershipPaymentResponse($payment->fresh(), 'Order membership berhasil dibuat.', 201);
+    }
+
+    public function cancel(Request $request, DataPayment $payment): JsonResponse
+    {
+        abort_unless((int) $payment->user_id === (int) $request->user()->id, 404);
+
+        if ((int) $payment->status === DataPayment::STATUS_PAID) {
+            return $this->errorResponse('Pembayaran yang sudah lunas tidak dapat dibatalkan.', 422);
+        }
+
+        if (! in_array((int) $payment->status, [
+            DataPayment::STATUS_PENDING,
+            DataPayment::STATUS_WAITING_CONFIRMATION,
+            DataPayment::STATUS_REJECTED,
+        ], true)) {
+            return $this->errorResponse('Transaksi sudah tidak dapat dibatalkan.', 422);
+        }
+
+        DB::transaction(function () use ($payment) {
+            $payment->update([
+                'status' => DataPayment::STATUS_CANCELED,
+                'keterangan' => trim(($payment->keterangan ? $payment->keterangan.' ' : '').'Pembayaran dibatalkan oleh pengguna.'),
+            ]);
+
+            if ((int) $payment->tipe_pembelian === DataPayment::PURCHASE_TYPE_MEMBERSHIP) {
+                UserProfileModel::where('user_id', $payment->user_id)
+                    ->where('status_membership', DataPayment::STATUS_PENDING)
+                    ->update(['status_membership' => 0]);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pembayaran berhasil dibatalkan.',
+            'data' => ['payment' => $this->paymentData($payment->fresh())],
+        ]);
+    }
+
+    public function expire(Request $request, DataPayment $payment): JsonResponse
+    {
+        abort_unless((int) $payment->user_id === (int) $request->user()->id, 404);
+        $this->paymentExpiryService->expireIfNeeded($payment);
+
+        return response()->json([
+            'success' => true,
+            'data' => ['payment' => $this->paymentData($payment->fresh())],
+        ]);
+    }
+
+    public function invoice(Request $request, DataPayment $payment): JsonResponse
+    {
+        abort_unless((int) $payment->user_id === (int) $request->user()->id, 404);
+        $this->paymentExpiryService->expireIfNeeded($payment);
+        $payment->load(['paymentClass', 'subMateri', 'classPayment']);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'invoice_number' => $payment->no_invoice,
+                'issued_at' => optional($payment->created_at)->toISOString(),
+                'payment' => $this->paymentData($payment->fresh(['paymentClass', 'subMateri', 'classPayment'])),
+                'customer' => [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                ],
+            ],
+        ]);
+    }
+
+    public function invoicePdf(Request $request, DataPayment $payment)
+    {
+        abort_unless((int) $payment->user_id === (int) $request->user()->id, 404);
+        $this->paymentExpiryService->expireIfNeeded($payment);
+        $payment->load(['paymentClass', 'subMateri']);
+        $paymentData = $this->paymentData($payment->fresh(['paymentClass', 'subMateri']));
+        $productName = data_get($paymentData, 'product.name', 'Transaksi Bankir Academy');
+        $statusLabel = $paymentData['status_label'];
+
+        $html = '<!doctype html><html><head><meta charset="utf-8"><style>'
+            .'body{font-family:DejaVu Sans,sans-serif;color:#1f2937} '
+            .'h1{font-size:22px} table{width:100%;border-collapse:collapse;margin-top:24px} '
+            .'td{padding:8px;border-bottom:1px solid #ddd} .label{width:35%;color:#6b7280}'
+            .'</style></head><body>'
+            .'<h1>Invoice Bankir Academy</h1>'
+            .'<table>'
+            .'<tr><td class="label">Nomor invoice</td><td>'.e($payment->no_invoice).'</td></tr>'
+            .'<tr><td class="label">Nama pelanggan</td><td>'.e($request->user()->name).'</td></tr>'
+            .'<tr><td class="label">Email</td><td>'.e($request->user()->email).'</td></tr>'
+            .'<tr><td class="label">Produk</td><td>'.e($productName).'</td></tr>'
+            .'<tr><td class="label">Status</td><td>'.e($statusLabel).'</td></tr>'
+            .'<tr><td class="label">Total</td><td>Rp '.number_format((float) $payment->nominal, 0, ',', '.').'</td></tr>'
+            .'</table></body></html>';
+
+        return PDF::loadHTML($html)
+            ->setPaper('a4', 'portrait')
+            ->download('invoice_'.$payment->no_invoice.'.pdf');
+    }
+
+    public function payIht(Request $request, DataPayment $payment): JsonResponse
+    {
+        abort_unless((int) $payment->user_id === (int) $request->user()->id, 404);
+
+        if (! $payment->canPayConfirmedIht()) {
+            if ($payment->hasConfirmedIhtPaymentLink()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Link pembayaran IHT masih tersedia.',
+                    'data' => ['payment' => $this->paymentData($payment->fresh())],
+                ]);
+            }
+
+            return $this->errorResponse('Order IHT belum dapat dibayar atau sudah selesai diproses.', 422);
+        }
+
+        $classPayment = ClassPaymentModel::where('no_invoice', $payment->no_invoice)->first();
+        if (! $classPayment) {
+            return $this->errorResponse('Data invoice kelas IHT tidak ditemukan.', 404);
+        }
+
+        $paymentAmount = (int) round((float) $payment->nominal);
+        if ($paymentAmount < 1) {
+            return $this->errorResponse('Nominal pembayaran IHT belum valid.', 422);
+        }
+
+        $quantity = max(1, (int) $payment->qty);
+        $classPayment->update([
+            'price' => $paymentAmount / $quantity,
+            'price_final' => $paymentAmount,
+            'jumlah' => $quantity,
+        ]);
+        $paymentUrl = $this->createDokuPaymentUrl($payment, $request->user(), 'Pembayaran Kelas IHT', true);
+
+        if (! $paymentUrl) {
+            return $this->errorResponse('Gagal membuat link pembayaran IHT. Silakan coba lagi.', 422);
+        }
+
+        $payment->update([
+            'link_payment' => $paymentUrl,
+            'expired' => 60,
+        ]);
+        $classPayment->update(['file' => $paymentUrl]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Link pembayaran IHT berhasil dibuat.',
+            'data' => ['payment' => $this->paymentData($payment->fresh())],
+        ]);
+    }
+
     public function storeClass(Request $request): JsonResponse
     {
         $this->normalizeParticipants($request);
@@ -36,6 +288,7 @@ class ManualPaymentController extends Controller
             'class_id' => ['required', 'integer', 'exists:classes,id'],
             'jml_peserta' => ['required', 'integer', 'min:1'],
             'sertifikat_invoice' => ['required', 'in:0,1'],
+            'payment_method' => ['nullable', Rule::in(['gateway', 'manual'])],
             'nama' => ['required', 'array'],
             'nama.*' => ['required', 'string', 'max:255'],
             'email' => ['required', 'array'],
@@ -45,6 +298,7 @@ class ManualPaymentController extends Controller
         ]);
 
         $participantCount = count($validated['nama']);
+        $paymentMethod = $validated['payment_method'] ?? 'manual';
 
         if (
             count($validated['email']) !== $participantCount
@@ -106,7 +360,8 @@ class ManualPaymentController extends Controller
             $pricePerParticipant,
             $certificateTotal,
             $grandTotal,
-            $paymentStatus
+            $paymentStatus,
+            $paymentMethod
         ) {
             $lockedClass = ClassesModel::query()
                 ->select('id', 'participant_limit')
@@ -166,9 +421,11 @@ class ManualPaymentController extends Controller
                 'nominal' => $grandTotal,
                 'qty' => $participantCount,
                 'status' => $paymentStatus,
-                'keterangan' => 'Pembelian kelas (Transfer Manual)',
+                'keterangan' => $paymentMethod === 'manual'
+                    ? 'Pembelian kelas (Transfer Manual)'
+                    : 'Pembelian kelas',
                 'tipe_pembelian' => DataPayment::PURCHASE_TYPE_CLASS,
-                'payment_method' => 'manual',
+                'payment_method' => $paymentMethod,
             ]);
 
             $invoiceNumber = 'BANKIR-MNL-'.$dataPayment->created_at->format('YmdHis').'-'.$dataPayment->id;
@@ -208,6 +465,33 @@ class ManualPaymentController extends Controller
 
         $result['payment']->load(['paymentClass', 'classPayment', 'subMateri']);
 
+        if ($paymentMethod === 'gateway' && $result['payment']->billingStatus() === DataPayment::STATUS_PENDING) {
+            $paymentUrl = $this->createDokuPaymentUrl(
+                $result['payment'],
+                $user,
+                'Pembayaran Kelas',
+                false
+            );
+
+            if (! $paymentUrl) {
+                $result['payment']->update([
+                    'status' => DataPayment::STATUS_CANCELED,
+                    'keterangan' => 'Gagal membuat link pembayaran.',
+                ]);
+
+                return $this->errorResponse('Gagal membuat link pembayaran kelas. Silakan coba lagi.', 422);
+            }
+
+            $result['payment']->update([
+                'link_payment' => $paymentUrl,
+                'expired' => 60,
+            ]);
+            if ($result['payment']->classPayment) {
+                $result['payment']->classPayment->update(['file' => $paymentUrl]);
+            }
+            $result['payment']->refresh();
+        }
+
         return response()->json([
             'success' => true,
             'message' => $paymentStatus === DataPayment::STATUS_PAID
@@ -215,7 +499,7 @@ class ManualPaymentController extends Controller
                 : 'Order kelas berhasil dibuat. Silakan transfer dan upload bukti pembayaran.',
             'data' => [
                 'payment' => $this->paymentData($result['payment']),
-                'manual_transfer' => $this->manualTransferData(),
+                'manual_transfer' => $paymentMethod === 'manual' ? $this->manualTransferData() : null,
             ],
         ], 201);
     }
@@ -239,6 +523,7 @@ class ManualPaymentController extends Controller
             ->with(['paymentClass', 'subMateri', 'riwayatTransaksi'])
             ->where('user_id', $userId)
             ->whereIn('tipe_pembelian', [
+                DataPayment::PURCHASE_TYPE_MEMBERSHIP,
                 DataPayment::PURCHASE_TYPE_CLASS,
                 DataPayment::PURCHASE_TYPE_EBOOK,
                 DataPayment::PURCHASE_TYPE_VIDEO,
@@ -247,6 +532,7 @@ class ManualPaymentController extends Controller
 
         if ($request->filled('type')) {
             $type = match (strtolower((string) $request->input('type'))) {
+                'membership' => DataPayment::PURCHASE_TYPE_MEMBERSHIP,
                 'kelas', 'class' => DataPayment::PURCHASE_TYPE_CLASS,
                 'ebook' => DataPayment::PURCHASE_TYPE_EBOOK,
                 'video' => DataPayment::PURCHASE_TYPE_VIDEO,
@@ -254,7 +540,7 @@ class ManualPaymentController extends Controller
             };
 
             if ($type === null) {
-                return $this->errorResponse('Filter type harus kelas, ebook, atau video.', 422);
+                return $this->errorResponse('Filter type harus membership, kelas, ebook, atau video.', 422);
             }
 
             $query->where('tipe_pembelian', $type);
@@ -307,6 +593,8 @@ class ManualPaymentController extends Controller
     public function uploadProof(Request $request, DataPayment $payment): JsonResponse
     {
         abort_unless((int) $payment->user_id === (int) $request->user()->id, 404);
+        $this->paymentExpiryService->expireIfNeeded($payment);
+        $payment->refresh();
 
         $request->validate([
             'link_payment' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
@@ -357,7 +645,10 @@ class ManualPaymentController extends Controller
 
         $validated = $request->validate([
             'submateri_id' => ['required', 'integer', 'exists:sub_materi,id'],
+            'payment_method' => ['nullable', Rule::in(['gateway', 'manual'])],
         ]);
+
+        $paymentMethod = $validated['payment_method'] ?? 'manual';
 
         $subMateri = SubMateriModel::query()
             ->with('materi')
@@ -388,7 +679,9 @@ class ManualPaymentController extends Controller
                 'message' => 'Order pembayaran yang sama masih tersedia.',
                 'data' => [
                     'payment' => $this->paymentData($existingPayment),
-                    'manual_transfer' => $this->manualTransferData(),
+                    'manual_transfer' => $existingPayment->payment_method === 'manual'
+                        ? $this->manualTransferData()
+                        : null,
                 ],
             ]);
         }
@@ -409,28 +702,33 @@ class ManualPaymentController extends Controller
         $label = $purchaseType === DataPayment::PURCHASE_TYPE_EBOOK ? 'Ebook' : 'Video';
         $paymentStatus = $nominal <= 0 ? DataPayment::STATUS_PAID : DataPayment::STATUS_PENDING;
 
-        $payment = DB::transaction(function () use ($user, $subMateri, $nominal, $purchase, $purchaseType, $label, $paymentStatus) {
+        $payment = DB::transaction(function () use ($user, $subMateri, $nominal, $purchase, $purchaseType, $label, $paymentStatus, $paymentMethod) {
             $dataPayment = DataPayment::create([
                 'no_invoice' => 'BANKIR-MNL-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
                 'user_id' => $user->id,
                 'materi_id' => $subMateri->id_materi,
                 'submateri_id' => $subMateri->id,
                 'pembelian' => $purchase,
-                'expired' => self::PAYMENT_DUE_MINUTES,
+                'expired' => $paymentMethod === 'gateway' ? 60 : self::PAYMENT_DUE_MINUTES,
                 'nominal' => $nominal,
                 'qty' => 1,
                 'status' => $paymentStatus,
                 'keterangan' => $nominal > 0
-                    ? 'Pembelian '.$label.' (Transfer Manual)'
+                    ? 'Pembelian '.$label.' ('.($paymentMethod === 'gateway' ? 'Virtual Account DOKU' : 'Transfer Manual').')'
                     : 'Klaim '.$label.' Gratis',
                 'tipe_pembelian' => $purchaseType,
-                'payment_method' => 'manual',
+                'payment_method' => $paymentMethod,
             ]);
 
             $invoiceNumber = 'BANKIR-MNL-'.$dataPayment->created_at->format('YmdHis').'-'.$dataPayment->id;
             $dataPayment->update(['no_invoice' => $invoiceNumber]);
 
-            if ($nominal > 0) {
+            if ($nominal <= 0) {
+                DB::table('history_pelatihan')->updateOrInsert(
+                    ['user_id' => $user->id, 'sub_materi_id' => $subMateri->id],
+                    ['created_at' => now(), 'updated_at' => now()]
+                );
+            } elseif ($paymentMethod === 'manual') {
                 RiwayatTransaksi::create([
                     'user_id' => $user->id,
                     'class_id' => $subMateri->id,
@@ -442,11 +740,6 @@ class ManualPaymentController extends Controller
                     'expired' => now()->addDay(),
                     'keterangan' => 'Pembelian '.$label.' via Transfer Manual.',
                 ]);
-            } else {
-                DB::table('history_pelatihan')->updateOrInsert(
-                    ['user_id' => $user->id, 'sub_materi_id' => $subMateri->id],
-                    ['created_at' => now(), 'updated_at' => now()]
-                );
             }
 
             return $dataPayment->fresh();
@@ -454,14 +747,40 @@ class ManualPaymentController extends Controller
 
         $payment->load(['paymentClass', 'subMateri', 'riwayatTransaksi']);
 
+        if ($paymentMethod === 'gateway' && $payment->billingStatus() === DataPayment::STATUS_PENDING) {
+            $paymentUrl = $this->createDokuPaymentUrl(
+                $payment,
+                $user,
+                'Pembayaran '.$label.' - '.$subMateri->nama,
+                false
+            );
+
+            if (! $paymentUrl) {
+                $payment->update([
+                    'status' => DataPayment::STATUS_CANCELED,
+                    'keterangan' => 'Gagal membuat link Virtual Account DOKU.',
+                ]);
+
+                return $this->errorResponse('Gagal membuat Virtual Account DOKU. Silakan coba lagi.', 422);
+            }
+
+            $payment->update([
+                'link_payment' => $paymentUrl,
+                'expired' => 60,
+            ]);
+            $payment->refresh();
+        }
+
         return response()->json([
             'success' => true,
             'message' => $paymentStatus === DataPayment::STATUS_PAID
                 ? $label.' gratis berhasil diaktifkan.'
-                : 'Order '.$label.' berhasil dibuat. Silakan transfer dan upload bukti pembayaran.',
+                : ($paymentMethod === 'gateway'
+                    ? 'Virtual Account DOKU berhasil dibuat. Lanjutkan pembayaran melalui DOKU.'
+                    : 'Order '.$label.' berhasil dibuat. Silakan transfer dan upload bukti pembayaran.'),
             'data' => [
                 'payment' => $this->paymentData($payment),
-                'manual_transfer' => $this->manualTransferData(),
+                'manual_transfer' => $paymentMethod === 'manual' ? $this->manualTransferData() : null,
             ],
         ], 201);
     }
@@ -514,6 +833,7 @@ class ManualPaymentController extends Controller
     private function paymentData(DataPayment $payment): array
     {
         $type = match ((int) $payment->tipe_pembelian) {
+            DataPayment::PURCHASE_TYPE_MEMBERSHIP => 'membership',
             DataPayment::PURCHASE_TYPE_CLASS => 'kelas',
             DataPayment::PURCHASE_TYPE_EBOOK => 'ebook',
             DataPayment::PURCHASE_TYPE_VIDEO => 'video',
@@ -523,19 +843,24 @@ class ManualPaymentController extends Controller
         $proofPath = $payment->link_payment && ! filter_var($payment->link_payment, FILTER_VALIDATE_URL)
             ? $payment->link_payment
             : null;
-        $product = $type === 'kelas' && $payment->paymentClass
+        $product = $type === 'membership'
             ? [
+                'type' => (int) $payment->tipe_membership === DataPayment::MEMBERSHIP_TYPE_COMPANY ? 'company' : 'individual',
+                'name' => (int) $payment->tipe_membership === DataPayment::MEMBERSHIP_TYPE_COMPANY
+                    ? 'Membership Perusahaan'
+                    : 'Membership Perorangan',
+            ]
+            : ($type === 'kelas' && $payment->paymentClass ? [
                 'id' => $payment->paymentClass->id,
                 'name' => $payment->paymentClass->title,
                 'image' => $payment->paymentClass->image,
                 'image_mobile' => $payment->paymentClass->image_mobile,
-            ]
-            : ($payment->subMateri ? [
+            ] : ($payment->subMateri ? [
                 'id' => $payment->subMateri->id,
                 'name' => $payment->subMateri->nama,
                 'thumbnail' => $payment->subMateri->thumbnail,
                 'materi_id' => $payment->subMateri->id_materi,
-            ] : null);
+            ] : null));
 
         return [
             'id' => $payment->id,
@@ -548,10 +873,18 @@ class ManualPaymentController extends Controller
             'status_key' => $this->statusKey($status),
             'status_label' => $this->statusLabel($status),
             'payment_method' => $payment->payment_method,
+            'payment_url' => $payment->payment_method === 'gateway' && filter_var($payment->link_payment, FILTER_VALIDATE_URL)
+                ? $payment->link_payment
+                : null,
             'proof_uploaded' => filled($proofPath),
             'proof_url' => $proofPath ? url(Storage::disk('public')->url($proofPath)) : null,
             'rejection_reason' => $payment->rejection_reason,
             'expires_at' => optional($payment->paymentExpiresAt())->toISOString(),
+            'can_cancel' => in_array($status, [
+                DataPayment::STATUS_PENDING,
+                DataPayment::STATUS_WAITING_CONFIRMATION,
+                DataPayment::STATUS_REJECTED,
+            ], true),
             'can_upload_proof' => $payment->payment_method === 'manual'
                 && in_array($status, [
                     DataPayment::STATUS_PENDING,
@@ -568,6 +901,7 @@ class ManualPaymentController extends Controller
         $payments = DataPayment::query()
             ->where('user_id', $userId)
             ->whereIn('tipe_pembelian', [
+                DataPayment::PURCHASE_TYPE_MEMBERSHIP,
                 DataPayment::PURCHASE_TYPE_CLASS,
                 DataPayment::PURCHASE_TYPE_EBOOK,
                 DataPayment::PURCHASE_TYPE_VIDEO,
@@ -593,6 +927,166 @@ class ManualPaymentController extends Controller
             'account_number' => env('MANUAL_PAYMENT_ACCOUNT_NUMBER', '803 555 9091'),
             'account_name' => env('MANUAL_PAYMENT_ACCOUNT_NAME', 'PT Bankir Academy Indonesia'),
         ];
+    }
+
+    private function membershipPaymentResponse(DataPayment $payment, string $message, int $status): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => [
+                'payment' => $this->paymentData($payment),
+                'manual_transfer' => $payment->payment_method === 'manual' ? $this->manualTransferData() : null,
+            ],
+        ], $status);
+    }
+
+    private function membershipConfiguration(int $membershipType): array
+    {
+        return match ($membershipType) {
+            DataPayment::MEMBERSHIP_TYPE_COMPANY => [
+                'label' => 'Membership Perusahaan',
+                'description' => 'Membership perusahaan',
+                'price' => 3000000,
+            ],
+            DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => [
+                'label' => 'Membership Perorangan',
+                'description' => 'Membership perorangan',
+                'price' => 99000,
+            ],
+            default => throw new \InvalidArgumentException('Tipe membership tidak valid.'),
+        };
+    }
+
+    private function createMembershipGatewayPayment(DataPayment $payment, $user, array $membership, int $membershipType): ?string
+    {
+        $clientId = env('DOKU_CLIENT_ID');
+        $secretKey = env('DOKU_SECRET_KEY');
+        $dokuUrl = rtrim((string) env('DOKU_URL'), '/');
+
+        if (! $clientId || ! $secretKey || ! $dokuUrl) {
+            return null;
+        }
+
+        $timestamp = now()->toIso8601ZuluString();
+        $requestId = Str::uuid()->toString();
+        $body = [
+            'order' => [
+                'amount' => $payment->nominal,
+                'invoice_number' => $payment->no_invoice,
+                'callback_url' => url('/pembayaran?invoice_number='.urlencode($payment->no_invoice)),
+                'line_items' => [[
+                    'name' => $membership['label'],
+                    'price' => $membership['price'],
+                    'quantity' => 1,
+                ]],
+            ],
+            'customer' => ['name' => $user->name, 'email' => $user->email],
+            'payment' => ['payment_due_date' => 60],
+            'additional_info' => [
+                'user_id' => $user->id,
+                'pembelian_tipe' => DataPayment::PURCHASE_TYPE_MEMBERSHIP,
+                'membership_tipe' => $membershipType,
+                'override_notification_url' => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
+            ],
+        ];
+        $jsonBody = json_encode($body);
+        $digest = base64_encode(hash('sha256', $jsonBody, true));
+        $rawSignature = 'Client-Id:'.$clientId."\n"
+            .'Request-Id:'.$requestId."\n"
+            .'Request-Timestamp:'.$timestamp."\n"
+            .'Request-Target:/checkout/v1/payment'."\n"
+            .'Digest:'.$digest;
+        $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+
+        try {
+            $response = Http::timeout(15)->withHeaders([
+                'Client-Id' => $clientId,
+                'Request-Id' => $requestId,
+                'Request-Timestamp' => $timestamp,
+                'Signature' => 'HMACSHA256='.$signature,
+                'Digest' => $digest,
+                'Content-Type' => 'application/json',
+            ])->post($dokuUrl.'/checkout/v1/payment', $body);
+        } catch (Throwable $exception) {
+            Log::error('Gagal membuat pembayaran membership DOKU melalui API mobile', [
+                'invoice' => $payment->no_invoice,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+
+        return $response->successful() ? ($response->json('response.payment.url') ?: null) : null;
+    }
+
+    private function createDokuPaymentUrl(DataPayment $payment, $user, string $itemName, bool $isIht): ?string
+    {
+        $paymentAmount = (int) round((float) $payment->nominal);
+        $clientId = env('DOKU_CLIENT_ID');
+        $secretKey = env('DOKU_SECRET_KEY');
+        $dokuUrl = rtrim((string) env('DOKU_URL'), '/');
+
+        if ($paymentAmount < 1 || ! $clientId || ! $secretKey || ! $dokuUrl) {
+            return null;
+        }
+
+        $timestamp = now()->toIso8601ZuluString();
+        $requestId = Str::uuid()->toString();
+        $body = [
+            'order' => [
+                'amount' => $paymentAmount,
+                'invoice_number' => $payment->no_invoice,
+                'callback_url' => url('/pembayaran?invoice_number='.urlencode($payment->no_invoice)),
+                'line_items' => [[
+                    'name' => $itemName,
+                    'price' => $paymentAmount,
+                    'quantity' => 1,
+                ]],
+            ],
+            'customer' => ['name' => $user->name, 'email' => $user->email],
+            'payment' => ['payment_due_date' => $isIht || $payment->payment_method === 'gateway'
+                ? 60
+                : self::PAYMENT_DUE_MINUTES],
+            'additional_info' => [
+                'user_id' => $user->id,
+                'class_id' => $payment->class_id,
+                'submateri_id' => $payment->submateri_id,
+                'qty' => max(1, (int) $payment->qty),
+                'pembelian_tipe' => (int) $payment->tipe_pembelian,
+                'is_iht' => $isIht ? 1 : 0,
+                'override_notification_url' => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
+            ],
+        ];
+        $jsonBody = json_encode($body);
+        $digest = base64_encode(hash('sha256', $jsonBody, true));
+        $rawSignature = 'Client-Id:'.$clientId."\n"
+            .'Request-Id:'.$requestId."\n"
+            .'Request-Timestamp:'.$timestamp."\n"
+            .'Request-Target:/checkout/v1/payment'."\n"
+            .'Digest:'.$digest;
+        $signature = base64_encode(hash_hmac('sha256', $rawSignature, $secretKey, true));
+
+        try {
+            $response = Http::timeout(15)->withHeaders([
+                'Client-Id' => $clientId,
+                'Request-Id' => $requestId,
+                'Request-Timestamp' => $timestamp,
+                'Signature' => 'HMACSHA256='.$signature,
+                'Digest' => $digest,
+                'Content-Type' => 'application/json',
+            ])->post($dokuUrl.'/checkout/v1/payment', $body);
+        } catch (Throwable $exception) {
+            Log::error('Gagal membuat pembayaran DOKU melalui API mobile', [
+                'invoice' => $payment->no_invoice,
+                'is_iht' => $isIht,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+
+        return $response->successful() ? ($response->json('response.payment.url') ?: null) : null;
     }
 
     private function statusValue($status): ?int

@@ -39,6 +39,7 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
+        'allow_email_linking' => env('GOOGLE_ALLOW_EMAIL_LINKING', false),
     ],
     'fonnte' => [
         'token' => env('FONNTE_API_TOKEN'),

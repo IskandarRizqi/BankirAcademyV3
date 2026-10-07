@@ -8,6 +8,9 @@ use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\EnsureMembershipType;
+use App\Http\Middleware\EnsureMobileAccess;
+use App\Http\Middleware\EnsureMobileRole;
+use App\Http\Middleware\EnsureMobileMembershipType;
 use App\Http\Middleware\EnsureSiswaIsVerified;
 use App\Http\Middleware\IsAdminRoot;
 use App\Http\Middleware\OnlyRoot;
@@ -98,6 +101,9 @@ class Kernel extends HttpKernel
         'role' => CheckRole::class,
         'siswa.verified' => EnsureSiswaIsVerified::class,
         'membership.type' => EnsureMembershipType::class,
+        'mobile.access' => EnsureMobileAccess::class,
+        'mobile.role' => EnsureMobileRole::class,
+        'mobile.membership' => EnsureMobileMembershipType::class,
         'is_root' => OnlyRoot::class,
         'admin.panel' => AdminPanelAccess::class,
     ];

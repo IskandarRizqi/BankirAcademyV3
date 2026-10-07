@@ -354,10 +354,11 @@ class HomeController extends Controller
             ->join('users', 'users.id', 'loker.user_id')
             ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
             ->where('loker.status', 1)
-            // ->whereDate('loker.tanggal_awal', '<=', $now)
-            // ->whereDate('loker.tanggal_akhir', '>=', $now)
-            ->orderBy('loker.tanggal_akhir', 'asc')
-            ->limit(12)
+            ->whereDate('loker.tanggal_awal', '<=', $now)
+            ->whereDate('loker.tanggal_akhir', '>=', $now)
+            ->orderByDesc('loker.created_at')
+            ->orderByDesc('loker.id')
+            ->limit(4)
             ->get();
         foreach ($data['loker'] as $key => $vv) {
             $vv->kota_name = DB::table('kota')->where('id', $vv->kabupaten)->first('name');
