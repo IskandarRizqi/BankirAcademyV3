@@ -81,6 +81,9 @@ class RouteArchitectureTest extends TestCase
             'api.v1.profile.membership.show',
             'api.v1.member.jobs.index',
             'api.v1.company.profile.show',
+            'api.v1.organization.dashboard',
+            'api.v1.organization.users.index',
+            'api.v1.organization.monitoring',
         ] as $name) {
             $route = Route::getRoutes()->getByName($name);
 
@@ -92,6 +95,8 @@ class RouteArchitectureTest extends TestCase
         $this->assertContains('mobile.role:6', Route::getRoutes()->getByName('api.v1.participant.profile')->middleware());
         $this->assertContains('mobile.role:2', Route::getRoutes()->getByName('api.v1.member.jobs.index')->middleware());
         $this->assertContains('mobile.membership:company', Route::getRoutes()->getByName('api.v1.company.profile.show')->middleware());
+        $this->assertContains('mobile.role:4,5', Route::getRoutes()->getByName('api.v1.organization.dashboard')->middleware());
+        $this->assertContains('mobile.role:4,5', Route::getRoutes()->getByName('api.v1.organization.users.index')->middleware());
     }
 
     public function test_compact_layout_and_dashboard_views_remain_available(): void

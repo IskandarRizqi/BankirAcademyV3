@@ -61,7 +61,7 @@
                 <div class="card glass-card p-4 mb-4 shadow-sm">
                     <h5 class="font-weight-bold text-dark mb-3">Ringkasan Informasi</h5>
                     
-                    <div class="mb-3">
+                    <div class="mb-3">      
                         <small class="text-muted d-block mb-1">📍 Lokasi Penempatan</small>
                         <span class="font-weight-bold text-dark">{{ $loker->kabupaten_name ?: ($loker->perusahaan->kabupaten_name ?? 'Lokasi N/A') }}</span>
                     </div>

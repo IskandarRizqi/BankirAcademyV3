@@ -7,6 +7,7 @@ use App\Exceptions\GoogleEmailNotVerifiedException;
 use App\Exceptions\GoogleProviderException;
 use App\Exceptions\GoogleTokenException;
 use App\Http\Controllers\Controller;
+use App\Models\DataPayment;
 use App\Models\SiswaProfile;
 use App\Models\User;
 use App\Models\UserProfileModel;
@@ -382,6 +383,7 @@ class AuthController extends Controller
             'updated_at' => optional($user->updated_at)->toISOString(),
             'requires_verification' => false,
             'profile' => $this->profileData($user->userProfile),
+            'membership_context' => $this->membershipContext($user),
             'student_profile' => $user->siswa?->only([
                 'id',
                 'user_id',
@@ -445,6 +447,36 @@ class AuthController extends Controller
             'tanggal_bergabung_membership' => $profile->tanggal_bergabung_membership,
             'tipe_membership' => $profile->tipe_membership,
             'membership' => $profile->membership?->toArray(),
+        ];
+    }
+
+    private function membershipContext(User $user): array
+    {
+        $profile = $user->userProfile;
+        $status = (int) ($profile?->status_membership ?? 0);
+        $type = (int) ($profile?->tipe_membership ?? 0);
+        $expiresAt = $profile?->masa_aktif_membership;
+        $isActive = $status === DataPayment::STATUS_PAID
+            && (! $expiresAt || now()->parse($expiresAt)->endOfDay()->isFuture());
+
+        return [
+            'is_member' => $isActive,
+            'status' => $status,
+            'status_label' => match ($status) {
+                DataPayment::STATUS_PAID => $isActive ? 'Member Aktif' : 'Membership Kedaluwarsa',
+                DataPayment::STATUS_PENDING, DataPayment::STATUS_WAITING_CONFIRMATION => 'Pembayaran Diproses',
+                DataPayment::STATUS_REJECTED => 'Pembayaran Ditolak',
+                default => 'Belum Member',
+            },
+            'type' => in_array($type, DataPayment::MEMBERSHIP_TYPES, true) ? $type : null,
+            'type_label' => match ($type) {
+                DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => 'Perorangan',
+                DataPayment::MEMBERSHIP_TYPE_COMPANY => 'Perusahaan',
+                default => null,
+            },
+            'active_until' => $expiresAt,
+            'joined_at' => $profile?->tanggal_bergabung_membership,
+            'member_code' => $user->id ? 'BA-'.str_pad((string) $user->id, 5, '0', STR_PAD_LEFT) : null,
         ];
     }
 

@@ -497,6 +497,7 @@ class LearningController extends Controller
                     'description' => $sub->keterangan,
                     'thumbnail' => $this->assetUrl($sub->thumbnail),
                     'order' => $sub->urutan,
+                    'price' => (int) ($sub->harga_final ?? $sub->harga ?? 0),
                     'completed' => $completedSubMaterials->contains($sub->id),
                     'items' => $includeItems ? $items->map(fn ($item) => [
                         'id' => $item->id,

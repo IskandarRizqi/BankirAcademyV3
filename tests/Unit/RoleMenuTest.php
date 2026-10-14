@@ -44,4 +44,42 @@ class RoleMenuTest extends TestCase
     {
         $this->assertSame([], RoleMenu::forRole(2));
     }
+
+    public function test_bank_and_school_receive_organization_menus(): void
+    {
+        $this->assertSame(
+            [
+                'organization_dashboard',
+                'organization_users',
+                'organization_monitoring',
+                'organization_scholarships',
+            ],
+            array_column(RoleMenu::forRole(4), 'key')
+        );
+
+        $this->assertSame(
+            [
+                'organization_dashboard',
+                'organization_users',
+                'organization_monitoring',
+            ],
+            array_column(RoleMenu::forRole(5), 'key')
+        );
+    }
+
+    public function test_navigation_api_returns_the_bank_menu(): void
+    {
+        $request = Request::create('/api/v1/navigation', 'GET');
+        $request->setUserResolver(fn () => new User([
+            'role' => 4,
+            'email' => 'bank@example.com',
+        ]));
+
+        $response = app(NavigationController::class)($request);
+        $data = $response->getData(true);
+
+        $this->assertSame(4, $data['data']['role_id']);
+        $this->assertSame('organization_dashboard', $data['data']['menus'][0]['key']);
+        $this->assertCount(4, $data['data']['menus']);
+    }
 }

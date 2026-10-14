@@ -109,7 +109,10 @@ class ManualPaymentController extends Controller
         ]);
         $invoiceNumber = 'BANKIR-'.$payment->created_at->format('YmdHis').'-'.$payment->id;
         $payment->update(['no_invoice' => $invoiceNumber]);
-        $profile->update(['status_membership' => DataPayment::STATUS_PENDING]);
+        $profile->update([
+            'status_membership' => DataPayment::STATUS_PENDING,
+            'tipe_membership' => $membershipType,
+        ]);
 
         if ($paymentMethod === 'manual') {
             return $this->membershipPaymentResponse($payment, 'Order membership berhasil dibuat. Silakan transfer dan upload bukti pembayaran.', 201);

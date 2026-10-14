@@ -43,7 +43,7 @@
                         <h3 class="job-title">{{ $loker->title }}</h3>
 
                         <div class="job-meta">
-                            <span><span aria-hidden="true">⌖</span>{{ $loker->kabupaten_name ?: 'Lokasi fleksibel' }}</span>
+                            <span><span aria-hidden="true">⌖</span>{{ $loker->kabupaten_name ?? $loker->kota->name ?? 'Lokasi fleksibel' }}</span>
                             @foreach (array_slice($types, 0, 2) as $type)
                                 <span><span aria-hidden="true">◷</span>{{ ucfirst($type) }}</span>
                             @endforeach

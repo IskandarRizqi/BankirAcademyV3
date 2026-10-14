@@ -6,9 +6,11 @@ use App\Http\Controllers\API\KelasController;
 use App\Http\Controllers\API\LearningController;
 use App\Http\Controllers\API\LokerController;
 use App\Http\Controllers\API\ManualPaymentController;
+use App\Http\Controllers\API\MemberFeatureController;
 use App\Http\Controllers\API\MobileJobController;
 use App\Http\Controllers\API\MobileProfileController;
 use App\Http\Controllers\API\NavigationController;
+use App\Http\Controllers\API\OrganizationController;
 use App\Http\Controllers\API\ParticipantController;
 use App\Http\Controllers\API\PublicCatalogController;
 use App\Http\Controllers\API\PublicContentController;
@@ -156,6 +158,7 @@ Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2,6'])
     ->name('api.v1.profile.')
     ->group(function () {
         Route::get('/membership', [MobileProfileController::class, 'membership'])->name('membership.show');
+        Route::get('/locations/{level}', [MobileProfileController::class, 'locations'])->name('locations.index');
         Route::patch('/membership', [MobileProfileController::class, 'updateMembership'])->name('membership.update');
         Route::post('/phone/otp', [MobileProfileController::class, 'sendOtp'])
             ->middleware('throttle:5,10')
@@ -193,6 +196,44 @@ Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2'])
             ->whereNumber('id')
             ->middleware(['mobile.membership:individual', 'throttle:apply-loker'])
             ->name('apply');
+    });
+
+Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:4,5'])
+    ->prefix('v1/organization')
+    ->name('api.v1.organization.')
+    ->group(function () {
+        Route::get('/profile', [OrganizationController::class, 'profile'])->name('profile');
+        Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('dashboard');
+        Route::get('/users', [OrganizationController::class, 'users'])->name('users.index');
+        Route::get('/users/{id}', [OrganizationController::class, 'showUser'])->whereNumber('id')->name('users.show');
+        Route::post('/users', [OrganizationController::class, 'storeUser'])->name('users.store');
+        Route::patch('/users/{id}', [OrganizationController::class, 'updateUser'])->whereNumber('id')->name('users.update');
+        Route::delete('/users/{id}', [OrganizationController::class, 'destroyUser'])->whereNumber('id')->name('users.destroy');
+        Route::get('/users/template', [OrganizationController::class, 'downloadTemplate'])->name('users.template');
+        Route::post('/users/import', [OrganizationController::class, 'importStudents'])->name('users.import');
+        Route::get('/monitoring', [OrganizationController::class, 'monitoring'])->name('monitoring');
+        Route::get('/scholarships', [OrganizationController::class, 'scholarships'])->name('scholarships.index');
+        Route::post('/scholarships/{id}/{action}', [OrganizationController::class, 'scholarshipAction'])
+            ->whereNumber('id')
+            ->whereIn('action', ['approve', 'reject'])
+            ->name('scholarships.action');
+    });
+
+Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2'])
+    ->prefix('v1/member')
+    ->name('api.v1.member.')
+    ->group(function () {
+        Route::get('/dashboard', [MemberFeatureController::class, 'dashboard'])->name('dashboard');
+        Route::get('/classes', [MemberFeatureController::class, 'classes'])->name('classes');
+        Route::get('/certificates', [MemberFeatureController::class, 'certificates'])->name('certificates');
+    });
+
+Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2', 'mobile.membership:company'])
+    ->prefix('v1/company')
+    ->name('api.v1.company.')
+    ->group(function () {
+        Route::get('/sop', [MemberFeatureController::class, 'sop'])->name('sop.index');
+        Route::get('/bonus-applications', [MemberFeatureController::class, 'bonusApplications'])->name('bonus-applications.index');
     });
 
 Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2', 'mobile.membership:company'])

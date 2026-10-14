@@ -39,6 +39,10 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/classes/getreview/{id}', [ClassesController::class, 'getreview'])->middleware('admin.panel');
     Route::get('/admin/classes/setreview/{id}/{review_active}', [ClassesController::class, 'setreview'])->middleware('admin.panel');
     Route::post('/admin/classes/setupcoming', [ClassesController::class, 'setupcoming'])->middleware('admin.panel');
+    Route::post('/admin/classes/{id}/landing/generate', [ClassesController::class, 'generateLanding'])
+        ->whereNumber('id')
+        ->middleware('admin.panel')
+        ->name('admin.classes.landing.generate');
 
     Route::get('/admin/instructor', [AdminInstructorController::class, 'index'])
         ->middleware('admin.panel')

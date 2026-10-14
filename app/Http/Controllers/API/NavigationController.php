@@ -11,8 +11,9 @@ class NavigationController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $roleId = (int) $request->user()->role;
-        $menus = collect(RoleMenu::forRole($roleId))
+        $user = $request->user()->loadMissing('userProfile');
+        $roleId = (int) $user->role;
+        $menus = collect(RoleMenu::forUser($user))
             ->map(fn (array $menu): array => [
                 'key' => $menu['key'],
                 'label' => $menu['label'],

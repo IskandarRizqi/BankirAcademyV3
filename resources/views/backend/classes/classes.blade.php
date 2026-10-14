@@ -222,6 +222,18 @@
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right shadow border-0">
+                                                @if ($v->landing_page_enabled)
+                                                    <a class="dropdown-item" href="{{ route('frontend.class.landing', $v->slug) }}"
+                                                        target="_blank" rel="noopener"><i
+                                                            class="bx bx-mobile-alt text-success mr-2"></i>Buka Landing Promo</a>
+                                                @endif
+                                                <form action="{{ route('admin.classes.landing.generate', $v->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item {{ $v->landing_page_enabled ? 'text-primary' : 'text-success' }}"
+                                                        onclick="return {{ $v->landing_page_enabled ? 'confirm(\'Ganti tema landing page ini?\')' : 'true' }}">
+                                                        <i class="bx {{ $v->landing_page_enabled ? 'bx-refresh' : 'bx-magic-wand' }} mr-2"></i>{{ $v->landing_page_enabled ? 'Regenerate Tema' : 'Generate Landing' }}
+                                                    </button>
+                                                </form>
                                                 <a class="dropdown-item"
                                                     href="/admin/classes/{{ $v->id }}/edit"><i
                                                         class="bx bx-edit text-warning mr-2"></i>Edit</a>

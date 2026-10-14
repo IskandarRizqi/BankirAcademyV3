@@ -46,6 +46,14 @@ class ClassesModel extends Model
         'jam_acara',
         'lokasi',
         'iht',
+        'landing_page_enabled',
+        'landing_page_theme',
+        'landing_page_generated_at',
+    ];
+
+    protected $casts = [
+        'landing_page_enabled' => 'boolean',
+        'landing_page_generated_at' => 'datetime',
     ];
 
     protected $appends = [

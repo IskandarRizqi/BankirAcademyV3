@@ -16,47 +16,62 @@ use Illuminate\Support\Facades\DB;
 
 class DataEventKelasController extends Controller
 {
-    public function dataeventkelas(Request $request)
-    {
-        $filters = [
-            'q' => trim((string) $request->query('q')),
-            'level' => $request->query('level'),
-            'category' => $this->arrayFilter($request->query('category')),
-            'instructor' => $this->arrayFilter($request->query('instructor')),
-            'jenis' => $this->arrayFilter($request->query('jenis')),
-            'kategori' => $this->arrayFilter($request->query('kategori'), ['0', '1']),
-            'iht' => $this->arrayFilter($request->query('iht'), ['0', '1']),
-        ];
+   public function dataeventkelas(Request $request)
+{
+    $filters = [
+        'q' => trim((string) $request->query('q')),
+        'level' => $request->query('level'),
+        'category' => $this->arrayFilter($request->query('category')),
+        'instructor' => $this->arrayFilter($request->query('instructor')),
+        'jenis' => $this->arrayFilter($request->query('jenis')),
+        'kategori' => $this->arrayFilter($request->query('kategori'), ['0', '1']),
+        'iht' => $this->arrayFilter($request->query('iht'), ['0', '1']),
+    ];
 
-        $classes = $this->activeClassesQuery()
-            ->when($filters['q'] !== '', fn($query) => $this->applySearch($query, $filters['q']))
-            ->when(in_array((string) $filters['level'], ['1', '2', '3'], true), fn($query) => $query->where('level', $filters['level']))
-            ->when($filters['category'] !== [], fn($query) => $query->whereIn('category', $filters['category']))
-            ->when($filters['jenis'] !== [], fn($query) => $this->applyJsonArrayFilter($query, 'jenis', $filters['jenis']))
-            ->when($filters['kategori'] !== [], fn($query) => $query->whereIn('kategori', $filters['kategori']))
-            ->when($filters['iht'] !== [], fn($query) => $this->applyIhtFilter($query, $filters['iht']))
-            ->when($filters['instructor'] !== [], fn($query) => $this->applyInstructorFilter($query, $filters['instructor']))
-            ->tap(fn($query) => $this->applyListOrdering($query))
-            ->paginate(9)
-            ->withQueryString();
+    $classes = $this->activeClassesQuery()
+        ->when($filters['q'] !== '', fn($query) => $this->applySearch($query, $filters['q']))
+        ->when(in_array((string) $filters['level'], ['1', '2', '3'], true), fn($query) => $query->where('level', $filters['level']))
+        ->when($filters['category'] !== [], fn($query) => $query->whereIn('category', $filters['category']))
+        ->when($filters['jenis'] !== [], fn($query) => $this->applyJsonArrayFilter($query, 'jenis', $filters['jenis']))
+        ->when($filters['kategori'] !== [], fn($query) => $query->whereIn('kategori', $filters['kategori']))
+        ->when($filters['iht'] !== [], fn($query) => $this->applyIhtFilter($query, $filters['iht']))
+        ->when($filters['instructor'] !== [], fn($query) => $this->applyInstructorFilter($query, $filters['instructor']))
+        // --- LOGIKA PENGURUTAN TANGGAL PELAKSANAAN ---
+        ->orderByRaw("
+            CASE 
+                -- 1. Event mendatang / sedang berjalan (class_date >= hari ini): Tampilkan teratas, urutkan dari yang paling dekat
+                WHEN class_date >= CURDATE() THEN 1 
+                -- 2. Event yang sudah lewat atau tanggal belum diisi: Tampilkan di paling bawah
+                ELSE 2 
+            END ASC
+        ")
+        ->orderByRaw("
+            CASE 
+                WHEN class_date >= CURDATE() THEN class_date 
+            END ASC
+        ")
+        ->orderBy('class_date', 'desc') // Mengurutkan event yang sudah lampau dari yang paling baru selesai
+        // ---------------------------------------------
+        ->paginate(9)
+        ->withQueryString();
 
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('membernonkeanggotaan.components.ui.course-card-items', [
-                    'classes' => $classes,
-                    'withoutStyle' => true,
-                ])->render(),
-                'next_page_url' => $classes->nextPageUrl(),
-                'has_more_pages' => $classes->hasMorePages(),
-            ]);
-        }
-
-        return view('membernonkeanggotaan.pages.event.listevent', [
-            'classes' => $classes,
-            'filters' => $filters,
-            'filterOptions' => $this->filterOptions(),
+    if ($request->ajax()) {
+        return response()->json([
+            'html' => view('membernonkeanggotaan.components.ui.course-card-items', [
+                'classes' => $classes,
+                'withoutStyle' => true,
+            ])->render(),
+            'next_page_url' => $classes->nextPageUrl(),
+            'has_more_pages' => $classes->hasMorePages(),
         ]);
     }
+
+    return view('membernonkeanggotaan.pages.event.listevent', [
+        'classes' => $classes,
+        'filters' => $filters,
+        'filterOptions' => $this->filterOptions(),
+    ]);
+}
 
     private function activeClassesQuery()
     {

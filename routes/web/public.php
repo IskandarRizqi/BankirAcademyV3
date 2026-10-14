@@ -63,6 +63,10 @@ foreach ($frontendPages as $name => [$uri, $view]) {
 //     return view('frontend.pages.event.bank-catalog');
 // })->name('frontend.classes.index');
 
+Route::get('/kelas/{slug}/landing', [BankPageController::class, 'landingPage'])
+    ->name('frontend.class.landing');
+Route::post('/kelas/{slug}/checkout', [BankPageController::class, 'checkout'])
+    ->name('frontend.class.checkout');
 Route::get('/kelas/{slug}', [BankPageController::class, 'classPage'])
     ->name('frontend.class.detail');
 // Class

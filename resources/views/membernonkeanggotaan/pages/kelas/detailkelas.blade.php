@@ -802,10 +802,10 @@
                     </div>
 
                     <div class="member-owned-class-detail__stats" aria-label="Ringkasan kelas">
-                        <div class="member-owned-class-detail__stat">
+                        {{-- <div class="member-owned-class-detail__stat">
                             <span class="member-owned-class-detail__stat-label">Peserta terdaftar</span>
                             <span class="member-owned-class-detail__stat-value">{{ $participantCount }} orang</span>
-                        </div>
+                        </div> --}}
                         <div class="member-owned-class-detail__stat">
                             <span class="member-owned-class-detail__stat-label">Tanggal pelaksanaan</span>
                             <span class="member-owned-class-detail__stat-value">{{ $classDateLabel }}</span>

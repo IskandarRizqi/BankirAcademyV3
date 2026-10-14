@@ -345,6 +345,36 @@ class ClassesController extends Controller
         // return redirect('/admin/classes')->with('success', 'Class Updated');
     }
 
+    public function generateLanding(int $id)
+    {
+        $class = ClassesModel::findOrFail($id);
+        $themes = [
+            'market-orange',
+            'mint-cobalt',
+            'violet-lime',
+            'midnight-sky',
+        ];
+        $currentTheme = (string) $class->landing_page_theme;
+        $currentIndex = array_search($currentTheme, $themes, true);
+        $theme = $class->landing_page_enabled && $currentIndex !== false
+            ? $themes[($currentIndex + 1) % count($themes)]
+            : $themes[0];
+        $isRegeneration = (bool) $class->landing_page_enabled;
+
+        $class->update([
+            'landing_page_enabled' => true,
+            'landing_page_theme' => $theme,
+            'landing_page_generated_at' => now(),
+        ]);
+
+        return back()->with(
+            'success',
+            $isRegeneration
+                ? 'Tema landing page berhasil diganti ke '.str_replace('-', ' ', $theme).'.'
+                : 'Landing page berhasil dibuat dengan tema '.str_replace('-', ' ', $theme).'.'
+        );
+    }
+
     private function normalizeSelectValues($value): array
     {
         $values = is_array($value) ? $value : [$value];

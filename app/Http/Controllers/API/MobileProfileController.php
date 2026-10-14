@@ -38,6 +38,30 @@ class MobileProfileController extends Controller
         ]);
     }
 
+    public function locations(Request $request, string $level): JsonResponse
+    {
+        [$table, $parentColumn] = match ($level) {
+            'provinces' => ['provinsi', null],
+            'cities' => ['kota', 'provinsi_id'],
+            'districts' => ['kecamatan', 'kota_id'],
+            'villages' => ['kelurahan', 'kecamatan_id'],
+            default => [null, null],
+        };
+
+        abort_unless($table !== null, 404);
+        $query = DB::table($table)->select(['id', 'name'])->orderBy('name');
+        if ($parentColumn !== null) {
+            $parentId = $request->integer('parent_id');
+            abort_if($parentId < 1, 422, 'Parent lokasi wajib dipilih.');
+            $query->where($parentColumn, $parentId);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $query->limit(500)->get(),
+        ]);
+    }
+
     public function updateMembership(MembershipProfileRequest $request): JsonResponse
     {
         $validated = $request->validated();
