@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class BankPageController
@@ -51,11 +52,9 @@ class BankPageController
             $account = $request->validate([
                 'nama_pendaftar' => ['required', 'string', 'max:255'],
                 'email_pendaftar' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
-                'nomor_handphone' => ['required', 'string', 'max:30'],
-                'password' => ['required', 'string', 'min:8'],
+                'nomor_handphone_pendaftar' => ['required', 'string', 'max:30'],
             ], [
                 'email_pendaftar.unique' => 'Email ini sudah terdaftar. Silakan masuk terlebih dahulu untuk melanjutkan.',
-                'password.min' => 'Password minimal terdiri dari 8 karakter.',
             ]);
 
             $user = DB::transaction(function () use ($account) {
@@ -63,14 +62,16 @@ class BankPageController
                     'name' => $account['nama_pendaftar'],
                     'email' => $account['email_pendaftar'],
                     'role' => 2,
-                    'password' => Hash::make($account['password']),
+                    // Akun tetap dapat dipakai oleh alur autentikasi, tetapi password
+                    // tidak perlu diminta dari peserta saat checkout.
+                    'password' => Hash::make(Str::random(40)),
                 ]);
 
                 UserProfileModel::create([
                     'user_id' => $user->id,
                     'name' => $account['nama_pendaftar'],
                     'phone_region' => '+62',
-                    'phone' => UserProfileModel::normalizePhone($account['nomor_handphone']),
+                    'phone' => UserProfileModel::normalizePhone($account['nomor_handphone_pendaftar']),
                     'gender' => 1,
                 ]);
 
@@ -80,12 +81,27 @@ class BankPageController
             Auth::login($user);
         }
 
+        $user = Auth::user();
+        $phone = $request->validate([
+            'nomor_handphone_pendaftar' => ['required', 'string', 'max:30'],
+        ])['nomor_handphone_pendaftar'];
+
+        UserProfileModel::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'name' => $user->name,
+                'phone_region' => '+62',
+                'phone' => UserProfileModel::normalizePhone($phone),
+                'gender' => 1,
+            ]
+        );
+
         $request->merge([
             'class_id' => $class->id,
             'jml_peserta' => 1,
-            'nama' => [$request->input('nama_pendaftar', Auth::user()->name)],
-            'email' => [$request->input('email_pendaftar', Auth::user()->email)],
-            'nomor_handphone' => [$request->input('nomor_handphone', optional(Auth::user()->userProfile)->phone)],
+            'nama' => [$user->name],
+            'email' => [$user->email],
+            'nomor_handphone' => [$phone],
             'sertifikat_invoice' => $request->input('sertifikat_invoice', '1'),
             'payment_method' => 'gateway',
         ]);

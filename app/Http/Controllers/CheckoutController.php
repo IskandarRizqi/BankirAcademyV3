@@ -9,6 +9,7 @@ use App\Models\DataPayment;
 use App\Models\Order;
 use App\Models\RiwayatTransaksi;
 use App\Models\UserProfileModel;
+use App\Services\FonnteService;
 use App\Services\MembershipPaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -83,6 +84,10 @@ class CheckoutController extends Controller
             ]);
 
             return response()->json(['message' => 'Invalid purchase type'], 422);
+        }
+
+        if (($result['notify_whatsapp'] ?? false) && isset($result['payment_id'])) {
+            app(FonnteService::class)->sendPaidClassInvoice((int) $result['payment_id']);
         }
 
         return response()->json(['message' => $result['message']], $result['status']);
@@ -238,6 +243,11 @@ class CheckoutController extends Controller
     {
         return DB::transaction(function () use ($invoiceNumber, $paymentStatus, $amount) {
             $dataPayment = DataPayment::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
+
+            if (! $dataPayment) {
+                return ['status' => 404, 'message' => 'Payment not found'];
+            }
+
             if ($dataPayment->class_id) {
                 $order = ClassPaymentModel::where('no_invoice', $invoiceNumber)->lockForUpdate()->first();
                 if (! $order && $dataPayment->class_id) {
@@ -347,7 +357,12 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            return ['status' => 200, 'message' => 'Class payment processed'];
+            return [
+                'status' => 200,
+                'message' => 'Class payment processed',
+                'notify_whatsapp' => (bool) $dataPayment->class_id,
+                'payment_id' => $dataPayment->id,
+            ];
         });
     }
 

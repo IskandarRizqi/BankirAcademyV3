@@ -37,6 +37,7 @@ class ClassesController extends Controller
         $data['param']['date_end'] = ($r->param_date_end) ? $r->param_date_end : Carbon::now()->addmonth()->format('Y-m-d');
         $data['param']['category'] = ($r->param_category) ? $r->param_category : null;
         $data['classes'] = ClassesModel::select('classes.*', 'biaya_sertifikat.type as tipebs', 'biaya_sertifikat.nominal')
+            ->with('classEvents')
             ->where(function ($q) use ($data) {
                 // $q->where('date_start', '>=', $data['param']['date_start'])->orWhereNull('date_start');
                 $q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']])->orWhereNull('date_start');
@@ -46,6 +47,79 @@ class ClassesController extends Controller
             })
             ->leftJoin('biaya_sertifikat', 'biaya_sertifikat.class_id', 'classes.id')
             ->get();
+
+        // Kalender tidak mengikuti filter periode tabel agar admin dapat melihat seluruh jadwal kelas.
+        $calendarClasses = ClassesModel::query()->with('classEvents')->get();
+        $data['calendarEvents'] = $calendarClasses->flatMap(function (ClassesModel $class) {
+            $events = collect();
+
+            if ($class->class_date) {
+                $classDate = Carbon::parse($class->class_date);
+                $isPast = $classDate->copy()->endOfDay()->isPast();
+                $events->push([
+                    'id' => 'class-' . $class->id,
+                    'class_id' => $class->id,
+                    'class_title' => $class->title,
+                    'title' => $class->title,
+                    'date' => Carbon::parse($class->class_date)->toDateString(),
+                    'start' => Carbon::parse($class->class_date)->toDateString(),
+                    'end' => null,
+                    'all_day' => true,
+                    'is_past' => $isPast,
+                    'schedule_status' => $isPast ? 'Terlewat' : 'Akan datang',
+                    'kind' => 'Pelaksanaan kelas',
+                    'type' => (int) $class->kategori,
+                    'category' => $class->category,
+                    'class_type' => (int) $class->kategori === 1 ? 'Offline' : 'Online',
+                    'status' => (int) $class->status === 1 ? 'Aktif' : 'Nonaktif',
+                    'participant_limit' => $class->participant_limit,
+                    'location' => $class->lokasi,
+                    'description' => null,
+                    'manage_url' => url('/admin/classes/createevent/' . $class->id),
+                ]);
+            }
+
+            foreach ($class->classEvents as $classEvent) {
+                if (! $classEvent->time_start) {
+                    continue;
+                }
+
+                $start = Carbon::parse($classEvent->time_start);
+                $end = $classEvent->time_end ? Carbon::parse($classEvent->time_end) : null;
+                $isPast = ($end ?: $start)->isPast();
+                $events->push([
+                    'id' => 'event-' . $classEvent->id,
+                    'class_id' => $class->id,
+                    'class_title' => $class->title,
+                    'title' => $class->title,
+                    'date' => $start->toDateString(),
+                    'start' => $start->format('Y-m-d\TH:i:s'),
+                    'end' => $end?->format('Y-m-d\TH:i:s'),
+                    'all_day' => false,
+                    'is_past' => $isPast,
+                    'schedule_status' => $isPast ? 'Terlewat' : 'Akan datang',
+                    'kind' => 'Sesi ' . ((int) $classEvent->type === 1 ? 'offline' : 'online'),
+                    'type' => (int) $classEvent->type,
+                    'category' => $class->category,
+                    'class_type' => (int) $class->kategori === 1 ? 'Offline' : 'Online',
+                    'status' => (int) $class->status === 1 ? 'Aktif' : 'Nonaktif',
+                    'participant_limit' => $class->participant_limit,
+                    'location' => $classEvent->location,
+                    'description' => $classEvent->description,
+                    'manage_url' => url('/admin/classes/createevent/' . $class->id),
+                ]);
+            }
+
+            return $events;
+        })->values()->all();
+
+        $data['calendarSummary'] = [
+            'classes' => $calendarClasses->count(),
+            'scheduled' => collect($data['calendarEvents'])->where('all_day', false)->count(),
+            'without_schedule' => $calendarClasses->filter(function (ClassesModel $class) {
+                return ! $class->class_date && $class->classEvents->isEmpty();
+            })->count(),
+        ];
 
         // Additional
         $data['category'] = ClassesModel::select('category')->distinct('category')->pluck('category')->toArray();

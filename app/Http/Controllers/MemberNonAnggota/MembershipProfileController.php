@@ -133,7 +133,7 @@ class MembershipProfileController extends Controller
                 ])
             );
 
-            $providerStatus = $response->json('status');
+            $providerStatus = $response->json('success');
             if (! $response->successful() || ! in_array($providerStatus, [true, 1, 'true', '1'], true)) {
                 throw new \RuntimeException('Fonnte menolak pengiriman OTP.');
             }

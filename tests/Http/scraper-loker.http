@@ -295,12 +295,12 @@ X-Scraper-Api-Key: {{apiKey}}
 ###############################################################################
 # 3. TEST VALIDASI GAGAL (KOSONGKAN FIELD REQUIRED)
 ###############################################################################
-GET {{baseUrl}}/api/getloker
-Content-Type: {{contentType}}
-Accept: {{contentType}}
+POST https://connecthub.ehr.co.id/api/v1/messages
+Content-Type: Bearer wapi_live_8aCqyadF31p6IwIelg1uUjAljISZEOLZ8ZHn7QdDbDTuAnQY
+Accept: "application/json"
 
 {
-  "keyword": "Test Keyword",
-  "title": "Judul Artikel Test",
-  "content": "<p>Ini isi artikel test</p>"
+  "to": "6285721174220", 
+  "body": "Pesan dari aplikasi Merchant", 
+  "external_id": "64562323JHSDGFB"
 }

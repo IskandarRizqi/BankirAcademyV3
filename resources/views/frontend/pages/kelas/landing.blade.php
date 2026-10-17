@@ -18,6 +18,13 @@
     $isFree = !$isIht && (int) data_get($pricing, 'gratis', 0) === 1;
     $priceComingSoon = !$isIht && !$pricing;
     $canCheckout = !$isIht && !$isUpcoming && !$isClosed && !$priceComingSoon;
+    $participantLimit = min(100, max(1, (int) data_get($class, 'participant_limit', 100) ?: 100));
+    $participantDiscountTiers = collect(data_get($pricing, 'participantDiscounts', []))
+        ->map(fn($discount) => [
+            'minimum_participants' => (int) data_get($discount, 'minimum_participants'),
+            'discount_amount' => (float) data_get($discount, 'discount_amount'),
+        ])
+        ->values();
     $priceLabel = $isIht
         ? 'Konsultasikan'
         : ($priceComingSoon ? 'Segera hadir' : ($isFree || $finalPrice === 0 ? 'Gratis' : 'Rp ' . number_format($finalPrice, 0, ',', '.')));
@@ -233,9 +240,15 @@
         .benefit-card:nth-child(2) { background: #fff0d1; border-color: #ffe1a2; }
         .benefit-card:nth-child(3) { background: var(--mint); border-color: #b6e9d1; }
         .benefit-card:nth-child(4) { background: #e8e5ff; border-color: #d5d0ff; }
-        .benefit-icon { display: grid; place-items: center; width: 31px; height: 31px; margin-bottom: 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 14px; font-weight: 700; }
-        .benefit-card h3 { margin: 0 0 5px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; letter-spacing: -.02em; }
-        .benefit-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+         .benefit-icon { display: grid; place-items: center; width: 31px; height: 31px; margin-bottom: 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 14px; font-weight: 700; }
+         .benefit-card h3 { margin: 0 0 5px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; letter-spacing: -.02em; }
+         .benefit-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+         .instructor-grid { display: grid; gap: 10px; margin-top: 17px; }
+         .instructor-card { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
+         .instructor-avatar { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 15px; object-fit: cover; background: var(--mint); }
+         .instructor-card strong { display: block; color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 13px; }
+         .instructor-card span { display: block; margin-top: 4px; color: var(--orange-dark); font-size: 10px; font-weight: 700; }
+         .instructor-card p { margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.4; }
 
         .schedule-card { margin-top: 17px; padding: 16px; border-radius: 19px; background: var(--ink); color: #fff; }
         .schedule-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
@@ -246,7 +259,7 @@
         .schedule-row strong { display: block; margin-bottom: 2px; font-size: 12px; }
         .schedule-row span { color: rgba(255,255,255,.6); font-size: 11px; line-height: 1.45; }
 
-        .story-card { position: relative; overflow: hidden; margin: 0 18px; padding: 21px 18px 20px; border-radius: 22px; background: var(--purple); color: #fff; }
+        .story-card { position: relative; overflow: hidden; margin: 20px 18px; padding: 21px 18px 20px; border-radius: 22px; background: var(--purple); color: #fff; }
         .story-card::after { position: absolute; right: -38px; bottom: -56px; width: 150px; height: 150px; border: 20px solid rgba(255,255,255,.12); border-radius: 50%; content: ''; }
         .story-card h2 { max-width: 260px; }
         .story-card p { position: relative; z-index: 1; margin: 11px 0 0; color: rgba(255,255,255,.8); font-size: 12px; line-height: 1.65; }
@@ -268,6 +281,11 @@
         .field input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,101,79,.14); }
         .field input[readonly] { color: var(--muted); background: #f6f3ef; }
         .field small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
+        .participant-box { margin-top: 18px; padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: #fffdfb; }
+        .participant-box-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .participant-box-head strong { font-size: 12px; }
+        .participant-box-head span { color: var(--muted); font-size: 10px; text-align: right; }
+        .total-summary { margin: 10px 0 0; color: var(--orange-dark); font-size: 11px; font-weight: 800; line-height: 1.45; }
         .account-box { margin-top: 17px; padding: 13px; border: 1px dashed #f0bbac; border-radius: 14px; background: #fff8f3; }
         .account-box strong { display: block; font-size: 12px; }
         .account-box p { margin: 4px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
@@ -295,10 +313,14 @@
         .related-list { display: flex; gap: 10px; overflow-x: auto; margin: 16px -18px 0; padding: 0 18px 5px; scrollbar-width: none; }
         .related-list::-webkit-scrollbar { display: none; }
         .related-card { flex: 0 0 160px; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
-        .related-card img { width: 100%; height: 85px; display: block; object-fit: cover; }
-        .related-card span { display: block; padding: 10px; font-size: 11px; font-weight: 700; line-height: 1.35; }
-        .footer { padding: 23px 18px 92px; background: var(--ink); color: rgba(255,255,255,.6); font-size: 10px; line-height: 1.6; }
-        .footer strong { color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 14px; }
+         .related-card img { width: 100%; height: 85px; display: block; object-fit: cover; }
+         .related-card span { display: block; padding: 10px; font-size: 11px; font-weight: 700; line-height: 1.35; }
+         .footer { padding: 23px 18px 92px; background: var(--ink); color: rgba(255,255,255,.6); font-size: 10px; line-height: 1.6; }
+         .footer strong { color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 14px; }
+         .footer-intro { max-width: 330px; margin: 10px 0 0; color: rgba(255,255,255,.76); font-size: 11px; line-height: 1.65; }
+         .footer-meta { display: grid; gap: 4px; margin-top: 14px; color: rgba(255,255,255,.58); font-size: 10px; }
+         .footer-meta strong { display: inline; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 10px; }
+         .footer-note { display: block; margin-top: 16px; color: rgba(255,255,255,.42); font-size: 9px; }
         .sticky-cta { position: fixed; z-index: 10; bottom: 0; left: 50%; display: flex; width: 390px; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: rgba(255,250,242,.94); border-top: 1px solid var(--line); backdrop-filter: blur(14px); }
         .sticky-cta small { display: block; color: var(--muted); font-size: 9px; }
         .sticky-cta strong { display: block; color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 15px; }
@@ -348,6 +370,14 @@
             </div>
             <div class="trust-copy"><strong>Belajar dari praktisi</strong>Materi dikemas ringkas, aplikatif, dan terarah.</div>
         </div>
+          <section class="story-card">
+            <span class="section-kicker" style="color: var(--yellow)">Tentang program</span>
+            <h3>Belajar dengan konteks, bukan hafalan.</h2>
+            <p>{{ \Illuminate\Support\Str::limit($description, 280) }}</p>
+            @if($tags->isNotEmpty())
+                <div class="tag-row">@foreach($tags as $tag)<span class="tag">{{ $tag }}</span>@endforeach</div>
+            @endif
+        </section>
 
         <section class="section">
             <span class="section-kicker">Kenapa kelas ini?</span>
@@ -357,7 +387,35 @@
                 <article class="benefit-card"><span class="benefit-icon">01</span><h3>Materi terarah</h3><p>Alur belajar disusun dari konsep penting sampai penerapan.</p></article>
                 <article class="benefit-card"><span class="benefit-icon">02</span><h3>Praktis & relevan</h3><p>Contoh dekat dengan kebutuhan dunia kerja perbankan.</p></article>
                 <article class="benefit-card"><span class="benefit-icon">03</span><h3>Mentor berpengalaman</h3><p>Dapatkan perspektif dari orang yang pernah menjalankannya.</p></article>
-                <article class="benefit-card"><span class="benefit-icon">04</span><h3>Sertifikat</h3><p>Bukti belajar sesuai ketentuan dan kelulusan kelas.</p></article>
+                <article class="benefit-card"><span class="benefit-icon">04</span><h3>Belajar fleksibel</h3><p>Materi dapat dipelajari sesuai ritme dan kebutuhan Anda.</p></article>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 0">
+            <span class="section-kicker">Mentor kelas</span>
+            <h2>Belajar bersama instruktur.</h2>
+            <div class="instructor-grid">
+                @forelse($instructors as $instructor)
+                    @php
+                        $instructorName = data_get($instructor, 'name') ?: 'Tim Bankir Academy';
+                        $instructorTitle = data_get($instructor, 'title') ?: 'Instruktur Bankir Academy';
+                        $instructorPicture = data_get($instructor, 'picture_src.url') ?: data_get($instructor, 'picture');
+                        $instructorBio = data_get($instructor, 'description') ?: data_get($instructor, 'bio');
+                    @endphp
+                    <article class="instructor-card">
+                        <img class="instructor-avatar" src="{{ $assetUrl($instructorPicture) }}" alt="{{ $instructorName }}" onerror="this.src='{{ asset('bankir-academy-icon.png') }}'">
+                        <div>
+                            <strong>{{ $instructorName }}</strong>
+                            <span>{{ $instructorTitle }}</span>
+                            @if($instructorBio)<p>{{ \Illuminate\Support\Str::limit(strip_tags((string) $instructorBio), 110) }}</p>@endif
+                        </div>
+                    </article>
+                @empty
+                    <article class="instructor-card">
+                        <img class="instructor-avatar" src="{{ asset('bankir-academy-icon.png') }}" alt="Bankir Academy">
+                        <div><strong>Tim Bankir Academy</strong><span>Instruktur dan praktisi perbankan</span><p>Materi disusun bersama praktisi untuk membantu Anda memahami penerapan di dunia kerja.</p></div>
+                    </article>
+                @endforelse
             </div>
         </section>
 
@@ -372,16 +430,9 @@
             </div>
         </section>
 
-        <section class="story-card">
-            <span class="section-kicker" style="color: var(--yellow)">Tentang program</span>
-            <h2>Belajar dengan konteks, bukan hafalan.</h2>
-            <p>{{ \Illuminate\Support\Str::limit($description, 280) }}</p>
-            @if($tags->isNotEmpty())
-                <div class="tag-row">@foreach($tags as $tag)<span class="tag">{{ $tag }}</span>@endforeach</div>
-            @endif
-        </section>
 
-        <section class="section">
+
+        {{-- <section class="section">
             <span class="section-kicker">Suasana belajar</span>
             <h2>Rasanya seperti campaign yang ingin Anda ikuti.</h2>
             <div class="gallery">
@@ -389,7 +440,7 @@
                     <div class="gallery-item"><img src="{{ $image }}" alt="Materi visual {{ $title }}" loading="lazy" onerror="this.src='{{ asset('bankir-academy-icon.png') }}'"></div>
                 @endforeach
             </div>
-        </section>
+        </section> --}}
 
         <section class="checkout-section" id="daftar">
             <span class="section-kicker">Amankan akses</span>
@@ -405,16 +456,24 @@
             @else
                 <form action="{{ route('frontend.class.checkout', $class->slug) }}" method="POST" id="landingCheckoutForm">
                     @csrf
-                    <div class="field"><label for="landingName">Nama lengkap</label><input id="landingName" name="nama_pendaftar" type="text" value="{{ old('nama_pendaftar', auth()->check() ? auth()->user()->name : '') }}" placeholder="Contoh: Budi Santoso" required {{ auth()->check() ? 'readonly' : '' }}></div>
-                    <div class="field"><label for="landingEmail">Email aktif</label><input id="landingEmail" name="email_pendaftar" type="email" value="{{ old('email_pendaftar', auth()->check() ? auth()->user()->email : '') }}" placeholder="nama@email.com" required {{ auth()->check() ? 'readonly' : '' }}><small>Invoice dan link pembayaran dikirim ke email ini.</small></div>
-                    <div class="field"><label for="landingPhone">Nomor WhatsApp</label><input id="landingPhone" name="nomor_handphone" type="tel" value="{{ old('nomor_handphone', data_get($profile, 'phone')) }}" placeholder="08xxxxxxxxxx" required></div>
+                    <div class="field"><label for="landingName">Nama lengkap pendaftar</label><input id="landingName" name="nama_pendaftar" type="text" value="{{ old('nama_pendaftar', auth()->check() ? auth()->user()->name : '') }}" placeholder="Contoh: Budi Santoso" required {{ auth()->check() ? 'readonly' : '' }}></div>
+                    <div class="field"><label for="landingEmail">Email aktif</label><input id="landingEmail" name="email_pendaftar" type="email" value="{{ old('email_pendaftar', auth()->check() ? auth()->user()->email : '') }}" placeholder="nama@email.com" required {{ auth()->check() ? 'readonly' : '' }}><small>Gunakan email aktif untuk akun belajar dan pemulihan akses.</small></div>
+                    <div class="field"><label for="landingPhone">Nomor WhatsApp pendaftar</label><input id="landingPhone" name="nomor_handphone_pendaftar" type="tel" value="{{ old('nomor_handphone_pendaftar', data_get($profile, 'phone')) }}" placeholder="08xxxxxxxxxx" required></div>
 
                     @guest
-                        <div class="account-box"><strong>Buat akun belajar</strong><p>Akun ini dipakai untuk mengakses kelas setelah pembayaran berhasil.</p><div class="field"><label for="landingPassword">Password akun</label><input id="landingPassword" name="password" type="password" minlength="8" placeholder="Minimal 8 karakter" required></div></div>
+                        <div class="account-box"><strong>Akun belajar dibuat otomatis</strong><p>Anda tidak perlu membuat password saat mendaftar. Gunakan email pendaftaran untuk mengatur akses akun jika diperlukan.</p></div>
                     @endguest
 
+                    @php
+                        $oldParticipantCount = min($participantLimit, max(1, (int) old('jml_peserta', 1)));
+                    @endphp
+                    <div class="participant-box">
+                        {{-- <div class="participant-box-head"><strong>Jumlah peserta</strong><span>Masukkan jumlah orang yang mengikuti kelas.</span></div> --}}
+                        <div class="field"><label for="landingParticipantCount">Jumlah peserta</label><input id="landingParticipantCount" name="jml_peserta" type="number" min="1" max="{{ $participantLimit }}" value="{{ old('jml_peserta', $oldParticipantCount) }}" required><small>Maksimal {{ $participantLimit }} peserta{{ (int) data_get($class, 'participant_limit') > 0 ? ' sesuai kuota kelas' : '' }}.</small></div>
+                        <p class="total-summary" id="landingTotalSummary"></p>
+                    </div>
+
                     <label class="gateway-card"><input type="radio" name="payment_gateway" value="doku" checked><span><strong>Payment gateway · DOKU</strong><span>Bayar aman melalui VA bank, QRIS, dan pilihan channel yang tersedia.</span><span class="gateway-logos"><img src="{{ asset('frontend/demo/gateway/bri.png') }}" alt="BRI"><img src="{{ asset('frontend/demo/gateway/bni.png') }}" alt="BNI"><img src="{{ asset('frontend/demo/gateway/mandiri.png') }}" alt="Mandiri"><img src="{{ asset('frontend/demo/gateway/permata.png') }}" alt="Permata"><img src="{{ asset('frontend/demo/gateway/indomaret.png') }}" alt="Indomaret"></span></span></label>
-                    <input type="hidden" name="sertifikat_invoice" value="1">
                     <label class="terms"><input type="checkbox" required><span>Saya memastikan data sudah benar dan menyetujui syarat pendaftaran kelas.</span></label>
                     <button class="submit-button" type="submit" {{ $canCheckout ? '' : 'disabled' }}>{{ $canCheckout ? 'Lanjut ke Pembayaran · ' . $priceLabel : ($isUpcoming ? 'Pendaftaran segera dibuka' : ($isClosed ? 'Pendaftaran ditutup' : 'Belum tersedia')) }}</button>
                     <p class="security-note">▣ Data terlindungi · Proses pembayaran terenkripsi</p>
@@ -427,12 +486,11 @@
             <h2>Sebelum Anda mulai.</h2>
             <div class="faq-list">
                 <div class="faq-item"><button class="faq-question" type="button">Bagaimana cara bayarnya?<span>+</span></button><div class="faq-answer">Isi data, klik lanjut ke pembayaran, lalu ikuti instruksi DOKU. Status pembayaran akan diproses otomatis.</div></div>
-                <div class="faq-item"><button class="faq-question" type="button">Apakah saya mendapat sertifikat?<span>+</span></button><div class="faq-answer">Sertifikat mengikuti ketentuan program, kehadiran, penyelesaian materi, dan persyaratan kelas.</div></div>
                 <div class="faq-item"><button class="faq-question" type="button">Bagaimana jika sudah punya akun?<span>+</span></button><div class="faq-answer">Masuk terlebih dahulu menggunakan akun Bankir Academy, lalu kembali ke halaman ini untuk melanjutkan pendaftaran.</div></div>
             </div>
         </section>
 
-        @if($relatedClasses->isNotEmpty())
+        {{-- @if($relatedClasses->isNotEmpty())
             <section class="section" style="padding-top: 0">
                 <span class="section-kicker">Pilihan lain</span><h2>Mungkin Anda juga suka.</h2>
                 <div class="related-list">
@@ -441,11 +499,21 @@
                     @endforeach
                 </div>
             </section>
-        @endif
+        @endif --}}
     </main>
 
-    <footer class="footer"><strong>Bankir Academy</strong><br>Belajar hari ini, lebih siap menghadapi dunia perbankan.</footer>
-    @if(!$isIht)<div class="sticky-cta"><div><small>Investasi kelas</small><strong>{{ $priceLabel }}</strong></div><a href="#daftar">Daftar sekarang</a></div>@endif
+    <footer class="footer">
+        <strong>PT Bankir Academy</strong>
+        <p class="footer-intro">PT Bankir Academy adalah perusahaan pembelajaran dan pengembangan talenta yang membantu calon bankir, profesional, institusi, sekolah, kampus, UMKM, dan komunitas membangun kompetensi yang relevan dengan kebutuhan dunia kerja.</p>
+        <div class="footer-meta">
+            <span><strong>Fokus layanan:</strong> kelas perbankan, pelatihan institusi, pengembangan talenta, dan solusi pembelajaran.</span>
+            <span><strong>Email:</strong> info@bankiracademy.co.id</span>
+            <span><strong>Lokasi:</strong> Permata Puri, Ngaliyan, Semarang</span>
+            <span><strong>Website:</strong> bankiracademy.co.id</span>
+        </div>
+        <small class="footer-note">Belajar hari ini, lebih siap menghadapi dunia perbankan. Copyright © 2026 PT Bankir Academy.</small>
+    </footer>
+    @if(!$isIht)<div class="sticky-cta"><div><small>Harga kelas</small><strong>{{ $priceLabel }}</strong></div><a href="#daftar">Daftar sekarang</a></div>@endif
 </div>
 <script>
     document.querySelectorAll('.faq-question').forEach(function (button) {
@@ -453,6 +521,48 @@
     });
     var checkoutForm = document.getElementById('landingCheckoutForm');
     if (checkoutForm) {
+        var participantCountInput = document.getElementById('landingParticipantCount');
+        var totalSummary = document.getElementById('landingTotalSummary');
+        var participantLimit = {{ $participantLimit }};
+        var baseParticipantPrice = {{ $finalPrice }};
+        var participantDiscountTiers = @json($participantDiscountTiers);
+
+        function formatCurrency(value) {
+            return 'Rp ' + Math.max(0, Math.round(value)).toLocaleString('id-ID');
+        }
+
+        function updateTotalSummary() {
+            var count = parseInt(participantCountInput?.value || '0', 10) || 0;
+            var tier = participantDiscountTiers.filter(function (item) {
+                return item.minimum_participants <= count;
+            }).sort(function (first, second) {
+                return second.minimum_participants - first.minimum_participants;
+            })[0];
+            var discountPerParticipant = tier ? Math.min(baseParticipantPrice, Number(tier.discount_amount)) : 0;
+            var classTotal = Math.max(0, baseParticipantPrice - discountPerParticipant) * count;
+
+            if (totalSummary) {
+                totalSummary.textContent = count > 0
+                    ? 'Estimasi total: ' + formatCurrency(classTotal) + (discountPerParticipant > 0 ? ' · Hemat ' + formatCurrency(discountPerParticipant * count) : '')
+                    : '';
+            }
+        }
+
+        function normalizeParticipantCount() {
+            if (!participantCountInput) return;
+            var count = Math.max(1, Math.min(participantLimit, parseInt(participantCountInput.value, 10) || 1));
+            participantCountInput.value = count;
+            updateTotalSummary();
+        }
+
+        if (participantCountInput) {
+            participantCountInput.addEventListener('input', normalizeParticipantCount);
+            participantCountInput.addEventListener('change', normalizeParticipantCount);
+            normalizeParticipantCount();
+        }
+
+        updateTotalSummary();
+
         checkoutForm.addEventListener('submit', function () {
             var submit = checkoutForm.querySelector('.submit-button');
             if (submit && !submit.disabled) { submit.disabled = true; submit.textContent = 'Menyiapkan pembayaran...'; }

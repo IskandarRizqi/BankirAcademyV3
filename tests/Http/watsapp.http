@@ -1,0 +1,9 @@
+POST https://connecthub.ehr.co.id/api/v1/messages
+Authorization : Bearer wapi_live_8aCqyadF31p6IwIelg1uUjAljISZEOLZ8ZHn7QdDbDTuAnQY
+Content-Type: "application/json"
+
+{
+  "to": "6285721174220", 
+  "body": "Pesan dari aplikasi Merchant", 
+  "external_id": "64562323JHSDGFB"
+}

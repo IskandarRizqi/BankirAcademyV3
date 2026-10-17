@@ -12,6 +12,7 @@ use App\Models\RiwayatTransaksi;
 use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use App\Services\ClassPricingService;
+use App\Services\FonnteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -434,6 +435,10 @@ class PaymentController extends Controller
 
         if (! $result['success']) {
             return back()->withInput()->with('error', $result['message']);
+        }
+
+        if ((int) $result['dataPayment']->status === DataPayment::STATUS_PAID) {
+            app(FonnteService::class)->sendPaidClassInvoice($result['dataPayment']->id);
         }
 
         // Opsi A: Jika bayar via Virtual Account / Payment Gateway
