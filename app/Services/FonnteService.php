@@ -39,11 +39,19 @@ class FonnteService
         $payment = DataPayment::with(['user.userProfile', 'paymentClass'])
             ->find($paymentId);
 
-        if (! $payment || (int) $payment->status !== DataPayment::STATUS_PAID) {
+        if (
+            ! $payment
+            || ! $payment->class_id
+            || (int) $payment->status !== DataPayment::STATUS_PAID
+        ) {
             return;
         }
 
-        $phone = $payment->user?->userProfile?->phone;
+        $phone = $payment->user?->userProfile?->phone ?: $payment->customer_phone;
+
+        if (filled($phone)) {
+            $phone = UserProfileModel::normalizePhone($phone);
+        }
 
         if (! filled($phone)) {
             Log::warning('Invoice lunas tidak dikirim karena nomor WhatsApp kosong', [
@@ -58,7 +66,7 @@ class FonnteService
         $classTitle = $payment->paymentClass?->title ?: 'Kelas Bankir Academy';
         $amount = number_format((float) $payment->nominal, 0, ',', '.');
         $message = implode("\n", [
-            "Halo {$payment->user->name},",
+            'Halo '.($payment->user?->name ?: $payment->customer_name ?: 'Peserta').',',
             '',
             'Pembayaran kelas Anda telah LUNAS.',
             "Kelas: {$classTitle}",
@@ -72,11 +80,11 @@ class FonnteService
 
         try {
             $response = $this->sendMessage(
-                UserProfileModel::normalizePhone($phone),
+                $phone,
                 $message,
             );
 
-            if (! $response->successful()) {
+            if (! $response->successful() || data_get($response->json(), 'status') === false) {
                 Log::error('Fonnte gagal mengirim invoice lunas', [
                     'payment_id' => $payment->id,
                     'invoice' => $payment->no_invoice,

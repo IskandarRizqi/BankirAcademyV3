@@ -362,7 +362,7 @@
                     </span>
                 </div>
 
-                <div class="calendar-summary">
+                {{-- <div class="calendar-summary">
                     <div class="calendar-summary-item">
                         <small>Total kelas pada filter</small>
                         <strong>{{ $calendarSummary['classes'] }}</strong>
@@ -375,7 +375,7 @@
                         <small>Belum ada jadwal</small>
                         <strong>{{ $calendarSummary['without_schedule'] }}</strong>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="class-calendar-layout">
                     <div>

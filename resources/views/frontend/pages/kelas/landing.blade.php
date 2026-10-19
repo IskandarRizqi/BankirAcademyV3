@@ -447,7 +447,8 @@
             <h2>Siap naik level?</h2>
             <p class="form-note">Isi data Anda. Setelah dikirim, Anda akan diarahkan ke halaman payment gateway untuk memilih metode pembayaran.</p>
 
-            @if(session('error')) <div class="alert">{{ session('error') }} @if(str_contains(session('error'), 'terdaftar')) <a href="{{ route('login.new', ['redirect' => url()->current() . '#daftar']) }}" style="font-weight: 800; text-decoration: underline">Masuk di sini</a>@endif</div> @endif
+            @if(session('error')) <div class="alert">{{ session('error') }}</div> @endif
+            @if(session('success')) <div class="alert" style="background:#e9fff3;color:#166534">{{ session('success') }}</div> @endif
             @if($errors->any()) <div class="alert">{{ $errors->first() }}</div> @endif
 
             @if($isIht)
@@ -457,12 +458,12 @@
                 <form action="{{ route('frontend.class.checkout', $class->slug) }}" method="POST" id="landingCheckoutForm">
                     @csrf
                     <div class="field"><label for="landingName">Nama lengkap pendaftar</label><input id="landingName" name="nama_pendaftar" type="text" value="{{ old('nama_pendaftar', auth()->check() ? auth()->user()->name : '') }}" placeholder="Contoh: Budi Santoso" required {{ auth()->check() ? 'readonly' : '' }}></div>
-                    <div class="field"><label for="landingEmail">Email aktif</label><input id="landingEmail" name="email_pendaftar" type="email" value="{{ old('email_pendaftar', auth()->check() ? auth()->user()->email : '') }}" placeholder="nama@email.com" required {{ auth()->check() ? 'readonly' : '' }}><small>Gunakan email aktif untuk akun belajar dan pemulihan akses.</small></div>
+                    <div class="field"><label for="landingEmail">Email aktif</label><input id="landingEmail" name="email_pendaftar" type="email" value="{{ old('email_pendaftar', auth()->check() ? auth()->user()->email : '') }}" placeholder="nama@email.com" required><small>Gunakan email aktif untuk menerima detail order dan pembayaran.</small></div>
                     <div class="field"><label for="landingPhone">Nomor WhatsApp pendaftar</label><input id="landingPhone" name="nomor_handphone_pendaftar" type="tel" value="{{ old('nomor_handphone_pendaftar', data_get($profile, 'phone')) }}" placeholder="08xxxxxxxxxx" required></div>
 
-                    @guest
+                    {{-- @guest
                         <div class="account-box"><strong>Akun belajar dibuat otomatis</strong><p>Anda tidak perlu membuat password saat mendaftar. Gunakan email pendaftaran untuk mengatur akses akun jika diperlukan.</p></div>
-                    @endguest
+                    @endguest --}}
 
                     @php
                         $oldParticipantCount = min($participantLimit, max(1, (int) old('jml_peserta', 1)));

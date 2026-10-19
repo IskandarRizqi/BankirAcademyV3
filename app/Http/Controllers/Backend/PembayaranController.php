@@ -70,7 +70,7 @@ class PembayaranController extends Controller
         // 3. Mapping data agar atribut sesuai dengan Blade
         $data['pembayaran'] = $pembayaran->map(function ($item) {
             // Mengambil nama langsung dari relasi user
-            $item->name = $item->user->name ?? '-';
+            $item->name = $item->user->name ?? $item->customer_name ?? '-';
 
             // Ambil detail dari relasi kelas jika ada
             if ($item->paymentClass) {

@@ -49,6 +49,9 @@ class DataPayment extends Model
     protected $fillable = [
         'no_invoice',
         'user_id',
+        'customer_name',
+        'customer_email',
+        'customer_phone',
         'class_id',
         'pembelian',
         'nominal',

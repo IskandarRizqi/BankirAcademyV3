@@ -233,10 +233,18 @@ class PaymentController extends Controller
     public function paymentorderclass(Request $request)
     {
         $user = $request->user();
+        $isGuestCheckout = $request->boolean('guest_checkout')
+            && $request->routeIs('frontend.class.checkout');
 
-        if (! $user) {
+        if (! $user && ! $isGuestCheckout) {
             abort(401);
         }
+
+        $guestCustomer = $isGuestCheckout ? $request->validate([
+            'customer_name' => ['required', 'string', 'max:255'],
+            'customer_email' => ['required', 'email', 'max:255'],
+            'customer_phone' => ['required', 'string', 'max:30'],
+        ]) : null;
 
         $validated = $request->validate([
             'class_id' => ['required', 'integer', 'exists:classes,id'],
@@ -262,7 +270,7 @@ class PaymentController extends Controller
         }
 
         $classId = (int) $validated['class_id'];
-        $class = ClassesModel::select('id', 'participant_limit', 'kategori', 'iht', 'date_start')->whereKey($classId)->first();
+        $class = ClassesModel::select('id', 'slug', 'participant_limit', 'kategori', 'iht', 'date_start')->whereKey($classId)->first();
 
         if (! $class) {
             return back()->withInput()->with('error', 'Kelas tidak ditemukan.');
@@ -293,6 +301,12 @@ class PaymentController extends Controller
 
         $classTotal = $pricePerParticipant * $jumlahPeserta;
         $certificateTotal = 0;
+
+        $customerName = $isGuestCheckout ? $guestCustomer['customer_name'] : $user->name;
+        $customerEmail = $isGuestCheckout ? $guestCustomer['customer_email'] : $user->email;
+        $customerPhone = $isGuestCheckout
+            ? UserProfileModel::normalizePhone($guestCustomer['customer_phone'])
+            : null;
 
         if ((int) $validated['sertifikat_invoice'] === 1) {
             $certificateFee = BiayaSertifikatModel::where('class_id', $classId)->first();
@@ -334,7 +348,10 @@ class PaymentController extends Controller
             $paymentStatus,
             $needsPaymentGateway,
             $validated,
-            $selectedPaymentMethod
+            $selectedPaymentMethod,
+            $customerName,
+            $customerEmail,
+            $customerPhone
         ) {
             $class = ClassesModel::select('id', 'participant_limit')->whereKey($classId)->lockForUpdate()->first();
 
@@ -358,7 +375,7 @@ class PaymentController extends Controller
 
             $classPayment = ClassPaymentModel::create([
                 'status' => $paymentStatus === DataPayment::STATUS_PAID ? 1 : 0,
-                'user_id' => $user->id,
+                'user_id' => $user?->id,
                 'class_id' => $classId,
                 'unique_code' => random_int(0, 999),
                 'price' => $pricePerParticipant,
@@ -388,7 +405,10 @@ class PaymentController extends Controller
 
             $dataPayment = DataPayment::create([
                 'no_invoice' => 'BANKIR-'.now()->format('YmdHisv').'-'.random_int(1000, 9999),
-                'user_id' => $user->id,
+                'user_id' => $user?->id,
+                'customer_name' => $customerName,
+                'customer_email' => $customerEmail,
+                'customer_phone' => $customerPhone,
                 'class_id' => $classId,
                 'pembelian' => DataPayment::PURCHASE_CLASS,
                 'expired' => 1440,
@@ -407,7 +427,7 @@ class PaymentController extends Controller
             ClassParticipantModel::updateOrCreate(
                 [
                     'payment_id' => $classPayment->id,
-                    'user_id' => $user->id,
+                    'user_id' => $user?->id,
                 ],
                 [
                     'class_id' => $classId,
@@ -417,7 +437,7 @@ class PaymentController extends Controller
             );
 
             SertifikatPesertaModel::create([
-                'user_id' => $user->id,
+                'user_id' => $user?->id,
                 'class_id' => $classId,
                 'payment_class_id' => $classPayment->id,
                 'nama' => json_encode($validated['nama']),
@@ -448,7 +468,9 @@ class PaymentController extends Controller
                 $grandTotal,
                 $user,
                 $classId,
-                $jumlahPeserta
+                $jumlahPeserta,
+                $customerName,
+                $customerEmail
             );
 
             if (! $paymentUrl) {
@@ -464,6 +486,11 @@ class PaymentController extends Controller
             $result['classPayment']->update(['file' => $paymentUrl]);
 
             return redirect()->away($paymentUrl);
+        }
+
+        if ($isGuestCheckout) {
+            return redirect()->route('frontend.class.landing', ['slug' => $class->slug])
+                ->with('success', 'Order berhasil dibuat. Detail pembayaran dikirim melalui WhatsApp setelah pembayaran lunas.');
         }
 
         // Opsi B: Jika bayar Manual atau Kelas Gratis (Langsung ke halaman konfirmasi/invoice)
@@ -981,8 +1008,15 @@ class PaymentController extends Controller
         return redirect()->away($paymentUrl);
     }
 
-    private function createClassDokuPaymentUrl(string $invoiceNumber, float $amount, $user, int $classId, int $quantity): ?string
-    {
+    private function createClassDokuPaymentUrl(
+        string $invoiceNumber,
+        float $amount,
+        $user,
+        int $classId,
+        int $quantity,
+        ?string $customerName = null,
+        ?string $customerEmail = null
+    ): ?string {
         $paymentAmount = (int) round($amount);
 
         if ($paymentAmount < 1) {
@@ -1010,13 +1044,27 @@ class PaymentController extends Controller
         }
         $timestamp = now()->toIso8601ZuluString();
         $requestId = Str::uuid()->toString();
+        $callbackUrl = $user?->siswa
+            ? $callbackurl
+            : ($user
+                ? url('/pembayaran?invoice_number='.urlencode($invoiceNumber))
+                : route('frontend.class.landing', ['slug' => $payment->paymentClass?->slug]));
+        $additionalInfo = [
+            'class_id' => $classId,
+            'qty' => $quantity,
+            'pembelian_tipe' => DataPayment::PURCHASE_TYPE_CLASS,
+            'override_notification_url' => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
+        ];
+
+        if ($user) {
+            $additionalInfo['user_id'] = $user->id;
+        }
+
         $body = [
             'order' => [
                 'amount' => $paymentAmount,
                 'invoice_number' => $invoiceNumber,
-                'callback_url' => $user->siswa
-                    ? $callbackurl
-                    : url('/pembayaran?invoice_number='.urlencode($invoiceNumber)),
+                'callback_url' => $callbackUrl,
                 'line_items' => [
                     [
                         'name' => 'Pembayaran Kelas',
@@ -1026,19 +1074,13 @@ class PaymentController extends Controller
                 ],
             ],
             'customer' => [
-                'name' => $user->name,
-                'email' => $user->email,
+                'name' => $customerName ?: ($user?->name ?: 'Peserta'),
+                'email' => $customerEmail ?: $user?->email,
             ],
             'payment' => [
                 'payment_due_date' => self::MEMBERSHIP_PAYMENT_DUE_MINUTES,
             ],
-            'additional_info' => [
-                'user_id' => $user->id,
-                'class_id' => $classId,
-                'qty' => $quantity,
-                'pembelian_tipe' => 2,
-                'override_notification_url' => env('DOKU_NOTIFICATION_URL', url('/api/c4/notifikasi')),
-            ],
+            'additional_info' => $additionalInfo,
         ];
 
         $jsonBody = json_encode($body);

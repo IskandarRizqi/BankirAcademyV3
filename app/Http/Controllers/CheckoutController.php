@@ -86,9 +86,7 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Invalid purchase type'], 422);
         }
 
-        if (($result['notify_whatsapp'] ?? false) && isset($result['payment_id'])) {
-            app(FonnteService::class)->sendPaidClassInvoice((int) $result['payment_id']);
-        }
+        $this->sendPaidClassInvoiceIfNeeded($result);
 
         return response()->json(['message' => $result['message']], $result['status']);
     }
@@ -267,11 +265,18 @@ class CheckoutController extends Controller
 
             if ($dataPayment->class_id) {
                 if ((int) $order->status === 1) {
+                    $wasPaymentPaid = (int) $dataPayment->status === DataPayment::STATUS_PAID;
+
                     if ($dataPayment && (int) $dataPayment->status !== DataPayment::STATUS_PAID) {
                         $dataPayment->update(['status' => DataPayment::STATUS_PAID]);
                     }
 
-                    return ['status' => 200, 'message' => 'Payment already processed'];
+                    return [
+                        'status' => 200,
+                        'message' => 'Payment already processed',
+                        'notify_whatsapp' => ! $wasPaymentPaid,
+                        'payment_id' => $dataPayment->id,
+                    ];
                 }
 
                 if (! $this->isSuccessfulDokuStatus($paymentStatus)) {
@@ -628,6 +633,15 @@ class CheckoutController extends Controller
             $notification['amount']
         );
 
+        $this->sendPaidClassInvoiceIfNeeded($result);
+
         return response()->json(['message' => $result['message']], $result['status']);
+    }
+
+    private function sendPaidClassInvoiceIfNeeded(array $result): void
+    {
+        if (($result['notify_whatsapp'] ?? false) && isset($result['payment_id'])) {
+            app(FonnteService::class)->sendPaidClassInvoice((int) $result['payment_id']);
+        }
     }
 }
