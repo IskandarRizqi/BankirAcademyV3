@@ -637,7 +637,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-6 form-group">
                                     <label class="font-weight-bold small">Kecamatan</label>
                                     <select name="kecamatan_id" id="edit-kecamatan"
                                         class="form-control @error('kecamatan_id') is-invalid @enderror">
@@ -647,7 +647,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 form-group d-none">
                                     <label class="font-weight-bold small">Kelurahan / Desa</label>
                                     <select name="kelurahan_id" id="edit-kelurahan"
                                         class="form-control @error('kelurahan_id') is-invalid @enderror">
