@@ -1,9 +1,8 @@
-@extends('layouts.appmembernonanggota')
+@extends(auth()->check() ? 'layouts.appmembernonanggota' : 'layouts.appfrontend')
 
 @section('title', 'Detail Lowongan')
 
-@section('content')
-    @php
+@php
         $decodeList = static function ($value): array {
             $decoded = json_decode((string) $value, true);
 
@@ -37,10 +36,30 @@
         $address = $loker->alamat ?: optional($company)->alamat;
         $description = trim(strip_tags((string) $loker->deskripsi));
         $jobdesk = trim(strip_tags((string) $loker->jobdesk));
+        $shareTitle = trim((string) $loker->title) . ' | Lowongan Kerja Bankir Academy';
+        $shareDescription = \Illuminate\Support\Str::limit(
+            preg_replace('/\s+/', ' ', $description ?: $jobdesk ?: 'Lihat detail lowongan kerja di Bankir Academy.'),
+            160
+        );
+        $shareUrl = url()->current();
+        $shareImage = $imageUrl ?: asset('bankir-academy-icon.png');
+        $shareText = rawurlencode($shareTitle . "\n" . $shareUrl);
+        $facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
     @endphp
+
+@section('page-title', $shareTitle)
+@section('page-description', $shareDescription)
+@section('page-url', $shareUrl)
+@section('page-image', $shareImage)
+@section('page-image-alt', 'Gambar ' . $loker->title)
+
+@section('content')
 
     <style>
         .loker-detail-page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 36px 0 52px;
             display: flex;
             flex-direction: column;
             gap: 22px;
@@ -316,6 +335,80 @@
             text-decoration: none;
         }
 
+        .loker-detail-share {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px 22px;
+        }
+
+        .loker-detail-share h2 {
+            margin: 0;
+            color: #111827;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .loker-detail-share p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .loker-detail-share__actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .loker-detail-share__button {
+            display: inline-flex;
+            min-height: 40px;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #374151;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: .15s ease;
+        }
+
+        .loker-detail-share__button:hover,
+        .loker-detail-share__button:focus-visible {
+            border-color: #c7d2fe;
+            background: #eef2ff;
+            color: #3730a3;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .loker-detail-share__button--whatsapp i {
+            color: #16a34a;
+        }
+
+        .loker-detail-share__button--facebook i {
+            color: #2563eb;
+        }
+
+        .loker-detail-share__button--instagram i {
+            color: #db2777;
+        }
+
+        .loker-detail-share__feedback {
+            min-height: 18px;
+            margin: 0;
+            color: #047857;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
         .loker-related {
             display: grid;
             gap: 16px;
@@ -346,6 +439,11 @@
         }
 
         @media (max-width: 575.98px) {
+            .loker-detail-page {
+                width: min(100% - 24px, 1180px);
+                padding-top: 24px;
+            }
+
             .loker-detail-heading {
                 align-items: flex-start;
                 flex-direction: column;
@@ -363,7 +461,7 @@
     </style>
 
     <div class="loker-detail-page">
-        <a class="loker-detail-back" href="{{ route('membernonanggota.loker.index') }}">
+        <a class="loker-detail-back" href="{{ auth()->check() ? route('membernonanggota.loker.index') : route('frontend.home') }}">
             <i class="fas fa-arrow-left" aria-hidden="true"></i>
             Kembali ke daftar loker
         </a>
@@ -421,17 +519,49 @@
             </article>
 
             <aside class="loker-detail-side">
-                @if ($canApply)
-                    <section class="loker-detail-apply" aria-labelledby="loker-apply-title">
-                        <h2 id="loker-apply-title">Tertarik dengan lowongan ini?</h2>
-                        <p>Periksa kembali CV ATS Anda sebelum melanjutkan proses lamaran.</p>
-                        <a class="loker-detail-apply__button"
-                            href="{{ route('membernonanggota.loker.apply', $loker->id) }}">
+                <section class="loker-detail-apply" aria-labelledby="loker-apply-title">
+                    <h2 id="loker-apply-title">Tertarik dengan lowongan ini?</h2>
+                    <p>{{ auth()->check() ? 'Periksa kembali CV ATS Anda sebelum melanjutkan proses lamaran.' : 'Silakan login terlebih dahulu untuk melamar lowongan ini.' }}</p>
+                    @if (auth()->check())
+                        <a class="loker-detail-apply__button" href="{{ route('membernonanggota.loker.apply', $loker->id) }}">
                             <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             Lamar Sekarang
                         </a>
-                    </section>
-                @endif
+                    @else
+                        <a class="loker-detail-apply__button" href="{{ route('login.new', ['redirect' => request()->getRequestUri()]) }}">
+                            <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                            Login untuk melamar
+                        </a>
+                    @endif
+                </section>
+
+                <section class="loker-detail-card loker-detail-share" aria-labelledby="loker-share-title">
+                    <h2 id="loker-share-title">Bagikan lowongan</h2>
+                    <p>Bagikan tautan ini ke teman atau jaringan profesional Anda.</p>
+                    <div class="loker-detail-share__actions">
+                        <a class="loker-detail-share__button loker-detail-share__button--whatsapp"
+                            href="https://wa.me/?text={{ $shareText }}" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                            WhatsApp
+                        </a>
+                        <a class="loker-detail-share__button loker-detail-share__button--facebook"
+                            href="{{ $facebookShareUrl }}" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                            Facebook
+                        </a>
+                        <button class="loker-detail-share__button loker-detail-share__button--instagram"
+                            type="button" data-share-platform="instagram" data-share-url="{{ $shareUrl }}">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                            Instagram
+                        </button>
+                        <button class="loker-detail-share__button" type="button" data-share-platform="copy"
+                            data-share-url="{{ $shareUrl }}">
+                            <i class="fas fa-link" aria-hidden="true"></i>
+                            Salin tautan
+                        </button>
+                    </div>
+                    <p class="loker-detail-share__feedback" id="loker-share-feedback" role="status" aria-live="polite"></p>
+                </section>
 
                 <section class="loker-detail-card loker-detail-info" aria-labelledby="loker-summary-title">
                     <h2 id="loker-summary-title">Ringkasan informasi</h2>
@@ -511,4 +641,47 @@
             </section>
         @endif
     </div>
+
+    <script>
+        (() => {
+            const feedback = document.getElementById('loker-share-feedback');
+
+            const copyText = async (text) => {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                }
+
+                const input = document.createElement('textarea');
+                input.value = text;
+                input.setAttribute('readonly', '');
+                input.style.position = 'fixed';
+                input.style.opacity = '0';
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                input.remove();
+            };
+
+            document.querySelectorAll('[data-share-platform]').forEach((button) => {
+                button.addEventListener('click', async () => {
+                    const platform = button.dataset.sharePlatform;
+                    const shareUrl = button.dataset.shareUrl;
+
+                    if (platform === 'instagram') {
+                        window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer');
+                    }
+
+                    try {
+                        await copyText(shareUrl);
+                        feedback.textContent = platform === 'instagram'
+                            ? 'Tautan disalin. Tempelkan di Instagram.'
+                            : 'Tautan berhasil disalin.';
+                    } catch (error) {
+                        feedback.textContent = 'Tautan tidak dapat disalin otomatis. Silakan salin dari alamat browser.';
+                    }
+                });
+            });
+        })();
+    </script>
 @endsection

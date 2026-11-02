@@ -11,6 +11,7 @@ use App\Models\RiwayatTransaksi;
 use App\Models\SiswaModulAktif;
 use App\Models\SubMateriModel;
 use App\Models\UserSubMateriItemProgress;
+use App\Services\LokerApplicationQuota;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -20,6 +21,8 @@ use Throwable;
 
 class ParticipantController extends Controller
 {
+    public function __construct(private LokerApplicationQuota $applicationQuota) {}
+
     public function profile(Request $request): JsonResponse
     {
         $user = $request->user()->load('siswa');
@@ -231,6 +234,10 @@ class ParticipantController extends Controller
 
     public function applyJob(Request $request, int $id): JsonResponse
     {
+        if ($this->applicationQuota->hasReachedLimit($request->user()->id)) {
+            return $this->error('Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.', Response::HTTP_FORBIDDEN);
+        }
+
         $job = $this->activeJobs()->where('loker.id', $id)->first();
         if (! $job) {
             return $this->error('Lowongan tidak ditemukan atau sudah tidak aktif.', Response::HTTP_NOT_FOUND);
@@ -246,6 +253,10 @@ class ParticipantController extends Controller
 
         try {
             $application = DB::transaction(function () use ($request, $cv, $job) {
+                if ($this->applicationQuota->hasReachedLimit($request->user()->id)) {
+                    throw new \DomainException('Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.');
+                }
+
                 $lastApply = LokerApply::query()
                     ->where('user_id', $request->user()->id)
                     ->where('loker_id', $job->id)

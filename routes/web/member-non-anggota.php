@@ -30,6 +30,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/member/loker/{id}', [LokerController::class, 'show'])
+    ->whereNumber('id')
+    ->name('membernonanggota.loker.show');
+
 Route::middleware('auth')->group(function () {
     Route::resource('dash-beranda', ProfileController::class);
     Route::get('/event-kelas', [DataEventKelasController::class, 'dataeventkelas']);
@@ -88,7 +92,6 @@ Route::middleware('auth')->group(function () {
         ->name('membernonanggota.certificates.index');
     Route::prefix('member/cv-ats')
         ->name('membernonanggota.cv-ats.')
-        ->middleware('membership.type:individual')
         ->controller(CvAtsController::class)
         ->group(function () {
             Route::get('/', 'index')->name('index');
@@ -104,18 +107,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/member/loker/cities', [LokerController::class, 'cities'])
             ->name('membernonanggota.loker.cities');
         Route::get('/member/loker/riwayat', [LokerController::class, 'history'])
-            ->middleware('membership.type:individual')
             ->name('membernonanggota.loker.history');
-        Route::get('/member/loker/{id}', [LokerController::class, 'show'])
-            ->whereNumber('id')
-            ->name('membernonanggota.loker.show');
         Route::get('/member/loker/{id}/apply', [LokerController::class, 'applyPreview'])
             ->whereNumber('id')
-            ->middleware('membership.type:individual')
             ->name('membernonanggota.loker.apply');
         Route::post('/member/loker/{id}/apply', [LokerController::class, 'submitApplication'])
             ->whereNumber('id')
-            ->middleware(['membership.type:individual', 'throttle:apply-loker'])
+            ->middleware('throttle:apply-loker')
             ->name('membernonanggota.loker.apply.store');
     });
     Route::middleware(['role:2', 'membership.type:company'])

@@ -9,6 +9,7 @@ use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
 use App\Models\UserProfileModel;
 use App\Models\DataPayment;
+use App\Services\LokerApplicationQuota;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,8 @@ use Throwable;
 
 class MobileJobController extends Controller
 {
+    public function __construct(private LokerApplicationQuota $applicationQuota) {}
+
     public function index(Request $request): JsonResponse
     {
         $query = $this->activeJobs();
@@ -96,10 +99,6 @@ class MobileJobController extends Controller
 
     public function applications(Request $request): JsonResponse
     {
-        if (! $this->hasActiveIndividualMembership($request->user())) {
-            return $this->error('Riwayat lamaran hanya tersedia untuk member perorangan aktif.', Response::HTTP_FORBIDDEN);
-        }
-
         $applications = LokerApply::query()
             ->with('loker')
             ->where('user_id', $request->user()->id)
@@ -128,8 +127,11 @@ class MobileJobController extends Controller
 
     public function apply(Request $request, int $id): JsonResponse
     {
-        if (! $this->hasActiveIndividualMembership($request->user())) {
-            return $this->error('Lamaran hanya tersedia untuk member perorangan aktif.', Response::HTTP_FORBIDDEN);
+        $user = $request->user();
+        $isMember = $this->hasActiveIndividualMembership($user);
+
+        if (! $isMember && $this->applicationQuota->hasReachedLimit($user->id)) {
+            return $this->error('Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.', Response::HTTP_FORBIDDEN);
         }
 
         $masterCv = LamaranModel::query()
@@ -146,7 +148,11 @@ class MobileJobController extends Controller
         }
 
         try {
-            $application = DB::transaction(function () use ($request, $masterCv, $job) {
+            $application = DB::transaction(function () use ($request, $masterCv, $job, $isMember) {
+                if (! $isMember && $this->applicationQuota->hasReachedLimit($request->user()->id)) {
+                    throw new \DomainException('Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.');
+                }
+
                 $lastApply = LokerApply::query()
                     ->where('user_id', $request->user()->id)
                     ->where('loker_id', $job->id)

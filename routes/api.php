@@ -167,19 +167,14 @@ Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2,6'])
             ->middleware('throttle:10,10')
             ->name('phone.otp.verify');
         Route::get('/cv', [MobileProfileController::class, 'cv'])
-            ->middleware('mobile.membership:individual')
             ->name('cv.show');
         Route::post('/cv', [MobileProfileController::class, 'storeCv'])
-            ->middleware('mobile.membership:individual')
             ->name('cv.store');
         Route::patch('/cv', [MobileProfileController::class, 'updateCv'])
-            ->middleware('mobile.membership:individual')
             ->name('cv.update');
         Route::delete('/cv', [MobileProfileController::class, 'deleteCv'])
-            ->middleware('mobile.membership:individual')
             ->name('cv.delete');
         Route::get('/cv/pdf', [MobileProfileController::class, 'cvPdf'])
-            ->middleware('mobile.membership:individual')
             ->name('cv.pdf');
     });
 
@@ -190,11 +185,10 @@ Route::middleware(['auth:sanctum', 'mobile.access', 'mobile.role:2'])
         Route::get('/', [MobileJobController::class, 'index'])->name('index');
         Route::get('/{id}', [MobileJobController::class, 'show'])->whereNumber('id')->name('show');
         Route::get('/applications', [MobileJobController::class, 'applications'])
-            ->middleware('mobile.membership:individual')
             ->name('applications.index');
         Route::post('/{id}/apply', [MobileJobController::class, 'apply'])
             ->whereNumber('id')
-            ->middleware(['mobile.membership:individual', 'throttle:apply-loker'])
+            ->middleware('throttle:apply-loker')
             ->name('apply');
     });
 

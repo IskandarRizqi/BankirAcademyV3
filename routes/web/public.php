@@ -75,7 +75,7 @@ Route::post('/list-class', [ClassesController::class, 'findClass']);
 // Loker
 Route::resource('loker', BerandaLoker::class);
 Route::get('/loker/{id}/detail', [BerandaLoker::class, 'detail']);
-Route::post('/loker/apply', [BerandaLoker::class, 'apply']);
+Route::post('/loker/apply', [BerandaLoker::class, 'apply'])->middleware('auth');
 
 Route::get('/promo', [HomeController::class, 'showAllPromo']);
 Route::get('/class/{unique_id}/{title}', [HomeController::class, 'detail_class']);

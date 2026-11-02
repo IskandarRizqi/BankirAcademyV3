@@ -9,6 +9,7 @@ use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\User;
 use App\Models\UserProfileModel;
+use App\Services\LokerApplicationQuota;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\DB;
 class LokerController extends Controller
 {
     private const PAGE_SIZE = 9;
+
+    public function __construct(private LokerApplicationQuota $applicationQuota) {}
 
     public function index(Request $request)
     {
@@ -92,14 +95,14 @@ class LokerController extends Controller
         $cities = DB::table('kota')
             ->where('provinsi_id', $provinceId)
             ->when($search !== '', function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+                $query->where('name', 'like', '%' . $search . '%');
             })
             ->orderBy('name')
             ->paginate(20);
 
         return response()->json([
             'results' => $cities->getCollection()
-                ->map(fn ($city) => [
+                ->map(fn($city) => [
                     'id' => $city->id,
                     'text' => $city->name,
                 ])
@@ -112,18 +115,19 @@ class LokerController extends Controller
 
     public function show(Request $request, int $id)
     {
-        $isMember = $this->hasActiveMembership($request->user());
-        $nonMemberIds = $isMember ? collect() : $this->nonMemberLokerIds();
+        $user = $request->user();
+        $isMember = $user && $this->hasActiveMembership($user);
+        $nonMemberIds = ! $user || $isMember ? collect() : $this->nonMemberLokerIds();
         $query = $this->activeLokerQuery()->where('loker.id', $id);
 
-        if (! $isMember) {
+        if ($user && ! $isMember) {
             $query->whereIn('loker.id', $nonMemberIds);
         }
 
         $loker = $query->firstOrFail();
         $relatedQuery = $this->activeLokerQuery()->where('loker.id', '!=', $loker->id);
 
-        if (! $isMember) {
+        if ($user && ! $isMember) {
             $relatedQuery->whereIn('loker.id', $nonMemberIds);
         }
 
@@ -136,15 +140,16 @@ class LokerController extends Controller
         return view('membernonkeanggotaan.pages.loker.detail', [
             'loker' => $loker,
             'relatedLokers' => $relatedLokers,
-            'canApply' => $this->hasActiveIndividualMembership($request->user()),
+            'canApply' => $user && $this->hasActiveIndividualMembership($user),
         ]);
     }
 
     public function applyPreview(Request $request, int $id)
     {
-        if (! $this->hasActiveIndividualMembership($request->user())) {
-            return redirect()->route('dash-beranda.index')
-                ->with('error', 'Fitur lamaran hanya tersedia untuk member perorangan aktif.');
+        $user = $request->user();
+        if (! $this->hasActiveIndividualMembership($user) && $this->applicationQuota->hasReachedLimit($user->id)) {
+            return redirect()->route('membernonanggota.membership-profile.edit')
+                ->with('error', 'Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.');
         }
 
         $loker = $this->activeLokerQuery()
@@ -204,9 +209,12 @@ class LokerController extends Controller
 
     public function submitApplication(Request $request, int $id)
     {
-        if (! $this->hasActiveIndividualMembership($request->user())) {
-            return redirect()->route('dash-beranda.index')
-                ->with('error', 'Fitur lamaran hanya tersedia untuk member perorangan aktif.');
+        $user = $request->user();
+        $isMember = $this->hasActiveIndividualMembership($user);
+
+        if (! $isMember && $this->applicationQuota->hasReachedLimit($user->id)) {
+            return redirect()->route('membernonanggota.membership-profile.edit')
+                ->with('error', 'Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.');
         }
 
         $loker = $this->activeLokerQuery()
@@ -244,18 +252,27 @@ class LokerController extends Controller
         // }
 
         // Simpan Lamaran Baru
-        DB::transaction(function () use ($request, $loker, $masterCv) {
-            $jobApplicationCv = $masterCv->replicate();
-            $jobApplicationCv->job_id = $loker->id;
-            $jobApplicationCv->is_cv_ats = null;
-            $jobApplicationCv->save();
+        try {
+            DB::transaction(function () use ($request, $loker, $masterCv, $isMember) {
+                if (! $isMember && $this->applicationQuota->hasReachedLimit($request->user()->id)) {
+                    throw new \DomainException('Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.');
+                }
 
-            LokerApply::create([
-                'loker_id' => $loker->id,
-                'user_id' => $request->user()->id,
-                'status' => 0,
-            ]);
-        });
+                $jobApplicationCv = $masterCv->replicate();
+                $jobApplicationCv->job_id = $loker->id;
+                $jobApplicationCv->is_cv_ats = null;
+                $jobApplicationCv->save();
+
+                LokerApply::create([
+                    'loker_id' => $loker->id,
+                    'user_id' => $request->user()->id,
+                    'status' => 0,
+                ]);
+            });
+        } catch (\DomainException $exception) {
+            return redirect()->route('membernonanggota.membership-profile.edit')
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()->route('membernonanggota.loker.history')
             ->with('success', 'Lamaran Anda berhasil dikirim');
@@ -263,11 +280,6 @@ class LokerController extends Controller
 
     public function history(Request $request)
     {
-        if (! $this->hasActiveIndividualMembership($request->user())) {
-            return redirect()->route('dash-beranda.index')
-                ->with('error', 'Riwayat lamaran hanya tersedia untuk member perorangan aktif.');
-        }
-
         $applications = LokerApply::query()
             ->with('loker')
             ->where('user_id', $request->user()->id)
@@ -299,9 +311,9 @@ class LokerController extends Controller
     {
         if ($filters['q'] !== '') {
             $query->where(function (Builder $searchQuery) use ($filters) {
-                $searchQuery->where('loker.title', 'like', '%'.$filters['q'].'%')
-                    ->orWhere('loker.nama', 'like', '%'.$filters['q'].'%')
-                    ->orWhere('perusahaan_models.nama', 'like', '%'.$filters['q'].'%');
+                $searchQuery->where('loker.title', 'like', '%' . $filters['q'] . '%')
+                    ->orWhere('loker.nama', 'like', '%' . $filters['q'] . '%')
+                    ->orWhere('perusahaan_models.nama', 'like', '%' . $filters['q'] . '%');
             });
         }
 
@@ -398,7 +410,7 @@ class LokerController extends Controller
         }
 
         return DB::table('kota')
-            ->when($provinceId !== '', fn ($query) => $query->where('provinsi_id', $provinceId))
+            ->when($provinceId !== '', fn($query) => $query->where('provinsi_id', $provinceId))
             ->where('id', $cityId)
             ->value('name');
     }
@@ -411,11 +423,11 @@ class LokerController extends Controller
 
                 return is_array($decoded) ? $decoded : Arr::wrap($value);
             })
-            ->filter(fn ($value) => $value !== null && $value !== '')
-            ->map(fn ($value) => (string) $value)
+            ->filter(fn($value) => $value !== null && $value !== '')
+            ->map(fn($value) => (string) $value)
             ->unique()
             ->sort()
-            ->mapWithKeys(fn ($value) => [$value => $this->formatOptionLabel($value)])
+            ->mapWithKeys(fn($value) => [$value => $this->formatOptionLabel($value)])
             ->all();
     }
 

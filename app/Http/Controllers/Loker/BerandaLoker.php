@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Loker;
 
 use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
+use App\Models\DataPayment;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
+use App\Models\UserProfileModel;
+use App\Services\LokerApplicationQuota;
 use App\Support\AdminPanel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -247,6 +250,23 @@ class BerandaLoker extends Controller
 
     public function apply(Request $request)
     {
+        $profile = UserProfileModel::where('user_id', Auth::user()->id)->first();
+        $isActiveIndividualMember = $profile
+            && (int) $profile->tipe_membership === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
+            && (int) $profile->status_membership === DataPayment::STATUS_PAID
+            && (! $profile->masa_aktif_membership || Carbon::parse($profile->masa_aktif_membership)->endOfDay()->isFuture());
+
+        if (! $isActiveIndividualMember && app(LokerApplicationQuota::class)->hasReachedLimit(Auth::user()->id)) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.',
+                ]);
+            }
+
+            return Redirect::back()->with('info', 'Batas lima lamaran untuk akun non-member sudah tercapai. Silakan menjadi member untuk melamar lagi.');
+        }
+
         $limit = GlobalHelper::getlimitlokermember();
         $count = GlobalHelper::countApplyByUserId(null);
         if ($limit['status']) {

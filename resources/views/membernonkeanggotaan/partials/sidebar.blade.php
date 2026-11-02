@@ -79,6 +79,16 @@
             'has_submenu' => false,
             'section' => 'Pembelajaran',
         ],
+
+        [
+            'label' => 'Buat CV ATS',
+            'icon' => 'cv',
+            'url' => route('membernonanggota.cv-ats.index'),
+            'active' => request()->routeIs('membernonanggota.cv-ats.*'),
+            'can_see' => true,
+            'has_submenu' => false,
+            'section' => 'Karier',
+        ],
         [
             'label' => 'Loker',
             'icon' => 'loker',
@@ -170,15 +180,6 @@
             ],
         ],
         \App\Models\DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL => [
-            [
-                'label' => 'Buat CV ATS',
-                'icon' => 'cv',
-                'url' => route('membernonanggota.cv-ats.index'),
-                'active' => request()->routeIs('membernonanggota.cv-ats.*'),
-                'can_see' => true,
-                'has_submenu' => false,
-                'section' => 'Karier',
-            ],
             [
                 'label' => 'Konsultasi',
                 'icon' => 'konsultasi',

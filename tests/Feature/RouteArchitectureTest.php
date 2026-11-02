@@ -99,6 +99,46 @@ class RouteArchitectureTest extends TestCase
         $this->assertContains('mobile.role:4,5', Route::getRoutes()->getByName('api.v1.organization.users.index')->middleware());
     }
 
+    public function test_non_members_can_reach_job_application_prerequisites_and_endpoints(): void
+    {
+        foreach ([
+            'membernonanggota.cv-ats.create',
+            'membernonanggota.loker.history',
+            'membernonanggota.loker.apply.store',
+            'api.v1.profile.cv.store',
+            'api.v1.member.jobs.applications.index',
+            'api.v1.member.jobs.apply',
+        ] as $name) {
+            $route = Route::getRoutes()->getByName($name);
+
+            $this->assertNotNull($route, $name.' route is missing');
+            $this->assertNotContains('membership.type:individual', $route->gatherMiddleware(), $name.' must allow non-members');
+            $this->assertNotContains('mobile.membership:individual', $route->gatherMiddleware(), $name.' must allow non-members');
+        }
+
+        $this->assertSame(5, config('app.loker_non_membership_application_limit'));
+    }
+
+    public function test_job_detail_is_public_but_applying_requires_login(): void
+    {
+        $detail = Route::getRoutes()->getByName('membernonanggota.loker.show');
+        $applyPreview = Route::getRoutes()->getByName('membernonanggota.loker.apply');
+        $applyStore = Route::getRoutes()->getByName('membernonanggota.loker.apply.store');
+
+        $this->assertNotNull($detail);
+        $this->assertNotContains('auth', $detail->gatherMiddleware());
+
+        foreach ([$applyPreview, $applyStore] as $route) {
+            $this->assertNotNull($route);
+            $this->assertContains('auth', $route->gatherMiddleware());
+            $this->assertContains('role:2', $route->gatherMiddleware());
+        }
+
+        $this->assertContains('auth', Route::getRoutes()->match(
+            \Illuminate\Http\Request::create('/loker/apply', 'POST')
+        )->gatherMiddleware());
+    }
+
     public function test_compact_layout_and_dashboard_views_remain_available(): void
     {
         $this->assertTrue(View::exists('layouts.compact'));

@@ -10,7 +10,14 @@
     <meta content="@yield('page-title', 'Bankir Academy — Learning, Talent &amp; Banking Solutions')" property="og:title" />
     <meta content="@yield('page-description', 'Membangun kompetensi, menghubungkan talenta, dan menghadirkan solusi terapan bagi ekosistem perbankan.')" property="og:description" />
     <meta content="website" property="og:type" />
-    <meta content="https://www.bankiracademy.co.id/" property="og:url" />
+    <meta content="@yield('page-url', url()->current())" property="og:url" />
+    <meta content="@yield('page-image', asset('bankir-academy-icon.png'))" property="og:image" />
+    <meta content="@yield('page-image-alt', 'Bankir Academy')" property="og:image:alt" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <meta content="@yield('page-title', 'Bankir Academy — Learning, Talent &amp; Banking Solutions')" name="twitter:title" />
+    <meta content="@yield('page-description', 'Membangun kompetensi, menghubungkan talenta, dan menghadirkan solusi terapan bagi ekosistem perbankan.')" name="twitter:description" />
+    <meta content="@yield('page-image', asset('bankir-academy-icon.png'))" name="twitter:image" />
+    <link rel="canonical" href="@yield('page-url', url()->current())" />
     <title>@yield('page-title', 'Bankir Academy — Learning, Talent &amp; Banking Solutions')</title>
     <!-- Favicon SVG: logo B Bankir Academy, tetap tajam di semua resolusi -->
     <link href='{{ asset('bankir-academy-icon.png') }}' rel="icon" type="image/svg+xml" />
