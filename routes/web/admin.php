@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ClassesController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\ExamController as AdminExamController;
 use App\Http\Controllers\Admin\InstructorController as AdminInstructorController;
 use App\Http\Controllers\Admin\LokerApplicationController;
 use App\Http\Controllers\Admin\LokerController as AdminLokerController;
@@ -26,6 +27,13 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::resource('/admin/classes', ClassesController::class)
         ->except(['show'])
         ->middleware('admin.panel');
+    Route::get('/admin/exams/{exam}/results', [AdminExamController::class, 'results'])
+        ->middleware('admin.panel')
+        ->name('admin.exams.results');
+    Route::resource('/admin/exams', AdminExamController::class)
+        ->except(['show'])
+        ->middleware('admin.panel')
+        ->names('admin.exams');
     Route::post('/admin/classes/setadditional', [ClassesController::class, 'setadditional'])->middleware('admin.panel');
     Route::post('/admin/classes/setpricing', [ClassesController::class, 'setpricing'])->middleware('admin.panel');
     Route::post('/admin/classes/setcontent', [ClassesController::class, 'setcontent'])->middleware('admin.panel');

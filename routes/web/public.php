@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ClassesController;
 use App\Http\Controllers\ArticleGeneratorController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\Front\BankPageController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\PagesController;
@@ -69,6 +70,16 @@ Route::post('/kelas/{slug}/checkout', [BankPageController::class, 'checkout'])
     ->name('frontend.class.checkout');
 Route::get('/kelas/{slug}', [BankPageController::class, 'classPage'])
     ->name('frontend.class.detail');
+Route::get('/exam/{token}/selesai', [ExamController::class, 'thanks'])
+    ->where('token', '[A-Za-z0-9]+')
+    ->name('exam.thanks');
+Route::get('/exam/{token}', [ExamController::class, 'show'])
+    ->where('token', '[A-Za-z0-9]+')
+    ->name('exam.show');
+Route::post('/exam/{token}', [ExamController::class, 'submit'])
+    ->where('token', '[A-Za-z0-9]+')
+    ->middleware('throttle:10,1')
+    ->name('exam.submit');
 // Class
 Route::get('/list-class', [ClassesController::class, 'listClass'])->name('frontend.classes.index');
 Route::post('/list-class', [ClassesController::class, 'findClass']);

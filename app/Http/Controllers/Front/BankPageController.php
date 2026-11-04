@@ -70,7 +70,10 @@ class BankPageController
         $class = ClassesModel::query()
             ->where('slug', $slug)
             ->where('status', 1)
-            ->with('pricingData')
+            ->with([
+                'pricingData',
+                'exams' => fn ($query) => $query->where('status', true)->latest(),
+            ])
             ->firstOrFail();
         $relatedClasses = ClassesModel::query()
             ->landingVisible($now)

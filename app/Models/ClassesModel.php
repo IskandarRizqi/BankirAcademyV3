@@ -74,6 +74,11 @@ class ClassesModel extends Model
         return $this->hasMany(ClassEventModel::class, 'class_id');
     }
 
+    public function exams(): HasMany
+    {
+        return $this->hasMany(ClassExamModel::class, 'class_id');
+    }
+
     public function pricingData(): HasOne
     {
         return $this->hasOne(ClassPricingModel::class, 'class_id');

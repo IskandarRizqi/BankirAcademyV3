@@ -64,6 +64,12 @@
         <span>Daftar Kelas</span>
     </a>
 
+    <a href="{{ route('admin.exams.index') }}"
+        class="nav-item-link {{ request()->routeIs('admin.exams.*') ? 'active' : '' }}">
+        <span class="nav-icon">{!! $icons['file'] !!}</span>
+        <span>Exam Kelas</span>
+    </a>
+
     <a href="{{ route('admin.manual-class-orders.index') }}"
         class="nav-item-link {{ request()->routeIs('admin.manual-class-orders.*') ? 'active' : '' }}">
         <span class="nav-icon">{!! $icons['list'] !!}</span>

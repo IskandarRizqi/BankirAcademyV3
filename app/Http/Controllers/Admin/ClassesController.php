@@ -37,7 +37,7 @@ class ClassesController extends Controller
         $data['param']['date_end'] = ($r->param_date_end) ? $r->param_date_end : Carbon::now()->addmonth()->format('Y-m-d');
         $data['param']['category'] = ($r->param_category) ? $r->param_category : null;
         $data['classes'] = ClassesModel::select('classes.*', 'biaya_sertifikat.type as tipebs', 'biaya_sertifikat.nominal')
-            ->with('classEvents')
+            ->with(['classEvents', 'exams'])
             ->where(function ($q) use ($data) {
                 // $q->where('date_start', '>=', $data['param']['date_start'])->orWhereNull('date_start');
                 $q->whereBetween('date_start', [$data['param']['date_start'], $data['param']['date_end']])->orWhereBetween('date_end', [$data['param']['date_start'], $data['param']['date_end']])->orWhereNull('date_start');

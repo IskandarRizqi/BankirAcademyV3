@@ -64,13 +64,22 @@
                     @endif
                 </div> --}}
 
-                <div class="hero-actions">
-                    <a class="btn btn-primary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">
-                        {{ $isUpcoming ? 'Lihat Jadwal Kelas' : 'Mulai Belajar →' }}
-                    </a>
-                    <a class="btn btn-outline" href="{{ route('frontend.classes.index') }}">Kembali ke Katalog</a>
-                </div>
-            </div>
+                 <div class="hero-actions">
+                     <a class="btn btn-primary" href="{{ auth()->check() ? $eventDetailUrl : $loginUrl }}">
+                         {{ $isUpcoming ? 'Lihat Jadwal Kelas' : 'Mulai Belajar →' }}
+                     </a>
+                     <a class="btn btn-outline" href="{{ route('frontend.classes.index') }}">Kembali ke Katalog</a>
+                 </div>
+                 @if($class->exams->isNotEmpty())
+                     <div style="margin-top:18px;padding:14px 16px;border:1px solid #dbe4ff;border-radius:12px;background:#f4f7ff;">
+                         <strong style="display:block;margin-bottom:5px;">Exam untuk kelas ini tersedia</strong>
+                         <span style="display:block;margin-bottom:10px;color:#657086;font-size:13px;">Anda dapat mengerjakan exam tanpa login. Nilai akan direkap oleh admin.</span>
+                         @foreach($class->exams as $exam)
+                             <a class="btn btn-outline" style="margin:3px 6px 3px 0;" href="{{ route('exam.show', $exam->public_token) }}">{{ $exam->title }} -&gt;</a>
+                         @endforeach
+                     </div>
+                 @endif
+             </div>
 
             <div class="preview-card">
                 <img class="class-banner-image" src="{{ asset($class->image) }}" alt="Banner {{ $class->title }}">

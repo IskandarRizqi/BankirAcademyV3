@@ -580,11 +580,16 @@
                                                 title="File Content" onclick="classContent({{ $v }})">
                                                 <i class="bx bx-file"></i>
                                             </button>
-                                            <a class="btn {{ $v->events_exist ? 'btn-primary' : 'btn-outline-secondary' }} bs-tooltip"
-                                                title="Event Schedule"
-                                                href="/admin/classes/createevent/{{ $v->id }}">
-                                                <i class="bx bx-calendar"></i>
-                                            </a>
+                                             <a class="btn {{ $v->events_exist ? 'btn-primary' : 'btn-outline-secondary' }} bs-tooltip"
+                                                 title="Event Schedule"
+                                                 href="/admin/classes/createevent/{{ $v->id }}">
+                                                 <i class="bx bx-calendar"></i>
+                                             </a>
+                                             <a class="btn {{ count($v->exams) > 0 ? 'btn-success' : 'btn-outline-secondary' }} bs-tooltip"
+                                                 title="Exam Kelas"
+                                                 href="{{ route('admin.exams.index', ['class_id' => $v->id]) }}">
+                                                 <i class="bx bx-help-circle"></i>
+                                             </a>
                                             <div class="btn-group btn-group-sm" role="group">
                                                 <button
                                                     class="btn {{ $v->certif_exist ? 'btn-warning text-white' : 'btn-outline-secondary' }} dropdown-toggle bs-tooltip"

@@ -35,6 +35,7 @@
         ->filter()
         ->take(4);
     $events = collect(data_get($class, 'event_list', []));
+    $exams = collect(data_get($class, 'exams', []));
     $instructors = collect(data_get($class, 'instructor_list', []));
     $shortDate = $classDate ? \Carbon\Carbon::parse($classDate)->translatedFormat('d M Y') : 'Tanggal diumumkan segera';
     $registrationDate = $startDate ? \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') : 'Terbuka';
@@ -417,6 +418,15 @@
                     </article>
                 @endforelse
             </div>
+            @if($exams->isNotEmpty())
+                <div style="margin-top:16px;padding:15px;border:1px solid var(--line);border-radius:15px;background:#fff;">
+                    <strong style="display:block;font-size:13px;">Exam kelas tersedia</strong>
+                    <span style="display:block;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.5;">Exam dapat diisi tanpa login. Hasilnya hanya dapat dilihat admin.</span>
+                    @foreach($exams as $exam)
+                        <a href="{{ route('exam.show', $exam->public_token) }}" style="display:inline-flex;margin:10px 6px 0 0;padding:9px 12px;border-radius:9px;background:var(--orange);color:#fff;font-size:11px;font-weight:700;">{{ $exam->title }} -&gt;</a>
+                    @endforeach
+                </div>
+            @endif
         </section>
 
         <section class="section" style="padding-top: 0">
