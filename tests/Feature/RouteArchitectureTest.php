@@ -121,12 +121,16 @@ class RouteArchitectureTest extends TestCase
 
     public function test_job_detail_is_public_but_applying_requires_login(): void
     {
+        $index = Route::getRoutes()->getByName('membernonanggota.loker.index');
         $detail = Route::getRoutes()->getByName('membernonanggota.loker.show');
         $applyPreview = Route::getRoutes()->getByName('membernonanggota.loker.apply');
         $applyStore = Route::getRoutes()->getByName('membernonanggota.loker.apply.store');
 
-        $this->assertNotNull($detail);
-        $this->assertNotContains('auth', $detail->gatherMiddleware());
+        foreach ([$index, $detail] as $route) {
+            $this->assertNotNull($route);
+            $this->assertNotContains('auth', $route->gatherMiddleware());
+            $this->assertNotContains('role:2', $route->gatherMiddleware());
+        }
 
         foreach ([$applyPreview, $applyStore] as $route) {
             $this->assertNotNull($route);

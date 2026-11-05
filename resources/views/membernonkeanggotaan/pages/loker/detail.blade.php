@@ -57,12 +57,16 @@
 
     <style>
         .loker-detail-page {
-            width: min(1180px, calc(100% - 32px));
+            width: min(1180px, calc(100% - 48px));
             margin: 0 auto;
-            padding: 36px 0 52px;
+            padding: 36px 0 72px;
             display: flex;
             flex-direction: column;
             gap: 22px;
+        }
+
+        .loker-detail-page--guest {
+            padding-top: 122px;
         }
 
         .loker-detail-back {
@@ -439,9 +443,18 @@
         }
 
         @media (max-width: 575.98px) {
+            .loker-detail-page--guest {
+                padding-top: 108px;
+                padding-bottom: 56px;
+            }
+
             .loker-detail-page {
-                width: min(100% - 24px, 1180px);
+                width: min(100% - 32px, 1180px);
                 padding-top: 24px;
+            }
+
+            .loker-detail-page.loker-detail-page--guest {
+                padding-top: 108px;
             }
 
             .loker-detail-heading {
@@ -460,8 +473,8 @@
         }
     </style>
 
-    <div class="loker-detail-page">
-        <a class="loker-detail-back" href="{{ auth()->check() ? route('membernonanggota.loker.index') : route('frontend.home') }}">
+    <div class="loker-detail-page {{ auth()->guest() ? 'loker-detail-page--guest' : '' }}">
+        <a class="loker-detail-back" href="{{ route('membernonanggota.loker.index') }}">
             <i class="fas fa-arrow-left" aria-hidden="true"></i>
             Kembali ke daftar loker
         </a>

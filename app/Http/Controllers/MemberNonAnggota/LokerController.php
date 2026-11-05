@@ -28,19 +28,14 @@ class LokerController extends Controller
         $filters = $this->filters($request);
         $query = $this->activeLokerQuery();
         $this->applyFilters($query, $filters);
-        $isMember = $this->hasActiveMembership($request->user());
-        $limit = (int) config('app.loker_non_membership_limit', 10);
+        $user = $request->user();
+        $isMember = $user && $this->hasActiveMembership($user);
 
         $this->applyOrdering($query);
 
-        $lokers = $isMember
-            ? $query->paginate(self::PAGE_SIZE)->withQueryString()
-            : $query->limit(max(0, $limit))->get();
-        $lokerSkeletonCount = ! $isMember && $limit > 0 && $lokers->count() === $limit
-            ? (3 - ($lokers->count() % 3)) % 3
-            : 0;
+        $lokers = $query->paginate(self::PAGE_SIZE)->withQueryString();
 
-        if ($isMember && $request->ajax()) {
+        if ($request->ajax()) {
             return response()->json([
                 'html' => view('membernonkeanggotaan.components.ui.loker-card-items', [
                     'lokers' => $lokers,
@@ -50,7 +45,9 @@ class LokerController extends Controller
             ]);
         }
 
-        $membershipProfile = UserProfileModel::where('user_id', $request->user()->id)->first();
+        $membershipProfile = $user
+            ? UserProfileModel::where('user_id', $user->id)->first()
+            : null;
         $membershipProvinces = DB::table('provinsi')->select(['id', 'name'])->orderBy('name')->get();
         $membershipLocations = [
             'cities' => $membershipProfile?->provinsi_id
@@ -72,8 +69,7 @@ class LokerController extends Controller
             'selectedProvinceName' => $this->provinceName($filters['provinsi']),
             'selectedCityName' => $this->cityName($filters['kabupaten'], $filters['provinsi']),
             'isMember' => $isMember,
-            'nonMembershipLimit' => $limit,
-            'lokerSkeletonCount' => $lokerSkeletonCount,
+            'applicationLimit' => $this->applicationQuota->limit(),
             'membershipProfile' => $membershipProfile,
             'membershipProvinces' => $membershipProvinces,
             'membershipLocations' => $membershipLocations,
@@ -116,20 +112,10 @@ class LokerController extends Controller
     public function show(Request $request, int $id)
     {
         $user = $request->user();
-        $isMember = $user && $this->hasActiveMembership($user);
-        $nonMemberIds = ! $user || $isMember ? collect() : $this->nonMemberLokerIds();
         $query = $this->activeLokerQuery()->where('loker.id', $id);
-
-        if ($user && ! $isMember) {
-            $query->whereIn('loker.id', $nonMemberIds);
-        }
 
         $loker = $query->firstOrFail();
         $relatedQuery = $this->activeLokerQuery()->where('loker.id', '!=', $loker->id);
-
-        if ($user && ! $isMember) {
-            $relatedQuery->whereIn('loker.id', $nonMemberIds);
-        }
 
         if ($loker->perusahaan_id) {
             $relatedQuery->where('loker.perusahaan_id', $loker->perusahaan_id);
@@ -436,8 +422,12 @@ class LokerController extends Controller
         return ucwords(strtolower(str_replace(['_', '-'], ' ', $value)));
     }
 
-    private function hasActiveMembership(User $user): bool
+    private function hasActiveMembership(?User $user): bool
     {
+        if (! $user) {
+            return false;
+        }
+
         $profile = $user->profile;
 
         if (! $profile || (int) $profile->status_membership !== DataPayment::STATUS_PAID) {
@@ -448,8 +438,12 @@ class LokerController extends Controller
             || Carbon::parse($profile->masa_aktif_membership)->endOfDay()->isFuture();
     }
 
-    private function hasActiveIndividualMembership(User $user): bool
+    private function hasActiveIndividualMembership(?User $user): bool
     {
+        if (! $user) {
+            return false;
+        }
+
         $profile = $user->profile;
 
         return $profile
@@ -457,13 +451,4 @@ class LokerController extends Controller
             && $this->hasActiveMembership($user);
     }
 
-    private function nonMemberLokerIds(): Collection
-    {
-        $limit = max(0, (int) config('app.loker_non_membership_limit', 10));
-        $query = $this->activeLokerQuery();
-
-        $this->applyOrdering($query);
-
-        return $query->limit($limit)->pluck('loker.id');
-    }
 }

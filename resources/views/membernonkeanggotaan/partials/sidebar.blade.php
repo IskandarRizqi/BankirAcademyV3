@@ -94,7 +94,7 @@
             'icon' => 'loker',
             'url' => route('membernonanggota.loker.index'),
             'active' => request()->routeIs('membernonanggota.loker.index', 'membernonanggota.loker.show'),
-            'can_see' => (int) $role === 2,
+            'can_see' => true,
             'has_submenu' => false,
             'section' => 'Karier',
         ],

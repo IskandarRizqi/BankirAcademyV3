@@ -1,6 +1,150 @@
 @extends('layouts.compact')
 
 @section('content')
+    <style>
+        #modalLoker .modal-dialog {
+            max-width: 1120px;
+        }
+
+        #modalLoker .modal-content {
+            overflow: hidden;
+            border: 0;
+            border-radius: 14px;
+        }
+
+        #modalLoker .modal-header,
+        #modalLoker .modal-footer {
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-color: #e5e7eb;
+        }
+
+        #modalLoker .modal-body {
+            max-height: calc(100vh - 210px);
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        #modalLoker .modal-body > .row {
+            display: grid;
+            grid-template-areas:
+                "company company company company company company title title title title title title"
+                "salary salary salary salary banner banner banner banner banner banner banner banner"
+                "start start start start end end end end status status status status"
+                "skill skill skill skill skill skill type type type type type type"
+                "description description description description description description jobdesk jobdesk jobdesk jobdesk jobdesk jobdesk";
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 18px 16px;
+            margin: 0;
+        }
+
+        #modalLoker .modal-body > .row > [class*="col-"] {
+            width: auto;
+            max-width: none;
+            padding: 0;
+            margin: 0 !important;
+        }
+
+        #modalLoker .modal-body > .row > input[type="hidden"] {
+            display: none;
+        }
+
+        #modalLoker .loker-field-company { grid-area: company; }
+        #modalLoker .loker-field-title { grid-area: title; }
+        #modalLoker .loker-field-salary { grid-area: salary; }
+        #modalLoker .loker-field-banner { grid-area: banner; }
+        #modalLoker .loker-field-start { grid-area: start; }
+        #modalLoker .loker-field-end { grid-area: end; }
+        #modalLoker .loker-field-status { grid-area: status; }
+        #modalLoker .loker-field-skill { grid-area: skill; }
+        #modalLoker .loker-field-type { grid-area: type; }
+        #modalLoker .loker-field-description { grid-area: description; }
+        #modalLoker .loker-field-jobdesk { grid-area: jobdesk; }
+
+        #modalLoker .form-group {
+            height: 100%;
+            margin-bottom: 0;
+        }
+
+        #modalLoker label {
+            display: block;
+            margin-bottom: 7px;
+            color: #374151;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        #modalLoker .form-control,
+        #modalLoker .select2-container--default .select2-selection--single,
+        #modalLoker .select2-container--default .select2-selection--multiple {
+            min-height: 42px;
+            border-color: #d1d5db;
+            border-radius: 8px;
+        }
+
+        #modalLoker .select2-container {
+            width: 100% !important;
+        }
+
+        #modalLoker .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px;
+        }
+
+        #modalLoker .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 8px;
+        }
+
+        #modalLoker .select2-container--default .select2-selection--multiple {
+            min-height: 42px;
+            padding: 4px 6px;
+        }
+
+        #modalLoker .cke {
+            min-height: 220px;
+            overflow: hidden;
+            border-color: #d1d5db;
+            border-radius: 8px;
+        }
+
+        #modalLoker .loker-image-upload {
+            min-height: 172px;
+            padding: 14px;
+            border: 1px dashed #c7d2fe;
+            border-radius: 10px;
+            background: #f8faff;
+        }
+
+        #modalLoker .loker-image-upload .form-control-file {
+            width: 100%;
+            padding: 8px 0;
+        }
+
+        #modalLoker #loker_image_preview {
+            display: block;
+            max-width: 100%;
+            max-height: 112px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 767.98px) {
+            #modalLoker .modal-body {
+                padding: 16px;
+            }
+
+            #modalLoker .modal-body > .row {
+                display: flex;
+                gap: 0;
+            }
+
+            #modalLoker .modal-body > .row > [class*="col-"] {
+                width: 100%;
+                flex: 0 0 100%;
+                margin-bottom: 16px !important;
+            }
+        }
+    </style>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -55,7 +199,7 @@
                         <input type="hidden" name="loker_id" id="loker_id">
 
                         <div class="row">
-                            <div class="col-lg-4 mb-3">
+                            <div class="col-lg-4 mb-3 loker-field-company">
                                 <div class="form-group">
                                     <label for="perusahaan_id">Perusahaan <span class="text-danger">*</span></label>
                                     <select name="perusahaan_id" id="perusahaan_id" class="form-control select2"
@@ -70,7 +214,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 mb-3">
+                            <div class="col-lg-4 mb-3 loker-field-title">
                                 <div class="form-group">
                                     <label for="loker_title">Judul Loker <span class="text-danger">*</span></label>
                                     <input type="text" name="loker_title" id="loker_title" class="form-control"
@@ -78,7 +222,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 mb-3">
+                            <div class="col-lg-4 mb-3 loker-field-salary">
                                 <div class="form-group">
                                     <label for="loker_gaji_min">Minimal Gaji</label>
                                     <input type="text" name="loker_gaji_min" id="loker_gaji_min" class="form-control"
@@ -86,23 +230,36 @@
                                 </div>
                             </div>
 
+                            <div class="col-lg-4 mb-3 loker-field-banner">
+                                <div class="form-group">
+                                    <label for="filClassesImage">Banner Loker</label>
+                                    <input type="file" name="filClassesImage" id="filClassesImage" class="form-control-file"
+                                        accept="image/jpeg,image/png,image/webp">
+                                    <small class="form-text text-muted">JPG, PNG, atau WEBP. Maksimal 1 MB.</small>
+                                    <div id="loker_image_preview_wrapper" class="mt-2" style="display: none;">
+                                        <img id="loker_image_preview" src="" alt="Preview banner loker"
+                                            class="img-thumbnail" style="max-width: 220px; max-height: 120px; object-fit: contain;">
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden" name="loker_gaji_max" id="loker_gaji_max">
 
-                            <div class="col-lg-6 mb-3">
+                            <div class="col-lg-6 mb-3 loker-field-description">
                                 <div class="form-group">
                                     <label for="loker_deskripsi">Deskripsi</label>
                                     <textarea name="loker_deskripsi" id="loker_deskripsi" cols="30" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 mb-3">
+                            <div class="col-lg-6 mb-3 loker-field-jobdesk">
                                 <div class="form-group">
                                     <label for="loker_jobdesk">Jobdesk</label>
                                     <textarea name="loker_jobdesk" id="loker_jobdesk" cols="30" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
 
-                            <div class="col-lg-3 mb-3">
+                            <div class="col-lg-3 mb-3 loker-field-start">
                                 <div class="form-group">
                                     <label for="loker_tanggal_awal">Tanggal Awal <span class="text-danger">*</span></label>
                                     <input type="date" name="loker_tanggal_awal" id="loker_tanggal_awal"
@@ -110,7 +267,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-3 mb-3">
+                            <div class="col-lg-3 mb-3 loker-field-end">
                                 <div class="form-group">
                                     <label for="loker_tanggal_akhir">Tanggal Akhir <span
                                             class="text-danger">*</span></label>
@@ -119,7 +276,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 mb-3">
+                            <div class="col-lg-2 mb-3 loker-field-skill">
                                 <div class="form-group">
                                     <label for="loker_skill">Skill</label>
                                     <select name="loker_skill[]" id="loker_skill" class="form-control select2" multiple
@@ -133,7 +290,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 mb-3">
+                            <div class="col-lg-2 mb-3 loker-field-type">
                                 <div class="form-group">
                                     <label for="loker_type">Tipe Kerjaan</label>
                                     <select name="loker_type[]" id="loker_type" class="form-control select2" multiple
@@ -147,7 +304,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 mb-3">
+                            <div class="col-lg-2 mb-3 loker-field-status">
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
                                     <select name="status" id="status" class="form-control" required>
@@ -171,8 +328,12 @@
 
 @section('custom-js')
     <script>
-        var loker_deskripsi = CKEDITOR.replace("loker_deskripsi");
-        var loker_jobdesk = CKEDITOR.replace("loker_jobdesk");
+        var loker_deskripsi = CKEDITOR.replace("loker_deskripsi", {
+            height: 220
+        });
+        var loker_jobdesk = CKEDITOR.replace("loker_jobdesk", {
+            height: 220
+        });
 
         $(document).ready(function() {
             gawetable();
@@ -248,6 +409,9 @@
             $('#loker_gaji_max').val('');
             $('#loker_tanggal_awal').val('');
             $('#loker_tanggal_akhir').val('');
+            $('#filClassesImage').val('');
+            $('#loker_image_preview').attr('src', '');
+            $('#loker_image_preview_wrapper').hide();
 
             if (typeof loker_deskripsi !== 'undefined') loker_deskripsi.setData('');
             if (typeof loker_jobdesk !== 'undefined') loker_jobdesk.setData('');
@@ -257,6 +421,52 @@
             $('#perusahaan_id').val('').trigger('change');
             $('#status').val('');
         }
+
+        function showLokerImage(image) {
+            if (!image) {
+                $('#loker_image_preview').attr('src', '');
+                $('#loker_image_preview_wrapper').hide();
+                return;
+            }
+
+            var parsedImage = image;
+            if (typeof image === 'string') {
+                try {
+                    parsedImage = JSON.parse(image);
+                } catch (e) {
+                    parsedImage = image;
+                }
+            }
+
+            var imagePath = typeof parsedImage === 'object' && parsedImage !== null
+                ? parsedImage.url
+                : parsedImage;
+
+            if (!imagePath) {
+                $('#loker_image_preview_wrapper').hide();
+                return;
+            }
+
+            var normalizedPath = String(imagePath).replace(/^\/+/, '');
+            var imageUrl = /^https?:\/\//i.test(String(imagePath))
+                ? imagePath
+                : /^image\/loker\//i.test(normalizedPath)
+                    ? '/' + normalizedPath
+                    : '{{ asset('image/loker') }}/' + normalizedPath;
+
+            $('#loker_image_preview').attr('src', imageUrl);
+            $('#loker_image_preview_wrapper').show();
+        }
+
+        $('#filClassesImage').on('change', function() {
+            var file = this.files && this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            showLokerImage(URL.createObjectURL(file));
+        });
 
         function tambahLoker() {
             kosong();
@@ -306,6 +516,8 @@
                     if (data.perusahaan_id) {
                         $('#perusahaan_id').val(data.perusahaan_id).trigger('change');
                     }
+
+                    showLokerImage(data.image);
 
                     $('#modalLoker').modal('show');
                 }

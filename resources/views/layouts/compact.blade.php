@@ -312,6 +312,7 @@
     <script src="{{ asset('Backend/plugins/file-upload/file-upload-with-preview.min.js') }}"></script>
     <script src="{{ asset('Backend/plugins/ckeditor/ckeditor.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @include('sweetalert::alert')
 
     <script>
         // Sidebar toggle (desktop collapses content, mobile slides drawer)

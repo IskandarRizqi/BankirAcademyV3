@@ -1,6 +1,7 @@
-@extends('layouts.appmembernonanggota')
+@extends(auth()->check() ? 'layouts.appmembernonanggota' : 'layouts.appfrontend')
 
 @section('title', 'Lowongan Kerja')
+@section('page-title', 'Lowongan Kerja | Bankir Academy')
 
 @section('content')
     <style>
@@ -8,6 +9,16 @@
             display: flex;
             flex-direction: column;
             gap: 22px;
+        }
+
+        .loker-page--guest {
+            width: min(1180px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 132px 0 80px;
+        }
+
+        .loker-page--guest .loker-filter-card {
+            top: 100px;
         }
 
         .loker-hero {
@@ -58,6 +69,7 @@
 
         .loker-hero__title {
             margin: 0;
+            color: #ffffff;
             font-size: clamp(28px, 4vw, 46px);
             font-weight: 900;
             letter-spacing: -.05em;
@@ -408,6 +420,12 @@
         }
 
         @media (max-width: 767.98px) {
+            .loker-page--guest {
+                width: min(100% - 32px, 1180px);
+                padding-top: 108px;
+                padding-bottom: 56px;
+            }
+
             .loker-layout {
                 grid-template-columns: 1fr;
             }
@@ -459,7 +477,7 @@
         }
     </style>
 
-    <div class="loker-page">
+    <div class="loker-page {{ auth()->guest() ? 'loker-page--guest' : '' }}">
         <section class="loker-hero" aria-labelledby="loker-page-title">
             <div class="loker-hero__content">
                 <span class="loker-hero__eyebrow">
@@ -547,13 +565,6 @@
                         <p>{{ $isMember ? 'Akses lowongan aktif dari perusahaan mitra.' : 'Peluang pilihan untuk memulai perjalanan karier Anda.' }}
                         </p>
                     </div>
-                    {{-- <span class="loker-result-count">
-                    @if ($isMember)
-                        {{ $lokers->total() }} lowongan
-                    @else
-                        {{ $lokers->count() }} dari {{ $nonMembershipLimit }} lowongan
-                    @endif
-                </span> --}}
                 </div>
 
                 @if ($lokers->count() > 0)
@@ -562,9 +573,6 @@
                             'lokers' => $lokers,
                         ])
 
-                        @for ($index = 0; $index < $lokerSkeletonCount; $index++)
-                            @include('membernonkeanggotaan.components.ui.loker-skeleton-card')
-                        @endfor
                     </div>
 
                     @if (method_exists($lokers, 'hasPages') && $lokers->hasPages())
@@ -588,45 +596,79 @@
         @if (!$isMember)
             <section class="loker-membership-cta" aria-labelledby="loker-membership-title">
                 <div>
-                    <p class="loker-membership-cta__eyebrow">Buka akses lebih luas</p>
-                    <h3 id="loker-membership-title">Ingin melihat lebih banyak peluang karier?</h3>
+                    <p class="loker-membership-cta__eyebrow">Siap melamar?</p>
+                    <h3 id="loker-membership-title">Buat langkah karier Anda berikutnya</h3>
                     <p>
-                        Non-member dapat melihat maksimal {{ $nonMembershipLimit }} lowongan. Bergabung sebagai member
-                        untuk mendapatkan akses lowongan yang lebih lengkap dan manfaat karier lainnya.
+                        Semua lowongan dapat dilihat tanpa login. Akun non-member dapat mengirim maksimal
+                        {{ $applicationLimit }} lamaran, sedangkan proses melamar memerlukan login terlebih dahulu.
                     </p>
                 </div>
                 <div class="loker-membership-cta__actions">
-                    <button type="button" class="loker-membership-cta__button loker-membership-cta__button--secondary"
-                        data-toggle="modal"
-                        data-target="{{ optional($membershipProfile ?? null)->canUpgradeToMembership() ? '#membershipPackageModal' : '#membershipProfileModal' }}"
-                        data-member-type="1">
-                        Member perusahaan
-                    </button>
-                    <button type="button" class="loker-membership-cta__button" data-toggle="modal"
-                        data-target="{{ optional($membershipProfile ?? null)->canUpgradeToMembership() ? '#membershipIndividualModal' : '#membershipProfileModal' }}"
-                        data-member-type="2">
-                        Member perorangan
-                    </button>
+                    @if (auth()->check())
+                        <button type="button" class="loker-membership-cta__button loker-membership-cta__button--secondary"
+                            data-toggle="modal"
+                            data-target="{{ optional($membershipProfile ?? null)->canUpgradeToMembership() ? '#membershipPackageModal' : '#membershipProfileModal' }}"
+                            data-member-type="1">
+                            Member perusahaan
+                        </button>
+                        <button type="button" class="loker-membership-cta__button" data-toggle="modal"
+                            data-target="{{ optional($membershipProfile ?? null)->canUpgradeToMembership() ? '#membershipIndividualModal' : '#membershipProfileModal' }}"
+                            data-member-type="2">
+                            Member perorangan
+                        </button>
+                    @else
+                        <a class="loker-membership-cta__button" href="{{ route('login.new', ['redirect' => request()->getRequestUri()]) }}">
+                            Login untuk melamar
+                        </a>
+                    @endif
                 </div>
             </section>
 
-            @include('membernonkeanggotaan.components.ui.membership-profile-modal')
-            @include('membernonkeanggotaan.components.ui.membership-package-modal')
-            @include('membernonkeanggotaan.components.ui.membership-individual-modal')
-            @include('membernonkeanggotaan.components.ui.membership-phone-verification-modal')
+            @if (auth()->check())
+                @include('membernonkeanggotaan.components.ui.membership-profile-modal')
+                @include('membernonkeanggotaan.components.ui.membership-package-modal')
+                @include('membernonkeanggotaan.components.ui.membership-individual-modal')
+                @include('membernonkeanggotaan.components.ui.membership-phone-verification-modal')
+            @endif
         @endif
     </div>
 @endsection
 
-@push('scripts')
+@push(auth()->check() ? 'scripts' : 'frontend-scripts')
     <script>
         (function() {
-            const provinceSelect = $('#loker-province');
-            const citySelect = $('#loker-city');
+            const provinceElement = document.getElementById('loker-province');
+            const cityElement = document.getElementById('loker-city');
 
-            if (!provinceSelect.length || !citySelect.length || typeof $.fn.select2 !== 'function') {
+            if (!provinceElement || !cityElement) {
                 return;
             }
+
+            if (typeof window.jQuery === 'undefined' || typeof window.jQuery.fn.select2 !== 'function') {
+                provinceElement.addEventListener('change', async function() {
+                    const provinceId = provinceElement.value;
+                    cityElement.disabled = !provinceId;
+                    cityElement.innerHTML = '<option value="">Semua kabupaten / kota</option>';
+
+                    if (!provinceId) {
+                        return;
+                    }
+
+                    const response = await fetch('{{ route('membernonanggota.loker.cities') }}?provinsi_id=' + encodeURIComponent(provinceId), {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const payload = await response.json();
+                    (payload.results || []).forEach(function(city) {
+                        const option = new Option(city.text, city.id);
+                        cityElement.add(option);
+                    });
+                });
+
+                return;
+            }
+
+            const provinceSelect = window.jQuery(provinceElement);
+            const citySelect = window.jQuery(cityElement);
 
             provinceSelect.select2({
                 width: '100%',

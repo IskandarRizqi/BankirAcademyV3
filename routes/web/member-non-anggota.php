@@ -34,6 +34,12 @@ Route::get('/member/loker/{id}', [LokerController::class, 'show'])
     ->whereNumber('id')
     ->name('membernonanggota.loker.show');
 
+Route::get('/member/loker', [LokerController::class, 'index'])
+    ->name('membernonanggota.loker.index');
+
+Route::get('/member/loker/cities', [LokerController::class, 'cities'])
+    ->name('membernonanggota.loker.cities');
+
 Route::middleware('auth')->group(function () {
     Route::resource('dash-beranda', ProfileController::class);
     Route::get('/event-kelas', [DataEventKelasController::class, 'dataeventkelas']);
@@ -102,10 +108,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/cetak', 'pdf')->name('pdf');
         });
     Route::middleware('role:2')->group(function () {
-        Route::get('/member/loker', [LokerController::class, 'index'])
-            ->name('membernonanggota.loker.index');
-        Route::get('/member/loker/cities', [LokerController::class, 'cities'])
-            ->name('membernonanggota.loker.cities');
         Route::get('/member/loker/riwayat', [LokerController::class, 'history'])
             ->name('membernonanggota.loker.history');
         Route::get('/member/loker/{id}/apply', [LokerController::class, 'applyPreview'])

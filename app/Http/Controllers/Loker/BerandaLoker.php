@@ -17,10 +17,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Throwable;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -403,6 +405,7 @@ class BerandaLoker extends Controller
             'loker_skill' => 'required',
             'loker_type' => 'required',
             'perusahaan_id' => 'required',
+            'filClassesImage' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:1024'],
         ]);
 
         if ($valid->fails()) {
@@ -436,23 +439,27 @@ class BerandaLoker extends Controller
             $data['user_id'] = Auth::user()->id;
         }
 
-        if ($request->filClassesImage) {
-            $namemeta_image = $request->file('filClassesImage')->getClientOriginalName();
-            $sizemeta_image = $request->file('filClassesImage')->getSize();
-            if ($sizemeta_image >= 1048576) {
-                return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
-            }
-            $filename2 = time() . '-' . $namemeta_image;
+        $currentLoker = $request->filled('loker_id')
+            ? LokerModel::find($request->loker_id)
+            : null;
+
+        if ($request->hasFile('filClassesImage')) {
             $file = $request->file('filClassesImage');
+            $imageSize = $file->getSize();
+            $filename2 = time() . '-' . Str::uuid() . '.' . $file->extension();
             $file->move(public_path('image/loker'), $filename2);
             $data['image'] = json_encode([
                 'url' => $filename2,
-                'size' => $sizemeta_image,
+                'size' => $imageSize,
             ]);
         }
 
         $l = LokerModel::updateOrCreate($val, $data);
         if ($l) {
+            if ($request->hasFile('filClassesImage') && $currentLoker) {
+                $this->deleteLocalLokerImage($currentLoker->image);
+            }
+
             $webhookResult = $this->sendApprovedLokerToN8n($l);
 
             if ($webhookResult === false) {
@@ -671,5 +678,21 @@ class BerandaLoker extends Controller
         }
 
         return Redirect::back()->with('info', 'Data Gagal Terhapus');
+    }
+
+    private function deleteLocalLokerImage(?string $image): void
+    {
+        $decoded = json_decode((string) $image, true);
+        $path = is_array($decoded) ? ($decoded['url'] ?? null) : $image;
+
+        if (! is_string($path) || $path === '' || Str::startsWith($path, ['http://', 'https://'])) {
+            return;
+        }
+
+        $localPath = public_path('image/loker/' . basename($path));
+
+        if (File::exists($localPath)) {
+            File::delete($localPath);
+        }
     }
 }
