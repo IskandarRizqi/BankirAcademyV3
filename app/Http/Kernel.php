@@ -9,13 +9,14 @@ use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\EnsureMembershipType;
 use App\Http\Middleware\EnsureMobileAccess;
-use App\Http\Middleware\EnsureMobileRole;
 use App\Http\Middleware\EnsureMobileMembershipType;
+use App\Http\Middleware\EnsureMobileRole;
 use App\Http\Middleware\EnsureSiswaIsVerified;
 use App\Http\Middleware\IsAdminRoot;
 use App\Http\Middleware\OnlyRoot;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\TrackVisitor;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\ValidateSignature;
@@ -106,5 +107,6 @@ class Kernel extends HttpKernel
         'mobile.membership' => EnsureMobileMembershipType::class,
         'is_root' => OnlyRoot::class,
         'admin.panel' => AdminPanelAccess::class,
+        'visitor' => TrackVisitor::class,
     ];
 }

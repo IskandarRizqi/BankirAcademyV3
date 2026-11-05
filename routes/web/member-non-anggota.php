@@ -31,10 +31,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/member/loker/{id}', [LokerController::class, 'show'])
+    ->middleware('visitor')
     ->whereNumber('id')
     ->name('membernonanggota.loker.show');
 
 Route::get('/member/loker', [LokerController::class, 'index'])
+    ->middleware('visitor')
     ->name('membernonanggota.loker.index');
 
 Route::get('/member/loker/cities', [LokerController::class, 'cities'])

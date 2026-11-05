@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\VisitorTrackingService;
 use App\Support\AuthRedirector;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -51,6 +52,8 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        app(VisitorTrackingService::class)->recordAuth($request);
+
         return redirect()->intended(AuthRedirector::pathFor($user));
     }
 

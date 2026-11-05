@@ -12,6 +12,7 @@ use App\Models\SubMateriModel;
 use App\Models\PrepotesUserModel; // Model progress/test user
 use App\Models\RiwayatTransaksi;
 use App\Models\SiswaModulAktif;
+use App\Services\VisitorTrackingService;
 use App\Support\AdminPanel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -381,6 +382,7 @@ public function prosesBayarBeasiswa(Request $request, $id)
             'status'            => 'SUCCESS',
             'keterangan'        => 'Pembelian materi pelatihan melalui pemotongan saldo beasiswa.'
         ]);
+        app(VisitorTrackingService::class)->recordTransaction($request);
 
         DB::commit();
         return redirect()->route('siswa.materi.belajar', [$id])

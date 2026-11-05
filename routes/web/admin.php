@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ManualClassOrderController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\ScraperApiKeyController;
 use App\Http\Controllers\Admin\SopController;
+use App\Http\Controllers\Admin\VisitorStatisticsController;
 use App\Http\Controllers\ArticleGeneratorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KeywordController;
@@ -23,6 +24,10 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin', function () {
         return redirect('/home');
     })->middleware('admin.panel');
+
+    Route::get('/admin/statistik-visitor', [VisitorStatisticsController::class, 'index'])
+        ->middleware('admin.panel')
+        ->name('admin.visitor-statistics');
 
     Route::resource('/admin/classes', ClassesController::class)
         ->except(['show'])

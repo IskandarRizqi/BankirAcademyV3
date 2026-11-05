@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\InstructorModel;
 use App\Models\User;
 use App\Models\UserProfileModel;
+use App\Services\VisitorTrackingService;
 use App\Support\AuthRedirector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,7 @@ class SocialiteController extends Controller
         $ins = Session::pull('ins', false);
         $user = $this->findOrCreateUser($socialUser, $provider, $ins);
         Auth::login($user, true);
+        app(VisitorTrackingService::class)->recordAuth(request());
 
         return redirect()->intended(AuthRedirector::pathFor($user));
     }
@@ -49,7 +51,7 @@ class SocialiteController extends Controller
     {
         $user = User::where('email', $socialUser->getEmail())->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'google_id' => $socialUser->getId(),
                 'name' => $socialUser->getName(),

@@ -14,6 +14,7 @@ use App\Models\RefferralModel;
 use App\Models\SertifikatPesertaModel;
 use App\Models\UserProfileModel;
 use App\Services\ClassPricingService;
+use App\Services\VisitorTrackingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -377,7 +378,7 @@ class OrderController extends Controller
             return response()->json(['msg' => 'Kelas Sudah Penuh', 'rc' => '07']);
             // Redirect::back()->with('error', 'Kelas Sudah Penuh');
         }
-        if ($class->date_start && now()->startOfDay()->lt(\Carbon\Carbon::parse($class->date_start)->startOfDay())) {
+        if ($class->date_start && now()->startOfDay()->lt(Carbon::parse($class->date_start)->startOfDay())) {
             return response()->json(['msg' => 'Kelas masih upcoming dan belum dapat didaftarkan', 'rc' => '07']);
         }
         if (! $auth) {
@@ -464,7 +465,7 @@ class OrderController extends Controller
                 'class_id' => $request->class_id,
                 'unique_code' => $randomNumber,
                 'price' => $price,
-         'additional_discount' => json_encode([
+                'additional_discount' => json_encode([
                     'base_price' => $resolvedPricing['base_price'],
                     'general_discount' => $resolvedPricing['general_discount'],
                     'membership_discount' => $resolvedPricing['membership_discount'],
@@ -476,7 +477,7 @@ class OrderController extends Controller
                     'discount_percent' => $resolvedPricing['discount_percent'],
                     'membership_type' => $resolvedPricing['membership_type'],
                     'discount_source' => $resolvedPricing['discount_source'],
-         ]),
+                ]),
                 'jumlah' => $jmlpeserta,
                 'biaya_sertifikat' => 0,
                 'price_final' => 0,
@@ -485,6 +486,7 @@ class OrderController extends Controller
             ]);
 
             $order->refresh();
+            app(VisitorTrackingService::class)->recordTransaction($request);
 
             SertifikatPesertaModel::create([
                 'user_id' => Auth::user()->id,
@@ -505,7 +507,7 @@ class OrderController extends Controller
                 'class_id' => $request->class_id,
                 'unique_code' => $randomNumber,
                 'price' => $price,
-         'additional_discount' => json_encode([
+                'additional_discount' => json_encode([
                     'base_price' => $resolvedPricing['base_price'],
                     'general_discount' => $resolvedPricing['general_discount'],
                     'membership_discount' => $resolvedPricing['membership_discount'],
@@ -517,7 +519,7 @@ class OrderController extends Controller
                     'discount_percent' => $resolvedPricing['discount_percent'],
                     'membership_type' => $resolvedPricing['membership_type'],
                     'discount_source' => $resolvedPricing['discount_source'],
-         ]),
+                ]),
                 'jumlah' => $jmlpeserta,
                 'biaya_sertifikat' => $total_biaya_sertifikat,
                 'price_final' => $price_final + $total_biaya_sertifikat, // Sudah mengcover berbayar maupun gratis berkombinasi sertifikat
@@ -526,6 +528,7 @@ class OrderController extends Controller
             ]);
 
             $order->refresh();
+            app(VisitorTrackingService::class)->recordTransaction($request);
 
             SertifikatPesertaModel::create([
                 'user_id' => Auth::user()->id,

@@ -37,7 +37,7 @@ Route::post('/order/send', [CheckoutController::class, 'store']);
 Route::get('/ordernopost', [OrderController::class, 'order_class']);
 
 Route::post('/inputinstructor', [HomeController::class, 'inputinstructor']);
-Route::get('/u-laman/{slug}', [HomeController::class, 'laman']);
+Route::get('/u-laman/{slug}', [HomeController::class, 'laman'])->middleware('visitor');
 Route::get('/all-laman', [HomeController::class, 'getAllLaman']);
 Route::post('/registerUser', [HomeController::class, 'registerUser']);
 Route::post('/registercorporate', [HomeController::class, 'registercorporate']);
@@ -50,9 +50,9 @@ Route::redirect('/sdank', '/syarat-dan-ketentuan', 301);
 // Route::get('/detail-kelas', fn () => view('front.kelas.detail'));
 
 Route::post('/kode-promo', [ProfileController::class, 'setKodePromo']);
-Route::get('/profile-instructor/{id}/{name}', [ProfileController::class, 'profileinstructor']);
+Route::get('/profile-instructor/{id}/{name}', [ProfileController::class, 'profileinstructor'])->middleware('visitor');
 Route::post('/set-master-refferal', [RefferalController::class, 'setMasterRefferal']);
-Route::get('/review-instructor', [ProfileController::class, 'review_instructor']);
+Route::get('/review-instructor', [ProfileController::class, 'review_instructor'])->middleware('visitor');
 
 Route::get('/join/referral/{url}', [RefferalController::class, 'joinRef']);
 Route::get('/join/referral/{iduser}/{referral}', [RefferalController::class, 'joinRefAjax']);

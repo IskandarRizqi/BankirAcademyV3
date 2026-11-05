@@ -143,4 +143,10 @@
         <span class="nav-icon">{!! $icons['history'] !!}</span>
         <span>Log Aktivitas Sistem</span>
     </a>
+
+    <a href="{{ route('admin.visitor-statistics') }}"
+        class="nav-item-link {{ request()->routeIs('admin.visitor-statistics') ? 'active' : '' }}">
+        <span class="nav-icon">{!! $icons['bar-chart-2'] !!}</span>
+        <span>Statistik Visitor</span>
+    </a>
 @endif

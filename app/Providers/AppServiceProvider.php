@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\DataPayment;
+use App\Services\VisitorTrackingService;
 use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -32,10 +34,16 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set('Asia/Jakarta');
         RateLimiter::for('apply-loker', function (Request $request) {
             return Limit::perMinute(1)
-                ->by($request->user()?->id . '-' . $request->route('id'))
+                ->by($request->user()?->id.'-'.$request->route('id'))
                 ->response(function () {
                     return redirect()->back()->with('error', 'Mohon tunggu sejenak sebelum mencoba lagi.');
                 });
+        });
+
+        DataPayment::created(function () {
+            if (app()->bound('request')) {
+                app(VisitorTrackingService::class)->recordTransaction(request());
+            }
         });
     }
 }

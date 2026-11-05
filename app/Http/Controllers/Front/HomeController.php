@@ -22,20 +22,19 @@ use App\Models\Pages;
 use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
 use App\Models\User;
+use App\Services\VisitorTrackingService;
+use App\Support\AuthRedirector;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class HomeController extends Controller
 {
-
     public function apiberanda()
     {
         $data = [];
@@ -47,18 +46,21 @@ class HomeController extends Controller
             ->pluck('image')
             ->toArray();
         foreach ($banner as $key => $v) {
-            array_push($data['banner'], 'https://bankiracademy.com/Image/' . $v);
+            array_push($data['banner'], 'https://bankiracademy.com/Image/'.$v);
         }
         $data['kelaspopuler'] = ClassesModel::select()
             ->where('date_end', '>=', Carbon::now())
             ->orderBy('date_end', 'DESC')
             ->first();
+
         return response()->json($data, 200);
     }
+
     public function index_custom()
     {
         return view('home');
     }
+
     public function paginateAjax($r)
     {
         $categori = ClassesModel::groupBy('category')->pluck('category')->toArray();
@@ -89,8 +91,8 @@ class HomeController extends Controller
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
             $owl .= '            <div class="portfolio-image">';
-            $owl .= '                <button class="mr-2 ' . preg_replace('/\s+/', '', $value) . ' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
-            $owl .= '                    onclick=tabsCategory("' . preg_replace('/\s+/', '', $value) . '")><small>' . $value . '</small></button>';
+            $owl .= '                <button class="mr-2 '.preg_replace('/\s+/', '', $value).' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
+            $owl .= '                    onclick=tabsCategory("'.preg_replace('/\s+/', '', $value).'")><small>'.$value.'</small></button>';
             $owl .= '            </div>';
             $owl .= '        </div>';
             $owl .= '    </div>';
@@ -114,33 +116,33 @@ class HomeController extends Controller
                 $html .= '    <div class="card">';
                 $html .= '        <div class="card-body" style="min-height: 708px !important">';
                 $html .= '            <div class="card" style="min-height: 340px !important">';
-                $html .= '                <img src="' . $v['image'] . '" width=100%>';
+                $html .= '                <img src="'.$v['image'].'" width=100%>';
                 $html .= '            </div>';
                 $html .= '            <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
-                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
+                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">'.$v['title'].'</h5>';
                 if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>'.Carbon::parse($tglawal)->format('d-m-Y').'</p>';
                 } else {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;>'.Carbon::parse($tglawal)->format('d-m-Y').' - '.Carbon::parse($tglakhir)->format('d-m-Y').'</p>';
                 }
-                $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
+                $html .= '            <a href="/profile-instructor/'.$v['instructor_list'][0]->id.'/'.$v['instructor_list'][0]->name.'" class="d-flex mt-2">';
                 if (json_decode($v['instructor_list'][0]->picture)) {
                     $html .= '                <img class="mr-3 rounded-circle"';
-                    $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                    $html .= '                    src="Image/'.json_decode($v['instructor_list'][0]->picture)->url.'" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
                 }
                 $html .= '                <div class=>';
                 $html .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
-                $html .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
-                $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
+                $html .= '                    <h5 class="text-uppercase d-block mb-0">'.$v['instructor_list']['0']->name.'</h5>';
+                $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">'.$v['instructor_list'][0]->title.'</small>';
                 $html .= '                </div>';
                 $html .= '                <div class="ml-2 flex-fill">';
                 $html .= '                    <label class="d-block mb-0"> Harga';
                 $html .= '                    </label>';
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
-                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                        $html .= '<del> Rp. '.number_format($v['pricing']->price).'</del>'.'<sup class="badge badge-danger" style="font-size: 8px">'.number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100).' %</sup>';
                     } else {
-                        $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                        $html .= '<small> Rp. '.number_format($v['pricing']->price).'</small>';
                     }
                 } else {
                     $html .= '<small> Rp. -</small>';
@@ -151,10 +153,10 @@ class HomeController extends Controller
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
                         $html .=
-                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                            '<h3 style=" color:#139700 !important;"> Rp. '.number_format($v['pricing']->price - $v['pricing']->promo_price).'</h3>';
                     } else {
                         $html .=
-                            '<h3 style=" color:#139700 !important;"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                            '<h3 style=" color:#139700 !important;"> Rp. '.number_format($v['pricing']->price).'</h3>';
                     }
                 } else {
                     $html .=
@@ -164,8 +166,8 @@ class HomeController extends Controller
                     '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
                 $html .=
                     '                    style="border-radius:10px !important"';
-                $html .= '                    href="class/' . $v['unique_id'] .
-                    '/' . str_replace('/', '-', $v['title']) . '">';
+                $html .= '                    href="class/'.$v['unique_id'].
+                    '/'.str_replace('/', '-', $v['title']).'">';
                 $html .= '                    Detail';
                 $html .= '                </a>';
                 $html .= '            </div>';
@@ -193,33 +195,33 @@ class HomeController extends Controller
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
             $semua .= '            <div class="card" style="min-height: 340px !important">';
-            $semua .= '                <img src="' . $v['image'] . '" width=100%>';
+            $semua .= '                <img src="'.$v['image'].'" width=100%>';
             $semua .= '            </div>';
             $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
-            $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
+            $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">'.$v['title'].'</h5>';
             if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">'.Carbon::parse($tglawal)->format('d-m-Y').'</p>';
             } else {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">'.Carbon::parse($tglawal)->format('d-m-Y').' - '.Carbon::parse($tglakhir)->format('d-m-Y').'</p>';
             }
-            $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
+            $semua .= '            <a href="/profile-instructor/'.$v['instructor_list'][0]->id.'/'.$v['instructor_list'][0]->name.'" class="d-flex mt-2">';
             if (json_decode($v['instructor_list'][0]->picture)) {
                 $semua .= '                <img class="mr-3 rounded-circle"';
-                $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                $semua .= '                    src="Image/'.json_decode($v['instructor_list'][0]->picture)->url.'" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
             }
             $semua .= '                <div class="text-left">';
             $semua .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
-            $semua .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
-            $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
+            $semua .= '                    <h5 class="text-uppercase d-block mb-0">'.$v['instructor_list']['0']->name.'</h5>';
+            $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">'.$v['instructor_list'][0]->title.'</small>';
             $semua .= '                </div>';
             $semua .= '                <div class="ml-2 flex-fill text-center">';
             $semua .= '                    <label class="d-block mb-0"> Harga';
             $semua .= '                    </label>';
             if ($v['pricing']) {
                 if ($v['pricing']->promo) {
-                    $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                    $semua .= '<del> Rp. '.number_format($v['pricing']->price).'</del>'.'<sup class="badge badge-danger" style="font-size: 8px">'.number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100).' %</sup>';
                 } else {
-                    $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                    $semua .= '<small> Rp. '.number_format($v['pricing']->price).'</small>';
                 }
             } else {
                 $semua .= '<small> Rp. -</small>';
@@ -230,10 +232,10 @@ class HomeController extends Controller
             if ($v['pricing']) {
                 if ($v['pricing']->promo) {
                     $semua .=
-                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. '.number_format($v['pricing']->price - $v['pricing']->promo_price).'</h3>';
                 } else {
                     $semua .=
-                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. '.number_format($v['pricing']->price).'</h3>';
                 }
             } else {
                 $semua .=
@@ -243,8 +245,8 @@ class HomeController extends Controller
                 '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
             $semua .=
                 '                    style="border-radius:10px !important"';
-            $semua .= '                    href="class/' . $v['unique_id'] .
-                '/' . str_replace('/', '-', $v['title']) . '">';
+            $semua .= '                    href="class/'.$v['unique_id'].
+                '/'.str_replace('/', '-', $v['title']).'">';
             $semua .= '                    Detail';
             $semua .= '                </a>';
             $semua .= '            </div>';
@@ -261,6 +263,7 @@ class HomeController extends Controller
         return $kelas;
         // return $dx;
     }
+
     public function indexv2($request)
     {
         $now = Carbon::now();
@@ -278,6 +281,7 @@ class HomeController extends Controller
                 ->orderBy('date_end', 'asc')
                 ->paginate(12)
                 ->toArray();
+
             return response()->json([
                 'success' => true,
                 'msg' => 'Data Terkirim',
@@ -320,7 +324,6 @@ class HomeController extends Controller
         //     ->orderBy('date_end', 'asc')
         //     ->get();
         // untuk event
-
 
         $currentYear = $now->year;
         $data['kelas'] = ClassesModel::query()
@@ -373,12 +376,14 @@ class HomeController extends Controller
             ->get();
 
         $data['literasi'] = Pages::select()->where('type', 0)->whereDate('date_start', '<=', $now->format('Y-m-d'))->whereDate('date_end', '>=', $now->format('Y-m-d'))->orderBy('created_at', 'desc')->limit(12)->get();
+
         // return $data;
         // $data['use_new_template'] = true;
         // return view('front.homev2.homev2', $data);
         // return view('front.homev3.index', $data);
         return view('frontend.pages.homepage.index', compact('data'));
     }
+
     public function index(Request $request)
     {
         return $this->indexv2($request);
@@ -402,11 +407,11 @@ class HomeController extends Controller
         $data['banner_bawah'] = BannerModel::where('jenis', 1)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_slide'] = BannerModel::where('jenis', 0)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
         $data['banner_slide_mobile'] = BannerModel::where('jenis', 3)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->orderBy('nama', 'ASC')->get();
-        $data['minggu_ini'] = ClassesModel::whereBetween("date_start", [
+        $data['minggu_ini'] = ClassesModel::whereBetween('date_start', [
             // $now->startOfWeek()->format('Y-m-d'), //This will return date in format like this: 2022-01-10
             // $now->endOfWeek()->format('Y-m-d')
             $now->format('Y-m-d'),
-            $now->addDays(14)->format('Y-m-d')
+            $now->addDays(14)->format('Y-m-d'),
         ])
             ->whereDate('date_start', '>=', Carbon::now())
             ->where('status', 1)
@@ -442,6 +447,7 @@ class HomeController extends Controller
 
         if ($request->ajax()) {
             $dx = $this->paginateAjax($request->all());
+
             return response()->json($dx);
         }
 
@@ -471,8 +477,8 @@ class HomeController extends Controller
             $owl .= '    <div class="oc-item">';
             $owl .= '        <div class="portfolio-item">';
             $owl .= '            <div class="portfolio-image">';
-            $owl .= '                <button class="mr-2 ' . $replace . ' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
-            $owl .= '                    onclick=tabsCategory("' . $replace . '")><small>' . $value . '</small></button>';
+            $owl .= '                <button class="mr-2 '.$replace.' btn btn-outline-primary" style="border-radius: 10px;font-size:18px;"';
+            $owl .= '                    onclick=tabsCategory("'.$replace.'")><small>'.$value.'</small></button>';
             $owl .= '            </div>';
             $owl .= '        </div>';
             $owl .= '    </div>';
@@ -481,7 +487,7 @@ class HomeController extends Controller
             // array_push($data['o']['cateKelas'], '<div id="' . $replace . '" class="row tabsCustom mt-2" hidden></div>');
             $html = '';
 
-            $html .= '<div id="' . $replace . '" class="row tabsCustom mt-2" hidden>';
+            $html .= '<div id="'.$replace.'" class="row tabsCustom mt-2" hidden>';
             foreach ($dx['kelas'][$value]['data'] as $k => $v) {
                 $tglawal = $v['date_start'];
                 $tglakhir = $v['date_end'];
@@ -499,33 +505,33 @@ class HomeController extends Controller
                 $html .= '    <div class="card">';
                 $html .= '        <div class="card-body" style="min-height: 708px !important">';
                 $html .= '            <div class="card" style="min-height: 340px !important">';
-                $html .= '                <img src="' . $v['image'] . '" width=100%>';
+                $html .= '                <img src="'.$v['image'].'" width=100%>';
                 $html .= '            </div>';
                 $html .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
-                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
+                $html .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">'.$v['title'].'</h5>';
                 if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">'.Carbon::parse($tglawal)->format('d-m-Y').'</p>';
                 } else {
-                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
+                    $html .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">'.Carbon::parse($tglawal)->format('d-m-Y').' - '.Carbon::parse($tglakhir)->format('d-m-Y').'</p>';
                 }
-                $html .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
+                $html .= '            <a href="/profile-instructor/'.$v['instructor_list'][0]->id.'/'.$v['instructor_list'][0]->name.'" class="d-flex mt-2">';
                 if (json_decode($v['instructor_list'][0]->picture)) {
                     $html .= '                <img class="mr-3 rounded-circle"';
-                    $html .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                    $html .= '                    src="Image/'.json_decode($v['instructor_list'][0]->picture)->url.'" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
                 }
                 $html .= '                <div class="text-left">';
                 $html .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
-                $html .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
-                $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
+                $html .= '                    <h5 class="text-uppercase d-block mb-0">'.$v['instructor_list']['0']->name.'</h5>';
+                $html .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">'.$v['instructor_list'][0]->title.'</small>';
                 $html .= '                </div>';
                 $html .= '                <div class="ml-2 flex-fill text-center">';
                 $html .= '                    <label class="d-block mb-0"> Harga';
                 $html .= '                    </label>';
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
-                        $html .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->price / $v['pricing']->promo_price) * 100) . ' %</sup>';
+                        $html .= '<del> Rp. '.number_format($v['pricing']->price).'</del>'.'<sup class="badge badge-danger" style="font-size: 8px">'.number_format(($v['pricing']->price / $v['pricing']->promo_price) * 100).' %</sup>';
                     } else {
-                        $html .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                        $html .= '<small> Rp. '.number_format($v['pricing']->price).'</small>';
                     }
                 } else {
                     $html .= '<small> Rp. -</small>';
@@ -536,10 +542,10 @@ class HomeController extends Controller
                 if ($v['pricing']) {
                     if ($v['pricing']->promo) {
                         $html .=
-                            '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                            '<h3 class="text-primary mb-2"> Rp. '.number_format($v['pricing']->price - $v['pricing']->promo_price).'</h3>';
                     } else {
                         $html .=
-                            '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                            '<h3 class="text-primary mb-2"> Rp. '.number_format($v['pricing']->price).'</h3>';
                     }
                 } else {
                     $html .=
@@ -549,8 +555,8 @@ class HomeController extends Controller
                     '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
                 $html .=
                     '                    style="border-radius:10px !important"';
-                $html .= '                    href="class/' . $v['unique_id'] .
-                    '/' . str_replace('/', '-', $v['title']) . '">';
+                $html .= '                    href="class/'.$v['unique_id'].
+                    '/'.str_replace('/', '-', $v['title']).'">';
                 $html .= '                    Detail';
                 $html .= '                </a>';
                 $html .= '            </div>';
@@ -574,33 +580,33 @@ class HomeController extends Controller
             $semua .= '    <div class="card">';
             $semua .= '        <div class="card-body" style="min-height: 708px !important">';
             $semua .= '            <div class="card" style="min-height: 340px !important">';
-            $semua .= '                <img src="' . $v['image'] . '" width=100%>';
+            $semua .= '                <img src="'.$v['image'].'" width=100%>';
             $semua .= '            </div>';
             $semua .= '            <div class="" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">';
-            $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">' . $v['title'] . '</h5>';
+            $semua .= '            <h5 class="text-uppercase mt-2" style="margin-bottom: 0px !important; font-size:15px !important;">'.$v['title'].'</h5>';
             if (Carbon::parse($tglawal)->format('d-m-Y') == Carbon::parse($tglakhir)->format('d-m-Y')) {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . '</p>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">'.Carbon::parse($tglawal)->format('d-m-Y').'</p>';
             } else {
-                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">' . Carbon::parse($tglawal)->format('d-m-Y') . ' - ' . Carbon::parse($tglakhir)->format('d-m-Y') . '</p>';
+                $semua .= '<p class="text-left" style="margin: 0px !important; font-size:10px !important;">'.Carbon::parse($tglawal)->format('d-m-Y').' - '.Carbon::parse($tglakhir)->format('d-m-Y').'</p>';
             }
-            $semua .= '            <a href="/profile-instructor/' . $v['instructor_list'][0]->id . '/' . $v['instructor_list'][0]->name . '" class="d-flex mt-2">';
+            $semua .= '            <a href="/profile-instructor/'.$v['instructor_list'][0]->id.'/'.$v['instructor_list'][0]->name.'" class="d-flex mt-2">';
             if (json_decode($v['instructor_list'][0]->picture)) {
                 $semua .= '                <img class="mr-3 rounded-circle"';
-                $semua .= '                    src="Image/' . json_decode($v['instructor_list'][0]->picture)->url . '" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
+                $semua .= '                    src="Image/'.json_decode($v['instructor_list'][0]->picture)->url.'" alt=Generic placeholder image style="max-width:50px; max-height:50px;">';
             }
             $semua .= '                <div class="text-left">';
             $semua .= '                    <small class="d-block mb-0">INSTRUCTOR</small>';
-            $semua .= '                    <h5 class="text-uppercase d-block mb-0">' . $v['instructor_list']['0']->name . '</h5>';
-            $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">' . $v['instructor_list'][0]->title . '</small>';
+            $semua .= '                    <h5 class="text-uppercase d-block mb-0">'.$v['instructor_list']['0']->name.'</h5>';
+            $semua .= '                    <small class="text-uppercase d-block mb-0" style="font-size:10px !important">'.$v['instructor_list'][0]->title.'</small>';
             $semua .= '                </div>';
             $semua .= '                <div class="ml-2 flex-fill text-center">';
             $semua .= '                    <label class="d-block mb-0"> Harga';
             $semua .= '                    </label>';
             if ($v['pricing']) {
                 if ($v['pricing']->promo) {
-                    $semua .= '<del> Rp. ' . number_format($v['pricing']->price) . '</del>' . '<sup class="badge badge-danger" style="font-size: 8px">' . number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100) . ' %</sup>';
+                    $semua .= '<del> Rp. '.number_format($v['pricing']->price).'</del>'.'<sup class="badge badge-danger" style="font-size: 8px">'.number_format(($v['pricing']->promo_price / $v['pricing']->price) * 100).' %</sup>';
                 } else {
-                    $semua .= '<small> Rp. ' . number_format($v['pricing']->price) . '</small>';
+                    $semua .= '<small> Rp. '.number_format($v['pricing']->price).'</small>';
                 }
             } else {
                 $semua .= '<small> Rp. -</small>';
@@ -611,10 +617,10 @@ class HomeController extends Controller
             if ($v['pricing']) {
                 if ($v['pricing']->promo) {
                     $semua .=
-                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price - $v['pricing']->promo_price) . '</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. '.number_format($v['pricing']->price - $v['pricing']->promo_price).'</h3>';
                 } else {
                     $semua .=
-                        '<h3 class="text-primary mb-2"> Rp. ' . number_format($v['pricing']->price) . '</h3>';
+                        '<h3 class="text-primary mb-2"> Rp. '.number_format($v['pricing']->price).'</h3>';
                 }
             } else {
                 $semua .=
@@ -624,8 +630,8 @@ class HomeController extends Controller
                 '                <a class="btn btn-primary btn-block btn-rounded mt-auto"';
             $semua .=
                 '                    style="border-radius:10px !important"';
-            $semua .= '                    href="class/' . $v['unique_id'] .
-                '/' . str_replace('/', '-', $v['title']) . '">';
+            $semua .= '                    href="class/'.$v['unique_id'].
+                '/'.str_replace('/', '-', $v['title']).'">';
             $semua .= '                    Detail';
             $semua .= '                </a>';
             $semua .= '            </div>';
@@ -653,6 +659,7 @@ class HomeController extends Controller
             ->orderBy('loker.tanggal_akhir', 'asc')
             ->limit(3)
             ->get();
+
         // return $dx['kelas']['Semua']['next_page_url'];
         // return $dx;
         return view(env('CUSTOM_HOME_PAGE', 'front.home.home'), $data);
@@ -692,6 +699,7 @@ class HomeController extends Controller
             ->get();
         $data['literasi'] = Pages::where('type', 0)->whereDate('date_start', '<=', Carbon::now()->format('Y-m-d'))->whereDate('date_end', '>=', Carbon::now()->format('Y-m-d'))->limit(3)->get();
         $data['sertif'] = BiayaSertifikatModel::where('class_id', $data['class']['id'])->first();
+
         // return $data;
         return view('front.kelasv2.detail3', $data);
     }
@@ -707,7 +715,7 @@ class HomeController extends Controller
             'dokumen' => 'required',
             'foto' => 'required',
         ]);
-        //response error validation
+        // response error validation
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all());
         }
@@ -724,11 +732,11 @@ class HomeController extends Controller
                 return Redirect::back()->with('error', 'Ukuran File Melebihi 1 MB');
             }
 
-            $filename = time() . '-' . $name;
+            $filename = time().'-'.$name;
             $file = $request->file('foto');
-            $file->move(public_path('Image/instructor/' . $request->nama), $filename);
+            $file->move(public_path('Image/instructor/'.$request->nama), $filename);
         }
-        $do = $request->file('dokumen')->store('instructor/' . $request->nama . '/' . time());
+        $do = $request->file('dokumen')->store('instructor/'.$request->nama.'/'.time());
         $i = User::create([
             'name' => $request->nama,
             'email' => $request->email,
@@ -746,8 +754,10 @@ class HomeController extends Controller
                 'user_id' => $i->id,
                 'status' => 0,
             ]);
+
             return Redirect::to('/')->with('success', 'Pendaftaran Berhasil, Menunggu Konfirmasi Admin via Email');
         }
+
         return Redirect::back()->with('error', 'Pendaftaran Gagal')->withInput($request->all());
     }
 
@@ -761,6 +771,8 @@ class HomeController extends Controller
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
+        app(VisitorTrackingService::class)->recordAuth(request());
+
         return redirect('/');
     }
 
@@ -768,10 +780,10 @@ class HomeController extends Controller
     {
         $user = User::where('email', $socialUser->getEmail())->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
-                'google_id'  => $socialUser->getId(),
-                'name'  => $socialUser->getName(),
+                'google_id' => $socialUser->getId(),
+                'name' => $socialUser->getName(),
                 'email' => $socialUser->getEmail(),
                 'role' => 3,
             ]);
@@ -797,6 +809,7 @@ class HomeController extends Controller
         $data['laman_head'] = ClassLamanModel::where('type', 1)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->orderBy('no_urut', 'asc')->get();
         $data['laman_footer'] = ClassLamanModel::where('type', 2)->where('status', 1)->where('tgl_tayang', '<=', $now->format('Y-m-d'))->where('tgl_expired', '>=', $now->format('Y-m-d'))->orderBy('no_urut', 'asc')->get();
         $data['layanan'] = Pages::where('type', 9)->where('date_start', '<=', $now->format('Y-m-d'))->where('date_end', '>=', $now->format('Y-m-d'))->get();
+
         return $data;
     }
 
@@ -804,6 +817,7 @@ class HomeController extends Controller
     {
         $l = [];
         $l['data'] = ClassLamanModel::where('slug', $slug)->first();
+
         // return $l;
         return view('front.home.laman', $l);
     }
@@ -812,6 +826,7 @@ class HomeController extends Controller
     {
         $now = Carbon::now();
         $data['data'] = BannerModel::where('jenis', 2)->where('mulai', '<=', $now->format('Y-m-d'))->where('selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
+
         // $data['data'] = KodePromoModel::where('tgl_mulai', '<=', $now->format('Y-m-d'))->where('tgl_selesai', '>=', $now->format('Y-m-d'))->paginate(12)->toArray();
         // return $data;
         return view('frontend.pages.promo.promo', $data);
@@ -825,20 +840,20 @@ class HomeController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        //response error validation
+        // response error validation
         if ($va->fails()) {
             return response()->json([
                 'status' => 400,
-                'error' => $va->errors()
+                'error' => $va->errors(),
             ], 400);
         }
 
         if ($request->referral) {
             $r = RefferralPesertaModel::where('code', $request->referral)->first();
-            if (!$r) {
+            if (! $r) {
                 return response()->json([
                     'status' => 400,
-                    'error' => ['referral' => 'Kode Referral Tidak Ditemukan']
+                    'error' => ['referral' => 'Kode Referral Tidak Ditemukan'],
                 ], 400);
             }
 
@@ -848,21 +863,23 @@ class HomeController extends Controller
                 'role' => 2,
                 'password' => Hash::make($request->password),
             ]);
-            if (!$u) {
+            if (! $u) {
                 return response()->json([
                     'status' => 400,
-                    'error' => ['register' => 'Register Gagal']
+                    'error' => ['register' => 'Register Gagal'],
                 ], 400);
             }
             Auth::login($u);
+            app(VisitorTrackingService::class)->recordAuth($request);
             RefferralModel::create([
                 'user_id' => $r->user_id,
                 'user_aplicator' => $u->id,
                 'code' => $request->referral,
             ]);
+
             return response()->json([
                 'status' => 200,
-                'error' => ''
+                'error' => '',
             ], 200);
         }
 
@@ -872,16 +889,18 @@ class HomeController extends Controller
             'role' => 2,
             'password' => Hash::make($request->password),
         ]);
-        if (!$u) {
+        if (! $u) {
             return response()->json([
                 'status' => 400,
-                'error' => ['register' => 'Register Gagal']
+                'error' => ['register' => 'Register Gagal'],
             ], 400);
         }
         Auth::login($u);
+        app(VisitorTrackingService::class)->recordAuth($request);
+
         return response()->json([
             'status' => 200,
-            'error' => ''
+            'error' => '',
         ], 200);
     }
 
@@ -895,7 +914,7 @@ class HomeController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        //response error validation
+        // response error validation
         if ($va->fails()) {
             return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
         }
@@ -922,14 +941,17 @@ class HomeController extends Controller
         ]);
         if ($u) {
             Auth::login($u);
+            app(VisitorTrackingService::class)->recordAuth($r);
+
             return Redirect::to('/dash-beranda')->with('success', 'Register Success!');
         }
+
         return Redirect::back()->with('error', 'Register Failed!')->withErrors($va->errors())->withInput($r->all());
     }
 
     public function getlayoutauth(Request $request)
     {
-        if ($redirect = \App\Support\AuthRedirector::safePath($request->query('redirect'))) {
+        if ($redirect = AuthRedirector::safePath($request->query('redirect'))) {
             $request->session()->put('url.intended', $redirect);
         }
 
