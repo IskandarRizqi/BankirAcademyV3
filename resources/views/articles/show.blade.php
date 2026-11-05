@@ -1,5 +1,71 @@
 @extends('layouts.appfrontend')
 
+@php
+    $canonicalUrl = route('frontend.articles.show', $article->slug);
+    $description = trim((string) $article->meta_description);
+    $description = $description !== ''
+        ? $description
+        : \Illuminate\Support\Str::limit(trim(strip_tags((string) $article->content)), 160);
+    $articleImage = trim((string) ($article->image_url ?: $article->image_base64));
+    $shareImage = $articleImage !== '' && !\Illuminate\Support\Str::startsWith($articleImage, 'data:')
+        ? (\Illuminate\Support\Str::startsWith($articleImage, ['http://', 'https://'])
+            ? $articleImage
+            : asset(ltrim($articleImage, '/')))
+        : asset('bankir-academy-icon.png');
+@endphp
+
+@section('page-title')
+    {{ $article->title }} | Bankir Academy
+@endsection
+
+@section('page-description')
+    {{ $description }}
+@endsection
+
+@section('page-url', $canonicalUrl)
+@section('page-image', $shareImage)
+@section('page-image-alt', $article->title)
+
+@section('head')
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="id_ID">
+    <meta property="article:published_time" content="{{ optional($article->created_at)->toIso8601String() }}">
+    <meta property="article:modified_time" content="{{ optional($article->updated_at)->toIso8601String() }}">
+    <meta property="article:section" content="{{ $article->keyword }}">
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+            'headline' => $article->title,
+            'description' => $description,
+            'image' => [$shareImage],
+            'url' => $canonicalUrl,
+            'inLanguage' => 'id-ID',
+            'datePublished' => optional($article->created_at)->toIso8601String(),
+            'dateModified' => optional($article->updated_at)->toIso8601String(),
+            'author' => [
+                '@type' => 'Organization',
+                'name' => 'Bankir Academy',
+                'url' => url('/'),
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                'name' => 'Bankir Academy',
+                'url' => url('/'),
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => asset('bankir-academy-icon.png'),
+                ],
+            ],
+            'mainEntityOfPage' => [
+                '@type' => 'WebPage',
+                '@id' => $canonicalUrl,
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}
+    </script>
+@endsection
+
 @section('content')
     <style>
         .article-wrapper {
@@ -163,7 +229,7 @@
                 <h3>Artikel Terkait</h3>
                 <div class="related-list">
                     @forelse ($relatedArticles as $related)
-                        <a href="{{ route('articles.publicShow', $related->slug) }}" class="related-item">
+                        <a href="{{ route('frontend.articles.show', $related->slug) }}" class="related-item">
                             @php
                                 $sideImg = !empty($related->image_base64)
                                     ? $related->image_base64

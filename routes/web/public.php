@@ -21,6 +21,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('frontend.home');
+Route::get('/robots.txt', function () {
+    return response(
+        "User-agent: *\nDisallow:\n\nSitemap: " . rtrim(config('app.url'), '/') . "/sitemap.xml\n",
+        200,
+        ['Content-Type' => 'text/plain']
+    );
+});
 Route::get('/artikel', [ArticleGeneratorController::class, 'publicIndex'])
     ->name('frontend.articles.index');
 Route::get('/artikel/{slug}', [ArticleGeneratorController::class, 'publicShow'])

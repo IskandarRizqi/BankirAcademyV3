@@ -23,7 +23,7 @@
     };
 
     $company = $loker->perusahaan;
-    $companyName = optional($company)->nama ?: 'Perusahaan mitra';
+    $companyName = optional($company)->nama ?: ($loker->nama ?: $loker->name ?? 'Perusahaan mitra');
     $imageUrl = $decodeImage($loker->image) ?: $decodeImage(optional($company)->image);
     $types = $decodeList($loker->type);
     $skills = $decodeList($loker->skill);
@@ -55,21 +55,20 @@
         .loker-card__media {
             position: relative;
             display: flex;
-            height: clamp(96px, 10vw, 124px);
+            height: clamp(132px, 13vw, 176px);
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 16px 24px;
             background: #f8fafc;
             border-bottom: 1px solid #eef0f5;
         }
 
         .loker-card__media img {
             display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            object-position: center;
+            /* width: 100%;
+                height: 100%; */
+            /* object-fit: fit; */
+            /* object-position: center; */
         }
 
         .loker-card__placeholder {

@@ -4,30 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Keyword;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
-use Stevebauman\Purify\Facades\Purify;
+use App\Services\SitemapService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ArticleGeneratorController extends Controller
 {
+    public function __construct(private SitemapService $sitemap) {}
+
     public function index()
     {
         // Ambil data statistik dan daftar artikel
         $stats = [
             'total_artikel' => Article::count(),
             'total_keyword' => Article::distinct('keyword')->count(),
-            'artikel_terbaru' => Article::latest()->first()?->created_at?->diffForHumans() ?? '-'
+            'artikel_terbaru' => Article::latest()->first()?->created_at?->diffForHumans() ?? '-',
         ];
 
         $articles = Article::latest()->get();
 
         return view('articles.create', compact('articles', 'stats'));
     }
+
     public function apiIndex(): JsonResponse
     {
         // Mengambil artikel dengan status 1 dan mengurutkannya dari yang terbaru
@@ -38,7 +41,7 @@ class ArticleGeneratorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data artikel berhasil diambil',
-            'data'    => $articles
+            'data' => $articles,
         ], 200);
     }
 
@@ -59,7 +62,7 @@ class ArticleGeneratorController extends Controller
 
             return back()->with('error', 'Gagal memproses artikel dari n8n.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Koneksi ke n8n error/timeout: ' . $e->getMessage());
+            return back()->with('error', 'Koneksi ke n8n error/timeout: '.$e->getMessage());
         }
     }
 
@@ -117,20 +120,21 @@ class ArticleGeneratorController extends Controller
     {
         $article = Article::where('slug', $slug)->firstOrFail();
         $relatedArticles = Article::where('status', 0)
-            ->where('id', '!=', $article->id) // Hindari artikel yang sedang dibaca muncul di sidebar 
+            ->where('id', '!=', $article->id) // Hindari artikel yang sedang dibaca muncul di sidebar
             ->take(4)                         // Ambil 4 artikel saja
             ->get();
         $user = auth()->user();
-        if (!$article->status) {
+        if (! $article->status) {
             $isAuthorized = $user && ($user->role == 0 || $user->email === 'cb@bankir.academy');
 
-            if (!$isAuthorized) {
+            if (! $isAuthorized) {
                 return back();
             }
         }
 
         return view('articles.show', compact('article', 'relatedArticles'));
     }
+
     public function getNextKeyword()
     {
         // Ambil keyword yang artikelnya belum mencapai 5,
@@ -145,75 +149,81 @@ class ArticleGeneratorController extends Controller
             ->first();
 
         // Fallback jika semua keyword baru saja digunakan < 12 jam lalu
-        if (!$keyword) {
+        if (! $keyword) {
             $keyword = Keyword::where('articles_count', '<', 5)
                 ->inRandomOrder()
                 ->first();
         }
 
-        if (!$keyword) {
+        if (! $keyword) {
             return response()->json([
-                'status'  => 'empty',
-                'message' => 'Semua keyword sudah mencapai batas maksimal 5 artikel.'
+                'status' => 'empty',
+                'message' => 'Semua keyword sudah mencapai batas maksimal 5 artikel.',
             ], 404);
         }
 
         // Update last_used_at agar tidak terpilih langsung di eksekusi berikutnya
         $keyword->update([
-            'last_used_at' => now()
+            'last_used_at' => now(),
         ]);
 
         return response()->json([
-            'status'  => 'success',
-            'data'    => [
-                'id'             => $keyword->id,
-                'keyword'        => $keyword->keyword,
-                'articles_count' => $keyword->articles_count
-            ]
+            'status' => 'success',
+            'data' => [
+                'id' => $keyword->id,
+                'keyword' => $keyword->keyword,
+                'articles_count' => $keyword->articles_count,
+            ],
         ], 200);
     }
+
     public function storeFromN8n(Request $request)
     {
         $validated = $request->validate([
-            'keyword_id'       => 'nullable',
-            'keyword'          => 'required|string',
-            'title'            => 'required|string',
-            'content'          => 'required',
+            'keyword_id' => 'nullable',
+            'keyword' => 'required|string',
+            'title' => 'required|string',
+            'content' => 'required',
             'meta_description' => 'required',
-            'meta_keywords'    => 'required',
-            'slug'             => 'required',
-            'image_url'        => 'nullable'
+            'meta_keywords' => 'required',
+            'slug' => 'required',
+            'image_url' => 'nullable',
         ]);
 
+        $image = $validated['image_url'] ?? null;
+        $isDataUri = is_string($image) && Str::startsWith($image, 'data:');
+
         $article = Article::create([
-            'keyword'          => $validated['keyword'],
-            'title'            => $validated['title'],
-            'content'          => $validated['content'],
+            'keyword' => $validated['keyword'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
             'meta_description' => $validated['meta_description'],
-            'meta_keywords'    => $validated['meta_keywords'],
-            'slug'             => $validated['slug'],
-            'image_base64'        => $validated['image_url']
+            'meta_keywords' => $validated['meta_keywords'],
+            'slug' => $validated['slug'],
+            'image_url' => $isDataUri ? null : $image,
+            'image_base64' => $image,
         ]);
 
         // Update counter keyword
-        if (!empty($validated['keyword_id'])) {
+        if (! empty($validated['keyword_id'])) {
             $kw = Keyword::find($validated['keyword_id']);
             if ($kw) {
                 $newCount = $kw->articles_count + 1;
 
                 $kw->update([
                     'articles_count' => $newCount,
-                    'status'         => ($newCount >= 5) ? 'completed' : 'processing',
-                    'used_at'        => now()
+                    'status' => ($newCount >= 5) ? 'completed' : 'processing',
+                    'used_at' => now(),
                 ]);
             }
         }
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Artikel berhasil disimpan ke Database Laravel',
         ], 201);
     }
+
     public function edit(Article $article)
     {
         return view('articles.edit', compact('article'));
@@ -222,31 +232,35 @@ class ArticleGeneratorController extends Controller
     public function publish(Article $article)
     {
         $article->update(['status' => 1]);
+        $this->regenerateSitemap();
 
         return back()->with('success', 'Artikel berhasil dipublikasikan!');
     }
+
     public function unpublish(Article $article)
     {
         $article->update(['status' => 0]);
+        $this->regenerateSitemap();
 
         return back()->with('success', 'Artikel berhasil di-unpublish!');
     }
+
     public function update(Request $request, Article $article)
     {
         $validated = $request->validate([
-            'keyword'          => 'required|string|max:255',
-            'title'            => 'required|string|max:255',
-            'slug'             => 'required|string|max:255|unique:articles,slug,' . $article->id,
+            'keyword' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:articles,slug,'.$article->id,
             'meta_description' => 'nullable|string',
-            'meta_keywords'    => 'nullable|string',
-            'content'          => 'required|string',
-            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp', // Validasi file upload
+            'meta_keywords' => 'nullable|string',
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp', // Validasi file upload
         ]);
 
         // Opsi handling gambar
         if ($request->hasFile('image')) {
             // Hapus gambar lama di storage lokal jika sebelumnya tersimpan secara lokal
-            if ($article->image_url && !filter_var($article->image_url, FILTER_VALIDATE_URL)) {
+            if ($article->image_url && ! filter_var($article->image_url, FILTER_VALIDATE_URL)) {
                 $oldPath = str_replace('/storage/', '', $article->image_url);
                 Storage::disk('public')->delete($oldPath);
             }
@@ -254,12 +268,18 @@ class ArticleGeneratorController extends Controller
             // Simpan gambar baru ke storage/app/public/articles
             $path = $request->file('image')->store('articles', 'public');
             $validated['image_url'] = Storage::url($path); // Output: /storage/articles/filename.jpg
+            $validated['image_base64'] = null;
         }
 
         $article->update($validated);
 
+        if ((int) $article->status === 1) {
+            $this->regenerateSitemap();
+        }
+
         return redirect()->route('articles.index')->with('success', 'Artikel berhasil diperbarui!');
     }
+
     public function upload(Request $request)
     {
         // 1. Validasi request
@@ -272,17 +292,17 @@ class ArticleGeneratorController extends Controller
 
             // 2. Buat nama file acak sepanjang 40 karakter (contoh: fLxLfGU12qjjntZSfsONadLzN4KBBzsurYPGBDdU.jpg)
             $extension = $file->getClientOriginalExtension();
-            $filename = Str::random(40) . '.' . $extension;
+            $filename = Str::random(40).'.'.$extension;
 
             // 3. Simpan file ke storage/app/public/articles/
             $file->storeAs('public/articles', $filename);
 
             // 4. Return path relatif sesuai format yang Anda minta
-            $imageUrl = '/storage/articles/' . $filename;
+            $imageUrl = '/storage/articles/'.$filename;
 
             return response()->json([
-                'success'   => true,
-                'message'   => 'Image uploaded successfully',
+                'success' => true,
+                'message' => 'Image uploaded successfully',
                 'image_url' => $imageUrl,
             ], 200);
         }
@@ -292,13 +312,15 @@ class ArticleGeneratorController extends Controller
             'message' => 'No image provided',
         ], 400);
     }
+
     public function exportPdf(Article $article)
     {
         $pdf = Pdf::loadView('articles.pdf_single', compact('article'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download('Artikel-' . $article->slug . '.pdf');
+        return $pdf->download('Artikel-'.$article->slug.'.pdf');
     }
+
     public function exportAllPdf()
     {
         $articles = Article::latest()->get();
@@ -306,13 +328,29 @@ class ArticleGeneratorController extends Controller
         $pdf = Pdf::loadView('articles.pdf_all', compact('articles'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download('Daftar-Semua-Artikel-' . date('Y-m-d') . '.pdf');
+        return $pdf->download('Daftar-Semua-Artikel-'.date('Y-m-d').'.pdf');
     }
 
     public function destroy(Article $article)
     {
+        $wasPublished = (int) $article->status === 1;
         $article->delete();
 
+        if ($wasPublished) {
+            $this->regenerateSitemap();
+        }
+
         return back()->with('success', 'Artikel berhasil dihapus!');
+    }
+
+    private function regenerateSitemap(): void
+    {
+        try {
+            $this->sitemap->generate();
+        } catch (\Throwable $exception) {
+            Log::error('Gagal memperbarui sitemap artikel.', [
+                'exception' => $exception,
+            ]);
+        }
     }
 }

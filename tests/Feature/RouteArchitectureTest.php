@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Middleware\AksesByIpAddress;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Tests\TestCase;
@@ -30,6 +31,8 @@ class RouteArchitectureTest extends TestCase
         foreach ([
             'home',
             'frontend.home',
+            'frontend.articles.index',
+            'frontend.articles.show',
             'siswa.materi.index',
             'membernonanggota.cv-ats.index',
             'api.recent-registrations.random',
@@ -139,7 +142,7 @@ class RouteArchitectureTest extends TestCase
         }
 
         $this->assertContains('auth', Route::getRoutes()->match(
-            \Illuminate\Http\Request::create('/loker/apply', 'POST')
+            Request::create('/loker/apply', 'POST')
         )->gatherMiddleware());
     }
 

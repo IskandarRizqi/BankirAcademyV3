@@ -14,12 +14,12 @@ use App\Models\SiswaProfile;
 use App\Models\SubMateriModel;
 use App\Models\User;
 use App\Models\UserProfileModel;
+use App\Services\SitemapService;
 use App\Support\AdminPanel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\Models\Activity;
-use Spatie\Sitemap\SitemapGenerator;
 
 class HomeController extends Controller
 {
@@ -174,8 +174,10 @@ class HomeController extends Controller
         return view('compact.index', $data);
     }
 
-    public function createSitemap()
+    public function createSitemap(SitemapService $sitemap)
     {
-        SitemapGenerator::create(env('APP_URL'))->writeToFile(public_path('sitemap.xml'));
+        $sitemap->generate();
+
+        return response()->json(['message' => 'Sitemap berhasil diperbarui.']);
     }
 }

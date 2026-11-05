@@ -14,7 +14,7 @@
     <meta property="og:description" content="{{ $article->meta_description }}">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="id_ID">
-    <meta property="og:url" content="{{ route('articles.publicShow', $article->slug) }}">
+    <meta property="og:url" content="{{ route('frontend.articles.show', $article->slug) }}">
     <meta property="og:image" content="{{ $article->image_url }}">
 
     <!-- Twitter Card Meta -->

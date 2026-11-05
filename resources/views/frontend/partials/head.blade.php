@@ -22,6 +22,8 @@
     <!-- Favicon SVG: logo B Bankir Academy, tetap tajam di semua resolusi -->
     <link href='{{ asset('bankir-academy-icon.png') }}' rel="icon" type="image/svg+xml" />
 
+    @yield('head')
+
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link

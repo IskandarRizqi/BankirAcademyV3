@@ -132,7 +132,7 @@ class PublicContentController extends Controller
             'title' => $article->title,
             'keyword' => $article->keyword,
             'excerpt' => Str::limit(trim(strip_tags((string) $article->content)), 300),
-            'image_url' => $this->assetUrl($article->image_url),
+            'image_url' => $this->assetUrl($article->image_url ?: $article->image_base64),
             'meta_description' => $article->meta_description,
             'created_at' => optional($article->created_at)->toISOString(),
             'updated_at' => optional($article->updated_at)->toISOString(),
