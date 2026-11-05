@@ -21,7 +21,17 @@
     <title>@yield('page-title', 'Bankir Academy — Learning, Talent &amp; Banking Solutions')</title>
     <!-- Favicon SVG: logo B Bankir Academy, tetap tajam di semua resolusi -->
     <link href='{{ asset('bankir-academy-icon.png') }}' rel="icon" type="image/svg+xml" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J98K6NX0S7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-J98K6NX0S7');
+    </script>
     @yield('head')
 
     <link href="https://fonts.googleapis.com" rel="preconnect" />

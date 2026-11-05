@@ -2569,10 +2569,17 @@ h4 {
 @media (max-width: 700px) {
     .job-grid {
         grid-template-columns: 1fr;
-        gap: 0;
+        gap: 16px;
     }
 
-    .job-card {
+    .job-grid > .loker-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .job-grid > .job-card {
+        width: 100%;
+        min-width: 0;
         min-height: 320px;
     }
 }
