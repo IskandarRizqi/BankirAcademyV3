@@ -321,8 +321,8 @@
                     </div>
 
                     <div class="loker-form-field loker-form-field--wide">
-                        <label for="loker-skill">Skill yang dibutuhkan <span class="text-danger">*</span></label>
-                        <select id="loker-skill" name="skill[]" class="loker-form-control" multiple required>
+                        <label for="loker-skill">Skill yang dibutuhkan <span class="text-muted">(opsional)</span></label>
+                        <select id="loker-skill" name="skill[]" class="loker-form-control" multiple>
                             @foreach($skills as $skill)
                                 <option value="{{ $skill }}" @selected(in_array($skill, (array) $selectedSkills, true))>{{ $skill }}</option>
                             @endforeach

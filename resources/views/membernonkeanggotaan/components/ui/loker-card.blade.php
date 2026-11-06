@@ -65,10 +65,10 @@
 
         .loker-card__media img {
             display: block;
-            /* width: 100%;
-                height: 100%; */
-            /* object-fit: fit; */
-            /* object-position: center; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
         .loker-card__placeholder {

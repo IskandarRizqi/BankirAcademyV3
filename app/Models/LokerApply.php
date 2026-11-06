@@ -11,23 +11,42 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class LokerApply extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public const REVIEW_PENDING = 'pending';
+
+    public const REVIEW_REJECTED = 'rejected';
+
+    public const REVIEW_APPROVED = 'approved';
+
     protected $fillable = [
         'loker_id',
         'user_id',
         'status',
+        'review_status',
+        'reviewed_by',
+        'reviewed_at',
+        'sent_at',
+        'send_error',
     ];
 
     protected $appends = ['status_name'];
 
+    protected $casts = [
+        'reviewed_at' => 'datetime',
+        'sent_at' => 'datetime',
+    ];
+
     public function getStatusNameAttribute()
     {
-        $s = 'Pending';
-        if (array_key_exists('status', $this->attributes)) {
-            if ($this->attributes['status'] == 1) {
-                $s = 'Terkirim';
-            }
+        if ((int) ($this->attributes['status'] ?? 0) === 1) {
+            return 'Terkirim ke perusahaan';
         }
-        return $s;
+
+        if (($this->attributes['review_status'] ?? self::REVIEW_PENDING) === self::REVIEW_REJECTED) {
+            return 'Ditolak admin';
+        }
+
+        return 'Menunggu review admin';
     }
 
     public function lamaran(): HasOne

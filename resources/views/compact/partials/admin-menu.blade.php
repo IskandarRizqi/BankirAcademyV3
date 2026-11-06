@@ -80,6 +80,11 @@
         <span class="nav-icon">{!! $icons['list'] !!}</span>
         <span>Generate Artikel</span>
     </a>
+    <a href="{{ route('admin.news.index') }}"
+        class="nav-item-link {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
+        <span class="nav-icon">{!! $icons['file'] !!}</span>
+        <span>Berita</span>
+    </a>
     <a href="/posting" class="nav-item-link {{ request()->routeIs('admin.manual-class-orders.*') ? 'active' : '' }}">
         <span class="nav-icon">{!! $icons['bar-chart-2'] !!}</span>
         <span>Posting</span>

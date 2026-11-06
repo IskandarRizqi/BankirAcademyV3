@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\DataPayment;
 use App\Models\LamaranModel;
 use App\Models\LokerApply;
 use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
 use App\Models\UserProfileModel;
-use App\Models\DataPayment;
 use App\Services\LokerApplicationQuota;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -61,10 +62,10 @@ class MobileJobController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Daftar lowongan berhasil diambil.',
-            'data' => collect($jobs instanceof \Illuminate\Pagination\LengthAwarePaginator ? $jobs->items() : $jobs)
+            'data' => collect($jobs instanceof LengthAwarePaginator ? $jobs->items() : $jobs)
                 ->map(fn (LokerModel $job) => $this->jobData($job))
                 ->values(),
-            'meta' => $jobs instanceof \Illuminate\Pagination\LengthAwarePaginator ? [
+            'meta' => $jobs instanceof LengthAwarePaginator ? [
                 'current_page' => $jobs->currentPage(),
                 'last_page' => $jobs->lastPage(),
                 'per_page' => $jobs->perPage(),
@@ -179,12 +180,13 @@ class MobileJobController extends Controller
             return $this->error($exception->getMessage(), Response::HTTP_CONFLICT);
         } catch (Throwable $exception) {
             report($exception);
+
             return $this->error('Lamaran gagal dikirim. Silakan coba lagi.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Lamaran berhasil dikirim.',
+            'message' => 'Lamaran berhasil dicatat dan menunggu review admin.',
             'data' => [
                 'id' => $application->id,
                 'job_id' => $application->loker_id,
@@ -256,6 +258,7 @@ class MobileJobController extends Controller
                 File::delete(public_path($newPath));
             }
             report($exception);
+
             return $this->error('Profil perusahaan gagal disimpan.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -361,6 +364,7 @@ class MobileJobController extends Controller
         }
 
         $job->delete();
+
         return response()->json(['success' => true, 'message' => 'Lowongan berhasil dihapus.']);
     }
 
@@ -383,6 +387,7 @@ class MobileJobController extends Controller
     private function hasActiveMembership($user): bool
     {
         $profile = UserProfileModel::where('user_id', $user->id)->first();
+
         return $profile && (int) $profile->status_membership === DataPayment::STATUS_PAID
             && (! $profile->masa_aktif_membership || now()->parse($profile->masa_aktif_membership)->endOfDay()->isFuture());
     }
@@ -390,6 +395,7 @@ class MobileJobController extends Controller
     private function hasActiveIndividualMembership($user): bool
     {
         $profile = UserProfileModel::where('user_id', $user->id)->first();
+
         return $this->hasActiveMembership($user) && $profile && (int) $profile->tipe_membership === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL;
     }
 
@@ -420,6 +426,7 @@ class MobileJobController extends Controller
             $data['description'] = $job->deskripsi;
             $data['jobdesk'] = $job->jobdesk;
         }
+
         return $data;
     }
 
@@ -427,6 +434,7 @@ class MobileJobController extends Controller
     {
         $image = json_decode((string) $company->image, true);
         $imageUrl = is_array($image) ? ($image['url'] ?? null) : null;
+
         return [
             'id' => $company->id,
             'name' => $company->nama,
@@ -447,6 +455,7 @@ class MobileJobController extends Controller
         $salaryDigits = preg_replace('/[^0-9]/', '', (string) ($request->input('gaji_min') ?? ''));
         $payload['gaji_min'] = $salaryDigits === '' ? null : (int) $salaryDigits;
         $payload['jobdesk'] = trim(strip_tags((string) $request->input('jobdesk'), '<p><br><strong><em><u><ul><ol><li><blockquote>'));
+
         return validator($payload, [
             'title' => ['required', 'string', 'max:255'],
             'gaji_min' => ['required', 'numeric', 'min:0'],
@@ -454,8 +463,8 @@ class MobileJobController extends Controller
             'jobdesk' => ['required', 'string', 'max:10000'],
             'tanggal_awal' => ['required', 'date'],
             'tanggal_akhir' => ['required', 'date', 'after_or_equal:tanggal_awal'],
-            'skill' => ['required', 'array', 'min:1'],
-            'skill.*' => ['required', 'string', 'max:100', 'distinct'],
+            'skill' => ['nullable', 'array'],
+            'skill.*' => ['nullable', 'string', 'max:100', 'distinct'],
             'type' => ['required', 'array', 'min:1'],
             'type.*' => ['required', 'string', 'max:100', 'distinct'],
         ])->validate();
@@ -463,6 +472,8 @@ class MobileJobController extends Controller
 
     private function jobAttributes(array $data, int $userId, int $companyId): array
     {
+        $skills = array_values(array_filter($data['skill'] ?? [], fn ($skill) => filled($skill)));
+
         return [
             'user_id' => $userId,
             'title' => $data['title'],
@@ -472,7 +483,7 @@ class MobileJobController extends Controller
             'jobdesk' => $data['jobdesk'],
             'tanggal_awal' => $data['tanggal_awal'],
             'tanggal_akhir' => $data['tanggal_akhir'],
-            'skill' => json_encode(array_values($data['skill'])),
+            'skill' => $skills !== [] ? json_encode($skills) : null,
             'type' => json_encode(array_values($data['type'])),
             'perusahaan_id' => $companyId,
             'status' => 0,
@@ -482,6 +493,7 @@ class MobileJobController extends Controller
     private function completeCompany(int $userId): PerusahaanModel|JsonResponse
     {
         $company = PerusahaanModel::where('user_id', $userId)->first();
+
         return $company && $company->isComplete()
             ? $company
             : $this->error('Lengkapi profil perusahaan terlebih dahulu.', Response::HTTP_CONFLICT);
@@ -490,12 +502,16 @@ class MobileJobController extends Controller
     private function decodeList($value): array
     {
         $decoded = json_decode((string) $value, true);
+
         return is_array($decoded) ? array_values($decoded) : (filled($value) ? [(string) $value] : []);
     }
 
     private function assetUrl(?string $path): ?string
     {
-        if (! $path) return null;
+        if (! $path) {
+            return null;
+        }
+
         return Str::startsWith($path, ['http://', 'https://', 'data:']) ? $path : asset(ltrim($path, '/'));
     }
 

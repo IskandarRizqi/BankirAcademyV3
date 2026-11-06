@@ -91,14 +91,14 @@ class LokerController extends Controller
         $cities = DB::table('kota')
             ->where('provinsi_id', $provinceId)
             ->when($search !== '', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%');
             })
             ->orderBy('name')
             ->paginate(20);
 
         return response()->json([
             'results' => $cities->getCollection()
-                ->map(fn($city) => [
+                ->map(fn ($city) => [
                     'id' => $city->id,
                     'text' => $city->name,
                 ])
@@ -261,7 +261,7 @@ class LokerController extends Controller
         }
 
         return redirect()->route('membernonanggota.loker.history')
-            ->with('success', 'Lamaran Anda berhasil dikirim');
+            ->with('success', 'Lamaran Anda berhasil dikirim dan menunggu review admin.');
     }
 
     public function history(Request $request)
@@ -297,9 +297,9 @@ class LokerController extends Controller
     {
         if ($filters['q'] !== '') {
             $query->where(function (Builder $searchQuery) use ($filters) {
-                $searchQuery->where('loker.title', 'like', '%' . $filters['q'] . '%')
-                    ->orWhere('loker.nama', 'like', '%' . $filters['q'] . '%')
-                    ->orWhere('perusahaan_models.nama', 'like', '%' . $filters['q'] . '%');
+                $searchQuery->where('loker.title', 'like', '%'.$filters['q'].'%')
+                    ->orWhere('loker.nama', 'like', '%'.$filters['q'].'%')
+                    ->orWhere('perusahaan_models.nama', 'like', '%'.$filters['q'].'%');
             });
         }
 
@@ -396,7 +396,7 @@ class LokerController extends Controller
         }
 
         return DB::table('kota')
-            ->when($provinceId !== '', fn($query) => $query->where('provinsi_id', $provinceId))
+            ->when($provinceId !== '', fn ($query) => $query->where('provinsi_id', $provinceId))
             ->where('id', $cityId)
             ->value('name');
     }
@@ -409,11 +409,11 @@ class LokerController extends Controller
 
                 return is_array($decoded) ? $decoded : Arr::wrap($value);
             })
-            ->filter(fn($value) => $value !== null && $value !== '')
-            ->map(fn($value) => (string) $value)
+            ->filter(fn ($value) => $value !== null && $value !== '')
+            ->map(fn ($value) => (string) $value)
             ->unique()
             ->sort()
-            ->mapWithKeys(fn($value) => [$value => $this->formatOptionLabel($value)])
+            ->mapWithKeys(fn ($value) => [$value => $this->formatOptionLabel($value)])
             ->all();
     }
 
@@ -450,5 +450,4 @@ class LokerController extends Controller
             && (int) $profile->tipe_membership === DataPayment::MEMBERSHIP_TYPE_INDIVIDUAL
             && $this->hasActiveMembership($user);
     }
-
 }

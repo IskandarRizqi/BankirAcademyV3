@@ -3,7 +3,21 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-	<title>@yield('title', 'Dashboard') - Bankir Academy</title>
+	<meta name="description" content="@yield('page-description', 'Bankir Academy menyediakan solusi pembelajaran, pengembangan talenta, riset, inovasi, dan program pemberdayaan untuk ekosistem perbankan Indonesia.')">
+	<meta name="robots" content="index, follow">
+	<meta property="og:title" content="@yield('page-title', 'Bankir Academy')">
+	<meta property="og:description" content="@yield('page-description', 'Bankir Academy menyediakan solusi pembelajaran dan peluang karier.')">
+	<meta property="og:type" content="@yield('og-type', 'website')">
+	<meta property="og:locale" content="id_ID">
+	<meta property="og:url" content="@yield('page-url', url()->current())">
+	<meta property="og:image" content="@yield('page-image', asset('bankir-academy-icon.png'))">
+	<meta property="og:image:alt" content="@yield('page-image-alt', 'Bankir Academy')">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="@yield('page-title', 'Bankir Academy')">
+	<meta name="twitter:description" content="@yield('page-description', 'Bankir Academy menyediakan solusi pembelajaran dan peluang karier.')">
+	<meta name="twitter:image" content="@yield('page-image', asset('bankir-academy-icon.png'))">
+	<link rel="canonical" href="@yield('page-url', url()->current())">
+	<title>@yield('page-title', 'Bankir Academy') - @yield('title', 'Dashboard')</title>
 
 	<link rel="icon" type="image/x-icon" href="{{env('CUSTOM_FAVICON','/359x404.png')}}" />
 
@@ -16,6 +30,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('cbtemplate/plugins/select2/select2.min.css') }}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	@yield('head')
 
 	<script src="{{ asset('cbtemplate/assets/js/libs/jquery-3.1.1.min.js') }}"></script>
 	<script src="{{ asset('cbtemplate/bootstrap/js/popper.min.js') }}"></script>

@@ -110,7 +110,7 @@ class BerandaLoker extends Controller
         // Filter Kata Kunci / Search
         if ($request->filled('search') || $request->filled('cari_lowongan')) {
             $keyword = $request->search ?? $request->cari_lowongan;
-            $query->where('loker.title', 'like', '%' . $keyword . '%');
+            $query->where('loker.title', 'like', '%'.$keyword.'%');
         }
 
         // Filter Provinsi / Lokasi
@@ -154,7 +154,7 @@ class BerandaLoker extends Controller
                 ->leftJoin('user_profile', 'user_profile.user_id', 'loker.user_id')
                 ->where(function ($query) use ($request) {
                     if ($request->search) {
-                        return $query->where('title', 'like', '%' . $request->search['value'] . '%');
+                        return $query->where('title', 'like', '%'.$request->search['value'].'%');
                     }
                     // if ($request->tanggal_akhir) {
                     //     $query->where('tanggal_akhir', 'like', '%' . $request->tanggal_akhir . '%');
@@ -201,10 +201,20 @@ class BerandaLoker extends Controller
                     return $row->status == 1 ? 'ACC' : 'Tidak ACC';
                 })
                 ->addColumn('aksi', function ($row) {
-                    $edit = "<span class='btn btn-warning btn-sm' onclick=editloker('" . $row->id . "')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z'></path><path d='M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z'></path></svg></span>";
-                    $hapus = "<span class='btn btn-danger btn-sm' onclick=deleteLoker('" . $row->id . "')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2zM9 4h6v2H9V4zm8 16H7V8h10v12z'></path></svg></span>";
+                    $edit = "<span class='btn btn-warning btn-sm' onclick=editloker('".$row->id."')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z'></path><path d='M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z'></path></svg></span>";
+                    $hapus = "<span class='btn btn-danger btn-sm' onclick=deleteLoker('".$row->id."')><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' style='fill: rgba(255, 255, 255, 1);transform: ;msFilter:;'><path d='M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2zM9 4h6v2H9V4zm8 16H7V8h10v12z'></path></svg></span>";
 
-                    return $edit . $hapus;
+                    $token = csrf_token();
+                    $publishAction = $row->status == 1 ? 'unpublish' : 'publish';
+                    $publishLabel = $row->status == 1 ? 'Unpublish' : 'Publish';
+                    $publishClass = $row->status == 1 ? 'btn-secondary' : 'btn-success';
+                    $publishRoute = route('admin.loker.'.$publishAction, $row->id);
+                    $publish = "<form method='POST' action='{$publishRoute}' class='d-inline ml-1' onsubmit=\"return confirm('{$publishLabel} lowongan ini?')\">"
+                        ."<input type='hidden' name='_token' value='{$token}'>"
+                        ."<input type='hidden' name='_method' value='PATCH'>"
+                        ."<button type='submit' class='btn {$publishClass} btn-sm'>{$publishLabel}</button></form>";
+
+                    return $edit.$hapus.$publish;
                 })
                 ->rawColumns(['aksi'])
                 ->make(true);
@@ -334,7 +344,7 @@ class BerandaLoker extends Controller
                 if ($value->lamaran) {
                     if ($value->lamaran->tanggal_akhir) {
                         $d = Carbon::parse($value->lamaran->tanggal_akhir);
-                        $value->tanggal_date = $d->day . ' ' . GlobalHelper::namabulan($d->month) . ' ' . $d->year;
+                        $value->tanggal_date = $d->day.' '.GlobalHelper::namabulan($d->month).' '.$d->year;
                     }
                 }
                 if (! in_array($value->loker_id, $lokerid)) {
@@ -446,7 +456,7 @@ class BerandaLoker extends Controller
         if ($request->hasFile('filClassesImage')) {
             $file = $request->file('filClassesImage');
             $imageSize = $file->getSize();
-            $filename2 = time() . '-' . Str::uuid() . '.' . $file->extension();
+            $filename2 = time().'-'.Str::uuid().'.'.$file->extension();
             $file->move(public_path('image/loker'), $filename2);
             $data['image'] = json_encode([
                 'url' => $filename2,
@@ -638,7 +648,7 @@ class BerandaLoker extends Controller
             'postalCode' => null,
             'name' => $name,
             'sameAs' => 'https://bankiracademy.com',
-            'logo' => env('APP_URL') . '/' . $data['data']->picture,
+            'logo' => env('APP_URL').'/'.$data['data']->picture,
         ];
         if ($data['data']->kecamatan != 'Pilih' && $data['data']->kecamatan != null) {
             $html['streetAddress'] = DB::table('kecamatan')
@@ -689,7 +699,7 @@ class BerandaLoker extends Controller
             return;
         }
 
-        $localPath = public_path('image/loker/' . basename($path));
+        $localPath = public_path('image/loker/'.basename($path));
 
         if (File::exists($localPath)) {
             File::delete($localPath);

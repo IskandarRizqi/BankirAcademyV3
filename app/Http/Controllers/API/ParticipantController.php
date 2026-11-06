@@ -289,7 +289,7 @@ class ParticipantController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Lamaran berhasil dikirim.',
+            'message' => 'Lamaran berhasil dicatat dan menunggu review admin.',
             'data' => [
                 'id' => $application->id,
                 'job_id' => $application->loker_id,

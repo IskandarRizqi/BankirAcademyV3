@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\Front\BankPageController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\NewsController;
 use App\Http\Controllers\Front\PagesController;
 use App\Http\Controllers\LivePurchaseToastController;
 use App\Http\Controllers\Loker\BerandaLoker;
@@ -25,7 +26,7 @@ Route::get('/', [HomeController::class, 'index'])
     ->name('frontend.home');
 Route::get('/robots.txt', function () {
     return response(
-        "User-agent: *\nDisallow:\n\nSitemap: " . rtrim(config('app.url'), '/') . "/sitemap.xml\n",
+        "User-agent: *\nDisallow:\n\nSitemap: ".rtrim(config('app.url'), '/')."/sitemap.xml\n",
         200,
         ['Content-Type' => 'text/plain']
     );
@@ -36,6 +37,12 @@ Route::get('/artikel', [ArticleGeneratorController::class, 'publicIndex'])
 Route::get('/artikel/{slug}', [ArticleGeneratorController::class, 'publicShow'])
     ->middleware('visitor')
     ->name('frontend.articles.show');
+Route::get('/berita', [NewsController::class, 'index'])
+    ->middleware('visitor')
+    ->name('frontend.news.index');
+Route::get('/berita/{slug}', [NewsController::class, 'show'])
+    ->middleware('visitor')
+    ->name('frontend.news.show');
 Route::get('/pages/page/{id}', [PagesController::class, 'showKelas'])->middleware('visitor');
 Route::get('/pages/about', [PagesController::class, 'showAbout'])->middleware('visitor');
 Route::redirect('/pages/contact', '/kontak-kami', 301);
@@ -67,7 +74,7 @@ $frontendPages = [
 ];
 
 foreach ($frontendPages as $name => [$uri, $view]) {
-    Route::get('/' . $uri, [BankPageController::class, 'show'])
+    Route::get('/'.$uri, [BankPageController::class, 'show'])
         ->middleware('visitor')
         ->defaults('frontendView', $view)
         ->name($name);

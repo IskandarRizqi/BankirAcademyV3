@@ -255,8 +255,9 @@
                                     </td>
                                     <td>
                                         <span class="loker-history-status">
-                                            <i class="fas fa-clock" aria-hidden="true"></i>
-                                            Terkirim
+                                            <i class="fas {{ $application->status == 1 ? 'fa-check-circle' : ($application->review_status === \App\Models\LokerApply::REVIEW_REJECTED ? 'fa-times-circle' : 'fa-clock') }}"
+                                                aria-hidden="true"></i>
+                                            {{ $application->status_name }}
                                         </span>
                                     </td>
                                     <td>

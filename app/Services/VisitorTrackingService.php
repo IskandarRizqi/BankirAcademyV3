@@ -102,6 +102,8 @@ class VisitorTrackingService
             'frontend.home' => 'Landing Page Utama',
             'frontend.articles.index' => 'Artikel',
             'frontend.articles.show' => 'Detail Artikel',
+            'frontend.news.index' => 'Berita',
+            'frontend.news.show' => 'Detail Berita',
             'frontend.classes.index' => 'Daftar Kelas',
             'frontend.class.landing' => 'Landing Page Kelas',
             'frontend.class.detail' => 'Detail Kelas',

@@ -179,8 +179,8 @@ class LokerPostingController extends Controller
             'jobdesk' => ['required', 'string', 'max:10000'],
             'tanggal_awal' => ['required', 'date'],
             'tanggal_akhir' => ['required', 'date', 'after_or_equal:tanggal_awal'],
-            'skill' => ['required', 'array', 'min:1'],
-            'skill.*' => ['required', 'string', 'max:100', 'distinct'],
+            'skill' => ['nullable', 'array'],
+            'skill.*' => ['nullable', 'string', 'max:100', 'distinct'],
             'type' => ['required', 'array', 'min:1'],
             'type.*' => ['required', 'string', 'max:100', 'distinct'],
         ]);
@@ -201,6 +201,8 @@ class LokerPostingController extends Controller
         PerusahaanModel $company,
         array $validated
     ): array {
+        $skills = array_values(array_filter($validated['skill'] ?? [], fn ($skill) => filled($skill)));
+
         return [
             'user_id' => $request->user()->id,
             'title' => $validated['title'],
@@ -210,7 +212,7 @@ class LokerPostingController extends Controller
             'jobdesk' => $validated['jobdesk'],
             'tanggal_awal' => $validated['tanggal_awal'],
             'tanggal_akhir' => $validated['tanggal_akhir'],
-            'skill' => json_encode(array_values($validated['skill'])),
+            'skill' => $skills !== [] ? json_encode($skills) : null,
             'type' => json_encode(array_values($validated['type'])),
             'perusahaan_id' => $company->id,
             'status' => 0,

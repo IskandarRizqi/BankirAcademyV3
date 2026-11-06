@@ -35,7 +35,7 @@
                         </div>
                         <div>
                             <span class="text-muted fw-medium small d-block">Menunggu Tinjauan</span>
-                            <h3 class="fw-bold text-dark mb-0 mt-1">{{ $data->where('status', '!=', 1)->count() }}</h3>
+                            <h3 class="fw-bold text-dark mb-0 mt-1">{{ $data->where('review_status', 'pending')->where('status', '!=', 1)->count() }}</h3>
                         </div>
                     </div>
                 </div>
@@ -110,6 +110,11 @@
                                                 class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-medium">
                                                 <i class="bx bx-check-circle me-1 align-middle"></i>{{ $v->status_name }}
                                             </span>
+                                        @elseif ($v->review_status === \App\Models\LokerApply::REVIEW_REJECTED)
+                                            <span
+                                                class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2 fw-medium">
+                                                <i class="bx bx-x-circle me-1 align-middle"></i>{{ $v->status_name }}
+                                            </span>
                                         @else
                                             <span
                                                 class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2 fw-medium">
@@ -124,7 +129,32 @@
                                                 onclick="opencv({{ json_encode($v) }})" title="Lihat Detail Pelamar">
                                                 <i class="bx bx-show me-1"></i> Detail
                                             </button>
-                                            {{-- <a href="/loker/{{ $v->lamaran->id ?? '#' }}/detail"
+                                             @if ($v->application_cv_id)
+                                                 <a class="btn btn-outline-info btn-sm rounded-2 me-1 d-inline-flex align-items-center"
+                                                     href="{{ route('cvats.pdf', $v->application_cv_id) }}" target="_blank"
+                                                     rel="noopener" title="Review CV ATS">
+                                                     <i class="bx bx-file me-1"></i> CV
+                                                 </a>
+                                             @endif
+                                             @if ($v->status != 1 && $v->review_status !== \App\Models\LokerApply::REVIEW_REJECTED)
+                                                 <form action="{{ route('apply.send', $v->id) }}" method="POST" class="d-inline"
+                                                     onsubmit="return confirm('Kirim lamaran ini ke email perusahaan sekarang?')">
+                                                     @csrf
+                                                     <button class="btn btn-success btn-sm rounded-2 me-1 d-inline-flex align-items-center"
+                                                         type="submit" title="Kirim ke perusahaan">
+                                                         <i class="bx bx-send me-1"></i> Kirim
+                                                     </button>
+                                                 </form>
+                                                 <form action="{{ route('apply.reject', $v->id) }}" method="POST" class="d-inline"
+                                                     onsubmit="return confirm('Tolak lamaran ini?')">
+                                                     @csrf
+                                                     <button class="btn btn-outline-danger btn-sm rounded-2 d-inline-flex align-items-center"
+                                                         type="submit" title="Tolak lamaran">
+                                                         <i class="bx bx-x me-1"></i> Tolak
+                                                     </button>
+                                                 </form>
+                                             @endif
+                                             {{-- <a href="/loker/{{ $v->lamaran->id ?? '#' }}/detail"
                                                 class="btn btn-outline-secondary btn-sm rounded-2 d-inline-flex align-items-center"
                                                 title="Lihat Detail Lowongan" target="_blank">
                                                 <i class="bx bx-link-external"></i>

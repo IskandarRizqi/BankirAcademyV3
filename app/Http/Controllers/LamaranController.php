@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LamaranModel;
-use App\Models\SiswaProfile;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\CvAtsPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,10 +22,10 @@ class LamaranController extends Controller
     public function create()
     {
         return view('compact.lamaran.form', [
-            'lamaran' => new LamaranModel(),
-            'action'  => route('lamaran.store'),
-            'method'  => 'POST',
-            'title'   => 'Buat Data CV / Lamaran'
+            'lamaran' => new LamaranModel,
+            'action' => route('lamaran.store'),
+            'method' => 'POST',
+            'title' => 'Buat Data CV / Lamaran',
         ]);
     }
 
@@ -34,14 +33,14 @@ class LamaranController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_lengkap'   => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'nama_panggilan' => 'required|string|max:100',
-            'tmpttgllahir'   => 'required|string|max:255',
-            'agama'          => 'required',
+            'tmpttgllahir' => 'required|string|max:255',
+            'agama' => 'required',
             'alamatdomisili' => 'required|string',
-            'telpdomisili'   => 'required|string|max:20',
-            'kodepos'        => 'required|string|max:10',
-            'statusperkawinan'=> 'required|string',
+            'telpdomisili' => 'required|string|max:20',
+            'kodepos' => 'required|string|max:10',
+            'statusperkawinan' => 'required|string',
         ]);
 
         $data = $request->except(['_token', '_method']);
@@ -49,19 +48,19 @@ class LamaranController extends Controller
 
         // Format Pengalaman Kerja (Array to Separated String)
         if (is_array($request->pekerjaanperusahaan)) {
-            $data['pekerjaanperusahaan']    = implode(',', array_filter($request->pekerjaanperusahaan));
-            $data['pekerjaanjabatan']       = implode(',', $request->pekerjaanjabatan ?? []);
-            $data['pekerjaantahun']         = implode(',', $request->pekerjaantahun ?? []);
+            $data['pekerjaanperusahaan'] = implode(',', array_filter($request->pekerjaanperusahaan));
+            $data['pekerjaanjabatan'] = implode(',', $request->pekerjaanjabatan ?? []);
+            $data['pekerjaantahun'] = implode(',', $request->pekerjaantahun ?? []);
             $data['pekerjaantanggungjawab'] = implode(';', $request->pekerjaantanggungjawab ?? []);
-            $data['pekerjaanprestasi']      = implode(';', $request->pekerjaanprestasi ?? []);
+            $data['pekerjaanprestasi'] = implode(';', $request->pekerjaanprestasi ?? []);
         }
 
         // Format Pelatihan / Sertifikasi (Array to Separated String)
         if (is_array($request->pelatihannama)) {
-            $data['pelatihannama']          = implode(',', array_filter($request->pelatihannama));
+            $data['pelatihannama'] = implode(',', array_filter($request->pelatihannama));
             $data['pelatihanpenyelanggara'] = implode(',', $request->pelatihanpenyelanggara ?? []);
-            $data['pelatihantahun']         = implode(',', $request->pelatihantahun ?? []);
-            $data['pelatihanlokasi']        = implode(',', $request->pelatihanlokasi ?? []);
+            $data['pelatihantahun'] = implode(',', $request->pelatihantahun ?? []);
+            $data['pelatihanlokasi'] = implode(',', $request->pelatihanlokasi ?? []);
         }
 
         LamaranModel::create($data);
@@ -76,9 +75,9 @@ class LamaranController extends Controller
 
         return view('compact.lamaran.form', [
             'lamaran' => $lamaran,
-            'action'  => route('lamaran.update', $lamaran->id),
-            'method'  => 'PUT',
-            'title'   => 'Edit Data CV / Lamaran'
+            'action' => route('lamaran.update', $lamaran->id),
+            'method' => 'PUT',
+            'title' => 'Edit Data CV / Lamaran',
         ]);
     }
 
@@ -88,9 +87,9 @@ class LamaranController extends Controller
         $lamaran = LamaranModel::where('user_id', Auth::id())->findOrFail($id);
 
         $request->validate([
-            'nama_lengkap'   => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'nama_panggilan' => 'required|string|max:100',
-            'tmpttgllahir'   => 'required|string|max:255',
+            'tmpttgllahir' => 'required|string|max:255',
             'alamatdomisili' => 'required|string',
         ]);
 
@@ -98,19 +97,19 @@ class LamaranController extends Controller
 
         // Format Pengalaman Kerja
         if (is_array($request->pekerjaanperusahaan)) {
-            $data['pekerjaanperusahaan']    = implode(',', array_filter($request->pekerjaanperusahaan));
-            $data['pekerjaanjabatan']       = implode(',', $request->pekerjaanjabatan ?? []);
-            $data['pekerjaantahun']         = implode(',', $request->pekerjaantahun ?? []);
+            $data['pekerjaanperusahaan'] = implode(',', array_filter($request->pekerjaanperusahaan));
+            $data['pekerjaanjabatan'] = implode(',', $request->pekerjaanjabatan ?? []);
+            $data['pekerjaantahun'] = implode(',', $request->pekerjaantahun ?? []);
             $data['pekerjaantanggungjawab'] = implode(';', $request->pekerjaantanggungjawab ?? []);
-            $data['pekerjaanprestasi']      = implode(';', $request->pekerjaanprestasi ?? []);
+            $data['pekerjaanprestasi'] = implode(';', $request->pekerjaanprestasi ?? []);
         }
 
         // Format Pelatihan
         if (is_array($request->pelatihannama)) {
-            $data['pelatihannama']          = implode(',', array_filter($request->pelatihannama));
+            $data['pelatihannama'] = implode(',', array_filter($request->pelatihannama));
             $data['pelatihanpenyelanggara'] = implode(',', $request->pelatihanpenyelanggara ?? []);
-            $data['pelatihantahun']         = implode(',', $request->pelatihantahun ?? []);
-            $data['pelatihanlokasi']        = implode(',', $request->pelatihanlokasi ?? []);
+            $data['pelatihantahun'] = implode(',', $request->pelatihantahun ?? []);
+            $data['pelatihanlokasi'] = implode(',', $request->pelatihanlokasi ?? []);
         }
 
         $lamaran->update($data);
@@ -126,31 +125,29 @@ class LamaranController extends Controller
 
         return redirect()->route('cvats.index')->with('success', 'Data CV berhasil dihapus!');
     }
-    public function downloadPdf($id = null)
-{
-    if ($id) {
-        // Jika dipanggil Admin (membawa ID Lamaran)
-        $lamaran = LamaranModel::with('user')->find($id);
-        if (!$lamaran) {
-            return redirect()->back()->with('error', 'Data CV tidak ditemukan.');
+
+    public function downloadPdf(CvAtsPdfService $pdfService, $id = null)
+    {
+        if ($id) {
+            // Admin membuka snapshot CV yang tersimpan untuk posisi tersebut.
+            $lamaran = LamaranModel::with('user')->find($id);
+            if (! $lamaran) {
+                return redirect()->back()->with('error', 'Data CV tidak ditemukan.');
+            }
+
+            $user = $lamaran->user;
+        } else {
+            // User selalu melihat CV ATS utama, sama seperti halaman CV ATS.
+            $user = Auth::user();
+            $lamaran = LamaranModel::where('user_id', $user->id)
+                ->where('is_cv_ats', true)
+                ->first();
+            if (! $lamaran) {
+                return redirect()->back()->with('error', 'Data CV belum ditemukan.');
+            }
         }
-        $user = $lamaran->user; // Pastikan relasi 'user' sudah ada di LamaranModel
-    } else {
-        // Jika dipanggil oleh Pelamar sendiri
-        $user = Auth::user();
-        $lamaran = LamaranModel::where('user_id', $user->id)->latest()->first();
-        if (!$lamaran) {
-            return redirect()->back()->with('error', 'Data CV belum ditemukan.');
-        }
+
+        return $pdfService->make($lamaran, $user)
+            ->stream($pdfService->filename($lamaran));
     }
-
-    // Nama file PDF
-    $fileName = 'CV_ATS_' . str_replace(' ', '_', $lamaran->nama_lengkap ?? $user->name) . '.pdf';
-
-    // Render template PDF
-    $pdf = Pdf::loadView('compact.cvats_pdf', compact('user', 'lamaran'))
-             ->setPaper('a4', 'portrait');
-
-    return $pdf->stream($fileName);
-}
 }

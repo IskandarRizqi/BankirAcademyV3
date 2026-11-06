@@ -41,10 +41,46 @@
             preg_replace('/\s+/', ' ', $description ?: $jobdesk ?: 'Lihat detail lowongan kerja di Bankir Academy.'),
             160
         );
-        $shareUrl = url()->current();
+        $shareUrl = route('membernonanggota.loker.show', $loker->id);
         $shareImage = $imageUrl ?: asset('bankir-academy-icon.png');
         $shareText = rawurlencode($shareTitle . "\n" . $shareUrl);
         $facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
+        $datePosted = $loker->tanggal_awal ?: $loker->created_at;
+        $jobPostingSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'JobPosting',
+            'title' => $loker->title,
+            'description' => $description ?: $jobdesk ?: $shareDescription,
+            'datePosted' => $datePosted
+                ? \Carbon\Carbon::parse($datePosted)->toDateString()
+                : now()->toDateString(),
+            'hiringOrganization' => [
+                '@type' => 'Organization',
+                'name' => $companyName,
+                'sameAs' => url('/'),
+                'logo' => $shareImage,
+            ],
+            'jobLocation' => [
+                '@type' => 'Place',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'streetAddress' => $address ?: 'Indonesia',
+                    'addressLocality' => $city ?: 'Indonesia',
+                    'addressRegion' => $province ?: 'Indonesia',
+                    'addressCountry' => 'ID',
+                ],
+            ],
+            'url' => $shareUrl,
+        ];
+        if ($loker->tanggal_akhir) {
+            $jobPostingSchema['validThrough'] = \Carbon\Carbon::parse($loker->tanggal_akhir)->toIso8601String();
+        }
+        if ($types !== []) {
+            $jobPostingSchema['employmentType'] = array_values(array_map(
+                fn ($type) => strtoupper(str_replace([' ', '-'], '_', (string) $type)),
+                $types,
+            ));
+        }
     @endphp
 
 @section('page-title', $shareTitle)
@@ -52,6 +88,17 @@
 @section('page-url', $shareUrl)
 @section('page-image', $shareImage)
 @section('page-image-alt', 'Gambar ' . $loker->title)
+@section('og-type', 'article')
+
+@section('head')
+    <meta name="robots" content="index, follow">
+    <meta property="og:site_name" content="Bankir Academy">
+    <meta property="og:updated_time" content="{{ optional($loker->updated_at)->toIso8601String() }}">
+    <meta name="twitter:image:alt" content="Gambar {{ $loker->title }}">
+    <script type="application/ld+json">
+        {!! json_encode($jobPostingSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}
+    </script>
+@endsection
 
 @section('content')
 

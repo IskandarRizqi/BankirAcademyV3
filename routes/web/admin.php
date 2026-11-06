@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\LokerApplicationController;
 use App\Http\Controllers\Admin\LokerController as AdminLokerController;
 use App\Http\Controllers\Admin\LokerDraftController;
 use App\Http\Controllers\Admin\ManualClassOrderController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\ScraperApiKeyController;
 use App\Http\Controllers\Admin\SopController;
@@ -105,6 +106,18 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::delete('/articles/{article}', [ArticleGeneratorController::class, 'destroy'])->name('articles.destroy');
     Route::get('/articles/{article}/export-pdf', [ArticleGeneratorController::class, 'exportPdf'])->name('articles.exportPdf');
 
+    Route::patch('/admin/berita/{news}/publish', [AdminNewsController::class, 'publish'])
+        ->middleware('admin.panel')
+        ->name('admin.news.publish');
+    Route::patch('/admin/berita/{news}/unpublish', [AdminNewsController::class, 'unpublish'])
+        ->middleware('admin.panel')
+        ->name('admin.news.unpublish');
+    Route::resource('/admin/berita', AdminNewsController::class)
+        ->except(['show'])
+        ->middleware('admin.panel')
+        ->names('admin.news')
+        ->parameters(['berita' => 'news']);
+
     Route::get('/admin/order-kelas-manual', [ManualClassOrderController::class, 'index'])
         ->middleware('admin.panel')
         ->name('admin.manual-class-orders.index');
@@ -124,6 +137,14 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/loker', [AdminLokerController::class, 'index_admin'])
         ->middleware('admin.panel')
         ->name('admin.loker.index');
+    Route::patch('/admin/loker/{id}/publish', [AdminLokerController::class, 'publish'])
+        ->middleware('admin.panel')
+        ->whereNumber('id')
+        ->name('admin.loker.publish');
+    Route::patch('/admin/loker/{id}/unpublish', [AdminLokerController::class, 'unpublish'])
+        ->middleware('admin.panel')
+        ->whereNumber('id')
+        ->name('admin.loker.unpublish');
     Route::get('/admin/loker/{id}', [AdminLokerController::class, 'show'])
         ->middleware('admin.panel')
         ->name('admin.loker.show');
@@ -154,6 +175,14 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/apply', [LokerApplicationController::class, 'index'])
         ->middleware('admin.panel')
         ->name('apply.index');
+    Route::post('/admin/apply/{id}/send', [LokerApplicationController::class, 'sendApplication'])
+        ->middleware('admin.panel')
+        ->whereNumber('id')
+        ->name('apply.send');
+    Route::post('/admin/apply/{id}/reject', [LokerApplicationController::class, 'rejectApplication'])
+        ->middleware('admin.panel')
+        ->whereNumber('id')
+        ->name('apply.reject');
     Route::get('/admin/getdatacvpelamar', [LokerApplicationController::class, 'getdatacvpelamar'])
         ->middleware('admin.panel')
         ->name('admin.applications.cv');

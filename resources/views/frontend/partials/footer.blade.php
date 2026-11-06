@@ -51,6 +51,7 @@
                     <nav class="footer-links">
                         <a href="{{ route('frontend.home') }}#kelas-online">Promo</a>
                         <a href="{{ route('frontend.articles.index') }}">Artikel</a>
+                        <a href="{{ route('frontend.news.index') }}">Berita</a>
                         <a href="{{ route('frontend.talent.job-connect') }}">Pusat Lowongan Kerja</a>
                         <a href="{{ route('frontend.classes.index') }}">Kelas Online</a>
                         <a href="{{ route('login.new') }}">Login</a>
