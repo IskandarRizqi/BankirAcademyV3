@@ -354,7 +354,8 @@
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between flex-wrap mb-3">
                     <div>
-                        <h4 class="font-weight-bold mb-1"><i class="bx bx-calendar mr-2 text-primary"></i>Kalender Kelas</h4>
+                        <h4 class="font-weight-bold mb-1"><i class="bx bx-calendar mr-2 text-primary"></i>Kalender Kelas
+                        </h4>
                         <p class="text-muted small mb-0">Jadwal pelaksanaan dan sesi kelas dari data kelas yang dipilih.</p>
                     </div>
                     <span class="badge badge-light border text-muted mt-2 mt-md-0">
@@ -381,11 +382,14 @@
                     <div>
                         <div class="class-calendar-toolbar">
                             <div class="btn-group btn-group-sm">
-                                <button type="button" class="btn btn-outline-secondary" id="calendarPrevious" aria-label="Bulan sebelumnya">
+                                <button type="button" class="btn btn-outline-secondary" id="calendarPrevious"
+                                    aria-label="Bulan sebelumnya">
                                     <i class="bx bx-chevron-left"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" id="calendarToday">Hari ini</button>
-                                <button type="button" class="btn btn-outline-secondary" id="calendarNext" aria-label="Bulan berikutnya">
+                                <button type="button" class="btn btn-outline-secondary" id="calendarToday">Hari
+                                    ini</button>
+                                <button type="button" class="btn btn-outline-secondary" id="calendarNext"
+                                    aria-label="Bulan berikutnya">
                                     <i class="bx bx-chevron-right"></i>
                                 </button>
                             </div>
@@ -396,16 +400,19 @@
                         <div id="classCalendarGrid" class="class-calendar-grid" aria-live="polite"></div>
                         <div class="calendar-legend" aria-label="Keterangan warna kalender">
                             <span class="calendar-legend-item"><span class="calendar-legend-dot"></span>Akan datang</span>
-                            <span class="calendar-legend-item"><span class="calendar-legend-dot is-past"></span>Sudah terlewat</span>
+                            <span class="calendar-legend-item"><span class="calendar-legend-dot is-past"></span>Sudah
+                                terlewat</span>
                         </div>
                         @if (count($calendarEvents) === 0)
-                            <div class="calendar-empty">Belum ada tanggal pelaksanaan atau sesi event pada hasil filter ini.</div>
+                            <div class="calendar-empty">Belum ada tanggal pelaksanaan atau sesi event pada hasil filter ini.
+                            </div>
                         @endif
                     </div>
 
                     <aside class="class-info-panel">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="font-weight-bold mb-0"><i class="bx bx-book-content mr-2 text-primary"></i>Informasi Kelas</h5>
+                            <h5 class="font-weight-bold mb-0"><i class="bx bx-book-content mr-2 text-primary"></i>Informasi
+                                Kelas</h5>
                             <span id="calendarInfoStatus" class="badge badge-success">-</span>
                         </div>
                         <div id="calendarInfoEmpty" class="calendar-empty py-4 px-0">
@@ -436,7 +443,8 @@
                             <a href="#" id="calendarInfoManage" class="btn btn-sm btn-primary btn-block mb-3">
                                 <i class="bx bx-edit mr-1"></i>Kelola Event Kelas
                             </a>
-                            <button type="button" id="calendarInfoDetail" class="btn btn-sm btn-outline-secondary btn-block">
+                            <button type="button" id="calendarInfoDetail"
+                                class="btn btn-sm btn-outline-secondary btn-block">
                                 <i class="bx bx-detail mr-1"></i>Lihat Detail Jadwal
                             </button>
                         </div>
@@ -467,7 +475,7 @@
                                 <th>Kategori</th>
                                 <th>Instruktur</th>
                                 <th class="text-center" width="10%">
-                                    Peserta<br>
+                                    Perusahaan<br>
                                     <small class="text-muted"><span class="text-danger font-weight-bold">A</span> (All) |
                                         <span class="text-success font-weight-bold">L</span> (Lunas)</small>
                                 </th>
@@ -477,6 +485,19 @@
                         </thead>
                         <tbody>
                             @foreach ($classes as $k => $v)
+                                @php
+                                    $pesertaList = $v->peserta_list;
+                                    $jumlahPerusahaan = collect($pesertaList['all'] ?? [])
+                                        ->pluck('user_name')
+                                        ->filter()
+                                        ->unique()
+                                        ->count();
+                                    $jumlahPerusahaanLunas = collect($pesertaList['lunas'] ?? [])
+                                        ->pluck('user_name')
+                                        ->filter()
+                                        ->unique()
+                                        ->count();
+                                @endphp
                                 <tr>
                                     {{-- Status Badge --}}
                                     <td>
@@ -552,18 +573,18 @@
                                         @endforeach
                                     </td>
 
-                                    {{-- Participants Count --}}
+                                    {{-- Company Count --}}
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2 bs-tooltip"
-                                            title="Total Peserta" data-toggle="modal" data-target="#listPesertaModal"
-                                            onclick="openPeserta({{ $v->peserta_list['all'] }}, {{ $v->id }})">
-                                            {{ count($v->peserta_list['all']) }}
+                                            title="Total Perusahaan" data-toggle="modal" data-target="#listPesertaModal"
+                                            onclick="openPeserta({{ $pesertaList['all'] }}, {{ $v->id }})">
+                                            {{ $jumlahPerusahaan }}
                                         </button>
                                         <span class="text-muted mx-1">|</span>
                                         <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 bs-tooltip"
-                                            title="Peserta Lunas" data-toggle="modal" data-target="#listPesertaModal"
-                                            onclick="openPeserta({{ $v->peserta_list['lunas'] }}, {{ $v->id }})">
-                                            {{ count($v->peserta_list['lunas']) }}
+                                            title="Perusahaan Lunas" data-toggle="modal" data-target="#listPesertaModal"
+                                            onclick="openPeserta({{ $pesertaList['lunas'] }}, {{ $v->id }})">
+                                            {{ $jumlahPerusahaanLunas }}
                                         </button>
                                     </td>
 
@@ -580,16 +601,16 @@
                                                 title="File Content" onclick="classContent({{ $v }})">
                                                 <i class="bx bx-file"></i>
                                             </button>
-                                             <a class="btn {{ $v->events_exist ? 'btn-primary' : 'btn-outline-secondary' }} bs-tooltip"
-                                                 title="Event Schedule"
-                                                 href="/admin/classes/createevent/{{ $v->id }}">
-                                                 <i class="bx bx-calendar"></i>
-                                             </a>
-                                             <a class="btn {{ count($v->exams) > 0 ? 'btn-success' : 'btn-outline-secondary' }} bs-tooltip"
-                                                 title="Exam Kelas"
-                                                 href="{{ route('admin.exams.index', ['class_id' => $v->id]) }}">
-                                                 <i class="bx bx-help-circle"></i>
-                                             </a>
+                                            <a class="btn {{ $v->events_exist ? 'btn-primary' : 'btn-outline-secondary' }} bs-tooltip"
+                                                title="Event Schedule"
+                                                href="/admin/classes/createevent/{{ $v->id }}">
+                                                <i class="bx bx-calendar"></i>
+                                            </a>
+                                            <a class="btn {{ count($v->exams) > 0 ? 'btn-success' : 'btn-outline-secondary' }} bs-tooltip"
+                                                title="Exam Kelas"
+                                                href="{{ route('admin.exams.index', ['class_id' => $v->id]) }}">
+                                                <i class="bx bx-help-circle"></i>
+                                            </a>
                                             <div class="btn-group btn-group-sm" role="group">
                                                 <button
                                                     class="btn {{ $v->certif_exist ? 'btn-warning text-white' : 'btn-outline-secondary' }} dropdown-toggle bs-tooltip"
@@ -633,15 +654,20 @@
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right shadow border-0">
                                                 @if ($v->landing_page_enabled)
-                                                    <a class="dropdown-item" href="{{ route('frontend.class.landing', $v->slug) }}"
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('frontend.class.landing', $v->slug) }}"
                                                         target="_blank" rel="noopener"><i
-                                                            class="bx bx-mobile-alt text-success mr-2"></i>Buka Landing Promo</a>
+                                                            class="bx bx-mobile-alt text-success mr-2"></i>Buka Landing
+                                                        Promo</a>
                                                 @endif
-                                                <form action="{{ route('admin.classes.landing.generate', $v->id) }}" method="POST">
+                                                <form action="{{ route('admin.classes.landing.generate', $v->id) }}"
+                                                    method="POST">
                                                     @csrf
-                                                    <button type="submit" class="dropdown-item {{ $v->landing_page_enabled ? 'text-primary' : 'text-success' }}"
+                                                    <button type="submit"
+                                                        class="dropdown-item {{ $v->landing_page_enabled ? 'text-primary' : 'text-success' }}"
                                                         onclick="return {{ $v->landing_page_enabled ? 'confirm(\'Ganti tema landing page ini?\')' : 'true' }}">
-                                                        <i class="bx {{ $v->landing_page_enabled ? 'bx-refresh' : 'bx-magic-wand' }} mr-2"></i>{{ $v->landing_page_enabled ? 'Regenerate Tema' : 'Generate Landing' }}
+                                                        <i
+                                                            class="bx {{ $v->landing_page_enabled ? 'bx-refresh' : 'bx-magic-wand' }} mr-2"></i>{{ $v->landing_page_enabled ? 'Regenerate Tema' : 'Generate Landing' }}
                                                     </button>
                                                 </form>
                                                 <a class="dropdown-item"
@@ -683,12 +709,14 @@
 
     </div>
 
-    <div class="modal fade" id="calendarEventModal" tabindex="-1" aria-labelledby="calendarEventModalLabel" aria-hidden="true">
+    <div class="modal fade" id="calendarEventModal" tabindex="-1" aria-labelledby="calendarEventModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-light">
                     <h5 class="modal-title font-weight-bold" id="calendarEventModalLabel">Detail Jadwal</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup"><span
+                            aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <h5 id="calendarEventTitle" class="font-weight-bold text-dark mb-3"></h5>
@@ -704,44 +732,82 @@
                     </dl>
                 </div>
                 <div class="modal-footer bg-light">
-                    <a href="#" id="calendarEventManage" class="btn btn-primary"><i class="bx bx-edit mr-1"></i>Kelola Event Kelas</a>
+                    <a href="#" id="calendarEventManage" class="btn btn-primary"><i
+                            class="bx bx-edit mr-1"></i>Kelola Event Kelas</a>
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Modal List Peserta --}}
+    {{-- Modal List Perusahaan Peserta Sertifikat --}}
     <div class="modal fade" id="listPesertaModal" tabindex="-1" aria-labelledby="listPesertaModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-light">
                     <h5 class="modal-title font-weight-bold" id="listPesertaModalLabel"><i
-                            class="bx bx-group mr-2"></i>List Peserta Sertifikat</h5>
+                            class="bx bx-buildings mr-2"></i>List Perusahaan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
-                        <table id="tblListPeserta" class="table table-hover table-striped mb-0">
+                        <table id="tblListPerusahaan" class="table table-hover table-striped mb-0">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Status</th>
-                                    {{-- <th>Nama Akun</th> --}}
-                                    <th>Nama Sertifikat</th>
-                                    <th>No HP</th>
-                                    <th>Instansi</th>
-                                    <th>Price</th>
-                                    <th>Sertifikat</th>
+                                    <th width="60">No</th>
+                                    <th>Perusahaan</th>
+                                    <th>Jumlah Peserta</th>
+                                    <th>Status Pembayaran</th>
+                                    <th width="150">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="listPeserta"></tbody>
+                            <tbody id="listPerusahaan"></tbody>
                         </table>
                     </div>
                 </div>
                 <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Detail Peserta Sertifikat --}}
+    <div class="modal fade" id="listPesertaDetailModal" tabindex="-1" aria-labelledby="listPesertaDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title font-weight-bold" id="listPesertaDetailModalLabel"><i
+                            class="bx bx-group mr-2"></i>Detail Peserta Sertifikat</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="tblListPesertaDetail" class="table table-hover table-striped mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th width="60">No</th>
+                                    <th>Status</th>
+                                    <th>Nama Sertifikat</th>
+                                    <th>No HP</th>
+                                    <th>Price</th>
+                                    <th>Sertifikat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listPesertaDetail"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" onclick="backToPesertaCompanies()">
+                        <i class="bx bx-arrow-back mr-1"></i>Kembali
+                    </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
@@ -927,10 +993,12 @@
                 dateEvents.slice(0, 4).forEach(event => {
                     const eventButton = document.createElement('button');
                     eventButton.type = 'button';
-                    eventButton.className = `calendar-event ${event.type === 1 ? 'is-offline' : 'is-online'} ${event.is_past ? 'is-past' : 'is-upcoming'}`;
+                    eventButton.className =
+                        `calendar-event ${event.type === 1 ? 'is-offline' : 'is-online'} ${event.is_past ? 'is-past' : 'is-upcoming'}`;
                     eventButton.dataset.eventIndex = event.index;
                     eventButton.title = `${event.title} - ${calendarEventTime(event)}`;
-                    eventButton.textContent = event.all_day ? event.title : `${calendarEventTime(event)} ${event.title}`;
+                    eventButton.textContent = event.all_day ? event.title :
+                        `${calendarEventTime(event)} ${event.title}`;
                     day.appendChild(eventButton);
                 });
 
@@ -957,7 +1025,8 @@
                 }))
                 .filter(event => {
                     const date = new Date(`${event.date}T00:00:00`);
-                    return date.getFullYear() === calendarCursor.getFullYear() && date.getMonth() === calendarCursor.getMonth();
+                    return date.getFullYear() === calendarCursor.getFullYear() && date.getMonth() === calendarCursor
+                        .getMonth();
                 });
             const classes = new Map();
 
@@ -1021,8 +1090,10 @@
             status.classList.toggle('badge-secondary', event.is_past);
             document.getElementById('calendarInfoTitle').textContent = event.class_title;
             document.getElementById('calendarInfoCategory').textContent = `${event.category || '-'} | ${event.class_type}`;
-            document.getElementById('calendarInfoTime').textContent = `${calendarEventDate(event)}, ${calendarEventTime(event)}`;
-            document.getElementById('calendarInfoLocation').textContent = event.location || (event.all_day ? event.class_type : 'Online');
+            document.getElementById('calendarInfoTime').textContent =
+                `${calendarEventDate(event)}, ${calendarEventTime(event)}`;
+            document.getElementById('calendarInfoLocation').textContent = event.location || (event.all_day ? event
+                .class_type : 'Online');
             document.getElementById('calendarInfoCapacity').textContent = event.participant_limit || 'Tidak dibatasi';
             document.getElementById('calendarInfoDescription').textContent = event.description || 'Tidak ada keterangan.';
             document.getElementById('calendarInfoManage').href = event.manage_url;
@@ -1036,8 +1107,10 @@
 
             document.getElementById('calendarEventTitle').textContent = event.class_title;
             document.getElementById('calendarEventKind').textContent = event.kind;
-            document.getElementById('calendarEventTime').textContent = `${calendarEventDate(event)}, ${calendarEventTime(event)}`;
-            document.getElementById('calendarEventLocation').textContent = event.location || (event.all_day ? event.class_type : 'Online');
+            document.getElementById('calendarEventTime').textContent =
+                `${calendarEventDate(event)}, ${calendarEventTime(event)}`;
+            document.getElementById('calendarEventLocation').textContent = event.location || (event.all_day ? event
+                .class_type : 'Online');
             document.getElementById('calendarEventDescription').textContent = event.description || '-';
             document.getElementById('calendarEventManage').href = event.manage_url;
             $('#calendarEventModal').modal('show');
@@ -1072,7 +1145,6 @@
 
         renderClassCalendar();
         createDataTable('#tblClasses');
-        createDataTable('#tblListPeserta');
 
         $(document).ready(function() {
             $('#tipe, #nominal').on('input change', function() {
@@ -1240,42 +1312,151 @@
             $('#nominal').change();
         }
 
-        function openPeserta(data, id_class) {
-            let html = '';
-            $('#listPeserta').html('');
+        let pesertaCompanyGroups = [];
+        let pesertaClassId = null;
 
-            if (data.length > 0) {
-                data.forEach(el => {
-                    try {
-                        if (el.nama_sertifikat && el.nama_sertifikat.startsWith('[')) {
-                            daftarNama = JSON.parse(el.nama_sertifikat);
-                        } else if (el.nama_sertifikat) {
-                            daftarNama = [el.nama_sertifikat]; // Jika bukan array, jadikan array tunggal
-                        } else {
-                            daftarNama = [el.user_name]; // Fallback ke nama akun jika data sertifikat kosong
-                        }
-                    } catch (e) {
-                        daftarNama = [el.nama_sertifikat];
+        function escapePesertaHtml(value) {
+            return $('<div>').text(value ?? '-').html();
+        }
+
+        function parseCertificateValues(value) {
+            if (!value) {
+                return [];
+            }
+
+            if (Array.isArray(value)) {
+                return value;
+            }
+
+            try {
+                if (typeof value === 'string' && value.startsWith('[')) {
+                    const values = JSON.parse(value);
+                    return Array.isArray(values) ? values : [value];
+                }
+            } catch (e) {
+                return [value];
+            }
+
+            return [value];
+        }
+
+        function getCertificateParticipants(participant) {
+            const names = parseCertificateValues(participant.nama_sertifikat);
+            const phones = parseCertificateValues(participant.nohp_sertifikat);
+            const participantNames = names.length > 0 ? names : [participant.user_name];
+
+            return participantNames.map((name, index) => ({
+                name: name || participant.user_name,
+                phone: phones[index] || participant.phone || '-'
+            }));
+        }
+
+        function openPeserta(data, id_class) {
+            pesertaClassId = id_class;
+            pesertaCompanyGroups = [];
+
+            const groups = {};
+            (data || []).forEach(participant => {
+                const company = String(participant.user_name || '').trim();
+                const groupKey = company.toLowerCase();
+
+                if (!groups[groupKey]) {
+                    groups[groupKey] = {
+                        company,
+                        participants: []
+                    };
+                }
+
+                getCertificateParticipants(participant).forEach(detail => {
+                    groups[groupKey].participants.push({
+                        ...participant,
+                        participant_name: detail.name,
+                        participant_phone: detail.phone
+                    });
+                });
+            });
+
+            pesertaCompanyGroups = Object.values(groups);
+
+            let html = '';
+            if (pesertaCompanyGroups.length > 0) {
+                pesertaCompanyGroups.forEach((group, index) => {
+                    const paidCount = group.participants.filter(participant => Number(participant.status) === 1).length;
+                    const unpaidCount = group.participants.length - paidCount;
+                    let paymentStatus = '';
+
+                    if (paidCount === group.participants.length) {
+                        paymentStatus = '<span class="badge badge-success">Lunas</span>';
+                    } else if (paidCount === 0) {
+                        paymentStatus = '<span class="badge badge-warning">Belum Lunas</span>';
+                    } else {
+                        paymentStatus = `<span class="badge badge-info">Sebagian Lunas</span><small class="d-block text-muted mt-1">${paidCount} lunas / ${unpaidCount} belum</small>`;
                     }
-                    daftarNama.forEach(namaIndividu => {
-                        let status = el.status ? '<span class="badge badge-success">Lunas</span>' :
-                            '<span class="badge badge-warning">Belum Lunas</span>';
-                        html += `
+
+                    html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${escapePesertaHtml(group.company)}</td>
+                            <td>${group.participants.length}</td>
+                            <td>${paymentStatus}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="openPesertaDetail(${index})">
+                                    <i class="bx bx-show mr-1"></i>Lihat Detail
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                html = '<tr><td colspan="5" class="text-center text-muted py-3">Tidak ada data perusahaan.</td></tr>';
+            }
+
+            $('#listPerusahaan').html(html);
+        }
+
+        function openPesertaDetail(companyIndex) {
+            const group = pesertaCompanyGroups[companyIndex];
+            if (!group) {
+                return;
+            }
+
+            $('#listPesertaDetailModalLabel').html(
+                `<i class="bx bx-group mr-2"></i>Detail Peserta - ${escapePesertaHtml(group.company)}`
+            );
+
+            let html = '';
+            group.participants.forEach((participant, index) => {
+                const status = Number(participant.status) === 1 ?
+                    '<span class="badge badge-success">Lunas</span>' :
+                    '<span class="badge badge-warning">Belum Lunas</span>';
+                const participantName = participant.participant_name || participant.user_name || '-';
+                const company = participant.user_name || '';
+                const certificateUrl =
+                    `/admin/classes/previewcertificate/${pesertaClassId}/${encodeURIComponent(participantName)}/${encodeURIComponent(company)}`;
+
+                html += `
                     <tr>
+                        <td>${index + 1}</td>
                         <td>${status}</td>
-                        <td>${namaIndividu ?? '-'}</td>
-                        <td>${el.phone ?? '-'}</td>
-                        <td>${el.user_name ?? '-'}</td>
-                        <td>Rp ${Number(el.price || 0).toLocaleString('id-ID')}</td>
-                      <td><a class="btn btn-primary" title="Preview" href="/admin/classes/previewcertificate/${id_class}/${namaIndividu}/${el.user_name}" target="_blank">Show Certificate</a></td>
+                        <td>${escapePesertaHtml(participantName)}</td>
+                        <td>${escapePesertaHtml(participant.participant_phone)}</td>
+                        <td>Rp ${Number(participant.price || 0).toLocaleString('id-ID')}</td>
+                        <td><a class="btn btn-sm btn-primary" title="Preview" href="${certificateUrl}" target="_blank">Show Certificate</a></td>
                     </tr>
                 `;
-                    });
-                })
-            } else {
-                html = `<tr><td colspan="7" class="text-center text-muted py-3">Tidak ada data peserta.</td></tr>`;
-            }
-            $('#listPeserta').html(html);
+            });
+
+            $('#listPesertaDetail').html(html ||
+                '<tr><td colspan="6" class="text-center text-muted py-3">Tidak ada data peserta.</td></tr>');
+            $('#listPesertaModal').one('hidden.bs.modal', function() {
+                $('#listPesertaDetailModal').modal('show');
+            }).modal('hide');
+        }
+
+        function backToPesertaCompanies() {
+            $('#listPesertaDetailModal').one('hidden.bs.modal', function() {
+                $('#listPesertaModal').modal('show');
+            }).modal('hide');
         }
 
         function activedClasses(id, s) {

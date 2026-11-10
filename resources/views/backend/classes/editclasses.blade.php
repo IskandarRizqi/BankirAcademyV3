@@ -376,8 +376,16 @@ $selectedSubcategories = is_array($selectedSubcategories) ? $selectedSubcategori
 		$('#slcClassesType, #slcClassesJenis').select2({
 			width: '100%'
 		});
+		$('#slcClassesCategory').select2({
+			width: '100%',
+			tags: true,
+			createTag: createClassTag,
+			placeholder: 'Pilih atau ketik category'
+		});
 		$('#subCategory').select2({
 			width: '100%',
+			tags: true,
+			createTag: createClassTag,
 			placeholder: 'Pilih sub category'
 		});
 		$('#txtClassesInstructor').select2({

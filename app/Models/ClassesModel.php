@@ -217,7 +217,8 @@ class ClassesModel extends Model
                     'user_profile.phone_region',
                     'user_profile.phone',
                     'user_profile.instansi',
-                    'sertifikat_peserta.nama as nama_sertifikat' // Ambil nama dari tabel sertifikat
+                    'sertifikat_peserta.nama as nama_sertifikat',
+                    'sertifikat_peserta.nohp as nohp_sertifikat'
                 )
                 ->leftJoin('user_profile', 'user_profile.user_id', '=', 'class_payment.user_id')
                 ->leftJoin('sertifikat_peserta', 'sertifikat_peserta.payment_class_id', '=', 'class_payment.id')

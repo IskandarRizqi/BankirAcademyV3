@@ -64,7 +64,10 @@ class LokerApprovalService
                 'gaji_max' => $draft->gaji_max ?? 0,
                 'deskripsi' => $description,
                 'jobdesk' => $jobdesk,
-                'image' => $company->image,
+                'image' => json_encode([
+                    'url' => self::DEFAULT_COMPANY_LOGO,
+                    'size' => null,
+                ]),
                 'skill' => json_encode($this->listValue($draft->keahlian_skill)),
                 'type' => json_encode($this->listValue($draft->tipe_pekerjaan)),
                 'status' => 1,

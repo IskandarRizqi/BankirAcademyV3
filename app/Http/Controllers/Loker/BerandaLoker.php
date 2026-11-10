@@ -165,6 +165,7 @@ class BerandaLoker extends Controller
                         return $query->where('loker.user_id', $auth->id);
                     }
                 })
+                ->orderByDesc('loker.created_at')
                 ->get();
 
             return DataTables::of($data)
