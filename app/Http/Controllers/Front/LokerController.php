@@ -29,7 +29,7 @@ class LokerController extends Controller
             'loker_jobdesk' => 'required',
             'loker_tanggal_awal' => 'required',
             'loker_tanggal_akhir' => 'required',
-            'loker_skill' => 'required',
+            'loker_skill' => 'nullable',
             'loker_type' => 'required',
         ]);
         //response error validation
@@ -46,7 +46,7 @@ class LokerController extends Controller
             'jobdesk' => $request->loker_jobdesk,
             'tanggal_awal' => $request->loker_tanggal_awal,
             'tanggal_akhir' => $request->loker_tanggal_akhir,
-            'skill' => json_encode($request->loker_skill),
+            'skill' => $request->filled('loker_skill') ? json_encode($request->loker_skill) : null,
             'type' => json_encode($request->loker_type),
         ];
 

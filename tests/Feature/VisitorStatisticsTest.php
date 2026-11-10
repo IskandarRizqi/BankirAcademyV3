@@ -120,9 +120,59 @@ class VisitorStatisticsTest extends TestCase
         $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
 
         $this->actingAs($admin)
-            ->get('/admin/statistik-visitor?year=2026')
+            ->get('/admin/statistik-visitor')
             ->assertOk()
-            ->assertSee('Belum ada data visitor');
+            ->assertSee('Belum ada data visitor')
+            ->assertSee('Hari ini')
+            ->assertSee('2026-11-05 - 2026-11-05');
+    }
+
+    public function test_dashboard_supports_monthly_and_yearly_filters(): void
+    {
+        $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor?period=monthly')
+            ->assertOk()
+            ->assertSee('Bulan ini')
+            ->assertSee('2026-11-01 - 2026-11-05');
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor?period=yearly')
+            ->assertOk()
+            ->assertSee('Tahun ini')
+            ->assertSee('2026-01-01 - 2026-11-05');
+    }
+
+    public function test_dashboard_supports_last_fourteen_days_filter(): void
+    {
+        $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor?period=14days')
+            ->assertOk()
+            ->assertSee('14 hari terakhir')
+            ->assertSee('2026-10-23 - 2026-11-05');
+    }
+
+    public function test_dashboard_supports_custom_date_filter(): void
+    {
+        $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor?period=custom&start_date=2026-11-01&end_date=2026-11-04')
+            ->assertOk()
+            ->assertSee('Rentang custom')
+            ->assertSee('2026-11-01 - 2026-11-04');
+    }
+
+    public function test_custom_date_filter_requires_a_complete_date_range(): void
+    {
+        $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor?period=custom&start_date=2026-11-01')
+            ->assertSessionHasErrors('end_date');
     }
 
     public function test_non_admin_cannot_access_visitor_dashboard(): void

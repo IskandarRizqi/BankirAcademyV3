@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassExamModel;
 use App\Models\ClassExamSubmissionModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -48,6 +49,15 @@ class ExamController extends Controller
             }
         });
         $validated = $validator->validate();
+        $normalizedPhone = preg_replace('/\D+/', '', trim($validated['phone']));
+        $existingSubmission = ClassExamSubmissionModel::query()
+            ->where('exam_id', $exam->id)
+            ->where('phone', $normalizedPhone)
+            ->exists();
+
+        if ($existingSubmission) {
+            return redirect()->route('exam.thanks', $exam->public_token)->with('already_submitted', true);
+        }
 
         $answers = array_values($validated['answers']);
         $correctAnswers = $questions->filter(function ($question, $index) use ($answers) {
@@ -56,19 +66,27 @@ class ExamController extends Controller
         $totalQuestions = $questions->count();
         $score = $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100, 2) : 0;
 
-        DB::transaction(function () use ($exam, $validated, $answers, $questions, $correctAnswers, $totalQuestions, $score) {
-            ClassExamSubmissionModel::create([
-                'exam_id' => $exam->id,
-                'name' => trim($validated['name']),
-                'phone' => trim($validated['phone']),
-                'answers' => $answers,
-                'questions_snapshot' => $questions->all(),
-                'correct_answers' => $correctAnswers,
-                'total_questions' => $totalQuestions,
-                'score' => $score,
-                'submitted_at' => now(),
-            ]);
-        });
+        try {
+            DB::transaction(function () use ($exam, $validated, $normalizedPhone, $answers, $questions, $correctAnswers, $totalQuestions, $score) {
+                ClassExamSubmissionModel::create([
+                    'exam_id' => $exam->id,
+                    'name' => trim($validated['name']),
+                    'phone' => $normalizedPhone,
+                    'answers' => $answers,
+                    'questions_snapshot' => $questions->all(),
+                    'correct_answers' => $correctAnswers,
+                    'total_questions' => $totalQuestions,
+                    'score' => $score,
+                    'submitted_at' => now(),
+                ]);
+            });
+        } catch (QueryException $exception) {
+            if ($exception->getCode() !== '23000') {
+                throw $exception;
+            }
+
+            return redirect()->route('exam.thanks', $exam->public_token)->with('already_submitted', true);
+        }
 
         return redirect()->route('exam.thanks', $exam->public_token);
     }

@@ -12,11 +12,15 @@ class VisitorStatisticsController extends Controller
 {
     public function index(Request $request)
     {
-        $currentYear = now()->year;
         $validated = $request->validate([
-            'year' => ['nullable', 'integer', 'min:2000', 'max:'.$currentYear],
+            'period' => ['nullable', 'in:today,weekly,14days,monthly,yearly,custom'],
+            'start_date' => ['nullable', 'required_if:period,custom', 'date'],
+            'end_date' => ['nullable', 'required_if:period,custom', 'date', 'after_or_equal:start_date'],
         ]);
-        $year = (int) ($validated['year'] ?? $currentYear);
+        $range = $this->resolveRange($validated);
+        $start = $range['start'];
+        $end = $range['end'];
+        $chartLabels = $this->chartLabels($start, $end);
 
         $categories = [
             Visitor::TYPE_LANDING => 'Landing Page',
@@ -28,63 +32,102 @@ class VisitorStatisticsController extends Controller
         foreach ($categories as $type => $label) {
             $statistics[$type] = [
                 'label' => $label,
-                'daily' => $this->periodCount($type, $year, 'day'),
-                'monthly' => $this->periodCount($type, $year, 'month'),
-                'yearly' => $this->periodCount($type, $year, 'year'),
-                'monthly_chart' => $this->monthlyChart($type, $year),
+                'total' => $this->periodCount($type, $start, $end),
+                'daily_chart' => $this->dailyChart($type, $start, $end),
             ];
         }
 
         return view('compact.visitor-statistics', [
-            'year' => $year,
-            'years' => $this->availableYears($year, $currentYear),
+            'period' => $range['period'],
+            'periodLabel' => $range['label'],
+            'startDate' => $start->toDateString(),
+            'endDate' => $end->toDateString(),
+            'chartLabels' => $chartLabels,
             'statistics' => $statistics,
-            'deviceStatistics' => $this->deviceStatistics($year),
-            'topPages' => $this->topPages($year),
+            'deviceStatistics' => $this->deviceStatistics($start, $end),
+            'topPages' => $this->topPages($start, $end),
         ]);
     }
 
-    private function baseQuery(string $type, int $year)
+    private function resolveRange(array $validated): array
+    {
+        $period = $validated['period'] ?? 'today';
+        $today = now();
+        $end = $today->copy()->endOfDay();
+
+        if ($period === 'custom') {
+            $start = Carbon::parse($validated['start_date'])->startOfDay();
+            $end = Carbon::parse($validated['end_date'])->endOfDay();
+        } elseif ($period === 'yearly') {
+            $start = $today->copy()->startOfYear();
+        } elseif ($period === 'monthly') {
+            $start = $today->copy()->startOfMonth();
+        } elseif ($period === '14days') {
+            $start = $today->copy()->subDays(13)->startOfDay();
+        } elseif ($period === 'weekly') {
+            $start = $today->copy()->subDays(6)->startOfDay();
+        } else {
+            $start = $today->copy()->startOfDay();
+        }
+
+        return [
+            'period' => $period,
+            'label' => match ($period) {
+                'today' => 'Hari ini',
+                'weekly' => '7 hari terakhir',
+                '14days' => '14 hari terakhir',
+                'monthly' => 'Bulan ini',
+                'yearly' => 'Tahun ini',
+                default => 'Rentang custom',
+            },
+            'start' => $start,
+            'end' => $end,
+        ];
+    }
+
+    private function baseQuery(string $type, Carbon $start, Carbon $end)
     {
         return Visitor::query()
             ->where('visitor_type', $type)
-            ->where('visited_year', $year);
+            ->whereBetween('visited_at', [$start, $end]);
     }
 
-    private function periodCount(string $type, int $year, string $period): int
+    private function periodCount(string $type, Carbon $start, Carbon $end): int
     {
-        $query = $this->baseQuery($type, $year);
+        return (int) $this->baseQuery($type, $start, $end)
+            ->distinct()
+            ->count('ip_address');
+    }
 
-        if ($period === 'day') {
-            $date = Carbon::create($year, now()->month, 1);
-            $date->day(min(now()->day, $date->daysInMonth));
-            $query->whereDate('visited_at', $date->toDateString());
-        } elseif ($period === 'month') {
-            $query->whereMonth('visited_at', now()->month);
+    private function dailyChart(string $type, Carbon $start, Carbon $end): array
+    {
+        $counts = $this->baseQuery($type, $start, $end)
+            ->selectRaw('DATE(visited_at) as visit_date, COUNT(DISTINCT ip_address) as unique_visitors')
+            ->groupByRaw('DATE(visited_at)')
+            ->pluck('unique_visitors', 'visit_date');
+        $data = [];
+
+        for ($date = $start->copy()->startOfDay(); $date->lte($end); $date->addDay()) {
+            $data[] = (int) $counts->get($date->toDateString(), 0);
         }
 
-        return (int) $query->distinct()->count('ip_address');
+        return $data;
     }
 
-    private function monthlyChart(string $type, int $year): array
+    private function chartLabels(Carbon $start, Carbon $end): array
     {
-        $months = [];
+        $labels = [];
 
-        for ($month = 1; $month <= 12; $month++) {
-            $start = Carbon::create($year, $month, 1)->startOfMonth();
-            $end = $start->copy()->endOfMonth();
-            $months[] = (int) $this->baseQuery($type, $year)
-                ->whereBetween('visited_at', [$start, $end])
-                ->distinct()
-                ->count('ip_address');
+        for ($date = $start->copy()->startOfDay(); $date->lte($end); $date->addDay()) {
+            $labels[] = $date->format('d/m');
         }
 
-        return $months;
+        return $labels;
     }
 
-    private function deviceStatistics(int $year): array
+    private function deviceStatistics(Carbon $start, Carbon $end): array
     {
-        $visitors = $this->baseQuery(Visitor::TYPE_LANDING, $year)
+        $visitors = $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
             ->select(['ip_address', 'user_agent'])
             ->get()
             ->unique('ip_address');
@@ -103,30 +146,14 @@ class VisitorStatisticsController extends Controller
         ];
     }
 
-    private function topPages(int $year)
+    private function topPages(Carbon $start, Carbon $end)
     {
-        return $this->baseQuery(Visitor::TYPE_LANDING, $year)
+        return $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
             ->select(['page_url', 'page_label'])
             ->selectRaw('COUNT(DISTINCT ip_address) as unique_visitors')
             ->groupBy('page_url', 'page_label')
             ->orderByDesc('unique_visitors')
             ->limit(5)
             ->get();
-    }
-
-    private function availableYears(int $selectedYear, int $currentYear): array
-    {
-        return Visitor::query()
-            ->whereBetween('visited_year', [2000, $currentYear])
-            ->distinct()
-            ->orderByDesc('visited_year')
-            ->pluck('visited_year')
-            ->map(fn ($year) => (int) $year)
-            ->push($selectedYear)
-            ->push($currentYear)
-            ->unique()
-            ->sortDesc()
-            ->values()
-            ->all();
     }
 }

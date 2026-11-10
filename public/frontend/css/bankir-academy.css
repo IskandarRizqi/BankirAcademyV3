@@ -2269,6 +2269,220 @@ h4 {
     }
 }
 
+/* Homepage news carousel */
+.homepage-news {
+    background: linear-gradient(180deg, #f8f7ff 0%, #ffffff 100%);
+}
+
+.homepage-news-slider {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    background: #17284d;
+    box-shadow: 0 22px 55px rgba(29, 45, 83, 0.14);
+}
+
+.homepage-news-track {
+    display: flex;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.homepage-news-slide {
+    display: grid;
+    flex: 0 0 100%;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+    min-height: 390px;
+    color: #fff;
+    background: #17284d;
+}
+
+.homepage-news-slide__media {
+    position: relative;
+    min-height: 390px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #273f78, #6255d6);
+}
+
+.homepage-news-slide__media::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(90deg, transparent 55%, rgba(23, 40, 77, 0.45));
+}
+
+.homepage-news-slide__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.homepage-news-slide__fallback {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 74px;
+}
+
+.homepage-news-slide__badge {
+    position: absolute;
+    z-index: 1;
+    top: 24px;
+    left: 24px;
+    padding: 8px 13px;
+    color: #fff;
+    background: rgba(23, 40, 77, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.homepage-news-slide__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px clamp(28px, 5vw, 66px) 62px;
+}
+
+.homepage-news-slide__body time {
+    color: #aebce0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.homepage-news-slide__body h3 {
+    margin: 15px 0 14px;
+    color: #fff;
+    font-size: clamp(25px, 3vw, 42px);
+    line-height: 1.12;
+}
+
+.homepage-news-slide__body p {
+    display: -webkit-box;
+    margin: 0 0 26px;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.homepage-news-slide__body .btn {
+    margin-top: auto;
+}
+
+.homepage-news-control {
+    position: absolute;
+    z-index: 2;
+    bottom: 28px;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.homepage-news-control:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+}
+
+.homepage-news-control--prev {
+    right: 80px;
+}
+
+.homepage-news-control--next {
+    right: 28px;
+}
+
+.homepage-news-dots {
+    position: absolute;
+    bottom: 42px;
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    gap: 7px;
+    transform: translateX(-50%);
+}
+
+.homepage-news-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.38);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+        width 0.2s ease,
+        background 0.2s ease;
+}
+
+.homepage-news-dot.is-active {
+    width: 24px;
+    background: #fff;
+    border-radius: 999px;
+}
+
+.homepage-news-more {
+    margin-top: 28px;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .homepage-news-slide {
+        display: block;
+        min-height: 0;
+    }
+
+    .homepage-news-slide__media {
+        min-height: 230px;
+        max-height: 300px;
+    }
+
+    .homepage-news-slide__body {
+        min-height: 315px;
+        padding: 30px 25px 78px;
+    }
+
+    .homepage-news-slide__body h3 {
+        font-size: 28px;
+    }
+
+    .homepage-news-control {
+        bottom: 25px;
+    }
+
+    .homepage-news-control--prev {
+        right: 77px;
+    }
+
+    .homepage-news-control--next {
+        right: 25px;
+    }
+
+    .homepage-news-dots {
+        bottom: 39px;
+        left: 25px;
+        transform: none;
+    }
+}
+
 /* Latest job openings */
 .job-openings {
     position: relative;

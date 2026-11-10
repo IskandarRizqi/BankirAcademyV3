@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ExamResultsExport;
 use App\Http\Controllers\Controller;
 use App\Models\ClassesModel;
 use App\Models\ClassExamModel;
+use App\Models\ClassExamSubmissionModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExamController extends Controller
 {
@@ -29,7 +34,7 @@ class ExamController extends Controller
     {
         $classes = ClassesModel::query()->orderBy('title')->get(['id', 'title']);
         $exam = new ClassExamModel([
-            'class_id' => $request->integer('class_id'),
+            'class_id' => $request->filled('class_id') ? $request->integer('class_id') : null,
             'status' => false,
         ]);
 
@@ -70,15 +75,57 @@ class ExamController extends Controller
     public function results(ClassExamModel $exam)
     {
         $exam->load('classData');
-        $submissions = $exam->submissions()->latest('submitted_at')->paginate(30);
+        $submissions = $exam->submissions()->latest('submitted_at')->latest('id')->get();
 
         return view('backend.exams.results', compact('exam', 'submissions'));
+    }
+
+    public function exportExcel(ClassExamModel $exam)
+    {
+        return Excel::download(
+            new ExamResultsExport($this->uniqueSubmissions($exam)),
+            'hasil-exam-'.$exam->id.'.xlsx'
+        );
+    }
+
+    public function exportPdf(ClassExamModel $exam)
+    {
+        $submissions = $this->uniqueSubmissions($exam);
+        $exam->load('classData');
+        $pdf = Pdf::loadView('backend.exams.results-pdf', compact('exam', 'submissions'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('hasil-exam-'.$exam->id.'.pdf');
+    }
+
+    public function destroySubmission(ClassExamModel $exam, ClassExamSubmissionModel $submission)
+    {
+        abort_unless((int) $submission->exam_id === (int) $exam->id, 404);
+
+        $submission->delete();
+
+        return redirect()->route('admin.exams.results', $exam)->with('success', 'Hasil exam berhasil dihapus.');
+    }
+
+    private function uniqueSubmissions(ClassExamModel $exam): Collection
+    {
+        return $exam->submissions()
+            ->latest('submitted_at')
+            ->latest('id')
+            ->get()
+            ->unique(fn (ClassExamSubmissionModel $submission) => $this->normalizedName($submission->name))
+            ->values();
+    }
+
+    private function normalizedName(?string $name): string
+    {
+        return mb_strtolower((string) preg_replace('/\s+/', ' ', trim((string) $name)));
     }
 
     private function validatedData(Request $request): array
     {
         $validator = Validator::make($request->all(), [
-            'class_id' => ['required', 'exists:classes,id'],
+            'class_id' => ['nullable', 'integer', 'exists:classes,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'status' => ['nullable', 'boolean'],
@@ -121,7 +168,7 @@ class ExamController extends Controller
         })->values()->all();
 
         return [
-            'class_id' => $validated['class_id'],
+            'class_id' => $validated['class_id'] ?? null,
             'title' => trim($validated['title']),
             'description' => filled($validated['description'] ?? null) ? trim($validated['description']) : null,
             'questions' => $questions,

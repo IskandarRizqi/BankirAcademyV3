@@ -276,15 +276,20 @@
             @if ($exam->description)
                 <p class="description">{{ $exam->description }}</p>
             @endif
-            <p class="class-name">Kelas: {{ $exam->classData->title }}</p>
+            <p class="class-name">{{ $exam->classData?->title ? 'Kelas: '.$exam->classData->title : 'Exam mandiri' }}</p>
         </header>
 
         @if ($completed)
             <section class="card success">
                 <div class="success-icon">&#10003;</div>
-                <h2>Jawaban berhasil dikirim</h2>
-                <p>Terima kasih sudah mengikuti exam. Hasil penilaian akan diperiksa oleh admin Bankir Academy dan tidak
-                    ditampilkan pada halaman ini.</p>
+                @if (session('already_submitted'))
+                    <h2>Exam sudah pernah dikirim</h2>
+                    <p>Jawaban dengan nomor HP ini sudah tercatat sebelumnya. Pengiriman ulang tidak membuat data baru.</p>
+                @else
+                    <h2>Jawaban berhasil dikirim</h2>
+                    <p>Terima kasih sudah mengikuti exam. Hasil penilaian akan diperiksa oleh admin Bankir Academy dan tidak
+                        ditampilkan pada halaman ini.</p>
+                @endif
             </section>
         @else
             @if ($errors->any())
@@ -294,7 +299,7 @@
                     akan langsung ditampilkan setelah pengiriman.</div>
             @endif
 
-            <form class="card" action="{{ route('exam.submit', $exam->public_token) }}" method="POST">
+            <form id="exam-form" class="card" action="{{ route('exam.submit', $exam->public_token) }}" method="POST">
                 @csrf
                 <h2>Data peserta</h2>
                 <div class="field">
@@ -326,12 +331,23 @@
                     </fieldset>
                 @endforeach
 
-                <button class="submit" type="submit">Kirim Jawaban</button>
-                <p class="privacy">Data nama dan nomor HP digunakan untuk keperluan rekap exam kelas.</p>
+                <button id="submit-exam-button" class="submit" type="submit">Kirim Jawaban</button>
+                <p class="privacy">Data nama dan nomor HP digunakan untuk keperluan rekap exam.</p>
             </form>
         @endif
         <p class="footer">Bankir Academy</p>
     </main>
+    @if (!$completed)
+        <script>
+            document.getElementById('exam-form')?.addEventListener('submit', function () {
+                const button = document.getElementById('submit-exam-button');
+                if (button) {
+                    button.disabled = true;
+                    button.textContent = 'Mengirim...';
+                }
+            });
+        </script>
+    @endif
 </body>
 
 </html>

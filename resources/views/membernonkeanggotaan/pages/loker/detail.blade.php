@@ -3,85 +3,82 @@
 @section('title', 'Detail Lowongan')
 
 @php
-        $decodeList = static function ($value): array {
-            $decoded = json_decode((string) $value, true);
+    $decodeList = static function ($value): array {
+        $decoded = json_decode((string) $value, true);
 
-            if (is_array($decoded)) {
-                return array_values($decoded);
-            }
+        if (is_array($decoded)) {
+            return array_values($decoded);
+        }
 
-            return filled($value) ? [(string) $value] : [];
-        };
+        return filled($value) ? [(string) $value] : [];
+    };
 
-        $decodeImage = static function ($value): ?string {
-            $decoded = json_decode((string) $value, true);
-            $path = is_array($decoded) ? data_get($decoded, 'url') : $value;
+    $decodeImage = static function ($value): ?string {
+        $decoded = json_decode((string) $value, true);
+        $path = is_array($decoded) ? data_get($decoded, 'url') : $value;
 
-            if (!filled($path)) {
-                return null;
-            }
+        if (!filled($path)) {
+            return null;
+        }
 
-            return \Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '/'])
-                ? $path
-                : asset('image/loker/' . ltrim($path, '/'));
-        };
+        return \Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '/'])
+            ? $path
+            : asset('image/loker/' . ltrim($path, '/'));
+    };
 
-        $company = $loker->perusahaan;
-        $companyName = optional($company)->nama ?: 'Perusahaan mitra';
-        $imageUrl = $decodeImage($loker->image) ?: $decodeImage(optional($company)->image);
-        $types = $decodeList($loker->type);
-        $skills = $decodeList($loker->skill);
-        $province = $loker->provinsi_name ?: optional($company)->provinsi_name;
-        $city = $loker->kabupaten_name ?: optional($company)->kabupaten_name;
-        $address = $loker->alamat ?: optional($company)->alamat;
-        $description = trim(strip_tags((string) $loker->deskripsi));
-        $jobdesk = trim(strip_tags((string) $loker->jobdesk));
-        $shareTitle = trim((string) $loker->title) . ' | Lowongan Kerja Bankir Academy';
-        $shareDescription = \Illuminate\Support\Str::limit(
-            preg_replace('/\s+/', ' ', $description ?: $jobdesk ?: 'Lihat detail lowongan kerja di Bankir Academy.'),
-            160
+    $company = $loker->perusahaan;
+    $companyName = optional($company)->nama ?: 'Perusahaan mitra';
+    $imageUrl = $decodeImage($loker->image) ?: $decodeImage(optional($company)->image);
+    $types = $decodeList($loker->type);
+    $skills = $decodeList($loker->skill);
+    $province = $loker->provinsi_name ?: optional($company)->provinsi_name;
+    $city = $loker->kabupaten_name ?: optional($company)->kabupaten_name;
+    $address = $loker->alamat ?: optional($company)->alamat;
+    $description = trim(strip_tags((string) $loker->deskripsi));
+    $jobdesk = trim(strip_tags((string) $loker->jobdesk));
+    $shareTitle = trim((string) $loker->title) . ' | Lowongan Kerja Bankir Academy';
+    $shareDescription = \Illuminate\Support\Str::limit(
+        preg_replace('/\s+/', ' ', $description ?: $jobdesk ?: 'Lihat detail lowongan kerja di Bankir Academy.'),
+        160,
+    );
+    $shareUrl = route('membernonanggota.loker.show', $loker->id);
+    $shareImage = $imageUrl ?: asset('bankir-academy-icon.png');
+    $shareText = rawurlencode($shareTitle . "\n" . $shareUrl);
+    $facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
+    $datePosted = $loker->tanggal_awal ?: $loker->created_at;
+    $jobPostingSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'JobPosting',
+        'title' => $loker->title,
+        'description' => $description ?: $jobdesk ?: $shareDescription,
+        'datePosted' => $datePosted ? \Carbon\Carbon::parse($datePosted)->toDateString() : now()->toDateString(),
+        'hiringOrganization' => [
+            '@type' => 'Organization',
+            'name' => $companyName,
+            'sameAs' => url('/'),
+            'logo' => $shareImage,
+        ],
+        'jobLocation' => [
+            '@type' => 'Place',
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $address ?: 'Indonesia',
+                'addressLocality' => $city ?: 'Indonesia',
+                'addressRegion' => $province ?: 'Indonesia',
+                'addressCountry' => 'ID',
+            ],
+        ],
+        'url' => $shareUrl,
+    ];
+    if ($loker->tanggal_akhir) {
+        $jobPostingSchema['validThrough'] = \Carbon\Carbon::parse($loker->tanggal_akhir)->toIso8601String();
+    }
+    if ($types !== []) {
+        $jobPostingSchema['employmentType'] = array_values(
+            array_map(fn($type) => strtoupper(str_replace([' ', '-'], '_', (string) $type)), $types),
         );
-        $shareUrl = route('membernonanggota.loker.show', $loker->id);
-        $shareImage = $imageUrl ?: asset('bankir-academy-icon.png');
-        $shareText = rawurlencode($shareTitle . "\n" . $shareUrl);
-        $facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
-        $datePosted = $loker->tanggal_awal ?: $loker->created_at;
-        $jobPostingSchema = [
-            '@context' => 'https://schema.org',
-            '@type' => 'JobPosting',
-            'title' => $loker->title,
-            'description' => $description ?: $jobdesk ?: $shareDescription,
-            'datePosted' => $datePosted
-                ? \Carbon\Carbon::parse($datePosted)->toDateString()
-                : now()->toDateString(),
-            'hiringOrganization' => [
-                '@type' => 'Organization',
-                'name' => $companyName,
-                'sameAs' => url('/'),
-                'logo' => $shareImage,
-            ],
-            'jobLocation' => [
-                '@type' => 'Place',
-                'address' => [
-                    '@type' => 'PostalAddress',
-                    'streetAddress' => $address ?: 'Indonesia',
-                    'addressLocality' => $city ?: 'Indonesia',
-                    'addressRegion' => $province ?: 'Indonesia',
-                    'addressCountry' => 'ID',
-                ],
-            ],
-            'url' => $shareUrl,
-        ];
-        if ($loker->tanggal_akhir) {
-            $jobPostingSchema['validThrough'] = \Carbon\Carbon::parse($loker->tanggal_akhir)->toIso8601String();
-        }
-        if ($types !== []) {
-            $jobPostingSchema['employmentType'] = array_values(array_map(
-                fn ($type) => strtoupper(str_replace([' ', '-'], '_', (string) $type)),
-                $types,
-            ));
-        }
-    @endphp
+    }
+@endphp
 
 @section('page-title', $shareTitle)
 @section('page-description', $shareDescription)
@@ -174,7 +171,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 14px 20px;
+            /* padding: 14px 20px; */
             border: 1px solid #e5e7eb;
             border-radius: 16px;
             background: #f8fafc;
@@ -581,14 +578,17 @@
             <aside class="loker-detail-side">
                 <section class="loker-detail-apply" aria-labelledby="loker-apply-title">
                     <h2 id="loker-apply-title">Tertarik dengan lowongan ini?</h2>
-                    <p>{{ auth()->check() ? 'Periksa kembali CV ATS Anda sebelum melanjutkan proses lamaran.' : 'Silakan login terlebih dahulu untuk melamar lowongan ini.' }}</p>
+                    <p>{{ auth()->check() ? 'Periksa kembali CV ATS Anda sebelum melanjutkan proses lamaran.' : 'Silakan login terlebih dahulu untuk melamar lowongan ini.' }}
+                    </p>
                     @if (auth()->check())
-                        <a class="loker-detail-apply__button" href="{{ route('membernonanggota.loker.apply', $loker->id) }}">
+                        <a class="loker-detail-apply__button"
+                            href="{{ route('membernonanggota.loker.apply', $loker->id) }}">
                             <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             Lamar Sekarang
                         </a>
                     @else
-                        <a class="loker-detail-apply__button" href="{{ route('login.new', ['redirect' => request()->getRequestUri()]) }}">
+                        <a class="loker-detail-apply__button"
+                            href="{{ route('login.new', ['redirect' => request()->getRequestUri()]) }}">
                             <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
                             Login untuk melamar
                         </a>
@@ -609,8 +609,8 @@
                             <i class="fab fa-facebook" aria-hidden="true"></i>
                             Facebook
                         </a>
-                        <button class="loker-detail-share__button loker-detail-share__button--instagram"
-                            type="button" data-share-platform="instagram" data-share-url="{{ $shareUrl }}">
+                        <button class="loker-detail-share__button loker-detail-share__button--instagram" type="button"
+                            data-share-platform="instagram" data-share-url="{{ $shareUrl }}">
                             <i class="fab fa-instagram" aria-hidden="true"></i>
                             Instagram
                         </button>
@@ -734,11 +734,12 @@
 
                     try {
                         await copyText(shareUrl);
-                        feedback.textContent = platform === 'instagram'
-                            ? 'Tautan disalin. Tempelkan di Instagram.'
-                            : 'Tautan berhasil disalin.';
+                        feedback.textContent = platform === 'instagram' ?
+                            'Tautan disalin. Tempelkan di Instagram.' :
+                            'Tautan berhasil disalin.';
                     } catch (error) {
-                        feedback.textContent = 'Tautan tidak dapat disalin otomatis. Silakan salin dari alamat browser.';
+                        feedback.textContent =
+                            'Tautan tidak dapat disalin otomatis. Silakan salin dari alamat browser.';
                     }
                 });
             });

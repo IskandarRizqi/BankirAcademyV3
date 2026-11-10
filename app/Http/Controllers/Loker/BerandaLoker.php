@@ -412,7 +412,7 @@ class BerandaLoker extends Controller
             'loker_jobdesk' => 'required',
             'loker_tanggal_awal' => 'required',
             'loker_tanggal_akhir' => 'required',
-            'loker_skill' => 'required',
+            'loker_skill' => 'nullable',
             'loker_type' => 'required',
             'perusahaan_id' => 'required',
             'filClassesImage' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:1024'],
@@ -440,7 +440,7 @@ class BerandaLoker extends Controller
             'jobdesk' => $request->loker_jobdesk,
             'tanggal_awal' => $request->loker_tanggal_awal,
             'tanggal_akhir' => $request->loker_tanggal_akhir,
-            'skill' => json_encode($request->loker_skill),
+            'skill' => $request->filled('loker_skill') ? json_encode($request->loker_skill) : null,
             'type' => json_encode($request->loker_type),
             'status' => $request->status ? $request->status : 0,
         ];

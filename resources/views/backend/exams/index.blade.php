@@ -9,7 +9,7 @@
     @endif
     <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
         <div>
-            <h3 class="mb-1">Exam Kelas</h3>
+            <h3 class="mb-1">Exam</h3>
             <p class="text-muted mb-0">Kelola soal dan lihat nilai peserta tanpa membuka hasil di halaman publik.</p>
         </div>
         <a href="{{ route('admin.exams.create') }}" class="btn btn-primary mt-2 mt-md-0"><i class="bx bx-plus mr-1"></i>Tambah Exam</a>
@@ -45,7 +45,7 @@
                 @forelse($exams as $exam)
                     <tr>
                         <td><strong>{{ $exam->title }}</strong><small class="d-block text-muted">{{ $exam->description ? \Illuminate\Support\Str::limit($exam->description, 80) : 'Tanpa deskripsi' }}</small></td>
-                        <td>{{ $exam->classData->title }}</td>
+                        <td>{{ $exam->classData?->title ?? 'Tanpa kelas' }}</td>
                         <td>{{ count($exam->questions ?: []) }}</td>
                         <td><span class="badge badge-{{ $exam->status ? 'success' : 'secondary' }}">{{ $exam->status ? 'Aktif' : 'Nonaktif' }}</span></td>
                         <td><a href="{{ route('admin.exams.results', $exam) }}">{{ $exam->submissions_count }} peserta</a></td>

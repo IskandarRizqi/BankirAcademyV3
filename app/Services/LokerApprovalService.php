@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class LokerApprovalService
 {
-    private const DEFAULT_COMPANY_LOGO = '/Bank-academy-logo-03.png';
+    private const DEFAULT_COMPANY_LOGO = '/bannerloker.png';
 
     public function approveAndPublish(int $draftId, array $options = []): LokerModel
     {

@@ -27,7 +27,7 @@ class NewsController extends Controller
                         ->orWhere('slug', 'like', "%{$search}%");
                 });
             })
-            ->when($request->filled('status'), fn ($query) => $query->where('status', (int) $request->status))
+            ->when($request->filled('status'), fn($query) => $query->where('status', (int) $request->status))
             ->latest()
             ->paginate(15)
             ->withQueryString();
@@ -78,7 +78,7 @@ class NewsController extends Controller
         DB::transaction(function () use ($request, $validated, $news) {
             $news->update($this->newsAttributes($validated));
 
-            $removeIds = collect($request->input('remove_images', []))->map(fn ($id) => (int) $id);
+            $removeIds = collect($request->input('remove_images', []))->map(fn($id) => (int) $id);
             $news->bannerImages()->whereIn('id', $removeIds)->get()->each(function (NewsImage $image) {
                 $this->deleteImage($image);
             });
@@ -113,7 +113,7 @@ class NewsController extends Controller
     {
         $wasPublished = $news->status;
         $news->load('bannerImages');
-        $news->bannerImages->each(fn (NewsImage $image) => $this->deleteImage($image));
+        $news->bannerImages->each(fn(NewsImage $image) => $this->deleteImage($image));
         $news->delete();
 
         if ($wasPublished) {
@@ -127,7 +127,7 @@ class NewsController extends Controller
     {
         $rules = [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:news,slug,'.optional($request->route('news'))->id],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:news,slug,' . optional($request->route('news'))->id],
             'excerpt' => ['nullable', 'string', 'max:320'],
             'content' => ['required', 'string'],
             'meta_title' => ['nullable', 'string', 'max:70'],
@@ -135,7 +135,7 @@ class NewsController extends Controller
             'meta_keywords' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'boolean'],
             'banner_images' => [$requireImage ? 'required' : 'nullable', 'array', 'max:10'],
-            'banner_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'banner_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:51200'],
             'remove_images' => ['nullable', 'array'],
             'remove_images.*' => ['integer'],
         ];
@@ -177,9 +177,10 @@ class NewsController extends Controller
         $current = request()->route('news');
 
         while (News::where('slug', $candidate)
-            ->when($current instanceof News, fn ($query) => $query->where('id', '!=', $current->id))
-            ->exists()) {
-            $candidate = $base.'-'.$suffix++;
+            ->when($current instanceof News, fn($query) => $query->where('id', '!=', $current->id))
+            ->exists()
+        ) {
+            $candidate = $base . '-' . $suffix++;
         }
 
         return $candidate;

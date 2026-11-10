@@ -44,7 +44,7 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
         <div>
             <h3 class="mb-1">{{ $exam->exists ? 'Edit Exam' : 'Tambah Exam' }}</h3>
-            <p class="text-muted mb-0">Exam berdiri sendiri, tetapi selalu terhubung ke satu kelas.</p>
+            <p class="text-muted mb-0">Exam dapat dihubungkan ke kelas atau dibuat tanpa kelas tertentu.</p>
         </div>
         <a href="{{ route('admin.exams.index') }}" class="btn btn-outline-secondary mt-2 mt-md-0">Kembali</a>
     </div>
@@ -64,9 +64,9 @@
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="class_id">Kelas</label>
-                            <select id="class_id" name="class_id" class="form-control" required>
-                                <option value="">Pilih kelas</option>
+                            <label for="class_id">Kelas <small class="text-muted">(opsional)</small></label>
+                            <select id="class_id" name="class_id" class="form-control">
+                                <option value="">Tanpa kelas</option>
                                 @foreach($classes as $class)
                                     <option value="{{ $class->id }}" {{ (string) old('class_id', $exam->class_id) === (string) $class->id ? 'selected' : '' }}>{{ $class->title }}</option>
                                 @endforeach

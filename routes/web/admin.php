@@ -36,6 +36,15 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::get('/admin/exams/{exam}/results', [AdminExamController::class, 'results'])
         ->middleware('admin.panel')
         ->name('admin.exams.results');
+    Route::get('/admin/exams/{exam}/results/export/excel', [AdminExamController::class, 'exportExcel'])
+        ->middleware('admin.panel')
+        ->name('admin.exams.results.export.excel');
+    Route::get('/admin/exams/{exam}/results/export/pdf', [AdminExamController::class, 'exportPdf'])
+        ->middleware('admin.panel')
+        ->name('admin.exams.results.export.pdf');
+    Route::delete('/admin/exams/{exam}/results/{submission}', [AdminExamController::class, 'destroySubmission'])
+        ->middleware('admin.panel')
+        ->name('admin.exams.results.destroy');
     Route::resource('/admin/exams', AdminExamController::class)
         ->except(['show'])
         ->middleware('admin.panel')

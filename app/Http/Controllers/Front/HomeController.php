@@ -18,6 +18,7 @@ use App\Models\DashboardModel;
 use App\Models\InstructorModel;
 use App\Models\KodePromoModel;
 use App\Models\LokerModel;
+use App\Models\News;
 use App\Models\Pages;
 use App\Models\RefferralModel;
 use App\Models\RefferralPesertaModel;
@@ -308,6 +309,12 @@ class HomeController extends Controller
             }
         }
         $data['categori'] = ClassesModel::groupBy('category')->pluck('category')->toArray();
+        $data['news'] = News::published()
+            ->with('bannerImages')
+            ->latest('published_at')
+            ->latest('id')
+            ->take(5)
+            ->get();
 
         $data['kelas_populer'] = [];
         $data['kelas_lama'] = ClassesModel::select()
