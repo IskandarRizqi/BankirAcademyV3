@@ -89,5 +89,5 @@
 @endsection
 
 @push('frontend-scripts')
-    <script src="{{ asset('frontend/js/auth-login.js') }}" defer></script>
+    <script src="{{ versioned_asset('frontend/js/auth-login.js') }}" defer></script>
 @endpush

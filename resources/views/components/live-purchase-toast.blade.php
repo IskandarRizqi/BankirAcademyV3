@@ -1,6 +1,6 @@
 @if (config('app.live_purchase_toast.enabled', true))
     @once
-        <link rel="stylesheet" href="{{ asset('css/live-purchase-toast.css') }}">
+        <link rel="stylesheet" href="{{ versioned_asset('css/live-purchase-toast.css') }}">
 
         <div
             id="live-purchase-toast"
@@ -49,6 +49,6 @@
         <script>
             window.bankirLivePurchaseToast = @json($livePurchaseToastConfig);
         </script>
-        <script src="{{ asset('js/live-purchase-toast.js') }}" defer></script>
+        <script src="{{ versioned_asset('js/live-purchase-toast.js') }}" defer></script>
     @endonce
 @endif

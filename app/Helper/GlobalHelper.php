@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helper;
+namespace App\Helper {
 
 use App\Jobs\SendUserActivationEmail;
 use App\Models\AllowIpAksesModel;
@@ -321,4 +321,20 @@ class  GlobalHelper
             return false;
         }
     }
+}
+}
+
+namespace {
+if (! function_exists('versioned_asset')) {
+    function versioned_asset(string $path): string
+    {
+        $relativePath = ltrim(parse_url($path, PHP_URL_PATH) ?: $path, '/');
+        $absolutePath = public_path($relativePath);
+        $version = is_file($absolutePath)
+            ? (string) filemtime($absolutePath)
+            : (string) config('app.asset_version', '1');
+
+        return asset($path) . '?v=' . $version;
+    }
+}
 }

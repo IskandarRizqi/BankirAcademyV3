@@ -16,6 +16,7 @@ use App\Http\Middleware\IsAdminRoot;
 use App\Http\Middleware\OnlyRoot;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\RevalidateHtml;
 use App\Http\Middleware\TrackVisitor;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            RevalidateHtml::class,
         ],
 
         'api' => [

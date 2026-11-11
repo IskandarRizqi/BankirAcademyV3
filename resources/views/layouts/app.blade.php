@@ -172,7 +172,7 @@
 
     }
 </style>
-<link rel="stylesheet" href="{{ asset('frontend/infixlmstheme/css/bootstrap.min8cc9.css') }}">
+<link rel="stylesheet" href="{{ versioned_asset('frontend/infixlmstheme/css/bootstrap.min8cc9.css') }}">
 @include('frontend.partials.head')
 
 <body>

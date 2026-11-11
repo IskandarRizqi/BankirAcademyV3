@@ -1,9 +1,9 @@
 	<!-- GLOBAL SCRIPTS -->
-	<script src="{{ asset('cbtemplate/bootstrap/js/bootstrap.min.js') }}"></script>
-	<script src="{{ asset('cbtemplate/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-	<script src="{{ asset('cbtemplate/assets/js/app.js') }}"></script>
-	<script src="{{ asset('cbtemplate/assets/js/custom.js') }}"></script>
-	<script src="{{ asset('cbtemplate/plugins/apex/apexcharts.min.js') }}"></script>
+	<script src="{{ versioned_asset('cbtemplate/bootstrap/js/bootstrap.min.js') }}"></script>
+	<script src="{{ versioned_asset('cbtemplate/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+	<script src="{{ versioned_asset('cbtemplate/assets/js/app.js') }}"></script>
+	<script src="{{ versioned_asset('cbtemplate/assets/js/custom.js') }}"></script>
+	<script src="{{ versioned_asset('cbtemplate/plugins/apex/apexcharts.min.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 	@php

@@ -41,11 +41,11 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     @if ($includeMarketingStyles ?? false)
-        <link rel="stylesheet" href="{{ asset('frontend/css/bankir-academy.css') }}">
+        <link rel="stylesheet" href="{{ versioned_asset('frontend/css/bankir-academy.css') }}">
     @endif
 
     @if ($includeAuthStyles ?? false)
-        <link rel="stylesheet" href="{{ asset('frontend/css/auth.css') }}">
+        <link rel="stylesheet" href="{{ versioned_asset('frontend/css/auth.css') }}">
     @endif
     <meta content="index.html" name="bankir-page" />
 </head>

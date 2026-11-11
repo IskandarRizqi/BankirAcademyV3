@@ -279,4 +279,4 @@
             document.getElementById('assistantWelcome').hidden = true;
         });
     </script>
-    <script src="{{ asset('frontend/js/bankir-academy.js') }}" defer></script>
+    <script src="{{ versioned_asset('frontend/js/bankir-academy.js') }}" defer></script>
