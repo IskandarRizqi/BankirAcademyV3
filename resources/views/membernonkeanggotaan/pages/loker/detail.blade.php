@@ -165,36 +165,63 @@
 
         .loker-detail-logo {
             display: flex;
-            width: min(100%, 220px);
-            height: 96px;
-            flex: 0 0 220px;
+            width: min(100%, 280px);
+            min-height: 120px;
+            flex: 0 1 280px;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            /* padding: 14px 20px; */
+            padding: 12px;
             border: 1px solid #e5e7eb;
             border-radius: 16px;
             background: #f8fafc;
         }
 
+        .loker-detail-logo--zoomable {
+            position: relative;
+            cursor: zoom-in;
+        }
+
+        .loker-detail-logo--zoomable:hover,
+        .loker-detail-logo--zoomable:focus-visible {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .14);
+            outline: none;
+        }
+
+        .loker-detail-logo__hint {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            background: rgba(17, 24, 39, .72);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            pointer-events: none;
+        }
+
         .loker-detail-logo img {
             display: block;
-            width: 100%;
-            height: 100%;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 260px;
             object-fit: contain;
             object-position: center;
         }
 
         .loker-detail-logo>span {
             display: inline-flex;
-            width: 64px;
-            height: 64px;
+            width: 42px;
+            height: 42px;
             align-items: center;
             justify-content: center;
             border-radius: 18px;
-            background: linear-gradient(135deg, #111827, #4338ca);
+            /* background: linear-gradient(135deg, #111827, #4338ca); */
             color: #ffffff;
-            font-size: 24px;
+            font-size: 21px;
             font-weight: 900;
             letter-spacing: .04em;
         }
@@ -476,6 +503,68 @@
             gap: 18px;
         }
 
+        .loker-image-lightbox {
+            position: fixed;
+            z-index: 1050;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, .84);
+        }
+
+        .loker-image-lightbox[hidden] {
+            display: none;
+        }
+
+        .loker-image-lightbox__figure {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            margin: 0;
+            text-align: center;
+        }
+
+        .loker-image-lightbox__image {
+            display: block;
+            width: auto;
+            max-width: min(94vw, 1200px);
+            max-height: 86vh;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+            object-fit: contain;
+        }
+
+        .loker-image-lightbox__caption {
+            margin-top: 10px;
+            color: #e5e7eb;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .loker-image-lightbox__close {
+            position: fixed;
+            top: 16px;
+            right: 18px;
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, .35);
+            border-radius: 50%;
+            background: rgba(15, 23, 42, .72);
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        body.loker-image-lightbox-open {
+            overflow: hidden;
+        }
+
         @media (max-width: 991.98px) {
             .loker-detail-layout {
                 grid-template-columns: 1fr;
@@ -509,6 +598,11 @@
             .loker-detail-logo {
                 width: 100%;
                 flex-basis: auto;
+                min-height: 0;
+            }
+
+            .loker-detail-logo img {
+                max-height: min(70vw, 320px);
             }
 
             .loker-related-grid {
@@ -526,13 +620,18 @@
         <div class="loker-detail-layout">
             <article class="loker-detail-card loker-detail-main">
                 <header class="loker-detail-heading">
-                    <div class="loker-detail-logo">
-                        @if ($imageUrl)
+                    @if ($imageUrl)
+                        <button class="loker-detail-logo loker-detail-logo--zoomable" type="button"
+                            id="loker-image-trigger" aria-haspopup="dialog" aria-controls="loker-image-lightbox"
+                            aria-label="Perbesar gambar {{ $companyName }}">
                             <img src="{{ $imageUrl }}" alt="Logo {{ $companyName }}">
-                        @else
+                            <span class="loker-detail-logo__hint">↗️</span>
+                        </button>
+                    @else
+                        <div class="loker-detail-logo">
                             <span aria-hidden="true">{{ strtoupper(substr($companyName, 0, 2)) }}</span>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                     <div>
                         <p class="loker-detail-eyebrow">Lowongan aktif</p>
                         <h1 class="loker-detail-title">{{ $loker->title }}</h1>
@@ -702,8 +801,52 @@
         @endif
     </div>
 
+    @if ($imageUrl)
+        <div class="loker-image-lightbox" id="loker-image-lightbox" role="dialog" aria-modal="true"
+            aria-labelledby="loker-image-lightbox-caption" hidden>
+            <button class="loker-image-lightbox__close" type="button" id="loker-image-lightbox-close"
+                aria-label="Tutup gambar">&times;</button>
+            <figure class="loker-image-lightbox__figure">
+                <img class="loker-image-lightbox__image" src="{{ $imageUrl }}"
+                    alt="Logo {{ $companyName }} diperbesar">
+                <figcaption class="loker-image-lightbox__caption" id="loker-image-lightbox-caption">
+                    {{ $companyName }}
+                </figcaption>
+            </figure>
+        </div>
+    @endif
+
     <script>
         (() => {
+            const imageTrigger = document.getElementById('loker-image-trigger');
+            const lightbox = document.getElementById('loker-image-lightbox');
+            const lightboxClose = document.getElementById('loker-image-lightbox-close');
+
+            if (imageTrigger && lightbox && lightboxClose) {
+                const closeLightbox = () => {
+                    lightbox.hidden = true;
+                    document.body.classList.remove('loker-image-lightbox-open');
+                    imageTrigger.focus();
+                };
+
+                imageTrigger.addEventListener('click', () => {
+                    lightbox.hidden = false;
+                    document.body.classList.add('loker-image-lightbox-open');
+                    lightboxClose.focus();
+                });
+                lightboxClose.addEventListener('click', closeLightbox);
+                lightbox.addEventListener('click', (event) => {
+                    if (event.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape' && !lightbox.hidden) {
+                        closeLightbox();
+                    }
+                });
+            }
+
             const feedback = document.getElementById('loker-share-feedback');
 
             const copyText = async (text) => {

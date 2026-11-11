@@ -90,6 +90,18 @@ class ClassPricingServiceTest extends TestCase
         $this->assertNull($result['membership_type']);
     }
 
+    public function test_free_class_with_zero_price_is_marked_as_free(): void
+    {
+        $class = $this->class();
+        $pricing = $this->pricing(0, 0, [], [], true);
+
+        $result = $this->service->resolvePricing($class, $pricing);
+
+        $this->assertTrue($result['is_free']);
+        $this->assertSame(0.0, $result['base_price']);
+        $this->assertSame(0.0, $result['final_price']);
+    }
+
     public function test_participant_discount_uses_the_highest_matching_tier_per_participant(): void
     {
         $class = $this->class();
@@ -119,7 +131,8 @@ class ClassPricingServiceTest extends TestCase
         float $price,
         float $generalPercent,
         array $discounts,
-        array $participantDiscounts = []
+        array $participantDiscounts = [],
+        bool $gratis = false
     ): ClassPricingModel
     {
         $pricing = new ClassPricingModel([
@@ -129,7 +142,7 @@ class ClassPricingServiceTest extends TestCase
             'promo_price' => $price * $generalPercent / 100,
             'discount_type' => 'percent',
             'discount_value' => $generalPercent,
-            'gratis' => 0,
+            'gratis' => $gratis ? 1 : 0,
         ]);
 
         $pricing->setRelation(

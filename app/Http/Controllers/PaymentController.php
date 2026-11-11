@@ -292,7 +292,7 @@ class PaymentController extends Controller
             return back()->withInput()->with('error', 'Kelas IHT hanya dapat diproses melalui order manual admin.');
         }
 
-        if (! $pricing['base_price'] && ! $pricing['is_iht']) {
+        if (! $pricing['base_price'] && ! $pricing['is_iht'] && ! $pricing['is_free']) {
             return back()->withInput()->with('error', 'Harga kelas belum tersedia.');
         }
 

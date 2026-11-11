@@ -340,7 +340,7 @@ class ManualPaymentController extends Controller
             return $this->errorResponse('Kelas IHT hanya dapat diproses melalui order manual admin.', 422);
         }
 
-        if (! $pricing['base_price'] && ! $pricing['is_iht']) {
+        if (! $pricing['base_price'] && ! $pricing['is_iht'] && ! $pricing['is_free']) {
             return $this->errorResponse('Harga kelas belum tersedia.', 422);
         }
 
