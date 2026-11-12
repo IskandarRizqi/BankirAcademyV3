@@ -17,6 +17,10 @@ class Visitor extends Model
 
     protected $fillable = [
         'ip_address',
+        'country_code',
+        'country',
+        'province',
+        'city',
         'user_agent',
         'page_url',
         'page_label',

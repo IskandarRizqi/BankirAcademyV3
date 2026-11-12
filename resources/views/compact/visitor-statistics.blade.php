@@ -214,6 +214,69 @@
                     @endif
                 </div>
             </div>
+
+            <div class="col-12 mb-4">
+                <div class="chart-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h2 class="h5 font-weight-bold mb-1">Visitor Berdasarkan Wilayah</h2>
+                            <p class="text-muted small mb-0">Visitor unik landing page berdasarkan perkiraan lokasi IP.</p>
+                        </div>
+                    </div>
+                    @if ($locationStatistics['provinces']->isEmpty() && $locationStatistics['cities']->isEmpty())
+                        <p class="empty-message mb-0">Belum ada data wilayah pada periode ini.</p>
+                    @else
+                        <div class="row">
+                            <div class="col-12 col-lg-5 mb-4 mb-lg-0">
+                                <h3 class="h6 font-weight-bold">Provinsi</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-borderless mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Wilayah</th>
+                                                <th class="text-right">Visitor unik</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($locationStatistics['provinces'] as $province)
+                                                <tr>
+                                                    <td>{{ $province->province }}</td>
+                                                    <td class="text-right font-weight-bold">
+                                                        {{ number_format($province->unique_visitors) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-7">
+                                <h3 class="h6 font-weight-bold">Kota/Kabupaten</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-borderless mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Kota/Kabupaten</th>
+                                                <th>Provinsi</th>
+                                                <th class="text-right">Visitor unik</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($locationStatistics['cities'] as $city)
+                                                <tr>
+                                                    <td>{{ $city->city }}</td>
+                                                    <td>{{ $city->province }}</td>
+                                                    <td class="text-right font-weight-bold">
+                                                        {{ number_format($city->unique_visitors) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 

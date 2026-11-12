@@ -46,6 +46,7 @@ class VisitorStatisticsController extends Controller
             'statistics' => $statistics,
             'deviceStatistics' => $this->deviceStatistics($start, $end),
             'topPages' => $this->topPages($start, $end),
+            'locationStatistics' => $this->locationStatistics($start, $end),
         ]);
     }
 
@@ -155,5 +156,27 @@ class VisitorStatisticsController extends Controller
             ->orderByDesc('unique_visitors')
             ->limit(5)
             ->get();
+    }
+
+    private function locationStatistics(Carbon $start, Carbon $end): array
+    {
+        $provinces = $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
+            ->selectRaw("COALESCE(NULLIF(province, ''), 'Tidak diketahui') as province")
+            ->selectRaw('COUNT(DISTINCT ip_address) as unique_visitors')
+            ->groupByRaw("COALESCE(NULLIF(province, ''), 'Tidak diketahui')")
+            ->orderByDesc('unique_visitors')
+            ->limit(10)
+            ->get();
+
+        $cities = $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
+            ->selectRaw("COALESCE(NULLIF(city, ''), 'Tidak diketahui') as city")
+            ->selectRaw("COALESCE(NULLIF(province, ''), '-') as province")
+            ->selectRaw('COUNT(DISTINCT ip_address) as unique_visitors')
+            ->groupByRaw("COALESCE(NULLIF(city, ''), 'Tidak diketahui'), COALESCE(NULLIF(province, ''), '-')")
+            ->orderByDesc('unique_visitors')
+            ->limit(15)
+            ->get();
+
+        return compact('provinces', 'cities');
     }
 }

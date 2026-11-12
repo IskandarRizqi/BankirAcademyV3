@@ -8,6 +8,8 @@ use App\Services\VisitorTrackingService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
@@ -95,6 +97,57 @@ class VisitorStatisticsTest extends TestCase
         $this->assertFalse(app(VisitorTrackingService::class)->isMobile(
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         ));
+    }
+
+    public function test_public_ip_location_is_saved_from_geolocation_service(): void
+    {
+        Cache::forget('visitor-geolocation:'.hash('sha256', '8.8.8.8'));
+        Http::fake([
+            'https://ipwho.is/*' => Http::response([
+                'success' => true,
+                'country_code' => 'ID',
+                'country' => 'Indonesia',
+                'region' => 'Jawa Barat',
+                'city' => 'Bandung',
+            ]),
+        ]);
+
+        $this->recordPage('8.8.8.8', '/kredit');
+
+        $this->assertDatabaseHas('visitors', [
+            'ip_address' => '8.8.8.8',
+            'country_code' => 'ID',
+            'country' => 'Indonesia',
+            'province' => 'Jawa Barat',
+            'city' => 'Bandung',
+        ]);
+        Http::assertSentCount(1);
+    }
+
+    public function test_dashboard_shows_visitor_location_statistics(): void
+    {
+        $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
+
+        Visitor::create([
+            'ip_address' => '203.0.113.10',
+            'country_code' => 'ID',
+            'country' => 'Indonesia',
+            'province' => 'Jawa Barat',
+            'city' => 'Bandung',
+            'page_url' => '/kredit',
+            'page_label' => 'Kredit',
+            'visitor_type' => Visitor::TYPE_LANDING,
+            'visitor_date' => '2026-11-05',
+            'visited_year' => 2026,
+            'visited_at' => '2026-11-05 10:00:00',
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor')
+            ->assertOk()
+            ->assertSee('Visitor Berdasarkan Wilayah')
+            ->assertSee('Jawa Barat')
+            ->assertSee('Bandung');
     }
 
     public function test_auth_and_transaction_categories_are_recorded_separately(): void

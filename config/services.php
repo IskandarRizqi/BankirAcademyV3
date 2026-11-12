@@ -50,5 +50,12 @@ return [
         'webhook_url_loker' => env('N8N_WEBHOOK_URL_LOKER'),
     ],
 
+    'visitor_geolocation' => [
+        'enabled' => (bool) env('VISITOR_GEOLOCATION_ENABLED', true),
+        'url' => env('VISITOR_GEOLOCATION_URL', 'https://ipwho.is'),
+        'cache_days' => (int) env('VISITOR_GEOLOCATION_CACHE_DAYS', 30),
+        'timeout' => (int) env('VISITOR_GEOLOCATION_TIMEOUT', 2),
+    ],
+
 
 ];
