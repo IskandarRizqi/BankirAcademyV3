@@ -12,6 +12,8 @@
             ? $articleImage
             : asset(ltrim($articleImage, '/')))
         : asset('bankir-academy-icon.png');
+    $contentParts = preg_split('/(?<=<\/p>)/i', (string) $article->content, -1, PREG_SPLIT_NO_EMPTY);
+    $insertAt = max(1, (int) ceil(count($contentParts) / 2));
 @endphp
 
 @section('page-title')
@@ -84,6 +86,27 @@
 
         .article-content {
             line-height: 1.8;
+            background: #fff;
+            border-radius: 20px;
+            padding: clamp(22px, 4vw, 52px);
+            box-shadow: 0 12px 35px rgba(31, 45, 72, 0.06);
+        }
+
+        .article-kicker {
+            display: inline-block;
+            margin-bottom: 14px;
+            color: #5148c5;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: #8791a5;
+            font-size: 13px;
+            margin-bottom: 27px;
         }
 
         /* Styling untuk Tag Standard Img */
@@ -177,6 +200,112 @@
             overflow: hidden;
         }
 
+        .article-share {
+            border-top: 1px solid #edf0f5;
+            margin-top: 34px;
+            padding-top: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .article-share__label {
+            font-size: 13px;
+            font-weight: 800;
+            color: #303d58;
+        }
+
+        .article-share__actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .article-share__button {
+            border: 0;
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .article-share__button--copy { background: #6c7890; }
+        .article-share__button--wa { background: #20b95a; }
+        .article-share__button--fb { background: #1877f2; }
+        .article-share__button--x { background: #111; }
+        .article-share__button--in { background: #0a66c2; }
+        .article-share__button--tg { background: #229ed9; }
+
+        .article-inline-related {
+            background: linear-gradient(135deg, #f1f0ff, #f5f8ff);
+            border: 1px solid #dfddfb;
+            border-radius: 14px;
+            padding: 22px;
+            margin: 30px 0;
+        }
+
+        .article-inline-related__eyebrow {
+            color: #5d56d9;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .article-inline-related h2 {
+            font-size: 20px;
+            margin: 6px 0 15px;
+        }
+
+        .article-inline-related__grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .article-inline-item {
+            background: #fff;
+            border: 1px solid #e5e5fa;
+            border-radius: 10px;
+            padding: 12px;
+            text-decoration: none;
+            color: #25324d;
+            position: relative;
+            min-height: 82px;
+        }
+
+        .article-inline-item strong {
+            display: block;
+            font-size: 13px;
+            line-height: 1.35;
+            padding-right: 16px;
+        }
+
+        .article-inline-item__type {
+            display: block;
+            color: #d17a00;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .article-inline-item__arrow {
+            position: absolute;
+            right: 11px;
+            bottom: 9px;
+            color: #5d56d9;
+        }
+
+        .article-inline-item--job .article-inline-item__type {
+            color: #0b8f68;
+        }
+
         @media (max-width: 992px) {
             .article-grid {
                 grid-template-columns: 1fr;
@@ -197,8 +326,22 @@
                 font-size: 1.75rem;
             }
 
+            .article-content {
+                border-radius: 14px;
+                padding: 21px 17px;
+            }
+
             .article-content .featured-image {
                 max-height: 250px;
+            }
+
+            .article-share {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .article-inline-related__grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -208,6 +351,15 @@
 
             {{-- Artikel Utama --}}
             <div class="article-content">
+                <span class="article-kicker">Artikel Bankir Academy</span>
+                <h1>{{ $article->title }}</h1>
+                <div class="article-meta">
+                    <span><i class="far fa-calendar-alt mr-1"></i>{{ optional($article->created_at)->translatedFormat('d F Y') }}</span>
+                    @if ($article->keyword)
+                        <span><i class="fas fa-tag mr-1"></i>{{ $article->keyword }}</span>
+                    @endif
+                </div>
+
                 @php
                     $mainImg = !empty($article->image_base64)
                         ? $article->image_base64
@@ -221,7 +373,42 @@
                         referrerpolicy="no-referrer" />
                 @endif
 
-                {!! $article->content !!}
+                <div class="article-body">
+                    @forelse ($contentParts as $index => $part)
+                        {!! $part !!}
+                        @if ($index + 1 === $insertAt)
+                            @include('articles.partials.inline-related')
+                        @endif
+                    @empty
+                        <p>Konten artikel belum tersedia.</p>
+                    @endforelse
+                    @if (count($contentParts) > 0 && $insertAt > count($contentParts))
+                        @include('articles.partials.inline-related')
+                    @endif
+                </div>
+
+                <div class="article-share">
+                    <span class="article-share__label">Bagikan artikel ini</span>
+                    <div class="article-share__actions">
+                        <button type="button" class="article-share__button article-share__button--copy"
+                            data-copy-article-link title="Salin tautan"><i class="fas fa-link"></i></button>
+                        <a class="article-share__button article-share__button--wa" target="_blank" rel="noopener"
+                            href="https://wa.me/?text={{ rawurlencode($article->title . ' ' . $canonicalUrl) }}"
+                            title="Bagikan ke WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a class="article-share__button article-share__button--fb" target="_blank" rel="noopener"
+                            href="https://www.facebook.com/sharer/sharer.php?u={{ rawurlencode($canonicalUrl) }}"
+                            title="Bagikan ke Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a class="article-share__button article-share__button--x" target="_blank" rel="noopener"
+                            href="https://twitter.com/intent/tweet?text={{ rawurlencode($article->title) }}&url={{ rawurlencode($canonicalUrl) }}"
+                            title="Bagikan ke X"><i class="fab fa-twitter"></i></a>
+                        <a class="article-share__button article-share__button--in" target="_blank" rel="noopener"
+                            href="https://www.linkedin.com/sharing/share-offsite/?url={{ rawurlencode($canonicalUrl) }}"
+                            title="Bagikan ke LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="article-share__button article-share__button--tg" target="_blank" rel="noopener"
+                            href="https://t.me/share/url?url={{ rawurlencode($canonicalUrl) }}&text={{ rawurlencode($article->title) }}"
+                            title="Bagikan ke Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    </div>
+                </div>
             </div>
 
             {{-- Sidebar Artikel Terkait --}}
@@ -252,3 +439,22 @@
         </div>
     </div>
 @endsection
+
+@push('frontend-scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyButton = document.querySelector('[data-copy-article-link]');
+            if (!copyButton) return;
+
+            copyButton.addEventListener('click', async function() {
+                try {
+                    await navigator.clipboard.writeText(window.location.href);
+                    copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => copyButton.innerHTML = '<i class="fas fa-link"></i>', 1600);
+                } catch (error) {
+                    window.prompt('Salin tautan artikel:', window.location.href);
+                }
+            });
+        });
+    </script>
+@endpush

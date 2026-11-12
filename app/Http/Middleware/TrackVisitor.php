@@ -13,7 +13,13 @@ class TrackVisitor
         $response = $next($request);
 
         if ($response->isSuccessful()) {
-            app(VisitorTrackingService::class)->recordPageVisit($request);
+            $tracking = app(VisitorTrackingService::class);
+            $tracking->recordPageVisit($request);
+            $deviceId = $tracking->deviceId($request);
+
+            if ($request->cookie(VisitorTrackingService::DEVICE_COOKIE) !== $deviceId) {
+                $response->withCookie($tracking->makeDeviceCookie($request, $deviceId));
+            }
         }
 
         return $response;

@@ -57,23 +57,31 @@ class VisitorStatisticsTest extends TestCase
 
     public function test_unique_visitor_count_across_two_pages_is_one(): void
     {
-        $this->recordPage('203.0.113.1', '/kredit');
-        $this->recordPage('203.0.113.1', '/tabungan');
+        $this->recordPage('203.0.113.1', '/kredit', '2026-11-05 10:00:00', '11111111-1111-4111-8111-111111111111');
+        $this->recordPage('203.0.113.1', '/tabungan', '2026-11-05 10:00:00', '11111111-1111-4111-8111-111111111111');
 
         $this->assertSame(1, Visitor::where('visitor_type', Visitor::TYPE_LANDING)
             ->distinct()
-            ->count('ip_address'));
+            ->count('device_id'));
     }
 
-    public function test_top_pages_count_unique_ips(): void
+    public function test_top_pages_count_unique_devices(): void
     {
-        $this->recordPage('203.0.113.1', '/kredit');
-        $this->recordPage('203.0.113.1', '/kredit');
-        $this->recordPage('203.0.113.2', '/kredit');
-        $this->recordPage('203.0.113.1', '/tabungan');
+        $this->recordPage('203.0.113.1', '/kredit', '2026-11-05 10:00:00', '11111111-1111-4111-8111-111111111111');
+        $this->recordPage('203.0.113.1', '/kredit', '2026-11-05 10:00:00', '11111111-1111-4111-8111-111111111111');
+        $this->recordPage('203.0.113.2', '/kredit', '2026-11-05 10:00:00', '22222222-2222-4222-8222-222222222222');
+        $this->recordPage('203.0.113.1', '/tabungan', '2026-11-05 10:00:00', '11111111-1111-4111-8111-111111111111');
 
-        $this->assertSame(2, Visitor::where('page_url', '/kredit')->distinct()->count('ip_address'));
-        $this->assertSame(1, Visitor::where('page_url', '/tabungan')->distinct()->count('ip_address'));
+        $this->assertSame(2, Visitor::where('page_url', '/kredit')->distinct()->count('device_id'));
+        $this->assertSame(1, Visitor::where('page_url', '/tabungan')->distinct()->count('device_id'));
+    }
+
+    public function test_same_ip_on_two_devices_counts_as_two_unique_devices(): void
+    {
+        $this->recordPage('203.0.113.1', '/kredit', '2026-11-05 10:00:00', '11111111-1111-4111-8111-111111111111');
+        $this->recordPage('203.0.113.1', '/kredit', '2026-11-05 10:00:00', '22222222-2222-4222-8222-222222222222');
+
+        $this->assertSame(2, Visitor::where('page_url', '/kredit')->distinct()->count('device_id'));
     }
 
     public function test_visitors_on_two_dates_are_counted_in_their_period(): void
@@ -81,8 +89,8 @@ class VisitorStatisticsTest extends TestCase
         $this->recordPage('203.0.113.1', '/kredit', '2026-11-05 10:00:00');
         $this->recordPage('203.0.113.2', '/kredit', '2026-11-04 10:00:00');
 
-        $this->assertSame(2, Visitor::whereYear('visited_at', 2026)->distinct()->count('ip_address'));
-        $this->assertSame(1, Visitor::whereDate('visited_at', '2026-11-05')->distinct()->count('ip_address'));
+        $this->assertSame(2, Visitor::whereYear('visited_at', 2026)->distinct()->count('device_id'));
+        $this->assertSame(1, Visitor::whereDate('visited_at', '2026-11-05')->distinct()->count('device_id'));
     }
 
     public function test_mobile_user_agent_is_classified_as_mobile(): void
@@ -130,6 +138,7 @@ class VisitorStatisticsTest extends TestCase
 
         Visitor::create([
             'ip_address' => '203.0.113.10',
+            'device_id' => '33333333-3333-4333-8333-333333333333',
             'country_code' => 'ID',
             'country' => 'Indonesia',
             'province' => 'Jawa Barat',
@@ -148,6 +157,34 @@ class VisitorStatisticsTest extends TestCase
             ->assertSee('Visitor Berdasarkan Wilayah')
             ->assertSee('Jawa Barat')
             ->assertSee('Bandung');
+    }
+
+    public function test_dashboard_counts_only_indonesian_visitors(): void
+    {
+        $admin = User::factory()->create(['email' => 'root@root.root', 'role' => 0]);
+
+        foreach ([
+            ['device_id' => '11111111-1111-4111-8111-111111111111', 'country_code' => 'ID'],
+            ['device_id' => '22222222-2222-4222-8222-222222222222', 'country_code' => 'US'],
+        ] as $visitor) {
+            Visitor::create([
+                'ip_address' => $visitor['country_code'] === 'ID' ? '203.0.113.10' : '8.8.8.8',
+                'device_id' => $visitor['device_id'],
+                'country_code' => $visitor['country_code'],
+                'page_url' => '/kredit',
+                'page_label' => 'Kredit',
+                'visitor_type' => Visitor::TYPE_LANDING,
+                'visitor_date' => '2026-11-05',
+                'visited_year' => 2026,
+                'visited_at' => '2026-11-05 10:00:00',
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->get('/admin/statistik-visitor')
+            ->assertOk()
+            ->assertSee('Visitor unik Indonesia')
+            ->assertSee('"name":"Landing Page","data":[1]', false);
     }
 
     public function test_auth_and_transaction_categories_are_recorded_separately(): void
@@ -244,18 +281,21 @@ class VisitorStatisticsTest extends TestCase
 
         $this->withServerVariables(['REMOTE_ADDR' => '203.0.113.9'])
             ->get('/test-public-visitor')
-            ->assertOk();
+            ->assertOk()
+            ->assertCookie(VisitorTrackingService::DEVICE_COOKIE);
 
         $this->assertDatabaseHas('visitors', [
             'ip_address' => '203.0.113.9',
             'page_url' => '/test-public-visitor',
             'visitor_type' => Visitor::TYPE_LANDING,
         ]);
+        $this->assertDatabaseMissing('visitors', ['device_id' => null]);
     }
 
-    private function recordPage(string $ip, string $url, string $visitedAt = '2026-11-05 10:00:00'): void
+    private function recordPage(string $ip, string $url, string $visitedAt = '2026-11-05 10:00:00', string $deviceId = 'device-one'): void
     {
         $request = $this->getRequest($url, $ip);
+        $request->cookies->set(VisitorTrackingService::DEVICE_COOKIE, $deviceId);
         Carbon::setTestNow($visitedAt);
         app(VisitorTrackingService::class)->recordPageVisit($request);
         Carbon::setTestNow('2026-11-05 10:00:00');

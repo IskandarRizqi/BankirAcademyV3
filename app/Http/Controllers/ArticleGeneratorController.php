@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Keyword;
+use App\Models\LokerModel;
 use App\Services\SitemapService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
@@ -113,7 +114,14 @@ class ArticleGeneratorController extends Controller
             $relatedArticles = $relatedArticles->merge($additional);
         }
 
-        return view('articles.show', compact('article', 'relatedArticles'));
+        $relatedJobs = LokerModel::where('status', 1)
+            ->whereDate('tanggal_awal', '<=', now())
+            ->whereDate('tanggal_akhir', '>=', now())
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('articles.show', compact('article', 'relatedArticles', 'relatedJobs'));
     }
 
     public function show($slug)
@@ -132,7 +140,14 @@ class ArticleGeneratorController extends Controller
             }
         }
 
-        return view('articles.show', compact('article', 'relatedArticles'));
+        $relatedJobs = LokerModel::where('status', 1)
+            ->whereDate('tanggal_awal', '<=', now())
+            ->whereDate('tanggal_akhir', '>=', now())
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('articles.show', compact('article', 'relatedArticles', 'relatedJobs'));
     }
 
     public function getNextKeyword()

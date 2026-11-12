@@ -90,6 +90,8 @@ class VisitorStatisticsController extends Controller
     {
         return Visitor::query()
             ->where('visitor_type', $type)
+            ->whereNotNull('device_id')
+            ->whereRaw('UPPER(country_code) = ?', ['ID'])
             ->whereBetween('visited_at', [$start, $end]);
     }
 
@@ -97,13 +99,13 @@ class VisitorStatisticsController extends Controller
     {
         return (int) $this->baseQuery($type, $start, $end)
             ->distinct()
-            ->count('ip_address');
+            ->count('device_id');
     }
 
     private function dailyChart(string $type, Carbon $start, Carbon $end): array
     {
         $counts = $this->baseQuery($type, $start, $end)
-            ->selectRaw('DATE(visited_at) as visit_date, COUNT(DISTINCT ip_address) as unique_visitors')
+            ->selectRaw('DATE(visited_at) as visit_date, COUNT(DISTINCT device_id) as unique_visitors')
             ->groupByRaw('DATE(visited_at)')
             ->pluck('unique_visitors', 'visit_date');
         $data = [];
@@ -129,9 +131,9 @@ class VisitorStatisticsController extends Controller
     private function deviceStatistics(Carbon $start, Carbon $end): array
     {
         $visitors = $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
-            ->select(['ip_address', 'user_agent'])
+            ->select(['device_id', 'user_agent'])
             ->get()
-            ->unique('ip_address');
+            ->unique('device_id');
         $total = $visitors->count();
         $mobile = $visitors->filter(function (Visitor $visitor) {
             return app(VisitorTrackingService::class)->isMobile((string) $visitor->user_agent);
@@ -151,7 +153,7 @@ class VisitorStatisticsController extends Controller
     {
         return $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
             ->select(['page_url', 'page_label'])
-            ->selectRaw('COUNT(DISTINCT ip_address) as unique_visitors')
+            ->selectRaw('COUNT(DISTINCT device_id) as unique_visitors')
             ->groupBy('page_url', 'page_label')
             ->orderByDesc('unique_visitors')
             ->limit(5)
@@ -162,7 +164,7 @@ class VisitorStatisticsController extends Controller
     {
         $provinces = $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
             ->selectRaw("COALESCE(NULLIF(province, ''), 'Tidak diketahui') as province")
-            ->selectRaw('COUNT(DISTINCT ip_address) as unique_visitors')
+            ->selectRaw('COUNT(DISTINCT device_id) as unique_visitors')
             ->groupByRaw("COALESCE(NULLIF(province, ''), 'Tidak diketahui')")
             ->orderByDesc('unique_visitors')
             ->limit(10)
@@ -171,7 +173,7 @@ class VisitorStatisticsController extends Controller
         $cities = $this->baseQuery(Visitor::TYPE_LANDING, $start, $end)
             ->selectRaw("COALESCE(NULLIF(city, ''), 'Tidak diketahui') as city")
             ->selectRaw("COALESCE(NULLIF(province, ''), '-') as province")
-            ->selectRaw('COUNT(DISTINCT ip_address) as unique_visitors')
+            ->selectRaw('COUNT(DISTINCT device_id) as unique_visitors')
             ->groupByRaw("COALESCE(NULLIF(city, ''), 'Tidak diketahui'), COALESCE(NULLIF(province, ''), '-')")
             ->orderByDesc('unique_visitors')
             ->limit(15)

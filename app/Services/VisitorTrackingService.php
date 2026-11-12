@@ -7,11 +7,14 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class VisitorTrackingService
 {
+    public const DEVICE_COOKIE = 'visitor_device_id';
+
     public function recordPageVisit(Request $request): ?Visitor
     {
         if (! $request->isMethod('GET') || $this->isInternalRequest($request)) {
@@ -27,7 +30,10 @@ class VisitorTrackingService
             return null;
         }
 
-        return $this->record($request, Visitor::TYPE_AUTH);
+        $visitor = $this->record($request, Visitor::TYPE_AUTH);
+        $this->queueDeviceCookie($request);
+
+        return $visitor;
     }
 
     public function recordTransaction(Request $request): ?Visitor
@@ -36,7 +42,10 @@ class VisitorTrackingService
             return null;
         }
 
-        return $this->record($request, Visitor::TYPE_TRANSACTION);
+        $visitor = $this->record($request, Visitor::TYPE_TRANSACTION);
+        $this->queueDeviceCookie($request);
+
+        return $visitor;
     }
 
     public function record(Request $request, string $type, ?string $pageUrl = null): ?Visitor
@@ -51,8 +60,10 @@ class VisitorTrackingService
 
         $visitedAt = now();
         $pageUrl = $this->normalizeUrl($pageUrl ?: $request->getPathInfo());
+        $deviceId = $this->deviceId($request);
         $attributes = [
             'ip_address' => $request->ip(),
+            'device_id' => $deviceId,
             'page_url' => $pageUrl,
             'visitor_type' => $type,
             'visitor_date' => $visitedAt->toDateString(),
@@ -75,6 +86,34 @@ class VisitorTrackingService
             // A concurrent request can win the unique daily insert race.
             return Visitor::where($attributes)->first();
         }
+    }
+
+    public function deviceId(Request $request): string
+    {
+        $deviceId = $request->attributes->get(self::DEVICE_COOKIE) ?: $request->cookie(self::DEVICE_COOKIE);
+
+        if (! is_string($deviceId) || ! preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $deviceId)) {
+            $deviceId = (string) Str::uuid();
+        }
+
+        $request->attributes->set(self::DEVICE_COOKIE, $deviceId);
+
+        return $deviceId;
+    }
+
+    public function makeDeviceCookie(Request $request, string $deviceId)
+    {
+        return cookie(
+            self::DEVICE_COOKIE,
+            $deviceId,
+            60 * 24 * 365 * 5,
+            '/',
+            null,
+            $request->isSecure(),
+            true,
+            false,
+            'lax'
+        );
     }
 
     public function normalizeUrl(string $url): string
@@ -136,6 +175,15 @@ class VisitorTrackingService
         }
 
         return Str::limit(trim($value), $limit, '');
+    }
+
+    private function queueDeviceCookie(Request $request): void
+    {
+        $deviceId = $this->deviceId($request);
+
+        if ($request->cookie(self::DEVICE_COOKIE) !== $deviceId) {
+            Cookie::queue($this->makeDeviceCookie($request, $deviceId));
+        }
     }
 
     private function isInternalRequest(Request $request): bool

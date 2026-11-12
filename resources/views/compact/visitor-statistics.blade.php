@@ -80,7 +80,7 @@
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
             <div>
                 <h1 class="h3 font-weight-bold text-dark mb-1">Statistik Visitor</h1>
-                <p class="text-muted mb-0">Visitor unik berdasarkan IP address pada {{ $periodLabel }} ({{ $startDate }}
+                <p class="text-muted mb-0">Visitor unik Indonesia berdasarkan cookie perangkat pada {{ $periodLabel }} ({{ $startDate }}
                     - {{ $endDate }}).</p>
             </div>
         </div>
@@ -137,7 +137,7 @@
                             <span class="stat-label">{{ $statistic['label'] }}</span>
                             <i class="fas fa-chart-line text-primary"></i>
                         </div>
-                        <div class="text-muted small mb-1">Visitor unik dalam periode terpilih</div>
+                        <div class="text-muted small mb-1">Perangkat unik dalam periode terpilih</div>
                         <div class="stat-value">{{ number_format($statistic['total']) }}</div>
                         <div class="text-muted small mt-2">{{ $startDate }} - {{ $endDate }}</div>
                     </div>
@@ -164,7 +164,7 @@
             <div class="col-12 col-xl-4 mb-4">
                 <div class="chart-card h-100">
                     <h2 class="h5 font-weight-bold mb-1">Perangkat Landing Page</h2>
-                    <p class="text-muted small">Dihitung dari IP unik pada periode terpilih.</p>
+                    <p class="text-muted small">Dihitung dari cookie perangkat unik pada periode terpilih.</p>
                     <div id="visitor-device-chart" class="chart-container"></div>
                     <p class="empty-message mb-0" id="visitor-device-empty" @if ($deviceStatistics['total'] > 0) hidden @endif>
                         Belum ada data perangkat.
@@ -184,7 +184,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
                             <h2 class="h5 font-weight-bold mb-1">Lima Halaman Terpopuler</h2>
-                            <p class="text-muted small mb-0">Visitor unik per halaman pada periode terpilih.</p>
+                            <p class="text-muted small mb-0">Perangkat unik per halaman pada periode terpilih.</p>
                         </div>
                     </div>
                     <div id="visitor-top-pages-chart" class="chart-container" style="min-height: 300px;"></div>
@@ -220,7 +220,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
                             <h2 class="h5 font-weight-bold mb-1">Visitor Berdasarkan Wilayah</h2>
-                            <p class="text-muted small mb-0">Visitor unik landing page berdasarkan perkiraan lokasi IP.</p>
+                            <p class="text-muted small mb-0">Perangkat unik Indonesia berdasarkan perkiraan lokasi IP.</p>
                         </div>
                     </div>
                     @if ($locationStatistics['provinces']->isEmpty() && $locationStatistics['cities']->isEmpty())
