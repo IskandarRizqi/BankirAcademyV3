@@ -24,6 +24,7 @@ class LokerModel extends Model
         'skill',
         'type',
         'status',
+        'views',
         'nama',
         'email',
         'alamat',
@@ -38,6 +39,7 @@ class LokerModel extends Model
 
     protected $casts = [
         'n8n_webhook_sent_at' => 'datetime',
+        'views' => 'integer',
     ];
 
     protected $hidden = [

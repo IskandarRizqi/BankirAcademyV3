@@ -94,6 +94,9 @@ class ArticleGeneratorController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
+        Article::whereKey($article->id)->increment('views');
+        $article->refresh();
+
         // Prioritaskan artikel lain dengan keyword yang sama
         $relatedArticles = Article::where('status', 1)
             ->where('id', '!=', $article->id)

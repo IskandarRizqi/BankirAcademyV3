@@ -762,6 +762,13 @@
                                 </dd>
                             </div>
                         </div>
+                        <div class="loker-detail-info-item">
+                            <span class="loker-detail-info-item__icon" aria-hidden="true"><i class="far fa-eye"></i></span>
+                            <div>
+                                <dt>Dilihat</dt>
+                                <dd>{{ number_format($loker->views) }} kali</dd>
+                            </div>
+                        </div>
                     </dl>
                 </section>
 

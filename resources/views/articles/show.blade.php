@@ -355,6 +355,7 @@
                 <h1>{{ $article->title }}</h1>
                 <div class="article-meta">
                     <span><i class="far fa-calendar-alt mr-1"></i>{{ optional($article->created_at)->translatedFormat('d F Y') }}</span>
+                    <span><i class="far fa-eye mr-1"></i>{{ number_format($article->views) }} kali dibaca</span>
                     @if ($article->keyword)
                         <span><i class="fas fa-tag mr-1"></i>{{ $article->keyword }}</span>
                     @endif

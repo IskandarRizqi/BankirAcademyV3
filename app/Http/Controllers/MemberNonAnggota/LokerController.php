@@ -115,6 +115,10 @@ class LokerController extends Controller
         $query = $this->activeLokerQuery()->where('loker.id', $id);
 
         $loker = $query->firstOrFail();
+
+        LokerModel::whereKey($loker->id)->increment('views');
+        $loker->refresh();
+
         $relatedQuery = $this->activeLokerQuery()->where('loker.id', '!=', $loker->id);
 
         if ($loker->perusahaan_id) {

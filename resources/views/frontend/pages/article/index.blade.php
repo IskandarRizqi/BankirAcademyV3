@@ -58,6 +58,7 @@
                                 <time datetime="{{ optional($article->created_at)->toDateString() }}">
                                     {{ optional($article->created_at)->format('d M Y') ?? '-' }}
                                 </time>
+                                {{-- <span><i class="far fa-eye mr-1"></i>{{ number_format($article->views) }} kali dibaca</span> --}}
                             </div>
                             <h2>{{ $article->title }}</h2>
                             <a class="article-card-link" href="{{ route('frontend.articles.show', $article->slug) }}">

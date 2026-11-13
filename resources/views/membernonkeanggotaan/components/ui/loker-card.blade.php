@@ -287,6 +287,11 @@
             <span>{{ $location ?: 'Lokasi belum tersedia' }}</span>
         </div>
 
+        <div class="loker-card__meta">
+            <span class="loker-card__icon" aria-hidden="true"><i class="far fa-eye"></i></span>
+            <span>{{ number_format($loker->views) }} kali dilihat</span>
+        </div>
+
         <div class="loker-card__footer mt-auto">
             <div class="loker-card__deadline">
                 <span>Batas pendaftaran</span>
