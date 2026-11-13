@@ -465,6 +465,8 @@
                     @endif
                 </div>
 
+                @include('frontend.partials.cv-ats-cta')
+
                 <div class="news-share"><span class="news-share__label">Bagikan berita ini</span>
                     <div class="news-share__actions"><button type="button"
                             class="news-share__button news-share__button--copy" data-copy-news-link title="Salin tautan"><i

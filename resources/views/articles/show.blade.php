@@ -388,6 +388,8 @@
                     @endif
                 </div>
 
+                @include('frontend.partials.cv-ats-cta')
+
                 <div class="article-share">
                     <span class="article-share__label">Bagikan artikel ini</span>
                     <div class="article-share__actions">

@@ -694,6 +694,8 @@
                     @endif
                 </section>
 
+                @include('frontend.partials.cv-ats-cta')
+
                 <section class="loker-detail-card loker-detail-share" aria-labelledby="loker-share-title">
                     <h2 id="loker-share-title">Bagikan lowongan</h2>
                     <p>Bagikan tautan ini ke teman atau jaringan profesional Anda.</p>
