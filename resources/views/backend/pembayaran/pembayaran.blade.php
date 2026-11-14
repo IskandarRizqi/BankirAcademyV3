@@ -197,7 +197,7 @@
         }
 
         #tblPembayaran {
-            min-width: 1180px;
+            min-width: 1320px;
         }
 
         #tblPembayaran thead th {
@@ -357,6 +357,8 @@
                                 <th class="border-top-0 pl-4" style="width: 50px;">#</th>
                                 <th class="border-top-0">Status</th>
                                 <th class="border-top-0">No Invoice</th>
+                                <th class="border-top-0">Hari Transaksi</th>
+                                <th class="border-top-0">Jam Transaksi</th>
                                 <th class="border-top-0">Skema / Metode</th>
                                 <th class="border-top-0">Bukti / Link Pembayaran</th>
                                 <th class="border-top-0">Total Harga</th>
@@ -391,6 +393,7 @@
                                             : null);
                                     $isManualPayment = $p->payment_method === 'manual' || !$isExternalUrl;
                                     $isMembership = (int) $p->tipe_pembelian === \App\Models\DataPayment::PURCHASE_TYPE_MEMBERSHIP;
+                                    $transactionAt = $p->created_at?->copy()->locale('id');
                                 @endphp
                                 <tr>
                                     <td class="pl-4 font-weight-bold align-middle">{{ $key + 1 }}</td>
@@ -422,6 +425,18 @@
                                     </td>
 
                                     <td class="align-middle font-weight-bold text-primary">{{ $p->no_invoice }}</td>
+
+                                    <td class="align-middle">
+                                        @if ($transactionAt)
+                                            <div class="font-weight-bold">{{ $transactionAt->translatedFormat('l') }}</div>
+                                            <small class="text-muted">{{ $transactionAt->format('d/m/Y') }}</small>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="align-middle text-nowrap">
+                                        {{ $transactionAt?->format('H:i') ?? '-' }}
+                                    </td>
 
                                     {{-- Skema / Metode Pembayaran --}}
                                     <td class="align-middle">

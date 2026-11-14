@@ -1033,7 +1033,7 @@
                     const form = deleteButton.closest('form');
                     Swal.fire({
                         title: 'Hapus draft ini?',
-                        text: 'Data yang dihapus tidak dapat dikembalikan.',
+                        text: 'Data yang dihapus tidak dapat dikembalikan.', 
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Ya, hapus',
@@ -1168,7 +1168,7 @@
                 setValue('edit-tanggal-posting', dateOnly(draft.tanggal_posting));
                 setValue('edit-batas-pendaftaran', dateOnly(draft.batas_pendaftaran));
                 setValue('edit-skill', draft.keahlian_skill);
-                setValue('edit-deskripsi', draft.deskripsi_pekerjaan);
+                setValue('edit-deskripsi', draft.deskripsi_pekerjaan || draft.ringkasan_ai || draft.jobdesk || draft.posisi);
                 setValue('edit-jobdesk', draft.jobdesk);
                 setValue('edit-kualifikasi', draft.kualifikasi_jobspek);
                 setValue('edit-fasilitas', draft.fasilitas);
