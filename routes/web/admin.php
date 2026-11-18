@@ -45,6 +45,12 @@ Route::middleware([IsAdminRoot::class])->group(function () {
     Route::delete('/admin/exams/{exam}/results/{submission}', [AdminExamController::class, 'destroySubmission'])
         ->middleware('admin.panel')
         ->name('admin.exams.results.destroy');
+    Route::post('/admin/exams/import', [AdminExamController::class, 'import'])
+        ->middleware('admin.panel')
+        ->name('admin.exams.import');
+    Route::get('/admin/exams/template', [AdminExamController::class, 'downloadTemplate'])
+        ->middleware('admin.panel')
+        ->name('admin.exams.template');
     Route::resource('/admin/exams', AdminExamController::class)
         ->except(['show'])
         ->middleware('admin.panel')
