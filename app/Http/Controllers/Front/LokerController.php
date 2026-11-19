@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\LokerModel;
+use App\Support\LokerContent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -11,15 +12,13 @@ use Illuminate\Support\Facades\Validator;
 
 class LokerController extends Controller
 {
-    public function index(Request $request)
-    {
-    }
+    public function index(Request $request) {}
 
     public function store(Request $request)
     {
         // return $request->all();
         $c = json_decode(Auth::user()->corporate);
-        if (!$c) {
+        if (! $c) {
             return Redirect::back()->withInput($request->all())->with('error', 'Data Corporate Tidak Sesuai');
         }
         $valid = Validator::make($request->all(), [
@@ -32,7 +31,7 @@ class LokerController extends Controller
             'loker_skill' => 'nullable',
             'loker_type' => 'required',
         ]);
-        //response error validation
+        // response error validation
         if ($valid->fails()) {
             return Redirect::back()->withErrors($valid)->withInput($request->all())->with('error', 'Data Tidak Sesuai');
         }
@@ -42,8 +41,8 @@ class LokerController extends Controller
             'perusahaan_user' => json_decode(Auth::user()->corporate)->id_corporate,
             'gaji_min' => $request->loker_gaji_min,
             'gaji_max' => 0,
-            'deskripsi' => $request->loker_deskripsi,
-            'jobdesk' => $request->loker_jobdesk,
+            'deskripsi' => LokerContent::html($request->loker_deskripsi),
+            'jobdesk' => LokerContent::html($request->loker_jobdesk),
             'tanggal_awal' => $request->loker_tanggal_awal,
             'tanggal_akhir' => $request->loker_tanggal_akhir,
             'skill' => $request->filled('loker_skill') ? json_encode($request->loker_skill) : null,
@@ -56,6 +55,7 @@ class LokerController extends Controller
         if ($l) {
             return Redirect::back()->with('success', 'Data Tersimpan');
         }
+
         return Redirect::back()->with('info', 'Data Gagal Tersimpan');
     }
 }

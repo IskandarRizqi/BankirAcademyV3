@@ -34,8 +34,10 @@
     $province = $loker->provinsi_name ?: optional($company)->provinsi_name;
     $city = $loker->kabupaten_name ?: optional($company)->kabupaten_name;
     $address = $loker->alamat ?: optional($company)->alamat;
-    $description = trim(strip_tags((string) $loker->deskripsi));
-    $jobdesk = trim(strip_tags((string) $loker->jobdesk));
+    $descriptionHtml = \App\Support\LokerContent::html($loker->deskripsi);
+    $jobdeskHtml = \App\Support\LokerContent::html($loker->jobdesk);
+    $description = \App\Support\LokerContent::text($descriptionHtml);
+    $jobdesk = \App\Support\LokerContent::text($jobdeskHtml);
     $shareTitle = trim((string) $loker->title) . ' | Lowongan Kerja Bankir Academy';
     $shareDescription = \Illuminate\Support\Str::limit(
         preg_replace('/\s+/', ' ', $description ?: $jobdesk ?: 'Lihat detail lowongan kerja di Bankir Academy.'),
@@ -268,8 +270,27 @@
             margin: 0;
             color: #4b5563;
             font-size: 14px;
-            line-height: 1.8;
+            line-height: 1.6;
             white-space: pre-line;
+        }
+
+        .loker-rich-text {
+            white-space: normal;
+        }
+
+        .loker-rich-text > * {
+            margin-top: 0;
+            margin-bottom: .45rem;
+            line-height: 1.6;
+        }
+
+        .loker-rich-text > :last-child {
+            margin-bottom: 0;
+        }
+
+        .loker-rich-text ul,
+        .loker-rich-text ol {
+            padding-left: 1.25rem;
         }
 
         .loker-detail-tags {
@@ -641,13 +662,17 @@
 
                 <section class="loker-detail-section" aria-labelledby="loker-description-title">
                     <h2 id="loker-description-title">Deskripsi pekerjaan</h2>
-                    <p class="loker-detail-copy">{{ $description ?: 'Deskripsi pekerjaan belum tersedia.' }}</p>
+                    <div class="loker-detail-copy loker-rich-text">
+                        {!! $descriptionHtml ?: 'Deskripsi pekerjaan belum tersedia.' !!}
+                    </div>
                 </section>
 
                 @if ($jobdesk)
                     <section class="loker-detail-section" aria-labelledby="loker-jobdesk-title">
                         <h2 id="loker-jobdesk-title">Tanggung jawab dan tugas</h2>
-                        <p class="loker-detail-copy">{{ $jobdesk }}</p>
+                    <div class="loker-detail-copy loker-rich-text">
+                        {!! $jobdeskHtml !!}
+                    </div>
                     </section>
                 @endif
 

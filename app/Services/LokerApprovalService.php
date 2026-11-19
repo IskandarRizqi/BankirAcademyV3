@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\LokerDraft;
 use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
+use App\Support\LokerContent;
 use Illuminate\Support\Facades\DB;
 
 class LokerApprovalService
@@ -62,8 +63,8 @@ class LokerApprovalService
                 'title' => $draft->posisi,
                 'gaji_min' => $draft->gaji_min ?? 0,
                 'gaji_max' => $draft->gaji_max ?? 0,
-                'deskripsi' => $description,
-                'jobdesk' => $jobdesk,
+                'deskripsi' => LokerContent::html($description),
+                'jobdesk' => LokerContent::html($jobdesk),
                 'image' => json_encode([
                     'url' => self::DEFAULT_COMPANY_LOGO,
                     'size' => null,

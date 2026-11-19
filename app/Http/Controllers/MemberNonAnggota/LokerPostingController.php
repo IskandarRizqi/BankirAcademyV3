@@ -5,6 +5,7 @@ namespace App\Http\Controllers\MemberNonAnggota;
 use App\Http\Controllers\Controller;
 use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
+use App\Support\LokerContent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -14,8 +15,6 @@ use Throwable;
 
 class LokerPostingController extends Controller
 {
-    private const ALLOWED_JOBDESK_TAGS = '<p><br><strong><em><u><ul><ol><li><blockquote>';
-
     public function index(Request $request)
     {
         $company = $this->requireCompleteCompany($request);
@@ -170,7 +169,8 @@ class LokerPostingController extends Controller
     {
         $payload = $request->all();
         $payload['gaji_min'] = $this->normalizeRupiah($request->input('gaji_min'));
-        $payload['jobdesk'] = $this->sanitizeJobdesk((string) $request->input('jobdesk'));
+        $payload['deskripsi'] = LokerContent::html($request->input('deskripsi'));
+        $payload['jobdesk'] = LokerContent::html($request->input('jobdesk'));
 
         $validator = Validator::make($payload, [
             'title' => ['required', 'string', 'max:255'],
@@ -242,16 +242,5 @@ class LokerPostingController extends Controller
         $digits = preg_replace('/[^0-9]/', '', (string) $value);
 
         return $digits === '' ? null : (int) $digits;
-    }
-
-    private function sanitizeJobdesk(string $value): string
-    {
-        $sanitized = strip_tags($value, self::ALLOWED_JOBDESK_TAGS);
-
-        return trim((string) preg_replace_callback(
-            '/<\s*(\/?)\s*(p|br|strong|em|u|ul|ol|li|blockquote)(?:\s+[^>]*)?\s*\/?>/i',
-            fn (array $matches) => '<'.($matches[1] === '/' ? '/' : '').strtolower($matches[2]).'>',
-            $sanitized
-        ));
     }
 }

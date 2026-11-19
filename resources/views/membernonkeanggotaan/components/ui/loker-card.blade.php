@@ -269,7 +269,7 @@
         </div>
 
         <p class="loker-card__description">
-            {{ \Illuminate\Support\Str::limit(strip_tags((string) $loker->deskripsi), 155) }}</p>
+            {{ \Illuminate\Support\Str::limit(\App\Support\LokerContent::text($loker->deskripsi), 155) }}</p>
 
         @if (count($types) > 0 || count($skills) > 0)
             <div class="loker-card__tags" aria-label="Kategori loker">

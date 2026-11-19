@@ -1,6 +1,22 @@
 @extends('layouts.appfrontend')
 
 @section('content')
+<style>
+    .loker-rich-text > * {
+        margin-top: 0;
+        margin-bottom: .45rem;
+        line-height: 1.6;
+    }
+
+    .loker-rich-text > :last-child {
+        margin-bottom: 0;
+    }
+
+    .loker-rich-text ul,
+    .loker-rich-text ol {
+        padding-left: 1.25rem;
+    }
+</style>
 <div id="content-area">
     <div class="full-page" data-type="component-text">
         
@@ -103,8 +119,8 @@
                     'work_type' => $workType,
                     'job_type' => $jobType,
                     'salary' => $salary,
-                    'deskripsi' => $job->deskripsi,
-                    'jobdesk' => $job->jobdesk ?? null,
+                    'deskripsi' => \App\Support\LokerContent::html($job->deskripsi),
+                    'jobdesk' => \App\Support\LokerContent::html($job->jobdesk ?? null),
                     'skill' => $skills,
                     'pengalaman' => $job->pengalaman ?? 'Min. 1 Tahun',
                     'whatsapp' => $job->whatsapp ?? '628123456789'
@@ -113,7 +129,7 @@
 
             <!-- Job Card Item -->
             <div class="card border-0 shadow-sm p-3 position-relative job-card cursor-pointer job-card-clickable {{ $index === 0 ? 'border-start border-4 border-primary bg-white active-card' : 'bg-white opacity-90' }}"
-                 data-job="{{ json_encode($jobPayload, JSON_HEX_APOS | JSON_HEX_QUOT) }}"
+                 data-job="{{ json_encode($jobPayload, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) }}"
                  onclick="selectJob(this)">
                 
                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -191,14 +207,14 @@
 
                                 <div class="job-description-body">
                                     <h5 class="fw-bold text-dark mb-2">Deskripsi Pekerjaan:</h5>
-                                    <div class="text-muted small leading-relaxed mb-4" id="detail-description">
-                                        {!! $firstJob->deskripsi !!}
+                                    <div class="text-muted small leading-relaxed mb-4 loker-rich-text" id="detail-description">
+                                         {!! \App\Support\LokerContent::html($firstJob->deskripsi) !!}
                                     </div>
 
                                     <div id="detail-jobdesk-wrapper" class="{{ empty($firstJob->jobdesk) ? 'd-none' : '' }}">
                                         <h5 class="fw-bold text-dark mb-2">Tanggung Jawab Utama:</h5>
-                                        <div class="text-muted small ps-3 mb-4" id="detail-jobdesk">
-                                            {!! $firstJob->jobdesk !!}
+                                        <div class="text-muted small ps-3 mb-4 loker-rich-text" id="detail-jobdesk">
+                                             {!! \App\Support\LokerContent::html($firstJob->jobdesk) !!}
                                         </div>
                                     </div>
 

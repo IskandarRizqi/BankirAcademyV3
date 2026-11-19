@@ -12,6 +12,7 @@ use App\Models\PerusahaanModel;
 use App\Models\UserProfileModel;
 use App\Services\LokerApplicationQuota;
 use App\Support\AdminPanel;
+use App\Support\LokerContent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -437,8 +438,8 @@ class BerandaLoker extends Controller
             'perusahaan_id' => $perusahaanId,
             'gaji_min' => $request->loker_gaji_min,
             'gaji_max' => 0,
-            'deskripsi' => $request->loker_deskripsi,
-            'jobdesk' => $request->loker_jobdesk,
+            'deskripsi' => LokerContent::html($request->loker_deskripsi),
+            'jobdesk' => LokerContent::html($request->loker_jobdesk),
             'tanggal_awal' => $request->loker_tanggal_awal,
             'tanggal_akhir' => $request->loker_tanggal_akhir,
             'skill' => $request->filled('loker_skill') ? json_encode($request->loker_skill) : null,

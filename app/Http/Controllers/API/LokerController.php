@@ -6,6 +6,7 @@ use App\Helper\GlobalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\HistoryIpAksesModel;
 use App\Models\LokerModel;
+use App\Support\LokerContent;
 use Illuminate\Http\Request;
 
 class LokerController extends Controller
@@ -51,6 +52,8 @@ class LokerController extends Controller
             if ($v->perusahaan_id) {
                 $v->image = $v->perusahaan->image;
             }
+            $v->deskripsi = LokerContent::html($v->deskripsi);
+            $v->jobdesk = LokerContent::html($v->jobdesk);
         }
         $data = [
             'message' => 'Data berhasil',
@@ -72,6 +75,11 @@ class LokerController extends Controller
         }
 
         $loker = $query->get();
+
+        $loker->each(function (LokerModel $job) {
+            $job->deskripsi = LokerContent::html($job->deskripsi);
+            $job->jobdesk = LokerContent::html($job->jobdesk);
+        });
 
         return response()->json([
             'success' => true,

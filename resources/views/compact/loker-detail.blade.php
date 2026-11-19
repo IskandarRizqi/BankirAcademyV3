@@ -1,6 +1,23 @@
 @extends('layouts.compact')
 @section('content')
 
+<style>
+    .loker-rich-text > * {
+        margin-top: 0;
+        margin-bottom: .45rem;
+        line-height: 1.6;
+    }
+
+    .loker-rich-text > :last-child {
+        margin-bottom: 0;
+    }
+
+    .loker-rich-text ul,
+    .loker-rich-text ol {
+        padding-left: 1.25rem;
+    }
+</style>
+
 <div class="row layout-top-spacing">
     <div class="col-12 mb-4">
         {{-- Tombol Kembali --}}
@@ -28,8 +45,8 @@
                     {{-- Deskripsi Loker --}}
                     <div class="mb-4">
                         <h5 class="font-weight-bold text-dark mb-3">Deskripsi Pekerjaan</h5>
-                        <div class="text-muted">
-                            {!! $loker->deskripsi !!}
+                        <div class="text-muted loker-rich-text">
+                            {!! \App\Support\LokerContent::html($loker->deskripsi) !!}
                         </div>
                     </div>
 
@@ -37,8 +54,8 @@
                     @if($loker->jobdesk)
                         <div class="mb-4">
                             <h5 class="font-weight-bold text-dark mb-3">Tanggung Jawab / Tugas</h5>
-                            <div class="text-muted">
-                                {!! $loker->jobdesk !!}
+                            <div class="text-muted loker-rich-text">
+                                {!! \App\Support\LokerContent::html($loker->jobdesk) !!}
                             </div>
                         </div>
                     @endif

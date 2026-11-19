@@ -10,6 +10,7 @@ use App\Models\LokerModel;
 use App\Models\PerusahaanModel;
 use App\Models\UserProfileModel;
 use App\Services\LokerApplicationQuota;
+use App\Support\LokerContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -423,8 +424,8 @@ class MobileJobController extends Controller
             'company' => $company ? $this->companyData($company) : null,
         ];
         if ($includeDescription) {
-            $data['description'] = $job->deskripsi;
-            $data['jobdesk'] = $job->jobdesk;
+            $data['description'] = LokerContent::html($job->deskripsi);
+            $data['jobdesk'] = LokerContent::html($job->jobdesk);
         }
 
         return $data;
@@ -454,7 +455,8 @@ class MobileJobController extends Controller
         $payload = $request->all();
         $salaryDigits = preg_replace('/[^0-9]/', '', (string) ($request->input('gaji_min') ?? ''));
         $payload['gaji_min'] = $salaryDigits === '' ? null : (int) $salaryDigits;
-        $payload['jobdesk'] = trim(strip_tags((string) $request->input('jobdesk'), '<p><br><strong><em><u><ul><ol><li><blockquote>'));
+        $payload['deskripsi'] = LokerContent::html($request->input('deskripsi'));
+        $payload['jobdesk'] = LokerContent::html($request->input('jobdesk'));
 
         return validator($payload, [
             'title' => ['required', 'string', 'max:255'],
@@ -479,8 +481,8 @@ class MobileJobController extends Controller
             'title' => $data['title'],
             'gaji_min' => $data['gaji_min'],
             'gaji_max' => 0,
-            'deskripsi' => $data['deskripsi'],
-            'jobdesk' => $data['jobdesk'],
+            'deskripsi' => LokerContent::html($data['deskripsi']),
+            'jobdesk' => LokerContent::html($data['jobdesk']),
             'tanggal_awal' => $data['tanggal_awal'],
             'tanggal_akhir' => $data['tanggal_akhir'],
             'skill' => $skills !== [] ? json_encode($skills) : null,

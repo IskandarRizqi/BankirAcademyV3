@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\LokerModel;
+use App\Support\LokerContent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -173,8 +174,8 @@ class PublicContentController extends Controller
         ];
 
         if ($includeDescription) {
-            $data['description'] = $job->deskripsi;
-            $data['jobdesk'] = $job->jobdesk;
+            $data['description'] = LokerContent::html($job->deskripsi);
+            $data['jobdesk'] = LokerContent::html($job->jobdesk);
         }
 
         return $data;

@@ -12,6 +12,7 @@ use App\Models\SiswaModulAktif;
 use App\Models\SubMateriModel;
 use App\Models\UserSubMateriItemProgress;
 use App\Services\LokerApplicationQuota;
+use App\Support\LokerContent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -391,8 +392,8 @@ class ParticipantController extends Controller
         ];
 
         if ($includeDescription) {
-            $data['description'] = $job->deskripsi;
-            $data['jobdesk'] = $job->jobdesk;
+            $data['description'] = LokerContent::html($job->deskripsi);
+            $data['jobdesk'] = LokerContent::html($job->jobdesk);
             $data['address'] = $job->alamat;
             $data['company'] = $job->perusahaan ? [
                 'name' => $job->perusahaan->nama,

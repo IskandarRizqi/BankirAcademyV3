@@ -88,7 +88,7 @@
 
                                     {{-- Deskripsi HTML disembunyikan tagnya, dibatasi jika terlalu panjang --}}
                                     <div class="text-muted small mb-2 text-truncate-2">
-                                        {!! Str::limit(strip_tags($loker->deskripsi), 120) !!}
+                                        {{ Str::limit(\App\Support\LokerContent::text($loker->deskripsi), 120) }}
                                     </div>
 
                                     {{-- Loop array untuk Skill --}}
