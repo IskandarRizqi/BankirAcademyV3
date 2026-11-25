@@ -2,6 +2,10 @@
     <script src="{{ $cdn ?? asset('vendor/sweetalert/sweetalert.all.js')  }}"></script>
 @endif
 @if (Session::has('alert.config'))
+    @php
+        $alertData = json_decode(Session::pull('alert.config'), true);
+        $alertConfig = $alertData['config'] ?? $alertData;
+    @endphp
     @if(config('sweetalert.animation.enable'))
         <link rel="stylesheet" href="{{ config('sweetalert.animatecss') }}">
     @endif
@@ -9,6 +13,6 @@
         <script src="{{ $cdn ?? asset('vendor/sweetalert/sweetalert.all.js')  }}"></script>
     @endif
     <script>
-        Swal.fire({!! Session::pull('alert.config') !!});
+        Swal.fire(@json($alertConfig));
     </script>
 @endif

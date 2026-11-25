@@ -7,11 +7,12 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 	@php
-	$flashType = session('success') ? 'success' : (session('error') ? 'error' : (session('info') ? 'info' : null));
+	$flashType = session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : (session('info') ? 'info' : null)));
 	$flashMessage = $flashType ? session($flashType) : null;
 	$flashTitle = [
 		'success' => 'Berhasil',
 		'error' => 'Gagal',
+		'warning' => 'Peringatan',
 		'info' => 'Informasi',
 	][$flashType] ?? null;
 	@endphp
