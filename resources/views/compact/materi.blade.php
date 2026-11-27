@@ -127,7 +127,7 @@
                             <button type="button" class="btn btn-sm btn-outline-success" onclick="$('#quickUploadInput').click()">
                                 ➕ Upload Baru ke Album
                             </button>
-                            <input type="file" id="quickUploadInput" accept="image/*" class="d-none" onchange="uploadToAlbum(this)">
+                            <input type="file" id="quickUploadInput" accept="image/*" class="d-none" data-auto-image-compress="manual" onchange="uploadToAlbum(this)">
                         </div>
 
                         <!-- Filter Search Input -->
@@ -229,8 +229,15 @@
     }
 
     // Direct Upload File Baru ke Tabel Photo via AJAX
-    function uploadToAlbum(input) {
+    async function uploadToAlbum(input) {
         if (input.files && input.files[0]) {
+            try {
+                await window.AutoImageCompressor.compressInput(input);
+            } catch (error) {
+                alert(error.message || 'Gambar gagal dikompres.');
+                return;
+            }
+
             let formData = new FormData();
             formData.append('file', input.files[0]);
             formData.append('_token', '{{ csrf_token() }}');

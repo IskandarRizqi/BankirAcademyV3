@@ -234,7 +234,10 @@
                                 <div class="form-group">
                                     <label for="filClassesImage">Banner Loker</label>
                                     <input type="file" name="filClassesImage" id="filClassesImage" class="form-control-file"
-                                        accept="image/jpeg,image/png,image/webp">
+                                        accept="image/jpeg,image/png,image/webp" data-compress-max-bytes="1048576"
+                                        data-compression-status="#loker_image_compression_status"
+                                        data-compression-preview="#loker_image_preview"
+                                        data-compression-preview-container="#loker_image_preview_wrapper">
                                     <small class="form-text text-muted">JPG, PNG, atau WEBP. Gambar akan dikompres otomatis maksimal 1 MB.</small>
                                     <small id="loker_image_compression_status" class="form-text text-muted" aria-live="polite"></small>
                                     <div id="loker_image_preview_wrapper" class="mt-2" style="display: none;">
@@ -459,137 +462,6 @@
             $('#loker_image_preview').attr('src', imageUrl);
             $('#loker_image_preview_wrapper').show();
         }
-
-        function formatFileSize(bytes) {
-            return (bytes / 1024 / 1024).toFixed(2) + ' MB';
-        }
-
-        function compressLokerImage(file) {
-            var maxFileSize = 1024 * 1024;
-            var maxDimensions = [1600, 1280, 1024, 800];
-            var qualities = [0.82, 0.72, 0.62, 0.52, 0.42];
-
-            return new Promise(function(resolve, reject) {
-                var image = new Image();
-                var objectUrl = URL.createObjectURL(file);
-
-                image.onload = function() {
-                    URL.revokeObjectURL(objectUrl);
-
-                    var candidates = [];
-
-                    function tryCandidate(index) {
-                        if (index >= candidates.length) {
-                            reject(new Error('Gambar terlalu besar untuk dikompres maksimal 1 MB.'));
-                            return;
-                        }
-
-                        var candidate = candidates[index];
-                        candidate.canvas.toBlob(function(blob) {
-                            if (!blob) {
-                                tryCandidate(index + 1);
-                                return;
-                            }
-
-                            if (blob.size <= maxFileSize) {
-                                resolve(blob);
-                                return;
-                            }
-
-                            tryCandidate(index + 1);
-                        }, 'image/jpeg', candidate.quality);
-                    }
-
-                    for (var dimensionIndex = 0; dimensionIndex < maxDimensions.length; dimensionIndex++) {
-                        var scale = Math.min(1, maxDimensions[dimensionIndex] / Math.max(image.width, image.height));
-                        var canvas = document.createElement('canvas');
-                        canvas.width = Math.max(1, Math.round(image.width * scale));
-                        canvas.height = Math.max(1, Math.round(image.height * scale));
-                        var context = canvas.getContext('2d');
-                        context.fillStyle = '#ffffff';
-                        context.fillRect(0, 0, canvas.width, canvas.height);
-                        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-                        for (var qualityIndex = 0; qualityIndex < qualities.length; qualityIndex++) {
-                            candidates.push({
-                                canvas: canvas,
-                                quality: qualities[qualityIndex]
-                            });
-                        }
-                    }
-
-                    tryCandidate(0);
-                };
-
-                image.onerror = function() {
-                    URL.revokeObjectURL(objectUrl);
-                    reject(new Error('File gambar tidak dapat dibaca.'));
-                };
-
-                image.src = objectUrl;
-            }).then(function(blob) {
-                if (blob.size >= file.size && file.size <= maxFileSize) {
-                    return file;
-                }
-
-                return new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.jpg', {
-                    type: 'image/jpeg',
-                    lastModified: Date.now()
-                });
-            });
-        }
-
-        function showLokerFilePreview(file) {
-            var reader = new FileReader();
-            reader.onload = function(event) {
-                showLokerImage(event.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        var compressionRequest = 0;
-        $('#filClassesImage').on('change', function() {
-            var input = this;
-            var file = input.files && input.files[0];
-            var requestId = ++compressionRequest;
-            var submitButton = $('#formLoker button[type="submit"]');
-            var status = $('#loker_image_compression_status');
-
-            if (!file) {
-                status.text('');
-                return;
-            }
-
-            submitButton.prop('disabled', true);
-            status.removeClass('text-danger text-success').addClass('text-muted')
-                .text('Mengompres gambar...');
-
-            compressLokerImage(file).then(function(compressedFile) {
-                if (requestId !== compressionRequest) {
-                    return;
-                }
-
-                var dataTransfer = new DataTransfer();
-                dataTransfer.items.add(compressedFile);
-                input.files = dataTransfer.files;
-                showLokerFilePreview(compressedFile);
-                status.removeClass('text-muted text-danger').addClass('text-success')
-                    .text('Ukuran: ' + formatFileSize(file.size) + ' -> ' + formatFileSize(compressedFile.size));
-            }).catch(function(error) {
-                if (requestId !== compressionRequest) {
-                    return;
-                }
-
-                input.value = '';
-                $('#loker_image_preview_wrapper').hide();
-                status.removeClass('text-muted text-success').addClass('text-danger')
-                    .text(error.message || 'Gambar gagal dikompres.');
-            }).finally(function() {
-                if (requestId === compressionRequest) {
-                    submitButton.prop('disabled', false);
-                }
-            });
-        });
 
         function tambahLoker() {
             kosong();

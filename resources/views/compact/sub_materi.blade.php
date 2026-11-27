@@ -274,7 +274,7 @@
                                         onclick="$('#quickPhotoInput').click()">
                                         ⬆️ Upload Foto Baru
                                     </button>
-                                    <input type="file" id="quickPhotoInput" accept="image/*" style="display: none;"
+                                    <input type="file" id="quickPhotoInput" accept="image/*" data-auto-image-compress="manual" style="display: none;"
                                         onchange="handleQuickUpload(this)">
                                 </div>
 
@@ -478,8 +478,15 @@
         }
 
         // Fitur Quick Upload Foto Baru via AJAX
-        function handleQuickUpload(input) {
+        async function handleQuickUpload(input) {
             if (!input.files || !input.files[0]) return;
+
+            try {
+                await window.AutoImageCompressor.compressInput(input);
+            } catch (error) {
+                alert(error.message || 'Gambar gagal dikompres.');
+                return;
+            }
 
             let formData = new FormData();
             formData.append('file', input.files[0]);

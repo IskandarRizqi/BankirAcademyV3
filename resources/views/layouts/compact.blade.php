@@ -312,6 +312,7 @@
     <script src="{{ versioned_asset('Backend/plugins/file-upload/file-upload-with-preview.min.js') }}"></script>
     <script src="{{ versioned_asset('Backend/plugins/ckeditor/ckeditor.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ versioned_asset('js/auto-image-compressor.js') }}"></script>
     @include('sweetalert::alert')
 
     <script>

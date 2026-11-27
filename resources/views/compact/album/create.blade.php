@@ -281,7 +281,7 @@
                                     <span class="text-muted d-block" style="font-size: 11px;">Bisa pilih multiple file
                                         (JPG, PNG, WEBP, Max 2MB/foto)</span>
                                 </div>
-                                <input type="file" name="images[]" id="photo_image" class="d-none" accept="image/*"
+                                <input type="file" name="images[]" id="photo_image" class="d-none" accept="image/*" data-auto-image-compress="manual"
                                     multiple onchange="handleFileSelect(this)">
                             </div>
 
@@ -540,12 +540,18 @@
                 });
             }
 
-            function handleFileSelect(input) {
+            async function handleFileSelect(input) {
                 const fileListContainer = document.getElementById('fileListContainer');
                 const fileList = document.getElementById('fileList');
                 fileList.innerHTML = '';
 
                 if (input.files.length > 0) {
+                    try {
+                        await window.AutoImageCompressor.compressInput(input);
+                    } catch (error) {
+                        return;
+                    }
+
                     fileListContainer.classList.remove('d-none');
                     Array.from(input.files).forEach(file => {
                         const li = document.createElement('li');

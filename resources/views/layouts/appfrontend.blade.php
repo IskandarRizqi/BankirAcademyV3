@@ -15,6 +15,7 @@
 		@include('frontend.partials.footer')
 	</div>
 
+	<script src="{{ versioned_asset('js/auto-image-compressor.js') }}"></script>
 	@stack('frontend-scripts')
 	@include('components.live-purchase-toast')
 </body>

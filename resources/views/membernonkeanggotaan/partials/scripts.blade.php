@@ -5,6 +5,7 @@
 	<script src="{{ versioned_asset('cbtemplate/assets/js/custom.js') }}"></script>
 	<script src="{{ versioned_asset('cbtemplate/plugins/apex/apexcharts.min.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="{{ versioned_asset('js/auto-image-compressor.js') }}"></script>
 
 	@php
 	$flashType = session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : (session('info') ? 'info' : null)));
